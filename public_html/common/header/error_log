@@ -1,0 +1,1 @@
+[06-Sep-2013 22:02:33] PHP Fatal error:  Call to undefined function  checklogin() in /home/thomaspa/public_html/scubawhere.com/common/header/header.php on line 16

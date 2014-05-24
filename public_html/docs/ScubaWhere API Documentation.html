@@ -1,0 +1,975 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>ScubaWhere API Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+
+/* Additions
+=============================================================================*/
+body {
+  font-size: 16px;
+  font-family: Georgia, serif;
+  counter-reset: chapter;
+}
+
+p:first-child {
+	text-align: center;
+	margin: 1em 0 2em 0 !important;
+}
+p:first-child a {
+	margin-auto;
+	max-width: 50%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: sans-serif;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-top: 2em;
+  counter-increment: chapter;
+}
+h2::before {
+  content: counter(chapter) ". ";
+}
+  h2 a {
+    display: none;
+  }
+  h2:hover a {
+    display: inline;
+  }
+
+h3 {
+  font-size: 1.17em;
+  margin-top: 1.5em;
+}
+  h3 a {
+    display: none;
+  }
+  h3:hover a {
+    display: inline;
+  }
+
+h4 {
+  font-size: 1em;
+  color: #FF851B; /* For all the 'Important' headings */
+}
+
+ul {
+  list-style-type: none;
+  font-family: Consolas, monospace;
+  
+  overflow: auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  
+  background-color: snow;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+}
+
+ul li {
+  white-space: pre;
+  color: #349884;
+}
+
+ul li strong {
+  color: #E0502C;
+}
+
+#contents {
+  float: right;
+  margin-left: 1em;
+}
+
+  #contents h3 {
+    margin-top: 0.25em;
+  }
+
+  #contents ol {
+    background-color: aliceblue;
+    border: 1px solid lightskyblue;
+    border-radius: 3px;
+    display: inline-block;
+    padding: 0.5em 1.5em 0.5em 2.5em;
+    margin-top: 0;
+  }
+
+blockquote {
+  color: #555;
+}
+
+code {
+  font-size: 16px;
+  background-color: floralwhite;
+  border-color: #CCC9C3;
+  padding: 0.1em 0.2em;
+}
+
+pre {
+  line-height: 1.25;
+}
+
+@media screen and (max-width: 550px) {
+  h1, h2, h3 {
+    line-height: 1.25;
+  }
+  
+  #contents {
+    float: none;
+    margin-left: 0;
+  }
+  
+  ul {
+    padding-left: 15px;
+  }
+}
+</style>
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="Internal API documentation for the ScubaWhere Dashboard">
+</head>
+<body>
+<p><a href="http://scubawhere.com/docs"><img src="http://scubawhere.com/docs/ScubaWhere_Logo.svg" /></a></p>
+<h1>Internal API Documentation</h1>
+<div id="contents">
+<h3>Table of Contents</h3>
+<ol></ol>
+</div>
+<p>Documentation for the ScubaWhere.com API</p>
+<ul>
+<li><strong>@version</strong> 0.7</li>
+<li><strong>@date</strong>    2014/05/21 - 14:00</li>
+</ul>
+<blockquote>
+<h3>Important</h3>
+<p>On <strong>success</strong>, the response contains either the requested information, the string <code>status</code> or (for calls that create something) <code>status</code> and <code>id</code>.</p>
+<p>If a request <strong>fails</strong>, the response <em>always</em> contains an <code>errors</code> array and has a HTTP code &gt;= 400.</p>
+</blockquote>
+<h2>Authentication &amp; User Management</h2>
+<p>All requests to the API, when coming from AJAX, are automatically sent and returned with a <code>scubawhere_session</code> cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores wheather a user is logged in. So no additional authentification information is needed to be sent with requests.</p>
+<h3>Login</h3>
+<p><code>POST /login</code></p>
+<p>Logs the company in with their credentials.</p>
+<ul>
+<li><strong>@param</strong> string  username</li>
+<li><strong>@param</strong> string  password</li>
+<li><strong>@param</strong> boolean remember</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON   Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Logout</h3>
+<p><code>GET /logout</code></p>
+<p>Logs a company out by their session key cookie, if logged in.</p>
+<ul>
+<li><strong>@return</strong> JSON   Always succeeds. Always contains <code>status</code></li>
+</ul>
+<h3>Register a company</h3>
+<p><code>POST /register/company</code></p>
+<p>This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to <a href="http://scubawhere.com/companypasswordreset">http://scubawhere.com/&#8203;companypasswordreset?email=<code>email</code>&amp;token=<code>token</code></a>. On how to transmit this form, refer to <a href="#Reset_a_company's_password">#Reset a company's password</a> in the documentation.</p>
+<ul>
+<li><strong>@param</strong> string  username   The chosen username</li>
+<li><strong>@param</strong> string  email      The company's contact email adress</li>
+<li><strong>@param</strong> string  name       The full legal company name</li>
+<li><strong>@param</strong> string  address_1  The first address line</li>
+<li><strong>@param</strong> string  address_2  The second address line (optional)</li>
+<li><strong>@param</strong> string  city       The city the company is based in</li>
+<li><strong>@param</strong> string  county     The county the company is based in</li>
+<li><strong>@param</strong> string  postcode   The postcode of the company's address</li>
+<li><strong>@param</strong> integer region_id  The ID of the corresponding region of the company</li>
+<li><strong>@param</strong> integer country_id The ID of the corresponding country of the company</li>
+<li><strong>@param</strong> string  phone      The company's contact telephone number</li>
+<li><strong>@param</strong> string  website    The company's website (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON   Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Check if username or email already exists</h3>
+<p><code>GET /register/exists</code></p>
+<ul>
+<li><strong>@param</strong> string field Either <code>username</code> or <code>email</code></li>
+<li><strong>@param</strong> string value The username or email address to check</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> integer     <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
+</ul>
+<h3>Sent a password reminder email</h3>
+<p><code>POST /password/remind</code></p>
+<ul>
+<li><strong>@param</strong> string email The email adress to reset the password for</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON        Contains <code>status</code> on success, <code>errors</code> when the email address can't be found</li>
+</ul>
+<h3>Reset a company's password</h3>
+<p><code>POST /password/reset</code></p>
+<p>This request should be made from the page where the user is linked to in the password reminder email.</p>
+<ul>
+<li><strong>@param</strong> string email                 The email adress of the user</li>
+<li><strong>@param</strong> string password              The password</li>
+<li><strong>@param</strong> string password_confirmation The password confirmation</li>
+<li><strong>@param</strong> string token                 The token (from the link)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                        Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>General</h2>
+<p>All requests from here only allow authenticated users/companies.</p>
+<h3>Retrieve CSRF token</h3>
+<p><code>GET /token</code></p>
+<p>After login, all <code>POST</code> requests must contain the <code>_token</code> parameter to prevent CSRF (Cross Site Request Forgery).</p>
+<ul>
+<li><strong>@return</strong> string    The token to be embedded into <code>POST</code> requests</li>
+</ul>
+<h2>Company</h2>
+<h3>Retrieve the company's basic information</h3>
+<p><code>GET /company</code></p>
+<ul>
+<li><strong>@return</strong> JSON    The <code>company</code> object</li>
+</ul>
+<h2>Boats</h2>
+<h3>Retrieve all accommodations &amp; boats</h3>
+<p><code>GET /company/boats</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An object containing an <code>accommodations</code> array and a <code>boats</code> array</li>
+</ul>
+<h3>Add new, update and delete accommodations &amp; boats</h3>
+<p><code>POST /company/boats</code></p>
+<p>Submit the whole form with the following structure: </p>
+<p><em>The IDs 1 &amp; 2 are just examples. Please use the real IDs that are retrieved from the API</em></p>
+<pre><code>&lt;input name=&quot;accommodations[1][name]&quot; value=&quot;My Accommodation&quot;&gt;
+&lt;input name=&quot;accommodations[1][description]&quot; value=&quot;This room is brilliant!&quot;&gt;
+&lt;input name=&quot;accommodations[2][name]&quot; value=&quot;Double Room&quot;&gt;
+&lt;input name=&quot;accommodations[2][description]&quot; value=&quot;A room for two people&quot;&gt;
+
+&lt;input name=&quot;boats[1][name]&quot; value=&quot;My Boat&quot;&gt;
+&lt;input name=&quot;boats[1][description]&quot; value=&quot;This is my first boat&quot;&gt;
+&lt;input name=&quot;boats[1][capacity]&quot; value=&quot;35&quot;&gt;
+&lt;input name=&quot;boats[1][photo]&quot; value=&quot;JPG_01234.jpg&quot;&gt;
+&lt;input name=&quot;boats[1][accommodations][1]&quot; value=&quot;20&quot;&gt; &lt;!-- This specifies the capacity of the accommodation on this particular boat --&gt;
+&lt;input name=&quot;boats[1][accommodations][2]&quot; value=&quot;15&quot;&gt;
+...
+</code></pre>
+
+<p>When <strong>creating new accommodations or boats</strong>, simply make their ID a random string, but continue to use this random ID whenever you refer to the entity throughout the form. The random ID is replaced by the real one in the system when the request is submitted.</p>
+<ul>
+<li><strong>@param</strong> array accommodations An associative array of the structure described above</li>
+<li><strong>@param</strong> array boats          An associative array of the structure described above</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Accommodations</h2>
+<h3>Retrieve all accommodations</h3>
+<p><code>GET /company/accommodations</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>accommodation</code> objects</li>
+</ul>
+<h2>Trips</h2>
+<h3>Retrieve a specific trip</h3>
+<p><code>GET /api/trip</code></p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the wanted trip</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      A <code>trip</code> object </li>
+</ul>
+<h3>Retrieve all trips</h3>
+<p><code>GET /api/trip/all</code></p>
+<p><code>GET /company/trips</code> (deprecated)</p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>trip</code> objects, complete with details of the pick-up <code>location</code>, all <code>locations</code> in the itinary and all connected <code>triptypes</code></li>
+</ul>
+<h3>Retrieve all triptypes</h3>
+<p><code>GET /company/triptypes</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>triptypes</code> objects</li>
+</ul>
+<h3>Add a trip</h3>
+<p><code>POST /company/add-trip</code></p>
+<p>Create a new trip.</p>
+<p><code>Locations</code> should be submitted as</p>
+<pre><code>&lt;input name=&quot;locations[]&quot; value=&quot;1&quot;&gt;
+</code></pre>
+
+<p><code>Triptypes</code> should be submitted as</p>
+<pre><code>&lt;input type=&quot;checkbox&quot; name=&quot;triptypes[]&quot; value=&quot;1&quot;&gt;
+</code></pre>
+
+<ul>
+<li><strong>@param</strong> string  name        The name of the trip</li>
+<li><strong>@param</strong> string  description The description of the trip</li>
+<li><strong>@param</strong> integer duration    How long the trip takes, in hours</li>
+<li><strong>@param</strong> integer location_id The ID of the pick-up location for the trip (optional)</li>
+<li><strong>@param</strong> string  photo       The filename of a photo that represents the trip (optional)</li>
+<li><strong>@param</strong> string  video       The filename of a video that represents the trip (optional)</li>
+<li><strong>@param</strong> array   locations   The IDs of the locations in the itinary</li>
+<li><strong>@param</strong> array   triptypes   The IDs of the triptypes associated with this trip</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and <code>id</code> of the newly created trip on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Activate a trip</h3>
+<p>Please refer to <a href="#Create_a_session">#Create a session</a>.</p>
+<h3>Edit a trip</h3>
+<p><code>POST /company/edit-trip</code></p>
+<p>Edit an existing trip's properties. Only the ID and the properties that are changed need to be submitted.</p>
+<p>For the structure of the <code>locations</code> and <code>triptypes</code> arrays, take a look at <code>Add a trip</code>.</p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the trip to edit</li>
+<li><strong>@param</strong> string  name        The name of the trip</li>
+<li><strong>@param</strong> string  description The description of the trip</li>
+<li><strong>@param</strong> integer duration    How long the trip takes, in hours</li>
+<li><strong>@param</strong> integer location_id The ID of the pick-up location for the trip</li>
+<li><strong>@param</strong> string  photo       The filename of a photo that represents the trip</li>
+<li><strong>@param</strong> string  video       The filename of a video that represents the trip</li>
+<li><strong>@param</strong> array   locations   The IDs of the locations in the itinary</li>
+<li><strong>@param</strong> array   triptypes   The IDs of the triptypes associated with this trip</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete a trip</h3>
+<p><code>POST /company/delete-trip</code></p>
+<p>Delete an existing trip.</p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the trip to delete</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Locations</h2>
+<h3>Retrieve locations 1/2 - Around a center</h3>
+<p><code>GET /company/locations</code></p>
+<p>Retrieve an arbitrary number of locations, sorted by distance to submitted location (near to far).</p>
+<blockquote>
+<h4>Important</h4>
+<p>If <code>area</code> is set and an array, <a href="#Retrieve_locations_2/2_-_Inside_bounds">#Retrieve locations 2/2 - Inside bounds</a> is performed instead.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> float   latitude</li>
+<li><strong>@param</strong> float   longitude</li>
+<li><strong>@param</strong> integer limit     The number of locations to retrieve (optional, default: 5)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON             An array of locations, ordered by <code>distance</code> (also in the results, in miles)</li>
+</ul>
+<p><em>The time it takes for the MySQL query to execute is logged.</em></p>
+<h3>Retrieve locations 2/2 - Inside bounds</h3>
+<p><code>GET /company/locations</code></p>
+<p>Retrieve <em>all</em> locactions inside the specified bounds.</p>
+<p>Build your <code>area</code> array like so:</p>
+<pre><code>var bounds = map.getBounds(),
+    north  = bounds.getNorthEast().lat(),
+    west   = bounds.getSouthWest().lng(),
+    south  = bounds.getSouthWest().lat(),
+    east   = bounds.getNorthEast().lng();
+
+var area   = [north, west, south, east];
+</code></pre>
+
+<blockquote>
+<h4>Important</h4>
+<p><code>limit</code> has no effect!</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> array area An array containg the bounds of the map (structure shown above)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      An array of locations (unordered)</li>
+</ul>
+<h3>Create a location</h3>
+<p><code>POST /company/add-location</code></p>
+<p>A newly created location is <strong>not</strong> limited to the creating company. All locations are available to all companies.</p>
+<ul>
+<li><strong>@param</strong> string name        A name for the location</li>
+<li><strong>@param</strong> string description A description for the location (optional)</li>
+<li><strong>@param</strong> float  latitude</li>
+<li><strong>@param</strong> float  longitude</li>
+<li><strong>@param</strong> string tags        Tags for the location (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON              Contains <code>status</code> and <code>id</code> of the newly created location on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Tickets</h2>
+<h3>Retrieve a specific ticket</h3>
+<p><code>GET /api/ticket</code></p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the wanted ticket</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      A <code>ticket</code> object, with details of connected <code>boats</code> and lists of <code>accommodation_id</code>s</li>
+</ul>
+<h3>Retrieve all tickets</h3>
+<p><code>GET /api/ticket/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>ticket</code> objects, complete with details of connected <code>boats</code> and lists of <code>accommodation_id</code>s</li>
+</ul>
+<h3>Create a ticket</h3>
+<p><code>POST /api/ticket/add</code></p>
+<p>Creates a new ticket for a trip.</p>
+<ul>
+<li><strong>@param</strong> integer trip_id     The ID of the <code>trip</code> that the ticket belongs to</li>
+<li><strong>@param</strong> string  name        A name for the ticket</li>
+<li><strong>@param</strong> string  description A description for the ticket</li>
+<li><strong>@param</strong> decimal price       The price (will be rounded to two decimals)</li>
+<li><strong>@param</strong> string  currency    Three letter international code (optional, default: dive center's country's currency)</li>
+<li><strong>@param</strong> array   boats       An array of <code>boat_id</code> =&gt; <code>accommodation_id</code> associations (can be empty)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and <code>id</code> of the newly created ticket on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update a ticket</h3>
+<p><code>POST /api/ticket/edit</code></p>
+<p>All parameters are optional (except the ticket <code>id</code>).</p>
+<p>It is <strong>not</strong> recommended that the <code>trip_id</code> be <em>updated</em> (although the functionality exits)!</p>
+<blockquote>
+<h4>Important</h4>
+<p>The response <em>can</em> contain an <code>id</code> field. If it <em>does</em> it means that the ticket could not simply be updated because it has already been booked. Instead the old ticket has now been replaced with an updated ticket in the system. The returned <code>id</code> is the new ID of the ticket and must be used from now on!</p>
+<p>The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: <code>trip_id</code>, <code>price</code> and <code>currency</code>  
+</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the ticket to edit</li>
+<li><strong>@param</strong> integer trip_id     The ID of the <code>trip</code> that the ticket belongs to</li>
+<li><strong>@param</strong> string  name        A name for the ticket</li>
+<li><strong>@param</strong> string  description A description for the ticket</li>
+<li><strong>@param</strong> decimal price       The price (will be rounded to two decimals)</li>
+<li><strong>@param</strong> string  currency    The currency that the price is in</li>
+<li><strong>@param</strong> array   boats       An array of <code>boat_id</code> =&gt; <code>accommodation_id</code> associations (can be empty)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code>, or <code>status</code> and <code>id</code> of the updated ticket on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete a ticket</h3>
+<p><code>POST /api/ticket/delete</code></p>
+<p>Delete an existing ticket.</p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the ticket to delete</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Sessions</h2>
+<h3>Retrieve a specific session</h3>
+<p><code>GET /api/session</code></p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the wanted session</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      A <code>session</code> object, with integrated <code>trip</code> and <code>boat</code> objects</li>
+</ul>
+<h3>Retrieve all sessions</h3>
+<p><code>GET /api/session/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>session</code> objects (without connected objects)</li>
+</ul>
+<p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_accommodations_&amp;_boats">#Retrieve all accommodations &amp; boats</a>.</em></p>
+<h3>Create a session</h3>
+<p><code>POST /api/session/add</code></p>
+<p><em>Activates</em> a trip by giving it a start datetime and an assigned boat.</p>
+<ul>
+<li><strong>@param</strong> integer trip_id      The ID of the <code>trip</code> that the session belongs to</li>
+<li><strong>@param</strong> string  start        The start datetime of the session. Must be interpretable by the <a href="http://php.net/strtotime">strtotime</a> PHP function</li>
+<li><strong>@param</strong> integer boat_id      The ID of the <code>boat</code> that carries this session</li>
+<li><strong>@param</strong> integer timetable_id The ID of the related timetable (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                Contains <code>status</code> and <code>id</code> of the new session on success, <code>errors</code> on failure</li>
+</ul>
+<p><em>The correct <code>timetable_id</code> is set automatically on the session from which a new <code>timetable</code> is created. For more information about timetables see <a href="#Create_a_timetable">#Create a timetable</a>.</em></p>
+<h3>Delete a session</h3>
+<blockquote>
+<h4>Important</h4>
+<p>This function can have two different failure responses:</p>
+<ul>
+<li><code>HTTP 404</code> The session could not be found.</li>
+<li><code>HTTP 406</code> Cannot delete session. It has already been booked!</li>
+</ul>
+<p>In the second case it is recommended to ask the user if he wants to <a href="#Deactivate_a_session">#deactivate the session</a> instead.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id The ID of the session to delete</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Deactivate a session</h3>
+<p><code>POST /api/session/deactivate</code></p>
+<p>Deactivating a session means it can no longer be selected for booking, but is still in the system and the bookings are still valid.</p>
+<blockquote>
+<h4>Important</h4>
+<p>This function is intended to be used if a session cannot be deleted because it has been booked, to sort out the rebooking of the affected customers while no new bookings can be created.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id The ID of the session to deactivate</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Timetables</h2>
+<h3>Retrieve a specific timetable</h3>
+<p><code>GET /api/timetable</code></p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the wanted timetable</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      A <code>timetable</code> object</li>
+</ul>
+<h3>Retrieve all timetables</h3>
+<p><code>GET /api/timetable/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>timetable</code> objects</li>
+</ul>
+<h3>Create a timetable</h3>
+<p><code>POST /api/timetable/add</code></p>
+<p>Creates a timetable that clones an existing <code>session</code> to all days of the weeks specified in the timetable in the specified rhythm of up to 4 weeks.</p>
+<p>The HTML form must submit the following structure:</p>
+<pre><code>&lt;!-- First Week --&gt;
+Mon &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;mon&quot;&gt;
+Tue &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;tue&quot;&gt;
+Wed &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;wed&quot;&gt;
+Thu &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;thu&quot;&gt;
+Fri &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;fri&quot;&gt;
+Sat &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;sat&quot;&gt;
+Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[1][]&quot; value=&quot;sun&quot;&gt;
+
+&lt;!-- Second Week --&gt;
+Mon &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;mon&quot;&gt;
+Tue &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;tue&quot;&gt;
+Wed &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;wed&quot;&gt;
+Thu &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;thu&quot;&gt;
+Fri &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;fri&quot;&gt;
+Sat &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;sat&quot;&gt;
+Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&quot;sun&quot;&gt;
+
+&lt;!-- Third Week (if needed) --&gt;
+...
+</code></pre>
+
+<blockquote>
+<h4>Important</h4>
+<p>It is not possible (yet) to retrieve the created sessions directly after they are created with a timetable! It is therefore necessary to retrieve the sessions via <a href="#Retrieve_all_sessions">#Retrieve all sessions</a> to confirm their creation and correctness.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer session_id The ID of the <code>session</code> to be timetabled</li>
+<li><strong>@param</strong> integer weeks      The number of weeks of the timetable's schedule</li>
+<li><strong>@param</strong> array   schedule   An 2D array of the structure specified above</li>
+<li><strong>@param</strong> integer iterations How often the timetable should be repeated (optional, default: 1.5 years worth of iterations)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON              Contains <code>status</code> and <code>id</code> of the new timetable on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Agents</h2>
+<h3>Retrieve a specific agent</h3>
+<p><code>GET /api/agent</code></p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the wanted agent</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      An <code>agent</code> object</li>
+</ul>
+<h3>Retrieve all agents</h3>
+<p><code>GET /api/agent/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>agent</code> objects</li>
+</ul>
+<h3>Create an agent</h3>
+<p><code>POST /api/agent/add</code></p>
+<p>Creates a new (travel) agent. All fields that are <strong>not</strong> marked <em>(optional)</em> are required.</p>
+<ul>
+<li><strong>@param</strong> string  name            The name of the travel agent</li>
+<li><strong>@param</strong> string  website         The agent's website (optional)</li>
+<li><strong>@param</strong> string  branch_name     Name of the agent's local branch</li>
+<li><strong>@param</strong> text    branch_address  Free textfield for the branch's address</li>
+<li><strong>@param</strong> string  branch_phone    The branch's telephone contact number (optional)</li>
+<li><strong>@param</strong> string  branch_email    A contact email address of the branch (optional)</li>
+<li><strong>@param</strong> text    billing_address If different from <code>branch_address</code> specify billing address (optional)</li>
+<li><strong>@param</strong> string  billing_phone   If different from <code>branch_phone</code> specify billing contact number (optional)</li>
+<li><strong>@param</strong> string  billing_email   If different from <code>branch_email</code> specify contact email address (optional)</li>
+<li><strong>@param</strong> integer commission      The agent's commission in percent as a whole number (e.g. 15%)</li>
+<li><strong>@param</strong> string  terms           MUST be one of the following three: fullamount, deposit, banned</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                   Contains <code>status</code> and <code>id</code> of the newly created agent on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update an agent</h3>
+<p><code>POST /api/agent/edit</code></p>
+<p>All parameters are optional (except the agent <code>id</code>).</p>
+<ul>
+<li><strong>@param</strong> integer id              The ID of the agent to be updated</li>
+<li><strong>@param</strong> string  name            The name of the travel agent</li>
+<li><strong>@param</strong> string  branch_name     Name of the agent's local branch</li>
+<li><strong>@param</strong> text    branch_address  Free textfield for the branch's address</li>
+<li><strong>@param</strong> string  branch_phone    The branch's telephone contact number</li>
+<li><strong>@param</strong> string  branch_email    A contact email address of the branch</li>
+<li><strong>@param</strong> text    billing_address If different from <code>branch_address</code> specify billing address</li>
+<li><strong>@param</strong> string  billing_phone   If different from <code>branch_phone</code> specify billing contact number</li>
+<li><strong>@param</strong> string  billing_email   If different from <code>branch_email</code> specify contact email address</li>
+<li><strong>@param</strong> integer commission      The agent's commission in percent as a whole number (e.g. 15%)</li>
+<li><strong>@param</strong> string  terms           MUST be one of the following three: fullamount, deposit, banned</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                   Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete an agent</h3>
+<p><em>Deleting an agent is currently not supported, sorry.</em></p>
+<p>&nbsp;</p>
+<h2>Changelog</h2>
+<h3>21<sup>st</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> New <a href="#Agents">#Agents</a> section</li>
+<li><strong>@edit</strong>  Clarified responsible fields in <em>Important</em> section of <a href="#Update_a_ticket">#Update a ticket</a></li>
+</ul>
+<h3>20<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> New parameter in <a href="#Create_a_timetable">#Create a Timetable</a>: <code>iterations</code></li>
+</ul>
+<h3>11<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@edit</strong> Made <code>location_id</code> optional in <a href="#Add_a_trip">#Add a Trip</a></li>
+</ul>
+<h3>1<sup>st</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> The <a href="#Timetables">#Timetables</a> section</li>
+</ul>
+<h3>24<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> The <a href="#Sessions">#Sessions</a> section</li>
+</ul>
+<h3>23<sup>rd</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> <a href="#Update_a_ticket">#Update a ticket</a></li>
+<li><strong>@added</strong> <a href="#Delete_a_ticket">#Delete a ticket</a></li>
+<li><strong>@fixed</strong> Removed redundant <code>id</code> return field from response in <a href="#Edit_a_trip">#Edit a trip</a></li>
+<li><strong>@edit</strong>  Changed <a href="#Check_if_username_or_email_already_exists">#Check if username or email already exists</a> from <code>POST</code> to <code>GET</code></li>
+</ul>
+<h3>19<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> The <a href="#Tickets">#Tickets</a> section</li>
+</ul>
+<h3>14<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> The method <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a></li>
+</ul>
+<h3>13<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> Some new <code>/api/</code> calls</li>
+<li><strong>@edit</strong>  Marked old calls as <em>(deprecated)</em> </li>
+</ul>
+<h3>12<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> Internal links in the <a href="#Changelog">#Changelog</a></li>
+<li><strong>@added</strong> <a href="#Retrieve_locations_2/2_-_Inside_bounds">#Retrieve locations 2/2 - Inside bounds</a></li>
+<li><strong>@edit</strong>  Changed <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations</a> to <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations 1/2 - Around a center</a></li>
+<li><strong>@edit</strong>  Changed description of <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations 1/2 - Around a center</a> to reflect the parameter of <code>area</code></li>
+</ul>
+<h3>10<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> Basic heading numbering</li>
+<li><strong>@added</strong> Heading links (access on hover)</li>
+<li><strong>@added</strong> Table of Contents</li>
+<li><strong>@added</strong> Docs for <a href="#Retrieve_all_triptypes">#Retrieve all triptypes</a></li>
+<li><strong>@fixed</strong> Spelling mistakes</li>
+<li><strong>@fixed</strong> Missing <code>locations</code> array on <a href="#Edit_a_trip">#Edit a trip</a></li>
+<li><strong>@fixed</strong> Missing <code>triptypes</code> array on <a href="#Add_a_trip">#Add a trip</a> and <a href="#Edit_a_trip">#Edit a trip</a></li>
+<li><strong>@edit</strong>  Removed repetition from <a href="#Locations">#Locations</a></li>
+<li><strong>@edit</strong>  Clarifications</li>
+<li><strong>@edit</strong>  Made <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations</a> use <code>GET</code></li>
+</ul>
+<h3>9<sup>th</sup> March 2014</h3>
+<ul>
+<li><strong>@added</strong> Created the page/documentation</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<h1>The End</h1>
+<ul>
+<li><strong>@author</strong>  Soren Schwert</li>
+</ul>
+<p><script src="assets/zepto.min.js"></script></p>
+<script>
+    contents = '';
+    $('h2').each(function() {
+      $self = $(this);
+      name = $self.text().replace(/ /g, '_').replace(/<(.|\n)*?>/g, '');
+      $self.attr('id', name);
+      contents += '<li><a href="#' + name + '">' + $self.text() + '</a></li>';
+      $self.append(' <a href="#' + name + '" title="Link to this section">#</a>');
+    });
+    $('#contents ol').append(contents);
+
+    $('h3').each(function() {
+      $self = $(this);
+      name = $self.text().replace(/ /g, '_').replace(/<(.|\n)*?>/g, '');
+      $self.attr('id', name);
+      $self.append(' <a href="#' + name + '" title="Link to this method">#</a>');
+    });
+</script>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

@@ -1,0 +1,149 @@
+/* COLOR THEME */
+/*
+BLUE - #4a9cff
+DEEP BLUE - #34495e
+DARK GREY - #4f4f4f
+LIGHT GREY - #c8c8c8
+HELPER YELLO - #fff7cb
+RED - #FF7163
+PURPLE - #6D6A99
+*/
+
+html{
+	height: 100%;
+	min-height: 700px
+}
+
+*{
+	position: relative;
+	z-index: 10;
+}
+
+body{
+	background-color: #c8c8c8;
+}
+
+#login-wrapper{
+	padding: 40px;
+	width: 400px;
+	margin: 0px auto;
+	margin-top: 80px;
+	text-align: center;
+}
+
+#login-wrapper img{
+	margin-bottom: 20px;
+}
+
+#login-wrapper h1{
+	color: #4f4f4f;
+	text-align: center;
+	font-weight: 200;
+	font-size: 22px;
+}
+
+#form-error{
+	color: #FF7163;
+	font-size: 13px;
+}
+
+/* form */
+form{
+	font-size: 18px;
+	font-size: 0px;
+	text-align: center;
+	background-color: #fff;
+	padding: 20px 0px 40px 0px;
+	box-shadow: 0px 0px 9px rgba(0,0,0,0.48);
+	margin-bottom: 10px;
+	position: relative;
+	z-index: 100;
+}
+
+
+form input[type='text'],
+form input[type='password']{
+	border: none;
+	width: 300px;
+	margin: 0px;
+	outline: none;
+	font-size: 18px;
+	padding: 10px 0px;
+	border-bottom: 1px solid #c8c8c8;
+}
+
+form input[type='text']{
+	border-bottom: 1px solid #c8c8c8;
+}
+
+form select{
+	padding:3px;
+	margin: 10px;
+	background: #f8f8f8;
+	color:#888;
+	border:none;
+	border-bottom: 1px solid #c8c8c8;
+	outline:none;
+	display: block;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	cursor:pointer;
+	width: 300px;
+	-webkit-border-radius:0px;
+    -moz-border-radius:0px;
+    border-radius:0px;
+}
+
+form .select{
+	margin-left: 40px;
+}
+
+form .select:after{
+	content: '\25BC';
+	display: block;
+	position: absolute;
+	font-size: 16px;
+	line-height: 1;
+	margin-top: -35px;
+	margin-left: 285px;
+	color: #c8c8c8;
+}
+
+form input[type='submit']{
+	margin-top: 20px;
+	display: block;
+	width: 320px;
+	padding: 10px 0px;
+	margin-left: 40px;
+}
+
+.errorMssg{
+	font-size: 13px;
+	color: #FF7163;
+}
+
+footer{
+	background: none;
+	position: fixed;
+	bottom: 0px;
+	text-align: left;
+	padding: 20px;
+	z-index: 1;
+}
+
+#register{
+	background-color: rgba(0,0,0,0.2);
+	padding: 10px;
+}
+
+#register:link,
+#register:hover,
+#register:active,
+#register:visited{
+	color: #fff;
+	text-decoration: none;
+}
+#register:hover{
+	background-color: rgba(0,0,0,0.4);
+}

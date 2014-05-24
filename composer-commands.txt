@@ -1,0 +1,3 @@
+php -d disable_functions= composer.phar (self)update
+php -d disable_functions= artisan dump-autoload
+php -d disable_functions= artisan optimize

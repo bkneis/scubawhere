@@ -1,0 +1,122 @@
+@import url(http://fonts.googleapis.com/css?family=Yesteryear);
+@import url(http://fonts.googleapis.com/css?family=Kite+One);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+#nav{
+	height: 45px;
+	background-color: #373737;
+	padding-top: 3px;
+	box-shadow: 0px 0px 9px black;
+	position: fixed;
+	width: 100%;
+	border-bottom: 2px solid rgba(0,0,0,1.5);
+	z-index: 9997;
+}
+
+#nav-wrapper{
+	margin: 0px auto;
+	z-index: 9997;
+	padding: 0px 20px;
+}
+
+#logo{
+	font-family: 'Yesteryear', cursive;
+	float: left;
+	line-height: 1;
+	margin-top: 3px;
+	font-weight: 200;
+	margin-right: 40px
+}
+
+#logo a:link{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:active{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:visited{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:hover{
+	color: #fff;
+	text-decoration: none;
+}
+
+
+#nav-wrapper img{
+	float: left;
+	margin-right: 10px;
+	margin-top: -3px;
+	padding: 5px 10px;
+	width: 75%
+}
+
+.nav-opt{
+	float: left;
+	padding-left: 30px;
+	padding-right: 30px;
+	color: #ffffff;
+	margin-top: 13px;
+}
+
+.nav-opt a:link{
+	color: #fff;
+	text-decoration: none;
+}
+
+.nav-opt a:hover{
+	color: #4a9cff;
+	text-decoration: none;
+}
+
+.nav-opt a:visited{
+	color: #fff;
+	text-decoration: none;
+}
+
+.nav-opt a:active{
+	color: #fff;
+	text-decoration: none;
+}
+
+#logout{
+	color: #ffffff;
+	margin-top: 4px;
+	background-color: #4a9cff;
+	padding: 5px 20px;
+	border-radius: 1px;
+	cursor: pointer;
+	border: none;
+	font-size: 18px;
+	float: right
+}
+#search-form{
+	float: right;
+}
+
+#search-box{
+	font-size: 20px;
+	padding: 4px;
+	border: none;
+	border-radius: 5px;
+	width: 210px;
+}
+
+.submit{
+	color: #ffffff;
+	margin-top: 7px;
+	background-color: #4a9cff;
+	padding: 7px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: none;
+	font-size: 18px;
+}
+.submit:hover{
+	box-shadow: inset 0px 0px 6px rgba(0,0,0,0.38);
+}
+
+

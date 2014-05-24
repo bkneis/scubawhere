@@ -1,0 +1,567 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+/* COLOR THEME */
+/*
+BLUE - #4a9cff
+DEEP BLUE - #34495e
+DARK GREY - #4f4f4f
+LIGHT GREY - #c8c8c8
+HELPER YELLO - #fff7cb
+RED - #FF7163
+PURPLE - #6D6A99
+*/
+
+/*
+******************************
+Stylesheet for all dive 
+	  center area
+******************************
+*/
+
+html, body{
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Open Sans', sans-serif;
+	background-color: #34495e;
+	color: #313131;
+	font-size: 13px;
+}
+
+/*				ELEMENT STYLES
+*******************************/
+a:link,
+a:visited,
+a:active,
+a:hover{
+	color: #4a9cff;
+	text-decoration: none;
+}
+
+a:hover{ text-decoration: underline; }
+
+hr{
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0,0.1) 
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ form */
+input, textarea, select{ 
+	font-size: 18px;
+	padding: 5px;
+	border: 1px solid #c8c8c8;
+}
+
+select{
+	font-size: 16px;
+	background: #ffffff;
+	border: 1px solid #bfbfbf;
+	height: 33px;
+}
+
+.check-wrap {
+	width: 25px;
+	position: relative;
+}
+
+.check-wrap  label {
+	cursor: pointer;
+	position: absolute;
+	width: 25px;
+	height: 25px;
+	top: 0;
+  	left: 0px;
+	background: #eee;
+	border:1px solid #ddd;
+}
+
+td .check-wrap  label {
+	right: -10px;
+	top: -4px;
+}
+
+.check-wrap label:after {
+	opacity: 0.2;
+	content: '';
+	position: absolute;
+	width: 9px;
+	height: 5px;
+	background: transparent;
+	top: 6px;
+	left: 7px;
+	border: 3px solid #34495e;
+	border-top: none;
+	border-right: none;
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+.check-wrap label:hover::after { opacity: 0.5; }
+
+.check-wrap input[type=checkbox]{
+	/*
+right: -9999px;
+	position: absolute;
+*/
+}
+
+.check-wrap input[type=checkbox]:checked 
++ label:after { opacity: 1}
+
+/* relies on */
+/*
+<div class="check-wrap">
+	<input type="checkbox" value="1" id="name" name="name" />
+  	<label for="name"></label>
+</div>
+*/
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ table */
+table{ width: 100%; }
+
+table thead th{
+	background-color: #fff; 
+	padding: 15px;
+	font-size: 14px;
+}
+
+table td{padding: 10px;}
+tr:nth-child(odd)	{ background-color:#e7eef8; }
+tr:nth-child(even)	{ background-color:#fff; }
+
+.col10{width: 10%}
+.col20{width: 20%}
+.col30{width: 30%}
+.col40{width: 40%}
+.col50{width: 50%}
+.col60{width: 60%}
+.col70{width: 70%}
+
+.col10c{width: 10%;text-align: center;}
+.col20c{width: 20%;text-align: center;}
+.col30c{width: 30%;text-align: center;}
+.col40c{width: 40%;text-align: center;}
+.col50c{width: 50%;text-align: center;}
+.col60c{width: 60%;text-align: center;}
+.col70c{width: 70%;text-align: center;}
+
+/*
+*******************************
+						CONTENT
+*******************************
+*/
+#guts{
+	width: 80%;
+	display: inline-block;
+	background-color: #ffffff;
+	position: relative;
+	min-height: 478px;
+	/* background: url('../img/p4.png'); */
+	background: #eeeeee;
+}
+
+#content-title{
+	background-color: #fff;
+	padding: 12px 20px;
+	font-size: 22px;
+	position: relative;
+	z-index: 2;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
+}
+
+#wrapper{ margin: 20px; }
+
+#wrapper .box100{
+	overflow: hidden;
+	background-color: #fff;
+}
+
+/*				GENERIC STYLES
+*******************************/
+#page{ padding-top: 50px; }
+
+.floating{
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
+	background-color: #fff;
+}
+
+.padder{ padding: 20px; }
+.margin{ margin: 20px; }
+
+.yellow-helper{
+	padding: 10px;
+	background-color: #fff7c6;
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+.loading-wrap{
+	width: 100%;
+	text-align: center;
+	padding: 20px;
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ buttons */
+
+.bttn{
+	display: inline-block;
+	border: none;
+	margin: 0px;
+	color: #fff;
+	cursor: pointer;
+	-webkit-transition: all ease 1s;
+    -moz-transition: 	all ease 1s;
+    -o-transition: 		all ease 1s;
+    transition: 		all ease 1s;
+}
+
+.bttn.redb:hover	{background-color: #ce584e}
+.bttn.blueb:hover	{background-color: #2e66aa}
+.bttn.purpleb:hover	{background-color: #474565}
+.bttn.greyb:hover	{background-color: #282828}
+
+.big-bttn{
+	font-size: 18px;
+	padding: 10px;
+}
+
+.small-bttn{
+	font-size: 13px;
+	padding: 7px;
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ switch */
+.switch-wrap{
+	background-color: #fff;
+	display: inline-block;
+	margin-bottom: 15px;
+	border-left: 4px solid #34495e;
+	font-size: 0px;
+}
+
+.switch-wrap label{
+	display: inline-block;
+	padding: 15px 20px;
+	font-size: 13px;
+}
+
+.switch-wrap .switch-option{
+	display: inline-block;
+	padding: 15px 20px;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.switch-wrap .switch-option:hover{
+	border-bottom: 3px solid rgba(255,112,99,0.5);
+	padding: 15px 20px 12px 20px;
+}
+
+.switch-wrap .option-active{
+	border-bottom: 3px solid #FF7163;
+	padding: 15px 20px 12px 20px;
+}
+
+.switch-wrap .option-active:hover{
+	border-bottom: 3px solid #FF7163;
+	padding: 15px 20px 12px 20px;
+}
+
+/*						COLORS
+*******************************/
+.redb{background-color: #FF7163}
+.redf{color: #FF7163}
+
+.blueb{background-color: #4a9cff}
+.bluef{color: #4a9cff}
+
+.purpleb{background-color: #6D6A99}
+.purplef{color: #6D6A99}
+
+.greyb{background-color: #4f4f4f}
+.greyf{color: #4f4f4f}
+
+/*
+*******************************
+						SIDEBAR
+*******************************
+*/
+#sidebar{
+	width: 20%;
+	min-height: 478px;
+	height: 100%;
+	float: left;
+	display: inline-block;
+	background-color: #34495e;
+}
+
+#tab-title{
+	background-color: #4a9cff;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+	padding: 15px;
+	font-size: 18px;
+	color: #fff;
+	text-align: right;
+	position: relative;
+	z-index: 1;
+}
+
+#dc-info{
+	font-size: 13px;
+	padding: 10px;
+	border-bottom: 1px solid #d4d4d4;
+	background-color: #fff;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
+	margin-bottom: 5px;
+	margin-top: 5px;
+	margin-left: 0px;
+	margin-right: 10px
+}
+
+#sidebar a:link,
+#sidebar a:hover,
+#sidebar a:active,
+#sidebar a:visited{
+	text-decoration: none;
+}
+
+ul#sidenav{
+	list-style: none;
+	display: block;
+	padding: 0px;
+	margin: 0px;
+	color: #ffffff;
+}
+
+ul#sidenav > li{
+	padding: 0px;
+	/* border-bottom: 2px groove rgba(120,120,120,0.5); */
+	cursor: pointer;
+}
+
+ul#sidenav div{ padding: 10px; }
+
+ul#sidenav div span{ 
+	position: absolute; 
+	margin-top: 5px;	
+	margin-left: 10px;	
+}
+
+ul#sidenav .arrow{
+	font-size: 8px;
+	float: right;
+	margin-top: 10px;
+	margin-right: 5px;
+	position: relative;
+}
+
+ul#sidenav img{
+	height: 25px;
+}
+
+ul#sidenav > li > ul{ display: none; padding: 0px; }
+
+ul#sidenav > li > ul > li{
+	/* border-top: 2px groove rgba(120,120,120,0.5); */
+	border-bottom: none;
+	background-color: rgba(0,0,0,0.15);
+	padding: 10px 20px;
+}
+
+.tab-active{
+	border-right: 3px solid #FF7163;
+}
+
+/*
+*******************************
+				BOX LOAYOUTS
+*******************************
+*/
+.row{ font-size: 0px; }
+
+.box50{
+	vertical-align: top;
+	font-size: 13px;
+	width: calc(50% - 5px);
+	display: inline-block;
+	margin-bottom: 15px;
+	background-color: #fff;
+}
+
+.box50:first-child{
+	margin-right: 10px;
+}
+
+.box50 > label{
+	color: #ffffff;
+	display: block;
+	padding: 10px;
+	font-size: 17px;
+	border-radius: 0px;
+}
+
+/* responsive boxes */
+@media all and (max-width: 1175px) {
+	.box50{width: 100%; display: block;}
+}
+
+.box100{
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.box100 > label{
+	color: #ffffff;
+	display: block;
+	padding: 10px;
+	font-size: 17px;
+	border-radius: 0px;
+}
+
+.box100 > label .removable{
+	font-weight: 800;
+	color: #FF7163;
+	float: right;
+	cursor: pointer;
+}
+
+.box-mssg:before{
+	content: "!";
+	background-color: #ce584e;
+	display: inline-block;
+	margin-top: -6px;
+	margin-left: -40px;
+	padding: 2px 10px;
+	position: absolute;
+	font-weight: 600;
+	font-size: 19px;
+}
+
+.box-mssg{
+	padding: 6px;
+	background-color: #4f4f4f;
+	color: #fff;
+	padding-left: 40px;
+	
+}
+
+/*
+*******************************
+				FORM LOAYOUTS
+*******************************
+*/
+.form-row{
+	margin-bottom: 10px;
+	font-size: 13px;
+}
+
+.form-row .field-label{
+	width: 150px;
+	display: inline-block;
+}
+
+/*						TOOLTIP
+*******************************
+*/
+.tooltip {
+	position: absolute;
+	width: 233px;
+	z-index: 9999;
+	padding: 0px;
+	background: #4a9cff;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	text-align: center;
+	padding: 10px;
+	color: #fff;
+	display: none;
+}
+
+.tooltip:after {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 15px 15px 0;
+	border-color: #4a9cff transparent;
+	display: block;
+	width: 0;
+	z-index: 1;
+	bottom: -15px;
+	left: 110px;
+}
+
+
+/*
+*******************************
+					INDV TABS
+*******************************
+*/
+
+/*					Create Trip
+*******************************
+*/
+#map_canvas{
+	height: 400px;
+}
+
+#location_fields{
+	
+}
+
+#saved-locations{
+	min-height: 200px;
+}
+
+.loc-row{
+	margin-bottom: 10px;
+}
+
+.loc-row label{
+	width: 100px;
+	display: block;
+	font-size: 15px;
+}
+
+.loc-row h5{
+	font-size: 18px;
+	margin: 5px 0px;
+	padding: 0px;
+	font-weight: 300;
+	border-left: 2px solid #FF7163;
+	padding-left: 10px
+}
+
+.loc-row .bttn{
+	display: block;
+	margin-top: 3px;
+}
+
+.single-saved-location{
+	font-size: 13px;
+	border-left: 5px solid #4f4f4f;
+	padding-left: 10px;
+	margin-bottom: 5px;
+}
+
+.single-saved-location > span{
+	display:  table-row;
+}
+
+.del-loc{
+	float: right;
+	color: 	#FF7163;
+	font-size: 16px;
+	font-weight: 600;
+	
+}
+/*						BOATS
+*******************************
+*/
+#add-another{
+	
+}

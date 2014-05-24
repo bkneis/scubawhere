@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='../fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='../fullcalendar/style.css' rel='stylesheet' />
+<script src='../lib/moment.min.js'></script>
+<script src='../lib/jquery.min.js'></script>
+<script src='../lib/minified/jquery-ui.min.js'></script>
+<script src='../fullcalendar/fullcalendar.min.js'></script>
+
+<script>
+
+	$(document).ready(function() {
+	
+	
+		/* initialize the external events
+		-----------------------------------------------------------------*/
+	
+		$('div.trip-event').each(function() {
+		
+			// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+			// it doesn't need to have a start or end
+			var eventObject = {
+				title: $.trim($(this).text()), // use the element's text as the event title
+				start: "2009-11-05T13:15:30Z",
+				
+			};
+			
+			// store the Event Object in the DOM element so we can get to it later
+			$(this).data('eventObject', eventObject);
+			
+			// make the event draggable using jQuery UI
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,      // will cause the event to go back to its
+				revertDuration: 0,  //  original position after the drag
+				helper:"clone",
+				containment:"document"
+			});
+			
+		});
+		
+		
+		
+		/* initialize draggable boats
+		-----------------------------------------------------------------*/
+		$('li.boat-drag').each(function() {
+			// make the event draggable using jQuery UI
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,      // will cause the event to go back to its
+				revertDuration: 0  //  original position after the drag
+			});
+			
+			
+		});
+		
+		$('li.droppable-event').each(function() {
+			$(this).droppable({
+			    drop:function(event, ui) {
+			        ui.draggable.appendTo($(this).children("ul"));
+			    }
+			});
+		});
+		
+
+
+	
+	
+		/* initialize the calendar
+		-----------------------------------------------------------------*/
+		
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			
+			editable: true,
+			droppable: true, // this allows things to be dropped onto the calendar !!!
+			drop: function(date) { // this function is called when something is dropped
+				
+				
+				
+				// retrieve the dropped element's stored Event Object
+				var originalEventObject = $(this).data('eventObject');
+				
+				
+				
+				// we need to copy it, so that multiple events don't have a reference to the same object
+				var copiedEventObject = $.extend({}, originalEventObject);
+				
+				var duration = $(this).attr('data-duration');
+				
+				
+				
+				// assign it the date that was reported
+				copiedEventObject.start = date;
+				copiedEventObject.end = moment(date, "dddd, MMMM Do YYYY, h:mm:ss a").add('days', duration).add('hours', duration);
+				
+				console.log(copiedEventObject.start);
+				console.log(copiedEventObject.end);
+				
+				
+				
+				checkOverlap(copiedEventObject);
+				
+				// render the event on the calendar
+				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+				
+				// is the "remove after drop" checkbox checked?
+				if ($('#drop-remove').is(':checked')) {
+					// if so, remove the element from the "Draggable Events" list
+					$(this).remove();
+				}
+				
+			}
+		});
+		
+		
+		
+		
+	});
+	
+	
+	
+	function checkOverlap(event) {  
+
+	    var start = new Date(event.start);
+	    var end = new Date(event.end);
+	
+	    var overlap = $('#calendar').fullCalendar('clientEvents', function(ev) {
+	        if( ev == event)
+	            return false;
+	        var estart = new Date(ev.start);
+	        var eend = new Date(ev.end);
+	
+	        return (Math.round(estart)/1000 < Math.round(end)/1000 && Math.round(eend) > Math.round(start));
+	    });
+	
+	    if (overlap.length){  
+	            alert("Overlap");
+	       }                  
+	  }
+
+</script>
+
+</head>
+<body>
+	<div id='wrap'>
+		<div class="row">
+			<div class="box50">
+				<label class="purpleb">Boats</label>
+				<div id='boats' class="padder draggable-items">
+					<div class="yellow-helper">Please drag a boat to its appropriate trip.</div>
+					<ul>
+					<li class='boat-drag'><div>Pro Boat 1</div></li>
+					<li class='boat-drag'><div>Pro Boat 2</div></li>
+					<li class='boat-drag'><div>Pro Boat 3</div></li>
+					<li class='boat-drag'><div>Pro Boat 4</div></li>
+					<li class='boat-drag'><div>Pro Boat 5</div></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="box50">
+				<label class="purpleb">Trips</label>
+				<div id='trips' class="padder dragganle-items">
+				<div class="yellow-helper">Please drag a boat to its appropriate trip.</div>
+					<ul>
+						<li class="droppable-event"><div class='trip-event' data-duration="5">A Boat Trip With Snorkling</div>
+							<ul></ul>
+						</li>
+						
+						<li class="droppable-event"><div class='trip-event' data-duration="7">Week Livaboard</div>			  
+							<ul></ul>
+						</li>
+						
+						<li class="droppable-event"><div class='trip-event' data-duration="1">Beach Dive</div>				  
+							<ul></ul>
+						</li>
+						
+						<li class="droppable-event"><div class='trip-event' data-duration="2">2 Wreck Dive</div>			  
+							<ul></ul>
+						</li>
+						
+						<li class="droppable-event"><div class='trip-event' data-duration="1">Day Snorkel</div>				  
+							<ul></ul>
+						</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id='calendar'></div>
+
+		<div style='clear:both'></div>
+
+	</div>
+</body>
+</html>
