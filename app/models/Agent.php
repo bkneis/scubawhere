@@ -1,6 +1,7 @@
 <?php
 
 use LaravelBook\Ardent\Ardent;
+use ScubaWhere\Helper;
 
 class Agent extends Ardent {
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');

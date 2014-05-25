@@ -141,6 +141,27 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Booking relations
+	 */
+	public function booked_packages()
+	{
+		return $this->hasManyThrough('Package', 'Booking');
+	}
+
+	public function booked_sessions()
+	{
+		return $this->hasManyTrough('Session', 'Booking');
+	}
+
+	public function booked_tickets()
+	{
+		return $this->hasManyTrough('Ticket', 'Booking');
+	}
+	/**
+	 * END Relations
+	 */
+
+	/**
 	 * Get the unique identifier for the user.
 	 *
 	 * @return mixed
@@ -170,6 +191,9 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->email;
 	}
 
+	/**
+	 * Additions with Laravel v4.1.26
+	 */
 	public function getRememberToken()
 	{
 		return $this->remember_token;
@@ -184,5 +208,8 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	{
 		return 'remember_token';
 	}
+	/**
+	 * END Additions
+	 */
 
 }

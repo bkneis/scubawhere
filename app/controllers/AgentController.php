@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Helper;
+// use ScubaWhere\Helper;
 
 class AgentController extends Controller {
 
@@ -86,6 +86,6 @@ class AgentController extends Controller {
 			return Response::json( array('errors' => $agent->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return Response::json( array('status' => 'OK. Agent updated'), 200 ); // 200 OK
+		return Response::json( array('status' => 'OK. Agent updated.'), 200 ); // 200 OK
 	}
 }

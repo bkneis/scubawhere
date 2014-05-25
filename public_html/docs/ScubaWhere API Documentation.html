@@ -318,6 +318,7 @@ h2 {
   font-size: 1.5em;
   margin-top: 2em;
   counter-increment: chapter;
+  overflow: auto;
 }
 h2::before {
   content: counter(chapter) ". ";
@@ -400,6 +401,29 @@ pre {
   line-height: 1.25;
 }
 
+.to-the-top {
+  display: block;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 40px;
+  background-color: #87cdf9;
+  color: white;
+  text-align: center;
+  border-radius: 50%;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 35px;
+  padding-bottom: 0.2em;
+  opacity: 0.6;
+}
+.to-the-top:hover {
+  background-color: #87cdf9;
+  text-decoration: none;
+  opacity: 1;
+}
+
 @media screen and (max-width: 550px) {
   h1, h2, h3 {
     line-height: 1.25;
@@ -413,10 +437,18 @@ pre {
   ul {
     padding-left: 15px;
   }
+  
+  .to-the-top {
+    right: 15px;
+    bottom: 15px;
+  }
 }
 </style>
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="Internal API documentation for the ScubaWhere Dashboard">
+
+<link rel="stylesheet" href="responsive-nav.css">
+<script src="responsive-nav.min.js"></script>
 </head>
 <body>
 <p><a href="http://scubawhere.com/docs"><img src="http://scubawhere.com/docs/ScubaWhere_Logo.svg" /></a></p>
@@ -520,7 +552,7 @@ pre {
 </ul>
 <h3>Add new, update and delete accommodations &amp; boats</h3>
 <p><code>POST /company/boats</code></p>
-<p>Submit the whole form with the following structure: </p>
+<p>Submit the whole form with the following structure:</p>
 <p><em>The IDs 1 &amp; 2 are just examples. Please use the real IDs that are retrieved from the API</em></p>
 <pre><code>&lt;input name=&quot;accommodations[1][name]&quot; value=&quot;My Accommodation&quot;&gt;
 &lt;input name=&quot;accommodations[1][description]&quot; value=&quot;This room is brilliant!&quot;&gt;
@@ -555,7 +587,7 @@ pre {
 <ul>
 <li><strong>@param</strong> integer id The ID of the wanted trip</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON      A <code>trip</code> object </li>
+<li><strong>@return</strong> JSON      A <code>trip</code> object</li>
 </ul>
 <h3>Retrieve all trips</h3>
 <p><code>GET /api/trip/all</code></p>
@@ -701,8 +733,7 @@ var area   = [north, west, south, east];
 <blockquote>
 <h4>Important</h4>
 <p>The response <em>can</em> contain an <code>id</code> field. If it <em>does</em> it means that the ticket could not simply be updated because it has already been booked. Instead the old ticket has now been replaced with an updated ticket in the system. The returned <code>id</code> is the new ID of the ticket and must be used from now on!</p>
-<p>The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: <code>trip_id</code>, <code>price</code> and <code>currency</code>  
-</p>
+<p>The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: <code>trip_id</code>, <code>price</code> and <code>currency</code></p>
 </blockquote>
 <ul>
 <li><strong>@param</strong> integer id          The ID of the ticket to edit</li>
@@ -876,10 +907,100 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                   Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
-<h3>Delete an agent</h3>
-<p><em>Deleting an agent is currently not supported, sorry.</em></p>
+<h2>Customers</h2>
+<blockquote>
+<h4>Important</h4>
+<p>A dive center can only view, access and edit customers that the dive center created itself.</p>
+</blockquote>
+<h3>Retrieve a specific customer</h3>
+<p><code>GET /api/customer</code></p>
+<ul>
+<li><strong>@param</strong> integer id  The ID of the wanted customer</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON       A <code>customer</code> object</li>
+</ul>
+<h3>Retrieve all customers</h3>
+<p><code>GET /api/customer/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON       An array of <code>customer</code> objects</li>
+</ul>
+<h3>Filter customers by email address</h3>
+<p><code>GET /api/customer/filter-email</code></p>
+<p>This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 <code>customer</code> objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length &gt;= 3).</p>
+<ul>
+<li><strong>@param</strong> string search  String to be searched for in the available email addresses (min length: 3 characters)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON          An array of <code>customer</code> objects</li>
+</ul>
+<h3>Create a customer</h3>
+<p><code>POST /api/customer/add</code></p>
+<p>Creates a new customer. The only <em>required</em> fields are <code>firstname</code> and <code>lastname</code>.</p>
+<blockquote>
+<h4>Important</h4>
+<p>Altough nearly all customer fields are optional, a booking does always <strong>need</strong> at least one customer with an email address assigned to it. This is validated when the booking is finalised.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> string  email          The email of the customer (optional)</li>
+<li><strong>@param</strong> string  firstname      The customer's first name</li>
+<li><strong>@param</strong> string  lastname       The customer's last name</li>
+<li><strong>@param</strong> string  birthday       Date of birth. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
+<li><strong>@param</strong> integer gender         One of three digits: <code>1</code> for male, <code>2</code> for female, <code>3</code> for other/undefined (optional)</li>
+<li><strong>@param</strong> string  address_1      First line of customer's address (optional)</li>
+<li><strong>@param</strong> string  address_2      Second line of customer's address (optional)</li>
+<li><strong>@param</strong> string  city           The customer's city (optional)</li>
+<li><strong>@param</strong> string  county         The customer's county (optional)</li>
+<li><strong>@param</strong> string  postcode       The customer's postcode (optional)</li>
+<li><strong>@param</strong> integer region_id      The ID of the <code>region</code> the customer lives in (optional)</li>
+<li><strong>@param</strong> integer country_id     The ID of the <code>country</code> the customer lives in (optional)</li>
+<li><strong>@param</strong> string  phone          A contact telephone number (optional)</li>
+<li><strong>@param</strong> integer certificate_id The ID of the <code>certificate</code> that the customer holds (optional)</li>
+<li><strong>@param</strong> string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                  Contains <code>status</code> and <code>id</code> of the newly created customer on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update a customer</h3>
+<p><code>POST /api/customer/edit</code></p>
+<p>All parameters are optional (except the customer <code>id</code>).</p>
+<ul>
+<li><strong>@param</strong> string  email          The email of the customer (optional)</li>
+<li><strong>@param</strong> string  firstname      The customer's first name</li>
+<li><strong>@param</strong> string  lastname       The customer's last name</li>
+<li><strong>@param</strong> string  birthday       Date of birth. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
+<li><strong>@param</strong> integer gender         One of three digits: <code>1</code> for male, <code>2</code> for female, <code>3</code> for other/undefined (optional)</li>
+<li><strong>@param</strong> string  address_1      First line of customer's address (optional)</li>
+<li><strong>@param</strong> string  address_2      Second line of customer's address (optional)</li>
+<li><strong>@param</strong> string  city           The customer's city (optional)</li>
+<li><strong>@param</strong> string  county         The customer's county (optional)</li>
+<li><strong>@param</strong> string  postcode       The customer's postcode (optional)</li>
+<li><strong>@param</strong> integer region_id      The ID of the <code>region</code> the customer lives in (optional)</li>
+<li><strong>@param</strong> integer country_id     The ID of the <code>country</code> the customer lives in (optional)</li>
+<li><strong>@param</strong> string  phone          A contact telephone number (optional)</li>
+<li><strong>@param</strong> integer certificate_id The ID of the <code>certificate</code> that the customer holds (optional)</li>
+<li><strong>@param</strong> string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                  Contains <code>status</code> and <code>id</code> of the newly created customer on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Countries &amp; Regions</h2>
+<h3>Recieve all countries and related regions</h3>
+<p><code>GET /api/country/all</code></p>
+<p>Use this API call to populate a country and (subsequent) region drop-down/select field.</p>
+<ul>
+<li><strong>@return</strong> JSON  An array of <code>country</code> objects with related <code>regions</code> arrays</li>
+</ul>
+<h2>Agencies &amp; Certificates</h2>
+<h3>Recieve all agencies and related certificates</h3>
+<p><code>GET /api/agency/all</code></p>
+<p>Use this API call to populate an agency and (subsequent) certificate drop-down/select field.</p>
+<ul>
+<li><strong>@return</strong> JSON  An array of <code>agency</code> objects with related <code>certificates</code> arrays</li>
+</ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>24<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> New <a href="#Customers">#Customers</a> section</li>
+<li><strong>@added</strong> The <a href="#Countries_&amp;_Regions">#Countries &amp; Regions</a> and <a href="#Agencies_&amp;_Certificates">#Agencies &amp; Certificates</a> sections</li>
+</ul>
 <h3>21<sup>st</sup> May 2014</h3>
 <ul>
 <li><strong>@added</strong> New <a href="#Agents">#Agents</a> section</li>
@@ -919,7 +1040,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <h3>13<sup>th</sup> March 2014</h3>
 <ul>
 <li><strong>@added</strong> Some new <code>/api/</code> calls</li>
-<li><strong>@edit</strong>  Marked old calls as <em>(deprecated)</em> </li>
+<li><strong>@edit</strong>  Marked old calls as <em>(deprecated)</em></li>
 </ul>
 <h3>12<sup>th</sup> March 2014</h3>
 <ul>
@@ -951,7 +1072,8 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <ul>
 <li><strong>@author</strong>  Soren Schwert</li>
 </ul>
-<p><script src="assets/zepto.min.js"></script></p>
+<p><a class="to-the-top" href="#Table_of_Contents">&uarr;</a>
+<script src="assets/zepto.min.js"></script></p>
 <script>
     contents = '';
     $('h2').each(function() {
@@ -970,6 +1092,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
       $self.append(' <a href="#' + name + '" title="Link to this method">#</a>');
     });
 </script>
+
 </body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

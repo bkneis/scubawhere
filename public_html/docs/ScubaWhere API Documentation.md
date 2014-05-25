@@ -25,7 +25,7 @@ All requests to the API, when coming from AJAX, are automatically sent and retur
 `POST /login`
 
 Logs the company in with their credentials.
-    
+
 - **@param** string  username
 - **@param** string  password
 - **@param** boolean remember
@@ -123,7 +123,7 @@ After login, all `POST` requests must contain the `_token` parameter to prevent 
 
 `POST /company/boats`
 
-Submit the whole form with the following structure: 
+Submit the whole form with the following structure:
 
 *The IDs 1 & 2 are just examples. Please use the real IDs that are retrieved from the API*
 
@@ -131,7 +131,7 @@ Submit the whole form with the following structure:
 	<input name="accommodations[1][description]" value="This room is brilliant!">
 	<input name="accommodations[2][name]" value="Double Room">
 	<input name="accommodations[2][description]" value="A room for two people">
-	
+
 	<input name="boats[1][name]" value="My Boat">
 	<input name="boats[1][description]" value="This is my first boat">
 	<input name="boats[1][capacity]" value="35">
@@ -163,7 +163,7 @@ When **creating new accommodations or boats**, simply make their ID a random str
 
 - **@param** integer id The ID of the wanted trip
 - &nbsp;
-- **@return** JSON      A `trip` object 
+- **@return** JSON      A `trip` object
 
 ### Retrieve all trips
 
@@ -270,7 +270,7 @@ Build your `area` array like so:
 		west   = bounds.getSouthWest().lng(),
 		south  = bounds.getSouthWest().lat(),
 		east   = bounds.getNorthEast().lng();
-	
+
 	var area   = [north, west, south, east];
 
 > #### Important
@@ -335,8 +335,8 @@ It is **not** recommended that the `trip_id` be *updated* (although the function
 
 > #### Important
 > The response *can* contain an `id` field. If it *does* it means that the ticket could not simply be updated because it has already been booked. Instead the old ticket has now been replaced with an updated ticket in the system. The returned `id` is the new ID of the ticket and must be used from now on!
-> 
-> The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: `trip_id`, `price` and `currency`  
+>
+> The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: `trip_id`, `price` and `currency`
 
 - **@param** integer id          The ID of the ticket to edit
 - **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
@@ -395,10 +395,10 @@ Delete an existing ticket.
 
 > #### Important
 > This function can have two different failure responses:
-> 
+>
 > - `HTTP 404` The session could not be found.
 > - `HTTP 406` Cannot delete session. It has already been booked!
-> 
+>
 > In the second case it is recommended to ask the user if he wants to [#deactivate the session](#Deactivate_a_session) instead.
 
 - **@param** integer id The ID of the session to delete
@@ -450,7 +450,7 @@ The HTML form must submit the following structure:
 	Fri <input type="checkbox" name="schedule[1][]" value="fri">
 	Sat <input type="checkbox" name="schedule[1][]" value="sat">
 	Sun <input type="checkbox" name="schedule[1][]" value="sun">
-	
+
 	<!-- Second Week -->
 	Mon <input type="checkbox" name="schedule[2][]" value="mon">
 	Tue <input type="checkbox" name="schedule[2][]" value="tue">
@@ -459,7 +459,7 @@ The HTML form must submit the following structure:
 	Fri <input type="checkbox" name="schedule[2][]" value="fri">
 	Sat <input type="checkbox" name="schedule[2][]" value="sat">
 	Sun <input type="checkbox" name="schedule[2][]" value="sun">
-	
+
 	<!-- Third Week (if needed) -->
 	...
 
@@ -529,15 +529,114 @@ All parameters are optional (except the agent `id`).
 - &nbsp;
 - **@return** JSON                   Contains `status` on success, `errors` on failure
 
+## Customers
 
-### Delete an agent
+> #### Important
+> A dive center can only view, access and edit customers that the dive center created itself.
 
-*Deleting an agent is currently not supported, sorry.*
+### Retrieve a specific customer
+
+`GET /api/customer`
+
+- **@param** integer id  The ID of the wanted customer
+- &nbsp;
+- **@return** JSON       A `customer` object
+
+### Retrieve all customers
+
+`GET /api/customer/all`
+
+- **@return** JSON       An array of `customer` objects
+
+### Filter customers by email address
+
+`GET /api/customer/filter-email`
+
+This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 `customer` objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length >= 3).
+
+- **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
+- &nbsp;
+- **@return** JSON          An array of `customer` objects
+
+### Create a customer
+
+`POST /api/customer/add`
+
+Creates a new customer. The only *required* fields are `firstname` and `lastname`.
+
+> #### Important
+> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address assigned to it. This is validated when the booking is finalised.
+
+- **@param** string  email          The email of the customer (optional)
+- **@param** string  firstname      The customer's first name
+- **@param** string  lastname       The customer's last name
+- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
+- **@param** string  address_1      First line of customer's address (optional)
+- **@param** string  address_2      Second line of customer's address (optional)
+- **@param** string  city           The customer's city (optional)
+- **@param** string  county         The customer's county (optional)
+- **@param** string  postcode       The customer's postcode (optional)
+- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
+- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
+- **@param** string  phone          A contact telephone number (optional)
+- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- &nbsp;
+- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
+
+### Update a customer
+
+`POST /api/customer/edit`
+
+All parameters are optional (except the customer `id`).
+
+- **@param** string  email          The email of the customer (optional)
+- **@param** string  firstname      The customer's first name
+- **@param** string  lastname       The customer's last name
+- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
+- **@param** string  address_1      First line of customer's address (optional)
+- **@param** string  address_2      Second line of customer's address (optional)
+- **@param** string  city           The customer's city (optional)
+- **@param** string  county         The customer's county (optional)
+- **@param** string  postcode       The customer's postcode (optional)
+- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
+- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
+- **@param** string  phone          A contact telephone number (optional)
+- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- &nbsp;
+- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
+
+## Countries & Regions
+
+### Recieve all countries and related regions
+
+`GET /api/country/all`
+
+Use this API call to populate a country and (subsequent) region drop-down/select field.
+
+- **@return** JSON  An array of `country` objects with related `regions` arrays
+
+## Agencies & Certificates
+
+### Recieve all agencies and related certificates
+
+`GET /api/agency/all`
+
+Use this API call to populate an agency and (subsequent) certificate drop-down/select field.
+
+- **@return** JSON  An array of `agency` objects with related `certificates` arrays
 
 
 &nbsp;
 
 ## Changelog
+
+### 24<sup>th</sup> May 2014
+- **@added** New [#Customers](#Customers) section
+- **@added** The [#Countries & Regions](#Countries_&_Regions) and [#Agencies & Certificates](#Agencies_&_Certificates) sections
 
 ### 21<sup>st</sup> May 2014
 - **@added** New [#Agents](#Agents) section
@@ -569,7 +668,7 @@ All parameters are optional (except the agent `id`).
 
 ### 13<sup>th</sup> March 2014
 - **@added** Some new `/api/` calls
-- **@edit**  Marked old calls as *(deprecated)* 
+- **@edit**  Marked old calls as *(deprecated)*
 
 ### 12<sup>th</sup> March 2014
 - **@added** Internal links in the [#Changelog](#Changelog)
@@ -600,6 +699,7 @@ All parameters are optional (except the agent `id`).
 
 - **@author**  Soren Schwert
 
+<a class="to-the-top" href="#Table_of_Contents">&uarr;</a>
 <script src="assets/zepto.min.js"></script>
 <script>
     contents = '';

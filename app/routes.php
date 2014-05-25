@@ -71,13 +71,19 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('company', 'CompanyController');
 
-	Route::controller('api/trip', 'TripController');
+	Route::controller('api/agency', 'AgencyController');
 
-	Route::controller('api/ticket', 'TicketController');
+	Route::controller('api/agent', 'AgentController');
+
+	Route::controller('api/country', 'CountryController');
+
+	Route::controller('api/customer', 'CustomerController');
 
 	Route::controller('api/session', 'SessionController');
 
+	Route::controller('api/ticket', 'TicketController');
+
 	Route::controller('api/timetable', 'TimetableController');
 
-	Route::controller('api/agent', 'AgentController');
+	Route::controller('api/trip', 'TripController');
 });
