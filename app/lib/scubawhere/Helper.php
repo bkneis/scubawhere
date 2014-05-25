@@ -17,14 +17,19 @@ class Helper
 		return Purifier::clean($string);
 	}
 
-	public static function rand_string($length) {
+	public static function booking_reference_number() {
 
-		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$length = 4;
+
+		// $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+		// Only use uppercase letters for clarity
+		$chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 		$size = strlen($chars);
 
 		for($i = 0; $i < $length; $i++) {
-			$string .= $chars[ rand(0, $size - 1) ];
+			$string .= $chars[ mt_rand(0, $size - 1) ];
 		}
 
 		return $string;

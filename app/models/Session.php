@@ -4,6 +4,9 @@ use LaravelBook\Ardent\Ardent;
 
 class Session extends Ardent {
 	protected $guarded = array('id', 'trip_id', 'created_at', 'updated_at', 'deleted_at');
+	protected $fillable = array('start', 'boat_id', 'timetable_id');
+
+	protected $appends = array('capacity');
 
 	protected $softDelete = true;
 
@@ -16,6 +19,11 @@ class Session extends Ardent {
 	public function beforeSave()
 	{
 		//
+	}
+
+	public function getCapacityAttribute()
+	{
+		return array( $this->bookings()->count(), $this->boat()->capacity );
 	}
 
 	public function trip()

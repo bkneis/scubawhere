@@ -21,7 +21,7 @@ class ExtentBookingsTable extends Migration {
 			$table->dropColumn('created_at', 'updated_at', 'manual', 'paid');
 
 			$table->integer('agent_id')->unsigned()->nullable()->default(null)->after('customer_id');
-			$table->string('source', 10)->after('agent_id')->nullable()->default(null); // Either 'telephone', 'email', 'facetoface' or 'frontend'
+			$table->string('source', 10)->after('agent_id')->nullable()->default(null); // Either 'telephone', 'email', 'facetoface' or 'frontend' (also possible: 'widget', 'other')
 
 			$table->decimal('paid_cash', 10, 2)->default(0);
 			$table->decimal('paid_creditcard', 10, 2)->default(0);

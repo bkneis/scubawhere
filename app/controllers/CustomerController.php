@@ -27,14 +27,6 @@ class CustomerController extends Controller {
 		return Auth::user()->customers()->get();
 	}
 
-	public function getFilterEmail()
-	{
-		if( strlen( Input::get('search') ) >= 3 )
-			return Auth::user()->customers()->where('column', 'LIKE', '%'.Input::get('search').'%')->take(10)->get();
-		else
-			return Response::json( array('errors' => array('The search term is too short. Must be at least 3 characters.')), 400 ); // 400 Bad Request
-	}
-
 	public function postAdd()
 	{
 		$data = Input::only(

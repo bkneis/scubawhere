@@ -9,7 +9,7 @@ class Ticket extends Ardent {
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => 'required',
-		'price'       => 'required|numeric',
+		'price'       => 'required|numeric|min:0',
 		'currency'    => 'required|alpha|size:3'
 	);
 
