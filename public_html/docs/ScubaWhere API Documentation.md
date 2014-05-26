@@ -677,6 +677,19 @@ Detach an attached customer from a booking. (To attach a customer, see [#Attach 
 - &nbsp;
 - **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
 
+### Validate a booking
+
+`GET /api/booking/validate`
+
+Return an array containing boolean values for various important tests.
+
+> #### Available tests
+> **customer**: Tests if the lead customer fulfills the requirements (has an email)
+
+- **@param**  integer booking_id The ID of the booking to be checked
+- &nbsp;
+- **@return** JSON               An array containing the available keys and boolean values
+
 ## Search
 
 ### Search for customers by email 
@@ -707,6 +720,7 @@ All parameters are **optional**.
 ### 26<sup>th</sup> May 2014
 - **@added** New [#Bookings](#Bookings) section
 - **@added** New [#Search](#Search) section
+- **@added** New [#Validate a booking](#Validate_a_booking) entry
 - **@edit**  Moved [#Search for customers by email](#Search_for_customer_by_email) from [#Customers](#Customers) to [#Search](#Search)
 
 ### 24<sup>th</sup> May 2014

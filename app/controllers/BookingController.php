@@ -31,9 +31,9 @@ class BookingController extends Controller {
 	{
 		$data = Input::only('agent_id', 'source');
 
-		// Check if the agent belongs to the signed-in company
 		if( $data['agent_id'] )
 		{
+			// Check if the agent belongs to the signed-in company
 			try
 			{
 				Auth::user()->agents()->findOrFail( $data['agent_id'] );
@@ -126,6 +126,23 @@ class BookingController extends Controller {
 		$booking->customers()->detach( Input::get('customer_id'));
 
 		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()), 200 ); // 200 OK
+	}
+
+	public function getValidate()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		return array(
+			'customer' => $booking->costumers()->first()->email != ''
+		);
 	}
 
 	/*
