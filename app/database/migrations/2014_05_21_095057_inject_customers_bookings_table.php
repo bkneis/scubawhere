@@ -20,7 +20,7 @@ class InjectCustomersBookingsTable extends Migration {
 
 		Schema::create('booking_customer', function($table)
 		{
-			$table->engine('InnoDB');
+			$table->engine = 'InnoDB';
 
 			$table->integer('booking_id')->unsigned();
 			$table->integer('customer_id')->unsigned();
