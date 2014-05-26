@@ -6,7 +6,7 @@
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
-/* Test file permissions after auto-deployment
+/*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
 |--------------------------------------------------------------------------
