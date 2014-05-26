@@ -9,8 +9,8 @@
 
 Documentation for the ScubaWhere.com API
 
-- **@version** 0.7
-- **@date**    2014/05/21 - 14:00
+- **@version** 0.9
+- **@date**    2014/05/26 - 1:15
 
 > ### Important
 > On **success**, the response contains either the requested information, the string `status` or (for calls that create something) `status` and `id`.
@@ -550,13 +550,7 @@ All parameters are optional (except the agent `id`).
 
 ### Filter customers by email address
 
-`GET /api/customer/filter-email`
-
-This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 `customer` objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length >= 3).
-
-- **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
-- &nbsp;
-- **@return** JSON          An array of `customer` objects
+The search functionality has been moved to [#Search for customers by email](#Search_for_customer_by_email).
 
 ### Create a customer
 
@@ -565,7 +559,7 @@ This can be used to populate a drop-down list of suggestions when searching for 
 Creates a new customer. The only *required* fields are `firstname` and `lastname`.
 
 > #### Important
-> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address assigned to it. This is validated when the booking is finalised.
+> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with [#Validate booking](#Validate_booking).)
 
 - **@param** string  email          The email of the customer (optional)
 - **@param** string  firstname      The customer's first name
@@ -629,10 +623,91 @@ Use this API call to populate an agency and (subsequent) certificate drop-down/s
 
 - **@return** JSON  An array of `agency` objects with related `certificates` arrays
 
+## Bookings
+
+The ideal booking process is throughoutly documented in a [Facebook Document](https://www.facebook.com/notes/scuba-where/the-booking-process-manifest/498190260280790).
+
+### Retrieve a specific booking
+
+`GET /api/booking`
+
+- **@param** integer id  The ID of the wanted booking
+- &nbsp;
+- **@return** JSON       A `booking` object
+
+### Retrieve all bookings
+
+`GET /api/booking/all`
+
+- **@return** JSON       An array of `booking` objects
+
+### Start a booking
+
+`POST /api/booking/init`
+
+> #### Important
+> When an `agent_id` is supplied, `source` is discarded.
+
+- **@param** integer agent_id The ID of the agent that makes the booking
+- **@param** string  source   The source of a non-agent booking (MUST be one of the following: telephone, email, facetoface
+- &nbsp;
+- **@return** JSON            Contains `status` and `id` & `reference` of the newly created booking on success, `errors` on failure
+
+*Please display the current booking's `reference` number prominently in the interface whenever a booking is made or edited!*
+
+### Attach customer to booking
+
+`POST /api/booking/attach-customer`
+
+Attach an existing customer to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
+
+- **@param** integer booking_id  The ID of the `booking` that the customer should be added to (most likeley the ID returned in [#Start a booking](#Start_a_booking)
+- **@param** integer customer_id The ID of the customer to attach
+- &nbsp;
+- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
+
+### Detach customer from booking
+
+`POST /api/booking/detach-customer`
+
+Detach an attached customer from a booking. (To attach a customer, see [#Attach customer to booking](#Attach_customer_to_booking).)
+
+- **@param** integer booking_id  The ID of the `booking` that the customer should be removed from (most likeley the ID returned in [#Start a booking](#Start_a_booking)
+- **@param** integer customer_id The ID of the customer to detach
+- &nbsp;
+- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
+
+## Search
+
+### Search for customers by email 
+
+`GET /api/search/customers`
+
+This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 `customer` objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length >= 3).
+
+- **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
+- &nbsp;
+- **@return** JSON          An array of `customer` objects
+
+### Search for sessions by filter
+
+All parameters are **optional**.
+
+- **@param** string  after   A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now)
+- **@param** string  before  A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now + 1 month)
+- **@param** integer trip_id The ID of the `trip` that the search should be limited to (default: null, meaning *all* trips)
+- &nbsp;
+- **@return** JSON           An array of `session` objects, complete with the connected `trip`, `trip->tickets` and a `capacity` array (`[used, available]`)
+
 
 &nbsp;
 
 ## Changelog
+
+### 26<sup>th</sup> May 2014
+- **@added** New [#Bookings](#Bookings) section
+- **@added** New [#Search](#Search) section
+- **@edit**  Moved [#Search for customers by email](#Search_for_customer_by_email) from [#Customers](#Customers) to [#Search](#Search)
 
 ### 24<sup>th</sup> May 2014
 - **@added** New [#Customers](#Customers) section
@@ -699,7 +774,7 @@ Use this API call to populate an agency and (subsequent) certificate drop-down/s
 
 - **@author**  Soren Schwert
 
-<a class="to-the-top" href="#Table_of_Contents">&uarr;</a>
+<a class="to-the-top" href="#Table_of_Contents" title="Go up to table of contents">&uarr;</a>
 <script src="assets/zepto.min.js"></script>
 <script>
     contents = '';

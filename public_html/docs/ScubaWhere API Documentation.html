@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
 <head>
 <title>ScubaWhere API Documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -459,8 +458,8 @@ pre {
 </div>
 <p>Documentation for the ScubaWhere.com API</p>
 <ul>
-<li><strong>@version</strong> 0.7</li>
-<li><strong>@date</strong>    2014/05/21 - 14:00</li>
+<li><strong>@version</strong> 0.9</li>
+<li><strong>@date</strong>    2014/05/26 - 1:15</li>
 </ul>
 <blockquote>
 <h3>Important</h3>
@@ -925,19 +924,13 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li><strong>@return</strong> JSON       An array of <code>customer</code> objects</li>
 </ul>
 <h3>Filter customers by email address</h3>
-<p><code>GET /api/customer/filter-email</code></p>
-<p>This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 <code>customer</code> objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length &gt;= 3).</p>
-<ul>
-<li><strong>@param</strong> string search  String to be searched for in the available email addresses (min length: 3 characters)</li>
-<li>&nbsp;</li>
-<li><strong>@return</strong> JSON          An array of <code>customer</code> objects</li>
-</ul>
+<p>The search functionality has been moved to <a href="#Search_for_customer_by_email">#Search for customers by email</a>.</p>
 <h3>Create a customer</h3>
 <p><code>POST /api/customer/add</code></p>
 <p>Creates a new customer. The only <em>required</em> fields are <code>firstname</code> and <code>lastname</code>.</p>
 <blockquote>
 <h4>Important</h4>
-<p>Altough nearly all customer fields are optional, a booking does always <strong>need</strong> at least one customer with an email address assigned to it. This is validated when the booking is finalised.</p>
+<p>Altough nearly all customer fields are optional, a booking does always <strong>need</strong> at least one customer with an email address assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with <a href="#Validate_booking">#Validate booking</a>.)</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong> string  email          The email of the customer (optional)</li>
@@ -994,8 +987,77 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <ul>
 <li><strong>@return</strong> JSON  An array of <code>agency</code> objects with related <code>certificates</code> arrays</li>
 </ul>
+<h2>Bookings</h2>
+<p>The ideal booking process is throughoutly documented in a <a href="https://www.facebook.com/notes/scuba-where/the-booking-process-manifest/498190260280790">Facebook Document</a>.</p>
+<h3>Retrieve a specific booking</h3>
+<p><code>GET /api/booking</code></p>
+<ul>
+<li><strong>@param</strong> integer id  The ID of the wanted booking</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON       A <code>booking</code> object</li>
+</ul>
+<h3>Retrieve all bookings</h3>
+<p><code>GET /api/booking/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON       An array of <code>booking</code> objects</li>
+</ul>
+<h3>Start a booking</h3>
+<p><code>POST /api/booking/init</code></p>
+<blockquote>
+<h4>Important</h4>
+<p>When an <code>agent_id</code> is supplied, <code>source</code> is discarded.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer agent_id The ID of the agent that makes the booking</li>
+<li><strong>@param</strong> string  source   The source of a non-agent booking (MUST be one of the following: telephone, email, facetoface</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON            Contains <code>status</code> and <code>id</code> &amp; <code>reference</code> of the newly created booking on success, <code>errors</code> on failure</li>
+</ul>
+<p><em>Please display the current booking's <code>reference</code> number prominently in the interface whenever a booking is made or edited!</em></p>
+<h3>Attach customer to booking</h3>
+<p><code>POST /api/booking/attach-customer</code></p>
+<p>Attach an existing customer to a booking. (To create a customer, see <a href="#Create_a_customer">#Create a customer</a>.)</p>
+<ul>
+<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the customer should be added to (most likeley the ID returned in <a href="#Start_a_booking">#Start a booking</a></li>
+<li><strong>@param</strong> integer customer_id The ID of the customer to attach</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Detach customer from booking</h3>
+<p><code>POST /api/booking/detach-customer</code></p>
+<p>Detach an attached customer from a booking. (To attach a customer, see <a href="#Attach_customer_to_booking">#Attach customer to booking</a>.)</p>
+<ul>
+<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the customer should be removed from (most likeley the ID returned in <a href="#Start_a_booking">#Start a booking</a></li>
+<li><strong>@param</strong> integer customer_id The ID of the customer to detach</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Search</h2>
+<h3>Search for customers by email</h3>
+<p><code>GET /api/search/customers</code></p>
+<p>This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 <code>customer</code> objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length &gt;= 3).</p>
+<ul>
+<li><strong>@param</strong> string search  String to be searched for in the available email addresses (min length: 3 characters)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON          An array of <code>customer</code> objects</li>
+</ul>
+<h3>Search for sessions by filter</h3>
+<p>All parameters are <strong>optional</strong>.</p>
+<ul>
+<li><strong>@param</strong> string  after   A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now)</li>
+<li><strong>@param</strong> string  before  A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now + 1 month)</li>
+<li><strong>@param</strong> integer trip_id The ID of the <code>trip</code> that the search should be limited to (default: null, meaning <em>all</em> trips)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON           An array of <code>session</code> objects, complete with the connected <code>trip</code>, <code>trip-&gt;tickets</code> and a <code>capacity</code> array (<code>[used, available]</code>)</li>
+</ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>26<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> New <a href="#Bookings">#Bookings</a> section</li>
+<li><strong>@added</strong> New <a href="#Search">#Search</a> section</li>
+<li><strong>@edit</strong>  Moved <a href="#Search_for_customer_by_email">#Search for customers by email</a> from <a href="#Customers">#Customers</a> to <a href="#Search">#Search</a></li>
+</ul>
 <h3>24<sup>th</sup> May 2014</h3>
 <ul>
 <li><strong>@added</strong> New <a href="#Customers">#Customers</a> section</li>
@@ -1072,7 +1134,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <ul>
 <li><strong>@author</strong>  Soren Schwert</li>
 </ul>
-<p><a class="to-the-top" href="#Table_of_Contents">&uarr;</a>
+<p><a class="to-the-top" href="#Table_of_Contents" title="Go up to table of contents">&uarr;</a>
 <script src="assets/zepto.min.js"></script></p>
 <script>
     contents = '';

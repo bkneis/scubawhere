@@ -32,14 +32,19 @@ class BookingController extends Controller {
 		$data = Input::only('agent_id', 'source');
 
 		// Check if the agent belongs to the signed-in company
-		try
+		if( $data['agent_id'] )
 		{
-			if( !Input::get('agent_id') ) throw new ModelNotFoundException();
-			Auth::user()->agents()->findOrFail( Input::get('agent_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The agent could not be found.')), 404 ); // 404 Not Found
+			try
+			{
+				Auth::user()->agents()->findOrFail( $data['agent_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The agent could not be found.')), 404 ); // 404 Not Found
+			}
+
+			// If a valid agent_id is supplied, discard source
+			$data['source'] = null;
 		}
 
 		$booking = new Booking($data);

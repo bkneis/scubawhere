@@ -24,7 +24,7 @@ class Booking extends Ardent {
 
 	public static $rules = array(
 		'agent_id'          => 'integer|exists:agents,id|required_without:source',
-		'source'            => 'alpha|required_without:agent_id|in:telephone,email,facetoface,frontend,widget,other',
+		'source'            => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		// 'price'          => 'numeric|min:0',
 		'currency'          => 'alpha|size:3',
 		'discount'          => 'numeric|min:0',

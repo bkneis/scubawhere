@@ -8,16 +8,30 @@ class SearchController extends Controller {
 	{
 		$data = Input::only('after', 'before', 'trip_id');
 
+		// Check the integrity of the supplied parameters
+		$validator = Validator::make( $data, array(
+			'after'   => 'date',
+			'before'  => 'date',
+			'trip_id' => 'integer|min:1' // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
+		) );
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+
+		// Tranform parameter strings into DateTime objects
+		$data['after']  = new DateTime( $data['after'] );
+		$data['before'] = new DateTime( $data['before'] );
+
 		$options = array(
-			'after' => new DateTime(),
-			'before' => new DateTime('+ 1 month'),
+			'after'   => new DateTime(),
+			'before'  => new DateTime('+ 1 month'),
 			'trip_id' => null
 		)
 
 		// Join the default options and the submitted filter parameters
 		$options = array_merge($options, $data);
 
-		$sessions = Auth::user()->sessions()
+		return Auth::user()->sessions()
 			->where('start', '>=', $options['after'])
 			->where('start', '<=', $options['before'])
 			->where(function($query) use ($options)
@@ -27,11 +41,9 @@ class SearchController extends Controller {
 				})
 			->with('trip', 'trip.tickets')
 			->take(25)->get();
-
-		return $sessions;
 	}
 
-	public function getCustomer()
+	public function getCustomers()
 	{
 		$options = Input::only('email');
 
