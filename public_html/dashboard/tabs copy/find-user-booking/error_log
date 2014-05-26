@@ -1,0 +1,42 @@
+[12-Dec-2013 15:36:04] PHP Fatal error:  Call to undefined function  get_bookings_by_company() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 3
+[12-Dec-2013 16:00:52] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 18
+[12-Dec-2013 16:05:50] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 18
+[12-Dec-2013 16:05:57] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 18
+[12-Dec-2013 16:22:55] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 18
+[12-Dec-2013 16:45:37] PHP Fatal error:  Call to undefined function  printr() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 27
+[12-Dec-2013 17:16:03] PHP Parse error:  syntax error, unexpected T_FUNCTION in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 45
+[12-Dec-2013 22:19:20] PHP Warning:  reset() [<a href='function.reset'>function.reset</a>]: Passed variable is not an array or object in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 44
+[12-Dec-2013 22:19:20] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 45
+[12-Dec-2013 22:19:27] PHP Warning:  reset() [<a href='function.reset'>function.reset</a>]: Passed variable is not an array or object in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 44
+[12-Dec-2013 22:19:27] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 45
+[12-Dec-2013 22:21:31] PHP Warning:  reset() [<a href='function.reset'>function.reset</a>]: Passed variable is not an array or object in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 44
+[12-Dec-2013 22:21:31] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 45
+[12-Dec-2013 23:45:36] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[12-Dec-2013 23:45:38] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[12-Dec-2013 23:45:39] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[12-Dec-2013 23:46:37] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[12-Dec-2013 23:46:39] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 48
+[12-Dec-2013 23:46:52] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[13-Dec-2013 16:32:12] PHP Fatal error:  Call to undefined function  get_country_constant_by_id() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/booking-details.php on line 34
+[13-Dec-2013 16:32:14] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[13-Dec-2013 17:11:16] PHP Fatal error:  Call to undefined function  get_certificate_constant_by_id() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/booking-details.php on line 39
+[13-Dec-2013 22:52:54] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[13-Dec-2013 22:54:56] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[13-Dec-2013 23:14:59] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[16-Dec-2013 16:59:30] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[17-Dec-2013 12:42:21] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[17-Dec-2013 17:28:36] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[17-Dec-2013 17:28:42] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[18-Dec-2013 22:30:30] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[18-Dec-2013 22:30:33] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[12-Jan-2014 11:52:24] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[28-Jan-2014 14:32:51] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-bookings/do.php on line 19
+[30-Jan-2014 13:30:25] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 15:34:26] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 15:34:26] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 16:25:33] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 16:25:33] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 16:25:47] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 16:25:49] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[03-Feb-2014 16:32:31] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19
+[04-Feb-2014 00:52:31] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/find-user-booking/do.php on line 19

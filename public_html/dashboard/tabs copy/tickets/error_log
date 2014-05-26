@@ -1,0 +1,2 @@
+[11-Feb-2014 15:00:45] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/tickets/add-new.php on line 50
+[11-Feb-2014 16:16:12] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/tickets/edit.php on line 29

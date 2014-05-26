@@ -1,6 +1,5 @@
 $(function() {
 	
-	
 		/* initialize the external events
 		-----------------------------------------------------------------*/
 	
@@ -107,12 +106,15 @@ $(function() {
 				}
 				
 			}
+			
 		});
 		
 		/*	 HACK	 */
         setTimeout(function() {
 			$('#calendar').fullCalendar( 'today' );
-		}, 100);	 
+		}, 100);
+		
+			 
 		});
 		
 
@@ -137,5 +139,3 @@ $(function() {
 	            alert("Overlap");
 	       }                  
 	  }
-
-

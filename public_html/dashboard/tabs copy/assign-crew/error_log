@@ -1,0 +1,5 @@
+[17-Nov-2013 16:31:09] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 14
+[17-Nov-2013 16:38:21] PHP Parse error:  syntax error, unexpected '<' in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 18
+[17-Nov-2013 16:38:47] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 22
+[17-Nov-2013 16:38:47] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 64
+[17-Nov-2013 21:27:20] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/do.php on line 20

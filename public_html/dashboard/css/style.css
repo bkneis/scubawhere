@@ -8,6 +8,7 @@ DARK GREY - #4f4f4f
 FAINT GREY - #ebebeb
 LIGHT GREY - #c8c8c8
 HELPER YELLO - #fff7cb
+GREEN - #4EE87D
 RED - #FF7163
 PURPLE - #6D6A99
 */
@@ -72,13 +73,6 @@ body{ background-color: #34495e; }
 	background-color: #fff;
 }
 
-.yellow-helper{
-	padding: 10px;
-	background-color: #fff7c6;
-	font-size: 15px;
-	margin-bottom: 15px;
-}
-
 .loading-wrap{
 	width: 100%;
 	text-align: center;
@@ -91,6 +85,31 @@ body{ background-color: #34495e; }
 	text-overflow: ellipsis; 
 	word-break: break-all; 
 	word-wrap: break-word; 
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HELPERS */
+.yellow-helper{
+	padding: 10px;
+	border-left: 4px solid #fff7c7;
+	background-color: rgba(255,247,199,0.6);
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+.red-helper{
+	padding: 10px;
+	border-left: 4px solid #FF7163;
+	background-color: rgba(255,112,99,0.3);
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+.green-helper{
+	padding: 10px;
+	border-left: 4px solid #4EE87D;
+	background-color: rgba(79,232,125,0.2);
+	font-size: 15px;
+	margin-bottom: 15px;
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UI */
@@ -115,12 +134,7 @@ body{ background-color: #34495e; }
 
 .hidden{ display: none }
 
-.expand-box-arrow{
-	background-color: rgba(0,0,0,0.15);
-	padding: 5px 10px;
-	margin-top: -5px;
-}
-.expand-box{cursor: pointer}
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ switch */
 /* relies on */
@@ -271,6 +285,35 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 */
 .row{ font-size: 0px; }
 
+.box33{
+	vertical-align: top;
+	font-size: 13px;
+	width: calc(33% - 8px);
+	display: inline-block;
+	margin-bottom: 15px;
+	background-color: #fff;
+	
+}
+
+.box33:first-child,
+.box33:nth-child(3n+1){
+	margin-right: 10px;
+	width: calc(33% - 6px);
+}
+
+.box33:nth-child(3n+0){
+	margin-left: 10px;
+	width: calc(33% - 6px);
+}
+
+.box50 > label{
+	color: #ffffff;
+	display: block;
+	padding: 10px;
+	font-size: 17px;
+	border-radius: 0px;
+}
+
 .box50{
 	vertical-align: top;
 	font-size: 13px;
@@ -295,6 +338,13 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 /* responsive boxes */
 @media all and (max-width: 1175px) {
 	.box50{width: 100%; display: block;}
+	*.box33{width: 100%; display: block; margin: auto 0px;}
+	
+	.box33:first-child,
+	.box33:nth-child(3n+1),
+	.box33:nth-child(3n+0){
+		margin: auto 0px;
+	}
 }
 
 .box100{
@@ -303,6 +353,7 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 	overflow: hidden;
 	min-height: 40px;
 	height: auto;
+	font-size: 13px;
 }
 
 .box100 > label{
@@ -326,10 +377,15 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 	color: #fff;
 }
 
-.expand-box-arrow{
+span.box-tool{
 	float: right;
 	cursor: pointer;
+	padding: 5px 10px;
+	margin-top: -5px;
 }
+
+.expand-box-arrow{background-color: rgba(0,0,0,0.15)}
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~box foot form */
 	.box-foot > span{
@@ -417,60 +473,33 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 /*					Create Trip
 *******************************
 */
-#map_canvas{
-	height: 400px;
+#duration-readable{
+	width: 150px;
+	min-height: 10px;
+	padding: 7px 1px;
+	float: left;
 }
 
-#location_fields{
-	
+#remove24{
+	float: none;
 }
 
-#saved-locations{
-	min-height: 200px;
+#markers-list{}
+
+#locations-list{
+	height: 367px;
+	overflow: scroll;
 }
 
-.loc-row{
-	margin-bottom: 10px;
+#trip-types{
+	list-style: none;
 }
 
-.loc-row label{
-	width: 100px;
-	display: block;
-	font-size: 15px;
-}
+/*					Locations
+*******************************
+*/
 
-.loc-row h5{
-	font-size: 18px;
-	margin: 5px 0px;
-	padding: 0px;
-	font-weight: 300;
-	border-left: 2px solid #FF7163;
-	padding-left: 10px
-}
 
-.loc-row .bttn{
-	display: block;
-	margin-top: 3px;
-}
-
-.single-saved-location{
-	font-size: 13px;
-	border-left: 5px solid #4f4f4f;
-	padding-left: 10px;
-	margin-bottom: 5px;
-}
-
-.single-saved-location > span{
-	display:  table-row;
-}
-
-.del-loc{
-	float: right;
-	color: 	#FF7163;
-	font-size: 16px;
-	font-weight: 600;
-	
-}
 
 /*						BOATS
 *******************************
@@ -526,6 +555,10 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 	display: block;
 }
 
+.boat-wrap > .padder > ul > li > .del-boat-room{
+	display: inline-block;
+}
+
 #newBoat-wrap{
 	background-color: #fff;
 	margin-bottom: 20px;
@@ -566,4 +599,3 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
-

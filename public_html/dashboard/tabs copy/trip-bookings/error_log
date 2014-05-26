@@ -1,0 +1,14 @@
+[17-Nov-2013 16:31:09] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 14
+[17-Nov-2013 16:38:21] PHP Parse error:  syntax error, unexpected '<' in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 18
+[17-Nov-2013 16:38:47] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 22
+[17-Nov-2013 16:38:47] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/tickets.php on line 64
+[17-Nov-2013 21:27:20] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/enter-booking/do.php on line 20
+[02-Dec-2013 20:27:54] PHP Parse error:  syntax error, unexpected '<' in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/tickets.php on line 48
+[02-Dec-2013 20:28:55] PHP Parse error:  syntax error, unexpected '<' in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/tickets.php on line 48
+[11-Jan-2014 18:29:02] PHP Fatal error:  Call to undefined function  get_session_tickets_by_session() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 13
+[11-Jan-2014 18:48:11] PHP Fatal error:  Call to undefined function  printr() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 51
+[11-Jan-2014 21:54:03] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 24
+[11-Jan-2014 21:54:03] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 24
+[11-Jan-2014 21:54:03] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 55
+[11-Jan-2014 21:55:51] PHP Warning:  Invalid argument supplied for foreach() in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 60
+[11-Jan-2014 22:45:46] PHP Parse error:  syntax error, unexpected $end in /home/thomaspa/public_html/scubawhere.com/dive-admin/tabs/bookings/bookings.php on line 104

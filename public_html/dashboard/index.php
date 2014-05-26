@@ -159,7 +159,7 @@
 					</div>
 
 					<ul>
-						<li data-load="tabs/reviews/index.php">Recent Reviews</li>
+						<li data-load="reviews">Recent Reviews</li>
 					</ul>
 				</li>
 

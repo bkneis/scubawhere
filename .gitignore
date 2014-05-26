@@ -3,3 +3,5 @@ ftpsync.settings
 root.sublime-project
 root.sublime-workspace
 public_html/blog/
+.ftpquota
+app/storage/

@@ -49,6 +49,4 @@
 
 		<div style='clear:both'></div>
 </div>
-
-
-<script src="tabs/activate-trip/js/script.js"></script>
+<script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>

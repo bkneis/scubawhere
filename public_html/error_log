@@ -113,3 +113,32 @@
 [08-May-2014 17:00:11 Europe/London] PHP Fatal error:  Class Company contains 3 abstract methods and must therefore be declared abstract or implement the remaining methods (Illuminate\Auth\UserInterface::getRememberToken, Illuminate\Auth\UserInterface::setRememberToken, Illuminate\Auth\UserInterface::getRememberTokenName) in /home/scubawhe/app/models/Company.php on line 169
 [08-May-2014 17:02:59 Europe/London] PHP Fatal error:  Class Company contains 3 abstract methods and must therefore be declared abstract or implement the remaining methods (Illuminate\Auth\UserInterface::getRememberToken, Illuminate\Auth\UserInterface::setRememberToken, Illuminate\Auth\UserInterface::getRememberTokenName) in /home/scubawhe/app/models/Company.php on line 169
 [08-May-2014 17:07:08 Europe/London] PHP Fatal error:  Class Company contains 3 abstract methods and must therefore be declared abstract or implement the remaining methods (Illuminate\Auth\UserInterface::getRememberToken, Illuminate\Auth\UserInterface::setRememberToken, Illuminate\Auth\UserInterface::getRememberTokenName) in /home/scubawhe/app/models/Company.php on line 169
+[21-May-2014 11:41:28 Europe/London] PHP Fatal error:  Call to undefined method Mews\Purifier\Facades\Purifier::clean() in /home/scubawhe/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php on line 208
+[21-May-2014 11:44:09 Europe/London] PHP Fatal error:  Cannot break/continue 1 level in /home/scubawhe/app/controllers/TestController.php on line 47
+[21-May-2014 13:59:53 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:53 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:53 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:53 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:54 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:54 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:55 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 13:59:55 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 14:00:05 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 14:00:28 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 14:22:34 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 14:22:51 Europe/London] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/scubawhe/app/controllers/AgentController.php on line 89
+[21-May-2014 15:24:19 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:24:21 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:24:24 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:24:25 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:24:33 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:24:58 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 15:25:50 Europe/London] PHP Fatal error:  Class 'ScubaWhere\Purifier' not found in /home/scubawhe/app/lib/scubawhere/Helper.php on line 15
+[21-May-2014 16:29:51 Europe/London] PHP Fatal error:  Call to undefined function emtpy() in /home/scubawhe/app/controllers/TicketController.php on line 57
+[24-May-2014 18:32:35 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:32:35 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:32:37 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:32:39 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:32:44 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:32:45 Europe/London] PHP Fatal error:  Cannot redeclare class AgentController in /home/scubawhe/app/controllers/AgencyController.php on line 29
+[24-May-2014 18:34:30 Europe/London] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/scubawhe/app/models/Agency.php on line 12
