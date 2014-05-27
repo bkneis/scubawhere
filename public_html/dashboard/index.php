@@ -1,11 +1,15 @@
 <?php
+
 	session_start();
 	if(!$_COOKIE["scubawhere_session"]){
-		header("Location: /dashboard/login");
+		header("Location: /dashboard/login/");
 		exit();
 	}
 
-	$ch = curl_init( 'localhost/company' );
+	if($_SERVER['HTTP_HOST'] === 'scubawhere.com')
+		$ch = curl_init( $_SERVER['HTTP_HOST'].'/company' );
+	else
+		$ch = curl_init( 'localhost/company' ); // Development environment
 
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 
@@ -17,12 +21,9 @@
 	curl_close( $ch );
 
 	$result = json_decode( $result );
-	if( isset( $result->id ) ) {
-	    //logged in
-	}
-	else {
+	if( empty($result->id) ) {
 		//not logged in
-		header("Location: /dashboard/login/");
+		header('Location: /dashboard/login/');
 		exit();
 	}
 ?>
