@@ -6,7 +6,7 @@
 		exit();
 	}
 
-	if($_SERVER['HTTP_HOST'] === 'scubawhere.com')
+	if($_SERVER['HTTP_HOST'] === 'scubawhere.com' || $_SERVER['HTTP_HOST'] === 'www.scubawhere.com')
 		$ch = curl_init( $_SERVER['HTTP_HOST'].'/company' );
 	else
 		$ch = curl_init( 'localhost/company' ); // Development environment
