@@ -3,9 +3,11 @@ ftpsync.settings
 root.sublime-project
 root.sublime-workspace
 public_html/blog/
+public_html/phpmyadmin/
 .ftpquota
 app/storage/
 error_log
+.cache/
 
 # pixeno server files to be ignored
 .bash_history

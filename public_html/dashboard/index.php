@@ -1,12 +1,11 @@
 <?php
 	session_start();
 	if(!$_COOKIE["scubawhere_session"]){
-		header("Location: http://scubawhere.com");
+		header("Location: ".$_SERVER['HTTP_HOST']);
 		exit();
 	}
 
-
-	$ch = curl_init( 'http://scubawhere.com/company' );
+	$ch = curl_init( 'localhost/company' );
 
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 
@@ -21,9 +20,10 @@
 	if( isset( $result->id ) ) {
 	    //logged in
 	}
+
 	else {
 		//not logged in
-		header("Location: http://scubawhere.com/dashboard/login/");
+		header("Location: ".$_SERVER['HTTP_HOST']."/dashboard/login/");
 		exit();
 	}
 ?>
@@ -196,9 +196,7 @@
 
 	<?php
 	   //INCLUDE FOOTER
-	   $footer = $_SERVER['DOCUMENT_ROOT'];
-	   $footer .= "/dashboard/common/footer/footer.php";
-	   include_once($footer);
+	   include_once("common/footer/footer.php");
     ?>
 </BODY>
 </HTML>

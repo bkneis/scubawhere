@@ -6,6 +6,7 @@
     RewriteEngine On
 
     # Exceptions...
+    RewriteCond %{REQUEST_URI} !^/phpmyadmin
     RewriteCond %{REQUEST_URI} !^/blog
     RewriteCond %{REQUEST_URI} !^/dashboard
     RewriteCond %{REQUEST_URI} !^/coming-soon
