@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if(!$_COOKIE["scubawhere_session"]){
-		header("Location: ".$_SERVER['HTTP_HOST']);
+		header("Location: /dashboard/login");
 		exit();
 	}
 
@@ -20,10 +20,9 @@
 	if( isset( $result->id ) ) {
 	    //logged in
 	}
-
 	else {
 		//not logged in
-		header("Location: ".$_SERVER['HTTP_HOST']."/dashboard/login/");
+		header("Location: /dashboard/login/");
 		exit();
 	}
 ?>
