@@ -26,5 +26,5 @@ return array(
 	|
 	*/
 
-	'url' => 'http://scubawhere',
+	'url' => 'http://scuba_where_local',
 );
