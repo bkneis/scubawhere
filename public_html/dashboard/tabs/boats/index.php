@@ -6,27 +6,27 @@
 			<div class="padder expandable hidden">
 				<!--list the boats with handlebars -->
 				<script id="boat" type="text/x-handlebars-template">
-					
+
 						<div class="boat-wrap box100" data-boat-id="{{id}}">
 							<h3 class="expand-box">{{newBoat}}{{name}} <span class="box-tool del-box redb" data-sure="Are you sure you want to delet this boat?">X</span><span class="box-tool expand-box-arrow">&#8595;</span></h3>
 							<div class="padder expandable hidden">
 								<p>{{description}}</p>
 								<span>Capacity: {{capacity}}</span>
-								
-								<input type="hidden" name="boats[{{id}}][name]" value="{{name}}">
+
+								<input type="hidden" name="boats[{{id}}][name]" value="{{{name}}}">
 								<input type="hidden" name="boats[{{id}}][capacity]" value="{{capacity}}">
-								<input type="hidden" name="boats[{{id}}][description]" value="{{description}}">
-								
+								<input type="hidden" name="boats[{{id}}][description]" value="{{{description}}}">
+
 								<ul>
 									{{#accommodations}}
 										<li>
-											<span>{{name}}</span>
+											<span><strong>{{{name}}}</strong></span>
 											<span>Capacity: {{pivot.capacity}}</span>
 											<span class="del-boat-room redf link" data-sure="Are you sure you want to delet this boat room?">Delete</span>
 											<input type="hidden" name="boats[{{pivot.boat_id}}][accommodations][{{id}}]" value="{{pivot.capacity}}">
 										</li>
 									{{/accommodations}}
-									
+
 									<li class="boat-room-row">
 										<span class="newBoatRoom">
 											<select name="newBoatRoomName" class="newRoomTypeSelect">
@@ -42,7 +42,7 @@
 							</div>
 						</div>
 				</script>
-				
+
 				<div class="box100">
 					<label class="blueb">Room Types</label>
 					<table id="rooms-table">
@@ -50,22 +50,22 @@
 							<tr>
 								<th>Name</th>
 								<th>Description</th>
-								<th></th>
+								<th class="colr">Remove</th>
 							</tr>
-							
+
 						</thead>
-						
-									
+
+
 						<tbody id="accom-body">
 							<!--list the room types with handlebars -->
 							<script id="rooms" type="text/x-handlebars-template">
 								<tr id="room-{{id}}">
-									<td class="colc">{{name}}</td>
-									<td class="colc">{{description}}</td>
-									<td class="colc">
+									<td class="">{{{name}}}</td>
+									<td class="">{{{description}}}</td>
+									<td class="colr">
 										<span class="bttn small-bttn redb del-room" id="del-{{id}}" data-sure="Are you sure you would like to delete this room type?">X</span>
-										<input type="hidden" name="accommodations[{{id}}][name]" value="{{name}}">
-										<input type="hidden" name="accommodations[{{id}}][description]" value="{{description}}">
+										<input type="hidden" name="accommodations[{{id}}][name]" value="{{{name}}}">
+										<input type="hidden" name="accommodations[{{id}}][description]" value="{{{description}}}">
 									</td>
 								</tr>
 							</script>
@@ -84,9 +84,9 @@
 				<input type="submit" class="bttn blueb" value="Create" id="saveBoat" />
 			</div>
 		</div>
-		
-		
-		
+
+
+
 		<div class="box100">
 			<label class="blueb">Add New Room Type</label>
 			<div class="padder" id="new-room-type">
@@ -95,11 +95,11 @@
 				<input type="submit" class="bttn blueb" value="Create" id="saveRoom">
 			</div>
 		</div>
-		
+
 		<input type="hidden" name="_token" value="" />
 		<input type="submit" id="saveAll" class="bttn blueb validate" value="Save All">
 	</form>
-	<script src="tabs/boats/js/boats.js"></script>	
+	<script src="tabs/boats/js/boats.js"></script>
 </div>
 
 

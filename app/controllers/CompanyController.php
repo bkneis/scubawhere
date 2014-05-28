@@ -61,10 +61,11 @@ class CompanyController extends Controller {
 			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'photo') ) );
 
 			$room = new Accommodation($reducedDetails);
+			$room->company_id = Auth::user()->id;
 			if( !$room->validate() )
 			{
 				$errors = $room->errors()->all();
-				$errors[] = "Something was wrong with the submitted data. The new accomodation '" . Helper::sanitise($details['name']) . "' could not be created.";
+				$errors[] = "Something was wrong with the submitted data. The new accomodation '" . Helper::sanitiseString($details['name']) . "' could not be created.";
 				return Response::json( array('errors' => $errors), 406 ); // 406 Not Acceptable
 			}
 
