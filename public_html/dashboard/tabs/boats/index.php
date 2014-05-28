@@ -97,7 +97,7 @@
 		</div>
 
 		<input type="hidden" name="_token" value="" />
-		<input type="submit" id="saveAll" class="bttn blueb validate" value="Save All">
+		<input type="submit" id="saveAll" class="bttn blueb validate" value="Save All" style="display: none;">
 	</form>
 	<script src="tabs/boats/js/boats.js"></script>
 </div>

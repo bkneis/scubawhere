@@ -721,7 +721,7 @@ All parameters are **optional**.
 - **@added** New [#Bookings](#Bookings) section
 - **@added** New [#Search](#Search) section
 - **@added** New [#Validate a booking](#Validate_a_booking) entry
-- **@edit**  Moved [#Search for customers by email](#Search_for_customer_by_email) from [#Customers](#Customers) to [#Search](#Search)
+- **@edit**  Moved [#Search for customers by email](#Search_for_customers_by_email) from [#Customers](#Customers) to [#Search](#Search)
 
 ### 24<sup>th</sup> May 2014
 - **@added** New [#Customers](#Customers) section

@@ -30,12 +30,12 @@ $(function(){
 
 			//add this new room to the array
 			roomTypes.push(roomType(rand, $("[name=newRoomName]").val()));
+
+			// Trigger saveAll
+			$('#saveAll').click();
 		}
 
 		e.preventDefault();
-
-		// Trigger saveAll
-		$('#saveAll').click();
 	});
 
 
@@ -157,7 +157,7 @@ $(function(){
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 	$("body").delegate(".del-boat-room", "click", function(){
 		if($(this).isSure()){
-			$(this).parent().smoothRemove();
+			$(this).parent().remove();
 
 			// Trigger saveAll
 			$('#saveAll').click();
@@ -194,7 +194,7 @@ $(function(){
 			//check they are sure they want to delet this
 			if($(this).isSure()){
 				//remove roomtype table row
-				$("#room-" + delRoomID).smoothRemove();
+				$("#room-" + delRoomID).remove();
 
 				//remove from array
 				$.each(roomTypes, function(i){
