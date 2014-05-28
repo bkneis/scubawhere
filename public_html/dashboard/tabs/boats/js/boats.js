@@ -33,6 +33,9 @@ $(function(){
 		}
 
 		e.preventDefault();
+
+		// Trigger saveAll
+		$('#saveAll').click();
 	});
 
 
@@ -70,7 +73,7 @@ $(function(){
 				$(this).parents(".newBoatRoom")
 				.parent("li").before(
 					"<li>" +
-						"<span>" + newBoatRoomName + "</span>" +
+						"<span><strong>" + newBoatRoomName + "</strong></span>" +
 						"<span>Capacity: " + newBoatRoomCapacity + "</span>" +
 						"<span class='del-boat-room redf link' data-sure='Are you sure you want to delet this boat room?'>Delete</span>" +
 						"<input type='hidden'" +
@@ -82,6 +85,9 @@ $(function(){
 				//set options back to default (value = 0)
 				$(this).siblings("[type='text']").val("");
 				$(this).parent().siblings('select option[value]').attr("selected", true);
+
+				// Trigger saveAll
+				$('#saveAll').click();
 			}
 			else {
 				//not enough room on the boat
@@ -132,6 +138,9 @@ $(function(){
 				$boatRoomSelect.append("<option value='" + this.id + "'>" + this.name + "</option>");
 			});
 
+			// Trigger saveAll
+			$('#saveAll').click();
+
 		}else{
 			//there was an error
 		}
@@ -149,6 +158,9 @@ $(function(){
 	$("body").delegate(".del-boat-room", "click", function(){
 		if($(this).isSure()){
 			$(this).parent().smoothRemove();
+
+			// Trigger saveAll
+			$('#saveAll').click();
 		}
 	});
 
@@ -194,8 +206,11 @@ $(function(){
 
 				console.log(roomTypes);
 
-				//remove the select lists
+				//remove from the select lists
 				$("option[value='" + delRoomID + "']").remove();
+
+				// Trigger saveAll
+				$('#saveAll').click();
 			}
 		}else{
 			alert("This room type belongs to one or more of your boats. Please remove this room type from all boats before deleting it.");
