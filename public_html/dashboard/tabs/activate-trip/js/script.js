@@ -268,6 +268,9 @@ $(function() {
 						updateCalendarEntry(eventObject);
 
 						pageMssg(data.status, true);
+
+						// TODO Hack!
+						window.location.reload();
 					});
 				}
 				else {

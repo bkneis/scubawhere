@@ -86,7 +86,8 @@ class DepartureController extends Controller {
 		// $departure->delete(); // Soft delete
 
 		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
-		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => 'NOW()', 'updated_at' => 'NOW()'));
+		$now = date("Y-m-d H:i:s");
+		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => $now, 'updated_at' => $now));
 
 		return Response::json( array('status' => 'OK. Departure deactivated'), 200 ); // 200 OK
 	}
@@ -106,7 +107,7 @@ class DepartureController extends Controller {
 		// $departure->forceDelete(); // Doesn't work/doesn't do anything
 
 		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
-		DB::table('sessions')->where('id', Input::get('id'))->delete();
+		//DB::table('sessions')->where('id', Input::get('id'))->delete();
 
 		// Try to find the record again to see if it worked
 		try
