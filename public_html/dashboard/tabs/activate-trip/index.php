@@ -1,12 +1,12 @@
 <div id="wrapper">
 	<div class="row">
-		<div class="box50">
+		<div class="box100">
 			<label class="purpleb">Trips</label>
 			<div id='trips' class="padder dragganle-items">
 				<div class="yellow-helper">
 					Please drag a trip onto an appropriate date to be activated.
 				</div>
-				<ul>
+				<ul style="padding-left: 0;">
 					<script id="trip-list" type="text/x-handlebars-template">
 						{{#each trips}}
 							<li class="droppable-event">
@@ -28,10 +28,15 @@
 	<div id="modalWindows" style="height: 0">
 		<script id="session-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
-				<p>New session</p>
+				<p style="text-transform: uppercase; float: right; line-height: 2.8em;">
+					{{#if isNew}}
+						New session
+					{{else}}
+						Update session
+					{{/if}}
+				</p>
 				<h2>{{{trip.name}}}</h2>
-
-				<table>
+				<table style="margin-top: 2em;">
 					<tr>
 						<td><strong>Date</strong></td>
 						<td>{{date start}}</td>
@@ -39,8 +44,9 @@
 					<tr>
 						<td><strong>Start time</strong></td>
 						<td>
-							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   size="2">:
-							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" size="2">
+							<small><span style="display: inline-block; width: 49px">hours</span><span>minutes</span></small><br>
+							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;">:
+							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"> h
 						</td>
 					</tr>
 					<tr>
@@ -62,15 +68,16 @@
 					</select>
 				</p>
 
-				<div style="margin-top: 1em; font-size: 1.2em; text-align: center">
+				<div style="margin-top: 1em; text-align: right">
 					{{#if isNew}}
-						<button class="submit-session buttn blueb">Activate</button>
+						<a class="close-modal" title="Abort" style="margin-right: 2em;">Discard</a>
+						<button class="submit-session bttn big-bttn blueb">Activate</button>
 					{{else}}
-						Sorry, updating a session is not yet possible
-						<!-- <button class="update-session buttn blueb">Update</button> -->
+						<a class="close-modal" title="Abort" style="margin-right: 2em;">Discard</a>
+						<button class="update-session bttn big-bttn blueb">Update</button>
 					{{/if}}
 				</div>
-				<a class="close-reveal-modal" title="Abort">&#215;</a>
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
 	</div>

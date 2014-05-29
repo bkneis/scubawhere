@@ -65,3 +65,31 @@ function setPage(){
         }
     });
 }
+
+function reproColor(id) { // Stands for: reproducible color
+
+	var colors = [ // 14 options
+		{bgcolor: '#001F3F', txtcolor: 'white'}, // navy
+		{bgcolor: '#0074D9', txtcolor: 'white'}, // blue
+		{bgcolor: '#7FDBFF', txtcolor: 'black'}, // aqua
+		{bgcolor: '#39CCCC', txtcolor: 'black'}, // teal
+		{bgcolor: '#3D9970', txtcolor: 'black'}, // olive
+		{bgcolor: '#2ECC40', txtcolor: 'black'}, // green
+		{bgcolor: '#01FF70', txtcolor: 'black'}, // lime
+		{bgcolor: '#FFDC00', txtcolor: 'black'}, // yellow
+		{bgcolor: '#FF851B', txtcolor: 'white'}, // orange
+		{bgcolor: '#FF4136', txtcolor: 'white'}, // red
+		{bgcolor: '#85144B', txtcolor: 'white'}, // maroon
+		{bgcolor: '#F012BE', txtcolor: 'white'}, // fuchsia
+		{bgcolor: '#B10DC9', txtcolor: 'white'}, // purple
+		{bgcolor: '#DDDDDD', txtcolor: 'black'}, // silver
+	];
+
+	var length = colors.length;
+
+	if(id === undefined) // return default
+		return colors[0];
+
+	return colors[ (id % length) ];
+}
+

@@ -15,7 +15,7 @@ PURPLE - #6D6A99
 
 /*
 ******************************
-Stylesheet for all dive 
+Stylesheet for all dive
 	  center area
 ******************************
 */
@@ -79,12 +79,12 @@ body{ background-color: #34495e; }
 	padding: 20px;
 }
 
-.truncate { 
-	overflow: hidden; 
-	white-space: nowrap; 
-	text-overflow: ellipsis; 
-	word-break: break-all; 
-	word-wrap: break-word; 
+.truncate {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HELPERS */
@@ -244,10 +244,10 @@ ul#sidenav > li > div:hover{ background-color: rgba(255,255,255,0.05); }
 
 ul#sidenav div{ padding: 10px; }
 
-ul#sidenav div span{ 
-	position: absolute; 
-	margin-top: 5px;	
-	margin-left: 10px;	
+ul#sidenav div span{
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 10px;
 }
 
 ul#sidenav .arrow{
@@ -292,7 +292,7 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 	display: inline-block;
 	margin-bottom: 15px;
 	background-color: #fff;
-	
+
 }
 
 .box33:first-child,
@@ -339,7 +339,7 @@ ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
 @media all and (max-width: 1175px) {
 	.box50{width: 100%; display: block;}
 	*.box33{width: 100%; display: block; margin: auto 0px;}
-	
+
 	.box33:first-child,
 	.box33:nth-child(3n+1),
 	.box33:nth-child(3n+0){
@@ -391,7 +391,7 @@ span.box-tool{
 	.box-foot > span{
 		display: inline-block;
 	}
-	
+
 	.box-foot > form{
 		display: inline-block;
 		color: #313131;
@@ -414,7 +414,7 @@ span.box-tool{
 	background-color: #4f4f4f;
 	color: #fff;
 	padding-left: 40px;
-	
+
 }
 
 /*
@@ -505,7 +505,7 @@ span.box-tool{
 *******************************
 */
 #boats-wrap{
-	
+
 }
 
 .boat-wrap{
@@ -599,3 +599,31 @@ span.box-tool{
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
+
+/**
+ * Activate Trip
+ */
+.fc-event {
+	cursor: pointer;
+}
+.droppable-event {
+	display: inline-block;
+}
+.ui-draggable {
+	margin: 2px 0;
+	border: 1px solid #4a9cff;
+	border-left-width: 5px;
+	padding: 5px 10px;
+}
+.ui-draggable:hover {
+	background: rgb(96, 190, 255);
+	color: white;
+	cursor: move;
+}
+.close-modal {
+	cursor: pointer;
+}
+.close-modal:hover {
+	color: inherit;
+}
+
