@@ -1,7 +1,7 @@
 $(function(){
-	var tripSource = $("#trip").html(); 
+	var tripSource = $("#trip").html();
 	var tripTemplate = Handlebars.compile(tripSource);
-	
+
 	$.ajax({
 			url: "/company/trips",
 			type: "GET",
@@ -9,10 +9,10 @@ $(function(){
 			async: false,
 			success: function(data){
 				$.each(data, function(){
-					console.log(tripTemplate(this));
+					// console.log(tripTemplate(this));
 					$("#trips").append(tripTemplate(this));
 				});
-				
+
 			}
 		});
 });

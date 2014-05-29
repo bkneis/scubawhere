@@ -1,6 +1,8 @@
 $(function () {
 
-	//compile the trip list temlate
+	// -------------------------------- //
+	// 1. Compile the trip list temlate //
+	// -------------------------------- //
 	var tripSource = $("#trip-template").html();
 	var triptemplate = Handlebars.compile(tripSource);
 
@@ -10,31 +12,33 @@ $(function () {
 		indexedTrips = _.indexBy(data, 'id');
 		$("#trip-select").append(triptemplate({trips : data}));
 
-	});
+		// --------------------------------- //
+		// 2. Compile for saved tickets data //
+		// --------------------------------- //
+		var sTicketsSource = $("#saved-tickets-template").html();
+		var sTtemplate = Handlebars.compile(sTicketsSource);
 
-	//compile for saved tickets data
-	var sTicketsSource = $("#saved-tickets-template").html();
-	var sTtemplate = Handlebars.compile(sTicketsSource);
+		Ticket.getAllTickets(function(data){
+			// 1. Sort the ticket array by trip_id
+			data = _.sortBy(data, 'trip_id');
+			// 2. Add certain corresponding trip details
+			data = _.each(data, function(element) {
+				element.trip_name = indexedTrips[ element.trip_id ].name;
+			});
 
-	Ticket.getAllTickets(function(data){
-		// 1. Sort the ticket array by trip_id
-		data = _.sortBy(data, 'trip_id');
-		// 2. Add certain corresponding trip details
-		data = _.each(data, function(element) {
-			element.trip_name = indexedTrips[ element.trip_id ].name;
+			$("#saved-tickets").append(sTtemplate({tickets : data}));
+
+			// -------------------------------- //
+			// 3. Compile the boat list temlate //
+			// -------------------------------- //
+			var boatSource = $("#boat-template").html();
+			var boatTemplate = Handlebars.compile(boatSource);
+
+			Boat.getAllBoats(function(data){
+				$("#boat-select").append( boatTemplate({boats : data.boats}) );
+			});
 		});
-		$("#saved-tickets").append(sTtemplate({tickets : data}));
 	});
-
-	//compile the boat list temlate
-	var boatSource = $("#boat-template").html();
-	var boatTemplate = Handlebars.compile(boatSource);
-
-	Boat.getAllBoats(function(data){
-		$("#boat-select").append( boatTemplate({boats : data.boats}) );
-		console.log(data);
-	});
-
 
 	//click event for saving a new ticket
 	$("#save-ticket").click(function(e){

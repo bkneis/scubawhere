@@ -39,6 +39,7 @@
 	<link href='css/fullcalendar.css' rel='stylesheet' />
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.tagsinput.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
 
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="../common/favicon.ico" />
@@ -69,9 +70,7 @@
 <BODY>
 	<?php
 	   //INCLUDE HEADER
-	   $header = $_SERVER['DOCUMENT_ROOT'];
-	   $header .= "/dashboard/common/header/header.php";
-	   include_once($header);
+	   include_once("common/header/header.php");
     ?>
 
 	<div id="page">

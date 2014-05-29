@@ -2,9 +2,11 @@
 
 use LaravelBook\Ardent\Ardent;
 
-class Session extends Ardent {
+class Departure extends Ardent {
 	protected $guarded = array('id', 'trip_id', 'created_at', 'updated_at', 'deleted_at');
 	protected $fillable = array('start', 'boat_id', 'timetable_id');
+
+	protected $table = 'sessions';
 
 	protected $appends = array('capacity');
 
@@ -23,7 +25,7 @@ class Session extends Ardent {
 
 	public function getCapacityAttribute()
 	{
-		return array( $this->bookings()->count(), $this->boat()->capacity );
+		return array( $this->bookings()->count(), $this->boat()->first()->capacity );
 	}
 
 	public function trip()
@@ -38,7 +40,7 @@ class Session extends Ardent {
 
 	public function bookings()
 	{
-		return $this->belongsToMany('Booking', 'booking_details')->withPivot('ticket_id', 'package_id');
+		return $this->belongsToMany('Booking', 'booking_details', 'session_id', 'booking_id')->withPivot('ticket_id', 'package_id');
 	}
 
 	public function timetable()

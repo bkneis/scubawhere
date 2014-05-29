@@ -39,10 +39,10 @@ class TripController extends Controller {
 				'location',
 				'locations',
 				'triptypes',
-				'tickets' => function($query)
+				/*'tickets' => function($query)
 				{
 					$query->where('active', '=', 1);
-				}
+				}*/
 			)
 		)->get();
 	}

@@ -79,7 +79,7 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/customer', 'CustomerController');
 
-	Route::controller('api/session', 'SessionController');
+	Route::controller('api/session', 'DepartureController');
 
 	Route::controller('api/ticket', 'TicketController');
 

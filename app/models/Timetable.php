@@ -25,8 +25,8 @@ class Timetable extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
-	public function sessions()
+	public function departures()
 	{
-		return $this->hasMany('Session');
+		return $this->hasMany('Departure');
 	}
 }

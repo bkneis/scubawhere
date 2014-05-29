@@ -1,20 +1,20 @@
 var Trip = {
-	getAllTrips : function (handeData) {
+	getAllTrips : function (handleData) {
 		$.get("/api/trip/all").done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
-	getSpecificTrips : function (params, handeData) {
+	getSpecificTrips : function (params, handleData) {
 		$.get("/api/trip", params).done(function(data){
-			handeData(data);
-		}); 
+			handleData(data);
+		});
 	},
 
-	getAllTripTypes : function(handeData){
+	getAllTripTypes : function(handleData){
 		$.get("/company/triptypes").done(function(data){
-			handeData(data);
-		}); 
+			handleData(data);
+		});
 	}
 
 };

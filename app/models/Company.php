@@ -120,9 +120,9 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->belongsTo('Region');
 	}
 
-	public function sessions()
+	public function departures()
 	{
-		return $this->hasManyThrough('Session', 'Trip');
+		return $this->hasManyThrough('Departure', 'Trip', 'company_id', 'trip_id');
 	}
 
 	public function tickets()

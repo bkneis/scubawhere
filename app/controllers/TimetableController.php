@@ -34,11 +34,11 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('session_id') ) throw new ModelNotFoundException();
-			$session = Auth::user()->sessions()->findOrFail( Input::get('session_id') );
+			$departure = Auth::user()->departures()->findOrFail( Input::get('session_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$timetable = new Timetable($data);
@@ -51,20 +51,20 @@ class TimetableController extends Controller {
 		$timetable = Auth::user()->timetables()->save($timetable);
 
 		// Update the referenced session object's timetable ID
-		$session->update( array('timetable_id' => $timetable->id) );
+		$departure->update( array('timetable_id' => $timetable->id) );
 
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //
 		////////////////////////////////////////////
 		$schedule = $data['schedule'];
 		$length = count($schedule);
-		$start = new DateTime( $session->start );
+		$start = new DateTime( $departure->start );
 		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for monday, 7 for sunday
 		// $startTime = $start->format('H:I');
 		$days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
-		// STEP 1: Convert schedule day names to actual dates, starting in the week of the original session //
+		// STEP 1: Convert schedule day names to actual dates, starting in the week of the original departure //
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		$scheduleDates = array();
 		for($i = 0; $i < $length; $i++)
@@ -117,9 +117,9 @@ class TimetableController extends Controller {
 		foreach( $sessionDates as &$date)
 		{
 			$date = array(
-				'trip_id' => $session->trip_id,
+				'trip_id' => $departure->trip_id,
 				'start' => $date,
-				'boat_id' => $session->boat_id,
+				'boat_id' => $departure->boat_id,
 				'timetable_id' => $timetable->id,
 				'created_at' => $now,
 				'updated_at' => $now

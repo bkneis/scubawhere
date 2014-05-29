@@ -1,3 +1,3 @@
 <footer>
-		<a href="http://www.scubawhere.com/dive-admin/">**Registered Dive Centre**</a>
+		<a href="http://www.scubawhere.com/dashboard/">**Registered Dive Centre**</a>
 </footer>

@@ -10,6 +10,8 @@
 	<script src="/dashboard/login/js/login.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
+
+	<link rel="icon" type="image/ico" href="../../common/favicon.ico" />
 </HEAD>
 <BODY>
 
