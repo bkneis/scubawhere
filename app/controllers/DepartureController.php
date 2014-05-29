@@ -107,7 +107,7 @@ class DepartureController extends Controller {
 		// $departure->forceDelete(); // Doesn't work/doesn't do anything
 
 		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
-		//DB::table('sessions')->where('id', Input::get('id'))->delete();
+		DB::table('sessions')->where('id', Input::get('id'))->delete();
 
 		// Try to find the record again to see if it worked
 		try
