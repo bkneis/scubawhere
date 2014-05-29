@@ -775,7 +775,6 @@ var area   = [north, west, south, east];
 <li><strong>@param</strong> integer trip_id      The ID of the <code>trip</code> that the session belongs to</li>
 <li><strong>@param</strong> string  start        The start datetime of the session. Must be interpretable by the <a href="http://php.net/strtotime">strtotime</a> PHP function</li>
 <li><strong>@param</strong> integer boat_id      The ID of the <code>boat</code> that carries this session</li>
-<li><strong>@param</strong> integer timetable_id The ID of the related timetable (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                Contains <code>status</code> and <code>id</code> of the new session on success, <code>errors</code> on failure</li>
 </ul>
@@ -788,7 +787,7 @@ var area   = [north, west, south, east];
 <li><code>HTTP 404</code> The session could not be found.</li>
 <li><code>HTTP 406</code> Cannot delete session. It has already been booked!</li>
 </ul>
-<p>In the second case it is recommended to ask the user if he wants to <a href="#Deactivate_a_session">#deactivate the session</a> instead.</p>
+<p>In the second case it is recommended to ask the user to <a href="#Deactivate_a_session">#deactivate the session</a> instead.</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong> integer id The ID of the session to delete</li>
@@ -1065,6 +1064,10 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>29<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@edit</strong> Removed <code>timetable_id</code> as a parameter for <a href="#Create_a_session">#Create a session</a></li>
+</ul>
 <h3>26<sup>th</sup> May 2014</h3>
 <ul>
 <li><strong>@added</strong> New <a href="#Bookings">#Bookings</a> section</li>

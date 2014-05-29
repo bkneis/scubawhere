@@ -385,7 +385,6 @@ Delete an existing ticket.
 - **@param** integer trip_id      The ID of the `trip` that the session belongs to
 - **@param** string  start        The start datetime of the session. Must be interpretable by the [strtotime](http://php.net/strtotime) PHP function
 - **@param** integer boat_id      The ID of the `boat` that carries this session
-- **@param** integer timetable_id The ID of the related timetable (optional)
 - &nbsp;
 - **@return** JSON                Contains `status` and `id` of the new session on success, `errors` on failure
 
@@ -397,9 +396,9 @@ Delete an existing ticket.
 > This function can have two different failure responses:
 >
 > - `HTTP 404` The session could not be found.
-> - `HTTP 406` Cannot delete session. It has already been booked!
+> - `HTTP 409` Cannot delete session. It has already been booked!
 >
-> In the second case it is recommended to ask the user if he wants to [#deactivate the session](#Deactivate_a_session) instead.
+> In the second case it is recommended to ask the user to [#deactivate the session](#Deactivate_a_session) instead.
 
 - **@param** integer id The ID of the session to delete
 - &nbsp;
@@ -716,6 +715,9 @@ All parameters are **optional**.
 &nbsp;
 
 ## Changelog
+
+### 29<sup>th</sup> May 2014
+- **@edit** Removed `timetable_id` as a parameter for [#Create a session](#Create_a_session)
 
 ### 26<sup>th</sup> May 2014
 - **@added** New [#Bookings](#Bookings) section

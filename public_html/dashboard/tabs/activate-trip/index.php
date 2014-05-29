@@ -35,7 +35,8 @@
 						Update session
 					{{/if}}
 				</p>
-				<h2>{{{trip.name}}}</h2>
+				<h2{{#if session.deleted_at}} style="text-decoration: line-through;"{{/if}}>{{{trip.name}}}</h2>
+				{{#if session.deleted_at}} <h3 style="color: red;">Deactivated</h3>{{/if}}
 				<table style="margin-top: 2em;">
 					<tr>
 						<td><strong>Date</strong></td>
@@ -70,11 +71,12 @@
 
 				<div style="margin-top: 1em; text-align: right">
 					{{#if isNew}}
-						<a class="close-modal" title="Abort" style="margin-right: 2em;">Discard</a>
+						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
 						<button class="submit-session bttn big-bttn blueb">Activate</button>
 					{{else}}
-						<a class="close-modal" title="Abort" style="margin-right: 2em;">Discard</a>
-						<button class="update-session bttn big-bttn blueb">Update</button>
+						<button class="delete-session bttn redb" style="float:left;">Delete</button>
+						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
+						<!--<button class="update-session bttn big-bttn blueb">Update</button>-->
 					{{/if}}
 				</div>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>

@@ -14,7 +14,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->with('trip', 'boat')->findOrFail( Input::get('id') );
+			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,12 +24,12 @@ class DepartureController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->departures()->get();
+		return Auth::user()->departures()->withTrashed()->get();
 	}
 
 	public function postAdd()
 	{
-		$data = Input::only('start', 'boat_id', 'timetable_id');
+		$data = Input::only('start', 'boat_id');
 
 		try
 		{
@@ -76,14 +76,17 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->findOrFail( Input::get('id') );
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$departure->delete(); // Soft delete
+		// $departure->delete(); // Soft delete
+
+		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
+		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => 'NOW()', 'updated_at' => 'NOW()'));
 
 		return Response::json( array('status' => 'OK. Departure deactivated'), 200 ); // 200 OK
 	}
@@ -93,19 +96,30 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->findOrFail( Input::get('id') );
+			$departure = Auth::user()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( !$departure->forceDelete() )
+		// $departure->forceDelete(); // Doesn't work/doesn't do anything
+
+		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
+		DB::table('sessions')->where('id', Input::get('id'))->delete();
+
+		// Try to find the record again to see if it worked
+		try
 		{
-			return Response::json( array('errors' => array('Cannot delete departure. It has already been booked!')), 409 ); // 409 Conflict
+			Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			// Record not found, all is good
+			return Response::json( array('status' => 'OK. Departure deleted'), 200 ); // 200 OK
 		}
 
-		return Response::json( array('status' => 'OK. Departure deleted'), 200 ); // 200 OK
+		return Response::json( array('errors' => array('Cannot delete departure. It has already been booked!')), 409 ); // 409 Conflict
 	}
 
 }

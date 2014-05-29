@@ -224,7 +224,60 @@ $(function() {
 
 	// The UPDATE button
 	$('#modalWindows').on('click', '.update-session', function(event) {
+		modal = $(event.target).closest('.reveal-modal');
+		eventObject = modal.data('eventObject');
 
+		eventObject.session._token = window.token;
+
+	});
+
+	// The DELETE button
+	$('#modalWindows').on('click', '.delete-session', function(event) {
+		modal = $(event.target).closest('.reveal-modal');
+		eventObject = modal.data('eventObject');
+
+		eventObject.session._token = window.token;
+
+		Sessions.deleteSession({
+			'id': eventObject.session.id,
+			'_token': eventObject.session._token
+		}, function success(data) {
+
+			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+
+			// Unset eventObject
+			delete eventObject;
+
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		}, function error(xhr) {
+			if(xhr.status == 409) {
+				message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
+				question = confirm(message);
+				if( question ) {
+					// Deactivate
+					Sessions.deactivateSession({
+						'id': eventObject.session.id,
+						'_token': eventObject.session._token
+					}, function success(data) {
+
+						eventObject.session.deleted_at = true;
+
+						updateCalendarEntry(eventObject);
+
+						pageMssg(data.status, true);
+					});
+				}
+				else {
+					// do nothing
+				}
+			}
+			else {
+				pageMssg(data.errors[0]);
+			}
+		});
 	});
 });
 
@@ -235,6 +288,9 @@ function createCalendarEntry(eventObject) {
 	eventObject.id    = randomString();
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
+	if(eventObject.session.deleted_at) {
+		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
+	}
 
 	// Render the event on the calendar
 	// The last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
@@ -248,6 +304,8 @@ function updateCalendarEntry(eventObject) {
 
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
+	if(eventObject.session.deleted_at)
+		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
 
 	// $('#calendar').fullCalendar('updateEvent', eventObject);
 
@@ -262,7 +320,7 @@ function showModalWindow(eventObject) {
 	sessionTemplate     = Handlebars.compile(sessionTemplate);
 
 	eventObject.boats = window.boats;
-	console.log(eventObject.session);
+	// console.log(eventObject.session);
 	if(!eventObject.session.boat_id) {
 		// Set default
 		eventObject.session.boat_id = _.values(eventObject.boats)[0].id;
