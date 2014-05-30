@@ -33,22 +33,20 @@ $(function() {
 
         newHash = "tabs/" + newHash + "/index.php";
 
-        if (newHash) {
+        if(newHash)
+        {
             $mainContent
-                .find("#wrapper")
-                .fadeOut(200, function() {
-                    $mainContent.hide().load(newHash, function() {
-                        $mainContent.fadeIn(200, function() {
-                            $pageWrap.animate({
-                                height: baseHeight + $mainContent.height() + "px"
-                            });
+            .find("#wrapper")
+            .fadeOut(200, function() {
+                $mainContent.hide().load(newHash, function() {
+                    $mainContent.fadeIn(200, function() {
+                        $pageWrap.animate({
+                            height: baseHeight + $mainContent.height() + "px",
                         });
                     });
                 });
-
-
+            });
         };
-
     });
 
     $(window).trigger('hashchange');

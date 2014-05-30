@@ -16,7 +16,7 @@ class Agent extends Ardent {
 		'billing_address' => '',
 		'billing_phone'   => '',
 		'billing_email'   => 'email',
-		'commission'      => 'required|integer|between:0,100',
+		'commission'      => 'required|numeric|between:0,100',
 		'terms'           => 'required|alpha|in:fullamount,deposit,banned'
 	);
 

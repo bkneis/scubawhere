@@ -100,8 +100,7 @@
 						<span class="arrow"></span>
 					</div>
 					<ul>
-						<li data-load="add-agent">Add Agent</li>
-						<li data-load="edit-agent">Edit Agent</li>
+						<li data-load="manage-agents">Manage Agents</li>
 						<li data-load="send-invoice">Send Invoice</li>
 					</ul>
 				</li>

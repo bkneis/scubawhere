@@ -35,6 +35,7 @@ return array(
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',
     'Certificate' => $baseDir . '/app/models/Certificate.php',
     'CertificatesTableSeeder' => $baseDir . '/app/database/seeds/CertificatesTableSeeder.php',
+    'ChangeAgentCommissionToDecimal' => $baseDir . '/app/database/migrations/2014_05_30_155319_change_agent_commission_to_decimal.php',
     'ClassPreloader\\Application' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Application.php',
     'ClassPreloader\\ClassList' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/ClassList.php',
     'ClassPreloader\\ClassLoader' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/ClassLoader.php',

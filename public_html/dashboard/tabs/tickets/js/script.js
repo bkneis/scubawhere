@@ -8,7 +8,7 @@ $(function () {
 
 	var indexedTrips;
 
-	Trip.getAllTrips(function(data){
+	Trip.getAllTrips(function success(data){
 		indexedTrips = _.indexBy(data, 'id');
 		$("#trip-select").append(triptemplate({trips : data}));
 
@@ -18,7 +18,7 @@ $(function () {
 		var sTicketsSource = $("#saved-tickets-template").html();
 		var sTtemplate = Handlebars.compile(sTicketsSource);
 
-		Ticket.getAllTickets(function(data){
+		Ticket.getAllTickets(function success(data){
 			// 1. Sort the ticket array by trip_id
 			data = _.sortBy(data, 'trip_id');
 			// 2. Add certain corresponding trip details
@@ -34,7 +34,7 @@ $(function () {
 			var boatSource = $("#boat-template").html();
 			var boatTemplate = Handlebars.compile(boatSource);
 
-			Boat.getAllBoats(function(data){
+			Boat.getAllBoats(function success(data){
 				$("#boat-select").append( boatTemplate({boats : data.boats}) );
 			});
 		});
@@ -49,7 +49,7 @@ $(function () {
 			console.log(data);
 			console.log(textStatus);
 			console.log(xhr);
-			// window.location.reload();
+
 			$('#save-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
 
