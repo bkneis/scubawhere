@@ -13,15 +13,23 @@ var Agent = {
 		});
 	},
 
-	createAgent : function(params, handleData) {
-		$.post("/api/agent/add", params, function(data) {
-			handleData(data);
+	createAgent : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/agent/add",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 
-	updateAgent : function(params, handleData) {
-		$.post("/api/agent/edit", params, function(data) {
-			handleData(data);
+	updateAgent : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/agent/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 

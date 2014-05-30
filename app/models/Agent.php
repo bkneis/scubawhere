@@ -17,7 +17,7 @@ class Agent extends Ardent {
 		'billing_phone'   => '',
 		'billing_email'   => 'email',
 		'commission'      => 'required|numeric|between:0,100',
-		'terms'           => 'required|alpha|in:fullamount,deposit,banned'
+		'terms'           => 'required|in:fullamount,deposit,banned'
 	);
 
 	public function beforeSave()

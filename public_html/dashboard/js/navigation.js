@@ -1,4 +1,4 @@
-var LOADER = "<div class='loading-wrap'><img src='img/loader.gif'></div>";
+
 $(function() {
     var newHash      = "",
         $mainContent = $("#content"),

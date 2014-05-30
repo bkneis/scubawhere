@@ -123,6 +123,17 @@
 			</script>
 
 		</div>
+
+		<script type="text/x-handlebars-template" id="errors-template">
+			<div class="yellow-helper errors" style="color: #E82C0C;">
+				<strong>There are a few problems with the form:</strong>
+				<ul>
+					{{#each errors}}
+						<li>{{this}}</li>
+					{{/each}}
+				</ul>
+			</div>
+		</script>
 	</div>
 </div>
 

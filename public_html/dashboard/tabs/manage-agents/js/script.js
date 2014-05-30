@@ -35,6 +35,30 @@ $(function(){
 			renderAgentList(function() {
 				renderEditForm(data.id);
 			});
+
+		}, function error(xhr) {
+
+			data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			if(data.errors.length > 0) {
+
+				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				errorsHTML = errorsHTML(data);
+
+				// Render error messages
+				$('.errors').remove();
+				$('#add-agent-form').prepend(errorsHTML)
+				$('#add-agent').before(errorsHTML);
+			}
+			else {
+				alert(xhr.responseText);
+			}
+
+			pageMssg('Oops, something wasn\'t quite right');
+
+			$('#add-agent').prop('disabled', false);
+			$('#save-ticket-loader').remove();
 		});
 	});
 
@@ -52,6 +76,33 @@ $(function(){
 			renderAgentList();
 
 			$('form').data('hasChanged', false);
+
+			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
+			$('.errors').remove();
+
+			$('#update-agent').prop('disabled', false);
+			$('#save-ticket-loader').remove();
+
+		}, function error(xhr) {
+
+			data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			if(data.errors.length > 0) {
+
+				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				errorsHTML = errorsHTML(data);
+
+				// Render error messages
+				$('.errors').remove();
+				$('#update-agent-form').prepend(errorsHTML)
+				$('#update-agent').before(errorsHTML);
+			}
+			else {
+				alert(xhr.responseText);
+			}
+
+			pageMssg('Oops, something wasn\'t quite right');
 
 			$('#update-agent').prop('disabled', false);
 			$('#save-ticket-loader').remove();
