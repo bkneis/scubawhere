@@ -1,4 +1,3 @@
-<script src="tabs/add-agent/js/script.js"></script>
 <script type="text/javascript">
     function showMe (box) {
         
@@ -54,7 +53,7 @@
 				</div>
 				
 				<div class="form-row">
-					<input type="checkbox" name="c1" onclick="showMe('billing-div')">Billing details are the same?
+					<input type="checkbox" name="c1" onclick="showMe('billing-div')">Billing details are diffrent?
 				</div>
                                 
                                 <div id="billing-div" style="display:none">
@@ -84,11 +83,11 @@
 					<label class="">Business Terms</label>
 					<div class="box50" style="padding-left:4.5cm;">
 						
-						<select id="terms">
+						<select id="terms" name="terms">
 							<option>Please select..</option>
-                                                        <option>Full Amount</option>
-                                                        <option>Deposit Only</option>
-                                                        <option>Banned</option>
+                                                        <option value="fullamount">Full Amount</option>
+                                                        <option value="deposit">Deposit Only</option>
+                                                        <option value="banned">Banned</option>
 						</select>
 					</div>
 				</div> 
@@ -101,3 +100,5 @@
 		
 	</div>
 </div>
+<script src="tabs/add-agent/js/script.js"></script>
+<script src="/dashboard/js/SetToken.js"></script>
