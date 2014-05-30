@@ -11,12 +11,18 @@ $(function(){
 		console.log(options);
 		*/
 		if(xhr.status == 404) {
-    		console.log(xhr.status + " " + xhr.statusText + ": " + xhr.responseText + " - " + options.url);
-    		alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText + "\n\n" + options.url);
-    	}
-    	else if(xhr.status >= 400) {
-    		alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText);
-    	}
+
+    		if(xhr.responseText.length > 100) // Filter out HTML responses
+    			xhr.responseText = '';
+    		else
+    			xhr.responseText += '\n';
+
+			console.log(xhr.status + " " + xhr.statusText + ": " + xhr.responseText + " - " + options.url);
+			alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText + options.url);
+		}
+		else if(xhr.status >= 400) {
+			alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText);
+		}
 	});
 
 	$("#logout").click(function(e){
