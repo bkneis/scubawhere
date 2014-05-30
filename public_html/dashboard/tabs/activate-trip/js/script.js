@@ -227,6 +227,10 @@ $(function() {
 
 	// Finally, the ACTIVATE button
 	$('#modalWindows').on('click', '.submit-session', function(event) {
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
 
@@ -252,8 +256,11 @@ $(function() {
 
 		// console.log(eventObject.isNew);
 
-		Sessions.createSession(eventObject.session, function(data){
-			// Sync worked, now save and update the calendar item
+		Sessions.createSession(eventObject.session, function success(data){
+
+			// Communitcate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-ticket-loader').remove();
 
 			// Remake the moment-object (parse as UTC, convert to local to work with)
 			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
@@ -272,6 +279,11 @@ $(function() {
 
 	// The UPDATE button
 	$('#modalWindows').on('click', '.update-session', function(event) {
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+
+
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
 
@@ -289,8 +301,11 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Sessions.updateSession(eventObject.session, function(data){
-			// Sync worked, now save and update the calendar item
+		Sessions.updateSession(eventObject.session, function success(data){
+
+			// Communitcate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-ticket-loader').remove();
 
 			// Remake the moment-object (parse as UTC, convert to local to work with)
 			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
@@ -309,6 +324,11 @@ $(function() {
 
 	// The DELETE button
 	$('#modalWindows').on('click', '.delete-session', function(event) {
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
+
+
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
 
@@ -321,6 +341,10 @@ $(function() {
 			'_token': eventObject.session._token
 		}, function success(data) {
 
+			// Communitcate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-ticket-loader').remove();
+
 			$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 			// Unset eventObject
@@ -332,14 +356,18 @@ $(function() {
 			pageMssg(data.status, true);
 		}, function error(xhr) {
 			if(xhr.status == 409) {
-				message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
-				question = confirm(message);
+				var message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
+				var question = confirm(message);
 				if( question ) {
 					// Deactivate
 					Sessions.deactivateSession({
 						'id': eventObject.session.id,
 						'_token': eventObject.session._token
 					}, function success(data) {
+
+						// Communitcate success to user
+						$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+						$('#save-ticket-loader').remove();
 
 						eventObject.session.deleted_at = true;
 
