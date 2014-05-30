@@ -74,9 +74,9 @@
 						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
 						<button class="submit-session bttn big-bttn blueb">Activate</button>
 					{{else}}
-						<button class="delete-session bttn redb" style="float:left;">Delete</button>
+						<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
 						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-						<!--<button class="update-session bttn big-bttn blueb">Update</button>-->
+						<button class="update-session bttn big-bttn blueb">Update</button>
 					{{/if}}
 				</div>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>

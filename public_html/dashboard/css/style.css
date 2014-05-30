@@ -609,13 +609,13 @@ span.box-tool{
 .droppable-event {
 	display: inline-block;
 }
-.ui-draggable {
+.trip-event {
 	margin: 2px 0;
 	border: 1px solid #4a9cff;
 	border-left-width: 5px;
 	padding: 5px 10px;
 }
-.ui-draggable:hover {
+.trip-event:hover {
 	background: rgb(96, 190, 255);
 	color: white;
 	cursor: move;

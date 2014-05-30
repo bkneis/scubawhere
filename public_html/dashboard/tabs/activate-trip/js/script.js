@@ -18,6 +18,7 @@ $(function() {
 		// 2. Get sessions
 		Sessions.getAllSessions(function(data) {
 			window.sessions = _.indexBy(data, 'id');
+
 			_.each(window.sessions, function(value) {
 				var eventObject = {
 					title: window.trips[ value.trip_id ].name, // use the element's text as the event title
@@ -25,13 +26,16 @@ $(function() {
 					trip: window.trips[ value.trip_id ],
 					session: value,
 					isNew: false,
+					durationEditable: false,
+					startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
 				};
+
 				// console.log("----------------------------------------");
-				// console.log("From Server:        " + eventObject.session.startObj);
+				// console.log("From Server:        " + eventObject.session.start);
 				// Parse server's UTC time and convert to local
 				// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
-				eventObject.session.startObj = $.fullCalendar.moment.utc(value.start).local();
-				// console.log("Converted to local: " + eventObject.session.startObj.format('YYYY-MM-DD HH:mm:ss'));
+				eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
+				// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
 
 				createCalendarEntry(eventObject);
 			});
@@ -63,6 +67,8 @@ $(function() {
 					trip_id: $(this).attr('data-id'),
 				},
 				isNew   : true,
+				durationEditable: false,
+				startEditable: true,
 			};
 
 			// Store the eventObject in the DOM element so we can get it back later
@@ -89,7 +95,7 @@ $(function() {
 		},
 		timezone: 'local', // TODO Change to user's profile timezone (don't trust the browser)
 		events: [],
-		editable: false,
+		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
 		drop: function(date) { // This function is called when something is dropped
 
@@ -97,9 +103,12 @@ $(function() {
 			var originalEventObject = $(this).data('eventObject');
 
 			// We need to copy it, so that multiple events don't have a reference to the same object
-			var eventObject = $.extend({}, originalEventObject);
+			var eventObject = $.extend(true, {}, originalEventObject);
+			// delete eventObject.session.boat_id;
 
 			/**
+			 * UTC problem
+			 * ===========
 			 * The date reported by the calendar, when a trip is dropped, is
 			 * in no-zone, no-time UTC (e.g. 2014-05-29 00:00:00). The problem
 			 * is, that when the user's local timezone is negative (e.g. -4:30
@@ -108,13 +117,53 @@ $(function() {
 			 * instead just fetch the date from the supplied object and create
 			 * a new date object from it with a default set time.
 			 */
-			date = date.format('YYYY-MM-DD');
-			eventObject.session.startObj = $.fullCalendar.moment(date + ' 09:00:00');
-			// console.log("Set to 9 hours:     " + eventObject.session.startObj.format('YYYY-MM-DD HH:mm:ss'));
+			var date = date.format('YYYY-MM-DD');
+			eventObject.session.start = $.fullCalendar.moment(date + ' 09:00:00');
+			// console.log("Set to 9 hours: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
 
 			createCalendarEntry(eventObject);
 
 			showModalWindow(eventObject);
+		},
+		eventDrop: function(eventObject, revertFunc) {
+			if(!eventObject.start.hasTime()) {
+				// Combine dropped-on date and session's start time
+				// See UTC problem above
+				var date = date.format('YYYY-MM-DD');
+				eventObject.start = $.fullCalendar.moment(date + ' ' + eventObject.session.start.format('HH:mm:ss'));
+			}
+			eventObject.session.start = eventObject.start;
+
+			eventObject.session._token = window.token;
+
+			// Format the time in a PHP readable format
+			eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
+
+			// console.log(eventObject.session);
+
+			Sessions.updateSession(eventObject.session, function success(data){
+				// Sync worked, now save and update the calendar item
+
+				// Remake the moment-object (parse as UTC, convert to local to work with)
+				// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
+				eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
+
+				updateCalendarEntry(eventObject);
+				// console.log(data.status + '|' + data.id);
+
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
+
+				pageMssg(data.status, true);
+			}, function error(xhr) {
+				revertFunc();
+
+				eventObject.session.start = $.fullCalendar.moment(eventObject.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss');
+
+				updateCalendarEntry(eventObject);
+
+				pageMssg(xhr.responseText);
+			});
 		},
 		eventClick: function(eventObject) {
 			showModalWindow(eventObject);
@@ -127,13 +176,10 @@ $(function() {
 	}, 100);
 
 	$('#modalWindows').on('change', '.boatSelect', function(event) {
-		eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
-
-		// Unset old value
-		delete eventObject.boats[ eventObject.session.boat_id ].selected;
+		var eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
 
 		// Assign selected value
-		eventObject.session.boat_id = event.target.value;
+		eventObject.session.newBoat_id = event.target.value;
 	});
 
 	$('#modalWindows').on('change', '.starthours, .startminutes', function(event) {
@@ -160,18 +206,18 @@ $(function() {
 				starthours = $(event.target).siblings('input').first().val("0" + starthours);
 		}
 
-		starthours = parseInt(starthours, 10);
-		startminutes = parseInt(startminutes, 10);
+		var starthours = parseInt(starthours, 10);
+		var startminutes = parseInt(startminutes, 10);
 
-		eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
+		var eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
 
 		// Create new independend moment object
-		eventObject.session.newStart = $.fullCalendar.moment( eventObject.session.startObj.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss' ).hours( starthours ).minutes( startminutes );
+		var newStart = $.fullCalendar.moment( eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss' ).hours( starthours ).minutes( startminutes );
 
-		// console.log(eventObject.session.startObj.format('HH:mm on DD-MM-YYYY'));
+		// console.log(eventObject.session.start.format('HH:mm on DD-MM-YYYY'));
 
 		// Update displayed end datetime
-		tempEnd = $.fullCalendar.moment(eventObject.session.newStart).add('hours', eventObject.trip.duration);
+		var tempEnd = $.fullCalendar.moment(newStart).add('hours', eventObject.trip.duration);
 		$(event.target)
 			.closest('.reveal-modal')
 			.find('.enddatetime')
@@ -181,62 +227,94 @@ $(function() {
 
 	// Finally, the ACTIVATE button
 	$('#modalWindows').on('click', '.submit-session', function(event) {
-		modal = $(event.target).closest('.reveal-modal');
-		eventObject = modal.data('eventObject');
+		var modal = $(event.target).closest('.reveal-modal');
+		var eventObject = modal.data('eventObject');
 
 		// Whenever the session is saved, it is not new anymore
 		eventObject.isNew = false;
 
 		// Get time from input boxes
-		starthours   = modal.find('.starthours').val();
-		startminutes = modal.find('.startminutes').val();
-		eventObject.session.startObj.hours(starthours).minutes(startminutes);
+		var starthours   = modal.find('.starthours').val();
+		var startminutes = modal.find('.startminutes').val();
+		eventObject.session.start.hours(starthours).minutes(startminutes);
 
-		console.log(eventObject.session.startObj.format('YYYY-MM-DD HH:mm:ss'));
+		// console.log(eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
 
 		eventObject.session._token = window.token;
 
-		// Clean up
-		if(eventObject.session.newStart) {
-			delete eventObject.session.newStart;
-		}
+		// debugger;
+		eventObject.session.boat_id = eventObject.session.newBoat_id || eventObject.session.boat_id;
+		// debugger;
 
 		// Format the time in a PHP readable format
-		eventObject.session.start = eventObject.session.startObj.utc().format('YYYY-MM-DD HH:mm:ss');
-		eventObject.session.startObj.local();
+		eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
+		// eventObject.session.start.local();
 
-		Sessions.createSession(_.omit(eventObject.session, 'startObj'), function(data){
+		// console.log(eventObject.isNew);
+
+		Sessions.createSession(eventObject.session, function(data){
 			// Sync worked, now save and update the calendar item
 
 			// Remake the moment-object (parse as UTC, convert to local to work with)
 			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
-			// eventObject.session.startObj = $.fullCalendar.moment.utc(eventObject.session.startObj, 'YYYY-MM-DD HH:mm:ss').local();
+			eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
 			eventObject.session.id = data.id;
 
-			updateCalendarEntry(eventObject);
+			// console.log(eventObject.session);
+			updateCalendarEntry(eventObject, true);
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();
 
-			pageMssg(data['status'], true);
+			pageMssg(data.status, true);
 		});
 	});
 
 	// The UPDATE button
 	$('#modalWindows').on('click', '.update-session', function(event) {
-		modal = $(event.target).closest('.reveal-modal');
-		eventObject = modal.data('eventObject');
+		var modal = $(event.target).closest('.reveal-modal');
+		var eventObject = modal.data('eventObject');
+
+		// Get time from input boxes
+		var starthours   = modal.find('.starthours').val();
+		var startminutes = modal.find('.startminutes').val();
+		eventObject.session.start.hours(starthours).minutes(startminutes);
 
 		eventObject.session._token = window.token;
+
+		eventObject.session.boat_id = eventObject.session.newBoat_id || eventObject.session.boat_id;
+
+		// Format the time in a PHP readable format
+		eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
+
+		// console.log(eventObject.session);
+
+		Sessions.updateSession(eventObject.session, function(data){
+			// Sync worked, now save and update the calendar item
+
+			// Remake the moment-object (parse as UTC, convert to local to work with)
+			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
+			eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
+
+			updateCalendarEntry(eventObject);
+			// console.log(data.status + '|' + data.id);
+
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		});
 
 	});
 
 	// The DELETE button
 	$('#modalWindows').on('click', '.delete-session', function(event) {
-		modal = $(event.target).closest('.reveal-modal');
-		eventObject = modal.data('eventObject');
+		var modal = $(event.target).closest('.reveal-modal');
+		var eventObject = modal.data('eventObject');
 
 		eventObject.session._token = window.token;
+
+		// console.log(eventObject.session);
 
 		Sessions.deleteSession({
 			'id': eventObject.session.id,
@@ -286,13 +364,14 @@ $(function() {
 
 function createCalendarEntry(eventObject) {
 
-	eventObject.start = eventObject.session.startObj;
+	eventObject.start = eventObject.session.start;
 	eventObject.end   = $.fullCalendar.moment(eventObject.start).add('hours', eventObject.trip.duration);
 	eventObject.id    = randomString();
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
 	if(eventObject.session.deleted_at) {
 		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
+		eventObject.textColor = colorOpacity(eventObject.textColor, 0.1);
 	}
 
 	// Render the event on the calendar
@@ -300,21 +379,29 @@ function createCalendarEntry(eventObject) {
 	$('#calendar').fullCalendar('renderEvent', eventObject, true);
 }
 
-function updateCalendarEntry(eventObject) {
+function updateCalendarEntry(eventObject, redraw) {
 
-	eventObject.start = eventObject.session.startObj;
+	eventObject.start = eventObject.session.start;
 	eventObject.end   = $.fullCalendar.moment(eventObject.start).add('hours', eventObject.trip.duration);
 
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
-	if(eventObject.session.deleted_at)
+	if(eventObject.session.deleted_at) {
 		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
-
+		eventObject.textColor = colorOpacity(eventObject.textColor, 0.1);
+	}
 	// $('#calendar').fullCalendar('updateEvent', eventObject);
 
+	// debugger;
+
 	// Because f***ing updateEvent doesn't work, we need to remove and render it again
-	$('#calendar').fullCalendar('removeEvents', eventObject.id);
-	$('#calendar').fullCalendar('renderEvent', eventObject, true);
+	if(redraw === true) {
+		$('#calendar').fullCalendar('removeEvents', eventObject.id);
+		$('#calendar').fullCalendar('renderEvent', eventObject, true);
+	}
+	else {
+		$('#calendar').fullCalendar('rerenderEvents');
+	}
 }
 
 function showModalWindow(eventObject) {
@@ -322,14 +409,15 @@ function showModalWindow(eventObject) {
 	var sessionTemplate = $("#session-template").html();
 	sessionTemplate     = Handlebars.compile(sessionTemplate);
 
-	eventObject.boats = window.boats;
+	eventObject.boats = $.extend(true, {}, window.boats);
 	// console.log(eventObject.session);
 	if(!eventObject.session.boat_id) {
 		// Set default
 		eventObject.session.boat_id = _.values(eventObject.boats)[0].id;
 	}
-
 	eventObject.boats[ eventObject.session.boat_id ].selected = true;
+
+	// console.log(eventObject);
 
 	$('#modalWindows')
 	.append( sessionTemplate(eventObject) )        // Create the modal
@@ -340,15 +428,13 @@ function showModalWindow(eventObject) {
 		animationSpeed: 300,                       // how fast animtions are
 		closeOnBackgroundClick: false,             // if you click background will modal close?
 		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
-		eventObject: eventObject,                  // Submit by reference to later get it as this.eventObject
+		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
 		onCloseModal: function() {
 			// Aborted action
+			// debugger;
 			if(this.eventObject.isNew) {
 				$('#calendar').fullCalendar('removeEvents', this.eventObject.id);
 			}
-
-			// Unset old boat value
-			delete this.eventObject.boats[ this.eventObject.session.boat_id ].selected;
 
 			// Clean up the randomStrings array
 			// window.randomStrings.indexOf( this.eventObject.id );

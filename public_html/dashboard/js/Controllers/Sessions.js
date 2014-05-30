@@ -1,12 +1,12 @@
 var Sessions = {
 	//params = int id (the ID of the wanted session)
-	getSecificSession: function(params, handleData){
+	getSecificSession: function(params, handleData) {
 		$.get("/api/session", params).done(function(data){
 			handleData(data);
 		});
 	},
 
-	getAllSessions: function(handleData){
+	getAllSessions: function(handleData) {
 		$.get("/api/session/all").done(function(data){
 			handleData(data);
 		});
@@ -17,9 +17,19 @@ var Sessions = {
 	// @param string  start        The start datetime of the session. Must be interpretable by the strtotime PHP function
 	// @param integer boat_id      The ID of the boat that carries this session
 	// @param integer timetable_id The ID of the related timetable (optional)
-	createSession: function(params, handleData){
+	createSession: function(params, handleData) {
 		$.post("/api/session/add", params, function(data){
 			handleData(data);
+		});
+	},
+
+	updateSession: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/session/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 

@@ -773,19 +773,38 @@ var area   = [north, west, south, east];
 <p><em>Activates</em> a trip by giving it a start datetime and an assigned boat.</p>
 <ul>
 <li><strong>@param</strong> integer trip_id      The ID of the <code>trip</code> that the session belongs to</li>
-<li><strong>@param</strong> string  start        The start datetime of the session. Must be interpretable by the <a href="http://php.net/strtotime">strtotime</a> PHP function</li>
+<li><strong>@param</strong> string  start        The start datetime of the session in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>)</li>
 <li><strong>@param</strong> integer boat_id      The ID of the <code>boat</code> that carries this session</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                Contains <code>status</code> and <code>id</code> of the new session on success, <code>errors</code> on failure</li>
 </ul>
 <p><em>The correct <code>timetable_id</code> is set automatically on the session from which a new <code>timetable</code> is created. For more information about timetables see <a href="#Create_a_timetable">#Create a timetable</a>.</em></p>
+<h3>Update a session</h3>
+<blockquote>
+<h4>Important</h4>
+<p>This function can have four different failure responses:</p>
+<ul>
+<li><code>HTTP 400 Bad Request</code>    Validation errors of the submitted data.</li>
+<li><code>HTTP 404 Not Found</code>      The session/departure could not be found.</li>
+<li><code>HTTP 406 Not Acceptable</code> The new boat's capacity is too small.</li>
+<li><code>HTTP 409 Conflict</code>       Cannot move session. It has already been booked!</li>
+</ul>
+</blockquote>
+<p><code>POST /api/session/edit</code></p>
+<ul>
+<li><strong>@param</strong> integer id      The ID of the <code>session</code> to be edited</li>
+<li><strong>@param</strong> string  start   The start datetime of the session in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>)</li>
+<li><strong>@param</strong> integer boat_id The ID of the <code>boat</code> that carries this session</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON           Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
 <h3>Delete a session</h3>
 <blockquote>
 <h4>Important</h4>
 <p>This function can have two different failure responses:</p>
 <ul>
 <li><code>HTTP 404</code> The session could not be found.</li>
-<li><code>HTTP 406</code> Cannot delete session. It has already been booked!</li>
+<li><code>HTTP 409</code> Cannot delete session. It has already been booked!</li>
 </ul>
 <p>In the second case it is recommended to ask the user to <a href="#Deactivate_a_session">#deactivate the session</a> instead.</p>
 </blockquote>
@@ -1064,6 +1083,10 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>30<sup>th</sup> May 2014</h3>
+<ul>
+<li><strong>@added</strong> The method <a href="#Update_a_session">#Update a session</a></li>
+</ul>
 <h3>29<sup>th</sup> May 2014</h3>
 <ul>
 <li><strong>@edit</strong> Removed <code>timetable_id</code> as a parameter for <a href="#Create_a_session">#Create a session</a></li>

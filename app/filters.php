@@ -13,7 +13,13 @@
 
 App::before(function($request)
 {
-	//
+	/*
+	DB::listen(function($sql, $bindings, $time)
+	{
+		Log::info("SQL: ".$sql);
+		Log::info("Bindings: ".implode(', ', $bindings));
+	});
+	*/
 });
 
 

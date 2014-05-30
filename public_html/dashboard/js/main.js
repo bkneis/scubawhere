@@ -11,8 +11,8 @@ $(function(){
 		console.log(options);
 		*/
 		if(xhr.status == 404) {
-    		console.log(xhr.status + " " + xhr.statusText + ": /" + options.url);
-    		alert(xhr.status + " " + xhr.statusText + ":\n\n/" + options.url);
+    		console.log(xhr.status + " " + xhr.statusText + ": " + xhr.responseText + " - " + options.url);
+    		alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText + "\n\n" + options.url);
     	}
     	else if(xhr.status >= 400) {
     		alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText);
@@ -92,25 +92,7 @@ function reproColor(id) { // Stands for: reproducible color
 
 	return colors[ (id % length) ];
 }
-function colorLuminance(hex, lum) {
 
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
-}
 function colorOpacity(hex, opa) {
 
 	// validate hex string

@@ -383,12 +383,30 @@ Delete an existing ticket.
 *Activates* a trip by giving it a start datetime and an assigned boat.
 
 - **@param** integer trip_id      The ID of the `trip` that the session belongs to
-- **@param** string  start        The start datetime of the session. Must be interpretable by the [strtotime](http://php.net/strtotime) PHP function
+- **@param** string  start        The start datetime of the session in UTC (format: `YYYY-MM-DD HH:mm:ss`)
 - **@param** integer boat_id      The ID of the `boat` that carries this session
 - &nbsp;
 - **@return** JSON                Contains `status` and `id` of the new session on success, `errors` on failure
 
 *The correct `timetable_id` is set automatically on the session from which a new `timetable` is created. For more information about timetables see [#Create a timetable](#Create_a_timetable).*
+
+### Update a session
+
+> #### Important
+> This function can have four different failure responses:
+>
+> - `HTTP 400 Bad Request`    Validation errors of the submitted data.
+> - `HTTP 404 Not Found`      The session/departure could not be found.
+> - `HTTP 406 Not Acceptable` The new boat's capacity is too small.
+> - `HTTP 409 Conflict`       Cannot move session. It has already been booked!
+
+`POST /api/session/edit`
+
+- **@param** integer id      The ID of the `session` to be edited
+- **@param** string  start   The start datetime of the session in UTC (format: `YYYY-MM-DD HH:mm:ss`)
+- **@param** integer boat_id The ID of the `boat` that carries this session
+- &nbsp;
+- **@return** JSON           Contains `status` on success, `errors` on failure
 
 ### Delete a session
 
@@ -715,6 +733,9 @@ All parameters are **optional**.
 &nbsp;
 
 ## Changelog
+
+### 30<sup>th</sup> May 2014
+- **@added** The method [#Update a session](#Update_a_session)
 
 ### 29<sup>th</sup> May 2014
 - **@edit** Removed `timetable_id` as a parameter for [#Create a session](#Create_a_session)
