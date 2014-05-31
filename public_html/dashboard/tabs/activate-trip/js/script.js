@@ -398,8 +398,9 @@ function createCalendarEntry(eventObject) {
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
 	if(eventObject.session.deleted_at) {
-		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
-		eventObject.textColor = colorOpacity(eventObject.textColor, 0.1);
+		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.2);
+		if( eventObject.textColor == '#000000') // black
+			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
 
 	// Render the event on the calendar
@@ -415,8 +416,9 @@ function updateCalendarEntry(eventObject, redraw) {
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
 	if(eventObject.session.deleted_at) {
-		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.1);
-		eventObject.textColor = colorOpacity(eventObject.textColor, 0.1);
+		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.2);
+		if( eventObject.textColor == '#000000') // black
+			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
 	// $('#calendar').fullCalendar('updateEvent', eventObject);
 
