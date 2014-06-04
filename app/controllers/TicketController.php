@@ -29,18 +29,8 @@ class TicketController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('trip_id', 'name', 'description', 'price', 'currency');
+		$data = Input::only('name', 'description', 'price', 'currency');
 		$data['currency'] = Helper::currency( Input::get('currency') );
-
-		try
-		{
-			if( empty( $data['trip_id'] ) ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->findOrFail( $data['trip_id'] );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
-		}
 
 		$ticket = new Ticket($data);
 
@@ -49,8 +39,17 @@ class TicketController extends Controller {
 			return Response::json( array('errors' => $ticket->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		// Input has been validated, save the model
-		$ticket = $trip->tickets()->save($ticket);
+		// Check if 'trips' input array is given and not empty
+		$trips = Input::get('trips');
+		if( !is_array($trips) || empty('trips') )
+			return Response::json( array( 'errors' => array('The "trips" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
+
+		// Required input has been validated, save the model
+		$ticket = Auth::user()->tickets()->save($ticket);
+
+		// Ticket has been created, let's connect it to trips
+		// TODO Validate existence of trip IDs
+		$ticket->trips()->sync( $trips );
 
 		// Ticket has been created, let's connect it to boats
 		$boats = Input::get('boats');
@@ -97,7 +96,7 @@ class TicketController extends Controller {
 		}
 
 		// Success
-		return Response::json( array('status' => 'Created and connected OK', 'id' => $ticket->id), 201); // 201 Created
+		return Response::json( array('status' => 'Ticket created and connected OK', 'id' => $ticket->id), 201); // 201 Created
 	}
 
 	public function postEdit()

@@ -52,7 +52,7 @@ class Trip extends Ardent {
 
 	public function tickets()
 	{
-		return $this->hasMany('Ticket');
+		return $this->belongsToMany('Ticket');
 	}
 
 	public function departures()

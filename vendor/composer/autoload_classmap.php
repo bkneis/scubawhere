@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Accommodation' => $baseDir . '/app/models/Accommodation.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
+    'AddCompanyIdToTickets' => $baseDir . '/app/database/migrations/2014_06_04_165618_add_company_id_to_tickets.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',
     'AddForeignCompanyIdToAgentsTable' => $baseDir . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
     'AddForeignKeysToBookingCustomerTable' => $baseDir . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
@@ -75,6 +76,7 @@ return array(
     'CreatePasswordRemindersTable' => $baseDir . '/app/database/migrations/2014_02_17_002807_create_password_reminders_table.php',
     'CreateRegionsTable' => $baseDir . '/app/database/migrations/2014_02_17_014920_create_regions_table.php',
     'CreateSessionsTable' => $baseDir . '/app/database/migrations/2014_02_17_021058_create_sessions_table.php',
+    'CreateTicketTripTable' => $baseDir . '/app/database/migrations/2014_06_04_163225_create_ticket_trip_table.php',
     'CreateTicketsTable' => $baseDir . '/app/database/migrations/2014_02_17_020836_create_tickets_table.php',
     'CreateTimetablesTable' => $baseDir . '/app/database/migrations/2014_03_24_141238_create_timetables_table.php',
     'CreateTripTriptypeTable' => $baseDir . '/app/database/migrations/2014_02_17_020748_create_trip_triptype_table.php',
@@ -1557,7 +1559,6 @@ return array(
     'Psr\\Log\\LoggerInterface' => $vendorDir . '/psr/log/Psr/Log/LoggerInterface.php',
     'Psr\\Log\\LoggerTrait' => $vendorDir . '/psr/log/Psr/Log/LoggerTrait.php',
     'Psr\\Log\\NullLogger' => $vendorDir . '/psr/log/Psr/Log/NullLogger.php',
-    'Region' => $baseDir . '/app/models/Region.php',
     'RegionsTableSeeder' => $baseDir . '/app/database/seeds/RegionsTableSeeder.php',
     'RegisterController' => $baseDir . '/app/controllers/RegisterController.php',
     'RemoveRegionsTable' => $baseDir . '/app/database/migrations/2014_06_04_103901_remove_regions_table.php',

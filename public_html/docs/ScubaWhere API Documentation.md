@@ -620,15 +620,15 @@ All parameters are optional (except the customer `id`).
 - &nbsp;
 - **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
 
-## Countries & Regions
+## Countries
 
-### Recieve all countries and related regions
+### Recieve all countries
 
 `GET /api/country/all`
 
-Use this API call to populate a country and (subsequent) region drop-down/select field.
+Use this API call to populate a country drop-down/select field.
 
-- **@return** JSON  An array of `country` objects with related `regions` arrays
+- **@return** JSON  An array of `country` objects
 
 ## Agencies & Certificates
 

@@ -4,7 +4,7 @@ use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
 class Ticket extends Ardent {
-	protected $guarded = array('id', 'trip_id', 'active', 'created_at', 'updated_at');
+	protected $guarded = array('id', 'company_id', 'active', 'created_at', 'updated_at');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -24,9 +24,14 @@ class Ticket extends Ardent {
 		$this->currency = Helper::currency($this->currency);
 	}
 
+	public function company()
+	{
+		return $this->belongsTo('Company');
+	}
+
 	public function trip()
 	{
-		return $this->belongsTo('Trip');
+		return $this->belongsToMany('Trip');
 	}
 
 	public function boats()

@@ -14,7 +14,7 @@ class CountryController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Country::with('regions')->findOrFail( Input::get('id') );
+			return Country::findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,6 +24,6 @@ class CountryController extends Controller {
 
 	public function getAll()
 	{
-		return Country::with('regions')->get();
+		return Country::get();
 	}
 }
