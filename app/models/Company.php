@@ -110,6 +110,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Customer');
 	}
 
+	public function locations()
+	{
+		return $this->belongsToMany('Location');
+	}
+
 	public function packages()
 	{
 		return $this->hasMany('Package');
@@ -157,9 +162,8 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasManyTrough('Ticket', 'Booking');
 	}
-	/**
-	 * END Relations
-	 */
+
+	/* END Relations */
 
 	/**
 	 * Get the unique identifier for the user.

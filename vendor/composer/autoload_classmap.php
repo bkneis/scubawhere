@@ -63,6 +63,7 @@ return array(
     'CreateBookingsTable' => $baseDir . '/app/database/migrations/2014_02_17_021810_create_bookings_table.php',
     'CreateCertificatesTable' => $baseDir . '/app/database/migrations/2014_02_17_021060_create_certificates_table.php',
     'CreateCompaniesTable' => $baseDir . '/app/database/migrations/2014_02_17_014940_create_companies_table.php',
+    'CreateCompanyLocationPivotTable' => $baseDir . '/app/database/migrations/2014_06_04_094433_create_company_location_pivot_table.php',
     'CreateContinentsTable' => $baseDir . '/app/database/migrations/2014_02_17_013607_create_continents_table.php',
     'CreateCountriesTable' => $baseDir . '/app/database/migrations/2014_02_17_014835_create_countries_table.php',
     'CreateCustomersTable' => $baseDir . '/app/database/migrations/2014_02_17_021744_create_customers_table.php',

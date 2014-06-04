@@ -25,4 +25,9 @@ class Location extends Ardent {
 		if( isset($this->tags) )
 			$this->tags = Helper::sanitiseString($this->tags);
 	}
+
+	public function companies()
+	{
+		return $this->belongsToMany('Company');
+	}
 }

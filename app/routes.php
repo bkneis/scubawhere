@@ -79,6 +79,8 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/customer', 'CustomerController');
 
+	Route::controller('api/location', 'LocationController');
+
 	Route::controller('api/session', 'DepartureController');
 
 	Route::controller('api/ticket', 'TicketController');
