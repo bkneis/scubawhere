@@ -41,7 +41,7 @@ class TicketController extends Controller {
 
 		// Check if 'trips' input array is given and not empty
 		$trips = Input::get('trips');
-		if( !is_array($trips) || empty('trips') )
+		if( !is_array($trips) || empty($trips) )
 			return Response::json( array( 'errors' => array('The "trips" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
 
 		// Required input has been validated, save the model
