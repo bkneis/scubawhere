@@ -321,6 +321,7 @@ Creates a new ticket for a trip.
 - **@param** string  description A description for the ticket
 - **@param** decimal price       The price (will be rounded to two decimals)
 - **@param** string  currency    Three letter international code (optional, default: dive center's country's currency)
+- **@param** array   trips       A simple array of `trip_id`s that the ticket is eligable for
 - **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
 - &nbsp;
 - **@return** JSON               Contains `status` and `id` of the newly created ticket on success, `errors` on failure
@@ -734,6 +735,10 @@ All parameters are **optional**.
 
 ## Changelog
 
+### 4<sup>th</sup> June 2014
+- **@edit** Added `trips` field to parameters for [#Create a ticket](#Create_a_ticket)
+- **@edit** Removed regions from [#Countries](#Countries)
+
 ### 30<sup>th</sup> May 2014
 - **@added** The method [#Update a session](#Update_a_session)
 
@@ -748,7 +753,7 @@ All parameters are **optional**.
 
 ### 24<sup>th</sup> May 2014
 - **@added** New [#Customers](#Customers) section
-- **@added** The [#Countries & Regions](#Countries_&_Regions) and [#Agencies & Certificates](#Agencies_&_Certificates) sections
+- **@added** The [#Countries](#Countries) and [#Agencies & Certificates](#Agencies_&_Certificates) sections
 
 ### 21<sup>st</sup> May 2014
 - **@added** New [#Agents](#Agents) section
