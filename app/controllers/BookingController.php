@@ -56,7 +56,7 @@ class BookingController extends Controller {
 		{
 			$booking->reference = Helper::booking_reference_number();
 		}
-		while( Booking::where('reference', $booking->reference)->count() >= 1 )
+		while( Booking::where('reference', $booking->reference)->count() >= 1 );
 
 		if( !$booking->validate() )
 		{

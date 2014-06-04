@@ -75,6 +75,8 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/agent', 'AgentController');
 
+	Route::controller('api/booking', 'BookingController');
+
 	Route::controller('api/country', 'CountryController');
 
 	Route::controller('api/customer', 'CustomerController');
