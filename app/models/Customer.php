@@ -74,17 +74,12 @@ class Customer extends Ardent {
 
 	public function bookings()
 	{
-		return $this->belongsToMany('Booking');
+		return $this->belongsToMany('Booking', 'booking_details')->withPivot('ticket_id', 'session_id', 'package_id', 'is_lead');
 	}
 
 	public function certificate()
 	{
 		return $this->belongsTo('Certificate');
-	}
-
-	public function region()
-	{
-		return $this->belongsTo('Region');
 	}
 
 	public function country()

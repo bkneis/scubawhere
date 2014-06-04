@@ -41,7 +41,7 @@ class Ticket extends Ardent {
 
 	public function bookings()
 	{
-		return $this->belongsToMany('Booking', 'booking_details')->withPivot('session_id', 'package_id');
+		return $this->belongsToMany('Booking', 'booking_details')->withPivot('session_id', 'package_id', 'customer_id', 'is_lead');
 	}
 
 }
