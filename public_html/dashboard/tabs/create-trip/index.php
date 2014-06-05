@@ -6,10 +6,11 @@
 	font-size: 12pt;
 	cursor: pointer;
 }
-.location-name:hover {
-	font-size: 14pt;
+.location-details:hover {
 	background-color: rgb(230, 245, 255);;
-	cursor: pointer;
+}
+.add-location {
+	list-style-type: none;
 }
 </style>
 <div id="wrapper">
