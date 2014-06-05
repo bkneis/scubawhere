@@ -74,7 +74,7 @@
 						<li class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
 							
 							<div class="location-details">
-							<div><p class="location-name">{{name}}</p></div>
+							<div class="location-name"><p>{{name}}</p></div>
 							<div>Long: {{longitude}}</div>
 							<div>Lat: {{latitude}}</div>
 							</div>
