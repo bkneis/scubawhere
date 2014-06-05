@@ -1,4 +1,20 @@
+<script type='text/javascript'>
 
+(function()
+{
+  if( window.localStorage )
+  {
+    if( !localStorage.getItem( 'firstLoad' ) )
+    {
+      localStorage[ 'firstLoad' ] = true;
+      window.location.reload();
+    }  
+    else
+      localStorage.removeItem( 'firstLoad' );
+  }
+})();
+
+</script>
 <script type="text/html" id="edit_marker_template">
     <h4>Edit Marker</h4>
     <form class="edit_marker" action="#" method="post" data-marker-index="{{index}}">
