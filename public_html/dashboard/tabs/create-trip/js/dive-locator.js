@@ -1,4 +1,3 @@
-var map;
 var token;
 
 $(function(){
@@ -42,27 +41,6 @@ $(function(){
 			}
 		});
 	});
-
-	map = new GMaps({
-		div: '#map',
-		lat: 0,
-		lng: 0,
-		width: '100%',
-		height: '400px',
-		zoom: 3,
-		bounds_changed: function(){
-			//set with map center coordinates
-			var bounds = map.getBounds(),
-			    north  = bounds.getNorthEast().lat(),
-			    west   = bounds.getSouthWest().lng(),
-			    sth    = bounds.getSouthWest().lat(),
-			    east   = bounds.getNorthEast().lng();
-			
-			var area   = [north, west, sth, east];
-			
-			setLoactionsList(area);
-		}
-	});
 	
 	var spotSource = $("#selected-spot").html(); 
 	var spotTemplate = Handlebars.compile(spotSource);
@@ -83,13 +61,32 @@ $(function(){
 		
 	});
 	
-	$("body").delegate(".select-pickup", "click", function(){
-		var thisPickup	 = $(this).parent().attr("data-location").split(",");
-		var pickupName = thisPickup[0];
-		var pickupID 	 = thisPickup[1];
+	$("body").delegate(".remove-location", "click", function(){
 		
-		$("#selected-pickup > span").html(pickupName + "<input type='hidden' name='location_id' value='" + pickupID + "'>");
 	});
+
+	$("#locations-list").html("");//refresh list
+	
+	var locSource = $("#locations").html(); 
+	var locTemplate = Handlebars.compile(locSource);
+	
+	$.ajax({
+				url: "/company/locations",
+				type: "GET",
+				dataType: "json",
+				data: {latitude:0, longitude:0, limit:1000, _token: token},
+				async: false,
+				success: function(data){
+					$.each(data, function(){
+					
+						$("#locations-list").append(locTemplate(this));
+						
+						$("#hidden-spots").append("<input type='hidden' name='locations[]' value='" + this.id + "'>");
+						
+					});
+					
+				}
+			});
 
 });
 
@@ -108,18 +105,6 @@ function validateTrip(){
 	var validDescription 	= $("[name=description]").validateField(5, 3000);
 	if(!validDescription){$("#cke_description").css("border-color", "red");}//oesnt work with present validate script
 	
-	function validPickUp(){
-		var validPU = true;
-		$("#pu-error").html("");
-		if($("[name='location_id']").length < 1){
-			validPU = false;
-			$("#pu-error").html("<div class='red-helper'>Please select a pickup location.</div>");
-		}
-		console.log(validPU);
-		return validPU;
-	}
-	validPickUp();//complete actions
-	
 	function validTripType(){
 		var validTT = true;
 		$("#type-error").html("");
@@ -131,48 +116,11 @@ function validateTrip(){
 		return validTT;
 	}
 	validTripType();//complete actions
-	if(validName && validDuration && validDescription && validPickUp() && validTripType()){
+	if(validName && validDuration && validDescription && validTripType()){
 		bool = false;
 	}else{
 		pageMssg("There are errors.", false);
 	}
 	
 	return bool;
-}
-	
-
-function setLoactionsList(area){
-	
-	$("#locations-list").html("");//refresh list
-	$("#pick-ups").html("");
-	
-	var locSource = $("#locations").html(); 
-	var locTemplate = Handlebars.compile(locSource);
-	
-	
-	
-	$.ajax({
-				url: "/company/locations",
-				type: "GET",
-				dataType: "json",
-				data: {area: area, _token: token},
-				async: false,
-				success: function(data){
-					$.each(data, function(){
-					
-						$("#locations-list").append(locTemplate(this));
-						
-						$("#hidden-spots").append("<input type='hidden' name='locations[]' value='" + this.id + "'>");
-			
-						map.addMarker({
-						  lat: this.latitude,
-						  lng: this.longitude,
-						  title: "" + this.id + "",
-						  });
-						
-					});
-					
-				}
-			});
-	
 }
