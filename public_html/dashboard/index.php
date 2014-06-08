@@ -48,7 +48,6 @@
 
 
 	<script src="/common/js/jquery.js"></script>
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 	<script src="/common/js/moment.min.js"></script>
 	<script src="/common/js/hashchange.min.js"></script>
 	<script src="/common/js/handlebars.js"></script>
@@ -57,7 +56,9 @@
 	<script src="/common/ckeditor/adapters/jquery.js"></script>
 	<script src="/common/js/fullcalendar.min.js"></script>
 	<script src="/common/js/jquery.tagsinput.min.js"></script>
-	<script src="/common/js/gmaps.js"></script>
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
 	<script src="/common/js/underscore-min.js"></script>
 
 

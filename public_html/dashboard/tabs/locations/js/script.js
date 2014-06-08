@@ -57,7 +57,12 @@ $(document).on('click', '.pan-to-marker', function(e) {
 		height: '400px',
 		zoom: 8
 	});
-	
+
+	google.maps.event.addListener(map.map, 'bounds_changed', function() {
+		// Trigger the map resize after the map has loaded, to fix the map not showing properly
+		google.maps.event.trigger(map.map, 'resize');
+	});
+
 	GMaps.geolocate({
         success: function(position){
           map.setCenter(position.coords.latitude, position.coords.longitude);
@@ -72,9 +77,9 @@ $(document).on('click', '.pan-to-marker', function(e) {
           //alert("Done!");
         //}
       });
-	
+
 	$('#tags').tagsInput({width:'502px', height: "60px"});
-	
+
 	_token = $.ajax({
 		url: "/token",
 		type: "GET",
@@ -84,12 +89,12 @@ $(document).on('click', '.pan-to-marker', function(e) {
 			$("[name='_token']").val(data)
 		}
 	});
-	
+
 	/*
-var locSource = $("#location").html(); 
+var locSource = $("#location").html();
 	var locTemplate = Handlebars.compile(locSource);
 */
-	
+
 	$.ajax({
 	url: "/company/locations",
 	type: "GET",
@@ -105,29 +110,29 @@ var locSource = $("#location").html();
 					  title: this.name,
 					  icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
 				  });
-				  
+
 			});
 		}
 	});
-	
+
 	var newMarker;
-	
+
 	/* 	ADD MARKER */
 	GMaps.on('click', map.map, function(event) {
 	    var index = map.markers.length;
 	    var lat = event.latLng.lat();
 	    var lng = event.latLng.lng();
-	
+
 	    $("[name='latitude']").val(lat);
 	    $("[name='longitude']").val(lng);
-	    
+
 	    //map.removeMarker('Marker #' + (index - 1));
 	    map.removeMarkers();
-	    
+
 	    var template = $('#edit_marker_template').text();
 
     	var content = template.replace(/{{index}}/g, index).replace(/{{lat}}/g, lat).replace(/{{lng}}/g, lng);
-	
+
 	    map.addMarker({
 	      lat: lat,
 	      lng: lng,
@@ -137,7 +142,7 @@ var locSource = $("#location").html();
 	      }
 	    });
 	  });
-	  
+
 	  $("form#save-location").submit(function(e){
 	  		$.ajax({
 			url: "/company/add-location",
@@ -151,5 +156,5 @@ var locSource = $("#location").html();
 			});
 	  		e.preventDefault();
 	  });
-	  
+
 });
