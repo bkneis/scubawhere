@@ -451,7 +451,7 @@ pre {
 <script src="responsive-nav.min.js"></script>
 </head>
 <body>
-<p><a href="http://scubawhere.com/docs"><img src="http://scubawhere.com/docs/ScubaWhere_Logo.svg" /></a></p>
+<p><a href="http://scubawhere.com/docs"><img src="ScubaWhere_Logo.svg" /></a></p>
 <h1>Internal API Documentation</h1>
 <div id="contents">
 <h3>Table of Contents</h3>
@@ -665,7 +665,7 @@ pre {
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON             An array of locations, ordered by <code>distance</code> (also in the results, in miles)</li>
 </ul>
-<p><em>The time it takes for the MySQL query to execute is logged.</em></p>
+<p><em>For performance monitoring, the time it takes for the MySQL query to execute is logged.</em></p>
 <h3>Retrieve locations 2/2 - Inside bounds</h3>
 <p><code>GET /company/locations</code></p>
 <p>Retrieve <em>all</em> locactions inside the specified bounds.</p>
@@ -699,6 +699,28 @@ var area   = [north, west, south, east];
 <li><strong>@param</strong> string tags        Tags for the location (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON              Contains <code>status</code> and <code>id</code> of the newly created location on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Retrieve all locations of a company</h3>
+<p><code>GET /api/location/all</code></p>
+<p>This methods returns all locations that have been formerly <a href="#Attach_a_location_to_a_company">#attached to the company</a> to the company.</p>
+<ul>
+<li><strong>@return</strong> JSON  An array of <code>location</code> objects</li>
+</ul>
+<h3>Attach a location to a company</h3>
+<p><code>POST /api/location/attach</code></p>
+<p>Attach an existing location to a company for use in their trips creation.</p>
+<ul>
+<li><strong>@param</strong> integer location_id The ID of the <code>location</code> to attach to the company</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Detach a location from a company</h3>
+<p><code>POST /api/location/detach</code></p>
+<p>Detach a formerly attached location from a company.</p>
+<ul>
+<li><strong>@param</strong> integer location_id The ID of the <code>location</code> to detach from the company</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Tickets</h2>
 <h3>Retrieve a specific ticket</h3>
@@ -1084,6 +1106,12 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>9<sup>th</sup> June 2014</h3>
+<ul>
+<li><strong>@added</strong> A new method to <a href="#Retrieve_all_locations_of_a_company">#Retrieve all locations of a company</a></li>
+<li><strong>@added</strong> A new method to <a href="#Attach_a_location_to_a_company">#Attach a location to a company</a></li>
+<li><strong>@added</strong> A new method to <a href="#Detach_a_location_from_a_company">#Detach a location from a company</a></li>
+</ul>
 <h3>4<sup>th</sup> June 2014</h3>
 <ul>
 <li><strong>@edit</strong> Added <code>trips</code> field to parameters for <a href="#Create_a_ticket">#Create a ticket</a></li>

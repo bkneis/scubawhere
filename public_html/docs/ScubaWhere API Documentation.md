@@ -1,4 +1,4 @@
-[![](http://scubawhere.com/docs/ScubaWhere_Logo.svg)](http://scubawhere.com/docs)
+[![](ScubaWhere_Logo.svg)](http://scubawhere.com/docs)
 
 # Internal API Documentation
 
@@ -255,7 +255,7 @@ Retrieve an arbitrary number of locations, sorted by distance to submitted locat
 - &nbsp;
 - **@return** JSON             An array of locations, ordered by `distance` (also in the results, in miles)
 
-*The time it takes for the MySQL query to execute is logged.*
+*For performance monitoring, the time it takes for the MySQL query to execute is logged.*
 
 ### Retrieve locations 2/2 - Inside bounds
 
@@ -293,6 +293,34 @@ A newly created location is **not** limited to the creating company. All locatio
 - **@param** string tags        Tags for the location (optional)
 - &nbsp;
 - **@return** JSON              Contains `status` and `id` of the newly created location on success, `errors` on failure
+
+### Retrieve all locations of a company
+
+`GET /api/location/all`
+
+This methods returns all locations that have been formerly [#attached to the company](#Attach_a_location_to_a_company) to the company.
+
+- **@return** JSON  An array of `location` objects
+
+### Attach a location to a company
+
+`POST /api/location/attach`
+
+Attach an existing location to a company for use in their trips creation.
+
+- **@param** integer location_id The ID of the `location` to attach to the company
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Detach a location from a company
+
+`POST /api/location/detach`
+
+Detach a formerly attached location from a company.
+
+- **@param** integer location_id The ID of the `location` to detach from the company
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
 
 ## Tickets
 
@@ -734,6 +762,11 @@ All parameters are **optional**.
 &nbsp;
 
 ## Changelog
+
+### 9<sup>th</sup> June 2014
+- **@added** A new method to [#Retrieve all locations of a company](#Retrieve_all_locations_of_a_company)
+- **@added** A new method to [#Attach a location to a company](#Attach_a_location_to_a_company)
+- **@added** A new method to [#Detach a location from a company](#Detach_a_location_from_a_company)
 
 ### 4<sup>th</sup> June 2014
 - **@edit** Added `trips` field to parameters for [#Create a ticket](#Create_a_ticket)
