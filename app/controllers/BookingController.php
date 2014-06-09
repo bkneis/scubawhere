@@ -93,7 +93,12 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$booking->customers()->attach( Input::get('customer_id')/*, array('chief' => is_this_user_chief?)*/ );
+		// Check if this customer is supposed to be the lead customer
+		$is_lead = Input::get('is_lead');
+		if( !is_bool($is_lead) )
+			$is_lead = false;
+
+		$booking->customers()->attach( Input::get('customer_id'), array('is_lead' => $is_lead) );
 
 		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()), 200 ); // 200 OK
 	}
@@ -140,8 +145,10 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// "Validation" rules
 		return array(
-			'customer' => $booking->costumers()->first()->email != ''
+			"email" => $booking->lead_costumer()->first()->email != '',
+			"phone" => $booking->lead_costumer()->first()->phone != '',
 		);
 	}
 
