@@ -33,7 +33,6 @@ class Customer extends Ardent {
 		'city'           => '',
 		'county'         => '',
 		'postcode'       => '',
-		'region_id'      => 'integer|exists:regions,id',
 		'country_id'     => 'integer|exists:countries,id',
 		'phone'          => '',
 		'certificate_id' => 'integer|exists:certificates,id',
