@@ -14,7 +14,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->tickets()->where('active', '=', 1)->with('boats')->findOrFail( Input::get('id') );
+			return Auth::user()->tickets()->where('active', 1)->with('boats', 'trips')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,7 +24,7 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->where('active', '=', 1)->with('boats')->get();
+		return Auth::user()->tickets()->where('active', 1)->with('boats', 'trips')->get();
 	}
 
 	public function postAdd()
@@ -48,7 +48,7 @@ class TicketController extends Controller {
 		$ticket = Auth::user()->tickets()->save($ticket);
 
 		// Ticket has been created, let's connect it to trips
-		// TODO Validate existence of trip IDs
+		// TODO Validate existence and ownership of trip IDs
 		$ticket->trips()->sync( $trips );
 
 		// Ticket has been created, let's connect it to boats

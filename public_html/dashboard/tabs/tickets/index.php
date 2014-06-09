@@ -6,9 +6,9 @@
 				<thead>
 					<tr>
 						<th>Ticket name</th>
-						<th>Price</th>
-						<th>Trip</th>
+						<th style="width: 100px;">Price</th>
 						<th>Description</th>
+						<th>Trips</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -17,8 +17,15 @@
 						<tr>
 							<td>{{{name}}}</td>
 							<td>{{{currency}}} {{{price}}}</td>
-							<td>{{trip_name}}</td>
 							<td>{{{description}}}</td>
+							<td>
+								<select>
+									<option>{{count trips}} trip(s) selected</option>
+									{{#each trips}}
+										<option>{{{name}}}</option>
+									{{/each}}
+								</select>
+							</td>
 						</tr>
 					{{/each}}
 
@@ -66,16 +73,14 @@
 				</div>
 
 				<div class="form-row">
-					<label class="field-label">Trip</label>
-					<select name="trip_id" id="trip-select">
-						<option value="">Please select a trip..</option>
-						<script id="trip-template" type="text/x-handlebars-template">
+					<p><strong>Please select the trips that this ticket should be eligable for:</strong></p>
+					<div id="trip-select" style="margin-bottom: 1.5em; margin-left: 4em;">
+						<script id="trips-template" type="text/x-handlebars-template">
 							{{#each trips}}
-								<option value="{{id}}">{{name}}</option>
+								<label><input type="checkbox" name="trips[]" value="{{id}}"> {{{name}}}</label><br>
 							{{/each}}
 						</script>
-
-					</select>
+					</div>
 				</div>
 
 				<div class="form-row">

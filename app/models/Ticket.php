@@ -29,9 +29,9 @@ class Ticket extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
-	public function trip()
+	public function trips()
 	{
-		return $this->belongsToMany('Trip');
+		return $this->belongsToMany('Trip')->withTimestamps();
 	}
 
 	public function boats()
