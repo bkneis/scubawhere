@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Accommodation' => $baseDir . '/app/models/Accommodation.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
+    'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
     'AddCompanyIdToTickets' => $baseDir . '/app/database/migrations/2014_06_04_165618_add_company_id_to_tickets.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',
     'AddForeignCompanyIdToAgentsTable' => $baseDir . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
