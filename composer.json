@@ -7,7 +7,8 @@
 		"laravel/framework": "4.2.*",
 		"doctrine/dbal": "2.5.*@dev",
 		"laravelbook/ardent": "dev-master",
-		"mews/purifier": "dev-master"
+		"mews/purifier": "dev-master",
+		"philipbrown/money": "1.*"
 	},
 	"autoload": {
 		"classmap": [
