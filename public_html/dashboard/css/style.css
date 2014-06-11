@@ -127,8 +127,9 @@ body{ background-color: #34495e; }
 .ui-state-hover{ background-color: #fff7cb }
 
 .rotate {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    transform: rotate(-180deg);
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 }
 
@@ -627,3 +628,13 @@ span.box-tool{
 	color: inherit;
 }
 
+/**
+ * Boats tab
+ */
+#boats-wrap .box-tool {
+	float: left;
+	margin-right: 0.5em;
+	transition: -webkit-transform 0.2s;
+	transition: -moz-transform 0.2s;
+	transition: transform 0.2s;
+}

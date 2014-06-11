@@ -1,46 +1,50 @@
 <div id="wrapper">
-	<div class="yellow-helper">Please enter all your boat details. You can divide a boats capacity up by room types. If you don't dive from boats then you could add a boat named "Beach" or "Pontoon" as appropriate.</div>
+	<div class="yellow-helper">Please enter all your boat details. You can divide a boats capacity up by room types. If you don't dive from boats then you could add a <i>boat</i> named "Beach" or "Pontoon" as appropriate.</div>
 	<form id="saveBoatsAndRooms" class="validate">
 		<div id="boats-wrap" class="box100">
-			<label class="blueb expand-box">Existing Boats & Rooms <span class="box-tool expand-box-arrow">&#8595;</span></label>
+			<label class="blueb expand-box"><span class="box-tool expand-box-arrow">&#8595;</span> Existing Boats & Rooms</label>
 			<div class="padder expandable hidden">
 				<!--list the boats with handlebars -->
 				<script id="boat" type="text/x-handlebars-template">
 
-						<div class="boat-wrap box100" data-boat-id="{{id}}">
-							<h3 class="expand-box">{{newBoat}}{{name}} <span class="box-tool del-box redb" data-sure="Are you sure you want to delet this boat?">X</span><span class="box-tool expand-box-arrow">&#8595;</span></h3>
-							<div class="padder expandable hidden">
-								<p>{{description}}</p>
-								<span>Capacity: {{capacity}}</span>
+					<div class="boat-wrap box100" data-boat-id="{{id}}">
+						<h3 class="expand-box">
+							{{newBoat}}{{{name}}}
+							<span class="box-tool expand-box-arrow">&#8595;</span>
+						</h3>
+						<div class="padder expandable hidden">
+							<span class="box-tool del-box redb" data-sure="Are you sure you want to delet this boat?" style="float: right; color: white;">Remove</span>
+							<p>{{{description}}}</p>
+							<span>Capacity: {{capacity}}</span>
 
-								<input type="hidden" name="boats[{{id}}][name]" value="{{{name}}}">
-								<input type="hidden" name="boats[{{id}}][capacity]" value="{{capacity}}">
-								<input type="hidden" name="boats[{{id}}][description]" value="{{{description}}}">
+							<input type="hidden" name="boats[{{id}}][name]" value="{{{name}}}">
+							<input type="hidden" name="boats[{{id}}][capacity]" value="{{capacity}}">
+							<input type="hidden" name="boats[{{id}}][description]" value="{{{description}}}">
 
-								<ul>
-									{{#accommodations}}
-										<li>
-											<span><strong>{{{name}}}</strong></span>
-											<span>Capacity: {{pivot.capacity}}</span>
-											<span class="del-boat-room redf link" data-sure="Are you sure you want to delet this boat room?">Delete</span>
-											<input type="hidden" name="boats[{{pivot.boat_id}}][accommodations][{{id}}]" value="{{pivot.capacity}}">
-										</li>
-									{{/accommodations}}
-
-									<li class="boat-room-row">
-										<span class="newBoatRoom">
-											<select name="newBoatRoomName" class="newRoomTypeSelect">
-												<option value="">Add new room type..</option>
-											</select>
-											<div>
-												<input class="valid" name="newBoatRoomCapacity" type="text" placeholder="No. beds.">
-												<input type="submit" id="saveBoatRoom" data-boat-id="{{id}}" value="Save" class="bttn small-bttn blueb">
-											</div>
-										</span>
+							<ul>
+								{{#accommodations}}
+									<li>
+										<span><strong>{{{name}}}</strong></span>
+										<span>Capacity: {{pivot.capacity}}</span>
+										<span class="del-boat-room redf link" data-sure="Are you sure you want to delet this boat room?">Delete</span>
+										<input type="hidden" name="boats[{{pivot.boat_id}}][accommodations][{{id}}]" value="{{pivot.capacity}}">
 									</li>
-								</ul>
-							</div>
+								{{/accommodations}}
+
+								<li class="boat-room-row">
+									<span class="newBoatRoom">
+										<select name="newBoatRoomName" class="newRoomTypeSelect">
+											<option value="">Add new room type..</option>
+										</select>
+										<div>
+											<input class="valid" name="newBoatRoomCapacity" type="text" placeholder="No. beds.">
+											<input type="submit" id="saveBoatRoom" data-boat-id="{{id}}" value="Save" class="bttn small-bttn blueb">
+										</div>
+									</span>
+								</li>
+							</ul>
 						</div>
+					</div>
 				</script>
 
 				<div class="box100">
@@ -69,14 +73,17 @@
 									</td>
 								</tr>
 							</script>
+
 						</tbody>
 					</table>
+					<br><br>
+					<label class="blueb">Boats</label>
 				</div>
 			</div>
 		</div>
 
 		<div id="newBoat-wrap" class="box100">
-			<label class="blueb">Add New Boat</label>
+			<label class="blueb"><img src="img/icons/yacht_white.png"> &nbsp; Add New Boat</label>
 			<div class="padder">
 				<input type="text" class="valid" name="newBoatName" placeholder="Boat name" />
 				<input type="text" class="valid" name="newBoatCapacity" placeholder="Capacity" />
@@ -88,7 +95,7 @@
 
 
 		<div class="box100">
-			<label class="blueb">Add New Room Type</label>
+			<label class="blueb"><img src="img/icons/bed_white.png"> &nbsp; Add New Room Type</label>
 			<div class="padder" id="new-room-type">
 				<input name="newRoomName" type="text" placeholder="Room name">
 				<textarea name="newRoomDescription" placeholder="Room description"></textarea>
