@@ -51,7 +51,7 @@ class TicketController extends Controller {
 		}
 		catch(InvalidCurrencyException $e)
 		{
-			return Response::json( array( 'errors' => array('The currency is not valid!')), 400 ); // 400 Bad Request
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
 		}
 		$data['price'] = round( $data['price'] * $currency->getSubunitToUnit() );
 
