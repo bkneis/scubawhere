@@ -119,10 +119,13 @@ $(function(){
 
 function renderAgentList(callback) {
 
+	$('#agent-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+
 	Agent.getAllAgents(function success(data) {
 
 		window.agents = _.indexBy(data, 'id');
 		$('#agent-list').remove();
+		$('#agent-list-container .loader').remove();
 
 		$("#agent-list-container").append( agentList({agents : data}) );
 
