@@ -10,12 +10,6 @@ class Booking extends Ardent {
 		'currency',
 		'discount',
 		'confirmed',
-		'paid_cash',
-		'paid_creditcard',
-		'paid_cheque',
-		'paid_banktransfer',
-		'pay_online',
-		'pay_later',
 		'reserved',
 		'pick_up',
 		'drop_off',
@@ -29,12 +23,6 @@ class Booking extends Ardent {
 		'currency'          => 'alpha|size:3',
 		'discount'          => 'numeric|min:0',
 		'confirmed'         => 'integer|in:0,1',
-		'paid_cash'         => 'numeric|min:0',
-		'paid_creditcard'   => 'numeric|min:0',
-		'paid_cheque'       => 'numeric|min:0',
-		'paid_banktransfer' => 'numeric|min:0',
-		'pay_online'        => 'numeric|min:0',
-		'pay_later'         => 'numeric|min:0',
 		'reserved'          => 'date|after:now',
 		'pick_up'           => '',
 		'drop_off'          => '',
@@ -66,5 +54,10 @@ class Booking extends Ardent {
 	public function company()
 	{
 		return $this->belongsTo('Company');
+	}
+
+	public function payments()
+	{
+		return $this->hasMany('Payment');
 	}
 }
