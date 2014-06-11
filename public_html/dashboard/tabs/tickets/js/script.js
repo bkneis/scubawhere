@@ -39,12 +39,12 @@ $(function () {
 	// Click event for saving a new ticket
 	$("#save-ticket").click(function(e){
 		e.preventDefault();
-		$('#save-ticket').prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+		$('#save-ticket').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Ticket.createTicket($("#new-ticket-form").serialize(), function(data) {
+		Ticket.createTicket($("#new-ticket-form").serialize(), function success(data) {
 
 			$('#save-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 
 			pageMssg(data.status, true);
 
@@ -52,6 +52,29 @@ $(function () {
 			window.location.hash = "";
 			$('#wrapper').html(LOADER);
 			window.location.hash = "tickets";
+		}, function error(xhr) {
+
+			data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			if(data.errors.length > 0) {
+
+				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				errorsHTML = errorsHTML(data);
+
+				// Render error messages
+				$('.errors').remove();
+				$('#new-ticket-form').prepend(errorsHTML)
+				$('#save-ticket').before(errorsHTML);
+			}
+			else {
+				alert(xhr.responseText);
+			}
+
+			pageMssg('Oops, something wasn\'t quite right');
+
+			$('#save-ticket').prop('disabled', false);
+			$('#save-loader').remove();
 		});
 	});
 });

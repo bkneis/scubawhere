@@ -23,8 +23,14 @@ var Ticket = {
 	// price
 	// currency (if not set then it will default to centres currency)
 	// boats (optional - and array of boat_id => accomodation_id)
-	createTicket : function(params, handleData){
-		$.post("/api/ticket/add", params).done(handleData);
+	createTicket : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/ticket/add",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	},
 
 	//Params

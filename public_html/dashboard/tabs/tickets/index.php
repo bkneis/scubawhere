@@ -16,7 +16,7 @@
 					{{#each tickets}}
 						<tr>
 							<td>{{{name}}}</td>
-							<td>{{{currency}}} {{{price}}}</td>
+							<td>{{{currency}}} {{{decimal_price}}}</td>
 							<td>{{{description}}}</td>
 							<td>
 								<select>
@@ -58,10 +58,10 @@
 
 				<div class="form-row">
 					<label class="field-label">Ticket Price</label>
-					<input type="text" name="price">
 					<select name="currency">
 						<option value="GBP">GBP</option>
 					</select>
+					<input type="text" name="price">
 				</div>
 
 				<div class="form-row">
@@ -119,9 +119,18 @@
 			</form>
 		</div>
 
+		<script type="text/x-handlebars-template" id="errors-template">
+			<div class="yellow-helper errors" style="color: #E82C0C;">
+				<strong>There are a few problems with the form:</strong>
+				<ul>
+					{{#each errors}}
+						<li>{{this}}</li>
+					{{/each}}
+				</ul>
+			</div>
+		</script>
+
 	</div>
-
-
 </div>
 
 <script src="/dashboard/js/SetToken.js"></script>

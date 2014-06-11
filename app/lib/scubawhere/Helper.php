@@ -42,26 +42,16 @@ class Helper
 	 */
 	public static function currency($currency = false)
 	{
-
-		// Until properly implemented, we are only returning properly formatted Great Britain Pounds
-		return 'GBP';
-
 		if($currency === false)
 		{
 			// Return the company's default currency
-		}
 
-		// Ensure the code is lowercase
-		$currency = strtoupper($currency);
-
-		// Check if the provided currency code is valid
-		if( in_array( $currency, currencies() ) )
-		{
-			return $currency;
+			// Until properly implemented, we are only returning properly formatted Great Britain Pounds
+			return 'GBP';
 		}
 		else
 		{
-			return '';
+			return strtoupper($currency);
 		}
 	}
 

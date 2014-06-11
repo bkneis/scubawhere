@@ -2,9 +2,12 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use PhilipBrown\Money\Currency;
 
 class Ticket extends Ardent {
 	protected $guarded = array('id', 'company_id', 'active', 'created_at', 'updated_at');
+
+	protected $appends = array('decimal_price');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -22,6 +25,10 @@ class Ticket extends Ardent {
 			$this->name = Helper::sanitiseString($this->name);
 
 		$this->currency = Helper::currency($this->currency);
+	}
+	public function getDecimalPriceAttribute()
+	{
+		return $this->price / Currency::init( $this->currency )->getSubunitToUnit();
 	}
 
 	public function company()

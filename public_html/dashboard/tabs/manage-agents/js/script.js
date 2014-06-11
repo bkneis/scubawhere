@@ -24,7 +24,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Agent.createAgent( $('#add-agent-form').serialize(), function success(data) {
 
@@ -58,7 +58,7 @@ $(function(){
 			pageMssg('Oops, something wasn\'t quite right');
 
 			$('#add-agent').prop('disabled', false);
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 		});
 	});
 
@@ -67,7 +67,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Agent.updateAgent( $('#update-agent-form').serialize(), function success(data) {
 
@@ -81,7 +81,7 @@ $(function(){
 			$('.errors').remove();
 
 			$('#update-agent').prop('disabled', false);
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 
 		}, function error(xhr) {
 
@@ -105,7 +105,7 @@ $(function(){
 			pageMssg('Oops, something wasn\'t quite right');
 
 			$('#update-agent').prop('disabled', false);
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 		});
 	});
 

@@ -105,7 +105,7 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 {
 	try
 	{
-		$currency = new Currency($value);
+		$currency = new PhilipBrown\Money\Currency($value);
 	}
 	catch(InvalidCurrencyException $e)
 	{
