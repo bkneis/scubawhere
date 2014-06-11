@@ -101,3 +101,16 @@ Validator::extend('valid_json', function($attribute, $value, $parameters)
 {
 	return json_decode($value) != null;
 });
+Validator::extend('valid_currency', function($attribute, $value, $parameters)
+{
+	try
+	{
+		$currency = new Currency($value);
+	}
+	catch(InvalidCurrencyException $e)
+	{
+		return false;
+	}
+
+	return true;
+});

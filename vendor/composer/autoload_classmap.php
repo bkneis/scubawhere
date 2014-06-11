@@ -38,6 +38,7 @@ return array(
     'Certificate' => $baseDir . '/app/models/Certificate.php',
     'CertificatesTableSeeder' => $baseDir . '/app/database/seeds/CertificatesTableSeeder.php',
     'ChangeAgentCommissionToDecimal' => $baseDir . '/app/database/migrations/2014_05_30_155319_change_agent_commission_to_decimal.php',
+    'ChangeAllPriceFieldsToInteger' => $baseDir . '/app/database/migrations/2014_06_11_131500_change_all_price_fields_to_integer.php',
     'ChangeBookingDetailsToIncludeCustomerIdAndLeadStatus' => $baseDir . '/app/database/migrations/2014_06_04_105146_change_booking_details_to_include_customer_id_and_lead_status.php',
     'ClassPreloader\\Application' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Application.php',
     'ClassPreloader\\ClassList' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/ClassList.php',

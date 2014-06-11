@@ -9,8 +9,8 @@ class Ticket extends Ardent {
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => 'required',
-		'price'       => 'required|numeric|min:0',
-		'currency'    => 'required|alpha|size:3'
+		'price'       => 'required|integer|min:0',
+		'currency'    => 'required|alpha|size:3|valid_currency'
 	);
 
 	public function beforeSave()

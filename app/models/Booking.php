@@ -20,7 +20,7 @@ class Booking extends Ardent {
 		'agent_id'          => 'integer|exists:agents,id|required_without:source',
 		'source'            => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		// 'price'          => 'numeric|min:0',
-		'currency'          => 'alpha|size:3',
+		'currency'          => 'alpha|size:3|valid_currency',
 		'discount'          => 'numeric|min:0',
 		'confirmed'         => 'integer|in:0,1',
 		'reserved'          => 'date|after:now',

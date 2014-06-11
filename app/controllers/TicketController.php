@@ -44,6 +44,17 @@ class TicketController extends Controller {
 		if( !is_array($trips) || empty($trips) )
 			return Response::json( array( 'errors' => array('The "trips" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
 
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not valid!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = round( $data['price'] * $currency->getSubunitToUnit() );
+
 		// Required input has been validated, save the model
 		$ticket = Auth::user()->tickets()->save($ticket);
 
