@@ -882,12 +882,14 @@ abstract class Ardent extends Model {
 		// while it is constructing and executing various queries against it.
 		$builder->setModel($this)->with($this->with);
 
-		if ($excludeDeleted and $this->softDelete)
+        // Fixes Laravel 4.2 incompatibility (https://github.com/laravelbook/ardent/pull/212)
+		/* if ($excludeDeleted and $this->softDelete)
 		{
 			$builder->whereNull($this->getQualifiedDeletedAtColumn());
 		}
 
-		return $builder;
+		return $builder; */
+        return $this->applyGlobalScopes($builder);
 	}
 
     public function touch()
