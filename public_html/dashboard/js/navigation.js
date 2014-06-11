@@ -15,15 +15,14 @@ $(function() {
         e.preventDefault();
     });
 
-    $(window).bind('hashchange', function(){
+    $(window).bind('hashchange', function() {
 
-    	$("#wrapper").html(LOADER);
+        newHash = window.location.hash.substring(1); // Fetch hash without #
 
-        newHash = window.location.hash.substring(1);
-
-        // inserted by soren
+        // Default to dashboard when hash is removed
         if(newHash === '') newHash = 'dashboard';
 
+        // Get the page title from the menu item
         var newTitle = $('[data-load="'+newHash+'"]').html();
         $("#content-title").html(newTitle);
 
@@ -31,24 +30,26 @@ $(function() {
         $('[data-load]').removeClass('tab-active');
         $('[data-load="'+newHash+'"]').addClass('tab-active');
 
-        newHash = "tabs/" + newHash + "/index.php";
+        newContent = "tabs/" + newHash + "/index.php";
 
-        if(newHash)
-        {
-            $mainContent
-            .find("#wrapper")
-            .fadeOut(200, function() {
-                $mainContent.hide().load(newHash, function() {
-                    $mainContent.fadeIn(200, function() {
-                        $pageWrap.animate({
-                            height: baseHeight + $mainContent.height() + "px",
-                        });
-                    });
+        // Blend out old content and load new content
+        window.contentHasLoaded = false;
+        $mainContent.find('#wrapper').fadeOut(200, function() {
+            if(!contentHasLoaded)
+                $mainContent.html(LOADER);
+
+        });
+        $mainContent.load(newContent, function() {
+            window.contentHasLoaded = true;
+            /*$mainContent.fadeIn(200, function() {
+                $pageWrap.animate({
+                    height: baseHeight + $mainContent.height() + "px",
                 });
-            });
-        };
+            });*/
+        });
     });
 
+    // Trigger content loading on page loading
     $(window).trigger('hashchange');
 
 });

@@ -1,9 +1,8 @@
-var _token;
-
 //interactions with the API
 //run on page load
 $(function(){
 
+	// Error handling
 	$(document).ajaxComplete(function(event, xhr, options) {
 		/*
 		console.log(event);
@@ -44,7 +43,7 @@ $(function(){
 		dataType: "html",
 		async: false,
 		success: function(data){
-			_token = data;
+			window._token = data;
 		}
 	});
 
@@ -53,7 +52,7 @@ $(function(){
 });
 
 //************************************
-						//FUNCTIONS
+// FUNCTIONS
 //************************************
 function setPage(){
 	$.ajax({

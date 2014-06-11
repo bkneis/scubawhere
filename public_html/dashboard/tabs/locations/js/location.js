@@ -40,7 +40,7 @@ $(document).ready(function(){
       //icon: "/img/marker.png",
       title: 'dive_point',
       infoWindow: {
-        content : 'Adjustment of the co ordinates'
+        content : 'Adjustment of the coordinates'
       }
     });
   });

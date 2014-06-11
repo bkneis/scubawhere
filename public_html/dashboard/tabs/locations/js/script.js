@@ -60,6 +60,7 @@ $(document).on('click', '.pan-to-marker', function(e) {
 
 	google.maps.event.addListener(map.map, 'bounds_changed', function() {
 		// Trigger the map resize after the map has loaded, to fix the map not showing properly
+		// console.log("Resize now!");
 		google.maps.event.trigger(map.map, 'resize');
 	});
 

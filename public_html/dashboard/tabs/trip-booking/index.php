@@ -1,11 +1,11 @@
-<script src="tabs/add-agent/js/script.js"></script>
+<script src="tabs/trip-booking/js/script.js"></script>
 
 <div id="wrapper">
 		<div class="box100">
 		<label class="dgreyb">Trip Bookings</label>
-		
+
 		<div class="padder">
-			
+
 			<table id="newspaper-a" summary="2007 Major IT Companies' Profit">
     <thead>
     	<tr>
@@ -94,6 +94,6 @@
     </tbody>
 </table>
 		</div>
-		
+
 	</div>
 </div>

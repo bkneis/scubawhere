@@ -40,6 +40,7 @@
 		<label class="dgreyb">Saved Tickets</label>
 		<div id="saved-tickets">
 			<!-- This is where the above goes when complied... -->
+			<div class="loader" style="left: 50%; margin-left: -13px; margin-top: 2em; margin-bottom: 2em;"></div>
 		</div>
 	</div>
 

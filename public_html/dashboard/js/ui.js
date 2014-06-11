@@ -105,7 +105,7 @@ $.fn.errorMssg = function(mssg){
 function pageMssg(mssg, bool){
 
 	if(bool==true){
-		$('#pageMssg').html("<span>" + mssg + "</span>");
+		$('#pageMssg').html("<span class='greenf'>" + mssg + "</span>");
 	}else{
 		$('#pageMssg').html("<span class='redf'>" + mssg + "</span>");
 	}
