@@ -28,7 +28,14 @@ class Ticket extends Ardent {
 	}
 	public function getDecimalPriceAttribute()
 	{
-		return $this->price / Currency::init( $this->currency )->getSubunitToUnit();
+		$currency = new Currency( $this->currency );
+
+		return number_format(
+			$this->price / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			$currency->getDecimalMark(), // decimal seperator
+			$currency->getThousandsSeperator()
+		);
 	}
 
 	public function company()
