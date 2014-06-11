@@ -28,11 +28,11 @@
 	}
 ?>
 
-<!DOCTYPE HTML>
-<HTML>
-<HEAD>
+<!DOCTYPE html>
+<html>
+<head>
 
-	<TITLE>Scuba Where | Dashboard</TITLE>
+	<title>Scuba Where | Dashboard</title>
 
 
 	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
@@ -67,8 +67,8 @@
 	<script src="js/main.js"></script>
 	<script src="js/validate.js"></script>
 
-</HEAD>
-<BODY>
+</head>
+<body>
 	<?php
 	   //INCLUDE HEADER
 	   include_once("common/header/header.php");
@@ -146,7 +146,7 @@
 					<ul>
 						<li data-load="boats">Boats</li>
 						<li data-load="add-ons">Add-ons</li>
-						<li data-load="crew">Crew</li>
+						<!--<li data-load="crew">Crew</li>-->
 					</ul>
 				</li>
 
@@ -177,16 +177,12 @@
 			</ul>
 		</div>
 
-
 		<!-- main page content to be loaded by AJAX -->
 		<div id="guts">
 			<div id="content-title"></div>
 
 			<div id="content">
 				<div id="wrapper">
-
-
-
 
 				</div>
 			</div>
@@ -197,5 +193,5 @@
 	   //INCLUDE FOOTER
 	   include_once("common/footer/footer.php");
     ?>
-</BODY>
-</HTML>
+</body>
+</html>
