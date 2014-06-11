@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 
 class Departure extends Ardent {
@@ -10,7 +11,10 @@ class Departure extends Ardent {
 
 	protected $appends = array('capacity');
 
-	protected $softDelete = true;
+	// Superseeded by trais as of the update to Laravel 4.2 (http://laravel.com/docs/upgrade#upgrade-4.2)
+	// protected $softDelete = true;
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
 
 	public static $rules = array(
 		'start'        => 'required|date',

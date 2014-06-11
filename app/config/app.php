@@ -69,6 +69,28 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Encryption Defaults
+	|--------------------------------------------------------------------------
+	|
+	| Introduced by Laravel 4.2, this configuration had to be manually added
+	| to this config script.
+	|
+	| From the Laravel 4.1 -> 4.2 upgrade guide:
+	| This setting may be used to control the default cipher used by the
+	| Laravel encryption facilities.
+	| (http://laravel.com/docs/upgrade#upgrade-4.2)
+	|
+	| Note:
+	| In Laravel 4.2, the default cipher is MCRYPT_RIJNDAEL_128 (AES),
+	| which is considered to be the most secure cipher. Changing the cipher
+	| back to MCRYPT_RIJNDAEL_256 is required to decrypt cookies/values that
+	| were encrypted in Laravel <= 4.1
+	*/
+
+	'cipher' => MCRYPT_RIJNDAEL_256,
+
+	/*
+	|--------------------------------------------------------------------------
 	| Autoloaded Service Providers
 	|--------------------------------------------------------------------------
 	|
