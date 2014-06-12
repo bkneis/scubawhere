@@ -83,6 +83,8 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/location', 'LocationController');
 
+	Route::controller('api/package', 'PackageController');
+
 	Route::controller('api/session', 'DepartureController');
 
 	Route::controller('api/ticket', 'TicketController');

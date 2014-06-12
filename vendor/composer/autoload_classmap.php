@@ -1303,6 +1303,7 @@ return array(
     'PHPParser_Unserializer' => $vendorDir . '/nikic/php-parser/lib/PHPParser/Unserializer.php',
     'PHPParser_Unserializer_XML' => $vendorDir . '/nikic/php-parser/lib/PHPParser/Unserializer/XML.php',
     'Package' => $baseDir . '/app/models/Package.php',
+    'PackageController' => $baseDir . '/app/controllers/PackageController.php',
     'PasswordController' => $baseDir . '/app/controllers/PasswordController.php',
     'Patchwork\\PHP\\Shim\\Iconv' => $vendorDir . '/patchwork/utf8/class/Patchwork/PHP/Shim/Iconv.php',
     'Patchwork\\PHP\\Shim\\Intl' => $vendorDir . '/patchwork/utf8/class/Patchwork/PHP/Shim/Intl.php',
