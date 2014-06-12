@@ -75,11 +75,11 @@ class TicketController extends Controller {
 				{
 					$validator = Validator::make(
 						array(
-							'boat_id' => $boat_id,
+							'boat_id'          => $boat_id,
 							'accommodation_id' => $accommodation_id
 						),
 						array(
-							'boat_id' => 'integer|exists:boats,id',
+							'boat_id'          => 'integer|exists:boats,id',
 							'accommodation_id' => 'integer|exists:accommodations,id'
 						)
 					);
