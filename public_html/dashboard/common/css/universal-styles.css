@@ -42,6 +42,9 @@ html, body{
 	border-bottom: 0.5em solid rgba(0, 0, 0, 0.1);
 	border-left:   0.5em solid #9f9f9f;
 	-webkit-animation: load8 0.6s infinite linear;
+	-moz-animation: load8 0.6s infinite linear;
+	-ms-animation: load8 0.6s infinite linear;
+	-o-animation: load8 0.6s infinite linear;
 	animation: load8 0.6s infinite linear;
 }
 .loader,
@@ -60,13 +63,41 @@ html, body{
 		transform: rotate(360deg);
 	}
 }
-@keyframes load8 {
+@-moz-keyframes load8 {
 	0% {
-		-webkit-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 	100% {
-		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@-ms-keyframes load8 {
+	0% {
+		-ms-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@-o-keyframes load8 {
+	0% {
+		-o-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-o-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes load8 {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
 		transform: rotate(360deg);
 	}
 }
