@@ -58,7 +58,7 @@ $(function(){
 			pageMssg('Oops, something wasn\'t quite right');
 
 			$('#add-agent').prop('disabled', false);
-			$('#save-loader').remove();
+			$('#add-agent-form').find('#save-loader').remove();
 		});
 	});
 
@@ -81,7 +81,7 @@ $(function(){
 			$('.errors').remove();
 
 			$('#update-agent').prop('disabled', false);
-			$('#save-loader').remove();
+			$('#update-agent-form').find('#save-loader').remove();
 
 		}, function error(xhr) {
 
