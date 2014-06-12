@@ -2228,18 +2228,60 @@
         ]
     },
     {
-        "name": "laravel/framework",
-        "version": "v4.2.1",
-        "version_normalized": "4.2.1.0",
+        "name": "philipbrown/money",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/laravel/framework.git",
-            "reference": "be75911bf8f7fe81a2db1dd2585324d080289dd5"
+            "url": "https://github.com/philipbrown/money.git",
+            "reference": "0496f28def2558b1e2db5020e8dfe9b058c4fe0b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/laravel/framework/zipball/be75911bf8f7fe81a2db1dd2585324d080289dd5",
-            "reference": "be75911bf8f7fe81a2db1dd2585324d080289dd5",
+            "url": "https://api.github.com/repos/philipbrown/money/zipball/0496f28def2558b1e2db5020e8dfe9b058c4fe0b",
+            "reference": "0496f28def2558b1e2db5020e8dfe9b058c4fe0b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2014-04-26 14:19:15",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PhilipBrown\\Money\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Philip Brown",
+                "email": "phil@ipbrown.com",
+                "role": "Creator/Developer"
+            }
+        ],
+        "description": "money"
+    },
+    {
+        "name": "laravel/framework",
+        "version": "v4.2.3",
+        "version_normalized": "4.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/framework.git",
+            "reference": "0efc0c962f28c9b5f3ce2da899c7a08a9471b5b1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/framework/zipball/0efc0c962f28c9b5f3ce2da899c7a08a9471b5b1",
+            "reference": "0efc0c962f28c9b5f3ce2da899c7a08a9471b5b1",
             "shasum": ""
         },
         "require": {
@@ -2309,7 +2351,7 @@
         "suggest": {
             "doctrine/dbal": "Allow renaming columns and dropping SQLite columns."
         },
-        "time": "2014-06-01 18:14:55",
+        "time": "2014-06-11 21:33:06",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2345,47 +2387,5 @@
             "framework",
             "laravel"
         ]
-    },
-    {
-        "name": "philipbrown/money",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/philipbrown/money.git",
-            "reference": "0496f28def2558b1e2db5020e8dfe9b058c4fe0b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/philipbrown/money/zipball/0496f28def2558b1e2db5020e8dfe9b058c4fe0b",
-            "reference": "0496f28def2558b1e2db5020e8dfe9b058c4fe0b",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*"
-        },
-        "time": "2014-04-26 14:19:15",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "PhilipBrown\\Money\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Philip Brown",
-                "email": "phil@ipbrown.com",
-                "role": "Creator/Developer"
-            }
-        ],
-        "description": "money"
     }
 ]

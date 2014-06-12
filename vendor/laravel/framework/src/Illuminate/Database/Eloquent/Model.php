@@ -559,6 +559,22 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
 	}
 
 	/**
+	 * Create or update a record matching the attributes, and fill it with values.
+	 *
+	 * @param array $attributes
+	 * @param array $values
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public static function updateOrCreate(array $attributes, array $values = array())
+	{
+		$instance = static::firstOrNew($attributes);
+
+		$instance->fill($values)->save();
+
+		return $instance;
+	}
+
+	/**
 	 * Get the first model for the given attributes.
 	 *
 	 * @param  array  $attributes
@@ -1379,9 +1395,9 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
 	 */
 	protected function finishSave(array $options)
 	{
-		$this->syncOriginal();
-
 		$this->fireModelEvent('saved', false);
+
+		$this->syncOriginal();
 
 		if (array_get($options, 'touch', true)) $this->touchOwners();
 	}
