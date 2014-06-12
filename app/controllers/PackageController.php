@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Helper;
+use PhilipBrown\Money\Currency;
 
 class PackageController extends Controller {
 
@@ -31,12 +32,31 @@ class PackageController extends Controller {
 	{
 		$data = Input::only('name', 'description', 'price', 'currency', 'capacity');
 
-		$package = new Package($data);
-
 		if( !$package->validate() )
 		{
 			return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
 		}
+
+		// Validate that tickets are supplied
+		$tickets = Input::get('tickets');
+		if( empty($tickets) )
+			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
+
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+
+		if( $data['capacity'] == 0)
+			$data['capacity'] = null;
+
+		$package = new Package($data);
 
 		$package = Auth::user()->packages()->save($package);
 
@@ -48,7 +68,7 @@ class PackageController extends Controller {
 		 */
 		// Input must be of type <input name="tickets[1][quantity]" value="2">
 		//                                ticket_id --^   quantity value --^
-		$package->tickets()->sync( Input::get('tickets') );
+		$package->tickets()->sync( $tickets );
 
 		return Response::json( array('status' => 'Package created and connected OK', 'id' => $package->id), 201 ); // 201 Created
 	}
@@ -66,6 +86,25 @@ class PackageController extends Controller {
 		{
 			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 		}
+
+		// Validate that tickets are supplied
+		$tickets = Input::get('tickets');
+		if( empty($tickets) )
+			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
+
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+
+		if( $data['capacity'] == 0)
+			$data['capacity'] = null;
 
 		if( !$package->update($data) )
 		{

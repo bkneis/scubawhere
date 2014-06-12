@@ -124,15 +124,27 @@ class TicketController extends Controller {
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$data = Input::only('trip_id', 'name', 'description', 'price', 'currency');
+
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+
 		// Check if a booking exists for the ticket and whether a critical value is updated
 		if( $ticket->bookings()->count() > 0 && (
-			   (Input::get('trip_id')  && Input::get('trip_id') != $ticket->trip_id)
-			|| (Input::get('price')    && Input::get('price') != $ticket->price)
-			|| (Input::get('currency') && Helper::currency( Input::get('currency') ) != $ticket->currency)
+			   (!empty($data['trip_id'])  && $data['trip_id'] != $ticket->trip_id)
+			|| (!empty($data['price'])    && $data['price']   != $ticket->price)
+			|| (!empty($data['currency']) && Helper::currency( $data['currency'] ) != $ticket->currency)
 		) )
 		{
 			// If yes, create a new ticket with the input data
-			$data = Input::only('trip_id', 'name', 'description', 'price', 'currency', 'boats');
 
 			// Replace all unavailable input data with data from the old ticket object
 			if( empty($data['trip_id']) )     $data['trip_id']     = $ticket->trip_id;
@@ -140,13 +152,16 @@ class TicketController extends Controller {
 			if( empty($data['description']) ) $data['description'] = $ticket->description;
 			if( empty($data['price']) )       $data['price']       = $ticket->price;
 			if( empty($data['currency']) )    $data['currency']    = $ticket->currency;
-			if( empty($data['boats']) )
+			if( !Input::get('boats') )
 			{
 				$data['boats'] = array();
 				foreach($ticket->boats() as $boat)
 				{
 					$data['boats'][$boat->id] = $boat->pivot->accommodation_id;
 				}
+			}
+			else {
+				$data['boats'] = Input::get('boats');
 			}
 
 			// "Delete" the old ticket
@@ -162,7 +177,6 @@ class TicketController extends Controller {
 		else
 		{
 			// If not, simply update it
-			$data = Input::only('trip_id', 'name', 'description', 'price', 'currency');
 			if( !$ticket->update($data) )
 			{
 				return Response::json( array('errors' => $ticket->errors()->all()), 406 ); // 406 Not Acceptable

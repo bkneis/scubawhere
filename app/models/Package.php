@@ -2,9 +2,12 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use PhilipBrown\Money\Currency;
 
 class Package extends Ardent {
 	protected $fillable = array('name', 'description', 'price', 'currency', 'capacity');
+
+	protected $appends = array('decimal_price');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -25,6 +28,18 @@ class Package extends Ardent {
 		$this->currency = Helper::currency($this->currency);
 	}
 
+	public function getDecimalPriceAttribute()
+	{
+		$currency = new Currency( $this->currency );
+
+		return number_format(
+			$this->price / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('Company');
@@ -37,6 +52,6 @@ class Package extends Ardent {
 
 	public function tickets()
 	{
-		return $this->belongsToMany('Ticket')->withPivot('quantity');
+		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();
 	}
 }

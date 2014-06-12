@@ -125,10 +125,11 @@
 
 					<ul>
 						<li data-load="create-trip">Create Trip</li>
-						<li data-load="locations">Locations</li>
-						<li data-load="tickets">Tickets</li>
-						<li data-load="list-trips">List Trips</li>
 						<li data-load="activate-trip">Activate Trip</li>
+						<li data-load="list-trips">List Trips</li>
+						<li data-load="tickets">Tickets</li>
+						<li data-load="packages">Packages</li>
+						<li data-load="locations">Locations</li>
 						<li data-load="trip-calender">Trip Calendar</li>
 					</ul>
 				</li>

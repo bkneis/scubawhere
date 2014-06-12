@@ -26,6 +26,7 @@ class Ticket extends Ardent {
 
 		$this->currency = Helper::currency($this->currency);
 	}
+
 	public function getDecimalPriceAttribute()
 	{
 		$currency = new Currency( $this->currency );
@@ -33,8 +34,8 @@ class Ticket extends Ardent {
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-			$currency->getDecimalMark(), // decimal seperator
-			$currency->getThousandsSeperator()
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
 		);
 	}
 
