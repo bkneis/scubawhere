@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
 class Company extends Ardent implements UserInterface, RemindableInterface {
+	use RemindableTrait;
+
 	protected $guarded = array('id', 'password', 'verified', 'views', 'created_at', 'updated_at');
 
 	/**
@@ -19,7 +22,6 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'username'    => 'required|alpha_dash|between:4,64|different:name|unique:companies,username',
 		'password'    => 'size:60',
 		'email'       => 'required|email|unique:companies,email',
-		'verified'    => 'digits:1',
 		'name'        => 'required',
 		'description' => '',
 		'address_1'   => 'required',

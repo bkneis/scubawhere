@@ -17,15 +17,23 @@ class PasswordController extends Controller {
 	 */
 	public function postRemind()
 	{
-		switch ($response = Password::remind(Input::only('email')))
+		switch ( $response = Password::remind(Input::only('email'), function($message)
+		{
+			$message->subject('ScubaWhere Password Reminder');
+		}) )
 		{
 			case Password::INVALID_USER:
-				return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+				return View::make('password.remind')->with('error', Lang::get($response));
+				// return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
 
 			case Password::REMINDER_SENT:
-				return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+				return View::make('password.remind')->with('status', Lang::get($response));
+				// return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+
 			default:
-				return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
+				Session::set('error', 'Nothing happend I\'m afraid...');
+				return View::make('password.remind');
+				// return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
 		}
 	}
 
@@ -52,7 +60,7 @@ class PasswordController extends Controller {
 
 			if(!$company->updateUniques())
 			{
-				return Response::json( array('errors' => $company->errors()->all()), 500 ); // 500 Internal Server Error
+				return View::make('password.reset', array('error' => $company->errors()->first(), 'email' => $credentials['email'], 'token' => $credentials['token']));
 			}
 
 			Auth::login($company);
@@ -66,10 +74,10 @@ class PasswordController extends Controller {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+				return View::make('password.reset', array('error' => Lang::get($response), 'email' => $credentials['email'], 'token' => $credentials['token']));
 
 			case Password::PASSWORD_RESET:
-				return Response::json( array('status' => 'A new password has been set.'), 200 ); // 200 OK
+				return View::make('password.reset', array('email' => $credentials['email'], 'status' => 'A new password has been set.<br><a href="../dashboard/login/">Log in</a>'));
 		}
 	}
 
@@ -89,8 +97,11 @@ class PasswordController extends Controller {
 	 * @param  string  $token
 	 * @return Response
 	 */
-	public function getReset($email = null, $token = null)
+	public function getReset()
 	{
+		$email = Input::get('email');
+		$token = Input::get('token');
+
 		$validator = Validator::make(
 			array(
 				'email' => $email,

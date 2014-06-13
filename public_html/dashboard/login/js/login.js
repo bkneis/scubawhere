@@ -11,19 +11,19 @@ $(function(){
 
 		if((!username)||(!password)) {
 			error = true;
-			$("#form-error").html("Please complete the form.");
+			$(".form-error").html("Please complete the form.");
 
 		}
 		else {
 			if(username.length <= 2) {
 				error = true;
-				$("#form-error").html("The username isn't long enough. Must have at least 3 characters.");
+				$(".form-error").html("The username isn't long enough. Must have at least 3 characters.");
 			}
 
 			// Check that password is over 6 chars
 			if(password.length < 6) {
 				error = true;
-				$("#form-error").html("The password isn't long enough. Must have at least 6 characters.");
+				$(".form-error").html("The password isn't long enough. Must have at least 6 characters.");
 			}
 		}
 
@@ -45,8 +45,12 @@ $(function(){
 					window.location.href = "/dashboard/";
 				},
 				error: function(xhr){
+					data = JSON.parse(xhr.responseText);
+
 					$('#loginDC').removeClass('loading');
-					$("#form-error").html(xhr.responseText.errors[0]);
+
+					$(".form-error").html(data.errors[0]);
+
 					$( "form" ).effect( "shake" );
 				}
 			});

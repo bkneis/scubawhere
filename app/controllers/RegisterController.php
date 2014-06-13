@@ -5,7 +5,7 @@ class RegisterController extends Controller {
 
 	public function postCompany()
 	{
-		$data = Input::only('username', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'region_id', 'country_id', 'phone', 'website');
+		$data = Input::only('username', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'phone', 'website');
 
 		$company = new Company($data);
 

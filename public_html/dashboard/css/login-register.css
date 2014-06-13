@@ -11,7 +11,7 @@ PURPLE - #6D6A99
 
 html{
 	height: 100%;
-	min-height: 700px
+	/* min-height: 700px; */
 }
 
 *{
@@ -21,6 +21,19 @@ html{
 
 body{
 	background-color: #c8c8c8;
+}
+
+p {
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+label {
+	display: block;
+	text-align: left;
+	margin-top: 0.5em;
+	margin-left: 57px;
 }
 
 #login-wrapper{
@@ -42,9 +55,12 @@ body{
 	font-size: 22px;
 }
 
-#form-error{
+.form-error{
 	color: #FF7163;
-	font-size: 13px;
+	display: block;
+	margin: auto;
+	margin-bottom: 1em;
+	width: 300px;
 }
 
 /* form */
@@ -61,7 +77,8 @@ form {
 
 
 form input[type='text'],
-form input[type='password']{
+form input[type='password'],
+form input[type='email'] {
 	/* border: none; */
 	width: 300px;
 	width: 280px;
@@ -77,6 +94,13 @@ form input[type='text']{
 	border-bottom: 1px solid #c8c8c8;
 }
 
+form select {
+	width: 300px;
+	padding: 10px;
+	height: 46px;
+	font-size: 18px;
+}
+/*
 form select{
 	padding:3px;
 	margin: 10px;
@@ -110,25 +134,29 @@ form .select:after{
 	margin-left: 285px;
 	color: #c8c8c8;
 }
+*/
 
-form .submit-bttn {
+form .submit-bttn,
+form .register-bttn {
 	margin: auto;
 	margin-top: 20px;
 	display: block;
 	width: 300px;
 	padding: 10px 0px;
 }
-form .submit-bttn div {
+form .submit-bttn div,
+form .register-bttn div {
 	display: none;
 	font-size: 12px;
 }
-form .submit-bttn.loading div {
+form .submit-bttn.loading div,
+form .register-bttn.loading div {
 	display: inline-block;
 	margin-top: -1em;
 }
 
 .errorMssg{
-	font-size: 13px;
+	font-size: 14px;
 	color: #FF7163;
 }
 

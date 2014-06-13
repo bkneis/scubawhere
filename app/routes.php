@@ -62,6 +62,9 @@ Route::get('logout', function()
 	return Response::json( array('status' => 'Successfully logged out. See you soon!') );
 });
 
+// Needs to be unauthorized, because it's needed in registration
+Route::controller('api/country', 'CountryController');
+
 Route::group(array('before' => 'auth'), function()
 {
 	Route::get('token', function()
@@ -76,8 +79,6 @@ Route::group(array('before' => 'auth'), function()
 	Route::controller('api/agent', 'AgentController');
 
 	Route::controller('api/booking', 'BookingController');
-
-	Route::controller('api/country', 'CountryController');
 
 	Route::controller('api/customer', 'CustomerController');
 

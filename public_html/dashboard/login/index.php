@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<TITLE>Scuba Where | Dive Centre Login</TITLE>
+	<title>Scuba Where | Dive Centre Login</title>
 
 
 	<script src="/common/js/jquery.js"></script>
@@ -15,14 +15,13 @@
 </head>
 <body>
 
-
 	<div id="login-wrapper">
 
-		<form action="/login" id="loginForm" method="post" accept-charset="utf-8">
+		<form action="#" id="loginForm" method="post" accept-charset="utf-8">
 			<img src="/dashboard/common/img/ScubaWhere_logo.svg">
 			<h1>Dive Centre Dashboard Login</h1>
 
-			<span id="form-error"></span>
+			<span class="form-error"></span>
 
 			<input type="text" name="username" placeholder="Username">
 
@@ -37,7 +36,7 @@
 			</button>
 
 		</form>
-		<span>Forgot your password? <a href="../forgot/">Click here.</a></span>
+		<span>Forgot your password? <a href="../../password/remind">Click here.</a></span>
 	</div>
 
     <footer><a href="../register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
