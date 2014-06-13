@@ -32,11 +32,6 @@ class PackageController extends Controller {
 	{
 		$data = Input::only('name', 'description', 'price', 'currency', 'capacity');
 
-		if( !$package->validate() )
-		{
-			return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
 		// Validate that tickets are supplied
 		$tickets = Input::get('tickets');
 		if( empty($tickets) )
@@ -57,6 +52,11 @@ class PackageController extends Controller {
 			$data['capacity'] = null;
 
 		$package = new Package($data);
+
+		if( !$package->validate() )
+		{
+			return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
+		}
 
 		$package = Auth::user()->packages()->save($package);
 
