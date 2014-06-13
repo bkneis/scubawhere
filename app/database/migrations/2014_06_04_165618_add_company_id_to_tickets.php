@@ -12,12 +12,15 @@ class AddCompanyIdToTickets extends Migration {
 	 */
 	public function up()
 	{
-		DB::table('tickets')->truncate();
-
 		Schema::table('tickets', function($table)
 		{
 			$table->integer('company_id')->unsigned()->after('id');
+		}
 
+		DB::table('tickets')->update(array('company_id' => 1));
+
+		Schema::table('tickets', function($table)
+		{
 			$table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');
 		});
 	}
