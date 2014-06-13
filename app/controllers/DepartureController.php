@@ -14,7 +14,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->findOrFail( Input::get('id') );
+			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
