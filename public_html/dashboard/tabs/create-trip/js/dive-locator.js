@@ -60,7 +60,17 @@ $(function(){
 	});
 
 	$("body").delegate(".remove-location", "click", function(){
+		
+		var thisLocation	 = $(this).attr("data-location").split(",");
+		var thisLocationName = thisLocation[0];
+		var thisLocationID 	 = thisLocation[1];
+		var thisLocationLat  = thisLocation[2];
+		var thisLocationLng  = thisLocation[3];
+		//alert(thisLocationName + " was removed");
+		var spotData = {name: thisLocationName, id: thisLocationID, longitude: thisLocationLng, latitude: thisLocationLat};
 
+		$( "li" ).remove("#"+thisLocationID);
+		
 	});
 
 	$("#locations-list").html("");//refresh list
