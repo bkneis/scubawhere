@@ -512,24 +512,6 @@ pre {
 <li>&nbsp;</li>
 <li><strong>@return</strong> integer     <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
 </ul>
-<h3>Sent a password reminder email</h3>
-<p><code>POST /password/remind</code></p>
-<ul>
-<li><strong>@param</strong> string email The email adress to reset the password for</li>
-<li>&nbsp;</li>
-<li><strong>@return</strong> JSON        Contains <code>status</code> on success, <code>errors</code> when the email address can't be found</li>
-</ul>
-<h3>Reset a company's password</h3>
-<p><code>POST /password/reset</code></p>
-<p>This request should be made from the page where the user is linked to in the password reminder email.</p>
-<ul>
-<li><strong>@param</strong> string email                 The email adress of the user</li>
-<li><strong>@param</strong> string password              The password</li>
-<li><strong>@param</strong> string password_confirmation The password confirmation</li>
-<li><strong>@param</strong> string token                 The token (from the link)</li>
-<li>&nbsp;</li>
-<li><strong>@return</strong> JSON                        Contains <code>status</code> on success, <code>errors</code> on failure</li>
-</ul>
 <h2>General</h2>
 <p>All requests from here only allow authenticated users/companies.</p>
 <h3>Retrieve CSRF token</h3>

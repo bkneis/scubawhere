@@ -70,27 +70,6 @@ This route creates a new company in the database and attemps to send a password 
 - &nbsp;
 - **@return** integer     `0` (FALSE) if no record was found, otherwise `1` (TRUE)
 
-### Sent a password reminder email
-
-`POST /password/remind`
-
-- **@param** string email The email adress to reset the password for
-- &nbsp;
-- **@return** JSON        Contains `status` on success, `errors` when the email address can't be found
-
-### Reset a company's password
-
-`POST /password/reset`
-
-This request should be made from the page where the user is linked to in the password reminder email.
-
-- **@param** string email                 The email adress of the user
-- **@param** string password              The password
-- **@param** string password_confirmation The password confirmation
-- **@param** string token                 The token (from the link)
-- &nbsp;
-- **@return** JSON                        Contains `status` on success, `errors` on failure
-
 ## General
 
 All requests from here only allow authenticated users/companies.
