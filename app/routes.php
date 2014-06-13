@@ -51,7 +51,7 @@ Route::post('login', function()
 	}
 	else
 	{
-		return Response::json( array('errors' => array('Oh, something wasn\'t correct.')), 406 ); // 406 Not Acceptable
+		return Response::json( array('errors' => array('Oops, something wasn\'t correct.')), 406 ); // 406 Not Acceptable
 	}
 });
 

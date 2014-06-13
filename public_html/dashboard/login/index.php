@@ -1,6 +1,6 @@
-<!DOCTYPE HTML>
-<HTML>
-<HEAD>
+<!DOCTYPE html>
+<html>
+<head>
 	<TITLE>Scuba Where | Dive Centre Login</TITLE>
 
 
@@ -12,8 +12,8 @@
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 
 	<link rel="icon" type="image/ico" href="../../common/favicon.ico" />
-</HEAD>
-<BODY>
+</head>
+<body>
 
 
 	<div id="login-wrapper">
@@ -24,13 +24,17 @@
 
 			<span id="form-error"></span>
 
-			<input type="text" name="username" placeholder="Username" />
+			<input type="text" name="username" placeholder="Username">
 
-			<input type="password" name="password" placeholder="Password" />
+			<input type="password" name="password" placeholder="Password"><br>
+
+			<label><input type="checkbox" name="remember"> Remember me</label>
 
 			<input type="hidden" name="_token" value="" />
-
-			<input type="submit" id="loginDC" value="Log in" class="bttn blueb">
+			<button id="loginDC" class="submit-bttn bttn blueb">
+				Log in
+				<div id="save-loader" class="loader"></div>
+			</button>
 
 		</form>
 		<span>Forgot your password? <a href="../forgot/">Click here.</a></span>
@@ -38,5 +42,5 @@
 
     <footer><a href="../register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
 
-</BODY>
-</HTML>
+</body>
+</html>

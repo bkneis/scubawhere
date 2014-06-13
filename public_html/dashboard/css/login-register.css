@@ -48,9 +48,8 @@ body{
 }
 
 /* form */
-form{
+form {
 	font-size: 18px;
-	font-size: 0px;
 	text-align: center;
 	background-color: #fff;
 	padding: 20px 0px 40px 0px;
@@ -63,13 +62,15 @@ form{
 
 form input[type='text'],
 form input[type='password']{
-	border: none;
+	/* border: none; */
 	width: 300px;
-	margin: 0px;
-	outline: none;
+	width: 280px;
+	/* margin: 0px; */
+	/* outline: none; */
 	font-size: 18px;
 	padding: 10px 0px;
-	border-bottom: 1px solid #c8c8c8;
+	padding: 10px;
+	/* border-bottom: 1px solid #c8c8c8; */
 }
 
 form input[type='text']{
@@ -110,12 +111,20 @@ form .select:after{
 	color: #c8c8c8;
 }
 
-form input[type='submit']{
+form .submit-bttn {
+	margin: auto;
 	margin-top: 20px;
 	display: block;
-	width: 320px;
+	width: 300px;
 	padding: 10px 0px;
-	margin-left: 40px;
+}
+form .submit-bttn div {
+	display: none;
+	font-size: 12px;
+}
+form .submit-bttn.loading div {
+	display: inline-block;
+	margin-top: -1em;
 }
 
 .errorMssg{
