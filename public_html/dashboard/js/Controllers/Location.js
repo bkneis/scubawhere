@@ -5,9 +5,9 @@ var Locations = {
 	//float longitude
 	//int limit
 	getLocationAround : function(params, handleData) {
-		$.get("/company/locations", params).done(function(data){
+		$.get("/company/locations?" + Math.random(), params).done(function(data){
 			handeData(data);
-		}); 
+		});
 	},
 
 
@@ -22,7 +22,7 @@ var Locations = {
 	//gets locations inside a rectangle
 	//requires one param - "area", as above
 	getLocationInside : function(params, handleData){
-		$.get("/company/locations", params).done(function(data){
+		$.get("/company/locations?" + Math.random(), params).done(function(data){
 			handeData(data);
 		});
 	},
@@ -36,7 +36,7 @@ var Locations = {
 
 	//Note: all created locations are available to all companies
 	createLocation : function(params, handleData){
-		$.get("/company/locations", params).done(function(data){
+		$.post("/company/add-location", params).done(function(data){
 			handeData(data);
 		});
 	}

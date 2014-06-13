@@ -2,13 +2,13 @@
 var Agent = {
 
 	getAgent : function(params, handleData) {
-		$.get("/api/agent", function(data) {
+		$.get("/api/agent?" + Math.random(), function(data) {
 			handleData(data);
 		});
 	},
 
 	getAllAgents : function(handleData) {
-		$.get("/api/agent/all", function(data){
+		$.get("/api/agent/all?" + Math.random(), function(data){
 			handleData(data);
 		});
 	},

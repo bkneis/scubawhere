@@ -1,13 +1,13 @@
 var Sessions = {
 	//params = int id (the ID of the wanted session)
 	getSecificSession: function(params, handleData) {
-		$.get("/api/session", params).done(function(data){
+		$.get("/api/session?" + Math.random(), params).done(function(data){
 			handleData(data);
 		});
 	},
 
 	getAllSessions: function(handleData) {
-		$.get("/api/session/all").done(function(data){
+		$.get("/api/session/all?" + Math.random()).done(function(data){
 			handleData(data);
 		});
 	},

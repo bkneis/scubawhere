@@ -4,14 +4,14 @@ var Ticket = {
 
 	// Param - id of ticket wanted
 	getTicket : function(params, handleData){
-		$.get("/api/ticket", function(data){
+		$.get("/api/ticket?" + Math.random(), function(data){
 			handleData(data)
 		});
 	},
 
 	// No params needed
 	getAllTickets : function(handleData){
-		$.get("/api/ticket/all", function(data){
+		$.get("/api/ticket/all?" + Math.random(), function(data){
 			handleData(data)
 		});
 	},

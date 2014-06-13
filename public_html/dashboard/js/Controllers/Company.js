@@ -1,7 +1,7 @@
 var Company = {
 	getCompany : function(handleData) {
-		$.get("/company").done(function(data){
+		$.get("/company?" + Math.random()).done(function(data){
 			handeData(data);
-		}); 
+		});
 	}
 };
