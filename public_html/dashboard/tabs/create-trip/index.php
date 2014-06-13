@@ -101,7 +101,7 @@
 							<div class="location-select">Long: {{longitude}}</div>
 							<div class="location-select">Lat: {{latitude}}</div>
 							<!--<div class="link remove-location">Remove location from trip</div>-->
-							<a style="cursor:pointer"class="remove-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">Remove location</a>
+							<a style="cursor:pointer" class="remove-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">Remove location</a>
 							<input type="hidden" name="locations[]" value="{{id}}" />
 						</li>
 
