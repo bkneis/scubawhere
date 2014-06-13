@@ -2,7 +2,7 @@
 	<div class="yellow-helper">Please enter all your boat details. You can divide a boats capacity up by room types. If you don't dive from boats then you could add a <i>boat</i> named "Beach" or "Pontoon" as appropriate.</div>
 	<form id="saveBoatsAndRooms" class="validate">
 		<div id="boats-wrap" class="box100">
-			<label class="blueb expand-box"><span class="box-tool expand-box-arrow">&#8595;</span> Existing Boats & Rooms</label>
+			<label class="dgreyb expand-box"><span class="box-tool expand-box-arrow">&#8595;</span> Existing Boats & Rooms</label>
 			<div class="padder expandable hidden">
 				<!--list the boats with handlebars -->
 				<script id="boat" type="text/x-handlebars-template">
@@ -48,7 +48,7 @@
 				</script>
 
 				<div class="box100">
-					<label class="blueb">Room Types</label>
+					<label class="dgreyb">Room Types</label>
 					<table id="rooms-table">
 						<thead>
 							<tr>
@@ -77,13 +77,13 @@
 						</tbody>
 					</table>
 					<br><br>
-					<label class="blueb">Boats</label>
+					<label class="dgreyb">Boats</label>
 				</div>
 			</div>
 		</div>
 
 		<div id="newBoat-wrap" class="box100">
-			<label class="blueb"><img src="img/icons/yacht_white.png"> &nbsp; Add New Boat</label>
+			<label class="dgreyb"><img src="img/icons/yacht_white.png"> &nbsp; Add New Boat</label>
 			<div class="padder">
 				<input type="text" class="valid" name="newBoatName" placeholder="Boat name" />
 				<input type="text" class="valid" name="newBoatCapacity" placeholder="Capacity" />
@@ -95,7 +95,7 @@
 
 
 		<div class="box100">
-			<label class="blueb"><img src="img/icons/bed_white.png"> &nbsp; Add New Room Type</label>
+			<label class="dgreyb"><img src="img/icons/bed_white.png"> &nbsp; Add New Room Type</label>
 			<div class="padder" id="new-room-type">
 				<input name="newRoomName" type="text" placeholder="Room name">
 				<textarea name="newRoomDescription" placeholder="Room description"></textarea>
