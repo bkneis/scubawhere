@@ -91,7 +91,7 @@
 				<ul id="selected-spots">
 					<script id="selected-spot" type="text/x-handlebars-template">
 
-						<li id='{{name}}' class="spot box33 remove-spot" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
+						<li id='{{id}}' class="spot box33 remove-spot" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
 							<div class="location-select">{{name}}</div>
 							<div class="location-select">Long: {{longitude}}</div>
 							<div class="location-select">Lat: {{latitude}}</div>
