@@ -38,9 +38,6 @@
 			<label>City*</label>
 			<input class="required"  type="text" name="city" placeholder="City">
 
-			<label>County</label>
-			<input type="text" name="county" placeholder="County">
-
 			<label>Postcode*</label>
 			<input class="required"  type="text" name="postcode" placeholder="Postcode">
 
@@ -51,7 +48,7 @@
 			<input class="required" type="text" name="phone" placeholder="Phone Number">
 
 			<label>Website (optional)</label>
-			<input type="text" name="website" placeholder="Website (optional)">
+			<input type="text" name="website" placeholder="http://...">
 
 			<br><span class="form-error"></span>
 
