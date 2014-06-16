@@ -16,7 +16,19 @@ var Booking = {
 	 * Initate a booking with either the 'source' of the booking or the 'agent_id'.
 	 * Source must be one of telephone, email, facetoface.
 	 *
-	 * So 'params' should be an object, either {source: 'telephone'} (for example) or {agent_id: 2} (also an example)
+	 * So 'params' should be an object, either
+	 *
+	 * {
+	 *     _token: ...,
+	 *     source: 'telephone'
+	 * } (for example)
+	 *
+	 * or
+	 *
+	 * {
+	 *     _token: ...,
+	 *     agent_id: 2
+	 * } (also an example)
 	 *
 	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.
@@ -37,6 +49,7 @@ var Booking = {
 	/**
 	 * Add a ticket to a booking.
 	 * Required parameters:
+	 * - _token
 	 * - booking_id
 	 * - customer_id
 	 * - is_lead
@@ -63,6 +76,7 @@ var Booking = {
 	/**
 	 * Remove a ticket from a booking.
 	 * Required parameters:
+	 * - _token
 	 * - booking_id
 	 * - customer_id
 	 * - session_id
