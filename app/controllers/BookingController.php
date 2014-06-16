@@ -58,21 +58,24 @@ class BookingController extends Controller {
 		}
 		while( Booking::where('reference', $booking->reference)->count() >= 1 );
 
-		if( !$booking->validate() )
-		{
-			return Response::json( array('errors' => $booking->errors()->all()), 400 ); // 400 Bad Request
-		}
-
 		$booking = Auth::user()->bookings()->save($booking);
 
 		return Response::json( array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference), 201 ); // 201 Created
 	}
 
-	public function postAttachCustomer()
+	public function postAddDetails()
 	{
-		$data = Input::only('booking_id', 'customer_id');
+		/**
+		 * Valid input parameters
+		 * booking_id
+		 * customer_id
+		 * is_lead
+		 * ticket_id
+		 * session_id
+		 * package_id
+		 */
 
-		// Check if both IDs exist and belong to the signed-in company
+		// Check if all IDs exist and belong to the signed-in company
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
@@ -91,6 +94,38 @@ class BookingController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+		}
+
+		try
+		{
+			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
+			Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
+		}
+
+		try
+		{
+			if( !Input::get('session_id') ) throw new ModelNotFoundException();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->firstOrFail();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( Input::get('package_id') )
+		{
+			try
+			{
+				$package = Auth::user()->packages()->findOrFail( Input::get('package_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+			}
 		}
 
 		// Check if this customer is supposed to be the lead customer
@@ -98,39 +133,88 @@ class BookingController extends Controller {
 		if( !is_bool($is_lead) )
 			$is_lead = false;
 
-		$booking->customers()->attach( Input::get('customer_id'), array('is_lead' => $is_lead) );
+		// Validate remaining capacity on session
+		$departure->getCapacityAttribute();
+		if( $departure[0] >= $departure[1] )
+		{
+			// Session/Boat already full/overbooked
+			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
+		}
+
+		if( Input::get('package_id') && !empty($package->capacity) )
+		{
+			// Validate remaining package capacity on session
+
+			// Package's capacity is *not* infinite and must be checked
+			$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
+
+			if( $usedUp >= $package->capacity )
+			{
+				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
+			}
+		}
+
+		// Check for extra one-time packages for this session and their capacity
+		// TODO
+
+		// If all checks completed successfully, write into database
+		$booking->customers()->attach( Input::get('customer_id'),
+			array(
+				'is_lead' => $is_lead,
+				'ticket_id' => Input::get('ticket_id'),
+				'session_id' => Input::get('session_id'),
+				'package_id' => Input::get('package_id')
+			)
+		);
 
 		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()), 200 ); // 200 OK
 	}
 
-	public function postDetachCustomer()
+	public function postRemoveDetails()
 	{
-		$data = Input::only('booking_id', 'customer_id');
+		/**
+		 * Valid input parameters
+		 * booking_id
+		 * customer_id
+		 * session_id
+		 */
 
-		// Check if both IDs exist and belong to the signed-in company
+		$data = Input::only('booking_id', 'customer_id', 'session_id');
+
+		// Check if entry exists on booking_details table
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		try
+		$affectedRows = DB::table('booking_details')
+			->where('booking_id', $booking->id)
+			->where('customer_id', Input::get('customer_id'))
+			->where('session_id', Input::get('session_id'))
+			->count();
+
+		if($affectedRows == 0)
+			return Response::json( array('errors' => array('The combination of IDs has not been found. Nothing was done on the server.')), 404 ); // 404 Not Found
+
+		if($affectedRows != 1)
 		{
-			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
-			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+			// Fail because only one record should be affected. Customer and session relation should be unique
+			return Response::json( array('errors' => array('This action would affect more than one record and is therefore aborted. Please check why the customer <-> session relationship is not unique.')), 400 ); // 400 Bad Request
 		}
 
-		$booking->customers()->detach( Input::get('customer_id'));
+		// Execute delete
+		$affectedRows = DB::table('booking_details')
+			->where('booking_id', $booking->id)
+			->where('customer_id', Input::get('customer_id'))
+			->where('session_id', Input::get('session_id'))
+			->delete();
 
-		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()), 200 ); // 200 OK
+		return array('status' => 'OK. Booking details removed.');
 	}
 
 	public function getValidate()
@@ -152,67 +236,23 @@ class BookingController extends Controller {
 		);
 	}
 
-	/*
-	public function postAdd()
+	public function getPayments()
 	{
-		$data = Input::only(
-			'name',
-			'website',
-			'branch_name',
-			'branch_address',
-			'branch_phone',
-			'branch_email',
-			'billing_address',
-			'billing_phone',
-			'billing_email',
-			'commission',
-			'terms'
-		);
+		/**
+		 * Valid input parameters
+		 * booking_id
+		 */
 
-		$agent = new Agent($data);
-
-		if( !$agent->validate() )
-		{
-			return Response::json( array('errors' => $agent->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		$agent = Auth::user()->agents()->save($agent);
-
-		return Response::json( array('status' => 'OK. Agent created', 'id' => $agent->id), 201 ); // 201 Created
-	}
-
-	public function postEdit()
-	{
 		try
 		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$agent = Auth::user()->agents()->findOrFail( Input::get('id') );
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The agent could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$data = Input::only(
-			'name',
-			'website',
-			'branch_name',
-			'branch_address',
-			'branch_phone',
-			'branch_email',
-			'billing_address',
-			'billing_phone',
-			'billing_email',
-			'commission',
-			'terms'
-		);
-
-		if( !$agent->update($data) )
-		{
-			return Response::json( array('errors' => $agent->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		return Response::json( array('status' => 'OK. Agent updated.'), 200 ); // 200 OK
+		return $booking->payments();
 	}
-	*/
 }

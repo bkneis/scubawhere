@@ -584,7 +584,7 @@ The search functionality has been moved to [#Search for customers by email](#Sea
 Creates a new customer. The only *required* fields are `firstname` and `lastname`.
 
 > #### Important
-> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with [#Validate booking](#Validate_booking).)
+> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address **and** and phone number assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with [#Validate booking](#Validate_booking).)
 
 - **@param** string  email          The email of the customer (optional)
 - **@param** string  firstname      The customer's first name

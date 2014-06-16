@@ -56,6 +56,11 @@ class Booking extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
+	public function packages()
+	{
+		return $this->belongsToMany('Package', 'booking_details')->withPivot('customer_id', 'is_lead', 'ticket_id', 'session_id');
+	}
+
 	public function payments()
 	{
 		return $this->hasMany('Payment');

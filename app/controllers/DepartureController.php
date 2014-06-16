@@ -27,6 +27,108 @@ class DepartureController extends Controller {
 		return Auth::user()->departures()->withTrashed()->get();
 	}
 
+	public function getFilter()
+	{
+		/**
+		 * Valid input parameter
+		 * ticket_id
+		 * package_id
+		 * after
+		 * before
+		 */
+
+		try
+		{
+			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
+			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( Input::get('package_id') )
+		{
+			try
+			{
+				$package = Auth::user()->packages()->findOrFail( Input::get('package_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+
+		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
+		$departures = Auth::user()->departures()->with('bookings', 'boat')
+		->whereHas('trip', function($query)
+		{
+			$query->whereHas('tickets', function($query)
+			{
+				$query
+				->where('id', Input::get('ticket_id'))
+				->where(function($query)
+				{
+					// Conditional where clause (only when package_id is provided)
+					if( Input::get('package_id') )
+					{
+						$query->whereHas('packages', function($query)
+						{
+							$query->where('id', Input::get('package_id'));
+						});
+					}
+				});
+			});
+		})
+		// Fetch sessions and conditionally filter by given dates
+		->where(function($query)
+		{
+			if( Input::get('after') && !Input::get('before') )
+				$query->where('start', '>=', Input::get('after'));
+
+			elseif( !Input::get('after') && Input::get('before') )
+				$query->where('start', '<=', Input::get('before'));
+
+			elseif( Input::get('after') && Input::get('before') )
+				$query
+				->whereBetween('start', array(Input::get('after'), Input::get('before')));
+		})->get();
+
+		// Conditionally filter by boat
+		if( $ticket->boats()->count() > 0 )
+		{
+			$boatIDs = $ticket->boats()->lists('id');
+			$departures->filter(function($departure)
+			{
+				return in_array($departure->boat_id, $boatIDs);
+			});
+		}
+
+		// Filter by capacity/availability
+		$departures = $departures->filter(function($departure)
+		{
+			$boatCapacity = $departure->getCapacityAttribute();
+			if( $boatCapacity[0] >= $boatCapacity[1] )
+			{
+				// Session/Boat already full/overbooked
+				return false;
+			}
+
+			if( Input::get('package_id') )
+			{
+				$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
+				if( $usedUp >= $package->capacity )
+				{
+					return false;
+				}
+			}
+
+			return true;
+		});
+
+		return $departures;
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('start', 'boat_id');
