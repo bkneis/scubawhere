@@ -15,7 +15,7 @@ class AddCompanyIdToTickets extends Migration {
 		Schema::table('tickets', function($table)
 		{
 			$table->integer('company_id')->unsigned()->after('id');
-		}
+		});
 
 		DB::table('tickets')->update(array('company_id' => 1));
 
