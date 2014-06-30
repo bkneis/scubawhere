@@ -2,6 +2,11 @@
 //run on page load
 $(function(){
 
+	$.ajaxSetup({
+		// Disable caching of AJAX responses
+		cache: false
+	});
+
 	// Error handling
 	$(document).ajaxComplete(function(event, xhr, options) {
 		/*

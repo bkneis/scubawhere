@@ -1,13 +1,13 @@
 var Sessions = {
 	//params = int id (the ID of the wanted session)
 	getSecificSession: function(params, handleData) {
-		$.get("/api/session?" + Math.random(), params).done(function(data){
+		$.get("/api/session", params).done(function(data){
 			handleData(data);
 		});
 	},
 
 	getAllSessions: function(handleData) {
-		$.get("/api/session/all?" + Math.random()).done(function(data){
+		$.get("/api/session/all").done(function(data){
 			handleData(data);
 		});
 	},
@@ -30,7 +30,7 @@ var Sessions = {
 	filter: function(params, handleData, errorFn) {
 		$.ajax({
 			type: "GET",
-			url: "/api/session/filter?" + Math.random(), // TODO replace all controllers' Math.random() appendices with a central function (http://api.jquery.com/ajaxSend/) to manipulate the URL on GET requests
+			url: "/api/session/filter", // TODO replace all controllers' Math.random() appendices with a central function (http://api.jquery.com/ajaxSend/) to manipulate the URL on GET requests
 			data: params,
 			success: handleData,
 			error: errorFn

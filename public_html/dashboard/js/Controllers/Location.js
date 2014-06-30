@@ -5,7 +5,7 @@ var Locations = {
 	//float longitude
 	//int limit
 	getLocationAround : function(params, handleData) {
-		$.get("/company/locations?" + Math.random(), params).done(function(data){
+		$.get("/company/locations", params).done(function(data){
 			handeData(data);
 		});
 	},
@@ -22,7 +22,7 @@ var Locations = {
 	//gets locations inside a rectangle
 	//requires one param - "area", as above
 	getLocationInside : function(params, handleData){
-		$.get("/company/locations?" + Math.random(), params).done(function(data){
+		$.get("/company/locations", params).done(function(data){
 			handeData(data);
 		});
 	},

@@ -1,7 +1,7 @@
 var Boat = {
 	//No params required
 	getAllBoats : function (handeData) {
-		$.get("/company/boats?" + Math.random()).done(function(data){
+		$.get("/company/boats").done(function(data){
 			handeData(data);
 		});
 	},
@@ -16,7 +16,7 @@ var Boat = {
 
 	//get all accommodations - no params
 	getAccommodations : function (handeData) {
-		$.get("/company/boats?" + Math.random()).done(function(data){
+		$.get("/company/boats").done(function(data){
 			handeData(data);
 		});
 	}

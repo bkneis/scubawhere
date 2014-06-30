@@ -1,13 +1,13 @@
 var Booking = {
 	//params = int id (the ID of the wanted session)
 	getSecificBooking: function(params, handleData) {
-		$.get("/api/booking?" + Math.random(), params).done(function(data){
+		$.get("/api/booking", params).done(function(data){
 			handleData(data);
 		});
 	},
 
 	getAllBookings: function(handleData) {
-		$.get("/api/booking/all?" + Math.random()).done(function(data){
+		$.get("/api/booking/all").done(function(data){
 			handleData(data);
 		});
 	},

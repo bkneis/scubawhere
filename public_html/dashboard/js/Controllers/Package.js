@@ -2,13 +2,13 @@
 var Package = {
 
 	getPackage : function(params, handleData) {
-		$.get("/api/package?" + Math.random(), function(data) {
+		$.get("/api/package", params, function(data) {
 			handleData(data);
 		});
 	},
 
 	getAllPackages : function(handleData) {
-		$.get("/api/package/all?" + Math.random(), function(data){
+		$.get("/api/package/all", function(data){
 			handleData(data);
 		});
 	},
