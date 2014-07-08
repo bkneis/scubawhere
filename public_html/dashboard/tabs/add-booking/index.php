@@ -1,8 +1,8 @@
 <div id="wrapper">
-	<div class="accordion" id="section1">Step 1: Type of Booking<span></span></div>
+	<div class="accordion" id="section1">Step 1: Source of Booking<span></span></div>
 	<div class="container">
 		<div class="content">
-			<h2>Please select type of booking</h2>
+			<h2>Please select source of booking</h2>
 			<select id="tob" onchange="validateTob()">
 				<option>Please select an option</option>
 				<option id="agent" value="agent">Agent</option>
@@ -10,33 +10,48 @@
 				<option id="email" value="email">Email</option>
 				<option id="person" value="person">In Person</option>
 			</select>
-			<div  id="agent-info" style="display:none">
+			<div>
+				<button onClick="test()">Test</button>
+			<div id="agent-info" style="display:none">
 				<h3>Please select which agent</h3>
 				<select id="agents">
 					<option>Select an agent</option>
-					<script id="agent" type="text/x-handlebars-template">
+					<script id="agents-list-template" type="text/x-handlebars-template">
+					{{#each agents}}
 					<option>{{name}}</option>
+					{{/each}}
 					</script>
 				</select>
 			</div>
 		</div>
 	</div>
+	<!-- change! -->
 	<div class="accordion" id="section2">Step 2: Trip Selection<span></span></div>
 	<div class="container">
 		<div class="content">
 			<h2>Select trips that wish to be purchased</h2>
-			<div id="trip-options">
-				<h1>Trips</h1>
-				<div id="trip-options">
-					<ul id="trips">
-						<script id="trip" type="text/x-handlebars-template">
-							<li onclick="addTrip('{{name}}')">{{name}}</li>
-						</script>
-					</ul>
-				</div>
+			<div class="products-col">
+				<h1>Tickets</h1>
+				<ul id="trips" class="product-list">
+					<script id="trips-list-template" type="text/x-handlebars-template">
+					{{#each tickets}}
+					<li onclick="addTrip('{{name}}', '{{price}}', '{{id}}')">{{name}}</li>
+					{{/each}}
+					</script>
+				</ul>
+			</div>
+			<div class="products-col">
+				<h1>Packages</h1>
+				<ul id="packages" class="product-list">
+					<script id="packages-list-template" type="text/x-handlebars-template">
+					{{#each packages}}
+					<li onclick="addPackage('{{name}}', '{{price}}')">{{name}}</li>
+					{{/each}}
+					</script>
+				</ul>
 			</div>
 
-			<div id="selected-trips" style="padding-right:10px">
+			<div id="selected-trips" class="products-col">
 				<h1>Selected Trips</h1>
 				<div class="trips-container">
 					<ol id="selected-trips-list">
@@ -54,15 +69,36 @@
 					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
 				</ul>
 				<div id="tabcontent"></div>
+				<div id="trip-select-popup" style="display:none; height:600px">
+					<div id="trips-select">
+						<p>Trip: <select id="cust-trips" onChange="tripSelect()"><option value="0">Please select...</option></select></p>
+					</div>
+					<div id="packages-select">
+						<p>
+							Package: <select id="cust-packages" onChange="packageSelect()"><option value="0">Please select...</option></select>
+							Trip: 
+							<select id="cust-package-tickets" style="display:none;">
+								<option>Select a trip</option>
+								<script id="package-tickets-list-template" type="text/x-handlebars-template">
+								{{#each tickets}}
+								<option>{{name}}</option>
+								{{/each}}
+								</script>
+							</select>
+						</p>
+					</div>
+					<div id="calendar"></div>
+					<button class="bttn blueb big-bttn" id="btnAssign">Assign Ticket</button>
+				</div>
 			</div>
 		</div>
 		<div class="accordion" id="section4">Step 4: Payment<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div id="trip-info" style="float:left; width:45%;">
-						<h2>Trip Type</h2>
-						<ul id="trips-list"></ul>
-						<h3>Total Cost</h3>
+					<h2>Trip Type</h2>
+					<ul id="trips-list"></ul>
+					<h3>Total Cost</h3>
 				</div>
 				<div id="trip-cost" style="float:left; width:45%;">
 					<h2>Trip Cost</h2>
@@ -103,6 +139,8 @@
 			<div class="content">
 				<div>Summary</div>
 				<p>Summary of trips, customers and costs</p>
+				<form id="booking-data">
+				</form>
 			</div>
 		</div>
 	</div>
@@ -152,4 +190,99 @@
 	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
 	<script type="text/javascript" src="tabs/add-booking/js/tabs.js"></script>
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
+
+	<!--Controllers-->
+	<script src="/dashboard/js/Controllers/Agent.js"></script>
+	<script src="/dashboard/js/Controllers/Ticket.js"></script>
+	<script src="/dashboard/js/Controllers/Package.js"></script>
+	<script src="/dashboard/js/Controllers/Sessions.js"></script>
+
+	<!--Calander-->
+	<link href='tabs/add-booking/calander/fullcalendar.css' rel='stylesheet' />
+	<link href='tabs/add-booking/calander/fullcalendar.print.css' rel='stylesheet' media='print' />
+	<script src='tabs/add-booking/calander/lib/moment.min.js'></script>
+	<!--<script src='tabs/add-booking/calander/lib/jquery.min.js'></script>-->
+	<script src='tabs/add-booking/calander/lib/jquery-ui.custom.min.js'></script>
+	<script src='tabs/add-booking/calander/fullcalendar.min.js'></script>
+	<script>
+
+	$(document).ready(function() {
+		var days = 0;
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultDate: '2014-06-12',
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end) {
+				//var title = prompt('Event Title:');
+				days++;
+				var title = 'Day '+days+' of diving';
+				var eventData;
+				if (title) {
+					eventData = {
+						title: title,
+						start: start,
+						end: end
+					};
+					$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+				}
+				$('#calendar').fullCalendar('unselect');
+			},
+			editable: false,
+			events: [
+			{
+				title: 'Fun Dive',
+				start: '2014-06-01'
+			},
+			{
+				title: 'Boat Trip',
+				start: '2014-06-07',
+				end: '2014-06-10'
+			},
+			{
+				id: 999,
+				title: 'Diving Club',
+				start: '2014-06-09T16:00:00'
+			},
+			{
+				id: 999,
+				title: 'Diving Club',
+				start: '2014-06-16T16:00:00'
+			},
+			{
+				title: 'Meeting',
+				start: '2014-06-12T10:30:00',
+				end: '2014-06-12T12:30:00'
+			},
+			{
+				title: 'Click for Google',
+				url: 'http://google.com/',
+				start: '2014-06-28'
+			}
+			]
+		});
+
+});
+
+</script>
+<style>
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+	font-size: 14px;
+}
+
+#calendar {
+	width: 90%;
+	margin: 20px auto;
+	height:70%;
+}
+
+</style>
 

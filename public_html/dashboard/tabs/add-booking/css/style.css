@@ -64,8 +64,9 @@ div.content ul li a {
     color:#555555;
 }
 
-#trip-options {width: 60%; float:left;}
-#selected-trips { width: 30%; margin-top: 1em; float:right; }
+/*#trip-options {width: 60%; float:left;}
+#selected-trips { width: 30%; margin-top: 1em; float:right; }*/
+.products-col {width:30%; float:left; padding-right: 10px}
 /* style the list to maximize the droppable hitarea */
 #selected-trips ol { margin: 0; padding: 1em 0 1em 3em; }
 
@@ -145,18 +146,18 @@ div.content ul li a {
     float:left;
 }
 
-#trips {
+.product-list {
     list-style-type: none;
     padding-left: 0;
 }
-#trips li {
+.product-list li {
     cursor: pointer;
     margin-bottom: 0.5em;
     border: 1px solid #4a9cff;
     border-left-width: 5px;
     padding: 5px 10px;
 }
-#trips li:hover {
+.product-list li:hover {
     background-color: rgb(230, 245, 255);
 }
 

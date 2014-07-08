@@ -17,7 +17,7 @@ $(function() {
 		'<input type="text" name="phone" id="phone'+count+'" placeholder="Contact Number" />',
 		'<input type="text" name="email" id="email'+count+'" placeholder="Email Address" />',
 		'<select id="country'+count+'"><option>Please select country of origin</option></select>',
-		'<a id="addtrip'+count+'" class="fancybox fancybox.iframe" href="tabs/add-booking/iframe.html" style="float:left; padding-top:10px;">Add Trip</a>'];
+		'<a id="addtrip'+count+'" class="fancybox" href="#trip-select-popup" style="float:left; padding-top:10px;">Add Trip</a>'];
 		
         var closetab = '<a href="" id="close'+count+'" class="close">&times;</a>';
         $("#tabul").append('<li id="t'+count+'" class="ntabs">Customer '+count+'&nbsp;&nbsp;'+closetab+'</li>');
@@ -25,7 +25,6 @@ $(function() {
 
         $("#tabul li").removeClass("ctab");
         $("#t"+count).addClass("ctab");
-		
 		$("#tabcontent input").hide();
 		$("#tabcontent select").hide();
 		$("#tabcontent a").hide();
@@ -39,6 +38,7 @@ $(function() {
         $("#t"+count).bind("click", function() {
             $("#tabul li").removeClass("ctab");
             $("#t"+count).addClass("ctab");
+            //$(".hide").hide();
 			$("#tabcontent input").hide();
 		$("#tabcontent select").hide();
 		$("#tabcontent a").hide();
@@ -63,27 +63,5 @@ $(function() {
             return false;
         });
     }//add tab function
-	
-	function addElement() {
-
-  var ni = document.getElementById('myDiv');
-
-  var numi = document.getElementById('theValue');
-
-  var num = (document.getElementById('theValue').value -1)+ 2;
-
-  numi.value = num;
-
-  var newdiv = document.createElement('div');
-
-  var divIdName = 'my'+num+'Div';
-
-  newdiv.setAttribute('id',divIdName);
-
-  newdiv.innerHTML = 'Element Number '+num+' has been added! <a href=\'#\' onclick=\'removeElement('+divIdName+')\'>Remove the div "'+divIdName+'"</a>';
-
-  ni.appendChild(newdiv);
-
-}
 
 });// JavaScript Document
