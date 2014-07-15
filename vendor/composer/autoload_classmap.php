@@ -1045,6 +1045,7 @@ return array(
     'LaravelBook\\Ardent\\Providers\\ArdentServiceProvider' => $vendorDir . '/laravelbook/ardent/src/LaravelBook/Ardent/Providers/ArdentServiceProvider.php',
     'Location' => $baseDir . '/app/models/Location.php',
     'LocationController' => $baseDir . '/app/controllers/LocationController.php',
+    'MakeCustomerTableColumnsNullable' => $baseDir . '/app/database/migrations/2014_07_13_232753_make_customer_table_columns_nullable.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mews\\Purifier\\Facades\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Facades/Purifier.php',
     'Mews\\Purifier\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Purifier.php',
