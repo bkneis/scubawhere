@@ -31,81 +31,147 @@ class DepartureController extends Controller {
 	{
 		/**
 		 * Valid input parameter
+		 * trip_id
 		 * ticket_id
 		 * package_id
 		 * after
 		 * before
 		 */
 
-		try
-		{
-			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
-		}
+		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id');
 
-		if( Input::get('package_id') )
+		// Check the integrity of the supplied parameters
+		$validator = Validator::make( $data, array(
+			'after'      => 'date',
+			'before'     => 'date',
+			'trip_id'    => 'integer|min:1',
+			'ticket_id'  => 'integer|min:1', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
+			'package_id' => 'integer|min:1' // Same goes for packages
+		) );
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+
+		// Tranform parameter strings into DateTime objects
+		$data['after']  = new DateTime( $data['after'] );
+		$data['before'] = new DateTime( $data['before'] );
+
+		$options = array(
+			'after'      => new DateTime(),
+			'before'     => new DateTime('+ 1 month'),
+			'trip_id'    => null,
+			'ticket_id'  => null,
+			'package_id' => null
+		);
+
+		// Join the default options and the submitted filter parameters
+		$options = array_merge($options, $data);
+
+		if( !empty( $options['trip_id'] ) )
 		{
 			try
 			{
-				$package = Auth::user()->packages()->findOrFail( Input::get('package_id') );
+				$ticket = Auth::user()->trips()->findOrFail( $options['trip_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$trip = false;
+
+		if( !empty( $options['ticket_id'] ) )
+		{
+			try
+			{
+				$ticket = Auth::user()->tickets()->findOrFail( $options['ticket_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$ticket = false;
+
+		if( !empty( $options['package_id'] ) )
+		{
+			try
+			{
+				$package = Auth::user()->packages()->findOrFail( $options['package_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
 				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 			}
 		}
+		else
+			$package = false;
 
+		/*
+		  We need to navigate the relationship-tree from departure/session via trip to
+		  ticket and then (conditionally) to package.
+		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
 		$departures = Auth::user()->departures()->with('bookings', 'boat')
-		->whereHas('trip', function($query)
+		->whereHas('trip', function($query) use ($trip, $ticket, $package)
 		{
-			$query->whereHas('tickets', function($query)
+			$query
+			->where(function($query) use ($trip)
+			{
+				// Filter by trip_id
+				if($trip)
+				{
+					$query->where('id', $trip->id);
+				}
+			})
+			->whereHas('tickets', function($query) use ($ticket, $package)
 			{
 				$query
-				->where('id', Input::get('ticket_id'))
-				->where(function($query)
+				->where(function($query) use ($ticket)
+				{
+					// Conditional where clause (only when ticket_id is provided)
+					if($ticket)
+					{
+						$query->where('id', $ticket->id);
+					}
+				})
+				->where(function($query) use ($package)
 				{
 					// Conditional where clause (only when package_id is provided)
-					if( Input::get('package_id') )
+					if( $package )
 					{
-						$query->whereHas('packages', function($query)
+						$query->whereHas('packages', function($query) use ($package)
 						{
-							$query->where('id', Input::get('package_id'));
+							$query->where('id', $package->id);
 						});
 					}
 				});
 			});
 		})
-		// Fetch sessions and conditionally filter by given dates
-		->where(function($query)
-		{
-			if( Input::get('after') && !Input::get('before') )
-				$query->where('start', '>=', Input::get('after'));
-
-			elseif( !Input::get('after') && Input::get('before') )
-				$query->where('start', '<=', Input::get('before'));
-
-			elseif( Input::get('after') && Input::get('before') )
-				$query
-				->whereBetween('start', array(Input::get('after'), Input::get('before')));
-		})->get();
+		// Filter by dates
+		->whereBetween('start', array(
+			 $options['after']->format('Y-m-d H:i:s'),
+			$options['before']->format('Y-m-d H:i:s')
+		))
+		// ->with('trip', 'trip.tickets')
+		->orderBy('start', 'ASC')
+		->take(25)
+		->get();
 
 		// Conditionally filter by boat
-		if( $ticket->boats()->count() > 0 )
+		if( $ticket && $ticket->boats()->count() > 0 )
 		{
 			$boatIDs = $ticket->boats()->lists('id');
-			$departures->filter(function($departure)
+			$departures->filter(function($departure) use ($boatIDs)
 			{
 				return in_array($departure->boat_id, $boatIDs);
 			});
 		}
 
 		// Filter by capacity/availability
-		$departures = $departures->filter(function($departure)
+		$departures = $departures->filter(function($departure) use ($package)
 		{
 			$boatCapacity = $departure->getCapacityAttribute();
 			if( $boatCapacity[0] >= $boatCapacity[1] )
@@ -114,7 +180,7 @@ class DepartureController extends Controller {
 				return false;
 			}
 
-			if( Input::get('package_id') )
+			if( $package )
 			{
 				$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
 				if( $usedUp >= $package->capacity )
