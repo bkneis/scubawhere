@@ -29,6 +29,10 @@ class Helper
 		$size = strlen($chars);
 
 		$string = "";
+<<<<<<< HEAD
+=======
+
+>>>>>>> Dashboard, add-booking tabs and customers controller
 		for($i = 0; $i < $length; $i++) {
 			$string .= $chars[ mt_rand(0, $size - 1) ];
 		}

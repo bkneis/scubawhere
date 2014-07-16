@@ -3,65 +3,66 @@
 	<div class="container">
 		<div class="content">
 			<h2>Please select source of booking</h2>
-			<select id="tob" onchange="validateTob()">
+			<select id="sob" onchange="validateSob()">
 				<option>Please select an option</option>
 				<option id="agent" value="agent">Agent</option>
-				<option id="phone" value="phone">Phone</option>
+				<option id="telephone" value="telephone">Phone</option>
 				<option id="email" value="email">Email</option>
-				<option id="person" value="person">In Person</option>
+				<option id="facetoface" value="facetoface">In Person</option>
 			</select>
 			<div>
-				<button onClick="test()">Test</button>
-			<div id="agent-info" style="display:none">
-				<h3>Please select which agent</h3>
-				<select id="agents">
-					<option>Select an agent</option>
-					<script id="agents-list-template" type="text/x-handlebars-template">
-					{{#each agents}}
-					<option>{{name}}</option>
-					{{/each}}
-					</script>
-				</select>
+				<div id="agent-info" style="display:none">
+					<h3>Please select which agent</h3>
+					<select id="agents">
+						<option>Select an agent</option>
+						<script id="agents-list-template" type="text/x-handlebars-template">
+						{{#each agents}}
+						<option value='{{id}}'>{{name}}</option>
+						{{/each}}
+						</script>
+					</select>
+				</div>
 			</div>
+			<button onclick="check()">Testing button</button>
 		</div>
 	</div>
 	<!-- change! -->
-	<div class="accordion" id="section2">Step 2: Trip Selection<span></span></div>
+	<div class="accordion" id="section2" onClick="initiate()">Step 2: Trip Selection<span></span></div>
 	<div class="container">
 		<div class="content">
 			<h2>Select trips that wish to be purchased</h2>
 			<div class="products-col">
 				<h1>Tickets</h1>
-				<ul id="trips" class="product-list">
-					<script id="trips-list-template" type="text/x-handlebars-template">
+				<ul id="available-tickets" class="product-list"><!--trips-->
+					<script id="tickets-list-template" type="text/x-handlebars-template">
 					{{#each tickets}}
-					<li onclick="addTrip('{{name}}', '{{price}}', '{{id}}')">{{name}}</li>
+					<li onclick="selectTicket('{{name}}', '{{id}}')">{{name}}</li>
 					{{/each}}
 					</script>
 				</ul>
 			</div>
 			<div class="products-col">
 				<h1>Packages</h1>
-				<ul id="packages" class="product-list">
+				<ul id="available-packages" class="product-list">
 					<script id="packages-list-template" type="text/x-handlebars-template">
 					{{#each packages}}
-					<li onclick="addPackage('{{name}}', '{{price}}')">{{name}}</li>
+					<li onclick="selectPackage('{{name}}', {{id}})">{{name}}</li>
 					{{/each}}
 					</script>
 				</ul>
 			</div>
 
-			<div id="selected-trips" class="products-col">
+			<div id="selected-tickets-div" class="products-col">
 				<h1>Selected Trips</h1>
 				<div class="trips-container">
-					<ol id="selected-trips-list">
+					<ol id="selected-tickets">
 					</ol>
 				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 	</div>
-	<div class="accordion" id="section3">Step 3: Customer Details<span></span></div>
+	<div class="accordion" id="section3">Step 3: Add Customer Details<span></span></div>
 	<div class="container">
 		<div class="content">
 			<h2>Please fill in the customer details and assign their trips<h2>
@@ -69,30 +70,59 @@
 					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
 				</ul>
 				<div id="tabcontent"></div>
-				<div id="trip-select-popup" style="display:none; height:600px">
-					<div id="trips-select">
-						<p>Trip: <select id="cust-trips" onChange="tripSelect()"><option value="0">Please select...</option></select></p>
+				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px;">Assign ticket</button>
+
+				<div id="customers-trips-summary">
+					
+				</div>
+
+				<!-- Pop up box -->
+				<div id="ticket-fancybox" style="display:none; height:810px; width:900px">
+					<div id="customer-select">
+						<!-- Here il display all the customers names, then have onclick to send customer-id to hidden data aswell look up if thier lead-->
+						<p>Customer: <select id="customers" onChange=""><option value="0">Please select...</option></select></p>
 					</div>
-					<div id="packages-select">
-						<p>
-							Package: <select id="cust-packages" onChange="packageSelect()"><option value="0">Please select...</option></select>
-							Trip: 
-							<select id="cust-package-tickets" style="display:none;">
-								<option>Select a trip</option>
-								<script id="package-tickets-list-template" type="text/x-handlebars-template">
-								{{#each tickets}}
-								<option>{{name}}</option>
-								{{/each}}
-								</script>
+					<div id="tickets-select" style="width:22%;float:left;">
+						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select></p>
+					</div>
+					<div id="packages-select" style="width:40%; float:left;">
+						
+							<p>or Package: <select id="customer-packages" onChange="displayPackageTickets()"><option value="0">Please select...</option></select>
+							Select ticket: 
+							<select id="customer-package-tickets" style="display:none;">
+								<option value="0">Select a trip...</option>
 							</select>
 						</p>
 					</div>
-					<div id="calendar"></div>
-					<button class="bttn blueb big-bttn" id="btnAssign">Assign Ticket</button>
+					<div id="info" style="display:none">
+						<p id="session-id"></p>
 				</div>
+				<div id="calendar"></div>
+				<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()" style="float:right">Assign Ticket</button>
+			</div><!-- End of pop up box -->
+		</div>
+	</div>
+	<div class="accordion" id="section5">Step 4: Assign Trips<span></span></div>
+		<div class="container">
+			<div class="content">
+				<div id="cust1" style="float:left">
+					<h1>Customer 1</h1>
+					<ul id="cust1-trips">
+						<li>Trip 1</li>
+					</ul>
+					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
+				</div>
+				<div id="cust1" style="float:left">
+					<h1>Customer 2</h1>
+					<ul id="cust1-trips">
+						<li>Trip 1</li>
+					</ul>
+					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
+				</div>
+				<div class="spacing" style="padding-bottom:150px;"></div>
 			</div>
 		</div>
-		<div class="accordion" id="section4">Step 4: Payment<span></span></div>
+		<div class="accordion" id="section5">Step 5: Payment<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div id="trip-info" style="float:left; width:45%;">
@@ -134,7 +164,7 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-		<div class="accordion" id="section5">Summary<span></span></div>
+		<div class="accordion" id="section6">Summary<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div>Summary</div>
@@ -144,7 +174,6 @@
 			</div>
 		</div>
 	</div>
-
 	<!--Accordion-->
 	<script type="text/javascript" src="tabs/add-booking/js/jquery.min.js"></script>
 	<script type="text/javascript" src="tabs/add-booking/js/highlight.pack.js"></script>
@@ -181,7 +210,6 @@
 	<link rel="stylesheet" type="text/css" href="tabs/add-booking/css/jquery.fancybox.css?v=2.1.5" media="screen" />
 	<script type="text/javascript">
 	$(document).ready(function() {
-
 		$('.fancybox').fancybox();
 	});
 	</script>
@@ -191,98 +219,41 @@
 	<script type="text/javascript" src="tabs/add-booking/js/tabs.js"></script>
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
+	<!-- Calendar-->
+	<link rel='stylesheet' href='tabs/add-booking/calendar/fullcalendar.css' />
+	<!--<script src='tabs/add-booking/calendar/lib/jquery.min.js'></script>-->
+	<script src='tabs/add-booking/calendar/lib/moment.min.js'></script>
+	<script src='tabs/add-booking/calendar/fullcalendar.js'></script>
+	<script>
+	$(document).ready(function() {
+
+	    // page is now ready, initialize the calendar...
+
+	    $('#calendar').fullCalendar({
+	        // put your options and callbacks here
+	        eventClick: function(calEvent, view) {
+
+	        	sessionID = calEvent.sessionID;
+
+		        alert('Trip selected: ' + calEvent.title);
+		        alert(sessionID);
+		        //alert('Session ID: ' + calEvent.sessionID);
+		        //alert('View: ' + view.name);
+
+		        // change the border color just for fun
+		        $(this).css('border-color', 'red');
+
+		    	}
+	    })
+
+	});
+	</script>
+
 	<!--Controllers-->
 	<script src="/dashboard/js/Controllers/Agent.js"></script>
 	<script src="/dashboard/js/Controllers/Ticket.js"></script>
 	<script src="/dashboard/js/Controllers/Package.js"></script>
 	<script src="/dashboard/js/Controllers/Sessions.js"></script>
-
-	<!--Calander-->
-	<link href='tabs/add-booking/calander/fullcalendar.css' rel='stylesheet' />
-	<link href='tabs/add-booking/calander/fullcalendar.print.css' rel='stylesheet' media='print' />
-	<script src='tabs/add-booking/calander/lib/moment.min.js'></script>
-	<!--<script src='tabs/add-booking/calander/lib/jquery.min.js'></script>-->
-	<script src='tabs/add-booking/calander/lib/jquery-ui.custom.min.js'></script>
-	<script src='tabs/add-booking/calander/fullcalendar.min.js'></script>
-	<script>
-
-	$(document).ready(function() {
-		var days = 0;
-		$('#calendar').fullCalendar({
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-			defaultDate: '2014-06-12',
-			selectable: true,
-			selectHelper: true,
-			select: function(start, end) {
-				//var title = prompt('Event Title:');
-				days++;
-				var title = 'Day '+days+' of diving';
-				var eventData;
-				if (title) {
-					eventData = {
-						title: title,
-						start: start,
-						end: end
-					};
-					$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-				}
-				$('#calendar').fullCalendar('unselect');
-			},
-			editable: false,
-			events: [
-			{
-				title: 'Fun Dive',
-				start: '2014-06-01'
-			},
-			{
-				title: 'Boat Trip',
-				start: '2014-06-07',
-				end: '2014-06-10'
-			},
-			{
-				id: 999,
-				title: 'Diving Club',
-				start: '2014-06-09T16:00:00'
-			},
-			{
-				id: 999,
-				title: 'Diving Club',
-				start: '2014-06-16T16:00:00'
-			},
-			{
-				title: 'Meeting',
-				start: '2014-06-12T10:30:00',
-				end: '2014-06-12T12:30:00'
-			},
-			{
-				title: 'Click for Google',
-				url: 'http://google.com/',
-				start: '2014-06-28'
-			}
-			]
-		});
-
-});
-
-</script>
-<style>
-
-body {
-	margin: 0;
-	padding: 0;
-	font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-	font-size: 14px;
-}
-
-#calendar {
-	width: 90%;
-	margin: 20px auto;
-	height:70%;
-}
-
-</style>
-
+	<script src="/dashboard/js/Controllers/Booking.js"></script>
+	<script src="/dashboard/js/Controllers/Trip.js"></script>
+	<script src="/dashboard/js/Controllers/Customer.js"></script>

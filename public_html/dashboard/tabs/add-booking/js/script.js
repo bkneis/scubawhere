@@ -1,10 +1,19 @@
+var bookingID;
+var sessionID;
+
+window.token;
+	$.get("/token", null, function(data) {
+		window.token = data;
+	});
+
+// Load all of the agents, tickets and packages for dive center to select
 $(function(){
 
-	var tripSource = $("#trips-list-template").html();
-	var tripTemplate = Handlebars.compile(tripSource);
+	var ticketSource = $("#tickets-list-template").html();
+	var ticketTemplate = Handlebars.compile(ticketSource);
 
 	Ticket.getAllTickets(function(data){
-					$("#trips").append(tripTemplate({tickets:data}));
+					$("#available-tickets").append(ticketTemplate({tickets:data}));
 				});
 
 	var agentSource = $("#agents-list-template").html();
@@ -18,20 +27,15 @@ $(function(){
 	var packageTemplate = Handlebars.compile(packageSource);
 
 	Package.getAllPackages(function(data){
-					$("#packages").append(packageTemplate({packages:data}));
+					$("#available-packages").append(packageTemplate({packages:data}));
 				});
 
-	/*var packageTicketSource = $("#package-tickets-list-template").html();
-	var packageTicketTemplate = Handlebars.compile(packageTicketSource);
-
-	Package.getPackage(packageId, function(data){
-					$("#cust-package-tickets").append(packageTemplate({tickets:data}));
-				});*/
 });
 
-function validateTob() {
-	var choice = document.getElementById("tob");
-	if(choice.value == "agent") {
+// Dispaly agents option if source of booking is through an agent
+function validateSob() {
+	var choice = document.getElementById("sob").value;
+	if(choice == "agent") {
 		document.getElementById('agent-info').style.display = 'block';
 	}
 	else {
@@ -39,106 +43,403 @@ function validateTob() {
 	}
 }
 
-function addTrip(trip, cost, id) {
-	//add id into hidden list to refrence for calander and packages
-	var list = document.getElementById('selected-trips-list');
-	var entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(trip));
-	entry.value = id;
-	list.appendChild(entry);
+//Initiate the booking process by sending API source of booking details, either agent_id or source
+//Also recieve back booking ID to add details to
+function initiate() {
 
-	var list2 = document.getElementById('trips-list');
-	var entry2 = document.createElement('li');
-	entry2.appendChild(document.createTextNode(trip));
-	list2.appendChild(entry2);
+	var choice = document.getElementById("sob").value;
 
-	var list3= document.getElementById('trips-cost-list');
-	var entry3 = document.createElement('li');
-	entry3.appendChild(document.createTextNode(cost));
-	list3.appendChild(entry3);
 
-	alert(trip + " was added");
-
-	var x = document.getElementById("cust-trips");
-	var option = document.createElement("option");
-	option.text = trip;
-	x.add(option);
-	
-}
-
-function addPackage(trip, cost) {
-	var list = document.getElementById('selected-trips-list');
-	var entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(trip));
-	list.appendChild(entry);
-
-	var list2 = document.getElementById('trips-list');
-	var entry2 = document.createElement('li');
-	entry2.appendChild(document.createTextNode(trip));
-	list2.appendChild(entry2);
-
-	var list3= document.getElementById('trips-cost-list');
-	var entry3 = document.createElement('li');
-	entry3.appendChild(document.createTextNode(cost));
-	list3.appendChild(entry3);
-
-	alert(trip + " was added");
-
-	var x = document.getElementById("cust-packages");
-	var option = document.createElement("option");
-	option.text = trip;
-	x.add(option);
-	
-}
-
-function tripSelect() {
-	var tripsDiv = document.getElementById('trips-select');
-	var tripsCombo = document.getElementById('cust-trips');
-	var packagesDiv = document.getElementById('packages-select');
-	var tripsVal = tripsCombo.value;
-
-	if(tripsVal == 0) {
-		packagesDiv.style.display = "inline";
+	if(choice == "agent") {
+		var agentID = document.getElementById("agents").value;
+		// var agentID = agents.options[agents.selectedIndex].id;
+		var data = {_token : window.token, agent_id : agentID};
 	}
 	else {
-		packagesDiv.style.display = "none";
+		var data = {_token : window.token, source : choice};
 	}
+
+	Booking.initiate(data, function success(data) {
+		alert("Booking initiated");
+		bookingID = data.id;
+		console.log(bookingID);
+	});
 }
 
-function packageSelect() {
-	var tripsDiv = document.getElementById('trips-select');
-	var packagesDiv = document.getElementById('packages-select');
-	var packagesCombo = document.getElementById('cust-packages');
-	var packageTripCombo = document.getElementById('cust-package-tickets');
-	var packagesVal = packagesCombo.value;
+// Add selected ticket to both list and select box for dive center to select when filtering through sessions and assigning to a customer
+function selectTicket(ticket, id) {
 
-	if(packagesVal == 0) {
-		tripsDiv.style.display = "inline";
-		packageTripCombo.style.display = "none";
+	var customerTickets = document.getElementById("customer-tickets");
+	var option = document.createElement("option");
+	option.text = ticket;
+	option.value = id;
+	customerTickets.add(option);
+
+	var selectedTickets = document.getElementById("selected-tickets");
+	var entry = document.createElement('li');
+	entry.appendChild(document.createTextNode(ticket));
+	selectedTickets.appendChild(entry);
+
+	alert(ticket + " was added")
+
+}
+
+// Same as selectTicket but for packages
+function selectPackage(package, id) {
+
+	var customerPackages = document.getElementById("customer-packages");
+	var option = document.createElement("option");
+	option.text = package;
+	option.value = id;
+	customerPackages.add(option);
+
+	var selectedPackages = document.getElementById("selected-tickets");
+	var entry = document.createElement('li');
+	entry.appendChild(document.createTextNode(package));
+	selectedPackages.appendChild(entry);
+
+	alert(package + " was added")
+
+}
+
+// This is to load the second select box next to the packages options with all tickets related to that package
+function displayPackageTickets() {
+
+	var packageID = document.getElementById("customer-packages").value;
+
+	if(packageID == 0) {
+		document.getElementById("packages-select").style.display = "none";
+		document.getElementById("tickets-select").style.display = "inline";
 	}
 	else {
-		tripsDiv.style.display = "none";
-		packageTripCombo.style.display = "inline";
+		var i;
+		var customerPackageTickets = document.getElementById("customer-package-tickets");
+		var customerTickets = document.getElementById("tickets-select");
+
+		customerPackageTickets.style.display = "inline";
+		customerTickets.style.display = "none";
+
+		var param = "id=" + packageID;
+		Package.getPackage(param, function success(data){
+			//console.log(data.tickets);
+			var numTickets = data.tickets.length;
+			for(i=0; i < numTickets; i++) {
+				var option = document.createElement("option");
+				option.text = data.tickets[i].name;
+				option.value = data.tickets[i].id;
+				customerPackageTickets.add(option);
+			}
+		});
 	}
+
+}
+
+/*function displaySessions(id) {
+
+	var i;
+	var ticketID = "id=" + id;
+
+	var events = [];
+
+	Ticket.getTicket(ticketID, function success(data) {
+		var numTrips = data.trips.length;
+		for(i = 0; i < numTrips; i++){
+			var event = {
+				title : data.trips[i].name,
+				duration : data.trips[i].duration
+			};
+
+			var param = "ticket_id=" + data.trips[i].id;
+			Sessions.filter(param, function success(data2){
+				data2.start;
+			});
+		}
+	});
+}*/
+
+// Used to calculate the 'end' for the calander by using the start + duration
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
 }
 
 function test() {
+	var ticketID = "ticket_id=" + 10;
 
-	var index;
+	Sessions.filter(ticketID, function success(data) {
+		console.log(data);
+	})
+}
 
-	var tripId = document.getElementById('cust-package-tickets').value;
+function test2() {
 
-	Sessions.getAllSessions(function success(data) {
-		var session = data[index];
-		for(index=0; index<data.length; index++){
-			//console.log(data[index].trip_id);
-			if(session.trip_id == tripId){
-				//console.log(data[index].start);
-				Ticket.getTicket(session.trip_id, function success2(data) {
-					console.log(data);
-				})
-			}
+	var param = "id=" + 1;
+	Trip.getSpecificTrips(param, function success(data){
+		console.log(data);
+	});
+	
+}
+
+function showSessionsoriginal() {
+
+	var i;
+	//var ticketID = 10;
+	var ticketID = document.getElementById("customer-tickets").value;
+
+	if(ticketID == 0){
+		ticketID = document.getElementById("customer-package-tickets").value;
+	}
+	var param = "ticket_id=" + ticketID;
+	var param2;
+
+	var events = [];
+
+	window.sessions;
+	window.trips;
+
+	Sessions.filter(param, function success(data) {
+
+		var numSessions = data.length;
+
+		for(i = 0; i < numSessions; i++){
+			
+		// need to create new object as array is pointing to old object that has been changed. Create a new object each time for unique
+
+			var event = 
+			{
+				title : null,
+				start : data[i].start,
+				end : null,
+				sessionID : data[i].id
+			};
+
+			//event.start = data[i].start;
+			//event.sessionID = data[i].id;
+
+			param2 = "id=" + data[i].trip_id;
+			//console.log(param2);
+
+			Trip.getSpecificTrips(param2, function success(data2){
+				event.title = data2.name;
+				event.end = null; //event.start.setHours ( event.start.getHours() + event.duration ); // FIX add start to duration to get en
+				console.log(data2);
+			});
+
+			events.push(event);
+			console.log(event);
 		}
+
+		console.log(events);
+
+	});
+
+	$('#calendar').fullCalendar('removeEvents');  //Removes all events
+
+	$('#calendar').fullCalendar( 'addEventSource', events); // load the new source
+
+	$('#calendar').fullCalendar( 'refetchEvents' );
+
+}
+
+function showSessions() {
+
+	$('#calendar').fullCalendar('removeEvents');  //Removes all events
+
+	var i;
+	//var ticketID = 10;
+	var ticketID = document.getElementById("customer-tickets").value;
+
+	if(ticketID == 0){
+		ticketID = document.getElementById("customer-package-tickets").value;
+	}
+	var param = "ticket_id=" + ticketID;
+	var param2;
+
+	window.sessions;
+	window.trips;
+
+	Sessions.filter(param, function success(data) {
+
+		window.sessions = _.indexBy(data, 'id');
+		//console.log(window.sessions);
+
+		_.each(window.sessions, function(value) {
+
+			param2 = "id=" + value.trip_id;
+			//console.log(param2);
+
+			Trip.getSpecificTrips(param2, function success(data2){
+
+				var startTime = $.fullCalendar.moment.utc(window.sessions[value.id].start);
+				var endTime = $.fullCalendar.moment(startTime).add('hours', window.sessions[value.id].duration);
+
+				var event = 
+				{
+					title : data2.name,
+					start : startTime,
+					//start : window.sessions[value.id].start,
+					end : endTime,
+					sessionID : window.sessions[value.id].id
+				};
+				$('#calendar').fullCalendar( 'renderEvent', event, true );
+				//console.log(event);
+			});
+		});
+
+		
 	});
 
 }
+
+function test5() {
+	param = "id=1";
+	Trip.getSpecificTrips(param, function success(data){
+		console.log(data);
+	})
+}
+
+function addCustomer(count){
+
+	var firstName = document.getElementById("fname"+count).value;
+	var firstName = document.getElementById("lname"+count).value;
+	var customerID;
+
+	var params = 
+	{
+		_token : window.token,
+		firstname : firstName,
+		lastname : lastName,
+		email : null,
+		country_id : null,
+		phone : null
+	};
+
+	var checkLead = document.getElementById("is_lead"+count).value;
+
+	if(checkLead == 1){ // So they are the lead customer
+		params.email = document.getElementById("email"+count).value;
+		//params.country_id = document.getElementById("country"+count).value;
+		params.country_id = "en";
+		params.phone = document.getElementById("phone"+count).value;
+	}
+
+	Customer.createCustomer(params, function sucess(data){
+		console.log(data);
+		document.getElementById("add-cust-"+count).style.display = "none";
+		customerID = data.id;
+
+		var customerSelect = document.getElementById("customers");
+		var option = document.createElement("option");
+		option.text = firstName + " " + lastName;
+		option.value = customerID;
+		option.setAttribute("data-lead") = checkLead;
+		option.setAttribute("data-count") = count;
+		customerSelect.add(option);
+
+		// add customer list
+		var div = document.createElement('div');
+		div.setAttribute('id', 'customer-'+count);
+		var ul = document.createElement('ul');
+		ul.setAttribute('id', 'customer-'+count+'-trips');
+
+		var custDiv = document.getElementById('customers-trips-summary');
+		div.appendChild(ul);
+		custDiv.appendChild(div);
+	});
+
+}
+
+
+// Used to assign customers their ticket and send API call to add detials of booking
+function assignTicket() {
+
+	//var customerID = document.getElementById("customers").value; - TRY NOW ADDED
+	//var isLead = document.getElementById("customer-id").getAttribute("data-lead"); - TRY NOW ADDED
+	//var customerCount = document.getElementById("customer-id").getAttribute("data-count");
+	var ticketID = document.getElementById("customer-tickets").value;
+	//var sessionID = document.getElementById("session-id").value;
+	var packageID = document.getElementById("customer-packages").value;
+
+	if(packageID == 0){
+		packageID = null;
+	}
+
+	if(ticketID == 0){
+		ticketID = document.getElementById("customer-package-tickets").value;
+	}
+
+	var params = 
+	{
+		_token : window.token,
+		booking_id : bookingID,
+		customer_id : 1, //customerID
+		is_lead : 1, // isLead
+		ticket_id : ticketID,
+		session_id : sessionID,
+		package_id : null 
+	};
+
+	Booking.addDetails(params, function success(data){
+		console.log(data);
+		//var tripItem = document.createElement('li');
+		//tripItem.innerHTML = trip name and date
+		//var custDiv = document.getElementById("customer-"+count+"-trips");
+		//custDiv.appendChild(tripItem);
+	});
+
+}
+
+function testadd() {
+
+	var data = 
+	{
+		_token : window.token,
+		booking_id : 1,
+		customer_id : 1,//customerID
+		is_lead : 1,
+		ticket_id : ticketID,
+		session_id : 1,
+		package_id : null 
+	};
+
+	Booking.addDetails(data, function success(data){
+		console.log(data);
+	});
+
+}
+
+function test4() {
+
+	var param = 
+	{	
+		_token : window.token, 
+		firstname : "bryan", 
+		lastname : "kneis", 
+		email : "bryan2@iqwebcreations.com",
+		birthday : "24-05-2014",
+		gender : 1,
+		address_1 : "46 ameythst road",
+		//address_2 : "christchurch",
+		city : "bournemouth",
+		county : "dorset",
+		postcode : "bh234eb",
+		country_id : 1,
+		phone : "07866965048",
+		certificate_id : "57",
+		last_dive : "22-04-2013"
+	};
+
+	Customer.createCustomer(param, function success(data){
+		console.log(data);
+	});
+	
+	/*$.ajax({
+			type: "POST",
+			url: "/api/customer/add",
+			data: param,
+			success: function success(data) {console.log(data);},
+			error: function error(){console.log("fasil");}
+		});*/
+
+}
+

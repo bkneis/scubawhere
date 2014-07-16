@@ -16,7 +16,12 @@
     				</div>
 
                     <div class="form-row">
-    					<label class="">Type of Product</label>
+                        <label class="field-label">Customer's Last Name</label>
+                        <input type="text" name="last_name">
+                    </div>
+
+                    <div class="form-row">
+    					<p><label class="">Type of Product</label></p>
     					<select id="type-product">
     						<option>Please select..</option>
                             <option>PADI course</option>
@@ -36,7 +41,7 @@
 
     		<div class="padder">
 
-    			<table id="newspaper-a" summary="2007 Major IT Companies' Profit">
+    			<table>
                 	<tr>
                 		<th scope="col">Booking Refrence</th>
                     	<th scope="col">Customer Name</th>
