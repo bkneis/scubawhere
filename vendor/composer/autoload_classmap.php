@@ -1589,6 +1589,7 @@ return array(
     'RegisterController' => $baseDir . '/app/controllers/RegisterController.php',
     'RemovePaymentFieldsFromBookingsTable' => $baseDir . '/app/database/migrations/2014_06_11_114251_remove_payment_fields_from_bookings_table.php',
     'RemoveRegionsTable' => $baseDir . '/app/database/migrations/2014_06_04_103901_remove_regions_table.php',
+    'RemoveUniqueIndexFromEmailInCustomerTable' => $baseDir . '/app/database/migrations/2014_07_16_152245_remove_unique_index_from_email_in_customer_table.php',
     'RemoveUnneededColumnsFromCustomers' => $baseDir . '/app/database/migrations/2014_05_24_203935_remove_unneeded_columns_from_customers.php',
     'RemoveUnneededIdColumns' => $baseDir . '/app/database/migrations/2014_02_19_143751_remove_unneeded_id_columns.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',

@@ -96,3 +96,4 @@ var Booking = {
 			error: errorFn
 		});
 	}
+}

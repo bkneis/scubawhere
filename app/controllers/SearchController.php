@@ -4,6 +4,7 @@
 
 class SearchController extends Controller {
 
+	/*
 	public function getSessions()
 	{
 		$data = Input::only('after', 'before', 'trip_id');
@@ -26,7 +27,7 @@ class SearchController extends Controller {
 			'after'   => new DateTime(),
 			'before'  => new DateTime('+ 1 month'),
 			'trip_id' => null
-		)
+		);
 
 		// Join the default options and the submitted filter parameters
 		$options = array_merge($options, $data);
@@ -35,13 +36,16 @@ class SearchController extends Controller {
 			->where('start', '>=', $options['after'])
 			->where('start', '<=', $options['before'])
 			->where(function($query) use ($options)
-				{
-					if( !empty( $options['trip_id'] ) )
-						$query->where('trip_id', $options['trip_id']);
-				})
+			{
+				if( !empty( $options['trip_id'] ) )
+					$query->where('trip_id', $options['trip_id']);
+			})
 			->with('trip', 'trip.tickets')
-			->take(25)->get();
+			->orderBy('start', 'ASC')
+			->take(25)
+			->get();
 	}
+	*/
 
 	public function getCustomers()
 	{

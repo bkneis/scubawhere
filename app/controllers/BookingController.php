@@ -134,8 +134,8 @@ class BookingController extends Controller {
 			$is_lead = false;
 
 		// Validate remaining capacity on session
-		$departure->getCapacityAttribute();
-		if( $departure[0] >= $departure[1] )
+		$capacity = $departure->getCapacityAttribute();
+		if( $capacity[0] >= $capacity[1] )
 		{
 			// Session/Boat already full/overbooked
 			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden

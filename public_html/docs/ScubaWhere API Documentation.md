@@ -384,6 +384,22 @@ Delete an existing ticket.
 
 *To retrieve the related `trip` and `boat` objects, please refer to [#Retrieve a specific trip](#Retrieve_a_specific_trip), [#Retrieve all trips](#Retrieve_all_trips) and [#Retrieve all accommodations & boats](#Retrieve_all_accommodations_&_boats).*
 
+### Search for sessions by filter
+
+`GET /api/session/filter`
+
+Returns 25 results, ordered by start date.
+
+All parameters are **optional**.
+
+- **@param** string  after      A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now)
+- **@param** string  before     A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now + 1 month)
+- **@param** integer trip_id    The ID of the `trip` that the search should be limited to (optional)
+- **@param** integer ticket_id  The ID of the `ticket` that the search should be limited to (optional)
+- **@param** integer package_id The ID of the `package` that the search should be limited to (optional)
+- &nbsp;
+- **@return** JSON              An array of 25 `session` objects, including `capacity` arrays (`[used, available]`)
+
 ### Create a session
 
 `POST /api/session/add`
@@ -575,7 +591,7 @@ All parameters are optional (except the agent `id`).
 
 ### Filter customers by email address
 
-The search functionality has been moved to [#Search for customers by email](#Search_for_customer_by_email).
+The search functionality has been moved to [#Search for customers by email](#Search_for_customers_by_email).
 
 ### Create a customer
 
@@ -726,16 +742,6 @@ This can be used to populate a drop-down list of suggestions when searching for 
 - **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
 - &nbsp;
 - **@return** JSON          An array of `customer` objects
-
-### Search for sessions by filter
-
-All parameters are **optional**.
-
-- **@param** string  after   A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now)
-- **@param** string  before  A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now + 1 month)
-- **@param** integer trip_id The ID of the `trip` that the search should be limited to (default: null, meaning *all* trips)
-- &nbsp;
-- **@return** JSON           An array of `session` objects, complete with the connected `trip`, `trip->tickets` and a `capacity` array (`[used, available]`)
 
 
 &nbsp;
