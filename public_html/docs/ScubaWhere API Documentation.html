@@ -773,6 +773,8 @@ var area   = [north, west, south, east];
 <li><strong>@return</strong> JSON    An array of <code>session</code> objects (without connected objects)</li>
 </ul>
 <p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_accommodations_&amp;_boats">#Retrieve all accommodations &amp; boats</a>.</em></p>
+<h3>Filter sessions</h3>
+<p>The filter functionality can be found at <a href="#Search_for_sessions_by_filter">#Search for sessions by filter</a>.</p>
 <h3>Create a session</h3>
 <p><code>POST /api/session/add</code></p>
 <p><em>Activates</em> a trip by giving it a start datetime and an assigned boat.</p>
@@ -948,7 +950,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li><strong>@return</strong> JSON       An array of <code>customer</code> objects</li>
 </ul>
 <h3>Filter customers by email address</h3>
-<p>The search functionality has been moved to <a href="#Search_for_customer_by_email">#Search for customers by email</a>.</p>
+<p>The search functionality has been moved to <a href="#Search_for_customers_by_email">#Search for customers by email</a>.</p>
 <h3>Create a customer</h3>
 <p><code>POST /api/customer/add</code></p>
 <p>Creates a new customer. The only <em>required</em> fields are <code>firstname</code> and <code>lastname</code>.</p>
@@ -1078,6 +1080,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li><strong>@return</strong> JSON          An array of <code>customer</code> objects</li>
 </ul>
 <h3>Search for sessions by filter</h3>
+<p><code>GET /api/search/sessions</code></p>
 <p>All parameters are <strong>optional</strong>.</p>
 <ul>
 <li><strong>@param</strong> string  after   A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now)</li>

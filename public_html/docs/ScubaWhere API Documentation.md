@@ -384,6 +384,10 @@ Delete an existing ticket.
 
 *To retrieve the related `trip` and `boat` objects, please refer to [#Retrieve a specific trip](#Retrieve_a_specific_trip), [#Retrieve all trips](#Retrieve_all_trips) and [#Retrieve all accommodations & boats](#Retrieve_all_accommodations_&_boats).*
 
+### Filter sessions
+
+The filter functionality can be found at [#Search for sessions by filter](#Search_for_sessions_by_filter).
+
 ### Create a session
 
 `POST /api/session/add`
@@ -575,7 +579,7 @@ All parameters are optional (except the agent `id`).
 
 ### Filter customers by email address
 
-The search functionality has been moved to [#Search for customers by email](#Search_for_customer_by_email).
+The search functionality has been moved to [#Search for customers by email](#Search_for_customers_by_email).
 
 ### Create a customer
 
@@ -728,6 +732,8 @@ This can be used to populate a drop-down list of suggestions when searching for 
 - **@return** JSON          An array of `customer` objects
 
 ### Search for sessions by filter
+
+`GET /api/search/sessions`
 
 All parameters are **optional**.
 
