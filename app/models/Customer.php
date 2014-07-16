@@ -15,7 +15,7 @@ class Customer extends Ardent {
 		'city',
 		'county',
 		'postcode',
-		'region_id',
+		// 'region_id',
 		'country_id',
 		'phone',
 		'certificate_id',
