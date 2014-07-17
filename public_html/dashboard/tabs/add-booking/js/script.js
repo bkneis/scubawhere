@@ -158,10 +158,10 @@ function displayPackageTickets() {
 }*/
 
 // Used to calculate the 'end' for the calander by using the start + duration
-Date.prototype.addHours= function(h){
+/*Date.prototype.addHours= function(h){
     this.setHours(this.getHours()+h);
     return this;
-}
+}*/
 
 function test() {
 	var ticketID = "ticket_id=" + 10;
@@ -301,7 +301,7 @@ function test5() {
 function addCustomer(count){
 
 	var firstName = document.getElementById("fname"+count).value;
-	var firstName = document.getElementById("lname"+count).value;
+	var lastName = document.getElementById("lname"+count).value;
 	var customerID;
 
 	var params = 
@@ -310,16 +310,18 @@ function addCustomer(count){
 		firstname : firstName,
 		lastname : lastName,
 		email : null,
-		country_id : null,
+		country_id : 1,
 		phone : null
 	};
 
-	var checkLead = document.getElementById("is_lead"+count).value;
+	var checkLead = document.getElementById("is_lead"+count).checked;
 
-	if(checkLead == 1){ // So they are the lead customer
+	console.log(checkLead);
+
+	if(checkLead){ // So they are the lead customer
 		params.email = document.getElementById("email"+count).value;
 		//params.country_id = document.getElementById("country"+count).value;
-		params.country_id = "en";
+		params.country_id = 1;
 		params.phone = document.getElementById("phone"+count).value;
 	}
 
@@ -328,12 +330,12 @@ function addCustomer(count){
 		document.getElementById("add-cust-"+count).style.display = "none";
 		customerID = data.id;
 
-		var customerSelect = document.getElementById("customers");
+		/*var customerSelect = document.getElementById("customers");
 		var option = document.createElement("option");
 		option.text = firstName + " " + lastName;
 		option.value = customerID;
-		option.setAttribute("data-lead") = checkLead;
-		option.setAttribute("data-count") = count;
+		option.setAttribute("data-lead", checkLead);
+		option.setAttribute("data-count", count);
 		customerSelect.add(option);
 
 		// add customer list
@@ -344,7 +346,7 @@ function addCustomer(count){
 
 		var custDiv = document.getElementById('customers-trips-summary');
 		div.appendChild(ul);
-		custDiv.appendChild(div);
+		custDiv.appendChild(div);*/
 	});
 
 }
@@ -356,6 +358,7 @@ function assignTicket() {
 	//var customerID = document.getElementById("customers").value; - TRY NOW ADDED
 	//var isLead = document.getElementById("customer-id").getAttribute("data-lead"); - TRY NOW ADDED
 	//var customerCount = document.getElementById("customer-id").getAttribute("data-count");
+	//var tripName = document.getElementById("customer-tickets").innerHTML; - ALSO ADD CHANGE TO PACKAGE TICKETS
 	var ticketID = document.getElementById("customer-tickets").value;
 	//var sessionID = document.getElementById("session-id").value;
 	var packageID = document.getElementById("customer-packages").value;
@@ -379,11 +382,23 @@ function assignTicket() {
 		package_id : null 
 	};
 
+	/*$.ajax({
+			type: "POST",
+			url: "/api/booking/add-details",
+			data: params,
+			success: function success(data) {
+				console.log(data);
+			},
+			error: function failure(){
+				console.log("nop");
+			}
+		});*/
+
 	Booking.addDetails(params, function success(data){
 		console.log(data);
 		//var tripItem = document.createElement('li');
-		//tripItem.innerHTML = trip name and date
-		//var custDiv = document.getElementById("customer-"+count+"-trips");
+		//tripItem.innerHTML = tripName
+		//var custDiv = document.getElementById("customer-"+customerCount+"-trips");
 		//custDiv.appendChild(tripItem);
 	});
 

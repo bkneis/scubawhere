@@ -14,9 +14,32 @@ $(function() {
         return false;
     });
 
+    function clearChecks(count) {
+
+        var checkLead = document.getElementById("is_lead"+count).checked;
+
+        var choice;
+
+        if(checkLead) {
+            choice = true;
+        } else {
+            choice = false;
+        }
+
+        var i;
+        var isLead;
+        for(i=0; i < totsl_tabs; i++){
+            if(i != count){
+                isLead = document.getElementbyID("is_lead"+i);
+                isLead.disabled = choice;
+            } 
+        }
+
+    }
+
     function addtab(count) {
 		var tabform = ['<form id="customer'+count+'">',
-        '<input type="checkbox" id="is_lead'+count+'" value="1"><label id="is_lead_label'+count+'" for="is_lead'+count+'" style="font-size:10pt; padding-left:5px; padding-right:15px">Lead Customer</label>',
+        '<input type="checkbox" id="is_lead'+count+'" value="1" onClick=""><label id="is_lead_label'+count+'" for="is_lead'+count+'" style="font-size:10pt; padding-left:5px; padding-right:15px">Lead Customer</label>',
         '<input type="text" name="fname" id="fname'+count+'" placeholder="First Name" />',
 		'<input type="text" name="lname" id="lname'+count+'" placeholder="Last Name" />',
 		'<input type="text" name="phone" id="phone'+count+'" placeholder="Contact Number" />',

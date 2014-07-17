@@ -30,12 +30,12 @@
 
     				<input type="hidden" class="token" name="_token">
     				<input type="submit" class="bttn blueb" id="find-booking" value="Find Booking">
-    				<button onclick="check()">Test</button>
+                    <!--<a href="#" class="button big icon edit">Find Booking</a>-->
     			</form>
     		</div>
     	</div>
     	<div class="box80" style="float:left">
-	<table>
+	<table style="text-align:center">
 		<caption></caption>
 		<thead>
 			<tr>
@@ -46,13 +46,35 @@
 				<th>Tickets</th>
 				<th>Packages</th>
 				<th>Booking total</th>
+                <th>Comfirmed</th>
 				<th></th>
 				<th></th>
 			</tr>
 		</thead>
+
+        <tbody id="bookings">
+            <script id="booking-list-template" type="text/x-handlebars-template">
+                {{#each booking}}
+                    <tr>
+                        <td data-id='{{id}}'>{{reference}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>$ {{price}}</td>
+                        <td class="confirm">{{confirmed}}</td>
+                        <td><a href="#" class="button icon search">View</a></td>
+                        <td><a href="#" class="button icon edit">Edit</a></td>
+                    </tr>
+                {{/each}}
+            </script>
+        </tbody>
 		
 	</div>
 </div>
 
-<script src="tabs/manage-booking/js/main.js"></script>
+<script src="tabs/manage-bookings/js/main.js"></script>
 <script src="/dashboard/js/Controllers/Booking.js"></script>
+
+<link rel="stylesheet" href="tabs/manage-bookings/css/gh-buttons.css">
