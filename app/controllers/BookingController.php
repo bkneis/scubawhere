@@ -14,7 +14,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->bookings()->findOrFail( Input::get('id') );
+			return Auth::user()->bookings()->with('customers')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,7 +24,7 @@ class BookingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->bookings()->get();
+		return Auth::user()->bookings()->with('customers')->get();
 	}
 
 	public function postInit()
