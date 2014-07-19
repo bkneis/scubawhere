@@ -330,7 +330,7 @@ function addCustomer(count){
 		document.getElementById("add-cust-"+count).style.display = "none";
 		customerID = data.id;
 
-		/*var customerSelect = document.getElementById("customers");
+		var customerSelect = document.getElementById("customers");
 		var option = document.createElement("option");
 		option.text = firstName + " " + lastName;
 		option.value = customerID;
@@ -339,7 +339,7 @@ function addCustomer(count){
 		customerSelect.add(option);
 
 		// add customer list
-		var div = document.createElement('div');
+		/*var div = document.createElement('div');
 		div.setAttribute('id', 'customer-'+count);
 		var ul = document.createElement('ul');
 		ul.setAttribute('id', 'customer-'+count+'-trips');
