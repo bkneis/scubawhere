@@ -1,21 +1,4 @@
 <div id="wrapper">
-	<style type="text/css">
-		#agent-list {
-			list-style-type: none;
-			padding-left: 0;
-		}
-		#agent-list li {
-			cursor: pointer;
-			margin-bottom: 0.5em;
-			border: 1px solid #4a9cff;
-			border-left-width: 5px;
-			padding: 5px 10px;
-		}
-		#agent-list li:hover,
-		#agent-list li.active {
-			background-color: rgb(230, 245, 255);
-		}
-	</style>
 	<div class="row">
 		<div class="box30">
 			<label class="dgreyb">Available agents</label>
