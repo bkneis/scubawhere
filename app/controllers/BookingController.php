@@ -72,7 +72,7 @@ class BookingController extends Controller {
 		 * is_lead
 		 * ticket_id
 		 * session_id
-		 * package_id
+		 * package_id (optional)
 		 */
 
 		// Check if all IDs exist and belong to the signed-in company
@@ -138,7 +138,7 @@ class BookingController extends Controller {
 		if( $capacity[0] >= $capacity[1] )
 		{
 			// Session/Boat already full/overbooked
-			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The session is already fully booked!'), 'capacity' => $capacity), 403 ); // 403 Forbidden
 		}
 
 		if( Input::get('package_id') && !empty($package->capacity) )
@@ -167,7 +167,7 @@ class BookingController extends Controller {
 			)
 		);
 
-		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()), 200 ); // 200 OK
+		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()->get()), 200 ); // 200 OK
 	}
 
 	public function postRemoveDetails()
