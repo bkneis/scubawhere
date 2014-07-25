@@ -40,11 +40,7 @@ class CustomerController extends Controller {
 			'city',
 			'county',
 			'postcode',
-<<<<<<< HEAD
 			// 'region_id',
-=======
-			//'region_id',
->>>>>>> Dashboard, add-booking tabs and customers controller
 			'country_id',
 			'phone',
 			'certificate_id',
