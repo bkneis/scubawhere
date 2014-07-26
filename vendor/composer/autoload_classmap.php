@@ -1048,6 +1048,7 @@ return array(
     'LocationController' => $baseDir . '/app/controllers/LocationController.php',
     'MakeCustomerTableColumnsNullable' => $baseDir . '/app/database/migrations/2014_07_13_232753_make_customer_table_columns_nullable.php',
     'MakeCustomerTableGenderNullable' => $baseDir . '/app/database/migrations/2014_07_15_030404_make_customer_table_gender_nullable.php',
+    'MakeDiscountColumnOnBookingTableIntoInteger' => $baseDir . '/app/database/migrations/2014_07_26_164147_make_discount_column_on_booking_table_into_integer.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mews\\Purifier\\Facades\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Facades/Purifier.php',
     'Mews\\Purifier\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Purifier.php',
