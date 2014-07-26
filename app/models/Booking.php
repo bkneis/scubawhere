@@ -9,24 +9,24 @@ class Booking extends Ardent {
 		// 'price',
 		'currency',
 		'discount',
-		'confirmed',
+		// 'confirmed',
 		'reserved',
-		'pick_up',
-		'drop_off',
-		'comments'
+		'pick_up_location',
+		'pick_up_time',
+		'comment'
 	);
 
 	public static $rules = array(
-		'agent_id'          => 'integer|exists:agents,id|required_without:source',
-		'source'            => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
-		// 'price'          => 'numeric|min:0',
-		'currency'          => 'alpha|size:3|valid_currency',
-		'discount'          => 'numeric|min:0',
-		'confirmed'         => 'integer|in:0,1',
-		'reserved'          => 'date|after:now',
-		'pick_up'           => '',
-		'drop_off'          => '',
-		'comments'          => ''
+		'agent_id'         => 'integer|exists:agents,id|required_without:source',
+		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
+		'price'            => 'integer|min:0',
+		'currency'         => 'alpha|size:3|valid_currency',
+		'discount'         => 'integer|min:0',
+		'confirmed'        => 'integer|in:0,1',
+		'reserved'         => 'date|after:now',
+		'pick_up_location' => '',
+		'pick_up_time'     => 'date|after:now',
+		'comment'          => ''
 	);
 
 	public function beforeSave()
@@ -61,8 +61,26 @@ class Booking extends Ardent {
 		return $this->belongsToMany('Package', 'booking_details')->withPivot('customer_id', 'is_lead', 'ticket_id', 'session_id');
 	}
 
+	public function tickets()
+	{
+		return $this->belongsToMany('Ticket', 'booking_details');
+	}
+
 	public function payments()
 	{
 		return $this->hasMany('Payment');
+	}
+
+
+	public function updatePrice()
+	{
+		$packagesSum = $this->packages()->distinct()->sum('price');
+
+		$ticketsSum = $this->tickets()->wherePivot('package_id', null)->sum('price');
+
+		$this->price = $packagesSum + $ticketsSum;
+		$this->currency = $this->tickets()->first()->currency;
+
+		$this->save();
 	}
 }

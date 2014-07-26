@@ -152,7 +152,7 @@ class DepartureController extends Controller {
 		})
 		// Filter by dates
 		->whereBetween('start', array(
-			 $options['after']->format('Y-m-d H:i:s'),
+			$options['after']->format('Y-m-d H:i:s'),
 			$options['before']->format('Y-m-d H:i:s')
 		))
 		// ->with('trip', 'trip.tickets')

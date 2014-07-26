@@ -167,7 +167,10 @@ class BookingController extends Controller {
 			)
 		);
 
-		return Response::json( array('status' => 'OK. Customer assigned.', 'customers' => $booking->customers()->get()), 200 ); // 200 OK
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Booking details added.', 'customers' => $booking->customers()->get()); // 200 OK
 	}
 
 	public function postRemoveDetails()
@@ -181,11 +184,11 @@ class BookingController extends Controller {
 
 		$data = Input::only('booking_id', 'customer_id', 'session_id');
 
-		// Check if entry exists on booking_details table
+		// Check if booking belongs to logged-in company
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -199,12 +202,12 @@ class BookingController extends Controller {
 			->count();
 
 		if($affectedRows == 0)
-			return Response::json( array('errors' => array('The combination of IDs has not been found. Nothing was done on the server.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The combination of IDs has not been found. Nothing was changed in the database.')), 404 ); // 404 Not Found
 
-		if($affectedRows != 1)
+		if($affectedRows > 1)
 		{
 			// Fail because only one record should be affected. Customer and session relation should be unique
-			return Response::json( array('errors' => array('This action would affect more than one record and is therefore aborted. Please check why the customer <-> session relationship is not unique.')), 400 ); // 400 Bad Request
+			return Response::json( array('errors' => array('This action would affect more than one record and has therefore been aborted. Please check why the customer <-> session relationship is not unique.')), 400 ); // 400 Bad Request
 		}
 
 		// Execute delete
@@ -214,7 +217,63 @@ class BookingController extends Controller {
 			->where('session_id', Input::get('session_id'))
 			->delete();
 
-		return array('status' => 'OK. Booking details removed.');
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Booking details removed.', 'customers' => $booking->customers()->get()); // 200 OK
+	}
+
+	public function postEditInfo()
+	{
+		/**
+		 * Valid input parameters
+		 * booking_id
+		 * pick_up_location
+		 * pick_up_time
+		 * discount
+		 * reserved
+		 * comment
+		 */
+
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$data = Input::only(
+			'pick_up_location', // Just text
+			'pick_up_time',     // Must be datetime
+			'discount',         // Should be decimal
+			'reserved',         // Must be datetime
+			'comment');         // Text
+
+		// Convert discount to subunit
+		if( !empty($data['discount']) )
+		{
+			try
+			{
+				$currency = new Currency( $booking->currency );
+			}
+			catch(InvalidCurrencyException $e)
+			{
+				return Response::json( array( 'errors' => array('Could not read a valid currency from database!')), 500 ); // 500 Internal Server Error
+			}
+			$data['discount'] = (int) round( $data['discount'] * $currency->getSubunitToUnit() );
+		}
+
+
+		if( !$booking->update($data) )
+		{
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return Response::json( array('status' => 'OK. Booking information updated.', 'booking' => $booking), 200 ); // 200 OK
+
 	}
 
 	public function getValidate()
