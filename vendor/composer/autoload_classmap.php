@@ -19,6 +19,7 @@ return array(
     'AgencyController' => $baseDir . '/app/controllers/AgencyController.php',
     'Agent' => $baseDir . '/app/models/Agent.php',
     'AgentController' => $baseDir . '/app/controllers/AgentController.php',
+    'AlterBookingsTable' => $baseDir . '/app/database/migrations/2014_07_26_162601_alter_bookings_table.php',
     'AlterLastDiveOnCustomersToDate' => $baseDir . '/app/database/migrations/2014_05_24_204451_alter_last_dive_on_customers_to_date.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boat' => $baseDir . '/app/models/Boat.php',
