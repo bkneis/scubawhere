@@ -13,6 +13,12 @@
 
 Route::get('/', function()
 {
+	if (Auth::viaRemember())
+	{
+		// If user is remembered as logged in, redirect to dashboard
+		return Redirect::to('dashboard');
+	}
+
 	return Redirect::to('blog');
 });
 
