@@ -163,7 +163,7 @@ class BookingController extends Controller {
 				'is_lead' => $is_lead,
 				'ticket_id' => Input::get('ticket_id'),
 				'session_id' => Input::get('session_id'),
-				'package_id' => Input::get('package_id')
+				'package_id' => Input::get('package_id') ? $package->id : null
 			)
 		);
 
