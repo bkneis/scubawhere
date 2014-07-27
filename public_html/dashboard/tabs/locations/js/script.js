@@ -96,6 +96,9 @@ var locSource = $("#location").html();
 	var locTemplate = Handlebars.compile(locSource);
 */
 
+	var locationSource = $("#location-list-template").html();
+	var locationTemplate = Handlebars.compile(locationSource);
+
 	$.ajax({
 	url: "/company/locations",
 	type: "GET",
@@ -111,6 +114,8 @@ var locSource = $("#location").html();
 					  title: this.name,
 					  icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
 				  });
+
+				$("#locations").append(locationTemplate(this));
 
 			});
 		}
@@ -159,3 +164,19 @@ var locSource = $("#location").html();
 	  });
 
 });
+
+function detachLocation(id) {
+
+	$.ajax({
+			url: "/api/location/detach",
+			type: "POST",
+			data: id,
+			dataType: "json",
+			async: false,
+			success: function(data){
+				pageMssg("Location deleted", true);
+				}
+			});
+	  		e.preventDefault();
+
+}

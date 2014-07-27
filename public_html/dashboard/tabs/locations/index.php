@@ -46,6 +46,36 @@
 			</form>
 		</div>
 	</div>
+	<div class="box100">
+		<label class="dgreyb">Manage Locations</label>
+
+		<table>
+		<caption></caption>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Longitude</th>
+				<th>Latitude</th>
+				<th> </th>
+			</tr>
+		</thead>
+		
+		<tbody id="locations">
+			<script id="location-list-template" type="text/x-handlebars-template">
+						
+					<tr>
+						<td>{{name}}</td>
+						<td>{{{description}}}</td>
+						<td>{{longitude}}</td>
+						<td>{{latitude}}</td>
+						<td><a onclick="detachLocation({{id}}">Remove</a></td>
+					</tr>
+				
+			</script>
+		</tbody>
+	</table>
+	</div>
 </div>
 
 <script src="tabs/locations/js/gmaps.js"></script>
