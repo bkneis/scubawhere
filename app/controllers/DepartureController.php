@@ -14,7 +14,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->findOrFail( Input::get('id') );
+			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -152,7 +152,7 @@ class DepartureController extends Controller {
 		})
 		// Filter by dates
 		->whereBetween('start', array(
-			 $options['after']->format('Y-m-d H:i:s'),
+			$options['after']->format('Y-m-d H:i:s'),
 			$options['before']->format('Y-m-d H:i:s')
 		))
 		// ->with('trip', 'trip.tickets')

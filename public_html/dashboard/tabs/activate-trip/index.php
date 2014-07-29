@@ -69,6 +69,52 @@
 					</select>
 				</p>
 
+				{{#unless isNew}}
+				{{#unless timetable_id}}
+					<div>
+						<strong>Define repeating timetable</strong>
+					</div>
+					<form style="padding: 1em; border: 3px dashed lightgray; overflow: auto;">
+						<table>
+							<tr style="text-align: left;">
+								<th>Week #</th>
+								<th>Mon</th>
+								<th>Tue</th>
+								<th>Wed</th>
+								<th>Thu</th>
+								<th>Fri</th>
+								<th>Sat</th>
+								<th>Sun</th>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td><input type="checkbox" name="schedule[1][]" value="mon" {{isWeekday 1}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="tue" {{isWeekday 2}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="wed" {{isWeekday 3}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="thu" {{isWeekday 4}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="fri" {{isWeekday 5}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="sat" {{isWeekday 6}}></td>
+								<td><input type="checkbox" name="schedule[1][]" value="sun" {{isWeekday 0}}></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td><input type="checkbox" name="schedule[2][]" value="mon"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="tue"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="wed"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="thu"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="fri"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="sat"></td>
+								<td><input type="checkbox" name="schedule[2][]" value="sun"></td>
+							</tr>
+						</table>
+						<input type="hidden" name="_token">
+						<input type="hidden" name="session_id" value="{{session.id}}">
+						<input type="number" name="iterations" value="4">
+						<button class="bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
+					</form>
+				{{/unless}}
+				{{/unless}}
+
 				<div style="margin-top: 1em; text-align: right">
 					{{#if isNew}}
 						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
@@ -88,5 +134,6 @@
 <script src="js/Controllers/Trip.js"></script>
 <script src="js/Controllers/Boat.js"></script>
 <script src="js/Controllers/Sessions.js"></script>
+<script src="js/Controllers/Timetable.js"></script>
 <script src="/common/js/jquery.reveal.js"></script>
 <script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>

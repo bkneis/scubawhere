@@ -29,6 +29,7 @@ class Helper
 		$size = strlen($chars);
 
 		$string = "";
+
 		for($i = 0; $i < $length; $i++) {
 			$string .= $chars[ mt_rand(0, $size - 1) ];
 		}

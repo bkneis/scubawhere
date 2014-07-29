@@ -1,84 +1,259 @@
 <div id="wrapper">
-		<div class="box100">
-		<label class="dgreyb">Add booking</label>
-
-		<div class="padder">
-
-			<form id="add-booking-form">
-				<div class="form-row">
-					<label class="field-label">Name</label>
-					<input type="text" name="booking_name">
+	<div class="accordion" id="section1">Step 1: Source of Booking<span></span></div>
+	<div class="container">
+		<div class="content">
+			<h2>Please select source of booking</h2>
+			<select id="sob" onchange="validateSob()">
+				<option>Please select an option</option>
+				<option id="agent" value="agent">Agent</option>
+				<option id="telephone" value="telephone">Phone</option>
+				<option id="email" value="email">Email</option>
+				<option id="facetoface" value="facetoface">In Person</option>
+			</select>
+			<div>
+				<div id="agent-info" style="display:none">
+					<h3>Please select which agent</h3>
+					<select id="agents">
+						<option>Select an agent</option>
+						<script id="agents-list-template" type="text/x-handlebars-template">
+						{{#each agents}}
+						<option value='{{id}}'>{{name}}</option>
+						{{/each}}
+						</script>
+					</select>
 				</div>
-
-                <div class="form-row">
-					<label class="field-label">Email</label>
-					<input type="text" name="booking_email">
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Contact number</label>
-					<input type="text" name="contact_number">
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Address</label>
-					<input type="text" name="booking_address">
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Country of origin</label>
-					<input type="text" name="branch_email">
-				</div>
-
-				<div class="form-row">
-					<label class="">Trip Type</label>
-					<div class="box50" style="padding-left:4.5cm;">
-
-						<select id="sob-select">
-							<option>Please select..</option>
-                            <option>PADI course</option>
-                            <option>Fun dive</option>
-                            <option>Night dive</option>
-                            <option>Training</option>
-						</select>
-					</div>
-				</div>
-
-                                <div class="form-row">
-					<label class="">Source of booking</label>
-					<div class="box50" style="padding-left:4.5cm;">
-
-						<select id="sob-select">
-							<option>Please select..</option>
-                            <option>Scuba Where</option>
-                            <option>Website</option>
-                            <option>Agent</option>
-                            <option>In Person</option>
-						</select>
-					</div>
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Additional customer names</label>
-					<input type="text" name="customer_name">
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Additional email addresses</label>
-					<input type="text" name="customer_email">
-				</div>
-
-                <div class="form-row">
-					<label class="field-label">Booking Comments</label>
-					<textarea name="booking_comments"></textarea>
-				</div>
-
-				<input type="hidden" class="token" name="_token">
-				<input type="submit" class="bttn blueb" id="add-booking" value="Add Booking">
-
-			</form>
+			</div>
+			<button onclick="check()">Testing button</button>
 		</div>
-
 	</div>
-</div>
-<script src="tabs/add-booking/js/script.js"></script>
+	<!-- change! -->
+	<div class="accordion" id="section2" onClick="initiate()">Step 2: Trip Selection<span></span></div>
+	<div class="container">
+		<div class="content">
+			<h2>Select trips that wish to be purchased</h2>
+			<div class="products-col">
+				<h1>Tickets</h1>
+				<ul id="available-tickets" class="product-list"><!--trips-->
+					<script id="tickets-list-template" type="text/x-handlebars-template">
+					{{#each tickets}}
+					<li onclick="selectTicket('{{name}}', '{{id}}')">{{name}}</li>
+					{{/each}}
+					</script>
+				</ul>
+			</div>
+			<div class="products-col">
+				<h1>Packages</h1>
+				<ul id="available-packages" class="product-list">
+					<script id="packages-list-template" type="text/x-handlebars-template">
+					{{#each packages}}
+					<li onclick="selectPackage('{{name}}', {{id}})">{{name}}</li>
+					{{/each}}
+					</script>
+				</ul>
+			</div>
+
+			<div id="selected-tickets-div" class="products-col">
+				<h1>Selected Trips</h1>
+				<div class="trips-container">
+					<ol id="selected-tickets">
+					</ol>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="accordion" id="section3">Step 3: Add Customer Details<span></span></div>
+	<div class="container">
+		<div class="content">
+			<h2>Please fill in the customer details and assign their trips<h2>
+				<ul id="tabul">
+					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
+				</ul>
+				<div id="tabcontent"></div>
+				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px;">Assign ticket</button>
+
+				<div id="customers-trips-summary">
+					
+				</div>
+
+				<!-- Pop up box -->
+				<div id="ticket-fancybox" style="display:none; height:810px; width:900px">
+					<div id="customer-select">
+						<!-- Here il display all the customers names, then have onclick to send customer-id to hidden data aswell look up if thier lead-->
+						<p>Customer: <select id="customers" onChange=""><option value="0">Please select...</option></select></p>
+					</div>
+					<div id="tickets-select" style="width:22%;float:left;">
+						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select></p>
+					</div>
+					<div id="packages-select" style="width:40%; float:left;">
+						
+							<p>or Package: <select id="customer-packages" onChange="displayPackageTickets()"><option value="0">Please select...</option></select>
+							Select ticket: 
+							<select id="customer-package-tickets" style="display:none;">
+								<option value="0">Select a trip...</option>
+							</select>
+						</p>
+					</div>
+					<div id="info" style="display:none">
+						<p id="session-id"></p>
+				</div>
+				<div id="calendar"></div>
+				<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()" style="float:right">Assign Ticket</button>
+			</div><!-- End of pop up box -->
+		</div>
+	</div>
+	<div class="accordion" id="section5">Step 4: Assign Trips<span></span></div>
+		<div class="container">
+			<div class="content">
+				<div id="cust1" style="float:left">
+					<h1>Customer 1</h1>
+					<ul id="cust1-trips">
+						<li>Trip 1</li>
+					</ul>
+					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
+				</div>
+				<div id="cust1" style="float:left">
+					<h1>Customer 2</h1>
+					<ul id="cust1-trips">
+						<li>Trip 1</li>
+					</ul>
+					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
+				</div>
+				<div class="spacing" style="padding-bottom:150px;"></div>
+			</div>
+		</div>
+		<div class="accordion" id="section5">Step 5: Payment<span></span></div>
+		<div class="container">
+			<div class="content">
+				<div id="trip-info" style="float:left; width:45%;">
+					<h2>Trip Type</h2>
+					<ul id="trips-list"></ul>
+					<h3>Total Cost</h3>
+				</div>
+				<div id="trip-cost" style="float:left; width:45%;">
+					<h2>Trip Cost</h2>
+					<ul id="trips-cost-list"></ul>
+					<p>0</p>
+				</div>
+				<div class="clear"></div>
+				<div id="pay-options">
+					<div class="pay-option">
+						<p>Cash</p>
+						<input class="payment" name="cash" type="text" size="5" maxlength="5" style="width:80%" />
+					</div>
+					<div class="pay-option">
+						<p>Card</p>
+						<input class="payment" name="card" type="text" size="5" maxlength="5" style="width:80%" />
+					</div>
+					<div class="pay-option">
+						<p>Cheque</p>
+						<input class="payment" name="cheque" type="text" size="5" maxlength="5" style="width:80%" />
+					</div>
+					<div class="pay-option">
+						<p>Bank</p>
+						<input class="payment" name="bank" type="text" size="5" maxlength="5" style="width:80%" />
+					</div>
+					<div class="pay-option">
+						<p>POB</p>
+						<input class="payment" name="pob" type="text" size="5" maxlength="5" style="width:80%" />
+					</div>
+					<div class="pay-option" style="padding-top:15px;">
+						<input name="pay-online" type="button" value="Pay Online" />
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="accordion" id="section6">Summary<span></span></div>
+		<div class="container">
+			<div class="content">
+				<div>Summary</div>
+				<p>Summary of trips, customers and costs</p>
+				<form id="booking-data">
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--Accordion-->
+	<script type="text/javascript" src="tabs/add-booking/js/jquery.min.js"></script>
+	<script type="text/javascript" src="tabs/add-booking/js/highlight.pack.js"></script>
+	<script type="text/javascript" src="tabs/add-booking/js/jquery.accordion.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+
+        //syntax highlighter
+        hljs.tabReplace = '    ';
+        hljs.initHighlightingOnLoad();
+
+        $.fn.slideFadeToggle = function(speed, easing, callback) {
+        	return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+        };
+
+        //accordion
+        $('.accordion').accordion({
+        	defaultOpen: 'section1',
+        	cookieName: 'accordion_nav',
+        	speed: 'slow',
+            animateOpen: function (elem, opts) { //replace the standard slideUp with custom function
+            	elem.next().stop(true, true).slideFadeToggle(opts.speed);
+            },
+            animateClose: function (elem, opts) { //replace the standard slideDown with custom function
+            	elem.next().stop(true, true).slideFadeToggle(opts.speed);
+            }
+        });
+
+    });
+	</script>
+
+	<!--Fancy box-->
+	<script type="text/javascript" src="tabs/add-booking/js/jquery.fancybox.js?v=2.1.5"></script>
+	<link rel="stylesheet" type="text/css" href="tabs/add-booking/css/jquery.fancybox.css?v=2.1.5" media="screen" />
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('.fancybox').fancybox();
+	});
+	</script>
+
+	<!--My scripts-->
+	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
+	<script type="text/javascript" src="tabs/add-booking/js/tabs.js"></script>
+	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
+
+	<!-- Calendar-->
+	<link rel='stylesheet' href='tabs/add-booking/calendar/fullcalendar.css' />
+	<!--<script src='tabs/add-booking/calendar/lib/jquery.min.js'></script>-->
+	<script src='tabs/add-booking/calendar/lib/moment.min.js'></script>
+	<script src='tabs/add-booking/calendar/fullcalendar.js'></script>
+	<script>
+	$(document).ready(function() {
+
+	    // page is now ready, initialize the calendar...
+
+	    $('#calendar').fullCalendar({
+	        // put your options and callbacks here
+	        eventClick: function(calEvent, view) {
+
+	        	sessionID = calEvent.sessionID;
+
+		        alert('Trip selected: ' + calEvent.title);
+		        alert(sessionID);
+		        //alert('Session ID: ' + calEvent.sessionID);
+		        //alert('View: ' + view.name);
+
+		        // change the border color just for fun
+		        $(this).css('border-color', 'red');
+
+		    	}
+	    })
+
+	});
+	</script>
+
+	<!--Controllers-->
+	<script src="/dashboard/js/Controllers/Agent.js"></script>
+	<script src="/dashboard/js/Controllers/Ticket.js"></script>
+	<script src="/dashboard/js/Controllers/Package.js"></script>
+	<script src="/dashboard/js/Controllers/Sessions.js"></script>
+	<script src="/dashboard/js/Controllers/Booking.js"></script>
+	<script src="/dashboard/js/Controllers/Trip.js"></script>
+	<script src="/dashboard/js/Controllers/Customer.js"></script>

@@ -29,17 +29,23 @@ class TimetableController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('session_id', 'weeks', 'schedule');
+		$data = Input::only('weeks', 'schedule');
 
 		try
 		{
 			if( !Input::get('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->findOrFail( Input::get('session_id') );
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
+
+		$schedule = $data['schedule'];
+		$length = count($schedule);
+
+		$data['schedule'] = json_encode( $schedule );
+		$data['weeks'] = $length;
 
 		$timetable = new Timetable($data);
 
@@ -51,21 +57,20 @@ class TimetableController extends Controller {
 		$timetable = Auth::user()->timetables()->save($timetable);
 
 		// Update the referenced session object's timetable ID
-		$departure->update( array('timetable_id' => $timetable->id) );
+		$timetable->departures()->associate( $departure );
+		// $departure->update( array('timetable_id' => $timetable->id) );
 
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //
 		////////////////////////////////////////////
-		$schedule = $data['schedule'];
-		$length = count($schedule);
 		$start = new DateTime( $departure->start );
 		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for monday, 7 for sunday
 		// $startTime = $start->format('H:I');
 		$days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// STEP 1: Convert schedule day names to actual dates, starting in the week of the original departure //
-		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		$scheduleDates = array();
 		for($i = 0; $i < $length; $i++)
 		{
@@ -74,7 +79,7 @@ class TimetableController extends Controller {
 			// Loop through the days of the week
 			for($d = 0; $d < 7; $d++)
 			{
-				if( in_array($days[$d], $schedule[$i]) )
+				if( in_array($days[$d], $schedule[$i + 1]) )
 				{
 					$scheduleDates[$i][] = $date_MondayOfThisWeek->add( new DateInterval('P'.$d.'D') );
 				}
@@ -128,7 +133,11 @@ class TimetableController extends Controller {
 
 		DB::table('sessions')->insert( $sessionDates );
 
-		return Response::json( array('status' => 'OK. Timetable and sessions created', 'id' => $timetable->id), 201 ); // 201 Created
+		return Response::json( array(
+			'status'   => 'OK. Timetable and sessions created',
+			'id'       => $timetable->id,
+			'sessions' => $timetable->departures()
+		), 201 ); // 201 Created
 	}
 
 	/*

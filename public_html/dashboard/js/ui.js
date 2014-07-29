@@ -60,7 +60,10 @@ $(function(){
 	//DELETABLE BOX
 	$("body").delegate(".del-box", "click", function(){
 		if($(this).isSure()){
-			$(this).parent().parent().smoothRemove();
+			$(this).parent().parent().smoothRemove(function() {
+				// Trigger saveAll
+				$('#saveAll').click();
+			});
 		}
 	});
 });
@@ -91,9 +94,14 @@ $.fn.isSure = function(){
 	return sure;
 }
 
-$.fn.smoothRemove = function(){
+$.fn.smoothRemove = function(callback){
     $(this).animate({height: 0, opacity: 0}, 'slow', function() {
         $(this).remove();
+
+        if(callback !== undefined && typeof callback === "function")
+        {
+        	callback();
+        }
     });
 }
 

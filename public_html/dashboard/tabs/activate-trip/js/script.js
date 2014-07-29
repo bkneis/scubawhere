@@ -19,26 +19,7 @@ $(function() {
 		Sessions.getAllSessions(function(data) {
 			window.sessions = _.indexBy(data, 'id');
 
-			_.each(window.sessions, function(value) {
-				var eventObject = {
-					title: window.trips[ value.trip_id ].name, // use the element's text as the event title
-					allDay: false,
-					trip: window.trips[ value.trip_id ],
-					session: value,
-					isNew: false,
-					durationEditable: false,
-					startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
-				};
-
-				// console.log("----------------------------------------");
-				// console.log("From Server:        " + eventObject.session.start);
-				// Parse server's UTC time and convert to local
-				// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
-				eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
-				// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
-
-				createCalendarEntry(eventObject);
-			});
+			insertSessionsFromArray(window.sessions);
 		});
 	});
 
@@ -388,7 +369,63 @@ $(function() {
 			}
 		});
 	});
+
+	// The CREATE TIMETABLE button
+	$('#modalWindows').on('click', '.create-timetable-button', function(event) {
+		event.preventDefault();
+		$form = $(event.target).closest('form');
+
+		Timetable.createTimetable(
+			$form.serialize(),
+			function success(data) {
+				pageMssg(data.status, true);
+
+				// Remove original session
+				eventObject = $form.closest('.reveal-modal').data('eventObject');
+
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
+
+				// Unset eventObject
+				delete eventObject;
+
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
+
+				// Draw new sessions
+				console.log(data);
+				var sessions = _.indexBy(data.sessions, 'id');
+				console.log(sessions);
+				insertSessionsFromArray(sessions);
+			},
+			function error(xhr) {
+				console.log(xhr);
+			}
+		);
+	});
 });
+
+function insertSessionsFromArray(array) {
+	_.each(array, function(value) {
+		var eventObject = {
+			title: window.trips[ value.trip_id ].name, // use the element's text as the event title
+			allDay: false,
+			trip: window.trips[ value.trip_id ],
+			session: value,
+			isNew: false,
+			durationEditable: false,
+			startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
+		};
+
+		// console.log("----------------------------------------");
+		// console.log("From Server:        " + eventObject.session.start);
+		// Parse server's UTC time and convert to local
+		// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
+		eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
+		// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
+
+		createCalendarEntry(eventObject);
+	});
+}
 
 function createCalendarEntry(eventObject) {
 
@@ -473,6 +510,20 @@ function showModalWindow(eventObject) {
 			$('#modal-' + this.eventObject.id).remove();
 		},
 	});
+
+	// Set timetable form _token
+	if(window._token)
+		$('#modalWindows [name="_token"]').val(_token);
+
+	$.ajax({
+		url: "/token",
+		type: "GET",
+		dataType: "html",
+		success: function(_token) {
+			$('#modalWindows [name="_token"]').val(_token);
+			window._token = _token;
+		}
+	});
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -489,6 +540,12 @@ Handlebars.registerHelper('readableDuration', function(duration) {
 		return Math.floor(duration/24) + ' days, ' + (duration%24) + ' hours';
 	else
 		return duration + ' hours';
+});
+Handlebars.registerHelper('isWeekday', function(day) {
+	if(this.start.format('d') == day)
+		return new Handlebars.SafeString('checked onchange="this.checked=!this.checked;"');
+	else
+		return '';
 });
 
 function checkOverlap(event) {

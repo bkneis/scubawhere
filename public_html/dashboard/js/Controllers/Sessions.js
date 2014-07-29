@@ -35,7 +35,7 @@ var Sessions = {
 			success: handleData,
 			error: errorFn
 		});
-	}
+	},
 
 	//Params:
 	// @param integer trip_id      The ID of the trip that the session belongs to
