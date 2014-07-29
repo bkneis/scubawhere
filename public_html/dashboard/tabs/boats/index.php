@@ -13,7 +13,7 @@
 							<span class="box-tool expand-box-arrow">&#8595;</span>
 						</h3>
 						<div class="padder expandable hidden">
-							<span class="box-tool del-box redb" data-sure="Are you sure you want to delet this boat?" style="float: right; color: white;">Remove</span>
+							<span class="box-tool del-box redb" data-sure="Are you sure you want to delete this boat?" style="float: right; color: white;">Remove</span>
 							<p>{{{description}}}</p>
 							<span>Capacity: {{capacity}}</span>
 
