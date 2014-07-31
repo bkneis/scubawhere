@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 
 /**
@@ -36,9 +37,16 @@ class CompanyController extends Controller {
 		// Find out what accommodations got deleted
 		$diffRooms = array_diff_key($presentRooms, $inputRooms);
 		// Remove these deleted accommodations from the database
-		if( count($diffRooms) > 0 && !Auth::user()->accommodations()->whereIn( 'id', array_keys($diffRooms) )->delete() )
+		if( count($diffRooms) > 0 )
 		{
-			return Response::json( array('errors' => array("Some accommodations could not be deleted because they are still assigned to boats. Please reload the page to see the current state.")), 409 ); // 409 Conflict
+			try
+			{
+				Auth::user()->accommodations()->whereIn( 'id', array_keys($diffRooms) )->delete();
+			}
+			catch(QueryException $e)
+			{
+				return Response::json( array('errors' => array("Some accommodations could not be deleted because they are still assigned to boats. Please reload the page to see the current state.")), 409 ); // 409 Conflict
+			}
 		}
 
 		// Find all already present accommodations
@@ -83,9 +91,16 @@ class CompanyController extends Controller {
 		// Find out what boats got deleted
 		$diffBoats = array_diff_key($presentBoats, $inputBoats);
 		// Remove these deleted boats from the database
-		if( count($diffBoats) > 0 && !Auth::user()->boats()->whereIn( 'id', array_keys($diffBoats) )->delete() )
+		if( count($diffBoats) > 0 )
 		{
-			return Response::json( array('errors' => array('Some boats could not be deleted because they are still assigned to tickets or sessions. Please reload the page to see the current state.')), 409 ); // 409 Conflict
+			try
+			{
+				Auth::user()->boats()->whereIn( 'id', array_keys($diffBoats) )->delete();
+			}
+			catch(QueryException $e)
+			{
+				return Response::json( array('errors' => array('Some boats could not be deleted because they are still assigned to tickets or sessions. Please reload the page to see the current state.')), 409 ); // 409 Conflict
+			}
 		}
 
 		// Taking care of new and existing boats:
