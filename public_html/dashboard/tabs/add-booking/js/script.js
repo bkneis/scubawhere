@@ -261,7 +261,7 @@ function showSessions() {
 	Sessions.filter(param, function success(data) {
 
 		window.sessions = _.indexBy(data, 'id');
-		//console.log(window.sessions);
+		console.log(window.sessions);
 
 		_.each(window.sessions, function(value) {
 
@@ -363,14 +363,6 @@ function assignTicket() {
 	//var sessionID = document.getElementById("session-id").value;
 	var packageID = document.getElementById("customer-packages").value;
 
-	if(packageID == 0){
-		packageID = null;
-	}
-
-	if(ticketID == 0){
-		ticketID = document.getElementById("customer-package-tickets").value;
-	}
-
 	var params = 
 	{
 		_token : window.token,
@@ -378,9 +370,36 @@ function assignTicket() {
 		customer_id : 1, //customerID
 		is_lead : 1, // isLead
 		ticket_id : ticketID,
-		session_id : sessionID,
-		package_id : null 
+		session_id : 9 //sessionID
 	};
+
+	/*if(packageID == 0){
+		var params = 
+		{
+			_token : window.token,
+			booking_id : bookingID,
+			customer_id : 1, //customerID
+			is_lead : 1, // isLead
+			ticket_id : ticketID,
+			session_id : 9 //sessionID 
+		};
+	}
+	else {
+		var params = 
+		{
+			_token : window.token,
+			booking_id : bookingID,
+			customer_id : 1, //customerID
+			is_lead : 1, // isLead
+			ticket_id : ticketID,
+			session_id : 9, //sessionID
+			package_id : packageID 
+		};
+	}*/
+
+	if(ticketID == 0){
+		ticketID = document.getElementById("customer-package-tickets").value;
+	}
 
 	/*$.ajax({
 			type: "POST",
