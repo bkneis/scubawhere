@@ -1,6 +1,8 @@
 <?php
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use ScubaWhere\Helper;
 
-class AddonsController extends \BaseController {
+class AddonsController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
