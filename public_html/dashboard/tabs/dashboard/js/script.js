@@ -1,3 +1,4 @@
+
 function getDate(amount){
 	var date = new Date();
     var y = date.getFullYear(),
@@ -42,4 +43,5 @@ function slideDown(object) {
         // Animation complete.
     });
 }
+
 

@@ -18,7 +18,7 @@
 	</div>
 
 	<div class="yellow-helper">
-		Please select a point on the map to set "Longitude" and "Latitude".
+		Please select a point on the map to set "Longitude" and "Latitude". Click on the marker to edit the Longitude or Latitude.
 	</div>
 
 	<div class="box100">
