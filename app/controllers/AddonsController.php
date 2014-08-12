@@ -4,85 +4,74 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AddonsController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+	public function __construct()
 	{
-		//
+		$this->beforeFilter('csrf', array('on' => 'post'));
 	}
 
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function getIndex()
 	{
-		//
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			return Auth::user()->addons()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
+		}
 	}
 
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+	public function getAll()
 	{
-		//
+		return Auth::user()->addons()->get();
 	}
 
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+	public function postAdd()
 	{
-		//
+		$data = Input::only(
+			'name',
+			'description',
+			'price',
+			'compulsory'
+		);
+
+		$addon = new Addons($data);
+
+		if( !$addon->validate() )
+		{
+			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		$addon = Auth::user()->addons()->save($addon);
+
+		return Response::json( array('status' => 'OK. Addon created', 'id' => $addon->id), 201 ); // 201 Created
 	}
 
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+	public function postEdit()
 	{
-		//
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$data = Input::only(
+			'name',
+			'description',
+			'price',
+			'compulsory'
+		);
+
+		if( !$addon->update($data) )
+		{
+			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
 	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
-
 }

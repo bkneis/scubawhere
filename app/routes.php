@@ -80,6 +80,8 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('company', 'CompanyController');
 
+	Route::controller('api/addon', 'AddonsController');
+
 	Route::controller('api/agency', 'AgencyController');
 
 	Route::controller('api/agent', 'AgentController');
