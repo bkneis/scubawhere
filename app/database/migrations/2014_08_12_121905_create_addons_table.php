@@ -12,7 +12,7 @@ class CreateAddonsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('agents', function($table)
+		Schema::create('addons', function($table)
 		{
 			$table->engine = 'InnoDB';
 
