@@ -56,7 +56,7 @@ $(function(){
 		var spotData = {name: thisLocationName, id: thisLocationID, longitude: thisLocationLng, latitude: thisLocationLat};
 
 		//if it isnt already selected
-		//$( "li" ).remove("#"+thisLocationLat);
+		$( "li" ).remove("#"+thisLocationName);
 		$("#selected-spots").append(spotTemplate(spotData));
 
 

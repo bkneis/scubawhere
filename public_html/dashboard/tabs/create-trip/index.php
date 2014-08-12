@@ -71,7 +71,7 @@
 
 					<script id="locations" type="text/x-handlebars-template">
 
-						<li class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
+						<li id='{{name}}' class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
 
 							<div class="location-details">
 							<div class="location-name"><p>{{name}}</p></div>
