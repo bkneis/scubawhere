@@ -696,27 +696,45 @@ The ideal booking process is throughoutly documented in a [Facebook Document](ht
 
 *Please display the current booking's `reference` number prominently in the interface whenever a booking is made or edited!*
 
-### Attach customer to booking
+### Add ticket to booking
 
-`POST /api/booking/attach-customer`
+`POST /api/booking/add-details`
 
-Attach an existing customer to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
+Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
 
-- **@param** integer booking_id  The ID of the `booking` that the customer should be added to (most likeley the ID returned in [#Start a booking](#Start_a_booking)
-- **@param** integer customer_id The ID of the customer to attach
+- **@param** integer booking_id  The ID of the `booking` that the details should be added to (most likely the ID returned in [#Start a booking](#Start_a_booking))
+- **@param** integer customer_id The ID of the `customer` to attach
+- **@param** boolean is_lead     Signal if the customer is the lead customer
+- **@param** integer ticket_id   The ID of the `ticket` to attach
+- **@param** integer session_id  The ID of the `session` that has been selected
+- **@param** integer package_id  If the `ticket` is part of a package, the package's ID must be submitted (optional)
 - &nbsp;
 - **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
 
-### Detach customer from booking
+### Remove ticket from booking
 
-`POST /api/booking/detach-customer`
+`POST /api/booking/remove-details`
 
-Detach an attached customer from a booking. (To attach a customer, see [#Attach customer to booking](#Attach_customer_to_booking).)
+Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see [#Add ticket to booking](#Add_ticket_to_booking).)
 
-- **@param** integer booking_id  The ID of the `booking` that the customer should be removed from (most likeley the ID returned in [#Start a booking](#Start_a_booking)
-- **@param** integer customer_id The ID of the customer to detach
+- **@param** integer booking_id  The ID of the `booking` that the details should be removed from (most likely the ID returned in [#Start a booking](#Start_a_booking))
+- **@param** integer customer_id The ID of the `customer` to detach
+- **@param** integer session_id  The ID of the `session` that should be removed from the booking
 - &nbsp;
 - **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
+
+### Change additional booking information
+
+`POST /api/booking/edit-info`
+
+- **@param** integer booking_id       The ID of the `booking` that should be changed
+- **@param** string  pick\_up\_location A string describing the pick-up location for this `booking` (optional)
+- **@param** string  pick\_up\_time     The pick-up datetime of the `booking` in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
+- **@param** decimal discount         The discount applied to the `booking`, as an amount (optional)
+- **@param** string  reserved         The datetime until which the `booking` should be reserved in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
+- **@param** text    comment          Additional comments about the `booking` (optional)
+- &nbsp;
+- **@return** JSON                    Contains `status` and the `booking` details on success, `errors` on failure.
 
 ### Validate a booking
 
@@ -748,10 +766,15 @@ This can be used to populate a drop-down list of suggestions when searching for 
 
 ## Changelog
 
+### 12<sup>th</sup> August 2014
+- **@added** New method: [#Change additional booking information](#Change_additional_booking_information)
+- **@edit**  Updated parameters and description for [#Add ticket to booking](#Add_ticket_to_booking)
+- **@edit**  Updated parameters and description for [#Remove ticket from booking](#Remove_ticket_from_booking)
+
 ### 9<sup>th</sup> June 2014
-- **@added** A new method to [#Retrieve all locations of a company](#Retrieve_all_locations_of_a_company)
-- **@added** A new method to [#Attach a location to a company](#Attach_a_location_to_a_company)
-- **@added** A new method to [#Detach a location from a company](#Detach_a_location_from_a_company)
+- **@added** New method: [#Retrieve all locations of a company](#Retrieve_all_locations_of_a_company)
+- **@added** New method: [#Attach a location to a company](#Attach_a_location_to_a_company)
+- **@added** New method: [#Detach a location from a company](#Detach_a_location_from_a_company)
 
 ### 4<sup>th</sup> June 2014
 - **@edit** Added `trips` field to parameters for [#Create a ticket](#Create_a_ticket)
