@@ -9,8 +9,8 @@
 
 Documentation for the ScubaWhere.com API
 
-- **@version** 0.9
-- **@date**    2014/05/26 - 1:15
+- **@version** 0.9.3
+- **@date**    2014/08/13 - 3:00
 
 > ### Important
 > On **success**, the response contains either the requested information, the string `status` or (for calls that create something) `status` and `id`.
@@ -388,12 +388,15 @@ Delete an existing ticket.
 
 `GET /api/session/filter`
 
-Returns 25 results, ordered by start date.
+Returns filtered sessions.
 
 All parameters are **optional**.
 
+> #### Important
+> *When the `before` parameter is submitted, the `after` parameter is also required!*
+
 - **@param** string  after      A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now)
-- **@param** string  before     A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now + 1 month)
+- **@param** string  before     A date & time interpretable by PHP's [strtotime](http://php.net/strtotime) function (default: now + 1 month) (requires `after` to be present)
 - **@param** integer trip_id    The ID of the `trip` that the search should be limited to (optional)
 - **@param** integer ticket_id  The ID of the `ticket` that the search should be limited to (optional)
 - **@param** integer package_id The ID of the `package` that the search should be limited to (optional)

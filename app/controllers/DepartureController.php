@@ -42,7 +42,7 @@ class DepartureController extends Controller {
 
 		// Check the integrity of the supplied parameters
 		$validator = Validator::make( $data, array(
-			'after'      => 'date',
+			'after'      => 'date|required_with:before',
 			'before'     => 'date',
 			'trip_id'    => 'integer|min:1',
 			'ticket_id'  => 'integer|min:1', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
@@ -53,19 +53,28 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 
 		// Tranform parameter strings into DateTime objects
-		$data['after']  = new DateTime( $data['after'] );
-		$data['before'] = new DateTime( $data['before'] );
+		$data['after']  = new DateTime( $data['after'] ); // Defaults to current date, when parameter is NULL
+		if( empty( $data['before'] ) )
+		{
+			if( $data['after'] > new DateTime('now') )
+			{
+				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
+				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
+				$data['before']->add( new DateInterval('P1M') ); // Extends the date 1 month into the future
+			}
+			else
+			{
+				// If `after` date lies in the past, return results up to 1 month into the future
+				$data['before'] = new DateTime('+1 month');
+			}
+		}
+		else
+		{
+			// If a ´before` date is submitted, simply use it
+			new DateTime( $data['before'] );
+		}
 
-		$options = array(
-			'after'      => new DateTime(),
-			'before'     => new DateTime('+ 1 month'),
-			'trip_id'    => null,
-			'ticket_id'  => null,
-			'package_id' => null
-		);
-
-		// Join the default options and the submitted filter parameters
-		$options = array_merge($options, $data);
+		$options = $data;
 
 		if( !empty( $options['trip_id'] ) )
 		{

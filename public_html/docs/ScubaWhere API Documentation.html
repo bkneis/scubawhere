@@ -459,8 +459,8 @@ pre {
 </div>
 <p>Documentation for the ScubaWhere.com API</p>
 <ul>
-<li><strong>@version</strong> 0.9</li>
-<li><strong>@date</strong>    2014/05/26 - 1:15</li>
+<li><strong>@version</strong> 0.9.3</li>
+<li><strong>@date</strong>    2014/08/13 - 3:00</li>
 </ul>
 <blockquote>
 <h3>Important</h3>
@@ -775,11 +775,15 @@ var area   = [north, west, south, east];
 <p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_accommodations_&amp;_boats">#Retrieve all accommodations &amp; boats</a>.</em></p>
 <h3>Search for sessions by filter</h3>
 <p><code>GET /api/session/filter</code></p>
-<p>Returns 25 results, ordered by start date.</p>
+<p>Returns filtered sessions.</p>
 <p>All parameters are <strong>optional</strong>.</p>
+<blockquote>
+<h4>Important</h4>
+<p><em>When the <code>before</code> parameter is submitted, the <code>after</code> parameter is also required!</em></p>
+</blockquote>
 <ul>
 <li><strong>@param</strong> string  after      A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now)</li>
-<li><strong>@param</strong> string  before     A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now + 1 month)</li>
+<li><strong>@param</strong> string  before     A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now + 1 month) (requires <code>after</code> to be present)</li>
 <li><strong>@param</strong> integer trip_id    The ID of the <code>trip</code> that the search should be limited to (optional)</li>
 <li><strong>@param</strong> integer ticket_id  The ID of the <code>ticket</code> that the search should be limited to (optional)</li>
 <li><strong>@param</strong> integer package_id The ID of the <code>package</code> that the search should be limited to (optional)</li>
