@@ -1,5 +1,10 @@
 var map;
 
+window.token;
+	$.get("/token", null, function(data) {
+		window.token = data;
+	});
+
 $(function(){
 
 // Update position
@@ -167,16 +172,24 @@ var locSource = $("#location").html();
 
 function detachLocation(id) {
 
+	var params = 
+	{
+		_token : window.token,
+		id : id
+	};
+
+	console.log(id);
+
 	$.ajax({
 			url: "/api/location/detach",
 			type: "POST",
-			data: id,
+			data: params, // id
 			dataType: "json",
 			async: false,
 			success: function(data){
 				pageMssg("Location deleted", true);
 				}
 			});
-	  		e.preventDefault();
+	  		//e.preventDefault();
 
 }

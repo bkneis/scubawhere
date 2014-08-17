@@ -69,7 +69,7 @@
 						<td>{{{description}}}</td>
 						<td>{{longitude}}</td>
 						<td>{{latitude}}</td>
-						<td><a onclick="detachLocation({{id}}">Remove</a></td>
+						<td><a onclick="detachLocation({{id}})">Remove</a></td>
 					</tr>
 				
 			</script>

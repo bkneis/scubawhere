@@ -1,7 +1,0 @@
-use getAllSessions put in array, then grab the trip id, start date and capacity. use trip id as param in getTrip for duration to get end date. Then put the new array created as events for calander in booking.
-
-Hide package/trip when one is selected.
-
-Display relevant tickets to package.
-
-Add elements into form to send off to api.
