@@ -3,14 +3,14 @@
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Addons extends Ardent {
+class Addon extends Ardent {
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
 	public static $rules = array(
-		'name'            => 'required',
-		'description'     => '',
-		'price'     			=> 'required|numeric',
-		'compulsory'  		=> 'required'
+		'name'        => 'required',
+		'description' => '',
+		'price'       => 'required|numeric',
+		'compulsory'  => 'required'
 	);
 
 	public function beforeSave()
@@ -19,7 +19,7 @@ class Addons extends Ardent {
 			$this->name = Helper::sanitiseString($this->name);
 
 		if( isset($this->description) )
-			$this->description = Helper::sanitiseString($this->description);
+			$this->description = Helper::sanitiseBasicTags($this->description);
 
 		if( isset($this->price) )
 			$this->price = Helper::sanitiseString($this->price);

@@ -2,7 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 // use ScubaWhere\Helper;
 
-class AddonsController extends Controller {
+class AddonController extends Controller {
 
 	public function __construct()
 	{
