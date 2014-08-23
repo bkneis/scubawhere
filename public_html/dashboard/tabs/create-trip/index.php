@@ -16,7 +16,7 @@
 <div id="wrapper">
 	<form id="trip-form">
 		<div class="row">
-			<div class="box50">
+			<div class="box100">
 				<label class="dgreyb">Name & Duration</label>
 				<div class="padder">
 					<div class="form-row">
@@ -39,13 +39,6 @@
 
 
 					</div>
-				</div>
-			</div>
-
-			<div class="box50">
-				<label class="redb">!</label>
-				<div class="padder">
-					In order to create a trip you must first add at least one boat - if you don't run trips from boats, simply log a beach or pontoon.
 				</div>
 			</div>
 		</div><!-- row -->
@@ -71,7 +64,7 @@
 
 					<script id="locations" type="text/x-handlebars-template">
 
-						<li class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
+						<li id='{{name}}' class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
 
 							<div class="location-details">
 							<div class="location-name"><p>{{name}}</p></div>

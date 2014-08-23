@@ -459,8 +459,8 @@ pre {
 </div>
 <p>Documentation for the ScubaWhere.com API</p>
 <ul>
-<li><strong>@version</strong> 0.9</li>
-<li><strong>@date</strong>    2014/05/26 - 1:15</li>
+<li><strong>@version</strong> 0.9.3</li>
+<li><strong>@date</strong>    2014/08/13 - 3:00</li>
 </ul>
 <blockquote>
 <h3>Important</h3>
@@ -775,11 +775,15 @@ var area   = [north, west, south, east];
 <p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_accommodations_&amp;_boats">#Retrieve all accommodations &amp; boats</a>.</em></p>
 <h3>Search for sessions by filter</h3>
 <p><code>GET /api/session/filter</code></p>
-<p>Returns 25 results, ordered by start date.</p>
+<p>Returns filtered sessions.</p>
 <p>All parameters are <strong>optional</strong>.</p>
+<blockquote>
+<h4>Important</h4>
+<p><em>When the <code>before</code> parameter is submitted, the <code>after</code> parameter is also required!</em></p>
+</blockquote>
 <ul>
 <li><strong>@param</strong> string  after      A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now)</li>
-<li><strong>@param</strong> string  before     A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now + 1 month)</li>
+<li><strong>@param</strong> string  before     A date &amp; time interpretable by PHP's <a href="http://php.net/strtotime">strtotime</a> function (default: now + 1 month) (requires <code>after</code> to be present)</li>
 <li><strong>@param</strong> integer trip_id    The ID of the <code>trip</code> that the search should be limited to (optional)</li>
 <li><strong>@param</strong> integer ticket_id  The ID of the <code>ticket</code> that the search should be limited to (optional)</li>
 <li><strong>@param</strong> integer package_id The ID of the <code>package</code> that the search should be limited to (optional)</li>
@@ -1051,23 +1055,40 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li><strong>@return</strong> JSON            Contains <code>status</code> and <code>id</code> &amp; <code>reference</code> of the newly created booking on success, <code>errors</code> on failure</li>
 </ul>
 <p><em>Please display the current booking's <code>reference</code> number prominently in the interface whenever a booking is made or edited!</em></p>
-<h3>Attach customer to booking</h3>
-<p><code>POST /api/booking/attach-customer</code></p>
-<p>Attach an existing customer to a booking. (To create a customer, see <a href="#Create_a_customer">#Create a customer</a>.)</p>
+<h3>Add ticket to booking</h3>
+<p><code>POST /api/booking/add-details</code></p>
+<p>Add a combination of an existing <strong>customer</strong> and <strong>ticket</strong> and <strong>session</strong> to a booking. (To create a customer, see <a href="#Create_a_customer">#Create a customer</a>.)</p>
 <ul>
-<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the customer should be added to (most likeley the ID returned in <a href="#Start_a_booking">#Start a booking</a></li>
-<li><strong>@param</strong> integer customer_id The ID of the customer to attach</li>
+<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the details should be added to (most likely the ID returned in <a href="#Start_a_booking">#Start a booking</a>)</li>
+<li><strong>@param</strong> integer customer_id The ID of the <code>customer</code> to attach</li>
+<li><strong>@param</strong> boolean is_lead     Signal if the customer is the lead customer</li>
+<li><strong>@param</strong> integer ticket_id   The ID of the <code>ticket</code> to attach</li>
+<li><strong>@param</strong> integer session_id  The ID of the <code>session</code> that has been selected</li>
+<li><strong>@param</strong> integer package_id  If the <code>ticket</code> is part of a package, the package's ID must be submitted (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
 </ul>
-<h3>Detach customer from booking</h3>
-<p><code>POST /api/booking/detach-customer</code></p>
-<p>Detach an attached customer from a booking. (To attach a customer, see <a href="#Attach_customer_to_booking">#Attach customer to booking</a>.)</p>
+<h3>Remove ticket from booking</h3>
+<p><code>POST /api/booking/remove-details</code></p>
+<p>Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see <a href="#Add_ticket_to_booking">#Add ticket to booking</a>.)</p>
 <ul>
-<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the customer should be removed from (most likeley the ID returned in <a href="#Start_a_booking">#Start a booking</a></li>
-<li><strong>@param</strong> integer customer_id The ID of the customer to detach</li>
+<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the details should be removed from (most likely the ID returned in <a href="#Start_a_booking">#Start a booking</a>)</li>
+<li><strong>@param</strong> integer customer_id The ID of the <code>customer</code> to detach</li>
+<li><strong>@param</strong> integer session_id  The ID of the <code>session</code> that should be removed from the booking</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Change additional booking information</h3>
+<p><code>POST /api/booking/edit-info</code></p>
+<ul>
+<li><strong>@param</strong> integer booking_id       The ID of the <code>booking</code> that should be changed</li>
+<li><strong>@param</strong> string  pick_up_location A string describing the pick-up location for this <code>booking</code> (optional)</li>
+<li><strong>@param</strong> string  pick_up_time     The pick-up datetime of the <code>booking</code> in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>) (optional)</li>
+<li><strong>@param</strong> decimal discount         The discount applied to the <code>booking</code>, as an amount (optional)</li>
+<li><strong>@param</strong> string  reserved         The datetime until which the <code>booking</code> should be reserved in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>) (optional)</li>
+<li><strong>@param</strong> text    comment          Additional comments about the <code>booking</code> (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                    Contains <code>status</code> and the <code>booking</code> details on success, <code>errors</code> on failure.</li>
 </ul>
 <h3>Validate a booking</h3>
 <p><code>GET /api/booking/validate</code></p>
@@ -1092,11 +1113,17 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>12<sup>th</sup> August 2014</h3>
+<ul>
+<li><strong>@added</strong> New method: <a href="#Change_additional_booking_information">#Change additional booking information</a></li>
+<li><strong>@edit</strong>  Updated parameters and description for <a href="#Add_ticket_to_booking">#Add ticket to booking</a></li>
+<li><strong>@edit</strong>  Updated parameters and description for <a href="#Remove_ticket_from_booking">#Remove ticket from booking</a></li>
+</ul>
 <h3>9<sup>th</sup> June 2014</h3>
 <ul>
-<li><strong>@added</strong> A new method to <a href="#Retrieve_all_locations_of_a_company">#Retrieve all locations of a company</a></li>
-<li><strong>@added</strong> A new method to <a href="#Attach_a_location_to_a_company">#Attach a location to a company</a></li>
-<li><strong>@added</strong> A new method to <a href="#Detach_a_location_from_a_company">#Detach a location from a company</a></li>
+<li><strong>@added</strong> New method: <a href="#Retrieve_all_locations_of_a_company">#Retrieve all locations of a company</a></li>
+<li><strong>@added</strong> New method: <a href="#Attach_a_location_to_a_company">#Attach a location to a company</a></li>
+<li><strong>@added</strong> New method: <a href="#Detach_a_location_from_a_company">#Detach a location from a company</a></li>
 </ul>
 <h3>4<sup>th</sup> June 2014</h3>
 <ul>

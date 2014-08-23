@@ -1,23 +1,23 @@
 var Boat = {
 	//No params required
-	getAllBoats : function (handeData) {
+	getAllBoats : function (handleData) {
 		$.get("/company/boats").done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
 	//this will create, edit or delete accomodations and boats
 	//param needs to be a serialised form - check docs for format
-	setBoat : function (form, handeData) {
+	setBoat : function (form, handleData) {
 		$.post("/company/boats", form).done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
 	//get all accommodations - no params
-	getAccommodations : function (handeData) {
+	getAccommodations : function (handleData) {
 		$.get("/company/boats").done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	}
 };

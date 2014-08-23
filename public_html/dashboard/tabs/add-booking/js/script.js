@@ -1,10 +1,14 @@
 var bookingID;
 var sessionID;
+var startDate;
+var endDate;
+
+var init = false;
 
 window.token;
-	$.get("/token", null, function(data) {
-		window.token = data;
-	});
+$.get("/token", null, function(data) {
+	window.token = data;
+});
 
 // Load all of the agents, tickets and packages for dive center to select
 $(function(){
@@ -47,23 +51,27 @@ function validateSob() {
 //Also recieve back booking ID to add details to
 function initiate() {
 
-	var choice = document.getElementById("sob").value;
+	if(!init){
+		var choice = document.getElementById("sob").value;
 
 
-	if(choice == "agent") {
-		var agentID = document.getElementById("agents").value;
-		// var agentID = agents.options[agents.selectedIndex].id;
-		var data = {_token : window.token, agent_id : agentID};
+		if(choice == "agent") {
+			var agentID = document.getElementById("agents").value;
+			// var agentID = agents.options[agents.selectedIndex].id;
+			var data = {_token : window.token, agent_id : agentID};
+		}
+		else {
+			var data = {_token : window.token, source : choice};
+		}
+
+		Booking.initiate(data, function success(data) {
+			alert("Booking initiated");
+			bookingID = data.id;
+			console.log(bookingID);
+		});
+
+		init = true;
 	}
-	else {
-		var data = {_token : window.token, source : choice};
-	}
-
-	Booking.initiate(data, function success(data) {
-		alert("Booking initiated");
-		bookingID = data.id;
-		console.log(bookingID);
-	});
 }
 
 // Add selected ticket to both list and select box for dive center to select when filtering through sessions and assigning to a customer
@@ -248,11 +256,12 @@ function showSessions() {
 	var i;
 	//var ticketID = 10;
 	var ticketID = document.getElementById("customer-tickets").value;
+	console.log(ticketID);
 
 	if(ticketID == 0){
 		ticketID = document.getElementById("customer-package-tickets").value;
 	}
-	var param = "ticket_id=" + ticketID;
+	var param = "ticket_id=" + ticketID + "&after=2014-07-01";
 	var param2;
 
 	window.sessions;
@@ -261,7 +270,7 @@ function showSessions() {
 	Sessions.filter(param, function success(data) {
 
 		window.sessions = _.indexBy(data, 'id');
-		//console.log(window.sessions);
+		console.log(window.sessions);
 
 		_.each(window.sessions, function(value) {
 
@@ -277,7 +286,6 @@ function showSessions() {
 				{
 					title : data2.name,
 					start : startTime,
-					//start : window.sessions[value.id].start,
 					end : endTime,
 					sessionID : window.sessions[value.id].id
 				};
@@ -337,16 +345,6 @@ function addCustomer(count){
 		option.setAttribute("data-lead", checkLead);
 		option.setAttribute("data-count", count);
 		customerSelect.add(option);
-
-		// add customer list
-		/*var div = document.createElement('div');
-		div.setAttribute('id', 'customer-'+count);
-		var ul = document.createElement('ul');
-		ul.setAttribute('id', 'customer-'+count+'-trips');
-
-		var custDiv = document.getElementById('customers-trips-summary');
-		div.appendChild(ul);
-		custDiv.appendChild(div);*/
 	});
 
 }
@@ -355,51 +353,47 @@ function addCustomer(count){
 // Used to assign customers their ticket and send API call to add detials of booking
 function assignTicket() {
 
-	//var customerID = document.getElementById("customers").value; - TRY NOW ADDED
+	var customerID = document.getElementById("customers").value;
 	//var isLead = document.getElementById("customer-id").getAttribute("data-lead"); - TRY NOW ADDED
-	//var customerCount = document.getElementById("customer-id").getAttribute("data-count");
-	//var tripName = document.getElementById("customer-tickets").innerHTML; - ALSO ADD CHANGE TO PACKAGE TICKETS
+	var customerCount = document.getElementById("customers").getAttribute("data-count");
+	//var tripName = document.getElementById("customer-tickets").text;
 	var ticketID = document.getElementById("customer-tickets").value;
-	//var sessionID = document.getElementById("session-id").value;
 	var packageID = document.getElementById("customer-packages").value;
 
-	if(packageID == 0){
-		packageID = null;
-	}
+	var customer = document.getElementById("customers");
+	var customerName = customer.options[customer.selectedIndex].text;
 
-	if(ticketID == 0){
-		ticketID = document.getElementById("customer-package-tickets").value;
-	}
+	var trip = document.getElementById("customer-tickets");
+	var tripName = trip.options[trip.selectedIndex].text;
 
 	var params = 
 	{
 		_token : window.token,
 		booking_id : bookingID,
-		customer_id : 1, //customerID
+		customer_id : customerID,
 		is_lead : 1, // isLead
 		ticket_id : ticketID,
-		session_id : sessionID,
-		package_id : null 
+		session_id : sessionID
 	};
 
-	/*$.ajax({
-			type: "POST",
-			url: "/api/booking/add-details",
-			data: params,
-			success: function success(data) {
-				console.log(data);
-			},
-			error: function failure(){
-				console.log("nop");
-			}
-		});*/
+	if(ticketID == 0){
+		ticketID = document.getElementById("customer-package-tickets").value;
+	}
 
 	Booking.addDetails(params, function success(data){
 		console.log(data);
-		//var tripItem = document.createElement('li');
-		//tripItem.innerHTML = tripName
-		//var custDiv = document.getElementById("customer-"+customerCount+"-trips");
-		//custDiv.appendChild(tripItem);
+		var table = document.getElementById("customers-trips-table");
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+		cell1.innerHTML = customerName;
+		cell2.innerHTML = tripName;
+		cell3.innerHTML = startDate;
+		cell4.innerHTML = endDate;
+		alert("Trip Assigned");
+		$.fancybox.close();
 	});
 
 }

@@ -72,8 +72,17 @@
 				<div id="tabcontent"></div>
 				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px;">Assign ticket</button>
 
-				<div id="customers-trips-summary">
-					
+				<div id="customers-trips-summary" style="height:200px; overflow-y:scroll;">
+					<table id="customers-trips-table">
+						<tr>
+							<td>Customer Name</td>
+							<td>Ticket</td>
+							<td>Start Date</td>
+							<td>End Date</td>
+							<td>Price</td>
+						</tr>
+						<!--ADD CUSTOMER TICKETS HERE-->
+					</table>
 				</div>
 
 				<!-- Pop up box -->
@@ -102,27 +111,7 @@
 			</div><!-- End of pop up box -->
 		</div>
 	</div>
-	<div class="accordion" id="section5">Step 4: Assign Trips<span></span></div>
-		<div class="container">
-			<div class="content">
-				<div id="cust1" style="float:left">
-					<h1>Customer 1</h1>
-					<ul id="cust1-trips">
-						<li>Trip 1</li>
-					</ul>
-					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
-				</div>
-				<div id="cust1" style="float:left">
-					<h1>Customer 2</h1>
-					<ul id="cust1-trips">
-						<li>Trip 1</li>
-					</ul>
-					<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()">Assign Ticket</button>
-				</div>
-				<div class="spacing" style="padding-bottom:150px;"></div>
-			</div>
-		</div>
-		<div class="accordion" id="section5">Step 5: Payment<span></span></div>
+		<div class="accordion" id="section4">Step 5: Payment<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div id="trip-info" style="float:left; width:45%;">
@@ -164,7 +153,7 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-		<div class="accordion" id="section6">Summary<span></span></div>
+		<div class="accordion" id="section5">Summary<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div>Summary</div>
@@ -234,6 +223,9 @@
 	        eventClick: function(calEvent, view) {
 
 	        	sessionID = calEvent.sessionID;
+	        	startDate = calEvent.start;
+	        	endDate = calEvent.end;
+
 
 		        alert('Trip selected: ' + calEvent.title);
 		        alert(sessionID);
