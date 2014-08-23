@@ -67,5 +67,5 @@
 	</div>
 </div>
 
-<script src="/dashboard/js/Controllers/Agent.js"></script>
-<script src="tabs/manage-agents/js/script.js"></script>
+<script src="/dashboard/js/Controllers/Addons.js"></script>
+<script src="tabs/add-ons/js/script.js"></script>
