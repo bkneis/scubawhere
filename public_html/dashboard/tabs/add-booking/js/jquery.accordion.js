@@ -136,38 +136,57 @@
 
     //opens a accordion panel
     function open($this, opts) {
-        close(opts);
-        //give the proper class to the linked element
-        $this.removeClass(opts.cssClose).addClass(opts.cssOpen);
 
-        //open the element
-        opts.animateOpen($this, opts);
+        //var section = $this.attr('id');
+        //var sectionNum = section.substr(section.length - 1);
+        //alert(section);
+        //alert(sectionNum);
 
-        //do cookies if plugin available
-        if (useCookies(opts)) {
-            // split the cookieOpen string by ","
-            id = $this.attr('id');
-            setCookie(id, opts);
-        }
+        //if(validated(sectionNum)) {
+
+            close(opts);
+            //give the proper class to the linked element
+            $this.removeClass(opts.cssClose).addClass(opts.cssOpen);
+
+            //open the element
+            opts.animateOpen($this, opts);
+
+            //do cookies if plugin available
+            if (useCookies(opts)) {
+                // split the cookieOpen string by ","
+                id = $this.attr('id');
+                alert(id);
+                setCookie(id, opts);
+            }
+        //}
     }
 
     //toggle a accordion on an event
     function toggle($this, opts) {
-        // close the only open item
-        if ($this.hasClass(opts.cssOpen))
-        {
-            close(opts);
-            //do cookies if plugin available
-            if (useCookies(opts)) {
-                // split the cookieOpen string by ","
-                setCookie('', opts);
+
+        var section = $this.attr('id');
+        var sectionNum = section.substr(section.length - 1);
+        //alert(section);
+        //alert(sectionNum);
+
+        if(validated(sectionNum)) {
+
+            // close the only open item
+            if ($this.hasClass(opts.cssOpen))
+            {
+                close(opts);
+                //do cookies if plugin available
+                if (useCookies(opts)) {
+                    // split the cookieOpen string by ","
+                    setCookie('', opts);
+                }
+                return false;
             }
+            close(opts);
+            //open a closed element
+            open($this, opts);
             return false;
         }
-        close(opts);
-        //open a closed element
-        open($this, opts);
-        return false;
     }
 
     //use cookies?
@@ -231,6 +250,56 @@
         }
 
         return true;
+    }
+
+    // This function holds all the validation rules for the accordian
+    function validated(i) {
+
+        if(i == 1){ // Start of the accordian, the user can always go back to this
+            return true;
+        }
+
+        if(i == 2){ // Source of Booking
+            var source = document.getElementById("sob").value;
+            if(source == 0){
+                alert("Please enter a source of booking");
+            }
+            else {
+                initiate();
+                return true;
+            }
+        }
+
+        if(i == 3){ // Selected tickets and packages
+            var numTickets = $("#selected-tickets").children().length;
+            if(numTickets == 0){
+                alert("Please select at least 1 ticket or package");
+            }
+            else {
+                return true;
+            }
+        }
+
+        if(i == 4){ // Payment
+            if(customersArray.length == 0){
+                alert("Please add at least 1 customer");
+            }
+            else {
+                var tickets = document.getElementById("customer-tickets").length - 1;
+                var packageTickets = document.getElementById("customer-package-tickets").length - 1;
+                //console.log("tickets: " + tickets + "package tickets : " + packageTickets);
+                var ticketsTotal = tickets + packageTickets;
+                if(ticketsTotal == 0){
+                    return true;
+                }
+                else {
+                    alert("Please assign all tickets");
+                }
+                //return true;
+                
+            }     
+        }
+
     }
 
     // settings

@@ -4,7 +4,7 @@
 		<div class="content">
 			<h2>Please select source of booking</h2>
 			<select id="sob" onchange="validateSob()">
-				<option>Please select an option</option>
+				<option value="0">Please select an option</option>
 				<option id="agent" value="agent">Agent</option>
 				<option id="telephone" value="telephone">Phone</option>
 				<option id="email" value="email">Email</option>
@@ -23,11 +23,11 @@
 					</select>
 				</div>
 			</div>
-			<button onclick="check()">Testing button</button>
+			<!--<button onclick="getToday()">Testing button</button>-->
 		</div>
 	</div>
 	<!-- change! -->
-	<div class="accordion" id="section2" onClick="initiate()">Step 2: Trip Selection<span></span></div>
+	<div class="accordion" id="section2">Step 2: Trip Selection<span></span></div>
 	<div class="container">
 		<div class="content">
 			<h2>Select trips that wish to be purchased</h2>
@@ -36,7 +36,7 @@
 				<ul id="available-tickets" class="product-list"><!--trips-->
 					<script id="tickets-list-template" type="text/x-handlebars-template">
 					{{#each tickets}}
-					<li onclick="selectTicket('{{name}}', '{{id}}')">{{name}}</li>
+					<li onclick="selectTicket('{{name}}', '{{id}}', '{{price}}')">{{name}}</li>
 					{{/each}}
 					</script>
 				</ul>
@@ -70,23 +70,12 @@
 					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
 				</ul>
 				<div id="tabcontent"></div>
-				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px;">Assign ticket</button>
-
-				<div id="customers-trips-summary" style="height:200px; overflow-y:scroll;">
-					<table id="customers-trips-table">
-						<tr>
-							<td>Customer Name</td>
-							<td>Ticket</td>
-							<td>Start Date</td>
-							<td>End Date</td>
-							<td>Price</td>
-						</tr>
-						<!--ADD CUSTOMER TICKETS HERE-->
-					</table>
-				</div>
+				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px; display:none">Assign ticket</button>
+				<!--<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="openFancy()" style="margin-top:10px;">Assign ticket</button>-->
 
 				<!-- Pop up box -->
 				<div id="ticket-fancybox" style="display:none; height:810px; width:900px">
+					<!--<button onclick="test9()">test</button>-->
 					<div id="customer-select">
 						<!-- Here il display all the customers names, then have onclick to send customer-id to hidden data aswell look up if thier lead-->
 						<p>Customer: <select id="customers" onChange=""><option value="0">Please select...</option></select></p>
@@ -103,18 +92,41 @@
 							</select>
 						</p>
 					</div>
-					<div id="info" style="display:none">
+					<!--<div id="info" style="display:none">
 						<p id="session-id"></p>
-				</div>
+				</div>-->
 				<div id="calendar"></div>
 				<button class="bttn blueb big-bttn" id="btnAssign" onclick="assignTicket()" style="float:right">Assign Ticket</button>
 			</div><!-- End of pop up box -->
 		</div>
 	</div>
-		<div class="accordion" id="section4">Step 5: Payment<span></span></div>
+		<div class="accordion" id="section4">Step 4: Payment / Trip Summary<span></span></div>
 		<div class="container">
 			<div class="content">
-				<div id="trip-info" style="float:left; width:45%;">
+				<div id="customers-trips-summary" style="max-height:200px; overflow-y:scroll;">
+					<table id="customers-trips-table">
+						<tr>
+							<td><strong>Customer Name</strong></td>
+							<td><strong>Ticket</strong></td>
+							<td><strong>Start Date</strong></td>
+							<td><strong>End Date</strong></td>
+							<td><strong>Price</strong></td>
+						</tr>
+						<!--ADD CUSTOMER TICKETS HERE-->
+					</table>
+				</div>
+				<table id="tblBookingCost">
+						<tr>
+							<td><Strong>Total Booking Cost</strong></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td id="totalBookingCost"><strong></strong></td>
+						</tr>
+					</table>
+				<!--<div id="trip-info" style="float:left; width:45%;">
 					<h2>Trip Type</h2>
 					<ul id="trips-list"></ul>
 					<h3>Total Cost</h3>
@@ -123,37 +135,38 @@
 					<h2>Trip Cost</h2>
 					<ul id="trips-cost-list"></ul>
 					<p>0</p>
-				</div>
+				</div>-->
 				<div class="clear"></div>
 				<div id="pay-options">
+					<h2>Payment Options</h2>
 					<div class="pay-option">
 						<p>Cash</p>
-						<input class="payment" name="cash" type="text" size="5" maxlength="5" style="width:80%" />
+						<input class="payment" id="pay-cash" type="text" size="5" maxlength="5" style="width:80%" />
 					</div>
 					<div class="pay-option">
 						<p>Card</p>
-						<input class="payment" name="card" type="text" size="5" maxlength="5" style="width:80%" />
+						<input class="payment" id="pay-card" type="text" size="5" maxlength="5" style="width:80%" />
 					</div>
 					<div class="pay-option">
 						<p>Cheque</p>
-						<input class="payment" name="cheque" type="text" size="5" maxlength="5" style="width:80%" />
+						<input class="payment" id="pay-cheque" type="text" size="5" maxlength="5" style="width:80%" />
 					</div>
 					<div class="pay-option">
 						<p>Bank</p>
-						<input class="payment" name="bank" type="text" size="5" maxlength="5" style="width:80%" />
+						<input class="payment" id="pay-bank" type="text" size="5" maxlength="5" style="width:80%" />
 					</div>
 					<div class="pay-option">
 						<p>POB</p>
-						<input class="payment" name="pob" type="text" size="5" maxlength="5" style="width:80%" />
+						<input class="payment" id="pay-pob" type="text" size="5" maxlength="5" style="width:80%" />
 					</div>
-					<div class="pay-option" style="padding-top:15px;">
-						<input name="pay-online" type="button" value="Pay Online" />
+					<div class="pay-option" style="padding-top:24px;">
+						<input name="validate-booking" type="button" value="Finalise Booking" onclick="validateBooking()"/>
 					</div>
 				</div>
 				<div class="clear"></div>
 			</div>
 		</div>
-		<div class="accordion" id="section5">Summary<span></span></div>
+		<!--<div class="accordion" id="section5">Summary<span></span></div>
 		<div class="container">
 			<div class="content">
 				<div>Summary</div>
@@ -161,7 +174,7 @@
 				<form id="booking-data">
 				</form>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<!--Accordion-->
 	<script type="text/javascript" src="tabs/add-booking/js/jquery.min.js"></script>
@@ -199,7 +212,11 @@
 	<link rel="stylesheet" type="text/css" href="tabs/add-booking/css/jquery.fancybox.css?v=2.1.5" media="screen" />
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$('.fancybox').fancybox();
+		$('.fancybox').fancybox({
+			/*onLoad : function(){
+		     $('#calendar').fullCalendar('render');
+		    }*/
+		});
 	});
 	</script>
 
@@ -228,7 +245,7 @@
 
 
 		        alert('Trip selected: ' + calEvent.title);
-		        alert(sessionID);
+		        //alert(sessionID);
 		        //alert('Session ID: ' + calEvent.sessionID);
 		        //alert('View: ' + view.name);
 
