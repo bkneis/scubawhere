@@ -34,6 +34,9 @@ class CompanyController extends Controller {
 		$presentRooms = array_flip( Auth::user()->accommodations()->lists('id') );
 		$inputRooms = Input::get('accommodations');
 
+		if( empty($inputRooms) )
+			$inputRooms = array();
+
 		// Find out what accommodations got deleted
 		$diffRooms = array_diff_key($presentRooms, $inputRooms);
 		// Remove these deleted accommodations from the database
@@ -88,6 +91,9 @@ class CompanyController extends Controller {
 		$presentBoats = array_flip( Auth::user()->boats()->lists('id') );
 		$inputBoats = Input::get('boats');
 
+		if( empty($inputBoats) )
+			$inputBoats = array();
+
 		// Find out what boats got deleted
 		$diffBoats = array_diff_key($presentBoats, $inputBoats);
 		// Remove these deleted boats from the database
@@ -104,7 +110,7 @@ class CompanyController extends Controller {
 		}
 
 		// Taking care of new and existing boats:
-		foreach( Input::get('boats') as $id => $details )
+		foreach( $inputBoats as $id => $details )
 		{
 			// Only allow 'whitelisted' fields on the $details array
 			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'capacity', 'photo') ) );
