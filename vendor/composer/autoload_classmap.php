@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Accommodation' => $baseDir . '/app/models/Accommodation.php',
+    'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',
