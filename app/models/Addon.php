@@ -6,9 +6,18 @@ use ScubaWhere\Helper;
 class Addon extends Ardent {
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
+	protected $fillable = array(
+		'name',
+		'description',
+		'currency',
+		'price',
+		'compulsory'
+	);
+	
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
+		'currency'    => 'alpha|size:3|valid_currency',
 		'price'       => 'required|numeric',
 		'compulsory'  => 'required'
 	);
