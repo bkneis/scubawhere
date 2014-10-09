@@ -33,9 +33,13 @@ class AddonController extends Controller {
 			'name',
 			'description',
 			'price',
+			'currency',
 			'compulsory'
 		);
 
+		//Get currency code
+		$data['currency'] = Helper::currency( Input::get('currency') );
+		
 		$addon = new Addons($data);
 
 		if( !$addon->validate() )
@@ -63,9 +67,13 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
+			'currency',
 			'price',
 			'compulsory'
 		);
+		
+		//Get currency code
+		$data['currency'] = Helper::currency( Input::get('currency') );
 
 		if( !$addon->update($data) )
 		{
