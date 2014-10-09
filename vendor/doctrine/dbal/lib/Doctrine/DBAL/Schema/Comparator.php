@@ -62,6 +62,18 @@ class Comparator
 
         $foreignKeysToTable = array();
 
+        foreach ($toSchema->getNamespaces() as $namespace) {
+            if ( ! $fromSchema->hasNamespace($namespace)) {
+                $diff->newNamespaces[$namespace] = $namespace;
+            }
+        }
+
+        foreach ($fromSchema->getNamespaces() as $namespace) {
+            if ( ! $toSchema->hasNamespace($namespace)) {
+                $diff->removedNamespaces[$namespace] = $namespace;
+            }
+        }
+
         foreach ($toSchema->getTables() as $table) {
             $tableName = $table->getShortestName($toSchema->getName());
             if ( ! $fromSchema->hasTable($tableName)) {
@@ -377,7 +389,7 @@ class Comparator
                 $changedProperties[] = $property;
             }
         }
-        
+
         if ($properties1['default'] != $properties2['default'] ||
             // Null values need to be checked additionally as they tell whether to create or drop a default value.
             // null != 0, null != false, null != '' etc. This affects platform's table alteration SQL generation.
@@ -387,7 +399,9 @@ class Comparator
             $changedProperties[] = 'default';
         }
 
-        if ($properties1['type'] instanceof Types\StringType || $properties1['type'] instanceof Types\BinaryType) {
+        if (($properties1['type'] instanceof Types\StringType && ! $properties1['type'] instanceof Types\GuidType) ||
+            $properties1['type'] instanceof Types\BinaryType
+        ) {
             // check if value of length is set at all, default value assumed otherwise.
             $length1 = $properties1['length'] ?: 255;
             $length2 = $properties2['length'] ?: 255;

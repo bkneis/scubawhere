@@ -44,10 +44,8 @@ trait SoftDeletingTrait {
 		{
 			$this->withTrashed()->where($this->getKeyName(), $this->getKey())->forceDelete();
 		}
-		else
-		{
-			return $this->runSoftDelete();
-		}
+
+		return $this->runSoftDelete();
 	}
 
 	/**
@@ -84,6 +82,8 @@ trait SoftDeletingTrait {
 		// Once we have saved the model, we will fire the "restored" event so this
 		// developer will do anything they need to after a restore operation is
 		// totally finished. Then we will return the result of the save call.
+		$this->exists = true;
+
 		$result = $this->save();
 
 		$this->fireModelEvent('restored', false);
@@ -108,7 +108,7 @@ trait SoftDeletingTrait {
 	 */
 	public static function withTrashed()
 	{
-		return with(new static)->newQueryWithoutScope(new SoftDeletingScope);
+		return (new static)->newQueryWithoutScope(new SoftDeletingScope);
 	}
 
 	/**
