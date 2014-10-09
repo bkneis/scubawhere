@@ -93,7 +93,7 @@ require app_path().'/filters.php';
 |--------------------------------------------------------------------------
 |
 | In this section we will place all the extensions proprietary to
-| ScubaWherethat don't fit anywhere else into the code.
+| ScubaWherethat that don't fit anywhere else into the code.
 |
 */
 
@@ -101,6 +101,7 @@ Validator::extend('valid_json', function($attribute, $value, $parameters)
 {
 	return json_decode($value) != null;
 });
+
 Validator::extend('valid_currency', function($attribute, $value, $parameters)
 {
 	try
@@ -114,3 +115,31 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 
 	return true;
 });
+
+// From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
+if (Config::get('database.log', false))
+{
+	Event::listen('illuminate.query', function($query, $bindings, $time, $name)
+	{
+		$data = compact('bindings', 'time', 'name');
+
+		// Format binding data for sql insertion
+		foreach ($bindings as $i => $binding)
+		{
+			if ($binding instanceof \DateTime)
+			{
+				$bindings[$i] = $binding->format('\'Y-m-d H:i:s\'');
+			}
+			else if (is_string($binding))
+			{
+				$bindings[$i] = "'$binding'";
+			}
+		}
+
+		// Insert bindings into query
+		$query = str_replace(array('%', '?'), array('%%', '%s'), $query);
+		$query = vsprintf($query, $bindings);
+
+		Log::info($query, $data);
+	});
+}

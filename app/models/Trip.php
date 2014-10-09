@@ -42,12 +42,12 @@ class Trip extends Ardent {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location');
+		return $this->belongsToMany('Location')->withTimestamps();
 	}
 
 	public function triptypes()
 	{
-		return $this->belongsToMany('Triptype');
+		return $this->belongsToMany('Triptype')->withTimestamps();
 	}
 
 	public function tickets()
