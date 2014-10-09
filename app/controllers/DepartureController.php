@@ -74,6 +74,11 @@ class DepartureController extends Controller {
 			new DateTime( $data['before'] );
 		}
 
+		if( $data['after'] > $data['before'] )
+		{
+			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
+		}
+
 		$options = $data;
 
 		if( !empty( $options['trip_id'] ) )

@@ -27,7 +27,7 @@ class RemoveUnneededIdColumns extends Migration {
 		Schema::table('boat_ticket', function($table) {
 			$table->dropColumn('id');
 		});
-		Schema::table('accomodation_boat', function($table) {
+		Schema::table('accommodation_boat', function($table) {
 			$table->dropColumn('id');
 		});
 	}
