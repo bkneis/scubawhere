@@ -659,3 +659,26 @@ span.box-tool{
 #agent-list li.active {
 	background-color: rgb(230, 245, 255);
 }
+
+
+
+
+/*						 ADDONS
+*******************************
+*/
+
+#addon-list {
+	list-style-type: none;
+	padding-left: 0;
+}
+#addon-list li {
+	cursor: pointer;
+	margin-bottom: 0.5em;
+	border: 1px solid #4a9cff;
+	border-left-width: 5px;
+	padding: 5px 10px;
+}
+#addon-list li:hover,
+#addon-list li.active {
+	background-color: rgb(230, 245, 255);
+}
