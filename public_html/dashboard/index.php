@@ -130,7 +130,7 @@
 						<li data-load="tickets">Tickets</li>
 						<li data-load="packages">Packages</li>
 						<li data-load="locations">Locations</li>
-						<li data-load="trip-calender">Trip Calendar</li>
+						<!-- <li data-load="trip-calender">Trip Calendar</li> -->
 					</ul>
 				</li>
 
