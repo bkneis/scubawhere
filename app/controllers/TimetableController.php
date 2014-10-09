@@ -96,7 +96,7 @@ class TimetableController extends Controller {
 		// STEP 2: Create 1D array of *all* session dates that will be created //
 		/////////////////////////////////////////////////////////////////////////
 		$timetableIterations = Input::get('iterations');
-		if( !$timetableIterations )
+		if( !$timetableIterations || !is_numeric($timetableIterations) || $timetableIterations <= 0 )
 		{
 			// If no number of iterations are set, default to 1.5 years
 			$timetableIterations = floor(78 / $length); // 78 weeks = 18 months = 1.5 years

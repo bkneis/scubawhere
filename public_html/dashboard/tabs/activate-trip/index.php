@@ -109,8 +109,8 @@
 						</table>
 						<input type="hidden" name="_token">
 						<input type="hidden" name="session_id" value="{{session.id}}">
-						<input type="number" name="iterations" value="4">
-						<button class="bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
+						Iterations: <input type="number" name="iterations" value="0" style="width: 50px;"> (default: 1.5 years worth)
+						<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
 					</form>
 				{{/unless}}
 				{{/unless}}
