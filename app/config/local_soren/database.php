@@ -33,6 +33,6 @@ return array(
 
 	),
 
-	'log' => true,
+	'log' => false,
 
 );

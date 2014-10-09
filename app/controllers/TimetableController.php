@@ -57,14 +57,15 @@ class TimetableController extends Controller {
 		$timetable = Auth::user()->timetables()->save($timetable);
 
 		// Update the referenced session object's timetable ID
-		$timetable->departures()->associate( $departure );
+		$departure->timetable()->associate( $timetable );
+		$departure->save();
 		// $departure->update( array('timetable_id' => $timetable->id) );
 
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //
 		////////////////////////////////////////////
 		$start = new DateTime( $departure->start );
-		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for monday, 7 for sunday
+		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for Monday, 7 for Sunday
 		// $startTime = $start->format('H:I');
 		$days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
 
@@ -74,14 +75,19 @@ class TimetableController extends Controller {
 		$scheduleDates = array();
 		for($i = 0; $i < $length; $i++)
 		{
-			$date_MondayOfThisWeek = $start->sub( new DateInterval('P'.($start_DayOfTheWeek - 1).'D') )->add( new DateInterval('P'.(7 * $i).'D') );
+			$date_MondayOfThisWeek = clone $start;
+			$date_MondayOfThisWeek
+				->sub( new DateInterval('P'.($start_DayOfTheWeek - 1).'D') ) // Set date to previous Monday
+				->add( new DateInterval('P'.(7 * $i).'D') );                 // Fast forward to whatever week we are in right now
+
 			$scheduleDates[$i] = array();
 			// Loop through the days of the week
 			for($d = 0; $d < 7; $d++)
 			{
 				if( in_array($days[$d], $schedule[$i + 1]) )
 				{
-					$scheduleDates[$i][] = $date_MondayOfThisWeek->add( new DateInterval('P'.$d.'D') );
+					$date_DayOfTheWeek   = clone $date_MondayOfThisWeek;
+					$scheduleDates[$i][] = clone $date_DayOfTheWeek->add( new DateInterval('P'.$d.'D') );
 				}
 			}
 		}
@@ -103,14 +109,12 @@ class TimetableController extends Controller {
 			{
 				foreach( $scheduleDates[$j] as &$day )
 				{
-					if( $i == 1 && $day <= $start) // For the first of all iterations only create sessions after the original sessions' startDate
+					if( $day > $start ) // Only create sessions after the original sessions' startDate
 					{
-						continue;
+						$sessionDates[] = clone $day;
 					}
 
-					$sessionDates[] = $day;
-
-					$day = $day->add( new DateInterval('P7D') ); // Add one week for the next iteration
+					$day->add( new DateInterval('P'.(7 * $length).'D') ); // Add needed weeks for the next iteration
 				}
 			}
 		}
@@ -122,12 +126,12 @@ class TimetableController extends Controller {
 		foreach( $sessionDates as &$date)
 		{
 			$date = array(
-				'trip_id' => $departure->trip_id,
-				'start' => $date,
-				'boat_id' => $departure->boat_id,
+				'trip_id'      => $departure->trip_id,
+				'start'        => $date,
+				'boat_id'      => $departure->boat_id,
 				'timetable_id' => $timetable->id,
-				'created_at' => $now,
-				'updated_at' => $now
+				'created_at'   => $now,
+				'updated_at'   => $now
 			);
 		}
 
@@ -136,7 +140,7 @@ class TimetableController extends Controller {
 		return Response::json( array(
 			'status'   => 'OK. Timetable and sessions created',
 			'id'       => $timetable->id,
-			'sessions' => $timetable->departures()
+			'sessions' => $timetable->departures()->get()
 		), 201 ); // 201 Created
 	}
 

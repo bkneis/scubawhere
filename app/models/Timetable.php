@@ -15,8 +15,15 @@ class Timetable extends Ardent {
 	{
 		if( isset($this->schedule) )
 		{
-			$this->schedule = json_encode($this->schedule);
-			$this->schedule = Helper::sanitiseString($this->schedule);
+			// JSON encoding is already done in the controller (due to the JSON having to be validated before save)
+			// $this->schedule = json_encode($this->schedule);
+
+			/*
+			 * The risk of corrupted data being saved and evaluated is estimated to be very low.
+			 * A such, the sanitisation can be skipped for nicer formatting and easier evaluation
+			 * on the editing side.
+			 */
+			// $this->schedule = Helper::sanitiseString($this->schedule);
 		}
 	}
 
