@@ -40,7 +40,9 @@ class AddonController extends Controller {
 		//Get currency code
 		$data['currency'] = Helper::currency( Input::get('currency') );
 		
-		$addon = new Addons($data);
+		//Check compulsory field.....?
+		
+		$addon = new Addon($data);
 
 		if( !$addon->validate() )
 		{

@@ -32,3 +32,6 @@ logs/
 mail/
 tmp/
 www
+.buildpath
+.project
+.settings
