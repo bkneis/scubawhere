@@ -6,6 +6,8 @@ use ScubaWhere\Helper;
 class Agent extends Ardent {
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
 
+	protected $appends = array('has_bookings');
+
 	public static $rules = array(
 		'name'            => 'required',
 		'website'         => 'active_url',
@@ -39,6 +41,11 @@ class Agent extends Ardent {
 
 		if( isset($this->billing_phone) )
 			$this->billing_phone = Helper::sanitiseString($this->billing_phone);
+	}
+
+	public function getHasBookingsAttribute()
+	{
+		return $this->bookings()->count() > 0;
 	}
 
 	public function bookings()

@@ -305,13 +305,15 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// $departure->delete(); // Soft delete
+		$departure->delete(); // Soft delete
 
+		/*
 		// We made sure that the record exists and belongs to the logged-in user, so it's save to softDelete manually
 		$now = date("Y-m-d H:i:s");
 		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => $now, 'updated_at' => $now));
+		*/
 
-		return Response::json( array('status' => 'OK. Departure deactivated'), 200 ); // 200 OK
+		return array('status' => 'OK. Departure deactivated');
 	}
 
 	public function postDelete()
@@ -326,23 +328,16 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// $departure->forceDelete(); // Doesn't work/doesn't do anything
-
-		// We made sure that the record exists and belongs to the logged-in user, so it's save to delete manually
-		DB::table('sessions')->where('id', Input::get('id'))->delete();
-
-		// Try to find the record again to see if it worked
 		try
 		{
-			Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail();
+			$departure->forceDelete();
 		}
-		catch(ModelNotFoundException $e)
+		catch(QueryException $e)
 		{
-			// Record not found, all is good
-			return Response::json( array('status' => 'OK. Departure deleted'), 200 ); // 200 OK
+			return Response::json( array('errors' => array('Cannot delete departure. It has already been booked!')), 409 ); // 409 Conflict
 		}
 
-		return Response::json( array('errors' => array('Cannot delete departure. It has already been booked!')), 409 ); // 409 Conflict
+		return array('status' => 'OK. Departure deleted');
 	}
 
 }
