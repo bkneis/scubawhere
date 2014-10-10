@@ -14,7 +14,7 @@ class AddCompanyIdToAddonsTable extends Migration {
 	{
 		Schema::table('addons', function(Blueprint $table)
 		{
-			$table->integer('company_id')->unsigned();
+			$table->integer('company_id')->unsigned()->after('id');
 		});
 	}
 
@@ -27,7 +27,7 @@ class AddCompanyIdToAddonsTable extends Migration {
 	{
 		Schema::table('addons', function(Blueprint $table)
 		{
-			$table->integer('company_id')->unsigned();
+			$table->dropColumn('company_id');
 		});
 	}
 
