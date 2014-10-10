@@ -12,6 +12,7 @@ return array(
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',
     'AddCurrencyFieldToTicketsAndAddonsTable' => $baseDir . '/app/database/migrations/2014_10_08_221505_add_currency_field_to_tickets_and_addons_table.php',
+    'AddDeletedAtColumnsToTicketsAndPackagesTable' => $baseDir . '/app/database/migrations/2014_10_10_002732_add_deleted_at_columns_to_tickets_and_packages_table.php',
     'AddForeignCompanyIdToAgentsTable' => $baseDir . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
     'AddForeignKeysToBookingCustomerTable' => $baseDir . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
     'AddRememberTokenToCompaniesBecauseOfLaravelUpdate' => $baseDir . '/app/database/migrations/2014_05_08_171023_add_remember_token_to_companies_because_of_laravel_update.php',
