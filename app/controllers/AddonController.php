@@ -24,7 +24,7 @@ class AddonController extends Controller {
 	}
 
 	public function getAll()
-	{		
+	{
 		return Auth::user()->addons()->get();
 	}
 
@@ -40,12 +40,23 @@ class AddonController extends Controller {
 
 		//Get currency code
 		$data['currency'] = Helper::currency( Input::get('currency') );
-		
+
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+
 		//Check compulsory field.....
 		if (empty($data['compulsory'])) {
 			$data['compulsory'] = 0;
 		}
-		
+
 		$addon = new Addon($data);
 
 		if( !$addon->validate() )
@@ -77,7 +88,7 @@ class AddonController extends Controller {
 			'price',
 			'compulsory'
 		);
-		
+
 		//Get currency code
 		$data['currency'] = Helper::currency( Input::get('currency') );
 
@@ -85,7 +96,7 @@ class AddonController extends Controller {
 		if (empty($data['compulsory'])) {
 			$data['compulsory'] = 0;
 		}
-		
+
 		if( !$addon->update($data) )
 		{
 			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable

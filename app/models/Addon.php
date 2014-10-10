@@ -9,16 +9,16 @@ class Addon extends Ardent {
 	protected $fillable = array(
 		'name',
 		'description',
-		'currency',
 		'price',
+		'currency',
 		'compulsory'
 	);
-	
+
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'currency'    => 'alpha|size:3|valid_currency',
-		'price'       => 'required|numeric',
+		'currency'    => 'required|alpha|size:3|valid_currency',
+		'price'       => 'required|integer|min:0',
 		'compulsory'  => 'required'
 	);
 
