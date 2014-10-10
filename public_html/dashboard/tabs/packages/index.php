@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="agent-list-template">
 					<ul id="agent-list">
 						{{#each packages}}
-							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{count tickets}}} tickets</li>
+							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{count tickets}} tickets | {{decimal_price}}</li>
 						{{else}}
 							<p>No packages available.</p>
 						{{/each}}
@@ -28,6 +28,22 @@
 						<div class="form-row">
 							<label class="field-label">Package Name</label>
 							<input type="text" name="name" value="{{{name}}}">
+							{{#if trashed}}
+								<strong style="color: #FF7163;">(Deactivated)</strong>
+							{{/if}}
+
+							{{#if update}}
+								{{#if trashed}}
+									<span class="box-tool blueb restore-package" style="color: white;">Restore</span>
+								{{else}}
+									{{#if has_bookings}}
+										<span class="questionmark-tooltip" style="float: right;" title="This package has been booked at least once. That is why it can only be deactivated and not removed.">?</span>
+										<span class="box-tool redb deactivate-package" style="color: white;">Deactivate</span>
+									{{else}}
+										<span class="box-tool redb remove-package" style="color: white;">Remove</span>
+									{{/if}}
+								{{/if}}
+							{{/if}}
 						</div>
 
 						<div class="form-row">
@@ -48,12 +64,12 @@
 							<select name="currency">
 								<option>GBP</option>
 							</select>
-							<input type="number" name="price" value="{{{decimal_price}}}" placeholder="00.00" style="width: 100px;" min="0">
+							<input type="number" name="price" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Max. group size per boat</label>
-							<input type="number" name="capacity" value="{{{capacity}}}" style="width: 55px;" min="0" step="1" placeholder="none">
+							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
 						</div>
 
 						{{#if update}}
@@ -74,7 +90,18 @@
 				<select class="ticket-select">
 					<option value="0">Select a ticket</option>
 					{{#each available_tickets}}
-						<option value="{{id}}"{{selected ../id}}>{{{name}}}</option>
+						<option value="{{id}}"
+
+							{{!
+								Check the parent context for the existance of the 'active' attribute,
+								which is only available in tickets, thus preventing an edge case where
+								the package and a ticket share the same id.
+								Just trust the code!
+							}}
+							{{#if ../active}}
+								{{selected ../id}}
+							{{/if}}
+						>{{{name}}}</option>
 					{{/each}}
 				</select>
 				Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">

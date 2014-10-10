@@ -98,7 +98,7 @@ $(function(){
 			$('.errors').remove();
 
 			$('#update-agent').prop('disabled', false);
-			$('#update-agent-form').find('#save-loader').remove();
+			$('#save-loader').remove();
 
 		}, function error(xhr) {
 
@@ -171,6 +171,86 @@ $(function(){
 		event.preventDefault();
 
 		prepareEditForm();
+	});
+
+	$('#agent-form-container').on('click', '.remove-package', function(event){
+		var check = confirm('Do you really want to remove this package?');
+		if(check){
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			Package.deletePackage({
+				'id'    : $('#update-agent-form input[name=id]').val(),
+				'_token': $('[name=_token]').val()
+			}, function success(data){
+
+				pageMssg(data.status, true);
+
+				renderAgentList();
+
+				renderEditForm();
+			}, function error(xhr){
+
+				pageMssg('Oops, something wasn\'t quite right');
+
+				$('.remove-package').prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+	});
+
+	$('#agent-form-container').on('click', '.deactivate-package', function(event){
+		var check = confirm('Do you really want to deactivate this package?');
+		if(check){
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			Package.deactivePackage({
+				'id'    : $('#update-agent-form input[name=id]').val(),
+				'_token': $('[name=_token]').val()
+			}, function success(data){
+
+				pageMssg(data.status, true);
+
+				renderAgentList();
+
+				window.agents[ $('#update-agent-form input[name=id]').val() ].trashed = true;
+
+				renderEditForm( $('#update-agent-form input[name=id]').val() );
+			}, function error(xhr){
+
+				pageMssg('Oops, something wasn\'t quite right');
+
+				$('.remove-package').prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+	});
+
+	$('#agent-form-container').on('click', '.restore-package', function(event){
+
+		// Show loading indicator
+		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+		Package.restorePackage({
+			'id'    : $('#update-agent-form input[name=id]').val(),
+			'_token': $('[name=_token]').val()
+		}, function success(data){
+
+			pageMssg(data.status, true);
+
+			renderAgentList();
+
+			window.agents[ $('#update-agent-form input[name=id]').val() ].trashed = false;
+
+			renderEditForm( $('#update-agent-form input[name=id]').val() );
+		}, function error(xhr){
+
+			pageMssg('Oops, something wasn\'t quite right');
+
+			$('.remove-package').prop('disabled', false);
+			$('#save-loader').remove();
+		});
 	});
 });
 

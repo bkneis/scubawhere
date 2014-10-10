@@ -33,19 +33,33 @@ var Package = {
 		});
 	},
 
-	/*
-	deactivatePackage : function(params, handleData){
-		$.post("/api/package/deactivate", params, function(data){
-			handleData(data);
+	deactivatePackage : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/package/deactivate",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
-	}
-	*/
+	},
 
-	/*
-	deletePackage : function(params, handleData){
-		$.post("/api/package/delete", params, function(data){
-			handleData(data);
+	restorePackage : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/package/restore",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	deletePackage : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/package/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	}
-	*/
 };
