@@ -3,17 +3,22 @@
 		<div class="box30">
 			<label class="dgreyb">Available addons</label>
 			<div class="padder" id="addon-list-container">
-				<!--<div class="yellow-helper">
+				<div class="yellow-helper">
 					Select an addon to change its details.
-				</div>-->
+				</div>
 				<button id="change-to-add-addon" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Addon</button>
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list">
-
+						{{#each addons}}
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{price}}}</li>
+						{{else}}
+							<p>No addons available.</p>
+						{{/each}}
 					</ul>
 				</script>
 			</div>
 		</div>
+		
 		<div class="box70" id="addon-form-container">
 
 			<script type="text/x-handlebars-template" id="addon-form-template">
@@ -33,14 +38,14 @@
 						<div class="form-row">
 							<label class="field-label">Addon Price</label>
 							<select name="currency">
-								<option>GBP</option>
+								<option value = "GBP">GBP</option>
 							</select>
 							<input type="text" name="price" placeholder="0.00" value="{{{price}}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Compulsory?</label>
-							<input type="checkbox" name="addon_compulsory" placeholder="" value="{{{addon_email}}}">
+							<input type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}>														
 						</div>
 
 

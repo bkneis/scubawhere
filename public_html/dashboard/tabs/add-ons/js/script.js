@@ -6,33 +6,33 @@ Handlebars.registerHelper('selected', function(selectObject) {
 		return '';
 });
 
-var agentForm,
-	agentList;
+var addonForm,
+	addonList;
 
 $(function(){
 
-	// Render initial agent list
-	agentList = Handlebars.compile( $("#agent-list-template").html() );
-	renderAgentList();
+	// Render initial addon list
+	addonList = Handlebars.compile( $("#addon-list-template").html() );	
+	renderAddonList();
 
-	// Default view: show create agent form
-	agentForm = Handlebars.compile( $("#agent-form-template").html() );
+	// Default view: show create addon form
+	addonForm = Handlebars.compile( $("#addon-form-template").html() );
 	renderEditForm();
 
-	$("#agent-form-container").on('click', '#add-agent', function(event) {
+	$("#addon-form-container").on('click', '#add-addon', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Agent.createAgent( $('#add-agent-form').serialize(), function success(data) {
+		Addon.createAddon( $('#add-addon-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
 			$('form').data('hasChanged', false);
 
-			renderAgentList(function() {
+			renderAddonList(function() {
 				renderEditForm(data.id);
 			});
 
@@ -48,8 +48,8 @@ $(function(){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-agent-form').prepend(errorsHTML)
-				$('#add-agent').before(errorsHTML);
+				$('#add-addon-form').prepend(errorsHTML)
+				$('#add-addon').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -57,31 +57,31 @@ $(function(){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#add-agent').prop('disabled', false);
-			$('#add-agent-form').find('#save-loader').remove();
+			$('#add-addon').prop('disabled', false);
+			$('#add-addon-form').find('#save-loader').remove();
 		});
 	});
 
-	$("#agent-form-container").on('click', '#update-agent', function(event) {
+	$("#addon-form-container").on('click', '#update-addon', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Agent.updateAgent( $('#update-agent-form').serialize(), function success(data) {
+		Addon.updateAddon( $('#update-addon-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
-			renderAgentList();
+			renderAddonList();
 
 			$('form').data('hasChanged', false);
 
-			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
+			// Because the page is not re-rendered like with add-addon, we need to manually remove the error messages
 			$('.errors').remove();
 
-			$('#update-agent').prop('disabled', false);
-			$('#update-agent-form').find('#save-loader').remove();
+			$('#update-addon').prop('disabled', false);
+			$('#update-addon-form').find('#save-loader').remove();
 
 		}, function error(xhr) {
 
@@ -95,8 +95,8 @@ $(function(){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-agent-form').prepend(errorsHTML)
-				$('#update-agent').before(errorsHTML);
+				$('#update-addon-form').prepend(errorsHTML)
+				$('#update-addon').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -104,12 +104,12 @@ $(function(){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#update-agent').prop('disabled', false);
+			$('#update-addon').prop('disabled', false);
 			$('#save-loader').remove();
 		});
 	});
 
-	$("#agent-list-container").on('click', '#change-to-add-agent', function(event){
+	$("#addon-list-container").on('click', '#change-to-add-addon', function(event){
 
 		event.preventDefault();
 
@@ -117,20 +117,20 @@ $(function(){
 	});
 });
 
-function renderAgentList(callback) {
+function renderAddonList(callback) {
 
-	$('#agent-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+	$('#addon-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Agent.getAllAgents(function success(data) {
+	Addon.getAllAddons(function success(data) {
+		
+		window.addons = _.indexBy(data, 'id');
+		$('#addon-list').remove();
+		$('#addon-list-container .loader').remove();
 
-		window.agents = _.indexBy(data, 'id');
-		$('#agent-list').remove();
-		$('#agent-list-container .loader').remove();
+		$("#addon-list-container").append( addonList({addons : data}) );
 
-		$("#agent-list-container").append( agentList({agents : data}) );
-
-		// (Re)Assign eventListener for agent clicks
-		$('#agent-list').on('click', 'li, strong', function(event) {
+		// (Re)Assign eventListener for addon clicks
+		$('#addon-list').on('click', 'li, strong', function(event) {
 
 			if( $(event.target).is('strong') )
 				event.target = event.target.parentNode;
@@ -152,15 +152,15 @@ function renderEditForm(id) {
 		}
 	}
 
-	var agent;
+	var addon;
 
 	if( id ) {
-		agent = window.agents[id];
-		agent.task = 'update';
-		agent.update = true;
+		addon = window.addons[id];
+		addon.task = 'update';
+		addon.update = true;
 	}
 	else {
-		agent = {
+		addon = {
 			task: 'add',
 			/*name: 'TUI',
 			website: 'http://tui.com',
@@ -174,12 +174,10 @@ function renderEditForm(id) {
 				return this.billing_address || this.billing_email || this.billing_phone;
 			},*/
 		};
-		agent.update = false;
-	}
+		addon.update = false;
+	}	
 
-	agent.has_billing_details = agent.billing_address || agent.billing_email || agent.billing_phone;
-
-	$('#agent-form-container').empty().append( agentForm(agent) );
+	$('#addon-form-container').empty().append( addonForm(addon) );
 
 	setToken('[name=_token]');
 
