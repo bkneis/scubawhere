@@ -2,6 +2,7 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use PhilipBrown\Money\Currency;
 
 class Addon extends Ardent {
 	protected $guarded = array('id', 'created_at', 'updated_at');
@@ -13,6 +14,8 @@ class Addon extends Ardent {
 		'currency',
 		'compulsory'
 	);
+
+	protected $appends = array('decimal_price');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -35,6 +38,18 @@ class Addon extends Ardent {
 
 		if( isset($this->compulsory) )
 			$this->compulsory = Helper::sanitiseString($this->compulsory);
+	}
+
+	public function getDecimalPriceAttribute()
+	{
+		$currency = new Currency( $this->currency );
+
+		return number_format(
+			$this->price / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
 	}
 
 	public function bookings()

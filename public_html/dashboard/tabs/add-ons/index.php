@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list">
 						{{#each addons}}
-							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{price}}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency}} {{decimal_price}}</li>
 						{{else}}
 							<p>No addons available.</p>
 						{{/each}}
@@ -18,7 +18,7 @@
 				</script>
 			</div>
 		</div>
-		
+
 		<div class="box70" id="addon-form-container">
 
 			<script type="text/x-handlebars-template" id="addon-form-template">
@@ -40,12 +40,12 @@
 							<select name="currency">
 								<option value = "GBP">GBP</option>
 							</select>
-							<input type="text" name="price" placeholder="0.00" value="{{{price}}}">
+							<input type="text" name="price" placeholder="0.00" value="{{decimal_price}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Compulsory?</label>
-							<input type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}>														
+							<input type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}>
 						</div>
 
 

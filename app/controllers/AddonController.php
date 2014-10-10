@@ -92,6 +92,17 @@ class AddonController extends Controller {
 		//Get currency code
 		$data['currency'] = Helper::currency( Input::get('currency') );
 
+		// Convert price to subunit
+		try
+		{
+			$currency = new Currency( $data['currency'] );
+		}
+		catch(InvalidCurrencyException $e)
+		{
+			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
+		}
+		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+
 		//Check compulsory field.....
 		if (empty($data['compulsory'])) {
 			$data['compulsory'] = 0;
