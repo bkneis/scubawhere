@@ -1,5 +1,1 @@
-<?php
-
-require('ScubaWhere API Documentation.html');
-
-?>
+<?php require('ScubaWhere API Documentation.html'); ?>

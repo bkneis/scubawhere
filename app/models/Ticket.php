@@ -1,13 +1,17 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
 class Ticket extends Ardent {
-	protected $guarded = array('id', 'company_id', 'active', 'created_at', 'updated_at');
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
 
-	protected $appends = array('decimal_price');
+	protected $guarded = array('id', 'company_id', 'active', 'created_at', 'updated_at', 'deleted_at');
+
+	protected $appends = array('decimal_price', 'has_bookings');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -39,6 +43,11 @@ class Ticket extends Ardent {
 		);
 	}
 
+	public function getHasBookingsAttribute()
+	{
+		return $this->bookings()->count() > 0;
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('Company');
@@ -61,7 +70,9 @@ class Ticket extends Ardent {
 
 	public function bookings()
 	{
-		return $this->belongsToMany('Booking', 'booking_details')->withPivot('session_id', 'package_id', 'customer_id', 'is_lead');
+		return $this->belongsToMany('Booking', 'booking_details')
+			->withPivot('session_id', 'package_id', 'customer_id', 'is_lead')
+			->withTimestamps();
 	}
 
 }
