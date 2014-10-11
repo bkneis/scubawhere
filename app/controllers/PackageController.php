@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
@@ -25,7 +26,7 @@ class PackageController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->packages()->with('tickets')->get();
+		return Auth::user()->packages()->withTrashed()->with('tickets')->get();
 	}
 
 	public function postAdd()
@@ -121,20 +122,65 @@ class PackageController extends Controller {
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( Input::get('tickets') );
 
-		return Response::json( array('status' => 'Package created and connected OK', 'id' => $package->id), 201 ); // 201 Created
+		return array('status' => 'Package edited OK');
 	}
-
-	/*
 
 	public function postDeactivate()
 	{
-		//
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$package->delete();
+
+		return array('status' => 'OK. Package deactivated');
+	}
+
+	public function postRestore()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$package = Auth::user()->packages()->onlyTrashed()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$package->restore();
+
+		return array('status' => 'OK. Package restored');
 	}
 
 	public function postDelete()
 	{
-		//
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+		}
+
+		try
+		{
+			$package->forceDelete();
+		}
+		catch(QueryException $e)
+		{
+			return Response::json( array('errors' => array('The package can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+		}
+
+		return array('status' => 'Ok. Package deleted');
 	}
-	*/
 
 }

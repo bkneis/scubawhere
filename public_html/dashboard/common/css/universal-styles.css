@@ -102,6 +102,22 @@ html, body{
 	}
 }
 
+.questionmark-tooltip {
+	color: grey;
+	border: 2px solid;
+	border-radius: 50%;
+	width: 1.35em;
+	font-weight: bold;
+	text-align: center;
+	margin-left: 0.5em;
+	margin-top: -0.2em;
+	cursor: help;
+}
+
+.trashed {
+	opacity: 0.6;
+}
+
 /*				ELEMENT STYLES
 *******************************/
 *:disabled {
