@@ -133,7 +133,7 @@
 
 <script src="js/Controllers/Trip.js"></script>
 <script src="js/Controllers/Boat.js"></script>
-<script src="js/Controllers/Sessions.js"></script>
+<script src="js/Controllers/Session.js"></script>
 <script src="js/Controllers/Timetable.js"></script>
 <script src="/common/js/jquery.reveal.js"></script>
 <script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>

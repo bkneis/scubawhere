@@ -140,7 +140,10 @@ class TimetableController extends Controller {
 		return Response::json( array(
 			'status'   => 'OK. Timetable and sessions created',
 			'id'       => $timetable->id,
-			'sessions' => $timetable->departures()->get()
+			'sessions' => $timetable->departures()
+				->where('start', '>', strtotime('first day of this month'))
+				->where('start', '<', strtotime('last day of next month'))
+				->get()
 		), 201 ); // 201 Created
 	}
 

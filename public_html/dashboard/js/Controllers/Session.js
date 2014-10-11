@@ -1,4 +1,4 @@
-var Sessions = {
+var Session = {
 	//params = int id (the ID of the wanted session)
 	getSecificSession: function(params, handleData) {
 		$.get("/api/session", params).done(function(data){
@@ -7,6 +7,8 @@ var Sessions = {
 	},
 
 	getAllSessions: function(handleData) {
+		console.warning('The function Session.getAllSessions() has been deprecated! Please use Session.filter() instead!');
+
 		$.get("/api/session/all").done(function(data){
 			handleData(data);
 		});
@@ -20,8 +22,10 @@ var Sessions = {
 	 *
 	 * Optional:
 	 * - package_id
+	 * - trip_id
 	 * - after      (a datetime (in UTC) of the format 'YYYY-MM-DD hh:mm:ss')
 	 * - before     (a datetime (in UTC) of the format 'YYYY-MM-DD hh:mm:ss')
+	 * - with_full  (whether or not to include full boats into the result set. Defaul: false)
 	 *
 	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.

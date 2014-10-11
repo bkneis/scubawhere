@@ -36,24 +36,13 @@ class DepartureController extends Controller {
 		 * package_id
 		 * after
 		 * before
+		 * with_full
 		 */
 
-		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id');
+		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id', 'with_full');
 
-		// Check the integrity of the supplied parameters
-		$validator = Validator::make( $data, array(
-			'after'      => 'date|required_with:before',
-			'before'     => 'date',
-			'trip_id'    => 'integer|min:1',
-			'ticket_id'  => 'integer|min:1', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
-			'package_id' => 'integer|min:1' // Same goes for packages
-		) );
-
-		if( $validator->fails() )
-			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
-
-		// Tranform parameter strings into DateTime objects
-		$data['after']  = new DateTime( $data['after'] ); // Defaults to current date, when parameter is NULL
+		// Transform parameter strings into DateTime objects
+		$data['after']  = new DateTime( $data['after'] ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
 			if( $data['after'] > new DateTime('now') )
@@ -64,20 +53,33 @@ class DepartureController extends Controller {
 			}
 			else
 			{
-				// If `after` date lies in the past, return results up to 1 month into the future
+				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
 				$data['before'] = new DateTime('+1 month');
 			}
 		}
 		else
 		{
-			// If a ´before` date is submitted, simply use it
-			new DateTime( $data['before'] );
+			// If a 'before' date is submitted, simply use it
+			$data['before'] = new DateTime( $data['before'] );
 		}
 
 		if( $data['after'] > $data['before'] )
 		{
 			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
 		}
+
+		// Check the integrity of the supplied parameters
+		$validator = Validator::make( $data, array(
+			'after'      => 'date|required_with:before',
+			'before'     => 'date',
+			'trip_id'    => 'integer|min:1',
+			'ticket_id'  => 'integer|min:1', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
+			'package_id' => 'integer|min:1', // Same goes for packages
+			'with_full'  => 'boolean'
+		) );
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 
 		$options = $data;
 
@@ -128,7 +130,7 @@ class DepartureController extends Controller {
 		  ticket and then (conditionally) to package.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-		$departures = Auth::user()->departures()->with('bookings', 'boat')
+		$departures = Auth::user()->departures()->withTrashed()->with('bookings', 'boat')
 		->whereHas('trip', function($query) use ($trip, $ticket, $package)
 		{
 			$query
@@ -190,8 +192,9 @@ class DepartureController extends Controller {
 			$boatCapacity = $departure->getCapacityAttribute();
 			if( $boatCapacity[0] >= $boatCapacity[1] )
 			{
-				// Session/Boat already full/overbooked
-				return false;
+				// Session/Boat full/overbooked
+				if( !$options['with_full'] )
+					return false;
 			}
 
 			if( $package )

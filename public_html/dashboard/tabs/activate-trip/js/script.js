@@ -14,13 +14,6 @@ $(function() {
 		window.trips = _.indexBy(data, 'id');
 		$('#trips ul').append(tripsTemplate({trips: data}));
 		initDraggables();
-
-		// 2. Get sessions
-		Sessions.getAllSessions(function(data) {
-			window.sessions = _.indexBy(data, 'id');
-
-			insertSessionsFromArray(window.sessions);
-		});
 	});
 
 	Boat.getAllBoats(function(data) {
@@ -70,12 +63,52 @@ $(function() {
 	--------------------------*/
 	$('#calendar').fullCalendar({
 		header: {
-			left: 'prev,next today',
+			left: '',
 			center: 'title',
-			right: 'month,agendaWeek,agendaDay',
+		},
+		events: function(start, end, timezone, callback) {
+
+			// Start loading indicator
+			$('.fc-header-title').after('<div id="fetch-events-loader" class="loader"></div>');
+
+			Session.filter({
+				'after': start.format(),
+				'before': end.format(),
+				'with_full': 1
+			}, function success(data) {
+				sessions = _.indexBy(data, 'id');
+
+				events = [];
+
+				// Create eventObjects
+				_.each(sessions, function(value) {
+					var eventObject = {
+						title: window.trips[ value.trip_id ].name, // use the element's text as the event title
+						allDay: false,
+						trip: window.trips[ value.trip_id ],
+						session: value,
+						isNew: false,
+						durationEditable: false,
+						startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
+					};
+
+					// console.log("----------------------------------------");
+					// console.log("From Server:        " + eventObject.session.start);
+					// Parse server's UTC time and convert to local
+					// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
+					eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
+					// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
+
+					events.push( createCalendarEntry(eventObject) );
+				});
+
+				callback(events);
+
+				// Remove loading indictor
+				$('#fetch-events-loader').remove();
+			});
 		},
 		timezone: 'local', // TODO Change to user's profile timezone (don't trust the browser)
-		events: [],
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
 		drop: function(date) { // This function is called when something is dropped
@@ -102,7 +135,9 @@ $(function() {
 			eventObject.session.start = $.fullCalendar.moment(date + ' 09:00:00');
 			// console.log("Set to 9 hours: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
 
-			createCalendarEntry(eventObject);
+			eventObject = createCalendarEntry(eventObject);
+
+			$('#calendar').fullCalendar('renderEvent', eventObject, true);
 
 			showModalWindow(eventObject);
 		},
@@ -122,7 +157,7 @@ $(function() {
 
 			// console.log(eventObject.session);
 
-			Sessions.updateSession(eventObject.session, function success(data){
+			Session.updateSession(eventObject.session, function success(data){
 				// Sync worked, now save and update the calendar item
 
 				// Remake the moment-object (parse as UTC, convert to local to work with)
@@ -152,9 +187,9 @@ $(function() {
 	});
 
 	/* HACK	*/
-	setTimeout(function() {
+	/* setTimeout(function() {
 		$('#calendar').fullCalendar( 'today' );
-	}, 100);
+	}, 100); */
 
 	$('#modalWindows').on('change', '.boatSelect', function(event) {
 		var eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
@@ -237,7 +272,7 @@ $(function() {
 
 		// console.log(eventObject.isNew);
 
-		Sessions.createSession(eventObject.session, function success(data){
+		Session.createSession(eventObject.session, function success(data){
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -282,7 +317,7 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Sessions.updateSession(eventObject.session, function success(data){
+		Session.updateSession(eventObject.session, function success(data){
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -317,7 +352,7 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Sessions.deleteSession({
+		Session.deleteSession({
 			'id': eventObject.session.id,
 			'_token': eventObject.session._token
 		}, function success(data) {
@@ -341,7 +376,7 @@ $(function() {
 				var question = confirm(message);
 				if( question ) {
 					// Deactivate
-					Sessions.deactivateSession({
+					Session.deactivateSession({
 						'id': eventObject.session.id,
 						'_token': eventObject.session._token
 					}, function success(data) {
@@ -365,7 +400,7 @@ $(function() {
 				}
 			}
 			else {
-				pageMssg(data.errors[0]);
+				pageMssg(xhr.responseText);
 			}
 		});
 	});
@@ -383,19 +418,18 @@ $(function() {
 				// Remove original session
 				eventObject = $form.closest('.reveal-modal').data('eventObject');
 
-				$('#calendar').fullCalendar('removeEvents', eventObject.id);
+				// $('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 				// Unset eventObject
-				delete eventObject;
+				// delete eventObject;
 
 				// Close modal window
 				$('#modalWindows .close-reveal-modal').click();
 
 				// Draw new sessions
-				console.log(data);
-				var sessions = _.indexBy(data.sessions, 'id');
-				console.log(sessions);
-				insertSessionsFromArray(sessions);
+				// var sessions = _.indexBy(data.sessions, 'id');
+
+				$('#calendar').fullCalendar('refetchEvents');
 			},
 			function error(xhr) {
 				console.log(xhr);
@@ -403,29 +437,6 @@ $(function() {
 		);
 	});
 });
-
-function insertSessionsFromArray(array) {
-	_.each(array, function(value) {
-		var eventObject = {
-			title: window.trips[ value.trip_id ].name, // use the element's text as the event title
-			allDay: false,
-			trip: window.trips[ value.trip_id ],
-			session: value,
-			isNew: false,
-			durationEditable: false,
-			startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
-		};
-
-		// console.log("----------------------------------------");
-		// console.log("From Server:        " + eventObject.session.start);
-		// Parse server's UTC time and convert to local
-		// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
-		eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
-		// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
-
-		createCalendarEntry(eventObject);
-	});
-}
 
 function createCalendarEntry(eventObject) {
 
@@ -440,9 +451,11 @@ function createCalendarEntry(eventObject) {
 			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
 
+	return eventObject;
+
 	// Render the event on the calendar
 	// The last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-	$('#calendar').fullCalendar('renderEvent', eventObject, true);
+	// $('#calendar').fullCalendar('renderEvent', eventObject, true);
 }
 
 function updateCalendarEntry(eventObject, redraw) {
