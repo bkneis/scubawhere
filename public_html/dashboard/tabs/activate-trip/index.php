@@ -96,16 +96,7 @@
 								<td><input type="checkbox" name="schedule[1][]" value="sat" {{isWeekday 6}}></td>
 								<td><input type="checkbox" name="schedule[1][]" value="sun" {{isWeekday 0}}></td>
 							</tr>
-							<tr>
-								<td>2</td>
-								<td><input type="checkbox" name="schedule[2][]" value="mon"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="tue"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="wed"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="thu"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="fri"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="sat"></td>
-								<td><input type="checkbox" name="schedule[2][]" value="sun"></td>
-							</tr>
+							{{timetableWeek 2}}
 						</table>
 						<input type="hidden" name="_token">
 						<input type="hidden" name="session_id" value="{{session.id}}">
@@ -127,6 +118,18 @@
 				</div>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
+		</script>
+		<script id="timetable-week-template" type="text/x-handlebars-template">
+			<tr>
+				<td>{{week}} <input type="checkbox" name="schedule[{{week}}][]" value="no_side_effect" onchange="toggleWeek(this);" data-week="{{week}}"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="mon" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="tue" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="wed" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="thu" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="fri" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="sat" disabled class="day_selector"></td>
+				<td><input type="checkbox" name="schedule[{{week}}][]" value="sun" disabled class="day_selector"></td>
+			</tr>
 		</script>
 	</div>
 </div>

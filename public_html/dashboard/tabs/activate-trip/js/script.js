@@ -4,6 +4,13 @@ $(function() {
 	var tripsTemplate = $("#trip-list").html();
 	tripsTemplate     = Handlebars.compile(tripsTemplate);
 
+	window.timetableWeek = $('#timetable-week-template').html();
+	window.timetableWeek = Handlebars.compile(timetableWeek);
+
+	Handlebars.registerHelper('timetableWeek', function(week) {
+		return new Handlebars.SafeString( timetableWeek( {'week': week} ) );
+	});
+
 	window.trips;
 	window.boats;
 	window.token;
@@ -537,6 +544,25 @@ function showModalWindow(eventObject) {
 			window._token = _token;
 		}
 	});
+}
+
+function toggleWeek(self) {
+	var $self    = $(self);
+	var $tr      = $self.closest('tr');
+	var disabled = !$self.is(':checked');
+	console.log(disabled);
+
+	// First, set the clicked week accordingly
+	$tr.find('.day_selector').prop('disabled', disabled);
+
+	if(disabled) {
+		// When the week has been disabled, remove all following weeks from the timetable
+		$tr.nextAll().remove();
+	}
+	else {
+		// When the week has been enabled, add the following week (disabled by default)
+		$tr.after( timetableWeek(  {'week': $self.data('week') * 1 + 1} ) );
+	}
 }
 
 Handlebars.registerHelper('date', function(datetime) {
