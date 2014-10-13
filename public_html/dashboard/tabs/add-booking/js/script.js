@@ -158,7 +158,7 @@ function displayPackageTickets() {
 			};
 
 			var param = "ticket_id=" + data.trips[i].id;
-			Sessions.filter(param, function success(data2){
+			Session.filter(param, function success(data2){
 				data2.start;
 			});
 		}
@@ -174,7 +174,7 @@ function displayPackageTickets() {
 function test() {
 	var ticketID = "ticket_id=" + 10;
 
-	Sessions.filter(ticketID, function success(data) {
+	Session.filter(ticketID, function success(data) {
 		console.log(data);
 	})
 }
@@ -185,7 +185,7 @@ function test2() {
 	Trip.getSpecificTrips(param, function success(data){
 		console.log(data);
 	});
-	
+
 }
 
 function showSessionsoriginal() {
@@ -205,15 +205,15 @@ function showSessionsoriginal() {
 	window.sessions;
 	window.trips;
 
-	Sessions.filter(param, function success(data) {
+	Session.filter(param, function success(data) {
 
 		var numSessions = data.length;
 
 		for(i = 0; i < numSessions; i++){
-			
+
 		// need to create new object as array is pointing to old object that has been changed. Create a new object each time for unique
 
-			var event = 
+			var event =
 			{
 				title : null,
 				start : data[i].start,
@@ -267,7 +267,7 @@ function showSessions() {
 	window.sessions;
 	window.trips;
 
-	Sessions.filter(param, function success(data) {
+	Session.filter(param, function success(data) {
 
 		window.sessions = _.indexBy(data, 'id');
 		console.log(window.sessions);
@@ -282,7 +282,7 @@ function showSessions() {
 				var startTime = $.fullCalendar.moment.utc(window.sessions[value.id].start);
 				var endTime = $.fullCalendar.moment(startTime).add('hours', window.sessions[value.id].duration);
 
-				var event = 
+				var event =
 				{
 					title : data2.name,
 					start : startTime,
@@ -294,7 +294,7 @@ function showSessions() {
 			});
 		});
 
-		
+
 	});
 
 }
@@ -312,7 +312,7 @@ function addCustomer(count){
 	var lastName = document.getElementById("lname"+count).value;
 	var customerID;
 
-	var params = 
+	var params =
 	{
 		_token : window.token,
 		firstname : firstName,
@@ -366,7 +366,7 @@ function assignTicket() {
 	var trip = document.getElementById("customer-tickets");
 	var tripName = trip.options[trip.selectedIndex].text;
 
-	var params = 
+	var params =
 	{
 		_token : window.token,
 		booking_id : bookingID,
@@ -400,7 +400,7 @@ function assignTicket() {
 
 function testadd() {
 
-	var data = 
+	var data =
 	{
 		_token : window.token,
 		booking_id : 1,
@@ -408,7 +408,7 @@ function testadd() {
 		is_lead : 1,
 		ticket_id : ticketID,
 		session_id : 1,
-		package_id : null 
+		package_id : null
 	};
 
 	Booking.addDetails(data, function success(data){
@@ -419,11 +419,11 @@ function testadd() {
 
 function test4() {
 
-	var param = 
-	{	
-		_token : window.token, 
-		firstname : "bryan", 
-		lastname : "kneis", 
+	var param =
+	{
+		_token : window.token,
+		firstname : "bryan",
+		lastname : "kneis",
 		email : "bryan2@iqwebcreations.com",
 		birthday : "24-05-2014",
 		gender : 1,
@@ -441,7 +441,7 @@ function test4() {
 	Customer.createCustomer(param, function success(data){
 		console.log(data);
 	});
-	
+
 	/*$.ajax({
 			type: "POST",
 			url: "/api/customer/add",

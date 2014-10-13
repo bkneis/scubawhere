@@ -95,9 +95,9 @@
 						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select></p>
 					</div>
 					<div id="packages-select" style="width:40%; float:left;">
-						
+
 							<p>or Package: <select id="customer-packages" onChange="displayPackageTickets()"><option value="0">Please select...</option></select>
-							Select ticket: 
+							Select ticket:
 							<select id="customer-package-tickets" style="display:none;">
 								<option value="0">Select a trip...</option>
 							</select>
@@ -245,7 +245,7 @@
 	<script src="/dashboard/js/Controllers/Agent.js"></script>
 	<script src="/dashboard/js/Controllers/Ticket.js"></script>
 	<script src="/dashboard/js/Controllers/Package.js"></script>
-	<script src="/dashboard/js/Controllers/Sessions.js"></script>
+	<script src="/dashboard/js/Controllers/Session.js"></script>
 	<script src="/dashboard/js/Controllers/Booking.js"></script>
 	<script src="/dashboard/js/Controllers/Trip.js"></script>
 	<script src="/dashboard/js/Controllers/Customer.js"></script>

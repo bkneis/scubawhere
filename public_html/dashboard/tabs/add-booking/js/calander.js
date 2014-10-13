@@ -6,7 +6,7 @@ $(function() {
 	window.sessions;
 
 		// 2. Get sessions
-		Sessions.getAllSessions(function(data) {
+		Session.getAllSessions(function(data) {
 			window.sessions = _.indexBy(data, 'id');
 
 			_.each(window.sessions, function(value) {
@@ -131,7 +131,7 @@ $(function() {
 
 			// console.log(eventObject.session);
 
-			Sessions.updateSession(eventObject.session, function success(data){
+			Session.updateSession(eventObject.session, function success(data){
 				// Sync worked, now save and update the calendar item
 
 				// Remake the moment-object (parse as UTC, convert to local to work with)
@@ -246,7 +246,7 @@ $(function() {
 
 		// console.log(eventObject.isNew);
 
-		Sessions.createSession(eventObject.session, function success(data){
+		Session.createSession(eventObject.session, function success(data){
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -291,7 +291,7 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Sessions.updateSession(eventObject.session, function success(data){
+		Session.updateSession(eventObject.session, function success(data){
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -326,7 +326,7 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Sessions.deleteSession({
+		Session.deleteSession({
 			'id': eventObject.session.id,
 			'_token': eventObject.session._token
 		}, function success(data) {
@@ -350,7 +350,7 @@ $(function() {
 				var question = confirm(message);
 				if( question ) {
 					// Deactivate
-					Sessions.deactivateSession({
+					Session.deactivateSession({
 						'id': eventObject.session.id,
 						'_token': eventObject.session._token
 					}, function success(data) {
