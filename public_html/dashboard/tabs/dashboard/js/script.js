@@ -26,13 +26,13 @@ function displayTodaysSessions() {
 	var yesterday = getDate(-1);
 	var tommorow = getDate(1);
 
-	var params = 
+	var params =
 	{
 		before : tommorow,
 		after : yesterday
 	};
 
-	Sessions.filter(params, function success(data){
+	Session.filter(params, function success(data){
 		console.log(data);
 	});
 

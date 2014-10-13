@@ -200,7 +200,7 @@
     })(jQuery);
 </script>
 
-<script src="/dashboard/js/Controllers/Sessions.js"></script>
+<script src="/dashboard/js/Controllers/Session.js"></script>
 
 
 
