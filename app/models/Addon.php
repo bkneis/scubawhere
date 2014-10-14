@@ -1,10 +1,14 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
 class Addon extends Ardent {
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
+
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
 	protected $fillable = array(

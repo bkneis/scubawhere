@@ -1,9 +1,13 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
 class Trip extends Ardent {
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
+
 	protected $guarded = array('id', 'company_id', 'views', 'created_at', 'updated_at');
 
 	public static $rules = array(
