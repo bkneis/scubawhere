@@ -32,6 +32,16 @@ class Departure extends Ardent {
 		return array( $this->bookings()->count(), $this->boat()->first()->capacity );
 	}
 
+	public function addons()
+	{
+		return $this->hasManyThrough('Addon', 'Bookingdetail');
+	}
+
+	public function bookingdetails()
+	{
+		return $this->hasMany('Bookingdetail');
+	}
+
 	public function trip()
 	{
 		return $this->belongsTo('Trip');

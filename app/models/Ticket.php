@@ -75,4 +75,9 @@ class Ticket extends Ardent {
 			->withTimestamps();
 	}
 
+	public function bookingdetails()
+	{
+		return $this->hasMany('Bookingdetail');
+	}
+
 }

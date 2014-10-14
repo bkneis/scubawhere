@@ -71,6 +71,16 @@ class Customer extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
+	public function addons()
+	{
+		return $this->hasManyThrough('Addon', 'Bookingdetail');
+	}
+
+	public function bookingdetails()
+	{
+		return $this->hasMany('Bookingdetail');
+	}
+
 	public function bookings()
 	{
 		return $this->belongsToMany('Booking', 'booking_details')->withPivot('ticket_id', 'session_id', 'package_id', 'is_lead');

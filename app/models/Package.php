@@ -66,6 +66,11 @@ class Package extends Ardent {
 			->withTimestamps();
 	}
 
+	public function bookingdetails()
+	{
+		return $this->hasMany('Bookingdetail');
+	}
+
 	public function tickets()
 	{
 		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();

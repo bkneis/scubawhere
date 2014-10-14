@@ -54,16 +54,21 @@ class Addon extends Ardent {
 
 	public function bookings()
 	{
-		return $this->hasMany('Booking');
+		return $this->hasManyThrough('Booking', 'Bookingdetail');
+	}
+
+	public function bookingdetails()
+	{
+		return $this->belongsToMany('Bookingdetail')->withPivot('quantity')->withTimestamps();
 	}
 
 	public function company()
 	{
-		return $this->belongsTo('Company', 'Customer');
+		return $this->belongsTo('Company');
 	}
 
 	public function customers()
 	{
-		return $this->hasManyThrough('Customer', 'Booking');
+		return $this->hasManyThrough('Customer', 'Bookingdetail');
 	}
 }
