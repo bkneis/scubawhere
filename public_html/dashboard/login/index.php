@@ -27,7 +27,7 @@
 
 			<input type="password" name="password" placeholder="Password"><br>
 
-			<label><input type="checkbox" name="remember"> Remember me</label>
+			<!-- <label><input type="checkbox" name="remember"> Remember me</label> -->
 
 			<input type="hidden" name="_token" value="" />
 			<button id="loginDC" class="submit-bttn bttn blueb">
