@@ -20,36 +20,36 @@ Handlebars.registerHelper('count', function(array) {
 
 Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
 
-var agentForm,
-	agentList,
+var packageForm,
+	packageList,
 	ticketSelect;
 
 $(function(){
 
-	// Render initial agent list
-	agentList = Handlebars.compile( $("#agent-list-template").html() );
-	renderAgentList();
+	// Render initial package list
+	packageList = Handlebars.compile( $("#package-list-template").html() );
+	renderPackageList();
 
-	// Default view: show create agent form
-	agentForm = Handlebars.compile( $("#agent-form-template").html() );
+	// Default view: show create package form
+	packageForm = Handlebars.compile( $("#package-form-template").html() );
 	prepareEditForm();
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
 
-	$("#agent-form-container").on('click', '#add-agent', function(event) {
+	$("#package-form-container").on('click', '#add-package', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Package.createPackage( $('#add-agent-form').serialize(), function success(data) {
+		Package.createPackage( $('#add-package-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
 			$('form').data('hasChanged', false);
 
-			renderAgentList(function() {
+			renderPackageList(function() {
 				prepareEditForm(data.id);
 			});
 
@@ -65,8 +65,8 @@ $(function(){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-agent-form').prepend(errorsHTML)
-				$('#add-agent').before(errorsHTML);
+				$('#add-package-form').prepend(errorsHTML)
+				$('#add-package').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -74,30 +74,30 @@ $(function(){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#add-agent').prop('disabled', false);
-			$('#add-agent-form').find('#save-loader').remove();
+			$('#add-package').prop('disabled', false);
+			$('#add-package-form').find('#save-loader').remove();
 		});
 	});
 
-	$("#agent-form-container").on('click', '#update-agent', function(event) {
+	$("#package-form-container").on('click', '#update-package', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Package.updatePackage( $('#update-agent-form').serialize(), function success(data) {
+		Package.updatePackage( $('#update-package-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
-			renderAgentList();
+			renderPackageList();
 
 			$('form').data('hasChanged', false);
 
-			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
+			// Because the page is not re-rendered like with add-package, we need to manually remove the error messages
 			$('.errors').remove();
 
-			$('#update-agent').prop('disabled', false);
+			$('#update-package').prop('disabled', false);
 			$('#save-loader').remove();
 
 		}, function error(xhr) {
@@ -112,8 +112,8 @@ $(function(){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-agent-form').prepend(errorsHTML)
-				$('#update-agent').before(errorsHTML);
+				$('#update-package-form').prepend(errorsHTML)
+				$('#update-package').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -121,12 +121,12 @@ $(function(){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#update-agent').prop('disabled', false);
+			$('#update-package').prop('disabled', false);
 			$('#save-loader').remove();
 		});
 	});
 
-	$('#agent-form-container').on('change', '.ticket-select', function(event) {
+	$('#package-form-container').on('change', '.ticket-select', function(event) {
 		$self     = $(event.target);
 		$quantity = $self.siblings('.quantity-input').first();
 		$price    = $self.siblings('.ticket-price').first();
@@ -155,7 +155,7 @@ $(function(){
 		}
 	});
 
-	$('#agent-form-container').on('change', '.quantity-input', function(event) {
+	$('#package-form-container').on('change', '.quantity-input', function(event) {
 		$quantity = $(event.target);
 		$price    = $quantity.siblings('.ticket-price').first();
 		$ticket   = $quantity.siblings('.ticket-select').first();
@@ -166,27 +166,27 @@ $(function(){
 		$price.text( window.tickets[id].currency + ' ' + priceSum );
 	});
 
-	$("#agent-list-container").on('click', '#change-to-add-agent', function(event){
+	$("#package-list-container").on('click', '#change-to-add-package', function(event){
 
 		event.preventDefault();
 
 		prepareEditForm();
 	});
 
-	$('#agent-form-container').on('click', '.remove-package', function(event){
+	$('#package-form-container').on('click', '.remove-package', function(event){
 		var check = confirm('Do you really want to remove this package?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Package.deletePackage({
-				'id'    : $('#update-agent-form input[name=id]').val(),
+				'id'    : $('#update-package-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 
 				pageMssg(data.status, true);
 
-				renderAgentList();
+				renderPackageList();
 
 				renderEditForm();
 			}, function error(xhr){
@@ -199,24 +199,24 @@ $(function(){
 		}
 	});
 
-	$('#agent-form-container').on('click', '.deactivate-package', function(event){
+	$('#package-form-container').on('click', '.deactivate-package', function(event){
 		var check = confirm('Do you really want to deactivate this package?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Package.deactivePackage({
-				'id'    : $('#update-agent-form input[name=id]').val(),
+				'id'    : $('#update-package-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 
 				pageMssg(data.status, true);
 
-				renderAgentList();
+				renderPackageList();
 
-				window.agents[ $('#update-agent-form input[name=id]').val() ].trashed = true;
+				window.packages[ $('#update-package-form input[name=id]').val() ].trashed = true;
 
-				renderEditForm( $('#update-agent-form input[name=id]').val() );
+				renderEditForm( $('#update-package-form input[name=id]').val() );
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
@@ -227,23 +227,23 @@ $(function(){
 		}
 	});
 
-	$('#agent-form-container').on('click', '.restore-package', function(event){
+	$('#package-form-container').on('click', '.restore-package', function(event){
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Package.restorePackage({
-			'id'    : $('#update-agent-form input[name=id]').val(),
+			'id'    : $('#update-package-form input[name=id]').val(),
 			'_token': $('[name=_token]').val()
 		}, function success(data){
 
 			pageMssg(data.status, true);
 
-			renderAgentList();
+			renderPackageList();
 
-			window.agents[ $('#update-agent-form input[name=id]').val() ].trashed = false;
+			window.packages[ $('#update-package-form input[name=id]').val() ].trashed = false;
 
-			renderEditForm( $('#update-agent-form input[name=id]').val() );
+			renderEditForm( $('#update-package-form input[name=id]').val() );
 		}, function error(xhr){
 
 			pageMssg('Oops, something wasn\'t quite right');
@@ -254,20 +254,20 @@ $(function(){
 	});
 });
 
-function renderAgentList(callback) {
+function renderPackageList(callback) {
 
-	$('#agent-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+	$('#package-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
 	Package.getAllPackages(function success(data) {
 
-		window.agents = _.indexBy(data, 'id');
-		$('#agent-list').remove();
-		$('#agent-list-container .loader').remove();
+		window.packages = _.indexBy(data, 'id');
+		$('#package-list').remove();
+		$('#package-list-container .loader').remove();
 
-		$("#agent-list-container").append( agentList({packages : data}) );
+		$("#package-list-container").append( packageList({packages : data}) );
 
-		// (Re)Assign eventListener for agent clicks
-		$('#agent-list').on('click', 'li, strong', function(event) {
+		// (Re)Assign eventListener for package clicks
+		$('#package-list').on('click', 'li, strong', function(event) {
 
 			if( $(event.target).is('strong') )
 				event.target = event.target.parentNode;
@@ -304,29 +304,29 @@ function prepareEditForm(id) {
 
 function renderEditForm(id) {
 
-	var agent;
+	var package;
 
 	if( id ) {
-		agent = window.agents[id];
-		agent.task = 'update';
-		agent.update = true;
-		_.each(agent.tickets, function(value, key, list) {
+		package = window.packages[id];
+		package.task = 'update';
+		package.update = true;
+		_.each(package.tickets, function(value, key, list) {
 			value.available_tickets = window.tickets;
 		});
 	}
 	else {
 		// Set defaults for a new package form
-		agent = {
+		package = {
 			task: 'add',
 			update: false,
 			decimal_price: '-',
 		};
 	}
-	agent.available_tickets = window.tickets;
+	package.available_tickets = window.tickets;
 
-	agent.has_billing_details = agent.billing_address || agent.billing_email || agent.billing_phone;
+	package.has_billing_details = package.billing_address || package.billing_email || package.billing_phone;
 
-	$('#agent-form-container').empty().append( agentForm(agent) );
+	$('#package-form-container').empty().append( packageForm(package) );
 
 	if(!id)
 		$('input[name=name]').focus();

@@ -2,13 +2,13 @@
 	<div class="row">
 		<div class="box30">
 			<label class="dgreyb">Available packages</label>
-			<div class="padder" id="agent-list-container">
+			<div class="padder" id="package-list-container">
 				<!--<div class="yellow-helper">
-					Select an agent to change its details.
+					Select an package to change its details.
 				</div>-->
-				<button id="change-to-add-agent" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Package</button>
-				<script type="text/x-handlebars-template" id="agent-list-template">
-					<ul id="agent-list">
+				<button id="change-to-add-package" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Package</button>
+				<script type="text/x-handlebars-template" id="package-list-template">
+					<ul id="package-list" class="entity-list">
 						{{#each packages}}
 							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{count tickets}} tickets | {{decimal_price}}</li>
 						{{else}}
@@ -19,12 +19,12 @@
 			</div>
 		</div>
 
-		<div class="box70" id="agent-form-container">
+		<div class="box70" id="package-form-container">
 
-			<script type="text/x-handlebars-template" id="agent-form-template">
+			<script type="text/x-handlebars-template" id="package-form-template">
 				<label class="dgreyb">{{task}} package</label>
 				<div class="padder">
-					<form id="{{task}}-agent-form">
+					<form id="{{task}}-package-form">
 						<div class="form-row">
 							<label class="field-label">Package Name</label>
 							<input type="text" name="name" value="{{{name}}}">
@@ -77,7 +77,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="bttn blueb big-bttn" id="{{task}}-agent">{{task}} Package</button>
+						<button class="bttn blueb big-bttn" id="{{task}}-package">{{task}} Package</button>
 
 					</form>
 				</div>
