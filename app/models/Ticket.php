@@ -9,9 +9,9 @@ class Ticket extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $guarded = array('id', 'company_id', 'active', 'created_at', 'updated_at', 'deleted_at');
+	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
 
-	protected $appends = array('decimal_price', 'has_bookings');
+	protected $appends = array('decimal_price', 'has_bookings', 'trashed');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -46,6 +46,11 @@ class Ticket extends Ardent {
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookings()->count() > 0;
+	}
+
+	public function getTrashedAttribute()
+	{
+		return $this->trashed();
 	}
 
 	public function company()

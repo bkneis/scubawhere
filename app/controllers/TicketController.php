@@ -15,7 +15,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->tickets()->where('active', 1)->with('boats', 'trips')->findOrFail( Input::get('id') );
+			return Auth::user()->tickets()->withTrashed()->with('boats', 'trips')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -25,7 +25,7 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->where('active', 1)->with('boats', 'trips')->get();
+		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips')->get();
 	}
 
 	public function postAdd()
@@ -117,14 +117,14 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->where('active', '=', 1)->findOrFail( Input::get('id') );
+			$ticket = Auth::user()->tickets()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$data = Input::only('trip_id', 'name', 'description', 'price', 'currency');
+		$data = Input::only('name', 'description', 'price', 'currency');
 
 		// Convert price to subunit
 		try
@@ -137,25 +137,30 @@ class TicketController extends Controller {
 		}
 		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
+		// Check if 'trips' input array is given and not empty
+		$trips = Input::get('trips');
+		if( !empty($trips) && !is_array($trips) )
+			return Response::json( array( 'errors' => array('The "trips" value must be an array!')), 400 ); // 400 Bad Request
+
 		// Check if a booking exists for the ticket and whether a critical value is updated
 		if( $ticket->bookings()->count() > 0 && (
-			   (!empty($data['trip_id'])  && $data['trip_id'] != $ticket->trip_id)
-			|| (!empty($data['price'])    && $data['price']   != $ticket->price)
+			   (!empty($trips)            && checkRemovedTripBookings($ticket->id, $ticket->trips()->lists('id'), $trips))
+			|| (!empty($data['price'])    && $data['price'] != $ticket->price)
 			|| (!empty($data['currency']) && Helper::currency( $data['currency'] ) != $ticket->currency)
 		) )
 		{
 			// If yes, create a new ticket with the input data
 
 			// Replace all unavailable input data with data from the old ticket object
-			if( empty($data['trip_id']) )     $data['trip_id']     = $ticket->trip_id;
 			if( empty($data['name']) )        $data['name']        = $ticket->name;
 			if( empty($data['description']) ) $data['description'] = $ticket->description;
 			if( empty($data['price']) )       $data['price']       = $ticket->price;
 			if( empty($data['currency']) )    $data['currency']    = $ticket->currency;
+
 			if( !Input::get('boats') )
 			{
 				$data['boats'] = array();
-				foreach($ticket->boats() as $boat)
+				foreach($ticket->boats() as $boat) // Includes pivot data by default
 				{
 					$data['boats'][$boat->id] = $boat->pivot->accommodation_id;
 				}
@@ -164,15 +169,22 @@ class TicketController extends Controller {
 				$data['boats'] = Input::get('boats');
 			}
 
-			// "Delete" the old ticket
-			$ticket->update( array('active' => 0) );
+			if( empty($trips) )
+			{
+				$data['trips'] = $ticket->trips()->lists('id');
+			}
+			else {
+				$data['trips'] = $trips;
+			}
 
-			// MAYBE: Unconnect the original ticket from boats
+			// SoftDelete the old ticket
+			$ticket->delete();
+
+			// TODO MAYBE: Unconnect the original ticket from boats
 
 			// Dispatch add-ticket route with all data and return result
 			$request = Request::create('api/ticket/add', 'POST', $data);
 			return Route::dispatch($request);
-
 		}
 		else
 		{
@@ -183,34 +195,55 @@ class TicketController extends Controller {
 			}
 			else
 			{
-				// Ticket has been updated, let's reconnect it
-
-				// Connect boats
+				// Ticket has been updated, let's connect it to boats
 				$boats = Input::get('boats');
-				if( $boats && !empty($boats) )
+				if( $boats && !empty($boats) ) // only if the parameter is given/submitted
 				{
 					$sync = array();
 					foreach( $boats as $boat_id => $accommodation_id )
 					{
-						$validator = Validator::make(
-							array(
-								'boat_id' => $boat_id,
-								'accommodation_id' => $accommodation_id
-							),
-							array(
-								'boat_id' => 'integer|exists:boats,id',
-								'accommodation_id' => 'required|integer|exists:accommodations,id'
-							)
-						);
+						// The validator fails when accommodation_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
+						if( !empty($accommodation_id) )
+						{
+							$validator = Validator::make(
+								array(
+									'boat_id'          => $boat_id,
+									'accommodation_id' => $accommodation_id
+								),
+								array(
+									'boat_id'          => 'integer|exists:boats,id',
+									'accommodation_id' => 'integer|exists:accommodations,id'
+								)
+							);
+						}
+						else
+						{
+							$accommodation_id = null;
+							$validator = Validator::make(
+								array(
+									'boat_id' => $boat_id
+								),
+								array(
+									'boat_id' => 'integer|exists:boats,id'
+								)
+							);
+						}
 
 						if( $validator->fails() )
 						{
 							return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
 						}
 
-						$sync[$id] = array('accommodation_id' => $accommodation_id);
+						$sync[$boat_id] = array('accommodation_id' => $accommodation_id);
 					}
 					$ticket->boats()->sync( $sync );
+				}
+
+				// Check if 'trips' input array is not empty
+				if( !empty($trips) )
+				{
+					// TODO Validate existence and ownership of trip IDs
+					$ticket->trips()->sync( $trips );
 				}
 
 				// When no problems occur, we return a success response
@@ -219,21 +252,37 @@ class TicketController extends Controller {
 		}
 	}
 
+	protected function checkRemovedTripBookings($ticket_id, $old_trips, $new_trips)
+	{
+		// Check, which tripIDs have been removed
+		$removed_trips = array_diff($old_trips, $new_trips);
+
+		// Now check if any of these removed trips has already been booked with this ticket
+		$check = Session::whereIn('trip_id', $removed_trips)->bookingdetails()->where('ticket_id', $ticket_id)->count() > 0;
+	}
+
 	public function postDelete()
 	{
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->where('active', '=', 1)->findOrFail( Input::get('id') );
+			$ticket = Auth::user()->tickets()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$ticket->update( array('active' => 0) );
+		try
+		{
+			$ticket->forceDelete();
+		}
+		catch(QueryException $e)
+		{
+			return Response::json( array('errors' => array('The ticket can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+		}
 
-		return array('status' => 'Ticket deleted OK');
+		return array('status' => 'OK. Ticket deleted');
 	}
 
 }
