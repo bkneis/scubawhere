@@ -11,6 +11,8 @@ class Addon extends Ardent {
 
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
+	protected $appends = array('decimal_price', 'has_bookings', 'trashed');
+
 	protected $fillable = array(
 		'name',
 		'description',
@@ -18,8 +20,6 @@ class Addon extends Ardent {
 		'currency',
 		'compulsory'
 	);
-
-	protected $appends = array('decimal_price');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -56,10 +56,20 @@ class Addon extends Ardent {
 		);
 	}
 
-	public function bookings()
+	public function getHasBookingsAttribute()
+	{
+		return $this->bookingdetails()->count() > 0;
+	}
+
+	public function getTrashedAttribute()
+	{
+		return $this->trashed();
+	}
+
+	/* public function bookings()
 	{
 		return $this->hasManyThrough('Booking', 'Bookingdetail');
-	}
+	} */
 
 	public function bookingdetails()
 	{

@@ -1,4 +1,3 @@
-
 var Addon = {
 
 	getAddon : function(params, handleData) {
@@ -33,11 +32,33 @@ var Addon = {
 		});
 	},
 
-	/*
-	deleteAddon : function(params, handleData){
-		$.post("/api/addon/delete", params, function(data){
-			handleData(data);
+	deactivateAddon : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/addon/deactivate",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	restoreAddon : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/addon/restore",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	deleteAddon : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/addon/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	}
-	*/
 };
