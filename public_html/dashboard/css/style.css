@@ -660,3 +660,16 @@ span.box-tool{
 	background-color: rgb(230, 245, 255);
 }
 
+.fc-view-container {
+	background-color: white;
+}
+.fc-toolbar {
+	padding: 1em 1em 0.6em 1em;
+	margin-bottom: 0;
+	background-color: #34495e;
+	color: white;
+}
+
+.fc-toolbar .loader {
+	top: 0.1em;
+}
