@@ -43,9 +43,9 @@
 						<td>{{date start}}</td>
 					</tr>
 					<tr>
-						<td><strong>Start time</strong></td>
+						<td><strong>Departure time</strong></td>
 						<td>
-							<small><span style="display: inline-block; width: 49px">hours</span><span>minutes</span></small><br>
+							<small><span style="display: inline-block; width: 49px">hour</span><span>minutes</span></small><br>
 							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;">:
 							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"> h
 						</td>
@@ -62,15 +62,15 @@
 
 				<p>
 					Boat for this session:&nbsp;
-					<select name="boat_id" class="boatSelect">
+					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{/if}}>
 						{{#each boats}}
-							<option value="{{id}}" {{#if selected}}selected{{/if}}>{{{name}}}</option>
+							<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
 						{{/each}}
 					</select>
 				</p>
 
 				{{#unless isNew}}
-				{{#unless timetable_id}}
+				{{#unless session.timetable_id}}
 					<div>
 						<strong>Define repeating timetable</strong>
 					</div>
@@ -103,6 +103,14 @@
 						Iterations: <input type="number" name="iterations" value="0" min="0" style="width: 50px;"> (default: 1.5 years worth)
 						<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
 					</form>
+				{{else}}
+					<div class="dashed-border">
+						<p>This session is <strong>timetabled</strong>.<br>Do you want to move all future versions of this session, too?</p>
+						<p>
+							<label><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, move all future versions.</label><br>
+							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move this one and leave the others where they are.</label>
+						</p>
+					</div>
 				{{/unless}}
 				{{/unless}}
 

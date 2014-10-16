@@ -18,7 +18,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 	}
 
@@ -246,7 +246,7 @@ class DepartureController extends Controller {
 
 		$departure = $trip->departures()->save($departure);
 
-		return Response::json( array('status' => 'OK. Departure created', 'id' => $departure->id), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Session created', 'id' => $departure->id), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -258,7 +258,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 		// $id0 = Input::get('id'); // correct
 
@@ -267,33 +267,86 @@ class DepartureController extends Controller {
 		 * We therefore get the model simply without authentication
 		 *
 		 * TODO Make this work with the correct way (above)
+		 * DONE Should be working now with the pull request implemented in f68134e that fixed hasManyThrough relations in Laravel
 		 */
-		$departure = Departure::find( Input::get('id') );
+		// $departure = Departure::find( Input::get('id') );
 
-		// $id1 = $departure->id; // not correct, = 1 (?!)
+		if( empty($departure->timetable_id) )
+		{
+			// TODO Check if boat belongs to logged in company
+			if( Input::get('start') )
+				$departure->start   = Input::get('start');
 
-		$departure->boat_id = Input::get('boat_id');
+			if( Input::get('boat_id') )
+			{
+				$departure->boat_id = Input::get('boat_id');
 
-		$capacity = $departure->getCapacityAttribute();
+				$capacity = $departure->getCapacityAttribute();
 
-		if($capacity[0] > $capacity[1])
-			return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
+				// TODO This next conditional is not checking if any tickets have been booked for the session that require a certain accomodation. It needs to be checked if this accomodation is also present on the new boat.
+				if($capacity[0] > $capacity[1])
+					return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
 
-		if($capacity[0] > 0 && Input::get('start') && Input::get('start') != $departure->start) {
-			return Response::json( array('errors' => array('The departure cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+				if($capacity[0] > 0 && Input::get('start') && Input::get('start') != $departure->start) {
+					return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+				}
+			}
 		}
-		// $id2 = $departure->id;
+		// If the session is part of a timetable and has been changed, check if request sent instructions on what to do
+		elseif( Input::get('start') && Input::get('start') !== $departure->start)
+		{
+			switch( Input::get('handle_timetable') )
+			{
+				case 'only_this':
+					// Remove this event from the timetable and set new time
+					$capacity = $departure->getCapacityAttribute();
+					if($capacity[0] > 0)
+						return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 
-		$data = Input::only('start', 'boat_id');
-		// $id3 = $departure->id;
+					$departure->timetable_id = null;
+					$departure->start        = Input::get('start');
+				break;
+				case 'following':
+					// First, replicate the timetable
+					$timetable = $departure->timetable()->first()->replicate();
+					$timetable->save();
 
-		if( !$departure->update($data) )
+					$start = new DateTime( Input::get('start') );
+
+					// Update all following session with new time and timetable_id
+					// First, calculate offset between old_time and new_time
+					$offset = $start->diff( new DateTime($departure->start) );
+
+					// Get all affected sessions
+					$sessions = Auth::user()->departures()->where('start', '>=', $departure->start)->where('timetable_id', $departure->timetable_id)->get();
+					$sessions->each( function($session) use ($timetable, $offset)
+					{
+						$session->timetable_id = $timetable->id;
+						$session->start = new DateTime( $session->start );
+						$session->start->sub($offset);
+
+						$session->save();
+					});
+
+					return array('status' => 'OK. All sessions updated.');
+				break;
+				default:
+					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
+				break;
+			}
+		}
+		else
+		{
+			// Do nothing
+			return array('status' => 'Nothing updated.');
+		}
+
+		if( !$departure->save() )
 		{
 			return Response::json( array('errors' => $departure->errors()->all()), 400 ); // 400 Bad Request
 		}
-		// $id4 = $departure->id;
 
-		return Response::json( array('status' => 'OK. Departure updated.'/*, 'id' => $id0.','.$id1.','.$id2.','.$id3.','.$id4*/), 200 ); // 200 OK
+		return array('status' => 'OK. Session updated.');
 	}
 
 	public function postDeactivate()
@@ -305,7 +358,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$departure->delete(); // Soft delete
@@ -316,7 +369,7 @@ class DepartureController extends Controller {
 		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => $now, 'updated_at' => $now));
 		*/
 
-		return array('status' => 'OK. Departure deactivated');
+		return array('status' => 'OK. Session deactivated');
 	}
 
 	public function postDelete()
@@ -328,7 +381,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
 		try
@@ -337,10 +390,10 @@ class DepartureController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('Cannot delete departure. It has already been booked!')), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot delete session. It has already been booked!')), 409 ); // 409 Conflict
 		}
 
-		return array('status' => 'OK. Departure deleted');
+		return array('status' => 'OK. Session deleted');
 	}
 
 }

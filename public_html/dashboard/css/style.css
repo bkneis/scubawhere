@@ -673,3 +673,28 @@ span.box-tool{
 .fc-toolbar .loader {
 	top: 0.1em;
 }
+
+.dashed-border {
+	margin: 1em;
+	border: dashed rgb(211, 211, 211);
+	padding: 0.5em 2em 1em;
+}
+.dashed-border.border-blink {
+	-webkit-animation: border-blink 0.8s ease 3;
+	-moz-animation: border-blink 0.8s ease 3;
+	-ms-animation: border-blink 0.8s ease 3;
+	animation: border-blink 0.8s ease 3;
+}
+
+@-webkit-keyframes border-blink {
+	50% { border-color: red; }
+}
+@-moz-keyframes border-blink {
+	50% { border-color: red; }
+}
+@-ms-keyframes border-blink {
+	50% { border-color: red; }
+}
+@keyframes border-blink {
+	50% { border-color: red; }
+}

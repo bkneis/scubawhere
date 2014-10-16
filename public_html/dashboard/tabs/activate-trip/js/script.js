@@ -96,8 +96,8 @@ $(function() {
 						trip: window.trips[ value.trip_id ],
 						session: value,
 						isNew: false,
+						editable: value.timetable_id == false, // This uses a 'falsy' check on purpose
 						durationEditable: false,
-						startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
 					};
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);
@@ -280,16 +280,33 @@ $(function() {
 	// The UPDATE button
 	$('#modalWindows').on('click', '.update-session', function(event) {
 
-		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
-
-
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
 
 		// Get time from input boxes
 		var starthours   = modal.find('.starthours').val();
 		var startminutes = modal.find('.startminutes').val();
+
+		// Check if every necessary info is supplied
+		if( eventObject.session.timetable_id && ( starthours != eventObject.start.hours() || startminutes != eventObject.start.minutes() ) && $('[name=handle_timetable]:checked').length === 0) {
+
+			$('.border-blink').removeClass('border-blink');
+
+			setTimeout(function() {
+				$('.dashed-border').addClass('border-blink');
+			}, 10);
+
+			return false;
+		}
+		else {
+			// Add mandatory parameter to request payload
+			eventObject.session.handle_timetable = $('[name=handle_timetable]:checked').val();
+		}
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+
+		// Write new time into session object
 		eventObject.session.start.hours(starthours).minutes(startminutes);
 
 		eventObject.session._token = window.token;
@@ -299,19 +316,20 @@ $(function() {
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
-		// console.log(eventObject.session);
-
 		Session.updateSession(eventObject.session, function success(data){
 
-			// Communitcate success to user
+			// Communicate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
+
+			// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
+			delete eventObject.session.handle_timetable;
 
 			// Remake the moment-object
 			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
-			updateCalendarEntry(eventObject);
-			// console.log(data.status + '|' + data.id);
+			// updateCalendarEntry(eventObject);
+			$('#calendar').fullCalendar('refetchEvents');
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();
