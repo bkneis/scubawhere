@@ -61,7 +61,7 @@
 								Enter different billing details?
 							</label>
 						</div>
-						<div id="billing-div" style="{{#unless has_billing_details}}display: none; {{/unless}}margin: 2em; border: dashed lightgray; padding: 0.5em 2em 1em 2em">
+						<div id="billing-div" class="dashed-border" style="{{#unless has_billing_details}}display: none; {{/unless}}">
 							<h3>Billing Information</h3>
 							<div class="form-row">
 								<label class="field-label">Billing Address</label>

@@ -71,10 +71,8 @@
 
 				{{#unless isNew}}
 				{{#unless session.timetable_id}}
-					<div>
-						<strong>Define repeating timetable</strong>
-					</div>
-					<form style="padding: 1em; border: 3px dashed lightgray; overflow: auto;">
+					<form class="dashed-border" style="overflow: auto;">
+						<h3>Define a repeating timetable</h3>
 						<table>
 							<tr style="text-align: left;">
 								<th>Week #</th>
@@ -105,9 +103,9 @@
 					</form>
 				{{else}}
 					<div class="dashed-border">
-						<p>This session is <strong>timetabled</strong>.<br>Do you want to move all future versions of this session, too?</p>
+						<p>You are moving a <strong>timetabled</strong> session!<br>Do you want to move all future versions of this session, too?</p>
 						<p>
-							<label><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, move all future versions.</label><br>
+							<label><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move all future versions.</label><br>
 							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move this one and leave the others where they are.</label>
 						</p>
 					</div>

@@ -615,9 +615,10 @@ span.box-tool{
 	border: 1px solid #4a9cff;
 	border-left-width: 5px;
 	padding: 5px 10px;
+	background-color: white;
 }
 .trip-event:hover {
-	background: rgb(96, 190, 255);
+	background-color: rgb(96, 190, 255);
 	color: white;
 	cursor: move;
 }

@@ -292,6 +292,7 @@ $(function() {
 
 			$('.border-blink').removeClass('border-blink');
 
+			// Direct chaining didn't work. Thus a timeout hack...
 			setTimeout(function() {
 				$('.dashed-border').addClass('border-blink');
 			}, 10);
