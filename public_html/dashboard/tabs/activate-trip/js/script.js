@@ -73,10 +73,11 @@ $(function() {
 			left: '',
 			center: 'title',
 		},
+		timezone: false,
 		events: function(start, end, timezone, callback) {
 
 			// Start loading indicator
-			$('.fc-header-title').after('<div id="fetch-events-loader" class="loader"></div>');
+			$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
 
 			Session.filter({
 				'after': start.format(),
@@ -99,12 +100,7 @@ $(function() {
 						startEditable: value.capacity[0] == 0, // the session has not been booked yet, so it's ok to move it
 					};
 
-					// console.log("----------------------------------------");
-					// console.log("From Server:        " + eventObject.session.start);
-					// Parse server's UTC time and convert to local
-					// TODO change local() to "setTimezone" (set the user's profile timezone) (don't trust the browser)
-					eventObject.session.start = $.fullCalendar.moment.utc(value.start).local();
-					// console.log("Converted to local: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
+					eventObject.session.start = $.fullCalendar.moment(value.start);
 
 					events.push( createCalendarEntry(eventObject) );
 				});
@@ -115,7 +111,6 @@ $(function() {
 				$('#fetch-events-loader').remove();
 			});
 		},
-		timezone: 'local', // TODO Change to user's profile timezone (don't trust the browser)
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
 		drop: function(date) { // This function is called when something is dropped
@@ -127,20 +122,7 @@ $(function() {
 			var eventObject = $.extend(true, {}, originalEventObject);
 			// delete eventObject.session.boat_id;
 
-			/**
-			 * UTC problem
-			 * ===========
-			 * The date reported by the calendar, when a trip is dropped, is
-			 * in no-zone, no-time UTC (e.g. 2014-05-29 00:00:00). The problem
-			 * is, that when the user's local timezone is negative (e.g. -4:30
-			 * for Newfoundland), the conversion into local would reduce the
-			 * date by one day (in this example to 2014-05-28). This is why we
-			 * instead just fetch the date from the supplied object and create
-			 * a new date object from it with a default set time.
-			 */
-			var date = date.format('YYYY-MM-DD');
-			eventObject.session.start = $.fullCalendar.moment(date + ' 09:00:00');
-			// console.log("Set to 9 hours: " + eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'));
+			eventObject.session.start = date.add(9, 'hours'); // Sets default start time to 09:00
 
 			eventObject = createCalendarEntry(eventObject);
 
@@ -151,25 +133,22 @@ $(function() {
 		eventDrop: function(eventObject, revertFunc) {
 			if(!eventObject.start.hasTime()) {
 				// Combine dropped-on date and session's start time
-				// See UTC problem above
-				var date = date.format('YYYY-MM-DD');
-				eventObject.start = $.fullCalendar.moment(date + ' ' + eventObject.session.start.format('HH:mm:ss'));
+				eventObject.start.time(eventObject.session.start.format('HH:mm:ss'));
 			}
 			eventObject.session.start = eventObject.start;
 
 			eventObject.session._token = window.token;
 
 			// Format the time in a PHP readable format
-			eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
+			eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
 			// console.log(eventObject.session);
 
 			Session.updateSession(eventObject.session, function success(data){
 				// Sync worked, now save and update the calendar item
 
-				// Remake the moment-object (parse as UTC, convert to local to work with)
-				// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
-				eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
 				updateCalendarEntry(eventObject);
 				// console.log(data.status + '|' + data.id);
@@ -240,7 +219,7 @@ $(function() {
 		// console.log(eventObject.session.start.format('HH:mm on DD-MM-YYYY'));
 
 		// Update displayed end datetime
-		var tempEnd = $.fullCalendar.moment(newStart).add('hours', eventObject.trip.duration);
+		var tempEnd = $.fullCalendar.moment(newStart).add(eventObject.trip.duration, 'hours');
 		$(event.target)
 			.closest('.reveal-modal')
 			.find('.enddatetime')
@@ -274,20 +253,18 @@ $(function() {
 		// debugger;
 
 		// Format the time in a PHP readable format
-		eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
-		// eventObject.session.start.local();
+		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
 		// console.log(eventObject.isNew);
 
-		Session.createSession(eventObject.session, function success(data){
+		Session.createSession(eventObject.session, function success(data) {
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
 
-			// Remake the moment-object (parse as UTC, convert to local to work with)
-			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
-			eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
+			// Remake the moment-object
+			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 			eventObject.session.id = data.id;
 
 			// console.log(eventObject.session);
@@ -320,7 +297,7 @@ $(function() {
 		eventObject.session.boat_id = eventObject.session.newBoat_id || eventObject.session.boat_id;
 
 		// Format the time in a PHP readable format
-		eventObject.session.start = eventObject.session.start.utc().format('YYYY-MM-DD HH:mm:ss');
+		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
 		// console.log(eventObject.session);
 
@@ -330,9 +307,8 @@ $(function() {
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
 
-			// Remake the moment-object (parse as UTC, convert to local to work with)
-			// TODO Change local() to "setTimezone" (set to user's profile timezone) (don't trust the browser)
-			eventObject.session.start = $.fullCalendar.moment.utc(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss').local();
+			// Remake the moment-object
+			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
 			updateCalendarEntry(eventObject);
 			// console.log(data.status + '|' + data.id);
@@ -448,7 +424,7 @@ $(function() {
 function createCalendarEntry(eventObject) {
 
 	eventObject.start = eventObject.session.start;
-	eventObject.end   = $.fullCalendar.moment(eventObject.start).add('hours', eventObject.trip.duration);
+	eventObject.end   = $.fullCalendar.moment(eventObject.start).add(eventObject.trip.duration, 'hours');
 	eventObject.id    = randomString();
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
@@ -468,7 +444,7 @@ function createCalendarEntry(eventObject) {
 function updateCalendarEntry(eventObject, redraw) {
 
 	eventObject.start = eventObject.session.start;
-	eventObject.end   = $.fullCalendar.moment(eventObject.start).add('hours', eventObject.trip.duration);
+	eventObject.end   = $.fullCalendar.moment(eventObject.start).add(eventObject.trip.duration, 'hours');
 
 	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
