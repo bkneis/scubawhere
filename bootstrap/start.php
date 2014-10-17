@@ -27,8 +27,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local_soren' => array('homestead'),
-	'local_bryan' => array('Admin-PC'),
-	'local_andy'  => array('andys-mbp'),
+	'local_bryan' => array('laptop1'),
 	'local_jon'   => array('JonWindows'),
 
 ));
