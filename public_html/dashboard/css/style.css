@@ -660,7 +660,6 @@ span.box-tool{
 .entity-list li.active {
 	background-color: rgb(230, 245, 255);
 }
-
 .fc-view-container {
 	background-color: white;
 }
@@ -670,9 +669,11 @@ span.box-tool{
 	background-color: #34495e;
 	color: white;
 }
-
 .fc-toolbar .loader {
 	top: 0.1em;
+}
+.fc-row .fc-content-skeleton td {
+	border-color: #ddd;
 }
 
 .dashed-border {

@@ -445,10 +445,10 @@ function createCalendarEntry(eventObject) {
 	eventObject.start = eventObject.session.start;
 	eventObject.end   = $.fullCalendar.moment(eventObject.start).add(eventObject.trip.duration, 'hours');
 	eventObject.id    = randomString();
-	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
+	eventObject.color = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
 	if(eventObject.session.deleted_at) {
-		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.2);
+		eventObject.color = colorOpacity(eventObject.color, 0.2);
 		if( eventObject.textColor == '#000000') // black
 			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
@@ -465,10 +465,10 @@ function updateCalendarEntry(eventObject, redraw) {
 	eventObject.start = eventObject.session.start;
 	eventObject.end   = $.fullCalendar.moment(eventObject.start).add(eventObject.trip.duration, 'hours');
 
-	eventObject.backgroundColor = reproColor( eventObject.session.boat_id ).bgcolor;
+	eventObject.color = reproColor( eventObject.session.boat_id ).bgcolor;
 	eventObject.textColor       = reproColor( eventObject.session.boat_id ).txtcolor;
 	if(eventObject.session.deleted_at) {
-		eventObject.backgroundColor = colorOpacity(eventObject.backgroundColor, 0.2);
+		eventObject.color = colorOpacity(eventObject.color, 0.2);
 		if( eventObject.textColor == '#000000') // black
 			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
