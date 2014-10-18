@@ -418,8 +418,8 @@ class BookingController extends Controller {
 
 		// "Validation" rules
 		return array(
-			"email" => $booking->lead_costumer()->first()->email != '',
-			"phone" => $booking->lead_costumer()->first()->phone != '',
+			"email" => $booking->lead_customer()->first()->email != '',
+			"phone" => $booking->lead_customer()->first()->phone != '',
 		);
 	}
 
