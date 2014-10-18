@@ -39,7 +39,7 @@ class Departure extends Ardent {
 
 	public function bookingdetails()
 	{
-		return $this->hasMany('Bookingdetail');
+		return $this->hasMany('Bookingdetail', 'session_id');
 	}
 
 	public function trip()
