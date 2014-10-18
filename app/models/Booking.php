@@ -16,6 +16,8 @@ class Booking extends Ardent {
 		'comment'
 	);
 
+	protected $appends = array('decimal_price');
+
 	public static $rules = array(
 		'agent_id'         => 'integer|exists:agents,id|required_without:source',
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
@@ -39,6 +41,23 @@ class Booking extends Ardent {
 
 		if( isset($this->comments) )
 			$this->comments = Helper::sanitiseString($this->comments);
+	}
+
+	public function getDecimalPriceAttribute()
+	{
+		$currency = new Currency( $this->currency );
+
+		return number_format(
+			$this->price / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
+	}
+
+	public function decimal_price()
+	{
+		return $this->getDecimalPriceAttribute();
 	}
 
 	public function customers()

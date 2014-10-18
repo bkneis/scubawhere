@@ -28,6 +28,11 @@ class AddonController extends Controller {
 		return Auth::user()->addons()->get();
 	}
 
+	public function getCompulsory()
+	{
+		return Auth::user()->addons()->where('compulsory', true)->get();
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only(

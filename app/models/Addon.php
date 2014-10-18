@@ -26,7 +26,7 @@ class Addon extends Ardent {
 		'description' => '',
 		'currency'    => 'required|alpha|size:3|valid_currency',
 		'price'       => 'required|integer|min:0',
-		'compulsory'  => 'required'
+		'compulsory'  => 'required|boolean'
 	);
 
 	public function beforeSave()

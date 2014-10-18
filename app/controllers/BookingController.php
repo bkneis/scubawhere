@@ -170,7 +170,7 @@ class BookingController extends Controller {
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Booking details added.', 'customers' => $booking->customers()->get()); // 200 OK
+		return array('status' => 'OK. Booking details added.', 'customers' => $booking->customers()->get(), 'price' => $booking->decimal_price()); // 200 OK
 	}
 
 	public function postRemoveDetails()
@@ -220,13 +220,118 @@ class BookingController extends Controller {
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Booking details removed.', 'customers' => $booking->customers()->get()); // 200 OK
+		return array('status' => 'OK. Booking details removed.', 'customers' => $booking->customers()->get(), 'price' => $booking->decimal_price()); // 200 OK
+	}
+
+	public function postAddAddon()
+	{
+		/**
+		 * Required input parameters
+		 * booking_id
+		 * session_id
+		 * customer_id
+		 * addon_id
+		 *
+		 * Optional input parameters
+		 * quantity
+		 */
+
+		// Check if the addon belongs to the company
+		try
+		{
+			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
+			$addon = Auth::user()->addons()->findOrFail( Input::get('addon_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( Input::get('quantity') )
+		{
+			$quantity = Input::get('quantity');
+			$validator = new Validator::make(
+				array('quantity' => $quantity),
+				array('quantity' => 'integer|min:1')
+			);
+
+			if( $validator->fails() )
+			{
+				return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+			}
+		}
+		else
+		{
+			$quantity = 1;
+		}
+
+		try
+		{
+			if( !Input::get('booking_id') )  throw new ModelNotFoundException();
+			if( !Input::get('session_id') )  throw new ModelNotFoundException();
+			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$bookingdetails = $booking->bookingdetails()
+				->where('session_id', Input::get('session_id'))
+				->where('customer_id', Input::get('customer_id'))
+				->first();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$bookingdetails->attach( $addon->id, array('quantity', $quantity) );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Addon added.', 'price' => $booking->decimal_price());
+	}
+
+	public function postRemoveAddon()
+	{
+		/**
+		 * Required input parameters
+		 *
+		 * booking_id
+		 * session_id
+		 * customer_id
+		 * addon_id
+		 */
+
+		try
+		{
+			if( !Input::get('booking_id') )  throw new ModelNotFoundException();
+			if( !Input::get('session_id') )  throw new ModelNotFoundException();
+			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$bookingdetails = $booking->bookingdetails()
+				->where('session_id', Input::get('session_id'))
+				->where('customer_id', Input::get('customer_id'))
+				->first();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
+		$bookingdetails->detach( $addon->id );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Addon removed.', 'price' => $booking->decimal_price());
 	}
 
 	public function postEditInfo()
 	{
 		/**
 		 * Valid input parameters
+		 *
 		 * booking_id
 		 * pick_up_location
 		 * pick_up_time
