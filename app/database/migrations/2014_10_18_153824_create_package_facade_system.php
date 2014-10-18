@@ -22,6 +22,9 @@ class CreatePackageFacadeSystem extends Migration {
 
 		// 2. Create new facade table
 		Schema::create('packagefacades', function($table){
+
+			$table->engine = 'InnoDB';
+
 			$table->increments('id');
 
 			$table->integer('package_id')->unsigned();
