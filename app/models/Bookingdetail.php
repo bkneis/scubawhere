@@ -40,9 +40,14 @@ class Bookingdetail extends Ardent {
 		return $this->belongsTo('Session');
 	}
 
+	public function packagefacade()
+	{
+		return $this->belongsTo('Packagefacade')->withTimestamps();
+	}
+
 	public function package()
 	{
-		return $this->belongsTo('Package');
+		return $this->hasManyThrough('Package', 'Packagefacade')->first();
 	}
 
 	public function addons()

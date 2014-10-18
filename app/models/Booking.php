@@ -85,9 +85,14 @@ class Booking extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
-	public function packages()
+	/*public function packages()
 	{
 		return $this->belongsToMany('Package', 'booking_details')->withPivot('customer_id', 'is_lead', 'ticket_id', 'session_id');
+	}*/
+
+	public function packagefacades()
+	{
+		return $this->belongsToMany('Packagefacade', 'booking_details');
 	}
 
 	public function tickets()
@@ -100,15 +105,21 @@ class Booking extends Ardent {
 		return $this->hasMany('Payment');
 	}
 
-
 	public function updatePrice()
 	{
-		$packagesSum = $this->packages()->distinct()->sum('price');
+		// TODO Do this properly with currency check
 
-		$ticketsSum = $this->tickets()->wherePivot('package_id', null)->sum('price');
+		$packagesSum = 0;
+		$this->packagefacades()->distinct()->with('package')->each(function($packagefacade)
+		{
+			$packagesSum += $packagefacade->package()->price;
+		}
 
-		$this->price = $packagesSum + $ticketsSum;
-		$this->currency = $this->tickets()->first()->currency;
+		$ticketsSum  = $this->tickets()->wherePivot('package_id', null)->sum('price');
+
+		$addonSum    = $this->addons()->sum('price');
+
+		$this->price = $packagesSum + $ticketsSum + $addonSum;
 
 		$this->save();
 	}

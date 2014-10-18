@@ -73,6 +73,7 @@ class BookingController extends Controller {
 		 * ticket_id
 		 * session_id
 		 * package_id (optional)
+		 * packagefacade_id (optional)
 		 */
 
 		// Check if all IDs exist and belong to the signed-in company
@@ -89,7 +90,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
-			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -99,7 +100,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
-			Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
+			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -116,7 +117,20 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( Input::get('package_id') )
+		if( Input::get('packagefacade_id') )
+		{
+			try
+			{
+				$packagefacade = $booking->packagefacades()->findOrFail( Input::get('packagefacade_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+			}
+
+			$package = $packagefacade->package();
+		}
+		elseif( Input::get('package_id') )
 		{
 			try
 			{
@@ -141,29 +155,38 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session is already fully booked!'), 'capacity' => $capacity), 403 ); // 403 Forbidden
 		}
 
-		if( Input::get('package_id') && !empty($package->capacity) )
+		if( isset($package) && !empty($package->capacity) )
 		{
 			// Validate remaining package capacity on session
 
 			// Package's capacity is *not* infinite and must be checked
-			$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
+			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($q) use ($package)
+			{
+				$q->where('package_id', $package->id);
+			})->count();
 
 			if( $usedUp >= $package->capacity )
 			{
+
+				// Check for extra one-time packages for this session and their capacity
+				// TODO
 				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
 			}
 		}
 
-		// Check for extra one-time packages for this session and their capacity
-		// TODO
-
 		// If all checks completed successfully, write into database
-		$booking->customers()->attach( Input::get('customer_id'),
+		if( isset($package) && !isset($packagefacade) )
+		{
+			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
+			$packagefacade->save();
+		}
+
+		$booking->customers()->attach( $customer->id,
 			array(
-				'is_lead' => $is_lead,
-				'ticket_id' => Input::get('ticket_id'),
-				'session_id' => Input::get('session_id'),
-				'package_id' => Input::get('package_id') ? $package->id : null
+				'is_lead'          => $is_lead,
+				'ticket_id'        => $ticket->id,
+				'session_id'       => $departure->id,
+				'packagefacade_id' => isset($package) ? $packagefacade->id : null
 			)
 		);
 

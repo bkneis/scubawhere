@@ -59,16 +59,21 @@ class Package extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
-	public function bookings()
+	/* public function bookings()
 	{
 		return $this->belongsToMany('Booking', 'booking_details')
 			->withPivot('ticket_id', 'customer_id', 'is_lead', 'session_id')
 			->withTimestamps();
+	}*/
+
+	public function packagefacades()
+	{
+		return $this->hasMany('Packagefacade')->withTimestamps();
 	}
 
 	public function bookingdetails()
 	{
-		return $this->hasMany('Bookingdetail');
+		return $this->hasManyThrough('Bookingdetail', 'Packagefacade');
 	}
 
 	public function tickets()

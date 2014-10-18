@@ -29,7 +29,7 @@ class Departure extends Ardent {
 
 	public function getCapacityAttribute()
 	{
-		return array( $this->bookings()->count(), $this->boat()->first()->capacity );
+		return array( $this->bookingdetails()->count(), $this->boat()->first()->capacity );
 	}
 
 	public function addons()
