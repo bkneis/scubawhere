@@ -45,6 +45,9 @@ $(function(){
 	var spotSource = $("#selected-spot").html();
 	var spotTemplate = Handlebars.compile(spotSource);
 
+	var spotSource2 = $("#locations").html();
+	var spotTemplate2 = Handlebars.compile(spotSource2);
+
 	$("#trip-form").delegate(".add-location", "click", function(){
 		//append this to list of selected locations
 
@@ -57,8 +60,9 @@ $(function(){
 
 		//if it isnt already selected
 		//$( "li" ).remove("#"+thisLocationName);
-		$("#" + thisLocationName).remove();
-		console.log(thisLocationName);
+		//var removeLocation = thisLocationName.replace(/\s+/g, '');
+		$("#" +thisLocationID).remove();
+		console.log(thisLocationID);
 		// find out a way to remove them with only first name
 		$("#selected-spots").append(spotTemplate(spotData));
 
@@ -76,7 +80,7 @@ $(function(){
 		var spotData = {name: thisLocationName, id: thisLocationID, longitude: thisLocationLng, latitude: thisLocationLat};
 
 		$( "li" ).remove("#"+thisLocationID);
-		//$("#locations-list").append(spotTemplate(spotData));
+		$("#locations-list").append(spotTemplate2(spotData));
 	});
 
 	$("#locations-list").html("");//refresh list
