@@ -58,6 +58,7 @@ $(function(){
 		//if it isnt already selected
 		//$( "li" ).remove("#"+thisLocationName);
 		$("#" + thisLocationName).remove();
+		console.log(thisLocationName);
 		// find out a way to remove them with only first name
 		$("#selected-spots").append(spotTemplate(spotData));
 

@@ -1,6 +1,7 @@
 <?php
 
 use LaravelBook\Ardent\Ardent;
+use PhilipBrown\Money\Currency;
 
 class Booking extends Ardent {
 	protected $fillable = array(

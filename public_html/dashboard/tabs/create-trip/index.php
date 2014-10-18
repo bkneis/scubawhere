@@ -63,7 +63,7 @@
 
 
 					<script id="locations" type="text/x-handlebars-template">
-
+					// add js function to remove spacing of location
 						<li id='{{name}}' class="add-location" data-location="{{name}},{{id}},{{latitude}},{{longitude}}">
 
 							<div class="location-details">

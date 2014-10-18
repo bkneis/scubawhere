@@ -219,10 +219,7 @@ function showSessions() {
 	//var ticketID = 10;
 	var ticketID = document.getElementById("customer-tickets").value;
 	//console.log(ticketID);
-
-	if(ticketID == 0){
-		ticketID = document.getElementById("customer-package-tickets").value;
-	}
+	
 	//var param = "ticket_id=" + ticketID + "&after=2014-07-01";
 	var param = "ticket_id=" + ticketID + "&after=" + getToday();
 	var param2;
@@ -489,6 +486,7 @@ function validateBooking() {
 		_token : window.token,
 		booking_id : bookingID
 	}
+	var params = "?booking_id=" + bookingID;
 
 	if((cash + card + cheque + bank + pob) == bookingCost){
 		console.log(params);
