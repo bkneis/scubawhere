@@ -114,7 +114,7 @@ class Booking extends Ardent {
 		$this->packagefacades()->distinct()->with('package')->each(function($packagefacade)
 		{
 			$packagesSum += $packagefacade->package()->price;
-		}
+		});
 
 		$ticketsSum  = $this->tickets()->wherePivot('package_id', null)->sum('price');
 
