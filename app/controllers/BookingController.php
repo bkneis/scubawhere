@@ -250,7 +250,7 @@ class BookingController extends Controller {
 		if( Input::get('quantity') )
 		{
 			$quantity = Input::get('quantity');
-			$validator = new Validator::make(
+			$validator = Validator::make(
 				array('quantity' => $quantity),
 				array('quantity' => 'integer|min:1')
 			);
