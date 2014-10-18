@@ -46,7 +46,7 @@
 				<ul id="available-packages" class="product-list">
 					<script id="packages-list-template" type="text/x-handlebars-template">
 					{{#each packages}}
-					<li onclick="selectPackage('{{name}}', {{id}})">{{name}}</li>
+					<li onclick="selectPackage('{{name}}', {{id}}, '{{price}}')">{{name}}</li>
 					{{/each}}
 					</script>
 				</ul>
@@ -70,11 +70,11 @@
 					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
 				</ul>
 				<div id="tabcontent"></div>
-				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" href="#ticket-fancybox" style="margin-top:10px; display:none">Assign ticket</button>
+				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="refreshCal()" href="#ticket-fancybox" style="margin-top:10px; display:none">Assign ticket</button>
 				<!--<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="openFancy()" style="margin-top:10px;">Assign ticket</button>-->
 
 				<!-- Pop up box -->
-				<div id="ticket-fancybox" style="display:none; height:810px; width:900px">
+				<div id="ticket-fancybox" style="display:none; height:600px%; width:700px">
 					<!--<button onclick="test9()">test</button>-->
 					<div id="customer-select">
 						<!-- Here il display all the customers names, then have onclick to send customer-id to hidden data aswell look up if thier lead-->
@@ -83,7 +83,7 @@
 					<div id="tickets-select" style="width:22%;float:left;">
 						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select></p>
 					</div>
-					<div id="packages-select" style="width:40%; float:left;">
+					<!--<div id="packages-select" style="width:40%; float:left;">
 
 							<p>or Package: <select id="customer-packages" onChange="displayPackageTickets()"><option value="0">Please select...</option></select>
 							Select ticket:
@@ -91,7 +91,8 @@
 								<option value="0">Select a trip...</option>
 							</select>
 						</p>
-					</div>
+					</div>-->
+					<div style="clear:both;"></div>
 					<!--<div id="info" style="display:none">
 						<p id="session-id"></p>
 				</div>-->
@@ -252,8 +253,14 @@
 		        // change the border color just for fun
 		        $(this).css('border-color', 'red');
 
-		    	}
-	    })
+		    	}//,
+		    	//'option', 'height', 200,
+	    		//'option', 'width', 300
+	     
+	    	
+	    });
+
+
 
 	});
 	</script>

@@ -286,9 +286,9 @@
             }
             else {
                 var tickets = document.getElementById("customer-tickets").length - 1;
-                var packageTickets = document.getElementById("customer-package-tickets").length - 1;
+                //var packageTickets = document.getElementById("customer-package-tickets").length - 1;
                 //console.log("tickets: " + tickets + "package tickets : " + packageTickets);
-                var ticketsTotal = tickets + packageTickets;
+                var ticketsTotal = tickets;
                 if(ticketsTotal == 0){
                     return true;
                 }

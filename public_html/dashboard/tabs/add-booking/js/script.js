@@ -103,29 +103,50 @@ function selectTicket(ticket, id, price) {
 // Same as selectTicket but for packages
 function selectPackage(package, id, price) {
 
-	var customerPackages = document.getElementById("customer-packages");
+	/*var customerPackages = document.getElementById("customer-packages");
 	var option = document.createElement("option");
 	option.text = package;
 	option.value = id;
-	option.setAttribute("data-price", price);
+	option.setAttribute("data-price", price);*/
 	bookingCost += parseFloat(price);
 	var totalBookingCost = document.getElementById("totalBookingCost");
 	totalBookingCost.innerHTML = bookingCost;
-	customerPackages.add(option);
+	//customerPackages.add(option);
 
 	var selectedPackages = document.getElementById("selected-tickets");
 	var entry = document.createElement('li');
 	entry.appendChild(document.createTextNode(package));
 	selectedPackages.appendChild(entry);
+	alert(package + " was added");
 
-	alert(package + " was added")
+	var param = "id=" + id;
+		var customerPackageTickets = document.getElementById("customer-tickets");
+		Package.getPackage(param, function success(data){
+			console.log(data.tickets);
+			console.log(data);
+			var numTickets = data.tickets.length;
+			for(var i=0; i < numTickets; i++) {
+				var quantity = data.tickets[i].pivot.quantity;
+				var optGroup = document.createElement('optgroup')
+				optGroup.label = package;
+				for(var j=0; j < quantity; j++){
+					var option = document.createElement("option");
+					option.text = data.tickets[i].name;
+					option.value = data.tickets[i].id;
+					option.setAttribute("data-price", (price / quantity));
+					option.setAttribute("data-package", id);
+					optGroup.appendChild(option);
+					//customerPackageTickets.add(option);
+				}
+				customerPackageTickets.add(optGroup);
+			}
+		}); 
 
 }
 
-// This is to load the second select box next to the packages options with all tickets related to that package
-function displayPackageTickets() {
+// This is to load the second select box
 
-	var packageID = document.getElementById("customer-packages").value;
+	/*var packageID = document.getElementById("customer-packages").value;
 
 	if(packageID == 0) {
 		document.getElementById("packages-select").style.display = "none";
@@ -133,11 +154,12 @@ function displayPackageTickets() {
 	}
 	else {
 		var i;
-		var customerPackageTickets = document.getElementById("customer-package-tickets");
+		var customerPackageTickets = document.getElementById("customer-tickets");
+		//var customerPackageTickets = document.getElementById("customer-package-tickets");
 		var customerTickets = document.getElementById("tickets-select");
 
-		customerPackageTickets.style.display = "inline";
-		customerTickets.style.display = "none";
+		//customerPackageTickets.style.display = "inline";
+		//customerTickets.style.display = "none";
 
 		var param = "id=" + packageID;
 		Package.getPackage(param, function success(data){
@@ -149,9 +171,25 @@ function displayPackageTickets() {
 				option.value = data.tickets[i].id;
 				customerPackageTickets.add(option);
 			}
-		});
+		}); 
 	}
 
+}*/ 
+
+function selectPackageTicket() {
+
+		var param = "id=" + packageID;
+		var customerPackageTickets = document.getElementById("customer-tickets");
+		Package.getPackage(param, function success(data){
+			//console.log(data.tickets);
+			var numTickets = data.tickets.length;
+			for(var i=0; i < numTickets; i++) {
+				var option = document.createElement("option");
+				option.text = data.tickets[i].name;
+				option.value = data.tickets[i].id;
+				customerPackageTickets.add(option);
+			}
+		});
 }
 
 function getToday() {
@@ -161,11 +199,11 @@ function getToday() {
 	var yyyy = today.getFullYear();
 
 	if(dd<10) {
-	    dd='0'+dd
+		dd='0'+dd
 	} 
 
 	if(mm<10) {
-	    mm='0'+mm
+		mm='0'+mm
 	} 
 
 	today = yyyy + '-' + mm + '-' + dd;
@@ -192,7 +230,7 @@ function showSessions() {
 	window.sessions;
 	window.trips;
 
-	Sessions.filter(param, function success(data) {
+	Session.filter(param, function success(data) {
 
 		window.sessions = _.indexBy(data, 'id');
 		//console.log(window.sessions);
@@ -229,11 +267,11 @@ function showSessions() {
 
 function validateLead(params) {
 	var email = params.email;
-    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    if (!filter.test(email)) {
-	    alert('Please provide a valid email address');
-	    return false;
+	if (!filter.test(email)) {
+		alert('Please provide a valid email address');
+		return false;
 	}
 	else if(!params.phone.match(/^\d+$/)){
 		alert("Please enter a valid phone number");
@@ -272,25 +310,26 @@ function addCustomer(count, checkLead){
 		//var checkLead = document.getElementById("is_lead"+count).checked;
 		console.log(checkLead);
 
-	if(checkLead){ // So they are the lead customer
-		params.email = document.getElementById("email"+count).value;
-		//params.country_id = document.getElementById("leadCountry").value;
-		params.country_id = 1;
-		params.phone = document.getElementById("phone"+count).value;
+		if(checkLead){ // So they are the lead customer
+			params.email = document.getElementById("email"+count).value;
+			//params.country_id = document.getElementById("leadCountry").value;
+			params.country_id = 1;
+			params.phone = document.getElementById("phone"+count).value;
 
-		validated = validateLead(params);
-	}
-	else {
-		if(params.firstname == "" || params.lastname == "" ){
-			alert("Please fill in the customers first and last name");
+			validated = validateLead(params);
 		}
 		else {
-			validated = true;
-	}
+			if(params.firstname == "" || params.lastname == "" ){
+				alert("Please fill in the customers first and last name");
+			}
+			else {
+				validated = true;
+			}
+		}
 
-	if(validated) {
-		Customer.createCustomer(params, function sucess(data){
-			console.log(data);
+		if(validated) {
+			Customer.createCustomer(params, function sucess(data){
+				console.log(data);
 			//document.getElementById("add-cust-"+count).style.display = "none";
 			document.getElementById("add-cust-"+count).innerHTML = "Edit Customer";
 			customerID = data.id;
@@ -309,10 +348,9 @@ function addCustomer(count, checkLead){
 			btn.setAttribute("task", "edit");
 			console.log(customersArray);
 		});
+		}
+
 	}
-
-}
-
 }
 
 function editCustomer(count) {
@@ -358,6 +396,7 @@ function editCustomer(count) {
 		}
 		else {
 			validated = true;
+		}
 	}
 
 	if(validated){
@@ -379,7 +418,6 @@ function assignTicket() {
 	var customer = document.getElementById("customers");
 	var trip = document.getElementById("customer-tickets");
 
-	if(trip.value == 0) trip = document.getElementById("customer-package-tickets");
 	if(customer.value == 0 || trip.value == 0 || sessionID == 0) {
 		alert("Please select a customer a ticket and a session to assign the trip");
 	}
@@ -389,11 +427,12 @@ function assignTicket() {
 
 	if(validated){
 
-	var customerID = document.getElementById("customers").value;
+		var customerID = document.getElementById("customers").value;
 		var isLead = customer.options[customer.selectedIndex].getAttribute("data-lead"); //- TRY NOW ADDED!!!!!!!!!!!
 		//var customerCount = document.getElementById("customers").getAttribute("data-count");
 		var ticketID = trip.value;
-		var packageID = document.getElementById("customer-packages").value;
+		//var packageID = document.getElementById("customer-packages").value;
+		var packageID = trip.options[trip.selectedIndex].getAttribute("data-package");
 		var customerName = customer.options[customer.selectedIndex].text;
 		var tripName = trip.options[trip.selectedIndex].text;
 		var price = trip.options[trip.selectedIndex].getAttribute("data-price");
@@ -405,7 +444,8 @@ function assignTicket() {
 			customer_id : customerID,
 			is_lead : isLead,
 			ticket_id : ticketID,
-			session_id : sessionID
+			session_id : sessionID,
+			package_id : packageID
 		};
 		/*if(ticketID == 0){
 			ticketID = document.getElementById("customer-package-tickets").value;
@@ -428,11 +468,13 @@ function assignTicket() {
 			cell4.innerHTML = String(endDate).slice(0, -8);
 			cell5.innerHTML = price;
 			alert("Trip Assigned");
-			$.fancybox.close();
+			if(document.getElementById("customer-tickets").length == 1){
+				$.fancybox.close();
+			}
 			$('#calendar').fullCalendar('removeEvents');
 			sessionID = 0;
 		});
-		}
+	}
 }
 
 function validateBooking() {
@@ -449,6 +491,7 @@ function validateBooking() {
 	}
 
 	if((cash + card + cheque + bank + pob) == bookingCost){
+		console.log(params);
 		Booking.validateBooking(params, function success(data){
 			console.log(data);
 			alert('Booking is validated, you can view/edit your booking in manage bookings');
@@ -457,4 +500,10 @@ function validateBooking() {
 	else {
 		alert('Please ensure the amount paid is the same as the total booking cost');
 	}
+}
+
+function refreshCal() {
+
+	$("#calendar").fullCalendar( 'changeView', 'basicWeek' );
+
 }

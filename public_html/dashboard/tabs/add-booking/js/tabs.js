@@ -44,7 +44,7 @@ $(function() {
         '<input type="text" name="fname" id="fname'+count+'" placeholder="First Name" />',
 		'<input type="text" name="lname" id="lname'+count+'" placeholder="Last Name" />',
 		'<input type="text" name="phone" id="phone'+count+'" placeholder="Contact Number" />',
-		'<input type="text" name="email" id="email'+count+'" placeholder="Email Address" />',
+		'<input type="text" name="email" class="email" id="email'+count+'" placeholder="Email Address" />',
 		'<select id="country'+count+'" ><option>Please select country of origin</option></select>',
         '<button id="add-cust-'+count+'" onclick="addCustomer('+count+', 0)">Add customer</button>',
         '</form>',
