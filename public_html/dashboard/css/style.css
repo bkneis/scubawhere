@@ -681,7 +681,11 @@ span.box-tool{
 	border: dashed rgb(211, 211, 211);
 	padding: 0.5em 2em 1em;
 }
-.dashed-border.border-blink {
+.attention-placeholder {
+	border: dashed transparent;
+}
+.border-blink {
+	border: dashed red;
 	-webkit-animation: border-blink 0.8s ease 3;
 	-moz-animation: border-blink 0.8s ease 3;
 	-ms-animation: border-blink 0.8s ease 3;
@@ -689,14 +693,14 @@ span.box-tool{
 }
 
 @-webkit-keyframes border-blink {
-	50% { border-color: red; }
+	50% { border-color: transparent; }
 }
 @-moz-keyframes border-blink {
-	50% { border-color: red; }
+	50% { border-color: transparent; }
 }
 @-ms-keyframes border-blink {
-	50% { border-color: red; }
+	50% { border-color: transparent; }
 }
 @keyframes border-blink {
-	50% { border-color: red; }
+	50% { border-color: transparent; }
 }

@@ -102,11 +102,13 @@
 						<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
 					</form>
 				{{else}}
-					<div class="dashed-border">
-						<p>You are moving a <strong>timetabled</strong> session!<br>Do you want to move all future versions of this session, too?</p>
+					<div class="horizontal-seperator"><span>Options</span></div>
+					<div class="yellow-helper attention-placeholder">
+						<h3>You are editing a <u>timetabled</u> session</h3>
+						Do you want to  all future versions of this session, too?</p>
 						<p>
-							<label><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move all future versions.</label><br>
-							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move this one and leave the others where they are.</label>
+							<label style="display: block; margin-bottom: 0.5em;"><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.</label>
+							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
 						</p>
 					</div>
 				{{/unless}}

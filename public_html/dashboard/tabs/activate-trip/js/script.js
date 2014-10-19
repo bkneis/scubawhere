@@ -291,11 +291,11 @@ $(function() {
 		// Check if every necessary info is supplied
 		if( eventObject.session.timetable_id && ( starthours != eventObject.start.hours() || startminutes != eventObject.start.minutes() ) && $('[name=handle_timetable]:checked').length === 0) {
 
-			$('.border-blink').removeClass('border-blink');
+			$('.attention-placeholder').removeClass('border-blink');
 
 			// Direct chaining didn't work. Thus a timeout hack...
 			setTimeout(function() {
-				$('.dashed-border').addClass('border-blink');
+				$('.attention-placeholder').addClass('border-blink');
 			}, 10);
 
 			return false;
@@ -344,12 +344,28 @@ $(function() {
 	// The DELETE button
 	$('#modalWindows').on('click', '.delete-session', function(event) {
 
-		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
-
-
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
+
+		// Check if every necessary info is supplied
+		if( eventObject.session.timetable_id && $('[name=handle_timetable]:checked').length === 0) {
+
+			$('.attention-placeholder').removeClass('border-blink');
+
+			// Direct chaining didn't work. Thus a timeout hack...
+			setTimeout(function() {
+				$('.attention-placeholder').addClass('border-blink');
+			}, 10);
+
+			return false;
+		}
+		else {
+			// Add mandatory parameter to request payload
+			eventObject.session.handle_timetable = $('[name=handle_timetable]:checked').val();
+		}
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
 
 		eventObject.session._token = window.token;
 

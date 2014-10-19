@@ -123,6 +123,20 @@ label {
 	opacity: 0.6;
 }
 
+.horizontal-seperator {
+	display: block;
+	background: gray;
+	height: 1px;
+	text-align: center;
+	margin: 2em;
+}
+	.horizontal-seperator span {
+		background-color: white;
+		position: relative;
+		top: -0.7em;
+		padding: 0 1em;
+	}
+
 /*				ELEMENT STYLES
 *******************************/
 *:disabled {
