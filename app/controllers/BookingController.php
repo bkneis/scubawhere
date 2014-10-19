@@ -47,6 +47,9 @@ class BookingController extends Controller {
 			$data['source'] = null;
 		}
 
+		$data['price'] = 0;
+		$data['currency'] = Helper::currency();
+
 		$booking = new Booking($data);
 
 		// Generate a reference number and check whether it is unique
