@@ -95,12 +95,23 @@ class TimetableController extends Controller {
 		/////////////////////////////////////////////////////////////////////////
 		// STEP 2: Create 1D array of *all* session dates that will be created //
 		/////////////////////////////////////////////////////////////////////////
-		$until = Input::get( 'until', date_create('+18 months')->format('Y-m-d') );
-		$until = date_create($until)->setTime(23, 59, 59); // Set time to last second of the day to make `until` date inclusive
-		if( $until === false )
+		$until = Input::get('until');
+
+		if( !Input::get('until') || empty($until) )
 		{
-			return Response::json( array('errors' => array('The "until" value is not a valid date.')), 400 ); // 400 Bad Request
+			$until = date_create('+18 months'); // Default
 		}
+		else
+		{
+			$until = date_create($until);
+
+			if( $until === false )
+			{
+				return Response::json( array('errors' => array('The "until" value is not a valid date.')), 400 ); // 400 Bad Request
+			}
+		}
+
+		$until->setTime(23, 59, 59); // Set time to last second of the day to make `until` date inclusive
 
 		$sessionDates = array();
 		$break = false;
@@ -130,6 +141,7 @@ class TimetableController extends Controller {
 		///////////////////////////////////////////////////////////////////////////
 		// STEP 3: Create required full detail array for insertion into database //
 		///////////////////////////////////////////////////////////////////////////
+
 		$now = new DateTime;
 		foreach( $sessionDates as &$date)
 		{
@@ -143,15 +155,22 @@ class TimetableController extends Controller {
 			);
 		}
 
-		DB::table('sessions')->insert( $sessionDates );
+		try
+		{
+			DB::table('sessions')->insert( $sessionDates );
+		}
+		catch(Illuminate\Database\QueryException $e)
+		{
+			return Response::json( array('errors' => array('departure->trip_id: '.$departure->trip_id, $e->getSql(), $e->getBindings())), 500 ); // 500 Internal Server Error
+		}
 
 		return Response::json( array(
 			'status'   => 'OK. Timetable and sessions created',
 			'id'       => $timetable->id,
-			'sessions' => $timetable->departures()
+			/*'sessions' => $timetable->departures()
 				->where('start', '>', strtotime('first day of this month'))
 				->where('start', '<', strtotime('last day of next month'))
-				->get()
+				->get()*/
 		), 201 ); // 201 Created
 	}
 

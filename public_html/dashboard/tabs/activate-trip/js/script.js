@@ -441,16 +441,8 @@ $(function() {
 				// Remove original session
 				eventObject = $form.closest('.reveal-modal').data('eventObject');
 
-				// $('#calendar').fullCalendar('removeEvents', eventObject.id);
-
-				// Unset eventObject
-				// delete eventObject;
-
 				// Close modal window
 				$('#modalWindows .close-reveal-modal').click();
-
-				// Draw new sessions
-				// var sessions = _.indexBy(data.sessions, 'id');
 
 				$('#calendar').fullCalendar('refetchEvents');
 			},

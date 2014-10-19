@@ -98,8 +98,11 @@
 						</table>
 						<input type="hidden" name="_token">
 						<input type="hidden" name="session_id" value="{{session.id}}">
-						Until: <input type="date" name="until">
+
 						<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
+
+						Until: <input type="date" name="until" placeholder="YYYY-MM-DD"><br>
+						<small>Default: for 1.5 years</small>
 					</form>
 				{{else}}
 					<div class="horizontal-seperator"><span>Options</span></div>
