@@ -298,7 +298,7 @@ class BookingController extends Controller {
 			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
 
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
-			$bookingdetails = $booking->bookingdetails()
+			$bookingdetail = $booking->bookingdetails()
 				->where('session_id', Input::get('session_id'))
 				->where('customer_id', Input::get('customer_id'))
 				->first();
@@ -308,7 +308,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$bookingdetails->attach( $addon->id, array('quantity', $quantity) );
+		$bookingdetail->addons()->attach( $addon->id, array('quantity', $quantity) );
 
 		// Update booking price
 		$booking->updatePrice();
