@@ -172,11 +172,12 @@ var locSource = $("#location").html();
 
 function detachLocation(id) {
 
-	var params = 
+	/*var params = 
 	{
 		_token : window.token,
 		id : id
-	};
+	};*/
+	var params = "?id=" + id;
 
 	console.log(id);
 
