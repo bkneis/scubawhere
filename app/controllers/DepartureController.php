@@ -39,7 +39,9 @@ class DepartureController extends Controller {
 		 * with_full
 		 */
 
-		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id', 'with_full');
+		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id');
+
+		$data['with_full'] = Input::get('with_full', false);
 
 		// Transform parameter strings into DateTime objects
 		$data['after']  = new DateTime( $data['after'] ); // Defaults to NOW, when parameter is NULL
