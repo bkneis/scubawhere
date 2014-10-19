@@ -189,7 +189,7 @@ class DepartureController extends Controller {
 		}
 
 		// Filter by capacity/availability
-		$departures = $departures->filter(function($departure) use ($package)
+		$departures = $departures->filter(function($departure) use ($package, $options)
 		{
 			$boatCapacity = $departure->getCapacityAttribute();
 			if( $boatCapacity[0] >= $boatCapacity[1] )

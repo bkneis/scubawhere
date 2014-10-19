@@ -70,7 +70,7 @@
 					<li id="litab" class="ntabs add"><a href="" id="addtab">+</a></li>
 				</ul>
 				<div id="tabcontent"></div>
-				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="refreshCal()" href="#ticket-fancybox" style="margin-top:10px; display:none">Assign ticket</button>
+				<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="refreshCal()" href="#ticket-fancybox" style="margin-top:10px; display:inline">Assign ticket</button>
 				<!--<button class="bttn blueb big-bttn fancybox" id="assign-ticket" onclick="openFancy()" style="margin-top:10px;">Assign ticket</button>-->
 
 				<!-- Pop up box -->
@@ -80,8 +80,15 @@
 						<!-- Here il display all the customers names, then have onclick to send customer-id to hidden data aswell look up if thier lead-->
 						<p>Customer: <select id="customers" onChange=""><option value="0">Please select...</option></select></p>
 					</div>
-					<div id="tickets-select" style="width:22%;float:left;">
-						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select></p>
+					<div id="tickets-select" style="float:left;">
+						<p>Ticket: <select id="customer-tickets" onChange="showSessions()"><option value="0">Please select...</option></select>
+						<select id="addons" onChange=""><option value="0">Addons...</option>
+						<script id="addons-template" type="text/x-handlebars-template">
+							{{#each addons}}
+								<option id=addon{{id}} data-price={{price}}>{{name}} - {{price}} {{currency}}</option> 
+							{{/each}}
+						</script>
+						</select></p>
 					</div>
 					<!--<div id="packages-select" style="width:40%; float:left;">
 
@@ -273,3 +280,4 @@
 	<script src="/dashboard/js/Controllers/Booking.js"></script>
 	<script src="/dashboard/js/Controllers/Trip.js"></script>
 	<script src="/dashboard/js/Controllers/Customer.js"></script>
+	<script src="/dashboard/js/Controllers/Addons.js"></script>

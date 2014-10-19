@@ -37,6 +37,13 @@ $(function(){
 		$("#available-packages").append(packageTemplate({packages:data}));
 	});
 
+	var addonsSource = $("#addons-template").html();
+	var addonsTemplate = Handlebars.compile(addonsSource);
+
+	Addon.getAllAddons(function(data){
+		$("#addons").append(addonsTemplate({addons:data}));
+	});
+
 });
 
 // Dispaly agents option if source of booking is through an agent
@@ -504,4 +511,9 @@ function refreshCal() {
 
 	$("#calendar").fullCalendar( 'changeView', 'basicWeek' );
 
+}
+
+function selectAddons() {
+
+	
 }
