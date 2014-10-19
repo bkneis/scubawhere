@@ -9,9 +9,9 @@ class ExampleTest extends TestCase {
 	 */
 	public function testBasicExample()
 	{
-		$crawler = $this->client->request('GET', '/');
-
-		$this->assertTrue($this->client->getResponse()->isOk());
+		//Example test to ensure the home page is currently redirecting
+		$response = $this->client->request('GET', '/');
+		$this->assertResponseStatus(302);
 	}
 
 }
