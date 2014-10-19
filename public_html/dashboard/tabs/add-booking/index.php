@@ -85,7 +85,7 @@
 						<select id="addons" onChange=""><option value="0">Addons...</option>
 						<script id="addons-template" type="text/x-handlebars-template">
 							{{#each addons}}
-								<option id=addon{{id}} data-price={{price}}>{{name}} - {{price}} {{currency}}</option> 
+								<option id=addon{{id}}>{{name}} - {{price}} {{currency}}</option> 
 							{{/each}}
 						</script>
 						</select></p>

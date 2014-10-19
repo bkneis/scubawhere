@@ -415,6 +415,26 @@ function test9() {
 	$('#calendar').fullCalendar('render');
 }
 
+function addAddon(){
+	var addons = document.getElementById('addons');
+	var addonIDsub = addons.options[addons.selectedIndex].id;
+	var addonID = addonIDsub.substring(5);
+	var customerID = document.getElementById("customers").value;
+
+	var params = 
+	{
+		_token : window.token,
+		booking_id : bookingID,
+		session_id : sessionID,
+		customer_id : customerID,
+		addon_id : addonID
+	};
+
+	Booking.addAddon(params, function success(data){
+		console.log(data);
+	});
+}
+
 // Used to assign customers their ticket and send API call to add detials of booking
 function assignTicket() {
 
@@ -478,6 +498,13 @@ function assignTicket() {
 			$('#calendar').fullCalendar('removeEvents');
 			sessionID = 0;
 		});
+	
+		var numAddons = document.getElementById("addons").length;
+		console.log(numAddons);
+		if(numAddons > 1){
+			addAddon();
+		}
+
 	}
 }
 
@@ -489,11 +516,11 @@ function validateBooking() {
 	var bank = document.getElementById('pay-bank').value;
 	var pob = document.getElementById('pay-pob').value;
 
-	var params = {
+	/*var params = {
 		_token : window.token,
 		booking_id : bookingID
-	}
-	//var params = "?booking_id=" + bookingID;
+	}*/
+	var params = "booking_id=" + bookingID;
 
 	if((cash + card + cheque + bank + pob) == bookingCost){
 		console.log(params);
