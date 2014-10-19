@@ -486,7 +486,7 @@ function validateBooking() {
 		_token : window.token,
 		booking_id : bookingID
 	}
-	var params = "?booking_id=" + bookingID;
+	//var params = "?booking_id=" + bookingID;
 
 	if((cash + card + cheque + bank + pob) == bookingCost){
 		console.log(params);
