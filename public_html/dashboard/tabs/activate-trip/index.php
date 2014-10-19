@@ -71,8 +71,8 @@
 
 				{{#unless isNew}}
 				{{#unless session.timetable_id}}
-					<form class="dashed-border" style="overflow: auto;">
-						<h3>Define a repeating timetable</h3>
+					<label><input type="checkbox" onchange="toggleTimetableForm();"> <h3 style="display: inline-block;">Define a repeating timetable</h3></label>
+					<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
 						<table>
 							<tr style="text-align: left;">
 								<th>Week #</th>

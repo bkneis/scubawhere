@@ -30,6 +30,10 @@ html, body{
 	font-size: 13px;
 }
 
+label {
+	cursor: pointer;
+}
+
 .loader {
 	display: inline-block;
 	margin-left: 1em;

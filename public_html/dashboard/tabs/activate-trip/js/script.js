@@ -560,6 +560,11 @@ function toggleWeek(self) {
 	}
 }
 
+function toggleTimetableForm() {
+	console.log($('.create-timetable'));
+	$('.create-timetable').toggle();
+}
+
 Handlebars.registerHelper('date', function(datetime) {
 	return datetime.format('DD-MM-YYYY');
 });
