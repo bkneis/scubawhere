@@ -310,23 +310,15 @@ class DepartureController extends Controller {
 
 					// Update all following session with new time and timetable_id
 					// First, calculate offset between old_time and new_time
-					$offset = $start->diff( new DateTime($departure->start) );
+					$offset    = new DateTime($departure->start);
+					$offset    = $offset->diff($start);
+					$offsetSQL = $offset->format('%h:%i'); // hours:minutes
 
-					// Get all affected sessions
-					$sessions = Auth::user()->departures()
-						->where('start', '>=', $departure->start)
-						->where('timetable_id', $departure->timetable_id)
-						->with('bookingdetails')
-						->get();
-
-					$sessions->each( function($session) use ($timetable, $offset)
-					{
-						$session->timetable_id = $timetable->id;
-						$session->start = new DateTime( $session->start );
-						$session->start->sub($offset);
-
-						$session->save();
-					});
+					// Single-Query MagicTM
+					DB::update(
+						"UPDATE `sessions` SET `timetable_id`=?, `start`=DATE_ADD(`start`, INTERVAL ? HOUR_MINUTE) WHERE `start`>=? AND `timetable_id`=?",
+						array( $timetable->id, $offsetSQL, $departure->start, $departure->timetable_id )
+					);
 
 					return array('status' => 'OK. All sessions updated.');
 				break;
