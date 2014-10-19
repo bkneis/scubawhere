@@ -1,5 +1,7 @@
 <?php
 /*
+ *  $Id$
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -14,24 +16,23 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <http://www.phpdoctrine.org>.
  */
 
 namespace Doctrine\DBAL\Schema;
 
 /**
- * Oracle Schema Manager.
+ * Oracle Schema Manager
  *
- * @author Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @since  2.0
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
+ * @author      Benjamin Eberlei <kontakt@beberlei.de>
+ * @version     $Revision$
+ * @since       2.0
  */
 class OracleSchemaManager extends AbstractSchemaManager
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableViewDefinition($view)
     {
         $view = \array_change_key_case($view, CASE_LOWER);
@@ -39,9 +40,6 @@ class OracleSchemaManager extends AbstractSchemaManager
         return new View($view['view_name'], $view['text']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableUserDefinition($user)
     {
         $user = \array_change_key_case($user, CASE_LOWER);
@@ -51,9 +49,6 @@ class OracleSchemaManager extends AbstractSchemaManager
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableTableDefinition($table)
     {
         $table = \array_change_key_case($table, CASE_LOWER);
@@ -62,44 +57,41 @@ class OracleSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @license New BSD License
      * @link http://ezcomponents.org/docs/api/trunk/DatabaseSchema/ezcDbSchemaPgsqlReader.html
+     * @param  array $tableIndexes
+     * @param  string $tableName
+     * @return array
      */
     protected function _getPortableTableIndexesList($tableIndexes, $tableName=null)
     {
         $indexBuffer = array();
-        foreach ($tableIndexes as $tableIndex) {
+        foreach ( $tableIndexes as $tableIndex ) {
             $tableIndex = \array_change_key_case($tableIndex, CASE_LOWER);
 
             $keyName = strtolower($tableIndex['name']);
 
-            if (strtolower($tableIndex['is_primary']) == "p") {
+            if ( strtolower($tableIndex['is_primary']) == "p" ) {
                 $keyName = 'primary';
                 $buffer['primary'] = true;
                 $buffer['non_unique'] = false;
             } else {
                 $buffer['primary'] = false;
-                $buffer['non_unique'] = ($tableIndex['is_unique'] == 0) ? true : false;
+                $buffer['non_unique'] = ( $tableIndex['is_unique'] == 0 ) ? true : false;
             }
             $buffer['key_name'] = $keyName;
             $buffer['column_name'] = $tableIndex['column_name'];
             $indexBuffer[] = $buffer;
         }
-
         return parent::_getPortableTableIndexesList($indexBuffer, $tableName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableTableColumnDefinition($tableColumn)
     {
         $tableColumn = \array_change_key_case($tableColumn, CASE_LOWER);
 
         $dbType = strtolower($tableColumn['data_type']);
-        if (strpos($dbType, "timestamp(") === 0) {
+        if(strpos($dbType, "timestamp(") === 0) {
             if (strpos($dbType, "WITH TIME ZONE")) {
                 $dbType = "timestamptz";
             } else {
@@ -107,22 +99,24 @@ class OracleSchemaManager extends AbstractSchemaManager
             }
         }
 
-        $unsigned = $fixed = null;
+        $type = array();
+        $length = $unsigned = $fixed = null;
+        if ( ! empty($tableColumn['data_length'])) {
+            $length = $tableColumn['data_length'];
+        }
 
         if ( ! isset($tableColumn['column_name'])) {
             $tableColumn['column_name'] = '';
         }
 
-        // Default values returned from database sometimes have trailing spaces.
-        $tableColumn['data_default'] = trim($tableColumn['data_default']);
-
-        if ($tableColumn['data_default'] === '' || $tableColumn['data_default'] === 'NULL') {
+        if ($tableColumn['data_default'] === 'NULL') {
             $tableColumn['data_default'] = null;
         }
 
         if (null !== $tableColumn['data_default']) {
             // Default values returned from database are enclosed in single quotes.
-            $tableColumn['data_default'] = trim($tableColumn['data_default'], "'");
+            // Sometimes trailing spaces are also encountered.
+            $tableColumn['data_default'] = trim(trim($tableColumn['data_default']), "'");
         }
 
         $precision = null;
@@ -173,8 +167,6 @@ class OracleSchemaManager extends AbstractSchemaManager
                 $length = null;
                 break;
             case 'float':
-            case 'binary_float':
-            case 'binary_double':
                 $precision = $tableColumn['data_precision'];
                 $scale = $tableColumn['data_scale'];
                 $length = null;
@@ -210,9 +202,6 @@ class OracleSchemaManager extends AbstractSchemaManager
         return new Column($tableColumn['column_name'], \Doctrine\DBAL\Types\Type::getType($type), $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableTableForeignKeysList($tableForeignKeys)
     {
         $list = array();
@@ -236,7 +225,7 @@ class OracleSchemaManager extends AbstractSchemaManager
         }
 
         $result = array();
-        foreach ($list as $constraint) {
+        foreach($list as $constraint) {
             $result[] = new ForeignKeyConstraint(
                 array_values($constraint['local']), $constraint['foreignTable'],
                 array_values($constraint['foreign']),  $constraint['name'],
@@ -247,39 +236,24 @@ class OracleSchemaManager extends AbstractSchemaManager
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableSequenceDefinition($sequence)
     {
         $sequence = \array_change_key_case($sequence, CASE_LOWER);
-
         return new Sequence($sequence['sequence_name'], $sequence['increment_by'], $sequence['min_value']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableFunctionDefinition($function)
     {
         $function = \array_change_key_case($function, CASE_LOWER);
-
         return $function['name'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableDatabaseDefinition($database)
     {
         $database = \array_change_key_case($database, CASE_LOWER);
-
         return $database['username'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createDatabase($database = null)
     {
         if (is_null($database)) {
@@ -291,19 +265,14 @@ class OracleSchemaManager extends AbstractSchemaManager
         $password   = $params['password'];
 
         $query  = 'CREATE USER ' . $username . ' IDENTIFIED BY ' . $password;
-        $this->_conn->executeUpdate($query);
+        $result = $this->_conn->executeUpdate($query);
 
         $query = 'GRANT CREATE SESSION, CREATE TABLE, UNLIMITED TABLESPACE, CREATE SEQUENCE, CREATE TRIGGER TO ' . $username;
-        $this->_conn->executeUpdate($query);
+        $result = $this->_conn->executeUpdate($query);
 
         return true;
     }
 
-    /**
-     * @param string $table
-     *
-     * @return boolean
-     */
     public function dropAutoincrement($table)
     {
         $sql = $this->_platform->getDropAutoincrementSql($table);
@@ -314,13 +283,10 @@ class OracleSchemaManager extends AbstractSchemaManager
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dropTable($name)
     {
-        $this->tryMethod('dropAutoincrement', $name);
+        $this->dropAutoincrement($name);
 
-        parent::dropTable($name);
+        return parent::dropTable($name);
     }
 }

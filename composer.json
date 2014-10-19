@@ -5,11 +5,12 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"doctrine/dbal": "2.5.*@dev",
+		"doctrine/dbal": "2.3.5",
 		"laravelbook/ardent": "dev-master",
 		"mews/purifier": "dev-master",
 		"philipbrown/money": "1.*",
-		"psecio/versionscan": "dev-master"
+		"psecio/versionscan": "dev-master",
+		"itsgoingd/clockwork": "1.*"
 	},
 	"autoload": {
 		"classmap": [

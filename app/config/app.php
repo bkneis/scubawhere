@@ -129,6 +129,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Mews\Purifier\PurifierServiceProvider',
+		'Clockwork\Support\Laravel\ClockworkServiceProvider',
 
 	),
 
