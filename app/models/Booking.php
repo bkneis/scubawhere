@@ -68,7 +68,7 @@ class Booking extends Ardent {
 
 	public function lead_customer()
 	{
-		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead');
+		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->first();
 	}
 
 	public function addons()
