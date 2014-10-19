@@ -45,5 +45,11 @@ var Locations = {
 		$.get("/location/all").done(function(data){
 			handeData(data);
 		});
-	}
+	},
+
+	attachLocation : function(params, handleData){
+		$.post("/api/location/attach", params).done(function(data){
+			handeData(data);
+		});
+	},
 };
