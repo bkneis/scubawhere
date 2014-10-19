@@ -74,6 +74,7 @@ $(function() {
 			center: 'title',
 		},
 		timezone: false,
+		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
 
 			// Start loading indicator
@@ -561,7 +562,6 @@ function toggleWeek(self) {
 }
 
 function toggleTimetableForm() {
-	console.log($('.create-timetable'));
 	$('.create-timetable').toggle();
 }
 

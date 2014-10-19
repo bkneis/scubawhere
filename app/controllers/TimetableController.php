@@ -95,29 +95,37 @@ class TimetableController extends Controller {
 		/////////////////////////////////////////////////////////////////////////
 		// STEP 2: Create 1D array of *all* session dates that will be created //
 		/////////////////////////////////////////////////////////////////////////
-		$timetableIterations = Input::get('iterations');
-		if( !$timetableIterations || !is_numeric($timetableIterations) || $timetableIterations <= 0 )
+		$until = Input::get( 'until', date_create('+18 months')->format('Y-m-d') );
+		$until = date_create($until)->setTime(23, 59, 59); // Set time to last second of the day to make `until` date inclusive
+		if( $until === false )
 		{
-			// If no number of iterations are set, default to 1.5 years
-			$timetableIterations = floor(78 / $length); // 78 weeks = 18 months = 1.5 years
+			return Response::json( array('errors' => array('The "until" value is not a valid date.')), 400 ); // 400 Bad Request
 		}
-		$sessionDates = array();
 
-		for($i = 1; $i <= $timetableIterations; $i++)
+		$sessionDates = array();
+		$break = false;
+
+		do
 		{
-			for($j = 0; $j < $length; $j++)
+			for($j = 0; $j < $length; $j++) // For number of weeks in the timetable
 			{
-				foreach( $scheduleDates[$j] as &$day )
+				foreach( $scheduleDates[$j] as &$day ) // For each checkbox in each week
 				{
 					if( $day > $start ) // Only create sessions after the original sessions' startDate
 					{
+						if( $day > $until) // Skip, if day of session is after the 'until' date
+						{
+							$break = true;
+							continue;
+						}
+
 						$sessionDates[] = clone $day;
 					}
 
 					$day->add( new DateInterval('P'.(7 * $length).'D') ); // Add needed weeks for the next iteration
 				}
 			}
-		}
+		} while($break === false);
 
 		///////////////////////////////////////////////////////////////////////////
 		// STEP 3: Create required full detail array for insertion into database //
