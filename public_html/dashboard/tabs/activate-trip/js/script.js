@@ -372,15 +372,19 @@ $(function() {
 		// console.log(eventObject.session);
 
 		Session.deleteSession({
-			'id': eventObject.session.id,
-			'_token': eventObject.session._token
+			'id'              : eventObject.session.id,
+			'_token'          : eventObject.session._token,
+			'handle_timetable': eventObject.session.handle_timetable
 		}, function success(data) {
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
 
-			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+			if(eventObject.session.handle_timetable === 'following')
+				$('#calendar').fullCalendar('refetchEvents');
+			else
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 			// Unset eventObject
 			delete eventObject;

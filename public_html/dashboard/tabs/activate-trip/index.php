@@ -105,9 +105,14 @@
 					<div class="horizontal-seperator"><span>Options</span></div>
 					<div class="yellow-helper attention-placeholder">
 						<h3>You are editing a <u>timetabled</u> session</h3>
-						Do you want to  all future versions of this session, too?</p>
+						Do you want to move/delete all future versions of this session, too?</p>
 						<p>
-							<label style="display: block; margin-bottom: 0.5em;"><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.</label>
+							<label style="display: block; margin-bottom: 0.5em;">
+								<input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.<br>
+								<small style="display: block; margin: 0 2em; color: orange;">
+									For UPDATE, this will move all future versions regardless if they have been booked or not. For DELETE, this will <u>deactivate</u> all future versions that have been booked and delete the others.
+								</small>
+							</label>
 							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
 						</p>
 					</div>

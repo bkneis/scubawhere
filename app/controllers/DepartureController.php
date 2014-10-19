@@ -175,7 +175,7 @@ class DepartureController extends Controller {
 		))
 		// ->with('trip', 'trip.tickets')
 		->orderBy('start', 'ASC')
-		->take(25)
+		// ->take(25)
 		->get();
 
 		// Conditionally filter by boat
@@ -262,16 +262,6 @@ class DepartureController extends Controller {
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
-		// $id0 = Input::get('id'); // correct
-
-		/**
-		 * The above query works, it is just not assigning the correct model (or ID)
-		 * We therefore get the model simply without authentication
-		 *
-		 * TODO Make this work with the correct way (above)
-		 * DONE Should be working now with the pull request implemented in f68134e that fixed hasManyThrough relations in Laravel
-		 */
-		// $departure = Departure::find( Input::get('id') );
 
 		if( empty($departure->timetable_id) )
 		{
@@ -309,6 +299,9 @@ class DepartureController extends Controller {
 					$departure->start        = Input::get('start');
 				break;
 				case 'following':
+
+					// TODO Differenciate between "Yes, move everything anyway and notify customers" and "Clone booked sessions and deactivate old ones"
+
 					// First, replicate the timetable
 					$timetable = $departure->timetable()->first()->replicate();
 					$timetable->save();
@@ -320,7 +313,12 @@ class DepartureController extends Controller {
 					$offset = $start->diff( new DateTime($departure->start) );
 
 					// Get all affected sessions
-					$sessions = Auth::user()->departures()->where('start', '>=', $departure->start)->where('timetable_id', $departure->timetable_id)->get();
+					$sessions = Auth::user()->departures()
+						->where('start', '>=', $departure->start)
+						->where('timetable_id', $departure->timetable_id)
+						->with('bookingdetails')
+						->get();
+
 					$sessions->each( function($session) use ($timetable, $offset)
 					{
 						$session->timetable_id = $timetable->id;
@@ -363,13 +361,37 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$departure->delete(); // Soft delete
+		if( $departure->timetable_id )
+		{
+			switch( Input::get('handle_timetable') )
+			{
+				case 'only_this': break;
+				case 'following':
 
-		/*
-		// We made sure that the record exists and belongs to the logged-in user, so it's save to softDelete manually
-		$now = date("Y-m-d H:i:s");
-		DB::table('sessions')->where('id', Input::get('id'))->update(array('deleted_at' => $now, 'updated_at' => $now));
-		*/
+					// Get all affected sessions
+					$sessions = Auth::user()->departures()
+						->where('start', '>=', $departure->start)
+						->where('timetable_id', $departure->timetable_id)
+						->with('bookingdetails')
+						->get();
+
+					$sessions->each( function($session)
+					{
+						if( $session->bookingdetails()->count() == 0 )
+							$session->forceDelete();
+						else
+							$session->delete(); // SoftDelete
+					});
+
+					return array('status' => 'OK. All sessions either deleted or deactivated.');
+				break;
+				default:
+					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
+				break;
+			}
+		}
+
+		$departure->delete(); // SoftDelete
 
 		return array('status' => 'OK. Session deactivated');
 	}
@@ -384,6 +406,36 @@ class DepartureController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( $departure->timetable_id )
+		{
+			switch( Input::get('handle_timetable') )
+			{
+				case 'only_this': break;
+				case 'following':
+
+					// Get all affected sessions
+					$sessions = Auth::user()->departures()
+						->where('start', '>=', $departure->start)
+						->where('timetable_id', $departure->timetable_id)
+						->with('bookingdetails')
+						->get();
+
+					$sessions->each( function($session)
+					{
+						if( $session->bookingdetails()->count() == 0 )
+							$session->forceDelete();
+						else
+							$session->delete(); // SoftDelete
+					});
+
+					return array('status' => 'OK. All sessions either deleted or deactivated.');
+				break;
+				default:
+					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
+				break;
+			}
 		}
 
 		try
