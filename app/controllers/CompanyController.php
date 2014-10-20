@@ -388,6 +388,9 @@ class CompanyController extends Controller {
 			return Response::json( array('errors' => $location->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
+		// Automatically attach location to the company
+		Auth::user()->locations()->attach( $location->id );
+
 		return Response::json( array('status' => 'OK. Location created', 'id' => $location->id), 201 ); // 201 Created
 	}
 }

@@ -95,33 +95,53 @@ class TimetableController extends Controller {
 		/////////////////////////////////////////////////////////////////////////
 		// STEP 2: Create 1D array of *all* session dates that will be created //
 		/////////////////////////////////////////////////////////////////////////
-		$timetableIterations = Input::get('iterations');
-		if( !$timetableIterations || !is_numeric($timetableIterations) || $timetableIterations <= 0 )
-		{
-			// If no number of iterations are set, default to 1.5 years
-			$timetableIterations = floor(78 / $length); // 78 weeks = 18 months = 1.5 years
-		}
-		$sessionDates = array();
+		$until = Input::get('until');
 
-		for($i = 1; $i <= $timetableIterations; $i++)
+		if( !Input::get('until') || empty($until) )
 		{
-			for($j = 0; $j < $length; $j++)
+			$until = date_create('+18 months'); // Default
+		}
+		else
+		{
+			$until = date_create($until);
+
+			if( $until === false )
 			{
-				foreach( $scheduleDates[$j] as &$day )
+				return Response::json( array('errors' => array('The "until" value is not a valid date.')), 400 ); // 400 Bad Request
+			}
+		}
+
+		$until->setTime(23, 59, 59); // Set time to last second of the day to make `until` date inclusive
+
+		$sessionDates = array();
+		$break = false;
+
+		do
+		{
+			for($j = 0; $j < $length; $j++) // For number of weeks in the timetable
+			{
+				foreach( $scheduleDates[$j] as &$day ) // For each checkbox in each week
 				{
 					if( $day > $start ) // Only create sessions after the original sessions' startDate
 					{
+						if( $day > $until) // Skip, if day of session is after the 'until' date
+						{
+							$break = true;
+							continue;
+						}
+
 						$sessionDates[] = clone $day;
 					}
 
 					$day->add( new DateInterval('P'.(7 * $length).'D') ); // Add needed weeks for the next iteration
 				}
 			}
-		}
+		} while($break === false);
 
 		///////////////////////////////////////////////////////////////////////////
 		// STEP 3: Create required full detail array for insertion into database //
 		///////////////////////////////////////////////////////////////////////////
+
 		$now = new DateTime;
 		foreach( $sessionDates as &$date)
 		{
@@ -135,15 +155,22 @@ class TimetableController extends Controller {
 			);
 		}
 
-		DB::table('sessions')->insert( $sessionDates );
+		try
+		{
+			DB::table('sessions')->insert( $sessionDates );
+		}
+		catch(Illuminate\Database\QueryException $e)
+		{
+			return Response::json( array('errors' => array('departure->trip_id: '.$departure->trip_id, $e->getSql(), $e->getBindings())), 500 ); // 500 Internal Server Error
+		}
 
 		return Response::json( array(
 			'status'   => 'OK. Timetable and sessions created',
 			'id'       => $timetable->id,
-			'sessions' => $timetable->departures()
+			/*'sessions' => $timetable->departures()
 				->where('start', '>', strtotime('first day of this month'))
 				->where('start', '<', strtotime('last day of next month'))
-				->get()
+				->get()*/
 		), 201 ); // 201 Created
 	}
 

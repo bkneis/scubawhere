@@ -99,8 +99,18 @@ var Booking = {
 
 	validateBooking: function(params, handleData, errorFn){
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			url: "/api/booking/validate",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	addAddon: function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/booking/add-addon",
 			data: params,
 			success: handleData,
 			error: errorFn

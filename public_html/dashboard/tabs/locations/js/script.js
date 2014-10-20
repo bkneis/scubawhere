@@ -105,14 +105,16 @@ var locSource = $("#location").html();
 	var locationTemplate = Handlebars.compile(locationSource);
 
 	$.ajax({
-	url: "/company/locations",
+	//url: "/company/locations",
+	url : "/api/location/all",
 	type: "GET",
 	dataType: "json",
-	data: {limit: 99999, latitude: 0, longitude: 0},
+	//data: {limit: 99999, latitude: 0, longitude: 0},
+	//data: {},
 	async: false,
 	success: function(data){
 			$.each(data, function(){
-				/* $("#locations").append(locTemplate(this)); */
+				 //$("#locations").append(locTemplate(this));
 				map.addMarker({
 					  lat: this.latitude,
 					  lng: this.longitude,
@@ -125,6 +127,20 @@ var locSource = $("#location").html();
 			});
 		}
 	});
+
+	/*Locations.getAttachedLocations(function success(data){
+		$.each(data, function(){
+				/* $("#locations").append(locTemplate(this)); 
+				map.addMarker({
+					  lat: this.latitude,
+					  lng: this.longitude,
+					  title: this.name,
+					  icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+				  });
+
+				$("#locations").append(locationTemplate(this));
+	});
+	});*/
 
 	var newMarker;
 
@@ -163,6 +179,7 @@ var locSource = $("#location").html();
 			async: false,
 			success: function(data){
 				pageMssg("Location saved", true);
+				console.log(data);
 				}
 			});
 	  		e.preventDefault();
@@ -177,6 +194,7 @@ function detachLocation(id) {
 		_token : window.token,
 		id : id
 	};
+	//var params = "?id=" + id;
 
 	console.log(id);
 

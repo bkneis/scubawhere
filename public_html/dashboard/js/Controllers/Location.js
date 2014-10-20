@@ -39,5 +39,17 @@ var Locations = {
 		$.post("/company/add-location", params).done(function(data){
 			handeData(data);
 		});
-	}
+	},
+
+	getAttachedLocations : function(handleData) {
+		$.get("/location/all").done(function(data){
+			handeData(data);
+		});
+	},
+
+	attachLocation : function(params, handleData){
+		$.post("/api/location/attach", params).done(function(data){
+			handeData(data);
+		});
+	},
 };

@@ -71,8 +71,8 @@
 
 				{{#unless isNew}}
 				{{#unless session.timetable_id}}
-					<form class="dashed-border" style="overflow: auto;">
-						<h3>Define a repeating timetable</h3>
+					<label><input type="checkbox" onchange="toggleTimetableForm();"> <h3 style="display: inline-block;">Define a repeating timetable</h3></label>
+					<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
 						<table>
 							<tr style="text-align: left;">
 								<th>Week #</th>
@@ -98,15 +98,25 @@
 						</table>
 						<input type="hidden" name="_token">
 						<input type="hidden" name="session_id" value="{{session.id}}">
-						Iterations: <input type="number" name="iterations" value="0" min="0" style="width: 50px;"> (default: 1.5 years worth)
+
 						<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
+
+						Until: <input type="date" name="until" placeholder="YYYY-MM-DD"><br>
+						<small>Default: for 1.5 years</small>
 					</form>
 				{{else}}
-					<div class="dashed-border">
-						<p>You are moving a <strong>timetabled</strong> session!<br>Do you want to move all future versions of this session, too?</p>
+					<div class="horizontal-seperator"><span>Options</span></div>
+					<div class="yellow-helper attention-placeholder">
+						<h3>You are editing a <u>timetabled</u> session</h3>
+						Do you want to move/delete all future versions of this session, too?</p>
 						<p>
-							<label><input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move all future versions.</label><br>
-							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move this one and leave the others where they are.</label>
+							<label style="display: block; margin-bottom: 0.5em;">
+								<input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.<br>
+								<small style="display: block; margin: 0 2em; color: orange;">
+									For UPDATE, this will move all future versions regardless if they have been booked or not. For DELETE, this will <u>deactivate</u> all future versions that have been booked and delete the others.
+								</small>
+							</label>
+							<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
 						</p>
 					</div>
 				{{/unless}}

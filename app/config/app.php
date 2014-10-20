@@ -129,6 +129,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Mews\Purifier\PurifierServiceProvider',
+		'Clockwork\Support\Laravel\ClockworkServiceProvider',
 
 	),
 
@@ -196,6 +197,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
         'Purifier'        => 'Mews\Purifier\Facades\Purifier',
+        'Clockwork'       => 'Clockwork\Support\Laravel\Facade',
 
 	),
 

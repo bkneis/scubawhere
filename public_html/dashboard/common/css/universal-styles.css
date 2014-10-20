@@ -30,6 +30,10 @@ html, body{
 	font-size: 13px;
 }
 
+label {
+	cursor: pointer;
+}
+
 .loader {
 	display: inline-block;
 	margin-left: 1em;
@@ -111,12 +115,27 @@ html, body{
 	text-align: center;
 	margin-left: 0.5em;
 	margin-top: -0.2em;
+	padding: 0 0.5em;
 	cursor: help;
 }
 
 .trashed {
 	opacity: 0.6;
 }
+
+.horizontal-seperator {
+	display: block;
+	background: gray;
+	height: 1px;
+	text-align: center;
+	margin: 2em;
+}
+	.horizontal-seperator span {
+		background-color: white;
+		position: relative;
+		top: -0.7em;
+		padding: 0 1em;
+	}
 
 /*				ELEMENT STYLES
 *******************************/

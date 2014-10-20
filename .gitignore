@@ -35,3 +35,4 @@ www
 .buildpath
 .project
 .settings
+.env.testing.php

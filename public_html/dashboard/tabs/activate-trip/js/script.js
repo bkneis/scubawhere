@@ -74,6 +74,7 @@ $(function() {
 			center: 'title',
 		},
 		timezone: false,
+		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
 
 			// Start loading indicator
@@ -290,11 +291,11 @@ $(function() {
 		// Check if every necessary info is supplied
 		if( eventObject.session.timetable_id && ( starthours != eventObject.start.hours() || startminutes != eventObject.start.minutes() ) && $('[name=handle_timetable]:checked').length === 0) {
 
-			$('.border-blink').removeClass('border-blink');
+			$('.attention-placeholder').removeClass('border-blink');
 
 			// Direct chaining didn't work. Thus a timeout hack...
 			setTimeout(function() {
-				$('.dashed-border').addClass('border-blink');
+				$('.attention-placeholder').addClass('border-blink');
 			}, 10);
 
 			return false;
@@ -343,27 +344,47 @@ $(function() {
 	// The DELETE button
 	$('#modalWindows').on('click', '.delete-session', function(event) {
 
-		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
-
-
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
+
+		// Check if every necessary info is supplied
+		if( eventObject.session.timetable_id && $('[name=handle_timetable]:checked').length === 0) {
+
+			$('.attention-placeholder').removeClass('border-blink');
+
+			// Direct chaining didn't work. Thus a timeout hack...
+			setTimeout(function() {
+				$('.attention-placeholder').addClass('border-blink');
+			}, 10);
+
+			return false;
+		}
+		else {
+			// Add mandatory parameter to request payload
+			eventObject.session.handle_timetable = $('[name=handle_timetable]:checked').val();
+		}
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
 
 		eventObject.session._token = window.token;
 
 		// console.log(eventObject.session);
 
 		Session.deleteSession({
-			'id': eventObject.session.id,
-			'_token': eventObject.session._token
+			'id'              : eventObject.session.id,
+			'_token'          : eventObject.session._token,
+			'handle_timetable': eventObject.session.handle_timetable
 		}, function success(data) {
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-ticket-loader').remove();
 
-			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+			if(eventObject.session.handle_timetable === 'following')
+				$('#calendar').fullCalendar('refetchEvents');
+			else
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 			// Unset eventObject
 			delete eventObject;
@@ -420,16 +441,8 @@ $(function() {
 				// Remove original session
 				eventObject = $form.closest('.reveal-modal').data('eventObject');
 
-				// $('#calendar').fullCalendar('removeEvents', eventObject.id);
-
-				// Unset eventObject
-				// delete eventObject;
-
 				// Close modal window
 				$('#modalWindows .close-reveal-modal').click();
-
-				// Draw new sessions
-				// var sessions = _.indexBy(data.sessions, 'id');
 
 				$('#calendar').fullCalendar('refetchEvents');
 			},
@@ -558,6 +571,10 @@ function toggleWeek(self) {
 		// When the week has been enabled, add the following week (disabled by default)
 		$tr.after( timetableWeek(  {'week': $self.data('week') * 1 + 1} ) );
 	}
+}
+
+function toggleTimetableForm() {
+	$('.create-timetable').toggle();
 }
 
 Handlebars.registerHelper('date', function(datetime) {

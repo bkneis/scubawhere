@@ -47,6 +47,9 @@ class BookingController extends Controller {
 			$data['source'] = null;
 		}
 
+		$data['price'] = 0;
+		$data['currency'] = Helper::currency();
+
 		$booking = new Booking($data);
 
 		// Generate a reference number and check whether it is unique
@@ -295,7 +298,7 @@ class BookingController extends Controller {
 			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
 
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
-			$bookingdetails = $booking->bookingdetails()
+			$bookingdetail = $booking->bookingdetails()
 				->where('session_id', Input::get('session_id'))
 				->where('customer_id', Input::get('customer_id'))
 				->first();
@@ -305,7 +308,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$bookingdetails->attach( $addon->id, array('quantity', $quantity) );
+		$bookingdetail->addons()->attach( $addon->id, array('quantity', $quantity) );
 
 		// Update booking price
 		$booking->updatePrice();
@@ -418,8 +421,8 @@ class BookingController extends Controller {
 
 		// "Validation" rules
 		return array(
-			"email" => $booking->lead_customer()->first()->email != '',
-			"phone" => $booking->lead_customer()->first()->phone != '',
+			"email" => !empty( $booking->lead_customer()->email ),
+			"phone" => !empty( $booking->lead_customer()->phone ),
 		);
 	}
 

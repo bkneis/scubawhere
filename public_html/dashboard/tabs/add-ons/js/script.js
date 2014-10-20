@@ -238,6 +238,7 @@ function renderEditForm(id) {
 		addon = window.addons[id];
 		addon.task = 'update';
 		addon.update = true;
+		addon.compulsory = parseInt( addon.compulsory );
 	}
 	else {
 		addon = {

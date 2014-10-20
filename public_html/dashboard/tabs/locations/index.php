@@ -80,4 +80,5 @@
 
 <script src="tabs/locations/js/gmaps.js"></script>
 <script src="tabs/locations/js/script.js"></script>
+<script src="/dashboard/js/Controllers/Location.js"></script>
 

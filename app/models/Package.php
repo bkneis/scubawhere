@@ -46,7 +46,7 @@ class Package extends Ardent {
 
 	public function getHasBookingsAttribute()
 	{
-		return $this->bookings()->count() > 0;
+		return $this->bookingdetails()->count() > 0;
 	}
 
 	public function getTrashedAttribute()
