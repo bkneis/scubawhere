@@ -1,123 +1,97 @@
 <div id="wrapper">
-
-	<script id="saved-tickets-template" type="text/x-handlebars-template">
-		{{#if tickets}}
-			<table>
-				<thead>
-					<tr>
-						<th>Ticket name</th>
-						<th style="width: 100px;">Price</th>
-						<th>Description</th>
-						<th>Trips</th>
-					</tr>
-				</thead>
-				<tbody>
-
-					{{#each tickets}}
-						<tr>
-							<td>{{{name}}}</td>
-							<td>{{{currency}}} {{{decimal_price}}}</td>
-							<td>{{{description}}}</td>
-							<td>
-								<select>
-									<option>{{count trips}} trip(s) selected</option>
-									{{#each trips}}
-										<option>{{{name}}}</option>
-									{{/each}}
-								</select>
-							</td>
-						</tr>
-					{{/each}}
-
-				</tbody>
-			</table>
-		{{else}}
-			No tickets created yet.
-		{{/if}}
-	</script>
-
-	<div class="box100">
-		<label class="dgreyb">Saved Tickets</label>
-		<div id="saved-tickets">
-			<!-- This is where the above goes when complied... -->
-			<div class="loader" style="left: 50%; margin-left: -13px; margin-top: 2em; margin-bottom: 2em;"></div>
+	<div class="row">
+		<div class="box30">
+			<label class="dgreyb">Current tickets</label>
+			<div class="padder" id="ticket-list-container">
+				<!--<div class="yellow-helper">
+					Select an ticket to change its details.
+				</div>-->
+				<button id="change-to-add-ticket" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Ticket</button>
+				<script type="text/x-handlebars-template" id="ticket-list-template">
+					<ul id="ticket-list" class="entity-list">
+						{{#each tickets}}
+							<li data-id="{{id}}"><strong>{{{name}}}</strong></li>
+						{{else}}
+							<p>No tickets available.</p>
+						{{/each}}
+					</ul>
+				</script>
+			</div>
 		</div>
-	</div>
 
+		<div class="box70" id="ticket-form-container">
 
-	<div class="box100">
-		<label class="dgreyb">Create New Ticket</label>
+			<script type="text/x-handlebars-template" id="ticket-form-template">
+				<label class="dgreyb">{{task}} ticket</label>
+				<div class="padder">
+					<form id="{{task}}-ticket-form">
+						<div class="form-row">
+							<label class="field-label">Ticket Name</label>
+							<input type="text" name="name" value="{{{name}}}">
+						</div>
 
-		<div class="padder">
+						<div class="form-row">
+							<label class="field-label">Ticket Description</label>
+							<input type="text" name="price" value="{{{description}}}">
+						</div>
 
-			<!-- Add new tickets -->
-			<form id="new-ticket-form">
-				<div class="form-row">
-					<label class="field-label">Ticket Name</label>
-					<input type="text" name="name">
-				</div>
+						<div class="form-row">
+							<label class="field-label">Ticket Price</label>
+							<select name="currency">
+								<option value="GBP">GBP</option>
+							</select>
+							<input type="text" name="price" value="{{{price}}}">
+						</div>
 
-				<div class="form-row">
-					<label class="field-label">Ticket Price</label>
-					<select name="currency">
-						<option value="GBP">GBP</option>
-					</select>
-					<input type="text" name="price">
-				</div>
+						<div class="form-row">
+							<p><strong>Please select the trips that this ticket should be eligable for:</strong></p>
+							<div id="trip-select" style="margin-bottom: 1.5em; margin-left: 4em;">
+								<script id="trip-list-template" type="text/x-handlebars-template">
+									{{#each trips}}
+										{{{name}}}
+									{{/each}}
+								</script>
+							</div>
+						</div>
 
-				<div class="form-row">
-					<label>Ticket Description</label>
-					<textarea name="description"></textarea>
-				</div>
+						<div class="form-row">
 
-				<div class="form-row">
-				</div>
+						<label style="display: block;">
+							<input type="checkbox" onclick="toggleShowBoats();">
+							<b>Limit the ticket to certain boats?</b>
+						</label>
+						<div class="box50" id="boat-select" style="display:none;">
+							<p>Please select the boats that you want this ticket to be eligible for:</p>
+							<script id="boat-template" type="text/x-handlebars-template">
+								{{#each boats}}
+									<label style="display: block; color: #313131;">
+										<input type="checkbox" onchange="toggleBoatSelect(this);">
+										{{name}}
+										<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;" disabled>
+											<option value="">All room types</option>
+											{{#if accommodations}}
+												<optgroup label="Limit to:">
+													{{#each accommodations}}
+														<option value="{{id}}" {{selected name}}>{{name}}</option>
+													{{/each}}
+												</optgroup>
+											{{/if}}
+										</select>
+									</label>
+								{{/each}}
+							</script>
+						</div>
 
-				<div class="form-row">
-					<p><strong>Please select the trips that this ticket should be eligable for:</strong></p>
-					<div id="trip-select" style="margin-bottom: 1.5em; margin-left: 4em;">
-						<script id="trips-template" type="text/x-handlebars-template">
-							{{#each trips}}
-								<label><input type="checkbox" name="trips[]" value="{{id}}"> {{{name}}}</label><br>
-							{{/each}}
-						</script>
-					</div>
-				</div>
-
-				<div class="form-row">
-
-					<label style="display: block;">
-						<input type="checkbox" onclick="toggleShowBoats();">
-						<b>Limit the ticket to certain boats?</b>
-					</label>
-					<div class="box50" id="boat-select" style="display:none;">
-						<p>Please select the boats that you want this ticket to be eligable for:</p>
-						<script id="boat-template" type="text/x-handlebars-template">
-							{{#each boats}}
-								<label style="display: block; color: #313131;">
-									<input type="checkbox" onchange="toggleBoatSelect(this);">
-									{{name}}
-									<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;" disabled>
-										<option value="">All room types</option>
-										{{#if accommodations}}
-											<optgroup label="Limit to:">
-												{{#each accommodations}}
-													<option value="{{id}}">{{name}}</option>
-												{{/each}}
-											</optgroup>
-										{{/if}}
-									</select>
-								</label>
-							{{/each}}
-						</script>
 					</div>
 
+						<input type="hidden" name="_token">
+
+						<button class="bttn blueb big-bttn" id="{{task}}-ticket">{{task}} Ticket</button>
+
+					</form>
 				</div>
+			</script>
 
-				<input type="hidden" class="token" name="_token">
-				<input type="submit" class="bttn blueb" id="save-ticket" value="Save">
-
-			</form>
 		</div>
 
 		<script type="text/x-handlebars-template" id="errors-template">
@@ -130,11 +104,9 @@
 				</ul>
 			</div>
 		</script>
-
 	</div>
 </div>
 
-<script src="/dashboard/js/SetToken.js"></script>
 <script src="/dashboard/js/Controllers/Boat.js"></script>
 <script src="/dashboard/js/Controllers/Trip.js"></script>
 <script src="/dashboard/js/Controllers/Ticket.js"></script>

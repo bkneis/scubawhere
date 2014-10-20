@@ -14,26 +14,21 @@ $(function(){
 
 	$("body").delegate("#saveRoom", "click", function(e){
 		//returns true if good, or alerts the user if not.
-		var validOne = $("[name=newRoomName]").validateField(5, 100);
-		var validTwo = $("[name=newRoomDescription]").validateField(5, 100);
+		//create temp id for the room
+		var rand = randomString();
+		var newRoom = {name: $("[name=newRoomName]").val(), description: $("[name=newRoomDescription]").val(), id: rand};
 
-		if(validOne && validTwo){
-			//create temp id for the room
-			var rand = randomString();
-			var newRoom = {name: $("[name=newRoomName]").val(), description: $("[name=newRoomDescription]").val(), id: rand};
+		//append new table row
+		$('#accom-body').append(accomTemplate(newRoom));
 
-			//append new table row
-			$('#accom-body').append(accomTemplate(newRoom));
+		//add this to the select list
+		$(".newRoomTypeSelect").append("<option value='" + rand + "'>" + $("[name=newRoomName]").val() + "</option>");
 
-			//add this to the select list
-			$(".newRoomTypeSelect").append("<option value='" + rand + "'>" + $("[name=newRoomName]").val() + "</option>");
+		//add this new room to the array
+		roomTypes.push(roomType(rand, $("[name=newRoomName]").val()));
 
-			//add this new room to the array
-			roomTypes.push(roomType(rand, $("[name=newRoomName]").val()));
-
-			// Trigger saveAll
-			$('#saveAll').click();
-		}
+		// Trigger saveAll
+		$('#saveAll').click();
 
 		e.preventDefault();
 	});
@@ -114,12 +109,10 @@ $(function(){
 		var rand = randomString();
 
 		//returns true if good, or alerts the user if not.
-		var validOne = $("[name=newBoatName]").validateField(5, 100);
-		var validTwo = $("[name=newBoatDescription]").validateField(5, 100);
 		var validThree = $("[name=newBoatCapacity]").validateNumericField();
 
 		//if true true true
-		if(validOne && validTwo && validThree){
+		if(validThree){
 
 			var newRoom = { newBoat: "New Boat - ",
 							name: $("[name=newBoatName]").val(),
