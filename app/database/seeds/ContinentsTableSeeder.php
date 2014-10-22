@@ -1,18 +1,10 @@
 <?php
 
-class ContinentsTableSeeder extends Seeder {
+class ContinentsTableSeeder extends CSVSeeder {
 
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('continents')->truncate();
-
-		$continents = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('continents')->insert($continents);
+	public function __construct(){
+		$this->tableName = 'continents';
+		$this->csvFile = app_path().'/database/seeds/csv/continents.csv';
 	}
 
 }

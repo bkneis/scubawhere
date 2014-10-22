@@ -1,18 +1,10 @@
 <?php
 
-class RegionsTableSeeder extends Seeder {
+class PaymentgatewaysTableSeeder extends CSVSeeder {
 
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('paymentgateways')->truncate();
-
-		$entries = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('paymentgateways')->insert($entries);
+	public function __construct(){
+		$this->tableName = 'paymentgateways';
+		$this->csvFile = app_path().'/database/seeds/csv/paymentgateways.csv';
 	}
 
 }

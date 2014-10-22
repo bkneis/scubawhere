@@ -1,18 +1,10 @@
 <?php
 
-class TriptypesTableSeeder extends Seeder {
-
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('triptypes')->truncate();
-
-		$entries = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('triptypes')->insert($entries);
+class TriptypesTableSeeder extends CSVSeeder {
+	
+	public function __construct(){
+		$this->tableName = 'triptypes';
+		$this->csvFile = app_path().'/database/seeds/csv/triptypes.csv';
 	}
 
 }

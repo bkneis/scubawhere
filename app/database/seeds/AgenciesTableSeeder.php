@@ -1,18 +1,10 @@
 <?php
 
-class AgenciesTableSeeder extends Seeder {
+class AgenciesTableSeeder extends CSVSeeder {
 
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('agencies')->truncate();
-
-		$agencies = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('agencies')->insert($agencies);
+	public function __construct(){
+		$this->tableName = 'agencies';
+		$this->csvFile = app_path().'/database/seeds/csv/agencies.csv';
 	}
 
 }
