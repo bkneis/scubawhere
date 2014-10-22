@@ -1,18 +1,18 @@
 <?php
 
-class RegionsTableSeeder extends Seeder {
+class TriptypesTableSeeder extends Seeder {
 
 	public function run()
 	{
 		// Uncomment the below to wipe the table clean before populating
-		// DB::table('regions')->truncate();
+		// DB::table('triptypes')->truncate();
 
-		$regions = array(
+		$entries = array(
 
 		);
 
 		// Uncomment the below to run the seeder
-		// DB::table('regions')->insert($regions);
+		// DB::table('triptypes')->insert($entries);
 	}
 
 }
