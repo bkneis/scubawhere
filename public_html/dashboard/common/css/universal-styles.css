@@ -110,12 +110,11 @@ label {
 	color: grey;
 	border: 2px solid;
 	border-radius: 50%;
-	width: 1.35em;
 	font-weight: bold;
 	text-align: center;
 	margin-left: 0.5em;
 	margin-top: -0.2em;
-	padding: 0 0.5em;
+	padding: 0 0.45em;
 	cursor: help;
 }
 
@@ -141,6 +140,10 @@ label {
 *******************************/
 *:disabled {
 	opacity: 0.5;
+}
+.disabled {
+	opacity: 0.5;
+	cursor: not-allowed !important;
 }
 
 a:link,

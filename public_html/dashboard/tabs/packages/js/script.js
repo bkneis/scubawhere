@@ -311,6 +311,7 @@ function renderEditForm(id) {
 		package.task = 'update';
 		package.update = true;
 		_.each(package.tickets, function(value, key, list) {
+			value.existing = true;
 			value.available_tickets = window.tickets;
 		});
 	}

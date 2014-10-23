@@ -675,6 +675,25 @@ span.box-tool{
 .fc-row .fc-content-skeleton td {
 	border-color: #ddd;
 }
+.fc-event {
+	padding: 0.25em 0.5em;
+}
+.timetabled::after {
+	content: '';
+	display: block;
+	height: 100%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-image: url(./../img/icons/schedule_white.png);
+	background-size: 1.5em;
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-color: inherit;
+	width: 1.5em;
+	padding-left: 3px;
+
+}
 
 .dashed-border {
 	margin: 1em;
@@ -703,4 +722,26 @@ span.box-tool{
 }
 @keyframes border-blink {
 	50% { border-color: transparent; }
+}
+
+#locationsList,
+#triptypesList {
+	overflow: auto;
+}
+.location,
+.triptype {
+	display: block;
+	border: 1px solid #c8c8c8;
+	float: left;
+	padding: 0.5em 1em;
+	margin: 0 0.5em 0.5em 0;
+}
+.location input {
+	float: right;
+	margin: 0;
+}
+.location.checked,
+.triptype.checked {
+	border-color: #27ae60;
+	background-color: #2ecc71;
 }

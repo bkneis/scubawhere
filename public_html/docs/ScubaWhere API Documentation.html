@@ -459,8 +459,8 @@ pre {
 </div>
 <p>Documentation for the ScubaWhere.com API</p>
 <ul>
-<li><strong>@version</strong> 0.9.3</li>
-<li><strong>@date</strong>    2014/08/13 - 3:00</li>
+<li><strong>@version</strong> 0.9</li>
+<li><strong>@date</strong>    2014/10/23 - 18:30</li>
 </ul>
 <blockquote>
 <h3>Important</h3>
@@ -573,7 +573,6 @@ pre {
 </ul>
 <h3>Retrieve all trips</h3>
 <p><code>GET /api/trip/all</code></p>
-<p><code>GET /company/trips</code> (deprecated)</p>
 <ul>
 <li><strong>@return</strong> JSON    An array of <code>trip</code> objects, complete with details of the pick-up <code>location</code>, all <code>locations</code> in the itinary and all connected <code>triptypes</code></li>
 </ul>
@@ -583,7 +582,7 @@ pre {
 <li><strong>@return</strong> JSON    An array of <code>triptypes</code> objects</li>
 </ul>
 <h3>Add a trip</h3>
-<p><code>POST /company/add-trip</code></p>
+<p><code>POST /trip/add</code></p>
 <p>Create a new trip.</p>
 <p><code>Locations</code> should be submitted as</p>
 <pre><code>&lt;input name=&quot;locations[]&quot; value=&quot;1&quot;&gt;
@@ -608,7 +607,7 @@ pre {
 <h3>Activate a trip</h3>
 <p>Please refer to <a href="#Create_a_session">#Create a session</a>.</p>
 <h3>Edit a trip</h3>
-<p><code>POST /company/edit-trip</code></p>
+<p><code>POST /trip/edit</code></p>
 <p>Edit an existing trip's properties. Only the ID and the properties that are changed need to be submitted.</p>
 <p>For the structure of the <code>locations</code> and <code>triptypes</code> arrays, take a look at <code>Add a trip</code>.</p>
 <ul>
@@ -625,7 +624,7 @@ pre {
 <li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Delete a trip</h3>
-<p><code>POST /company/delete-trip</code></p>
+<p><code>POST /trip/delete</code></p>
 <p>Delete an existing trip.</p>
 <ul>
 <li><strong>@param</strong> integer id The ID of the trip to delete</li>
@@ -1113,6 +1112,10 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>23<sup>th</sup> October 2014</h3>
+<ul>
+<li><strong>@edit</strong>  Changed API calls for <a href="#Retrieve_all_trips">#getting</a>, <a href="#Add_a_trip">#adding</a>, <a href="#Edit_a_trip">#editing</a> and <a href="#Delete_a_trip">#deleting</a> trips.</li>
+</ul>
 <h3>12<sup>th</sup> August 2014</h3>
 <ul>
 <li><strong>@added</strong> New method: <a href="#Change_additional_booking_information">#Change additional booking information</a></li>
@@ -1127,8 +1130,8 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <h3>4<sup>th</sup> June 2014</h3>
 <ul>
-<li><strong>@edit</strong> Added <code>trips</code> field to parameters for <a href="#Create_a_ticket">#Create a ticket</a></li>
-<li><strong>@edit</strong> Removed regions from <a href="#Countries">#Countries</a></li>
+<li><strong>@edit</strong>  Added <code>trips</code> field to parameters for <a href="#Create_a_ticket">#Create a ticket</a></li>
+<li><strong>@edit</strong>  Removed regions from <a href="#Countries">#Countries</a></li>
 </ul>
 <h3>30<sup>th</sup> May 2014</h3>
 <ul>
@@ -1136,7 +1139,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <h3>29<sup>th</sup> May 2014</h3>
 <ul>
-<li><strong>@edit</strong> Removed <code>timetable_id</code> as a parameter for <a href="#Create_a_session">#Create a session</a></li>
+<li><strong>@edit</strong>  Removed <code>timetable_id</code> as a parameter for <a href="#Create_a_session">#Create a session</a></li>
 </ul>
 <h3>26<sup>th</sup> May 2014</h3>
 <ul>
@@ -1161,7 +1164,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <h3>11<sup>th</sup> May 2014</h3>
 <ul>
-<li><strong>@edit</strong> Made <code>location_id</code> optional in <a href="#Add_a_trip">#Add a Trip</a></li>
+<li><strong>@edit</strong>  Made <code>location_id</code> optional in <a href="#Add_a_trip">#Add a Trip</a></li>
 </ul>
 <h3>1<sup>st</sup> May 2014</h3>
 <ul>

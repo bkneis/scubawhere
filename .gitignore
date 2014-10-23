@@ -36,3 +36,4 @@ www
 .project
 .settings
 .env.testing.php
+composer.phar

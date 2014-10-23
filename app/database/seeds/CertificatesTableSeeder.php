@@ -1,18 +1,10 @@
 <?php
 
-class CertificatesTableSeeder extends Seeder {
+class CertificatesTableSeeder extends CSVSeeder {
 
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('certificates')->truncate();
-
-		$certificates = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('certificates')->insert($certificates);
+	public function __construct(){
+		$this->tableName = 'certificates';
+		$this->csvFile = app_path().'/database/seeds/csv/certificates.csv';
 	}
 
 }

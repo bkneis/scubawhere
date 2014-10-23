@@ -36,8 +36,9 @@
 	<title>Scuba Where | Dashboard</title>
 
 	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
-	<link href='css/fullcalendar.css' rel='stylesheet' />
+	<link rel='stylesheet' href='css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.tagsinput.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
 
@@ -48,15 +49,22 @@
 
 	<!-- Third Party Libraries -->
 	<script src="/common/js/jquery.js"></script>
+
 	<script src="/common/js/ui.min/jquery-ui.min.js"></script>
 	<script src="/common/js/jquery.tagsinput.min.js"></script>
+
 	<script src="/common/js/moment.min.js"></script>
 	<script src="/common/js/fullcalendar.min.js"></script>
+
 	<script src="/common/js/hashchange.min.js"></script>
+
 	<script src="/common/js/handlebars.js"></script>
+
 	<script src="/common/ckeditor/ckeditor.js"></script>
 	<script src="/common/ckeditor/adapters/jquery.js"></script>
+
 	<script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+
 	<script src="/common/js/underscore-min.js"></script>
 
 	<!-- ScubaWhere Files -->
@@ -76,11 +84,11 @@
 		<!-- tabbed navigation and sidebar LEFT -->
 		<div id="sidebar">
 			<div id="tab-title">Admin Panel</div>
-			<div id="dc-info">
+			<!-- <div id="dc-info">
 				<div id="dc-name"></div>
 				<div id="dc-uname"></div>
 				<div id="dc-veri"></div>
-			</div>
+			</div> -->
 
 			<!-- Navigation including accordion drop down menus -->
 
@@ -99,8 +107,7 @@
 						<span class="arrow"></span>
 					</div>
 					<ul>
-						<li data-load="manage-agents">Manage Agents</li>
-						<li data-load="send-invoice">Send Invoice</li>
+						<li data-load="agents">Manage Agents</li>
 					</ul>
 				</li>
 
@@ -125,13 +132,11 @@
 					</div>
 
 					<ul>
-						<li data-load="create-trip">Create Trip</li>
-						<li data-load="activate-trip">Activate Trip</li>
-						<li data-load="list-trips">List Trips</li>
+						<li data-load="trips">Trips</li>
+						<li data-load="activate-trip">Activate Trips</li>
 						<li data-load="tickets">Tickets</li>
 						<li data-load="packages">Packages</li>
 						<li data-load="locations">Locations</li>
-						<!-- <li data-load="trip-calender">Trip Calendar</li> -->
 					</ul>
 				</li>
 

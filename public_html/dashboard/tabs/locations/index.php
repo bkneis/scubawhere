@@ -60,10 +60,10 @@
 				<th> </th>
 			</tr>
 		</thead>
-		
+
 		<tbody id="locations">
 			<script id="location-list-template" type="text/x-handlebars-template">
-						
+
 					<tr>
 						<td>{{name}}</td>
 						<td>{{{description}}}</td>
@@ -71,14 +71,14 @@
 						<td>{{latitude}}</td>
 						<td><a onclick="detachLocation({{id}})">Remove</a></td>
 					</tr>
-				
+
 			</script>
 		</tbody>
 	</table>
 	</div>
 </div>
 
+<script src="/dashboard/js/Controllers/Location.js"></script>
 <script src="tabs/locations/js/gmaps.js"></script>
 <script src="tabs/locations/js/script.js"></script>
-<script src="/dashboard/js/Controllers/Location.js"></script>
 

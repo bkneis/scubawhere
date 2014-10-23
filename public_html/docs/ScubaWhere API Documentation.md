@@ -9,8 +9,8 @@
 
 Documentation for the ScubaWhere.com API
 
-- **@version** 0.9.3
-- **@date**    2014/08/13 - 3:00
+- **@version** 0.9
+- **@date**    2014/10/23 - 18:30
 
 > ### Important
 > On **success**, the response contains either the requested information, the string `status` or (for calls that create something) `status` and `id`.
@@ -148,8 +148,6 @@ When **creating new accommodations or boats**, simply make their ID a random str
 
 `GET /api/trip/all`
 
-`GET /company/trips` (deprecated)
-
 - **@return** JSON    An array of `trip` objects, complete with details of the pick-up `location`, all `locations` in the itinary and all connected `triptypes`
 
 ### Retrieve all triptypes
@@ -160,7 +158,7 @@ When **creating new accommodations or boats**, simply make their ID a random str
 
 ### Add a trip
 
-`POST /company/add-trip`
+`POST /trip/add`
 
 Create a new trip.
 
@@ -189,7 +187,7 @@ Please refer to [#Create a session](#Create_a_session).
 
 ### Edit a trip
 
-`POST /company/edit-trip`
+`POST /trip/edit`
 
 Edit an existing trip's properties. Only the ID and the properties that are changed need to be submitted.
 
@@ -209,7 +207,7 @@ For the structure of the `locations` and `triptypes` arrays, take a look at `Add
 
 ### Delete a trip
 
-`POST /company/delete-trip`
+`POST /trip/delete`
 
 Delete an existing trip.
 
@@ -769,6 +767,9 @@ This can be used to populate a drop-down list of suggestions when searching for 
 
 ## Changelog
 
+### 23<sup>th</sup> October 2014
+- **@edit**  Changed API calls for [#getting](#Retrieve_all_trips), [#adding](#Add_a_trip), [#editing](#Edit_a_trip) and [#deleting](#Delete_a_trip) trips.
+
 ### 12<sup>th</sup> August 2014
 - **@added** New method: [#Change additional booking information](#Change_additional_booking_information)
 - **@edit**  Updated parameters and description for [#Add ticket to booking](#Add_ticket_to_booking)
@@ -780,14 +781,14 @@ This can be used to populate a drop-down list of suggestions when searching for 
 - **@added** New method: [#Detach a location from a company](#Detach_a_location_from_a_company)
 
 ### 4<sup>th</sup> June 2014
-- **@edit** Added `trips` field to parameters for [#Create a ticket](#Create_a_ticket)
-- **@edit** Removed regions from [#Countries](#Countries)
+- **@edit**  Added `trips` field to parameters for [#Create a ticket](#Create_a_ticket)
+- **@edit**  Removed regions from [#Countries](#Countries)
 
 ### 30<sup>th</sup> May 2014
 - **@added** The method [#Update a session](#Update_a_session)
 
 ### 29<sup>th</sup> May 2014
-- **@edit** Removed `timetable_id` as a parameter for [#Create a session](#Create_a_session)
+- **@edit**  Removed `timetable_id` as a parameter for [#Create a session](#Create_a_session)
 
 ### 26<sup>th</sup> May 2014
 - **@added** New [#Bookings](#Bookings) section
@@ -807,7 +808,7 @@ This can be used to populate a drop-down list of suggestions when searching for 
 - **@added** New parameter in [#Create a Timetable](#Create_a_timetable): `iterations`
 
 ### 11<sup>th</sup> May 2014
-- **@edit** Made `location_id` optional in [#Add a Trip](#Add_a_trip)
+- **@edit**  Made `location_id` optional in [#Add a Trip](#Add_a_trip)
 
 ### 1<sup>st</sup> May 2014
 - **@added** The [#Timetables](#Timetables) section

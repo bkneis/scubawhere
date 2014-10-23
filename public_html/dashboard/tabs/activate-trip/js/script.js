@@ -97,8 +97,9 @@ $(function() {
 						trip: window.trips[ value.trip_id ],
 						session: value,
 						isNew: false,
-						editable: value.timetable_id == false, // This uses a 'falsy' check on purpose
+						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
 						durationEditable: false,
+						className: value.timetable_id ? 'timetabled' : console.log(value.timetable_id), // This uses a 'falsy' check on purpose
 					};
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);

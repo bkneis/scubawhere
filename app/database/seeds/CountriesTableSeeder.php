@@ -1,18 +1,10 @@
 <?php
 
-class CountriesTableSeeder extends Seeder {
+class CountriesTableSeeder extends CSVSeeder {
 
-	public function run()
-	{
-		// Uncomment the below to wipe the table clean before populating
-		// DB::table('countries')->truncate();
-
-		$countries = array(
-
-		);
-
-		// Uncomment the below to run the seeder
-		// DB::table('countries')->insert($countries);
+	public function __construct(){
+		$this->tableName = 'countries';
+		$this->csvFile = app_path().'/database/seeds/csv/countries.csv';
 	}
 
 }

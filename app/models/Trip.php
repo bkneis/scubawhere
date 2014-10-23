@@ -10,6 +10,8 @@ class Trip extends Ardent {
 
 	protected $guarded = array('id', 'company_id', 'views', 'created_at', 'updated_at');
 
+	protected $appends = array('deletable');
+
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => 'required',
@@ -32,6 +34,11 @@ class Trip extends Ardent {
 
 		if( isset($this->video) )
 			$this->video = Helper::sanitiseString($this->video);
+	}
+
+	public function getDeletableAttribute()
+	{
+		return !($this->tickets()->withTrashed()->count() > 0 || $this->departures()->withTrashed()->count() > 0 );
 	}
 
 	public function company()
