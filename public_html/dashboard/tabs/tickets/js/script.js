@@ -18,11 +18,28 @@ $(function () {
 	ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
 	renderEditForm();
 
-	tripList = Handlebars.compile( $("#trip-list-template").html() );
+	tripTemplate = Handlebars.compile( $("#trip-list-template").html() );
 	
 	Trip.getAllTrips(function success(data){
-		trips = _.sortBy(data, 'id');
-		$("#trip-select").append(tripList({trips : data}));
+		indexedTrips = _.indexBy(data, 'id');
+		$("#trip-select").empty().append(tripTemplate({trips : data}));
+
+		// --------------------------------- //
+		// 2. Compile for saved tickets data //
+		// --------------------------------- //
+
+		Ticket.getAllTickets(function success(data){
+			// Sort the ticket array by trip_id
+			data = _.sortBy(data, 'trip_id');
+			// -------------------------------- //
+			// 3. Compile the boat list temlate //
+			// -------------------------------- //
+			var boatTemplate = Handlebars.compile($("#boat-template").html());
+
+			Boat.getAllBoats(function success(data){
+				$("#boat-select").empty().append( boatTemplate({boats : data.boats}) );
+			});
+		});
 	});
 
 	$("#ticket-form-container").on('click', '#add-ticket', function(event) {
@@ -69,14 +86,13 @@ $(function () {
 	});
 
 	// Click event for saving a new ticket
-	$("#save-ticket").click(function(e){
+	$("#update-ticket").click(function(e){
 		e.preventDefault();
-		$('#save-ticket').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#update-ticket').prop('disabled', true).after('<div id="update-loader" class="loader"></div>');
 
-		Ticket.createTicket($("#new-ticket-form").serialize(), function success(data) {
-
-			$('#save-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-loader').remove();
+		Ticket.updateTicket($("#update-ticket-form").serialize(), function success(data) {
+			$('#update-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#update-loader').remove();
 
 			pageMssg(data.status, true);
 
@@ -96,8 +112,8 @@ $(function () {
 
 				// Render error messages
 				$('.errors').remove();
-				$('#new-ticket-form').prepend(errorsHTML)
-				$('#save-ticket').before(errorsHTML);
+				$('#update-ticket-form').prepend(errorsHTML)
+				$('#update-ticket').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -155,7 +171,7 @@ function renderEditForm(id) {
 
 	var ticket;
 
-	if( id ) {
+	if(id) {
 		ticket = window.tickets[id];
 		ticket.task = 'update';
 		ticket.update = true;
@@ -168,6 +184,13 @@ function renderEditForm(id) {
 	}
 
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
+
+	tripList = Handlebars.compile( $("#trip-list-template").html() );
+	
+	Trip.getAllTrips(function success(data){
+		trips = _.sortBy(data, 'id');
+		$("#trip-select").append(tripList({trips : data}));
+	});
 
 	setToken('[name=_token]');
 

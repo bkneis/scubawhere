@@ -19,6 +19,31 @@
 			</div>
 		</div>
 
+		<script id="trip-list-template" type="text/x-handlebars-template">
+			{{#each trips}}
+				<input type="checkbox" name="trips[]" value="{{id}}"><label class="field-label">{{{name}}}</label>
+			{{/each}}
+		</script>
+
+		<script id="boat-template" type="text/x-handlebars-template">
+			{{#each boats}}
+				<label style="display: block; color: #313131;">
+					<input type="checkbox" onchange="toggleBoatSelect(this);">
+					{{name}}
+					<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;" disabled>
+						<option value="">All room types</option>
+						{{#if accommodations}}
+							<optgroup label="Limit to:">
+								{{#each accommodations}}
+									<option value="{{id}}" {{selected name}}>{{name}}</option>
+								{{/each}}
+							</optgroup>
+						{{/if}}
+					</select>
+				</label>
+			{{/each}}
+		</script>
+
 		<div class="box70" id="ticket-form-container">
 
 			<script type="text/x-handlebars-template" id="ticket-form-template">
@@ -46,11 +71,7 @@
 						<div class="form-row">
 							<p><strong>Please select the trips that this ticket should be eligable for:</strong></p>
 							<div id="trip-select" style="margin-bottom: 1.5em; margin-left: 4em;">
-								<script id="trip-list-template" type="text/x-handlebars-template">
-									{{#each trips}}
-										{{{name}}}
-									{{/each}}
-								</script>
+								
 							</div>
 						</div>
 
@@ -62,24 +83,7 @@
 						</label>
 						<div class="box50" id="boat-select" style="display:none;">
 							<p>Please select the boats that you want this ticket to be eligible for:</p>
-							<script id="boat-template" type="text/x-handlebars-template">
-								{{#each boats}}
-									<label style="display: block; color: #313131;">
-										<input type="checkbox" onchange="toggleBoatSelect(this);">
-										{{name}}
-										<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;" disabled>
-											<option value="">All room types</option>
-											{{#if accommodations}}
-												<optgroup label="Limit to:">
-													{{#each accommodations}}
-														<option value="{{id}}" {{selected name}}>{{name}}</option>
-													{{/each}}
-												</optgroup>
-											{{/if}}
-										</select>
-									</label>
-								{{/each}}
-							</script>
+			
 						</div>
 
 					</div>
