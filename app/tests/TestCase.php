@@ -5,13 +5,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 	public static $databaseMigrated = false;	
 	
 	public static $testModels = array(
-		'Accommodation', 'Addon', 'Agency', 'Agent',
+		'Accommodation', 'Addon', /*'Agency',*/ 'Agent',
 		'Boat', 'Booking', 'Bookingdetail',
-		'Certificate', 'Company', 'Continent', 'Country', 'Customer',
+		/*'Certificate',*/ 'Company', /*'Continent', 'Country',*/ 'Customer',
 		'Departure',
 		'Location',
 		'Package', 'Packagefacade', 'Payment', /*'Paymentgateway',*/
-		'Ticket', 'Timetable', 'Trip', 'Triptype'
+		'Ticket', 'Timetable', 'Trip', /*'Triptype'*/
 	);
 	
 	/**
@@ -26,8 +26,14 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 			//Migrate the database
 			Artisan::call('migrate');
 			
-			//@TODO seed tables
-			//Artisan::call('db::seed');
+			
+			
+			//Turn foreign key checks off
+			DB::statement('SET FOREIGN_KEY_CHECKS=0;');// <- USE WITH CAUTION!
+			//Seed tables
+			Artisan::call('db:seed');
+			//Turn foreign key checks on
+			DB::statement('SET FOREIGN_KEY_CHECKS=1;');// <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 			
 			//Assert tables are empty
 			foreach (self::$testModels as $model){
