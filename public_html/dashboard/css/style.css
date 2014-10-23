@@ -675,6 +675,25 @@ span.box-tool{
 .fc-row .fc-content-skeleton td {
 	border-color: #ddd;
 }
+.fc-event {
+	padding: 0.25em 0.5em;
+}
+.timetabled::after {
+	content: '';
+	display: block;
+	height: 100%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-image: url(./../img/icons/schedule_white.png);
+	background-size: 1.5em;
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-color: inherit;
+	width: 1.5em;
+	padding-left: 3px;
+
+}
 
 .dashed-border {
 	margin: 1em;
