@@ -22,9 +22,9 @@ class CSVSeeder extends Seeder
 		//Clear anything out from the current table & reset any auto increments
 		DB::table($this->tableName)->truncate();
 		//Read the data from the .csv file
-		$data = $this->readCSV($this->$csvFile, ',');
+		$data = $this->readCSV($this->csvFile, ',');
 		//Seed the table if data was returned
-		if ($seedData !== false) {
+		if ($data !== false) {
 			DB::table($this->tableName)->insert($data);
 		}		
 	}
