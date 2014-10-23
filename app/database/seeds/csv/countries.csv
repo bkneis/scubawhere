@@ -1,4 +1,269 @@
 continent_id,abbreviation,name,description
-3,UK,United Kingdom	
-5,AU,Australia	
-4,US,USA	
+3,AFG,Afghanistan,Islamic State of Afghanistan
+4,ALB,Albania,Republic of Albania
+1,DZA,Algeria,People's Democratic Republic of Algeria
+4,AND,Andorra,Principality of Andorra
+1,AGO,Angola,Republic of Angola
+5,ATG,Antigua and Barbuda,
+7,ARG,Argentina,Argentine Republic
+4,ARM,Armenia,Republic of Armenia
+6,AUS,Australia,Commonwealth of Australia
+4,AUT,Austria,Republic of Austria
+4,AZE,Azerbaijan,Republic of Azerbaijan
+5,BHS,"Bahamas, The",Commonwealth of The Bahamas
+3,BHR,Bahrain,Kingdom of Bahrain
+3,BGD,Bangladesh,People's Republic of Bangladesh
+5,BRB,Barbados,
+4,BLR,Belarus,Republic of Belarus
+4,BEL,Belgium,Kingdom of Belgium
+5,BLZ,Belize,
+1,BEN,Benin,Republic of Benin
+3,BTN,Bhutan,Kingdom of Bhutan
+7,BOL,Bolivia,Republic of Bolivia
+4,BIH,Bosnia and Herzegovina,
+1,BWA,Botswana,Republic of Botswana
+7,BRA,Brazil,Federative Republic of Brazil
+3,BRN,Brunei,Negara Brunei Darussalam
+4,BGR,Bulgaria,Republic of Bulgaria
+1,BFA,Burkina Faso,
+1,BDI,Burundi,Republic of Burundi
+3,KHM,Cambodia,Kingdom of Cambodia
+1,CMR,Cameroon,Republic of Cameroon
+5,CAN,Canada,
+1,CPV,Cape Verde,Republic of Cape Verde
+1,CAF,Central African Republic,
+1,TCD,Chad,Republic of Chad
+7,CHL,Chile,Republic of Chile
+3,CHN,"China, People's Republic of",People's Republic of China
+7,COL,Colombia,Republic of Colombia
+1,COM,Comoros,Union of Comoros
+1,COD,"Congo, (Congo Kinshasa)",Democratic Republic of the Congo
+1,COG,"Congo, (Congo Brazzaville)",Republic of the Congo
+5,CRI,Costa Rica,Republic of Costa Rica
+1,CIV,Cote d'Ivoire (Ivory Coast),Republic of Cote d'Ivoire
+4,HRV,Croatia,Republic of Croatia
+5,CUB,Cuba,Republic of Cuba
+4,CYP,Cyprus,Republic of Cyprus
+4,CZE,Czech Republic,
+4,DNK,Denmark,Kingdom of Denmark
+1,DJI,Djibouti,Republic of Djibouti
+5,DMA,Dominica,Commonwealth of Dominica
+5,DOM,Dominican Republic,
+7,ECU,Ecuador,Republic of Ecuador
+1,EGY,Egypt,Arab Republic of Egypt
+5,SLV,El Salvador,Republic of El Salvador
+1,GNQ,Equatorial Guinea,Republic of Equatorial Guinea
+1,ERI,Eritrea,State of Eritrea
+4,EST,Estonia,Republic of Estonia
+1,ETH,Ethiopia,Federal Democratic Republic of Ethiopia
+6,FJI,Fiji,Republic of the Fiji Islands
+4,FIN,Finland,Republic of Finland
+4,FRA,France,French Republic
+1,GAB,Gabon,Gabonese Republic
+1,GMB,"Gambia, The",Republic of The Gambia
+4,GEO,Georgia,Republic of Georgia
+4,DEU,Germany,Federal Republic of Germany
+1,GHA,Ghana,Republic of Ghana
+4,GRC,Greece,Hellenic Republic
+5,GRD,Grenada,
+5,GTM,Guatemala,Republic of Guatemala
+1,GIN,Guinea,Republic of Guinea
+1,GNB,Guinea-Bissau,Republic of Guinea-Bissau
+7,GUY,Guyana,Co-operative Republic of Guyana
+5,HTI,Haiti,Republic of Haiti
+5,HND,Honduras,Republic of Honduras
+4,HUN,Hungary,Republic of Hungary
+4,ISL,Iceland,Republic of Iceland
+3,IND,India,Republic of India
+3,IDN,Indonesia,Republic of Indonesia
+3,IRN,Iran,Islamic Republic of Iran
+3,IRQ,Iraq,Republic of Iraq
+4,IRL,Ireland,
+3,ISR,Israel,State of Israel
+4,ITA,Italy,Italian Republic
+5,JAM,Jamaica,
+3,JPN,Japan,
+3,JOR,Jordan,Hashemite Kingdom of Jordan
+3,KAZ,Kazakhstan,Republic of Kazakhstan
+1,KEN,Kenya,Republic of Kenya
+6,KIR,Kiribati,Republic of Kiribati
+3,PRK,"Korea, North",Democratic People's Republic of Korea
+3,KOR,"Korea, South",Republic of Korea
+3,KWT,Kuwait,State of Kuwait
+3,KGZ,Kyrgyzstan,Kyrgyz Republic
+3,LAO,Laos,Lao People's Democratic Republic
+4,LVA,Latvia,Republic of Latvia
+3,LBN,Lebanon,Lebanese Republic
+1,LSO,Lesotho,Kingdom of Lesotho
+1,LBR,Liberia,Republic of Liberia
+1,LBY,Libya,Great Socialist People's Libyan Arab Jamahiriya
+4,LIE,Liechtenstein,Principality of Liechtenstein
+4,LTU,Lithuania,Republic of Lithuania
+4,LUX,Luxembourg,Grand Duchy of Luxembourg
+4,MKD,Macedonia,Republic of Macedonia
+1,MDG,Madagascar,Republic of Madagascar
+1,MWI,Malawi,Republic of Malawi
+3,MYS,Malaysia,
+3,MDV,Maldives,Republic of Maldives
+1,MLI,Mali,Republic of Mali
+4,MLT,Malta,Republic of Malta
+6,MHL,Marshall Islands,Republic of the Marshall Islands
+1,MRT,Mauritania,Islamic Republic of Mauritania
+1,MUS,Mauritius,Republic of Mauritius
+5,MEX,Mexico,United Mexican States
+6,FSM,Micronesia,Federated States of Micronesia
+4,MDA,Moldova,Republic of Moldova
+4,MCO,Monaco,Principality of Monaco
+3,MNG,Mongolia,
+4,MNE,Montenegro,Republic of Montenegro
+1,MAR,Morocco,Kingdom of Morocco
+1,MOZ,Mozambique,Republic of Mozambique
+3,MMR,Myanmar (Burma),Union of Myanmar
+1,NAM,Namibia,Republic of Namibia
+6,NRU,Nauru,Republic of Nauru
+3,NPL,Nepal,
+4,NLD,Netherlands,Kingdom of the Netherlands
+6,NZL,New Zealand,
+5,NIC,Nicaragua,Republic of Nicaragua
+1,NER,Niger,Republic of Niger
+1,NGA,Nigeria,Federal Republic of Nigeria
+4,NOR,Norway,Kingdom of Norway
+3,OMN,Oman,Sultanate of Oman
+3,PAK,Pakistan,Islamic Republic of Pakistan
+6,PLW,Palau,Republic of Palau
+5,PAN,Panama,Republic of Panama
+6,PNG,Papua New Guinea,Independent State of Papua New Guinea
+7,PRY,Paraguay,Republic of Paraguay
+7,PER,Peru,Republic of Peru
+3,PHL,Philippines,Republic of the Philippines
+4,POL,Poland,Republic of Poland
+4,PRT,Portugal,Portuguese Republic
+3,QAT,Qatar,State of Qatar
+4,ROU,Romania,
+3,RUS,Russia,Russian Federation
+1,RWA,Rwanda,Republic of Rwanda
+5,KNA,Saint Kitts and Nevis,Federation of Saint Kitts and Nevis
+5,LCA,Saint Lucia,
+5,VCT,Saint Vincent and the Grenadines,
+6,WSM,Samoa,Independent State of Samoa
+4,SMR,San Marino,Republic of San Marino
+1,STP,Sao Tome and Principe,Democratic Republic of Sao Tome and Principe
+3,SAU,Saudi Arabia,Kingdom of Saudi Arabia
+1,SEN,Senegal,Republic of Senegal
+4,SRB,Serbia,Republic of Serbia
+1,SYC,Seychelles,Republic of Seychelles
+1,SLE,Sierra Leone,Republic of Sierra Leone
+3,SGP,Singapore,Republic of Singapore
+4,SVK,Slovakia,Slovak Republic
+4,SVN,Slovenia,Republic of Slovenia
+6,SLB,Solomon Islands,
+1,SOM,Somalia,
+1,ZAF,South Africa,Republic of South Africa
+4,ESP,Spain,Kingdom of Spain
+3,LKA,Sri Lanka,Democratic Socialist Republic of Sri Lanka
+1,SDN,Sudan,Republic of the Sudan
+7,SUR,Suriname,Republic of Suriname
+1,SWZ,Swaziland,Kingdom of Swaziland
+4,SWE,Sweden,Kingdom of Sweden
+4,CHE,Switzerland,Swiss Confederation
+3,SYR,Syria,Syrian Arab Republic
+3,TJK,Tajikistan,Republic of Tajikistan
+1,TZA,Tanzania,United Republic of Tanzania
+3,THA,Thailand,Kingdom of Thailand
+3,TLS,Timor-Leste (East Timor),Democratic Republic of Timor-Leste
+1,TGO,Togo,Togolese Republic
+6,TON,Tonga,Kingdom of Tonga
+5,TTO,Trinidad and Tobago,Republic of Trinidad and Tobago
+1,TUN,Tunisia,Tunisian Republic
+3,TUR,Turkey,Republic of Turkey
+3,TKM,Turkmenistan,
+6,TUV,Tuvalu,
+1,UGA,Uganda,Republic of Uganda
+4,UKR,Ukraine,
+3,ARE,United Arab Emirates,United Arab Emirates
+4,GBR,United Kingdom,United Kingdom of Great Britain and Northern Ireland
+5,USA,United States,United States of America
+7,URY,Uruguay,Oriental Republic of Uruguay
+3,UZB,Uzbekistan,Republic of Uzbekistan
+6,VUT,Vanuatu,Republic of Vanuatu
+4,VAT,Vatican City,State of the Vatican City
+7,VEN,Venezuela,Bolivarian Republic of Venezuela
+3,VNM,Vietnam,Socialist Republic of Vietnam
+3,YEM,Yemen,Republic of Yemen
+1,ZMB,Zambia,Republic of Zambia
+1,ZWE,Zimbabwe,Republic of Zimbabwe
+,GEO,Abkhazia,Republic of Abkhazia
+,TWN,"China, Republic of (Taiwan)",Republic of China
+,AZE,Nagorno-Karabakh,Nagorno-Karabakh Republic
+,CYP,Northern Cyprus,Turkish Republic of Northern Cyprus
+,MDA,Pridnestrovie (Transnistria),Pridnestrovian Moldavian Republic
+,SOM,Somaliland,Republic of Somaliland
+,GEO,South Ossetia,Republic of South Ossetia
+,AUS,Ashmore and Cartier Islands,Territory of Ashmore and Cartier Islands
+,CXR,Christmas Island,Territory of Christmas Island
+,CCK,Cocos (Keeling) Islands,Territory of Cocos (Keeling) Islands
+,AUS,Coral Sea Islands,Coral Sea Islands Territory
+,HMD,Heard Island and McDonald Islands,Territory of Heard Island and McDonald Islands
+,NFK,Norfolk Island,Territory of Norfolk Island
+,NCL,New Caledonia,
+,PYF,French Polynesia,Overseas Country of French Polynesia
+,MYT,Mayotte,Departmental Collectivity of Mayotte
+,GLP,Saint Barthelemy,Collectivity of Saint Barthelemy
+,MAF,Saint Martin,Collectivity of Saint Martin
+,SPM,Saint Pierre and Miquelon,Territorial Collectivity of Saint Pierre and Miquelon
+,WLF,Wallis and Futuna,Collectivity of the Wallis and Futuna Islands
+,ATF,French Southern and Antarctic Lands,Territory of the French Southern and Antarctic Lands
+,PYF,Clipperton Island,
+,BVT,Bouvet Island,
+,COK,Cook Islands,
+,NIU,Niue,
+,TKL,Tokelau,
+,GGY,Guernsey,Bailiwick of Guernsey
+,IMN,Isle of Man,
+,JEY,Jersey,Bailiwick of Jersey
+,AIA,Anguilla,
+,BMU,Bermuda,
+,IOT,British Indian Ocean Territory,
+,BSB,British Sovereign Base Areas,
+,VGB,British Virgin Islands,
+,CYM,Cayman Islands,
+,FLK,Falkland Islands (Islas Malvinas),
+,GIB,Gibraltar,
+,MSR,Montserrat,
+,PCN,Pitcairn Islands,
+,SHN,Saint Helena,
+,SGS,South Georgia & South Sandwich Islands,
+,TCA,Turks and Caicos Islands,
+,MNP,Northern Mariana Islands,Commonwealth of The Northern Mariana Islands
+,PRI,Puerto Rico,Commonwealth of Puerto Rico
+,ASM,American Samoa,Territory of American Samoa
+,UMI,Baker Island,
+,GUM,Guam,Territory of Guam
+,UMI,Howland Island,
+,UMI,Jarvis Island,
+,UMI,Johnston Atoll,
+,UMI,Kingman Reef,
+,UMI,Midway Islands,
+,UMI,Navassa Island,
+,UMI,Palmyra Atoll,
+,VIR,U.S. Virgin Islands,United States Virgin Islands
+,UMI,Wake Island,
+,HKG,Hong Kong,Hong Kong Special Administrative Region
+,MAC,Macau,Macau Special Administrative Region
+,FRO,Faroe Islands,
+,GRL,Greenland,
+,GUF,French Guiana,Overseas Region of Guiana
+,GLP,Guadeloupe,Overseas Region of Guadeloupe
+,MTQ,Martinique,Overseas Region of Martinique
+,REU,Reunion,Overseas Region of Reunion
+,ALA,Aland,
+,ABW,Aruba,
+,ANT,Netherlands Antilles,
+,SJM,Svalbard,
+,ASC,Ascension,
+,TAA,Tristan da Cunha,
+2,ATA,Australian Antarctic Territory,
+2,ATA,Ross Dependency,
+2,ATA,Peter I Island,
+2,ATA,Queen Maud Land,
+2,ATA,British Antarctic Territory,
