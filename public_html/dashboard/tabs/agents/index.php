@@ -121,4 +121,4 @@
 </div>
 
 <script src="/dashboard/js/Controllers/Agent.js"></script>
-<script src="tabs/manage-agents/js/script.js"></script>
+<script src="tabs/agents/js/script.js"></script>

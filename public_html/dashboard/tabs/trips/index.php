@@ -130,5 +130,5 @@
 </div>
 
 
-<script src="tabs/create-trip/js/dive-locator.js"></script>
-<script src="tabs/create-trip/js/script.js"></script>
+<script src="tabs/trips/js/dive-locator.js"></script>
+<script src="tabs/trips/js/script.js"></script>

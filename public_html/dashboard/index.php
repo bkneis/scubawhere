@@ -76,11 +76,11 @@
 		<!-- tabbed navigation and sidebar LEFT -->
 		<div id="sidebar">
 			<div id="tab-title">Admin Panel</div>
-			<div id="dc-info">
+			<!-- <div id="dc-info">
 				<div id="dc-name"></div>
 				<div id="dc-uname"></div>
 				<div id="dc-veri"></div>
-			</div>
+			</div> -->
 
 			<!-- Navigation including accordion drop down menus -->
 
@@ -99,8 +99,7 @@
 						<span class="arrow"></span>
 					</div>
 					<ul>
-						<li data-load="manage-agents">Manage Agents</li>
-						<li data-load="send-invoice">Send Invoice</li>
+						<li data-load="agents">Manage Agents</li>
 					</ul>
 				</li>
 
@@ -125,13 +124,11 @@
 					</div>
 
 					<ul>
-						<li data-load="create-trip">Create Trip</li>
-						<li data-load="activate-trip">Activate Trip</li>
-						<li data-load="list-trips">List Trips</li>
+						<li data-load="trips">Manage Trips</li>
+						<li data-load="activate-trip">Activate Trips</li>
 						<li data-load="tickets">Tickets</li>
 						<li data-load="packages">Packages</li>
 						<li data-load="locations">Locations</li>
-						<!-- <li data-load="trip-calender">Trip Calendar</li> -->
 					</ul>
 				</li>
 
