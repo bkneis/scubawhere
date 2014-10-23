@@ -10,37 +10,15 @@ var tripList;
 
 $(function () {
 
-	// Render initial agent list
+	// Handlebars Prep
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
-	renderTicketList();
-
-	// Default view: show create ticket form
 	ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
-	renderEditForm();
-
 	tripTemplate = Handlebars.compile( $("#trip-list-template").html() );
-	
-	Trip.getAllTrips(function success(data){
-		indexedTrips = _.indexBy(data, 'id');
-		$("#trip-select").empty().append(tripTemplate({trips : data}));
+	boatTemplate = Handlebars.compile($("#boat-template").html());
 
-		// --------------------------------- //
-		// 2. Compile for saved tickets data //
-		// --------------------------------- //
-
-		Ticket.getAllTickets(function success(data){
-			// Sort the ticket array by trip_id
-			data = _.sortBy(data, 'trip_id');
-			// -------------------------------- //
-			// 3. Compile the boat list temlate //
-			// -------------------------------- //
-			var boatTemplate = Handlebars.compile($("#boat-template").html());
-
-			Boat.getAllBoats(function success(data){
-				$("#boat-select").empty().append( boatTemplate({boats : data.boats}) );
-			});
-		});
-	});
+	//Render initial form and ticket list
+	renderEditForm();
+	renderTicketList();
 
 	$("#ticket-form-container").on('click', '#add-ticket', function(event) {
 
@@ -86,11 +64,12 @@ $(function () {
 	});
 
 	// Click event for saving a new ticket
-	$("#update-ticket").click(function(e){
+	$("#ticket-form-container").on('click', '#update-ticket', function(e) {
 		e.preventDefault();
 		$('#update-ticket').prop('disabled', true).after('<div id="update-loader" class="loader"></div>');
 
 		Ticket.updateTicket($("#update-ticket-form").serialize(), function success(data) {
+
 			$('#update-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#update-loader').remove();
 
@@ -188,8 +167,21 @@ function renderEditForm(id) {
 	tripList = Handlebars.compile( $("#trip-list-template").html() );
 	
 	Trip.getAllTrips(function success(data){
-		trips = _.sortBy(data, 'id');
-		$("#trip-select").append(tripList({trips : data}));
+		indexedTrips = _.indexBy(data, 'id');
+		$("#trip-select").empty().append(tripTemplate({trips : data}));
+
+		Ticket.getAllTickets(function success(data){
+			// Sort the ticket array by trip_id
+			data = _.sortBy(data, 'trip_id');
+			// -------------------------------- //
+			// 3. Compile the boat list temlate //
+			// -------------------------------- //
+
+			Boat.getAllBoats(function success(data){
+				$("#boat-select").empty().append( boatTemplate({boats : data.boats}) );
+				boatTemplate(te);
+			});
+		});
 	});
 
 	setToken('[name=_token]');

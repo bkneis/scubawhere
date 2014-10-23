@@ -147,7 +147,7 @@ function renderEditForm(id) {
 
 	if( unsavedChanges() ) {
 		var question = confirm("ATTENTION: All unsaved changes are lost!");
-		if( !question) {
+		if( !question ) {
 			return false;
 		}
 	}

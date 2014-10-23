@@ -47,10 +47,13 @@ var Ticket = {
 	// already been booked. Instead the old ticket has now been
 	// replaced with an updated ticket in the system. The returned
 	// id is the new ID of the ticket and must be used from now on!
-	updateTicket : function(params, handleData){
-		$.post("/api/ticket/edit", params).
-		done(function(data){
-			handleData(data);
+	updateTicket : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/ticket/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 

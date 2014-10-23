@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
-							<li data-id="{{id}}"><strong>{{{name}}}</strong></li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{description}}}</li>
 						{{else}}
 							<p>No tickets available.</p>
 						{{/each}}
@@ -50,6 +50,7 @@
 				<label class="dgreyb">{{task}} ticket</label>
 				<div class="padder">
 					<form id="{{task}}-ticket-form">
+						<input type="hidden" name="id" value="{{id}}">
 						<div class="form-row">
 							<label class="field-label">Ticket Name</label>
 							<input type="text" name="name" value="{{{name}}}">
@@ -57,7 +58,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Ticket Description</label>
-							<input type="text" name="price" value="{{{description}}}">
+							<input type="text" name="description" value="{{{description}}}">
 						</div>
 
 						<div class="form-row">
