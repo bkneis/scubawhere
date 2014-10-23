@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 

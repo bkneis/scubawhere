@@ -36,8 +36,9 @@
 	<title>Scuba Where | Dashboard</title>
 
 	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
-	<link href='css/fullcalendar.css' rel='stylesheet' />
+	<link rel='stylesheet' href='css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.tagsinput.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
 
@@ -48,15 +49,22 @@
 
 	<!-- Third Party Libraries -->
 	<script src="/common/js/jquery.js"></script>
+
 	<script src="/common/js/ui.min/jquery-ui.min.js"></script>
 	<script src="/common/js/jquery.tagsinput.min.js"></script>
+
 	<script src="/common/js/moment.min.js"></script>
 	<script src="/common/js/fullcalendar.min.js"></script>
+
 	<script src="/common/js/hashchange.min.js"></script>
+
 	<script src="/common/js/handlebars.js"></script>
+
 	<script src="/common/ckeditor/ckeditor.js"></script>
 	<script src="/common/ckeditor/adapters/jquery.js"></script>
+
 	<script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+
 	<script src="/common/js/underscore-min.js"></script>
 
 	<!-- ScubaWhere Files -->
