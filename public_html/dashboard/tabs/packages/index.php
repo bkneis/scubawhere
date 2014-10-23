@@ -91,14 +91,7 @@
 					<option value="0">Select a ticket</option>
 					{{#each available_tickets}}
 						<option value="{{id}}"
-
-							{{!
-								Check the parent context for the existance of the 'active' attribute,
-								which is only available in tickets, thus preventing an edge case where
-								the package and a ticket share the same id.
-								Just trust the code!
-							}}
-							{{#if ../active}}
+							{{#if ../existing}}
 								{{selected ../id}}
 							{{/if}}
 						>{{{name}}}</option>

@@ -5,7 +5,7 @@ var Trip = {
 		});
 	},
 
-	getSpecificTrips : function (params, handleData) {
+	getSpecificTrip : function (params, handleData) {
 		$.get("/api/trip", params).done(function(data){
 			handleData(data);
 		});
@@ -15,6 +15,55 @@ var Trip = {
 		$.get("/company/triptypes").done(function(data){
 			handleData(data);
 		});
-	}
+	},
 
+	create : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/trip/add",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	update : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/trip/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	/*deactivate : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/trip/deactivate",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	restore : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/trip/restore",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},*/
+
+	delete : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/trip/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	}
 };

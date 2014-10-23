@@ -132,7 +132,7 @@
 					</div>
 
 					<ul>
-						<li data-load="trips">Manage Trips</li>
+						<li data-load="trips">Trips</li>
 						<li data-load="activate-trip">Activate Trips</li>
 						<li data-load="tickets">Tickets</li>
 						<li data-load="packages">Packages</li>

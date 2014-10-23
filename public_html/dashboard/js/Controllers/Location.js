@@ -6,7 +6,7 @@ var Locations = {
 	//int limit
 	getLocationAround : function(params, handleData) {
 		$.get("/company/locations", params).done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
@@ -23,7 +23,7 @@ var Locations = {
 	//requires one param - "area", as above
 	getLocationInside : function(params, handleData){
 		$.get("/company/locations", params).done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
@@ -37,19 +37,26 @@ var Locations = {
 	//Note: all created locations are available to all companies
 	createLocation : function(params, handleData){
 		$.post("/company/add-location", params).done(function(data){
-			handeData(data);
+			handleData(data);
 		});
 	},
 
 	getAttachedLocations : function(handleData) {
-		$.get("/location/all").done(function(data){
-			handeData(data);
+		$.get("/api/location/all").done(function(data){
+			handleData(data);
 		});
 	},
 
 	attachLocation : function(params, handleData){
 		$.post("/api/location/attach", params).done(function(data){
-			handeData(data);
+			handleData(data);
+		});
+	},
+
+	detach : function(params, handleData){
+		$.post("/api/location/detach", params).done(function(data){
+			handleData(data);
 		});
 	},
 };
+var Place = Locations;
