@@ -23,7 +23,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		'Bookingdetail' => 'booking_details',
 		'Company' => 'companies',
 		'Customer' => 'customers',
-		//'Departure' => 'departures',
+		'Departure' => 'sessions',
 		'Location' => 'locations',
 		'Package' => 'packages',
 		'Packagefacade' => 'packagefacades',
