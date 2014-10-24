@@ -47,12 +47,12 @@ $(function(){
 		renderEditForm( event.target.getAttribute('data-id') );
 	});
 
-	$tripFormContainer.on('click', '#add-trip', function(event) {
+	$tripFormContainer.on('submit', '#add-trip-form', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#add-trip').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Trip.create( $('#add-trip-form').serialize(), function success(data) {
 
@@ -90,12 +90,12 @@ $(function(){
 		});
 	});
 
-	$tripFormContainer.on('click', '#update-trip', function(event) {
+	$tripFormContainer.on('submit', '#update-trip-form', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#update-trip').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Trip.update( $('#update-trip-form').serialize(), function success(data) {
 
@@ -208,6 +208,9 @@ function renderTripList(callback) {
 		$('#trip-list-container .loader').remove();
 
 		$("#trip-list-container").append( tripList({trips : data}) );
+
+		if(typeof callback === 'function')
+			callback();
 	});
 }
 

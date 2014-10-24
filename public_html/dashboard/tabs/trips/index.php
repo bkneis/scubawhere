@@ -84,7 +84,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="bttn blueb big-bttn" id="{{task}}-trip">{{task}} Trip</button>
+						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-trip" value="{{task}} Trip">
 
 					</form>
 				</div>

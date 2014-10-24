@@ -47,7 +47,7 @@
 						<div class="form-row">
 							<h3>Please select the trips that this ticket should be eligable for:</h3>
 							{{#each available_trips}}
-								<label style="margin-left: 4em;">
+								<label style="margin: 0.5em 0 0.5em 4em; display: block;">
 									<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked'}}>
 									{{{name}}}
 								</label>
@@ -63,7 +63,7 @@
 							<div class="dashed-border" id="boat-select"{{#unless hasBoats}} style="display:none;"{{/unless}}>
 								<p>Please select the boats that you want this ticket to be eligible for:</p>
 								{{#each available_boats}}
-									<label style="display: block; color: #313131;">
+									<label>
 										<input type="checkbox" onchange="toggleBoatSelect(this);"{{inArray id ../boats ' checked'}}>
 										{{name}}
 										<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;"{{inArray id ../boats '' ' disabled'}}>
@@ -83,7 +83,7 @@
 						</div>
 
 						<input type="hidden" name="_token">
-						<button class="bttn blueb big-bttn" id="{{task}}-ticket">{{task}} Ticket</button>
+						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-ticket" value="{{task}} Ticket">
 
 					</form>
 				</div>

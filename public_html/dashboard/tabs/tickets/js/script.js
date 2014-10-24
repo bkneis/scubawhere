@@ -45,12 +45,12 @@ $(function () {
 		renderEditForm( event.target.getAttribute('data-id') );
 	});
 
-	$("#ticket-form-container").on('click', '#add-ticket', function(event) {
+	$("#ticket-form-container").on('submit', '#add-ticket-form', function(event) {
 
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#add-ticket').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Ticket.createTicket( $('#add-ticket-form').serialize(), function success(data) {
 
@@ -89,7 +89,7 @@ $(function () {
 	});
 
 	// Click event for saving a new ticket
-	$("#ticket-form-container").on('click', '#update-ticket', function(event) {
+	$("#ticket-form-container").on('submit', '#update-ticket-form', function(event) {
 
 		event.preventDefault();
 
@@ -153,6 +153,9 @@ function renderTicketList(callback) {
 		$('#ticket-list-container .loader').remove();
 
 		$("#ticket-list-container").append( ticketList({tickets : data}) );
+
+		if(typeof callback === 'function')
+			callback();
 	});
 }
 
