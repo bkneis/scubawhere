@@ -202,6 +202,13 @@ class TicketController extends Controller {
 					$sync = array();
 					foreach( $boats as $boat_id => $accommodation_id )
 					{
+						// If the boat array is submitted empty, meaning all boats should be detached, skip all this and go directly to sync
+						if( empty($boat_id) )
+						{
+							$sync = array();
+							break;
+						}
+
 						// The validator fails when accommodation_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
 						if( !empty($accommodation_id) )
 						{

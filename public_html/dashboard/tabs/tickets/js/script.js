@@ -5,20 +5,47 @@ Handlebars.registerHelper('selected', function(selectObject) {
 	else
 		return '';
 });
+Handlebars.registerHelper('inArray', function(needle, haystack, string, elseString) {
+	if(elseString === undefined) elseString = '';
+	if(haystack === undefined) return elseString;
 
-var tripList;
+	return _.has(haystack, needle) ? string : elseString;
+});
+Handlebars.registerHelper('isEqualDeepPivot', function(compare, array, key, attribute, string) {
+	if(!array) return '';
+	if( !_.has(array, key) ) return '';
+
+	return array[key].pivot[attribute] === compare ? string : '';
+});
 
 $(function () {
 
 	// Handlebars Prep
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
-	ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
-	tripTemplate = Handlebars.compile( $("#trip-list-template").html() );
+	renderTicketList();
+
 	boatTemplate = Handlebars.compile($("#boat-template").html());
 
 	//Render initial form and ticket list
-	renderEditForm();
-	renderTicketList();
+
+	Trip.getAllTrips(function success(data){
+		window.trips = _.indexBy(data, 'id');
+
+			Boat.getAllBoats(function success(data){
+				window.boats = _.indexBy(data.boats, 'id');
+
+				ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
+				renderEditForm();
+			});
+	});
+
+	$('#ticket-list-container').on('click', 'li', function(event) {
+
+		if( $(event.target).is('strong') )
+			event.target = event.target.parentNode;
+
+		renderEditForm( event.target.getAttribute('data-id') );
+	});
 
 	$("#ticket-form-container").on('click', '#add-ticket', function(event) {
 
@@ -64,21 +91,25 @@ $(function () {
 	});
 
 	// Click event for saving a new ticket
-	$("#ticket-form-container").on('click', '#update-ticket', function(e) {
-		e.preventDefault();
+	$("#ticket-form-container").on('click', '#update-ticket', function(event) {
+
+		event.preventDefault();
+
 		$('#update-ticket').prop('disabled', true).after('<div id="update-loader" class="loader"></div>');
 
 		Ticket.updateTicket($("#update-ticket-form").serialize(), function success(data) {
 
-			$('#update-ticket').attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#update-loader').remove();
-
 			pageMssg(data.status, true);
 
-			// Trigger tab reload
-			window.location.hash = "";
-			$('#wrapper').html(LOADER);
-			window.location.hash = "tickets";
+			renderTicketList();
+
+			$('form').data('hasChanged', false);
+
+			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
+			$('.errors').remove();
+
+			$('#update-ticket').prop('disabled', false);
+			$('#update-ticket-form').find('#update-loader').remove();
 		}, function error(xhr) {
 
 			data = JSON.parse(xhr.responseText);
@@ -124,18 +155,6 @@ function renderTicketList(callback) {
 		$('#ticket-list-container .loader').remove();
 
 		$("#ticket-list-container").append( ticketList({tickets : data}) );
-
-		// (Re)Assign eventListener for ticket clicks
-		$('#ticket-list').on('click', 'li, strong', function(event) {
-
-			if( $(event.target).is('strong') )
-				event.target = event.target.parentNode;
-
-			renderEditForm( event.target.getAttribute('data-id') );
-		});
-
-		if( typeof callback === 'function')
-			callback();
 	});
 }
 
@@ -152,37 +171,25 @@ function renderEditForm(id) {
 
 	if(id) {
 		ticket = window.tickets[id];
-		ticket.task = 'update';
-		ticket.update = true;
+
+		ticket.task     = 'update';
+		ticket.update   = true;
+		ticket.trips    = _.indexBy(ticket.trips, 'id');
+		ticket.boats    = _.indexBy(ticket.boats, 'id');
+		ticket.hasBoats = Object.keys(ticket.boats).length > 0;
 	}
 	else {
 		ticket = {
 			task: 'add',
+			update: false,
+			hasBoats: false,
 		};
-		ticket.update = false;
 	}
 
+	ticket.available_trips = window.trips;
+	ticket.available_boats = window.boats;
+
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
-
-	tripList = Handlebars.compile( $("#trip-list-template").html() );
-	
-	Trip.getAllTrips(function success(data){
-		indexedTrips = _.indexBy(data, 'id');
-		$("#trip-select").empty().append(tripTemplate({trips : data}));
-
-		Ticket.getAllTickets(function success(data){
-			// Sort the ticket array by trip_id
-			data = _.sortBy(data, 'trip_id');
-			// -------------------------------- //
-			// 3. Compile the boat list temlate //
-			// -------------------------------- //
-
-			Boat.getAllBoats(function success(data){
-				$("#boat-select").empty().append( boatTemplate({boats : data.boats}) );
-				boatTemplate(te);
-			});
-		});
-	});
 
 	setToken('[name=_token]');
 
@@ -212,12 +219,10 @@ function toggleBoatSelect(self) {
 
 function toggleShowBoats() {
 	$('#boat-select').toggle();
+
+	// Set all child inputs to not-checked and trigger disabling of select fields
 	$('#boat-select').find('[type=checkbox]').attr('checked', false).trigger('change');
 }
-
-Handlebars.registerHelper('count', function(array) {
-	return array.length;
-});
 
 function setToken(element) {
 	if( window.token ) {

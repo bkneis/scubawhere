@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
-							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{description}}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency}} {{decimal_price}}</li>
 						{{else}}
 							<p>No tickets available.</p>
 						{{/each}}
@@ -18,31 +18,6 @@
 				</script>
 			</div>
 		</div>
-
-		<script id="trip-list-template" type="text/x-handlebars-template">
-			{{#each trips}}
-				<input type="checkbox" name="trips[]" value="{{id}}"><label class="field-label">{{{name}}}</label>
-			{{/each}}
-		</script>
-
-		<script id="boat-template" type="text/x-handlebars-template">
-			{{#each boats}}
-				<label style="display: block; color: #313131;">
-					<input type="checkbox" onchange="toggleBoatSelect(this);">
-					{{name}}
-					<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;" disabled>
-						<option value="">All room types</option>
-						{{#if accommodations}}
-							<optgroup label="Limit to:">
-								{{#each accommodations}}
-									<option value="{{id}}" {{selected name}}>{{name}}</option>
-								{{/each}}
-							</optgroup>
-						{{/if}}
-					</select>
-				</label>
-			{{/each}}
-		</script>
 
 		<div class="box70" id="ticket-form-container">
 
@@ -58,7 +33,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Ticket Description</label>
-							<input type="text" name="description" value="{{{description}}}">
+							<textarea name="description">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row">
@@ -66,31 +41,48 @@
 							<select name="currency">
 								<option value="GBP">GBP</option>
 							</select>
-							<input type="text" name="price" value="{{{price}}}">
+							<input type="text" name="price" value="{{decimal_price}}">
 						</div>
 
 						<div class="form-row">
-							<p><strong>Please select the trips that this ticket should be eligable for:</strong></p>
-							<div id="trip-select" style="margin-bottom: 1.5em; margin-left: 4em;">
-								
+							<h3>Please select the trips that this ticket should be eligable for:</h3>
+							{{#each available_trips}}
+								<label style="margin-left: 4em;">
+									<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked'}}>
+									{{{name}}}
+								</label>
+							{{/each}}
+						</div>
+
+						<div class="form-row">
+
+							<label style="display: block;">
+								<input type="checkbox" onclick="toggleShowBoats()"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
+							</label>
+							<input type="hidden" name="boats[]" value="">
+							<div class="dashed-border" id="boat-select"{{#unless hasBoats}} style="display:none;"{{/unless}}>
+								<p>Please select the boats that you want this ticket to be eligible for:</p>
+								{{#each available_boats}}
+									<label style="display: block; color: #313131;">
+										<input type="checkbox" onchange="toggleBoatSelect(this);"{{inArray id ../boats ' checked'}}>
+										{{name}}
+										<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;"{{inArray id ../boats '' ' disabled'}}>
+											<option value="">All room types</option>
+											{{#if accommodations}}
+												<optgroup label="Limit to:">
+													{{#each accommodations}}
+														<option value="{{id}}"{{isEqualDeepPivot id ../../../boats ../../id 'accommodation_id' ' selected'}}>{{name}}</option>
+													{{/each}}
+												</optgroup>
+											{{/if}}
+										</select>
+									</label>
+								{{/each}}
 							</div>
+
 						</div>
-
-						<div class="form-row">
-
-						<label style="display: block;">
-							<input type="checkbox" onclick="toggleShowBoats();">
-							<b>Limit the ticket to certain boats?</b>
-						</label>
-						<div class="box50" id="boat-select" style="display:none;">
-							<p>Please select the boats that you want this ticket to be eligible for:</p>
-			
-						</div>
-
-					</div>
 
 						<input type="hidden" name="_token">
-
 						<button class="bttn blueb big-bttn" id="{{task}}-ticket">{{task}} Ticket</button>
 
 					</form>

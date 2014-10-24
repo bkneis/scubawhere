@@ -208,9 +208,6 @@ function renderTripList(callback) {
 		$('#trip-list-container .loader').remove();
 
 		$("#trip-list-container").append( tripList({trips : data}) );
-
-		if( typeof callback === 'function')
-			callback();
 	});
 }
 
