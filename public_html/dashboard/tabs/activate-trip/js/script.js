@@ -99,7 +99,7 @@ $(function() {
 						isNew: false,
 						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
 						durationEditable: false,
-						className: value.timetable_id ? 'timetabled' : console.log(value.timetable_id), // This uses a 'falsy' check on purpose
+						className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose
 					};
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);
@@ -559,7 +559,7 @@ function toggleWeek(self) {
 	var $self    = $(self);
 	var $tr      = $self.closest('tr');
 	var disabled = !$self.is(':checked');
-	console.log(disabled);
+	// console.log(disabled);
 
 	// First, set the clicked week accordingly
 	$tr.find('.day_selector').prop('disabled', disabled);

@@ -89,7 +89,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$ticket = Auth::user()->trips()->findOrFail( $options['trip_id'] );
+				$trip = Auth::user()->trips()->findOrFail( $options['trip_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -144,18 +144,27 @@ class DepartureController extends Controller {
 					$query->where('id', $trip->id);
 				}
 			})
-			->whereHas('tickets', function($query) use ($ticket, $package)
+			->where(function($query) use ($ticket, $package)
 			{
-				$query
-				->where(function($query) use ($ticket)
+				if($ticket)
 				{
-					// Conditional where clause (only when ticket_id is provided)
-					if($ticket)
+					$query->whereHas('tickets', function($query) use ($ticket, $package)
 					{
-						$query->where('id', $ticket->id);
-					}
-				})
-				->where(function($query) use ($package)
+						$query->where('id', $ticket->id)
+						->where(function($query) use ($package)
+						{
+							// Conditional where clause (only when package_id is provided)
+							if( $package )
+							{
+								$query->whereHas('packages', function($query) use ($package)
+								{
+									$query->where('id', $package->id);
+								});
+							}
+						});
+					});
+				}
+				else
 				{
 					// Conditional where clause (only when package_id is provided)
 					if( $package )
@@ -165,7 +174,7 @@ class DepartureController extends Controller {
 							$query->where('id', $package->id);
 						});
 					}
-				});
+				}
 			});
 		})
 		// Filter by dates
