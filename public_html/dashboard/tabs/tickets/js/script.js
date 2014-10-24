@@ -24,8 +24,6 @@ $(function () {
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
 	renderTicketList();
 
-	boatTemplate = Handlebars.compile($("#boat-template").html());
-
 	//Render initial form and ticket list
 
 	Trip.getAllTrips(function success(data){
