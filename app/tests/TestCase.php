@@ -11,63 +11,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 	
 	
 	/**
-	 * Array of all unseeded models with their table names
-	 * @var array of unseeded models (name => table)
-	 */
-	public static $modelTables = array(
-		'Accommodation' => 'accommodations',
-		'Addon' => 'addons',
-		'Agent' => 'agents',
-		'Boat' => 'boats',
-		'Booking' => 'bookings',
-		'Bookingdetail' => 'booking_details',
-		'Company' => 'companies',
-		'Customer' => 'customers',
-		'Departure' => 'sessions',
-		'Location' => 'locations',
-		'Package' => 'packages',
-		'Packagefacade' => 'packagefacades',
-		'Payment' => 'payments',
-		'Ticket' => 'tickets',
-		'Timetable' => 'timetables',
-		'Trip' => 'trips'
-	);	
-	
-	
-	
-	/**
-	 * Array of all seeded models with their table names
-	 * @var array of seeded models (name => table)
-	 */
-	public static $seededModelTables = array(
-		'Agency' => 'agencies',
-		'Certificate' => 'certificates',
-		'Continent' => 'continents',
-		'Country' => 'countries',
-		'Paymentgateway' => 'paymentgateways',
-		'Triptype' => 'triptypes'
-	);
-	
-	
-	
-	/**
-	 * Array of all pivot table names
-	 * @var array of pivot table names
-	 */
-	public static $pivotTables = array(
-			'accommodation_boat',
-			'addon_bookingdetail',
-			'boat_ticket',
-			'company_location',
-			'location_trip',
-			'package_ticket',
-			'ticket_trip',
-			'trip_triptype'
-	);
-	
-	
-	
-	/**
 	 * Default <code>setUp()</code> for each <code>TestCase</code>
 	 * Will ensure the database has been refreshed at least once (but does not reset migrations)
 	 * Also refreshes any event listeners on the models
@@ -102,8 +45,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 	 */
 	public function dbClear(){
 		echo("\nDB ".getenv('DATABASE_NAME').": Clearing tables.....");
-		$this->clearModelTables(self::$modelTables);
-		$this->clearTables(self::$pivotTables);
+		$this->clearModelTables(TestSettings::$modelTables);
+		$this->clearTables(TestSettings::$pivotTables);
 	}
 	
 	
@@ -120,7 +63,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		//Turn foreign key checks on
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');// <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 		//Assert seeded tables have entries
-		foreach (self::$seededModelTables as $model => $table){
+		foreach (TestSettings::$seededModelTables as $model => $table){
 			$this->assertNotCount(0, call_user_func(array($model, 'all')), $model." table should not be empty!");
 		}
 	}
@@ -139,9 +82,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 	public function dbRefresh($includeReset = false){
 		echo("\nDB ".getenv('DATABASE_NAME').": Refreshing.....");
 		
-		//@TODO Fix issue with rollbacks beforethis can be used
+		//@TODO Fix issue with rollbacks before this can be used
 // 		if ($includeReset) {
-// 			echo("\nRolling back migrations.....");
+// 			echo("\nDB ".getenv('DATABASE_NAME').": Rolling back migrations.....");
 // 			//Turn foreign key checks off <- USE WITH CAUTION!
 // 			DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 // 			//Rollback all migrations			
@@ -149,6 +92,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 // 			//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 // 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 // 		}
+
 		$this->dbMigrate();
 		$this->dbClear();
 		$this->dbSeed();
@@ -216,11 +160,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 	 */
 	private function refreshListeners(){
 		//Reset event listeners on all models
-		foreach (self::$modelTables as $model => $table){			
+		foreach (TestSettings::$modelTables as $model => $table){			
 			call_user_func(array($model, 'flushEventListeners'));			
 			call_user_func(array($model, 'boot'));
 		}
-		foreach (self::$seededModelTables as $model => $table){			
+		foreach (TestSettings::$seededModelTables as $model => $table){			
 			call_user_func(array($model, 'flushEventListeners'));			
 			call_user_func(array($model, 'boot'));
 		}		
