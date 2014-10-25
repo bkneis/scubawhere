@@ -36,6 +36,7 @@ class TestSettings {
 			'Certificate' => 'certificates',
 			'Continent' => 'continents',
 			'Country' => 'countries',
+			'Currency' => 'currencies',
 			'Paymentgateway' => 'paymentgateways',
 			'Triptype' => 'triptypes'
 	);
