@@ -18,6 +18,7 @@ class CreateCurrenciesTable extends Migration {
 			$table->string('name', 64);
 			$table->string('alpha_code', 4);
 			$table->integer('numeric_code')->unsigned();
+			$table->string('symbol', 4);
 			$table->integer('minor_unit')->unsigned();
 			$table->timestamps();
 		});
