@@ -111,6 +111,7 @@ return array(
     'CreateCompanyLocationPivotTable' => $baseDir . '/app/database/migrations/2014_06_04_094433_create_company_location_pivot_table.php',
     'CreateContinentsTable' => $baseDir . '/app/database/migrations/2014_02_17_013607_create_continents_table.php',
     'CreateCountriesTable' => $baseDir . '/app/database/migrations/2014_02_17_014835_create_countries_table.php',
+    'CreateCurrenciesTable' => $baseDir . '/app/database/migrations/2014_10_25_173618_create_currencies_table.php',
     'CreateCustomersTable' => $baseDir . '/app/database/migrations/2014_02_17_021744_create_customers_table.php',
     'CreateLocationTripTable' => $baseDir . '/app/database/migrations/2014_02_17_020801_create_location_trip_table.php',
     'CreateLocationsTable' => $baseDir . '/app/database/migrations/2014_02_17_020714_create_locations_table.php',
