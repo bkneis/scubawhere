@@ -28,4 +28,9 @@ class Country extends Ardent {
 	{
 		return $this->hasMany('Customer');
 	}
+	
+	public function currency()
+	{
+		return $this->belongsTo('Currency');
+	}
 }
