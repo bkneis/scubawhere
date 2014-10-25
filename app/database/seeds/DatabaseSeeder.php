@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('CertificatesTableSeeder');
 		$this->call('ContinentsTableSeeder');
 		$this->call('CountriesTableSeeder');
+		$this->call('CurrenciesTableSeeder');
 		$this->call('PaymentgatewaysTableSeeder');
 		$this->call('TriptypesTableSeeder');		
 	}
