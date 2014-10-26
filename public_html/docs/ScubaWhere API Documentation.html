@@ -441,8 +441,8 @@ pre {
 <h1>Internal API Documentation</h1>
 <p>Documentation for the ScubaWhere.com API</p>
 <ul>
-<li><strong>@version</strong> 0.9</li>
-<li><strong>@date</strong>    2014/10/23 - 18:30</li>
+<li><strong>@version</strong>	0.9</li>
+<li><strong>@date</strong>   	2014/10/23 - 18:30</li>
 </ul>
 <blockquote>
 <h3>Important</h3>
@@ -455,52 +455,56 @@ pre {
 <p><code>GET /token</code></p>
 <p>After login, all <code>POST</code> requests must contain the <code>_token</code> parameter to prevent CSRF (Cross Site Request Forgery).</p>
 <ul>
-<li><strong>@return</strong> string    The token to be embedded into <code>POST</code> requests</li>
+<li><strong>@return</strong>	string	The token to be embedded into  <code>POST</code> requests</li>
 </ul>
 <h2>Authentication &amp; Registration</h2>
-<p>All requests to the API, when coming from AJAX, are automatically sent and returned with a <code>scubawhere_session</code> cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores wheather a user is logged in. So no additional authentification information is needed to be sent with requests.</p>
+<p>All requests to the API, when coming from AJAX, are automatically sent and returned with a <code>scubawhere_session</code> cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores whether a user is logged in. So no additional authentification information is needed to be sent with <code>GET</code> requests. </p>
+<blockquote>
+<h4>Important</h4>
+<p><code>POST</code> requests require a valid <code>_token</code> parameter (see <a href="#Retrieve_a_CSRF_token">#Retrieve a CSRF token</a>).</p>
+</blockquote>
 <h3>Login</h3>
 <p><code>POST /login</code></p>
 <p>Logs the company in with their credentials.</p>
 <ul>
-<li><strong>@param</strong> string  username</li>
-<li><strong>@param</strong> string  password</li>
-<li><strong>@param</strong> boolean remember</li>
+<li><strong>@param</strong>	string	username</li>
+<li><strong>@param</strong>	string	password</li>
+<li><strong>@param</strong>	boolean	remember</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON   Contains <code>status</code> on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Logout</h3>
 <p><code>GET /logout</code></p>
 <p>Logs a company out by their session key cookie, if logged in.</p>
 <ul>
-<li><strong>@return</strong> JSON   Always succeeds. Always contains <code>status</code></li>
+<li><strong>@return</strong>	JSON	Always succeeds. Always contains  <code>status</code></li>
 </ul>
 <h3>Register a company</h3>
 <p><code>POST /register/company</code></p>
 <p>This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to <a href="http://scubawhere.com/companypasswordreset">http://scubawhere.com/&#8203;companypasswordreset?email=<code>email</code>&amp;token=<code>token</code></a>. On how to transmit this form, refer to <a href="#Reset_a_company's_password">#Reset a company's password</a> in the documentation.</p>
 <ul>
-<li><strong>@param</strong> string  username   The chosen username</li>
-<li><strong>@param</strong> string  email      The company's contact email adress</li>
-<li><strong>@param</strong> string  name       The full legal company name</li>
-<li><strong>@param</strong> string  address_1  The first address line</li>
-<li><strong>@param</strong> string  address_2  The second address line (optional)</li>
-<li><strong>@param</strong> string  city       The city the company is based in</li>
-<li><strong>@param</strong> string  county     The county the company is based in</li>
-<li><strong>@param</strong> string  postcode   The postcode of the company's address</li>
-<li><strong>@param</strong> integer region_id  The ID of the corresponding region of the company</li>
-<li><strong>@param</strong> integer country_id The ID of the corresponding country of the company</li>
-<li><strong>@param</strong> string  phone      The company's contact telephone number</li>
-<li><strong>@param</strong> string  website    The company's website (optional)</li>
+<li><strong>@param</strong>	string	username	The chosen username</li>
+<li><strong>@param</strong>	string	email   	The company's contact email adress</li>
+<li><strong>@param</strong>	string	name    	The full legal company name</li>
+<li><strong>@param</strong>	string	address_1	The first address line</li>
+<li><strong>@param</strong>	string	address_2	The second address line (optional)</li>
+<li><strong>@param</strong>	string	city    	The city the company is based in</li>
+<li><strong>@param</strong>	string	county  	The county the company is based in</li>
+<li><strong>@param</strong>	string	postcode	The postcode of the company's address</li>
+<li><strong>@param</strong>	integer	region_id	The ID of the corresponding region of the company</li>
+<li><strong>@param</strong>	integer	country_id	The ID of the corresponding country of the company</li>
+<li><strong>@param</strong>	string	phone   	The company's contact telephone number</li>
+<li><strong>@param</strong>	string	website 	The company's website (optional)</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON   Contains <code>status</code> on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Check if username or email already exists</h3>
 <p><code>GET /register/exists</code></p>
 <ul>
-<li><strong>@param</strong> string field Either <code>username</code> or <code>email</code></li>
-<li><strong>@param</strong> string value The username or email address to check</li>
+<li><strong>@param</strong>	string	field   	Either   <code>username</code> or <code>email</code></li>
+<li><strong>@param</strong>	string	value   	The username or email address to check</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> integer     <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
+<li><strong>@return</strong> integer <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
 </ul>
 <h2>Accommodations</h2>
 <h3>Retrieve all accommodations</h3>
@@ -513,15 +517,15 @@ pre {
 <p><code>GET /api/agency/all</code></p>
 <p>Use this API call to populate an agency and (subsequent) certificate drop-down/select field.</p>
 <ul>
-<li><strong>@return</strong> JSON  An array of <code>agency</code> objects with related <code>certificates</code> arrays</li>
+<li><strong>@return</strong> JSON    An array of <code>agency</code> objects with related <code>certificates</code> arrays</li>
 </ul>
 <h2>Agents</h2>
 <h3>Retrieve a specific agent</h3>
 <p><code>GET /api/agent</code></p>
 <ul>
-<li><strong>@param</strong> integer id The ID of the wanted agent</li>
+<li><strong>@param</strong>	integer	id      	The ID of the wanted agent</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON      An <code>agent</code> object</li>
+<li><strong>@return</strong> JSON    An <code>agent</code> object</li>
 </ul>
 <h3>Retrieve all agents</h3>
 <p><code>GET /api/agent/all</code></p>
@@ -532,19 +536,19 @@ pre {
 <p><code>POST /api/agent/add</code></p>
 <p>Creates a new (travel) agent. All fields that are <strong>not</strong> marked <em>(optional)</em> are required.</p>
 <ul>
-<li><strong>@param</strong> string  name            The name of the travel agent</li>
-<li><strong>@param</strong> string  website         The agent's website (optional)</li>
-<li><strong>@param</strong> string  branch_name     Name of the agent's local branch</li>
-<li><strong>@param</strong> text    branch_address  Free textfield for the branch's address</li>
-<li><strong>@param</strong> string  branch_phone    The branch's telephone contact number (optional)</li>
-<li><strong>@param</strong> string  branch_email    A contact email address of the branch (optional)</li>
-<li><strong>@param</strong> text    billing_address If different from <code>branch_address</code> specify billing address (optional)</li>
-<li><strong>@param</strong> string  billing_phone   If different from <code>branch_phone</code> specify billing contact number (optional)</li>
-<li><strong>@param</strong> string  billing_email   If different from <code>branch_email</code> specify contact email address (optional)</li>
-<li><strong>@param</strong> integer commission      The agent's commission in percent as a whole number (e.g. 15%)</li>
-<li><strong>@param</strong> string  terms           MUST be one of the following three: fullamount, deposit, banned</li>
+<li><strong>@param</strong>	string	name        	The name of the travel agent</li>
+<li><strong>@param</strong>	string	website     	The agent's website (optional)</li>
+<li><strong>@param</strong>	string	branch_name 	Name of the agent's local branch</li>
+<li><strong>@param</strong>	text	branch_address	Free textfield for the branch's address</li>
+<li><strong>@param</strong>	string	branch_phone	The branch's telephone contact number (optional)</li>
+<li><strong>@param</strong>	string	branch_email	A contact email address of the branch (optional)</li>
+<li><strong>@param</strong>	text	billing_address	If different from <code>branch_address</code> specify billing address (optional)</li>
+<li><strong>@param</strong>	string	billing_phone	If different from <code>branch_phone</code> specify billing contact number (optional)</li>
+<li><strong>@param</strong>	string	billing_email	If different from <code>branch_email</code> specify contact email address (optional)</li>
+<li><strong>@param</strong>	integer	commission  	The agent's commission in percent as a whole number (e.g. 15%)</li>
+<li><strong>@param</strong>	string	terms   	MUST be one of the following three: fullamount, deposit, banned</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON                   Contains <code>status</code> and <code>id</code> of the newly created agent on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> and <code>id</code> of the newly created agent on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Update an agent</h3>
 <p><code>POST /api/agent/edit</code></p>
@@ -626,12 +630,13 @@ pre {
 <p><code>POST /api/booking/add-details</code></p>
 <p>Add a combination of an existing <strong>customer</strong> and <strong>ticket</strong> and <strong>session</strong> to a booking. (To create a customer, see <a href="#Create_a_customer">#Create a customer</a>.)</p>
 <ul>
-<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the details should be added to (most likely the ID returned in <a href="#Start_a_booking">#Start a booking</a>)</li>
-<li><strong>@param</strong> integer customer_id The ID of the <code>customer</code> to attach</li>
-<li><strong>@param</strong> boolean is_lead     Signal if the customer is the lead customer</li>
-<li><strong>@param</strong> integer ticket_id   The ID of the <code>ticket</code> to attach</li>
-<li><strong>@param</strong> integer session_id  The ID of the <code>session</code> that has been selected</li>
-<li><strong>@param</strong> integer package_id  If the <code>ticket</code> is part of a package, the package's ID must be submitted (optional)</li>
+<li><strong>@param</strong> integer booking_id     	The ID of the  <code>booking</code> that the details should be added to (most likely the ID returned in <a href="#Start_a_booking">#Start a booking</a>)</li>
+<li><strong>@param</strong> integer customer_id    	The ID of the  <code>customer</code> to attach</li>
+<li><strong>@param</strong> boolean is_lead        	Signal if the customer is the lead customer</li>
+<li><strong>@param</strong> integer ticket_id      	The ID of the  <code>ticket</code> to attach</li>
+<li><strong>@param</strong> integer session_id     	The ID of the  <code>session</code> that has been selected</li>
+<li><strong>@param</strong> integer package_id     	If the  <code>ticket</code> is part of a package, the package's ID must be submitted (optional)</li>
+<li><strong>@param</strong> integer packagefacade_id	If the  <code>ticket</code> is part of a package that a previous ticket has already been added to, this has to be submitted to identify the package (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
 </ul>
@@ -644,6 +649,29 @@ pre {
 <li><strong>@param</strong> integer session_id  The ID of the <code>session</code> that should be removed from the booking</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Add addon to booking</h3>
+<p><code>POST /api/booking/add-addon</code></p>
+<p>Adds an addon to a customer-session combination.</p>
+<ul>
+<li><strong>@param</strong>	integer	booking_id	The ID of the  <code>booking</code></li>
+<li><strong>@param</strong>	integer	session_id	The ID of the  <code>session</code> that the addon should be added to</li>
+<li><strong>@param</strong>	integer customer_id	The ID of the  <code>customer</code> the addon is for</li>
+<li><strong>@param</strong>	integer	addon_id	The ID of the  <code>addon</code> to add</li>
+<li><strong>@param</strong>	integer	quantity	How many of this addon should be added (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Remove addon from booking</h3>
+<p><code>POST /api/booking/remove-addon</code></p>
+<p>Removes an addon from a customer-session combination.</p>
+<ul>
+<li><strong>@param</strong>	integer	booking_id	The ID of the  <code>booking</code></li>
+<li><strong>@param</strong>	integer	session_id	The ID of the  <code>session</code> that the addon should be removed from</li>
+<li><strong>@param</strong>	integer customer_id	The ID of the  <code>customer</code> the addon was booked for</li>
+<li><strong>@param</strong>	integer	addon_id	The ID of the  <code>addon</code> to remove</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Change additional booking information</h3>
 <p><code>POST /api/booking/edit-info</code></p>
@@ -662,7 +690,8 @@ pre {
 <p>Return an array containing boolean values for various important tests.</p>
 <blockquote>
 <h4>Available tests</h4>
-<p><strong>customer</strong>: Tests if the lead customer fulfills the requirements (has an email)</p>
+<p><strong>email</strong> Tests if the lead customer has an email<br>
+<strong>phone</strong> Tests if the lead customer has a phone number</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong>  integer booking_id The ID of the booking to be checked</li>
@@ -750,12 +779,12 @@ pre {
 <li><strong>@return</strong> JSON                  Contains <code>status</code> and <code>id</code> of the newly created customer on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Locations</h2>
-<h3>Retrieve locations 1/2 - Around a center</h3>
+<h3>Retrieve locations (around a center)</h3>
 <p><code>GET /company/locations</code></p>
 <p>Retrieve an arbitrary number of locations, sorted by distance to submitted location (near to far).</p>
 <blockquote>
 <h4>Important</h4>
-<p>If <code>area</code> is set and an array, <a href="#Retrieve_locations_2/2_-_Inside_bounds">#Retrieve locations 2/2 - Inside bounds</a> is performed instead.</p>
+<p>If <code>area</code> is set and an array, <a href="#Retrieve_locations_(inside_bounds)">#Retrieve locations (inside bounds)</a> is performed instead.</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong> float   latitude</li>
@@ -765,7 +794,7 @@ pre {
 <li><strong>@return</strong> JSON             An array of locations, ordered by <code>distance</code> (also in the results, in miles)</li>
 </ul>
 <p><em>For performance monitoring, the time it takes for the MySQL query to execute is logged.</em></p>
-<h3>Retrieve locations 2/2 - Inside bounds</h3>
+<h3>Retrieve locations (inside bounds)</h3>
 <p><code>GET /company/locations</code></p>
 <p>Retrieve <em>all</em> locactions inside the specified bounds.</p>
 <p>Build your <code>area</code> array like so:</p>
@@ -1094,7 +1123,14 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
-<h3>23<sup>th</sup> October 2014</h3>
+<h3>26<sup>th</sup> October 2014</h3>
+<ul>
+<li><strong>@added</strong> Expandable &amp; responsive main menu</li>
+<li><strong>@added</strong> <code>packagefacade_id</code> to <a href="#Add_ticket_to_booking">#Add ticket to booking</a></li>
+<li><strong>@added</strong> <a href="#Add_addon_to_booking">#Add addon to booking</a> and <a href="#Remove_addon_from_booking">#Remove addon from booking</a></li>
+<li><strong>@edit</strong>  Reordered sections alphabetically</li>
+</ul>
+<h3>23<sup>rd</sup> October 2014</h3>
 <ul>
 <li><strong>@edit</strong>  Changed API calls for <a href="#Retrieve_all_trips">#getting</a>, <a href="#Add_a_trip">#adding</a>, <a href="#Edit_a_trip">#editing</a> and <a href="#Delete_a_trip">#deleting</a> trips.</li>
 </ul>
@@ -1180,8 +1216,8 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <ul>
 <li><strong>@added</strong> Internal links in the <a href="#Changelog">#Changelog</a></li>
 <li><strong>@added</strong> <a href="#Retrieve_locations_2/2_-_Inside_bounds">#Retrieve locations 2/2 - Inside bounds</a></li>
-<li><strong>@edit</strong>  Changed <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations</a> to <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations 1/2 - Around a center</a></li>
-<li><strong>@edit</strong>  Changed description of <a href="#Retrieve_locations_1/2_-_Around_a_center">#Retrieve locations 1/2 - Around a center</a> to reflect the parameter of <code>area</code></li>
+<li><strong>@edit</strong>  Changed <a href="#Retrieve_locations_(around_a_center)">#Retrieve locations</a> to <a href="#Retrieve_locations_(around_a_center)">#Retrieve locations 1/2 - Around a center</a></li>
+<li><strong>@edit</strong>  Changed description of <a href="#Retrieve_locations_(around_a_center)">#Retrieve locations 1/2 - Around a center</a> to reflect the parameter of <code>area</code></li>
 </ul>
 <h3>10<sup>th</sup> March 2014</h3>
 <ul>

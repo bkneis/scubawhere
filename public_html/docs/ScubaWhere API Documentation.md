@@ -5,8 +5,8 @@
 
 Documentation for the ScubaWhere.com API
 
-- **@version** 0.9
-- **@date**    2014/10/23 - 18:30
+- **@version**	0.9
+- **@date**   	2014/10/23 - 18:30
 
 > ### Important
 > On **success**, the response contains either the requested information, the string `status` or (for calls that create something) `status` and `id`.
@@ -23,10 +23,13 @@ All requests from here only allow authenticated users/companies.
 
 After login, all `POST` requests must contain the `_token` parameter to prevent CSRF (Cross Site Request Forgery).
 
-- **@return** string    The token to be embedded into `POST` requests
+- **@return**	string	The token to be embedded into  `POST` requests
 
 ## Authentication & Registration
-All requests to the API, when coming from AJAX, are automatically sent and returned with a `scubawhere_session` cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores wheather a user is logged in. So no additional authentification information is needed to be sent with requests.
+All requests to the API, when coming from AJAX, are automatically sent and returned with a `scubawhere_session` cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores whether a user is logged in. So no additional authentification information is needed to be sent with `GET` requests. 
+
+> #### Important
+> `POST` requests require a valid `_token` parameter (see [#Retrieve a CSRF token](#Retrieve_a_CSRF_token)).
 
 ### Login
 
@@ -34,11 +37,11 @@ All requests to the API, when coming from AJAX, are automatically sent and retur
 
 Logs the company in with their credentials.
 
-- **@param** string  username
-- **@param** string  password
-- **@param** boolean remember
+- **@param**	string	username
+- **@param**	string	password
+- **@param**	boolean	remember
 - &nbsp;
-- **@return** JSON   Contains `status` on success, `errors` on failure
+- **@return** JSON    Contains `status` on success, `errors` on failure
 
 ### Logout
 
@@ -46,7 +49,7 @@ Logs the company in with their credentials.
 
 Logs a company out by their session key cookie, if logged in.
 
-- **@return** JSON   Always succeeds. Always contains `status`
+- **@return**	JSON	Always succeeds. Always contains  `status`
 
 ### Register a company
 
@@ -54,29 +57,29 @@ Logs a company out by their session key cookie, if logged in.
 
 This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to [http://scubawhere.com/&#8203;companypasswordreset?email=`email`&token=`token`](http://scubawhere.com/companypasswordreset). On how to transmit this form, refer to [#Reset a company's password](#Reset_a_company's_password) in the documentation.
 
-- **@param** string  username   The chosen username
-- **@param** string  email      The company's contact email adress
-- **@param** string  name       The full legal company name
-- **@param** string  address_1  The first address line
-- **@param** string  address_2  The second address line (optional)
-- **@param** string  city       The city the company is based in
-- **@param** string  county     The county the company is based in
-- **@param** string  postcode   The postcode of the company's address
-- **@param** integer region_id  The ID of the corresponding region of the company
-- **@param** integer country_id The ID of the corresponding country of the company
-- **@param** string  phone      The company's contact telephone number
-- **@param** string  website    The company's website (optional)
+- **@param**	string	username	The chosen username
+- **@param**	string	email   	The company's contact email adress
+- **@param**	string	name    	The full legal company name
+- **@param**	string	address_1	The first address line
+- **@param**	string	address_2	The second address line (optional)
+- **@param**	string	city    	The city the company is based in
+- **@param**	string	county  	The county the company is based in
+- **@param**	string	postcode	The postcode of the company's address
+- **@param**	integer	region_id	The ID of the corresponding region of the company
+- **@param**	integer	country_id	The ID of the corresponding country of the company
+- **@param**	string	phone   	The company's contact telephone number
+- **@param**	string	website 	The company's website (optional)
 - &nbsp;
-- **@return** JSON   Contains `status` on success, `errors` on failure
+- **@return** JSON    Contains `status` on success, `errors` on failure
 
 ### Check if username or email already exists
 
 `GET /register/exists`
 
-- **@param** string field Either `username` or `email`
-- **@param** string value The username or email address to check
+- **@param**	string	field   	Either   `username` or `email`
+- **@param**	string	value   	The username or email address to check
 - &nbsp;
-- **@return** integer     `0` (FALSE) if no record was found, otherwise `1` (TRUE)
+- **@return** integer `0` (FALSE) if no record was found, otherwise `1` (TRUE)
 
 ## Accommodations
 
@@ -94,7 +97,7 @@ This route creates a new company in the database and attemps to send a password 
 
 Use this API call to populate an agency and (subsequent) certificate drop-down/select field.
 
-- **@return** JSON  An array of `agency` objects with related `certificates` arrays
+- **@return** JSON    An array of `agency` objects with related `certificates` arrays
 
 ## Agents
 
@@ -102,9 +105,9 @@ Use this API call to populate an agency and (subsequent) certificate drop-down/s
 
 `GET /api/agent`
 
-- **@param** integer id The ID of the wanted agent
+- **@param**	integer	id      	The ID of the wanted agent
 - &nbsp;
-- **@return** JSON      An `agent` object
+- **@return** JSON    An `agent` object
 
 ### Retrieve all agents
 
@@ -118,19 +121,19 @@ Use this API call to populate an agency and (subsequent) certificate drop-down/s
 
 Creates a new (travel) agent. All fields that are **not** marked *(optional)* are required.
 
-- **@param** string  name            The name of the travel agent
-- **@param** string  website         The agent's website (optional)
-- **@param** string  branch_name     Name of the agent's local branch
-- **@param** text    branch_address  Free textfield for the branch's address
-- **@param** string  branch_phone    The branch's telephone contact number (optional)
-- **@param** string  branch_email    A contact email address of the branch (optional)
-- **@param** text    billing_address If different from `branch_address` specify billing address (optional)
-- **@param** string  billing_phone   If different from `branch_phone` specify billing contact number (optional)
-- **@param** string  billing_email   If different from `branch_email` specify contact email address (optional)
-- **@param** integer commission      The agent's commission in percent as a whole number (e.g. 15%)
-- **@param** string  terms           MUST be one of the following three: fullamount, deposit, banned
+- **@param**	string	name        	The name of the travel agent
+- **@param**	string	website     	The agent's website (optional)
+- **@param**	string	branch_name 	Name of the agent's local branch
+- **@param**	text	branch_address	Free textfield for the branch's address
+- **@param**	string	branch_phone	The branch's telephone contact number (optional)
+- **@param**	string	branch_email	A contact email address of the branch (optional)
+- **@param**	text	billing_address	If different from `branch_address` specify billing address (optional)
+- **@param**	string	billing_phone	If different from `branch_phone` specify billing contact number (optional)
+- **@param**	string	billing_email	If different from `branch_email` specify contact email address (optional)
+- **@param**	integer	commission  	The agent's commission in percent as a whole number (e.g. 15%)
+- **@param**	string	terms   	MUST be one of the following three: fullamount, deposit, banned
 - &nbsp;
-- **@return** JSON                   Contains `status` and `id` of the newly created agent on success, `errors` on failure
+- **@return** JSON    Contains `status` and `id` of the newly created agent on success, `errors` on failure
 
 ### Update an agent
 
@@ -226,12 +229,13 @@ The ideal booking process is throughoutly documented in a [Facebook Document](ht
 
 Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
 
-- **@param** integer booking_id  The ID of the `booking` that the details should be added to (most likely the ID returned in [#Start a booking](#Start_a_booking))
-- **@param** integer customer_id The ID of the `customer` to attach
-- **@param** boolean is_lead     Signal if the customer is the lead customer
-- **@param** integer ticket_id   The ID of the `ticket` to attach
-- **@param** integer session_id  The ID of the `session` that has been selected
-- **@param** integer package_id  If the `ticket` is part of a package, the package's ID must be submitted (optional)
+- **@param** integer booking_id     	The ID of the  `booking` that the details should be added to (most likely the ID returned in [#Start a booking](#Start_a_booking))
+- **@param** integer customer_id    	The ID of the  `customer` to attach
+- **@param** boolean is_lead        	Signal if the customer is the lead customer
+- **@param** integer ticket_id      	The ID of the  `ticket` to attach
+- **@param** integer session_id     	The ID of the  `session` that has been selected
+- **@param** integer package_id     	If the  `ticket` is part of a package, the package's ID must be submitted (optional)
+- **@param** integer packagefacade_id	If the  `ticket` is part of a package that a previous ticket has already been added to, this has to be submitted to identify the package (optional)
 - &nbsp;
 - **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
 
@@ -246,6 +250,33 @@ Remove a ticket from a booking. This method doesn't need the ticketID, because t
 - **@param** integer session_id  The ID of the `session` that should be removed from the booking
 - &nbsp;
 - **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
+
+### Add addon to booking
+
+`POST /api/booking/add-addon`
+
+Adds an addon to a customer-session combination.
+
+- **@param**	integer	booking_id	The ID of the  `booking`
+- **@param**	integer	session_id	The ID of the  `session` that the addon should be added to
+- **@param**	integer customer_id	The ID of the  `customer` the addon is for
+- **@param**	integer	addon_id	The ID of the  `addon` to add
+- **@param**	integer	quantity	How many of this addon should be added (optional)
+- &nbsp;
+- **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
+
+### Remove addon from booking
+
+`POST /api/booking/remove-addon`
+
+Removes an addon from a customer-session combination.
+
+- **@param**	integer	booking_id	The ID of the  `booking`
+- **@param**	integer	session_id	The ID of the  `session` that the addon should be removed from
+- **@param**	integer customer_id	The ID of the  `customer` the addon was booked for
+- **@param**	integer	addon_id	The ID of the  `addon` to remove
+- &nbsp;
+- **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
 
 ### Change additional booking information
 
@@ -267,7 +298,8 @@ Remove a ticket from a booking. This method doesn't need the ticketID, because t
 Return an array containing boolean values for various important tests.
 
 > #### Available tests
-> **customer**: Tests if the lead customer fulfills the requirements (has an email)
+> **email** Tests if the lead customer has an email<br>
+> **phone** Tests if the lead customer has a phone number
 
 - **@param**  integer booking_id The ID of the booking to be checked
 - &nbsp;
@@ -367,14 +399,14 @@ All parameters are optional (except the customer `id`).
 
 ## Locations
 
-### Retrieve locations 1/2 - Around a center
+### Retrieve locations (around a center)
 
 `GET /company/locations`
 
 Retrieve an arbitrary number of locations, sorted by distance to submitted location (near to far).
 
 > #### Important
-> If `area` is set and an array, [#Retrieve locations 2/2 - Inside bounds](#Retrieve_locations_2/2_-_Inside_bounds) is performed instead.
+> If `area` is set and an array, [#Retrieve locations (inside bounds)](#Retrieve_locations_(inside_bounds)) is performed instead.
 
 - **@param** float   latitude
 - **@param** float   longitude
@@ -384,7 +416,7 @@ Retrieve an arbitrary number of locations, sorted by distance to submitted locat
 
 *For performance monitoring, the time it takes for the MySQL query to execute is logged.*
 
-### Retrieve locations 2/2 - Inside bounds
+### Retrieve locations (inside bounds)
 
 `GET /company/locations`
 
@@ -762,7 +794,13 @@ Delete an existing trip.
 
 ## Changelog
 
-### 23<sup>th</sup> October 2014
+### 26<sup>th</sup> October 2014
+- **@added** Expandable & responsive main menu
+- **@added** `packagefacade_id` to [#Add ticket to booking](#Add_ticket_to_booking)
+- **@added** [#Add addon to booking](#Add_addon_to_booking) and [#Remove addon from booking](#Remove_addon_from_booking)
+- **@edit**  Reordered sections alphabetically
+
+### 23<sup>rd</sup> October 2014
 - **@edit**  Changed API calls for [#getting](#Retrieve_all_trips), [#adding](#Add_a_trip), [#editing](#Edit_a_trip) and [#deleting](#Delete_a_trip) trips.
 
 ### 12<sup>th</sup> August 2014
@@ -830,8 +868,8 @@ Delete an existing trip.
 ### 12<sup>th</sup> March 2014
 - **@added** Internal links in the [#Changelog](#Changelog)
 - **@added** [#Retrieve locations 2/2 - Inside bounds](#Retrieve_locations_2/2_-_Inside_bounds)
-- **@edit**  Changed [#Retrieve locations](#Retrieve_locations_1/2_-_Around_a_center) to [#Retrieve locations 1/2 - Around a center](#Retrieve_locations_1/2_-_Around_a_center)
-- **@edit**  Changed description of [#Retrieve locations 1/2 - Around a center](#Retrieve_locations_1/2_-_Around_a_center) to reflect the parameter of `area`
+- **@edit**  Changed [#Retrieve locations](#Retrieve_locations_(around_a_center)) to [#Retrieve locations 1/2 - Around a center](#Retrieve_locations_(around_a_center))
+- **@edit**  Changed description of [#Retrieve locations 1/2 - Around a center](#Retrieve_locations_(around_a_center)) to reflect the parameter of `area`
 
 ### 10<sup>th</sup> March 2014
 - **@added** Basic heading numbering
