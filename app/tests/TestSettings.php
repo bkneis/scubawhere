@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Contains any setting related to the test environment 
+ */
 class TestSettings {
 
 	/**
