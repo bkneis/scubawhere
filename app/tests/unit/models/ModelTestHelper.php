@@ -7,7 +7,12 @@ class ModelTestHelper{
 	
 	//Constants that can be used to quickly create & assert models
 	
-	const TEST_STRING = "Test string";	
+	const TEST_NAME = "Test name";
+	const TEST_NAME_UPDATE = "New test name";
+	const TEST_DESCRIPTION = "Test description";
+	const TEST_DESCRIPTION_UPDATE = "New test description";
+	const TEST_ABBR = "TST";
+	const TEST_ABBR_UPDATE = "NTST";
 	const TEST_USERNAME = "testuser";
 	const TEST_PASSWORD = "testpassword";
 	const TEST_EMAIL = "test@email.com";
@@ -63,8 +68,12 @@ class ModelTestHelper{
 	}
 	
 	public static function createContinent($append = ""){
-		//TODO
-		return 0;
+		$entry = new Continent();
+		$entry->abbreviation = self::TEST_ABBR;
+		$entry->name = self::TEST_NAME.$append;
+		$entry->description = self::TEST_DESCRIPTION.$append;
+		$entry->save();
+		return $entry->id;
 	}
 	
 	public static function createCountry($continent_id, $currency_id, $append = ""){

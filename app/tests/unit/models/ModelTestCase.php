@@ -20,22 +20,22 @@ abstract class ModelTestCase extends TestCase {
 	/**
 	 * Tests if a model is Created, Read, Updated, Soft Deleted, Restored & Force Deleted correctly
 	 */
-	abstract protected function testCRUD();	
+	abstract public function testCRUD();	
 	/**
 	 * Tests model validation messages
 	 */
-	abstract protected function testValidation();
+	abstract public function testValidation();
 	/**
 	 * Tests relationships between any other model. Tests should also check and CRUD functions that effect relationships.
 	 */
-	abstract protected function testRelationships();
+	abstract public function testRelationships();
 	/**
 	 * Tests any functions extending the model
 	 */
-	abstract protected function testFunctions();
+	abstract public function testFunctions();
 	/**
 	 * Tests anything else related to the model
 	 */
-	abstract protected function testEdges();	
+	abstract public function testEdges();	
 	
 }
