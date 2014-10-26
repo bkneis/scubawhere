@@ -1,11 +1,7 @@
+<main class="cd-main-content"><div class="width-controller">
 [![](ScubaWhere_Logo.svg)](http://scubawhere.com/docs)
 
 # Internal API Documentation
-
-<div id="contents">
-<h3>Table of Contents</h3>
-<ol></ol>
-</div>
 
 Documentation for the ScubaWhere.com API
 
@@ -17,7 +13,19 @@ Documentation for the ScubaWhere.com API
 
 > If a request **fails**, the response *always* contains an `errors` array and has a HTTP code >= 400.
 
-## Authentication & User Management
+## General
+
+All requests from here only allow authenticated users/companies.
+
+### Retrieve CSRF token
+
+`GET /token`
+
+After login, all `POST` requests must contain the `_token` parameter to prevent CSRF (Cross Site Request Forgery).
+
+- **@return** string    The token to be embedded into `POST` requests
+
+## Authentication & Registration
 All requests to the API, when coming from AJAX, are automatically sent and returned with a `scubawhere_session` cookie. This cookie contains a unique keystring that is used by the system to identify each user individually. The system also stores wheather a user is logged in. So no additional authentification information is needed to be sent with requests.
 
 ### Login
@@ -70,25 +78,79 @@ This route creates a new company in the database and attemps to send a password 
 - &nbsp;
 - **@return** integer     `0` (FALSE) if no record was found, otherwise `1` (TRUE)
 
-## General
+## Accommodations
 
-All requests from here only allow authenticated users/companies.
+### Retrieve all accommodations
 
-### Retrieve CSRF token
+`GET /company/accommodations`
 
-`GET /token`
+- **@return** JSON    An array of `accommodation` objects
 
-After login, all `POST` requests must contain the `_token` parameter to prevent CSRF (Cross Site Request Forgery).
+## Agencies & Certificates
 
-- **@return** string    The token to be embedded into `POST` requests
+### Recieve all agencies and related certificates
 
-## Company
+`GET /api/agency/all`
 
-### Retrieve the company's basic information
+Use this API call to populate an agency and (subsequent) certificate drop-down/select field.
 
-`GET /company`
+- **@return** JSON  An array of `agency` objects with related `certificates` arrays
 
-- **@return** JSON    The `company` object
+## Agents
+
+### Retrieve a specific agent
+
+`GET /api/agent`
+
+- **@param** integer id The ID of the wanted agent
+- &nbsp;
+- **@return** JSON      An `agent` object
+
+### Retrieve all agents
+
+`GET /api/agent/all`
+
+- **@return** JSON    An array of `agent` objects
+
+### Create an agent
+
+`POST /api/agent/add`
+
+Creates a new (travel) agent. All fields that are **not** marked *(optional)* are required.
+
+- **@param** string  name            The name of the travel agent
+- **@param** string  website         The agent's website (optional)
+- **@param** string  branch_name     Name of the agent's local branch
+- **@param** text    branch_address  Free textfield for the branch's address
+- **@param** string  branch_phone    The branch's telephone contact number (optional)
+- **@param** string  branch_email    A contact email address of the branch (optional)
+- **@param** text    billing_address If different from `branch_address` specify billing address (optional)
+- **@param** string  billing_phone   If different from `branch_phone` specify billing contact number (optional)
+- **@param** string  billing_email   If different from `branch_email` specify contact email address (optional)
+- **@param** integer commission      The agent's commission in percent as a whole number (e.g. 15%)
+- **@param** string  terms           MUST be one of the following three: fullamount, deposit, banned
+- &nbsp;
+- **@return** JSON                   Contains `status` and `id` of the newly created agent on success, `errors` on failure
+
+### Update an agent
+
+`POST /api/agent/edit`
+
+All parameters are optional (except the agent `id`).
+
+- **@param** integer id              The ID of the agent to be updated
+- **@param** string  name            The name of the travel agent
+- **@param** string  branch_name     Name of the agent's local branch
+- **@param** text    branch_address  Free textfield for the branch's address
+- **@param** string  branch_phone    The branch's telephone contact number
+- **@param** string  branch_email    A contact email address of the branch
+- **@param** text    billing_address If different from `branch_address` specify billing address
+- **@param** string  billing_phone   If different from `branch_phone` specify billing contact number
+- **@param** string  billing_email   If different from `branch_email` specify contact email address
+- **@param** integer commission      The agent's commission in percent as a whole number (e.g. 15%)
+- **@param** string  terms           MUST be one of the following three: fullamount, deposit, banned
+- &nbsp;
+- **@return** JSON                   Contains `status` on success, `errors` on failure
 
 ## Boats
 
@@ -126,94 +188,182 @@ When **creating new accommodations or boats**, simply make their ID a random str
 - &nbsp;
 - **@return** JSON                Contains `status` on success, `errors` on failure
 
-## Accommodations
+## Bookings
 
-### Retrieve all accommodations
+The ideal booking process is throughoutly documented in a [Facebook Document](https://www.facebook.com/notes/scuba-where/the-booking-process-manifest/498190260280790).
 
-`GET /company/accommodations`
+### Retrieve a specific booking
 
-- **@return** JSON    An array of `accommodation` objects
+`GET /api/booking`
 
-## Trips
-
-### Retrieve a specific trip
-
-`GET /api/trip`
-
-- **@param** integer id The ID of the wanted trip
+- **@param** integer id  The ID of the wanted booking
 - &nbsp;
-- **@return** JSON      A `trip` object
+- **@return** JSON       A `booking` object
 
-### Retrieve all trips
+### Retrieve all bookings
 
-`GET /api/trip/all`
+`GET /api/booking/all`
 
-- **@return** JSON    An array of `trip` objects, complete with details of the pick-up `location`, all `locations` in the itinary and all connected `triptypes`
+- **@return** JSON       An array of `booking` objects
 
-### Retrieve all triptypes
+### Start a booking
 
-`GET /company/triptypes`
+`POST /api/booking/init`
 
-- **@return** JSON    An array of `triptypes` objects
+> #### Important
+> When an `agent_id` is supplied, `source` is discarded.
 
-### Add a trip
-
-`POST /trip/add`
-
-Create a new trip.
-
-`Locations` should be submitted as
-
-    <input name="locations[]" value="1">
-
-`Triptypes` should be submitted as
-
-    <input type="checkbox" name="triptypes[]" value="1">
-
-- **@param** string  name        The name of the trip
-- **@param** string  description The description of the trip
-- **@param** integer duration    How long the trip takes, in hours
-- **@param** integer location_id The ID of the pick-up location for the trip (optional)
-- **@param** string  photo       The filename of a photo that represents the trip (optional)
-- **@param** string  video       The filename of a video that represents the trip (optional)
-- **@param** array   locations   The IDs of the locations in the itinary
-- **@param** array   triptypes   The IDs of the triptypes associated with this trip
+- **@param** integer agent_id The ID of the agent that makes the booking
+- **@param** string  source   The source of a non-agent booking (MUST be one of the following: telephone, email, facetoface
 - &nbsp;
-- **@return** JSON               Contains `status` and `id` of the newly created trip on success, `errors` on failure
+- **@return** JSON            Contains `status` and `id` & `reference` of the newly created booking on success, `errors` on failure
 
-### Activate a trip
+*Please display the current booking's `reference` number prominently in the interface whenever a booking is made or edited!*
 
-Please refer to [#Create a session](#Create_a_session).
+### Add ticket to booking
 
-### Edit a trip
+`POST /api/booking/add-details`
 
-`POST /trip/edit`
+Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
 
-Edit an existing trip's properties. Only the ID and the properties that are changed need to be submitted.
-
-For the structure of the `locations` and `triptypes` arrays, take a look at `Add a trip`.
-
-- **@param** integer id          The ID of the trip to edit
-- **@param** string  name        The name of the trip
-- **@param** string  description The description of the trip
-- **@param** integer duration    How long the trip takes, in hours
-- **@param** integer location_id The ID of the pick-up location for the trip
-- **@param** string  photo       The filename of a photo that represents the trip
-- **@param** string  video       The filename of a video that represents the trip
-- **@param** array   locations   The IDs of the locations in the itinary
-- **@param** array   triptypes   The IDs of the triptypes associated with this trip
+- **@param** integer booking_id  The ID of the `booking` that the details should be added to (most likely the ID returned in [#Start a booking](#Start_a_booking))
+- **@param** integer customer_id The ID of the `customer` to attach
+- **@param** boolean is_lead     Signal if the customer is the lead customer
+- **@param** integer ticket_id   The ID of the `ticket` to attach
+- **@param** integer session_id  The ID of the `session` that has been selected
+- **@param** integer package_id  If the `ticket` is part of a package, the package's ID must be submitted (optional)
 - &nbsp;
-- **@return** JSON               Contains `status` on success, `errors` on failure
+- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
 
-### Delete a trip
+### Remove ticket from booking
 
-`POST /trip/delete`
+`POST /api/booking/remove-details`
 
-Delete an existing trip.
+Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see [#Add ticket to booking](#Add_ticket_to_booking).)
 
-- **@param** integer id The ID of the trip to delete
+- **@param** integer booking_id  The ID of the `booking` that the details should be removed from (most likely the ID returned in [#Start a booking](#Start_a_booking))
+- **@param** integer customer_id The ID of the `customer` to detach
+- **@param** integer session_id  The ID of the `session` that should be removed from the booking
 - &nbsp;
-- **@return** JSON      Contains `status` on success, `errors` on failure
+- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
+
+### Change additional booking information
+
+`POST /api/booking/edit-info`
+
+- **@param** integer booking_id       The ID of the `booking` that should be changed
+- **@param** string  pick\_up\_location A string describing the pick-up location for this `booking` (optional)
+- **@param** string  pick\_up\_time     The pick-up datetime of the `booking` in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
+- **@param** decimal discount         The discount applied to the `booking`, as an amount (optional)
+- **@param** string  reserved         The datetime until which the `booking` should be reserved in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
+- **@param** text    comment          Additional comments about the `booking` (optional)
+- &nbsp;
+- **@return** JSON                    Contains `status` and the `booking` details on success, `errors` on failure.
+
+### Validate a booking
+
+`GET /api/booking/validate`
+
+Return an array containing boolean values for various important tests.
+
+> #### Available tests
+> **customer**: Tests if the lead customer fulfills the requirements (has an email)
+
+- **@param**  integer booking_id The ID of the booking to be checked
+- &nbsp;
+- **@return** JSON               An array containing the available keys and boolean values
+
+## Company
+
+### Retrieve the company's basic information
+
+`GET /company`
+
+- **@return** JSON    The `company` object
+
+## Countries
+
+### Recieve all countries
+
+`GET /api/country/all`
+
+Use this API call to populate a country drop-down/select field.
+
+- **@return** JSON  An array of `country` objects
+
+## Customers
+
+> #### Important
+> A dive center can only view, access and edit customers that the dive center created itself.
+
+### Retrieve a specific customer
+
+`GET /api/customer`
+
+- **@param** integer id  The ID of the wanted customer
+- &nbsp;
+- **@return** JSON       A `customer` object
+
+### Retrieve all customers
+
+`GET /api/customer/all`
+
+- **@return** JSON       An array of `customer` objects
+
+### Filter customers by email address
+
+The search functionality has been moved to [#Search for customers by email](#Search_for_customers_by_email).
+
+### Create a customer
+
+`POST /api/customer/add`
+
+Creates a new customer. The only *required* fields are `firstname` and `lastname`.
+
+> #### Important
+> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address **and** and phone number assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with [#Validate booking](#Validate_booking).)
+
+- **@param** string  email          The email of the customer (optional)
+- **@param** string  firstname      The customer's first name
+- **@param** string  lastname       The customer's last name
+- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
+- **@param** string  address_1      First line of customer's address (optional)
+- **@param** string  address_2      Second line of customer's address (optional)
+- **@param** string  city           The customer's city (optional)
+- **@param** string  county         The customer's county (optional)
+- **@param** string  postcode       The customer's postcode (optional)
+- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
+- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
+- **@param** string  phone          A contact telephone number (optional)
+- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- &nbsp;
+- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
+
+### Update a customer
+
+`POST /api/customer/edit`
+
+All parameters are optional (except the customer `id`).
+
+- **@param** string  email          The email of the customer (optional)
+- **@param** string  firstname      The customer's first name
+- **@param** string  lastname       The customer's last name
+- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
+- **@param** string  address_1      First line of customer's address (optional)
+- **@param** string  address_2      Second line of customer's address (optional)
+- **@param** string  city           The customer's city (optional)
+- **@param** string  county         The customer's county (optional)
+- **@param** string  postcode       The customer's postcode (optional)
+- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
+- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
+- **@param** string  phone          A contact telephone number (optional)
+- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
+- &nbsp;
+- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
 
 ## Locations
 
@@ -299,70 +449,17 @@ Detach a formerly attached location from a company.
 - &nbsp;
 - **@return** JSON               Contains `status` on success, `errors` on failure
 
-## Tickets
+## Search
 
-### Retrieve a specific ticket
+### Search for customers by email 
 
-`GET /api/ticket`
+`GET /api/search/customers`
 
-- **@param** integer id The ID of the wanted ticket
+This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 `customer` objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length >= 3).
+
+- **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
 - &nbsp;
-- **@return** JSON      A `ticket` object, with details of connected `boats` and lists of `accommodation_id`s
-
-### Retrieve all tickets
-
-`GET /api/ticket/all`
-
-- **@return** JSON    An array of `ticket` objects, complete with details of connected `boats` and lists of `accommodation_id`s
-
-### Create a ticket
-
-`POST /api/ticket/add`
-
-Creates a new ticket for a trip.
-
-- **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
-- **@param** string  name        A name for the ticket
-- **@param** string  description A description for the ticket
-- **@param** decimal price       The price (will be rounded to two decimals)
-- **@param** string  currency    Three letter international code (optional, default: dive center's country's currency)
-- **@param** array   trips       A simple array of `trip_id`s that the ticket is eligable for
-- **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
-- &nbsp;
-- **@return** JSON               Contains `status` and `id` of the newly created ticket on success, `errors` on failure
-
-### Update a ticket
-
-`POST /api/ticket/edit`
-
-All parameters are optional (except the ticket `id`).
-
-It is **not** recommended that the `trip_id` be *updated* (although the functionality exits)!
-
-> #### Important
-> The response *can* contain an `id` field. If it *does* it means that the ticket could not simply be updated because it has already been booked. Instead the old ticket has now been replaced with an updated ticket in the system. The returned `id` is the new ID of the ticket and must be used from now on!
->
-> The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: `trip_id`, `price` and `currency`
-
-- **@param** integer id          The ID of the ticket to edit
-- **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
-- **@param** string  name        A name for the ticket
-- **@param** string  description A description for the ticket
-- **@param** decimal price       The price (will be rounded to two decimals)
-- **@param** string  currency    The currency that the price is in
-- **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
-- &nbsp;
-- **@return** JSON               Contains `status`, or `status` and `id` of the updated ticket on success, `errors` on failure
-
-### Delete a ticket
-
-`POST /api/ticket/delete`
-
-Delete an existing ticket.
-
-- **@param** integer id The ID of the ticket to delete
-- &nbsp;
-- **@return** JSON      Contains `status` on success, `errors` on failure
+- **@return** JSON          An array of `customer` objects
 
 ## Sessions
 
@@ -460,6 +557,71 @@ Deactivating a session means it can no longer be selected for booking, but is st
 - &nbsp;
 - **@return** JSON      Contains `status` on success, `errors` on failure
 
+## Tickets
+
+### Retrieve a specific ticket
+
+`GET /api/ticket`
+
+- **@param** integer id The ID of the wanted ticket
+- &nbsp;
+- **@return** JSON      A `ticket` object, with details of connected `boats` and lists of `accommodation_id`s
+
+### Retrieve all tickets
+
+`GET /api/ticket/all`
+
+- **@return** JSON    An array of `ticket` objects, complete with details of connected `boats` and lists of `accommodation_id`s
+
+### Create a ticket
+
+`POST /api/ticket/add`
+
+Creates a new ticket for a trip.
+
+- **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
+- **@param** string  name        A name for the ticket
+- **@param** string  description A description for the ticket
+- **@param** decimal price       The price (will be rounded to two decimals)
+- **@param** string  currency    Three letter international code (optional, default: dive center's country's currency)
+- **@param** array   trips       A simple array of `trip_id`s that the ticket is eligable for
+- **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
+- &nbsp;
+- **@return** JSON               Contains `status` and `id` of the newly created ticket on success, `errors` on failure
+
+### Update a ticket
+
+`POST /api/ticket/edit`
+
+All parameters are optional (except the ticket `id`).
+
+It is **not** recommended that the `trip_id` be *updated* (although the functionality exits)!
+
+> #### Important
+> The response *can* contain an `id` field. If it *does* it means that the ticket could not simply be updated because it has already been booked. Instead the old ticket has now been replaced with an updated ticket in the system. The returned `id` is the new ID of the ticket and must be used from now on!
+>
+> The following fields will create a new ticket when they are updated and the (old) ticket has already been booked: `trip_id`, `price` and `currency`
+
+- **@param** integer id          The ID of the ticket to edit
+- **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
+- **@param** string  name        A name for the ticket
+- **@param** string  description A description for the ticket
+- **@param** decimal price       The price (will be rounded to two decimals)
+- **@param** string  currency    The currency that the price is in
+- **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
+- &nbsp;
+- **@return** JSON               Contains `status`, or `status` and `id` of the updated ticket on success, `errors` on failure
+
+### Delete a ticket
+
+`POST /api/ticket/delete`
+
+Delete an existing ticket.
+
+- **@param** integer id The ID of the ticket to delete
+- &nbsp;
+- **@return** JSON      Contains `status` on success, `errors` on failure
+
 ## Timetables
 
 ### Retrieve a specific timetable
@@ -515,253 +677,86 @@ The HTML form must submit the following structure:
 - &nbsp;
 - **@return** JSON              Contains `status` and `id` of the new timetable on success, `errors` on failure
 
-## Agents
+## Trips
 
-### Retrieve a specific agent
+### Retrieve a specific trip
 
-`GET /api/agent`
+`GET /api/trip`
 
-- **@param** integer id The ID of the wanted agent
+- **@param** integer id The ID of the wanted trip
 - &nbsp;
-- **@return** JSON      An `agent` object
+- **@return** JSON      A `trip` object
 
-### Retrieve all agents
+### Retrieve all trips
 
-`GET /api/agent/all`
+`GET /api/trip/all`
 
-- **@return** JSON    An array of `agent` objects
+- **@return** JSON    An array of `trip` objects, complete with details of the pick-up `location`, all `locations` in the itinary and all connected `triptypes`
 
-### Create an agent
+### Retrieve all triptypes
 
-`POST /api/agent/add`
+`GET /company/triptypes`
 
-Creates a new (travel) agent. All fields that are **not** marked *(optional)* are required.
+- **@return** JSON    An array of `triptypes` objects
 
-- **@param** string  name            The name of the travel agent
-- **@param** string  website         The agent's website (optional)
-- **@param** string  branch_name     Name of the agent's local branch
-- **@param** text    branch_address  Free textfield for the branch's address
-- **@param** string  branch_phone    The branch's telephone contact number (optional)
-- **@param** string  branch_email    A contact email address of the branch (optional)
-- **@param** text    billing_address If different from `branch_address` specify billing address (optional)
-- **@param** string  billing_phone   If different from `branch_phone` specify billing contact number (optional)
-- **@param** string  billing_email   If different from `branch_email` specify contact email address (optional)
-- **@param** integer commission      The agent's commission in percent as a whole number (e.g. 15%)
-- **@param** string  terms           MUST be one of the following three: fullamount, deposit, banned
+### Add a trip
+
+`POST /trip/add`
+
+Create a new trip.
+
+`Locations` should be submitted as
+
+    <input name="locations[]" value="1">
+
+`Triptypes` should be submitted as
+
+    <input type="checkbox" name="triptypes[]" value="1">
+
+- **@param** string  name        The name of the trip
+- **@param** string  description The description of the trip
+- **@param** integer duration    How long the trip takes, in hours
+- **@param** integer location_id The ID of the pick-up location for the trip (optional)
+- **@param** string  photo       The filename of a photo that represents the trip (optional)
+- **@param** string  video       The filename of a video that represents the trip (optional)
+- **@param** array   locations   The IDs of the locations in the itinary
+- **@param** array   triptypes   The IDs of the triptypes associated with this trip
 - &nbsp;
-- **@return** JSON                   Contains `status` and `id` of the newly created agent on success, `errors` on failure
+- **@return** JSON               Contains `status` and `id` of the newly created trip on success, `errors` on failure
 
-### Update an agent
+### Activate a trip
 
-`POST /api/agent/edit`
+Please refer to [#Create a session](#Create_a_session).
 
-All parameters are optional (except the agent `id`).
+### Edit a trip
 
-- **@param** integer id              The ID of the agent to be updated
-- **@param** string  name            The name of the travel agent
-- **@param** string  branch_name     Name of the agent's local branch
-- **@param** text    branch_address  Free textfield for the branch's address
-- **@param** string  branch_phone    The branch's telephone contact number
-- **@param** string  branch_email    A contact email address of the branch
-- **@param** text    billing_address If different from `branch_address` specify billing address
-- **@param** string  billing_phone   If different from `branch_phone` specify billing contact number
-- **@param** string  billing_email   If different from `branch_email` specify contact email address
-- **@param** integer commission      The agent's commission in percent as a whole number (e.g. 15%)
-- **@param** string  terms           MUST be one of the following three: fullamount, deposit, banned
+`POST /trip/edit`
+
+Edit an existing trip's properties. Only the ID and the properties that are changed need to be submitted.
+
+For the structure of the `locations` and `triptypes` arrays, take a look at `Add a trip`.
+
+- **@param** integer id          The ID of the trip to edit
+- **@param** string  name        The name of the trip
+- **@param** string  description The description of the trip
+- **@param** integer duration    How long the trip takes, in hours
+- **@param** integer location_id The ID of the pick-up location for the trip
+- **@param** string  photo       The filename of a photo that represents the trip
+- **@param** string  video       The filename of a video that represents the trip
+- **@param** array   locations   The IDs of the locations in the itinary
+- **@param** array   triptypes   The IDs of the triptypes associated with this trip
 - &nbsp;
-- **@return** JSON                   Contains `status` on success, `errors` on failure
+- **@return** JSON               Contains `status` on success, `errors` on failure
 
-## Customers
+### Delete a trip
 
-> #### Important
-> A dive center can only view, access and edit customers that the dive center created itself.
+`POST /trip/delete`
 
-### Retrieve a specific customer
+Delete an existing trip.
 
-`GET /api/customer`
-
-- **@param** integer id  The ID of the wanted customer
+- **@param** integer id The ID of the trip to delete
 - &nbsp;
-- **@return** JSON       A `customer` object
-
-### Retrieve all customers
-
-`GET /api/customer/all`
-
-- **@return** JSON       An array of `customer` objects
-
-### Filter customers by email address
-
-The search functionality has been moved to [#Search for customers by email](#Search_for_customers_by_email).
-
-### Create a customer
-
-`POST /api/customer/add`
-
-Creates a new customer. The only *required* fields are `firstname` and `lastname`.
-
-> #### Important
-> Altough nearly all customer fields are optional, a booking does always **need** at least one customer with an email address **and** and phone number assigned to it. This is validated when the booking is finalised. (It can also be queried at any time with [#Validate booking](#Validate_booking).)
-
-- **@param** string  email          The email of the customer (optional)
-- **@param** string  firstname      The customer's first name
-- **@param** string  lastname       The customer's last name
-- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
-- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
-- **@param** string  address_1      First line of customer's address (optional)
-- **@param** string  address_2      Second line of customer's address (optional)
-- **@param** string  city           The customer's city (optional)
-- **@param** string  county         The customer's county (optional)
-- **@param** string  postcode       The customer's postcode (optional)
-- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
-- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
-- **@param** string  phone          A contact telephone number (optional)
-- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
-- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
-- &nbsp;
-- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
-
-### Update a customer
-
-`POST /api/customer/edit`
-
-All parameters are optional (except the customer `id`).
-
-- **@param** string  email          The email of the customer (optional)
-- **@param** string  firstname      The customer's first name
-- **@param** string  lastname       The customer's last name
-- **@param** string  birthday       Date of birth. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
-- **@param** integer gender         One of three digits: `1` for male, `2` for female, `3` for other/undefined (optional)
-- **@param** string  address_1      First line of customer's address (optional)
-- **@param** string  address_2      Second line of customer's address (optional)
-- **@param** string  city           The customer's city (optional)
-- **@param** string  county         The customer's county (optional)
-- **@param** string  postcode       The customer's postcode (optional)
-- **@param** integer region_id      The ID of the `region` the customer lives in (optional)
-- **@param** integer country_id     The ID of the `country` the customer lives in (optional)
-- **@param** string  phone          A contact telephone number (optional)
-- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
-- **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
-- &nbsp;
-- **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
-
-## Countries
-
-### Recieve all countries
-
-`GET /api/country/all`
-
-Use this API call to populate a country drop-down/select field.
-
-- **@return** JSON  An array of `country` objects
-
-## Agencies & Certificates
-
-### Recieve all agencies and related certificates
-
-`GET /api/agency/all`
-
-Use this API call to populate an agency and (subsequent) certificate drop-down/select field.
-
-- **@return** JSON  An array of `agency` objects with related `certificates` arrays
-
-## Bookings
-
-The ideal booking process is throughoutly documented in a [Facebook Document](https://www.facebook.com/notes/scuba-where/the-booking-process-manifest/498190260280790).
-
-### Retrieve a specific booking
-
-`GET /api/booking`
-
-- **@param** integer id  The ID of the wanted booking
-- &nbsp;
-- **@return** JSON       A `booking` object
-
-### Retrieve all bookings
-
-`GET /api/booking/all`
-
-- **@return** JSON       An array of `booking` objects
-
-### Start a booking
-
-`POST /api/booking/init`
-
-> #### Important
-> When an `agent_id` is supplied, `source` is discarded.
-
-- **@param** integer agent_id The ID of the agent that makes the booking
-- **@param** string  source   The source of a non-agent booking (MUST be one of the following: telephone, email, facetoface
-- &nbsp;
-- **@return** JSON            Contains `status` and `id` & `reference` of the newly created booking on success, `errors` on failure
-
-*Please display the current booking's `reference` number prominently in the interface whenever a booking is made or edited!*
-
-### Add ticket to booking
-
-`POST /api/booking/add-details`
-
-Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
-
-- **@param** integer booking_id  The ID of the `booking` that the details should be added to (most likely the ID returned in [#Start a booking](#Start_a_booking))
-- **@param** integer customer_id The ID of the `customer` to attach
-- **@param** boolean is_lead     Signal if the customer is the lead customer
-- **@param** integer ticket_id   The ID of the `ticket` to attach
-- **@param** integer session_id  The ID of the `session` that has been selected
-- **@param** integer package_id  If the `ticket` is part of a package, the package's ID must be submitted (optional)
-- &nbsp;
-- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
-
-### Remove ticket from booking
-
-`POST /api/booking/remove-details`
-
-Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see [#Add ticket to booking](#Add_ticket_to_booking).)
-
-- **@param** integer booking_id  The ID of the `booking` that the details should be removed from (most likely the ID returned in [#Start a booking](#Start_a_booking))
-- **@param** integer customer_id The ID of the `customer` to detach
-- **@param** integer session_id  The ID of the `session` that should be removed from the booking
-- &nbsp;
-- **@return** JSON               Contains `status` and a list of attached `customers` on success, `errors` on failure
-
-### Change additional booking information
-
-`POST /api/booking/edit-info`
-
-- **@param** integer booking_id       The ID of the `booking` that should be changed
-- **@param** string  pick\_up\_location A string describing the pick-up location for this `booking` (optional)
-- **@param** string  pick\_up\_time     The pick-up datetime of the `booking` in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
-- **@param** decimal discount         The discount applied to the `booking`, as an amount (optional)
-- **@param** string  reserved         The datetime until which the `booking` should be reserved in UTC (format: `YYYY-MM-DD HH:mm:ss`) (optional)
-- **@param** text    comment          Additional comments about the `booking` (optional)
-- &nbsp;
-- **@return** JSON                    Contains `status` and the `booking` details on success, `errors` on failure.
-
-### Validate a booking
-
-`GET /api/booking/validate`
-
-Return an array containing boolean values for various important tests.
-
-> #### Available tests
-> **customer**: Tests if the lead customer fulfills the requirements (has an email)
-
-- **@param**  integer booking_id The ID of the booking to be checked
-- &nbsp;
-- **@return** JSON               An array containing the available keys and boolean values
-
-## Search
-
-### Search for customers by email 
-
-`GET /api/search/customers`
-
-This can be used to populate a drop-down list of suggestions when searching for a customer by email address. It returns a set of maximal 10 `customer` objects whos email addresses contain the search string. Results are only returned when the search string is longer than 2 characters (length >= 3).
-
-- **@param** string search  String to be searched for in the available email addresses (min length: 3 characters)
-- &nbsp;
-- **@return** JSON          An array of `customer` objects
-
+- **@return** JSON      Contains `status` on success, `errors` on failure
 
 &nbsp;
 
@@ -860,11 +855,12 @@ This can be used to populate a drop-down list of suggestions when searching for 
 # The End
 
 - **@author**  Soren Schwert
-
-<a class="to-the-top" href="#Table_of_Contents" title="Go up to table of contents">&uarr;</a>
+</div>
+</main>
+<nav id="cd-lateral-nav"><header></header></nav>
 <script src="assets/zepto.min.js"></script>
 <script>
-    contents = '';
+    var contents = '<ol class="cd-navigation cd-single-item-wrapper">';
     $('h2').each(function() {
       $self = $(this);
       name = $self.text().replace(/ /g, '_').replace(/<(.|\n)*?>/g, '');
@@ -872,7 +868,9 @@ This can be used to populate a drop-down list of suggestions when searching for 
       contents += '<li><a href="#' + name + '">' + $self.text() + '</a></li>';
       $self.append(' <a href="#' + name + '" title="Link to this section">#</a>');
     });
-    $('#contents ol').append(contents);
+	contents += '</ol>';
+	contents += '<small><a href="http://codyhouse.co/gem/secondary-expandable-navigation/" target="_blank" class="made-with">~ made with <strong>codyhouse</strong> ~</a></small>';
+    $('#cd-lateral-nav').append(contents);
 
     $('h3').each(function() {
       $self = $(this);
@@ -880,4 +878,8 @@ This can be used to populate a drop-down list of suggestions when searching for 
       $self.attr('id', name);
       $self.append(' <a href="#' + name + '" title="Link to this method">#</a>');
     });
+	
+	$('body p:first-child').after('<a id="cd-menu-trigger" class="is-fixed" href="#"><span class="cd-menu-icon"></span><span class="cd-menu-text">Menu</span></a>');
+	$('html, body').addClass('height-100');
 </script>
+<script src="assets/secondary-expandable-navigation/js/main.js"></script>
