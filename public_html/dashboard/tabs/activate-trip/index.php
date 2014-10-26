@@ -150,9 +150,15 @@
 	</div>
 </div>
 
+<script src="/common/js/moment.min.js"></script>
+<script src="/common/js/fullcalendar.min.js"></script>
+
+<script src="/common/js/ui.min/jquery-ui.min.js"></script>
+<script src="/common/js/jquery.reveal.js"></script>
+
 <script src="js/Controllers/Trip.js"></script>
 <script src="js/Controllers/Boat.js"></script>
 <script src="js/Controllers/Session.js"></script>
 <script src="js/Controllers/Timetable.js"></script>
-<script src="/common/js/jquery.reveal.js"></script>
+
 <script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>

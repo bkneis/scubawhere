@@ -78,6 +78,10 @@
 	</div>
 </div>
 
+<script src="http://maps.google.com/maps/api/js" type="text/javascript"></script>
+
+<script src="/common/js/jquery.tagsinput.min.js"></script>
+
 <script src="/dashboard/js/Controllers/Location.js"></script>
 <script src="tabs/locations/js/gmaps.js"></script>
 <script src="tabs/locations/js/script.js"></script>

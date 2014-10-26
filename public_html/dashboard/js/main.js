@@ -42,7 +42,7 @@ $(function(){
 	});
 
 	//token
-	_token = $.ajax({
+	_token = window._token || $.ajax({
 		url: "/token",
 		type: "GET",
 		dataType: "html",
@@ -52,29 +52,11 @@ $(function(){
 		}
 	});
 
-	setPage();
-
 });
 
 //************************************
 // FUNCTIONS
 //************************************
-function setPage(){
-	$.ajax({
-        url: "/company",
-        dataType: "json",
-        type: "GET",
-        async: false,
-        success: function(data){
-        	$("#dc-name").html("Name: " + data.name);
-        	$("#dc-uname").html("Username: " + data.username);
-	        $("#dc-veri").html("Verified: " + data.verified);
-        },
-        error: function(){
-	        window.location.href = "/dashboard/login/";
-        }
-    });
-}
 
 function reproColor(id) { // Stands for: reproducible color
 

@@ -117,7 +117,7 @@
     <!-- END Portlet PORTLET-->
 
     <!-- BEGIN Portlet PORTLET-->
-    <div class="widget yellow">
+    <!-- <div class="widget yellow">
         <div class="widget-title">
             <h4><i class="icon-edit"></i> Calendar</h4>
             <span class="tools">
@@ -127,7 +127,7 @@
         <div id="calendar" class="widget-body">
             <button onclick="displayTodaysSessions()">sdghsh</button>
         </div>
-    </div>
+    </div> -->
     <!-- END Portlet PORTLET-->
 
 </div>
@@ -148,20 +148,13 @@
                     <h1>dasd</h1>
                     <h1>dasd</h1>
                     <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
-                    <h1>dasd</h1>
                 </div>
             </div>
         </div>
         <!-- END Portlet PORTLET-->
 
         <!-- BEGIN Portlet PORTLET-->
-        <div class="widget blue">
+        <!-- <div class="widget blue">
             <div class="widget-title">
                 <h4><i class="icon-edit"></i> Locations</h4>
                 <span class="tools">
@@ -171,7 +164,7 @@
             <div id="locations" class="widget-body">
                 <div id="map"></div>
             </div>
-        </div>
+        </div> -->
         <!-- END Portlet PORTLET-->
     </div>
 </div>
@@ -179,14 +172,14 @@
 
 <link href="tabs/dashboard/css/style.css" rel="stylesheet" />
 <link href="tabs/dashboard/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-<script type="text/javascript" src="tabs/locations/js/gmaps.js"></script>
-<script type="text/javascript" src="tabs/dashboard/js/maps.js"></script>
+<!-- <script type="text/javascript" src="tabs/locations/js/gmaps.js"></script>
+<script type="text/javascript" src="tabs/dashboard/js/maps.js"></script> -->
 <script type="text/javascript" src="tabs/dashboard/js/script.js"></script>
 
 <!--<script type="text/javascript" src="../common/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <link rel="stylesheet" href="../common/css/jquery.mCustomScrollbar.css" />-->
 
-<link rel="stylesheet" href="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.min.css" />
+<!-- <link rel="stylesheet" href="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.min.css" />
 <script src="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.concat.min.js"></script>
 
 <script>
@@ -198,9 +191,9 @@
             });
         });
     })(jQuery);
-</script>
+</script> -->
 
-<script src="/dashboard/js/Controllers/Session.js"></script>
+<!-- <script src="/ashboard/js/Controllers/Session.js"></script> -->
 
 
 
