@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contains any setting related to the test environment 
+ * Contains any setting related to the test environment
  */
 class TestSettings {
 
@@ -11,41 +11,41 @@ class TestSettings {
 	 */
 	public static $modelTables = array(
 			'Accommodation' => 'accommodations',
-			'Addon' => 'addons',
-			'Agent' => 'agents',
-			'Boat' => 'boats',
-			'Booking' => 'bookings',
+			'Addon'         => 'addons',
+			'Agent'         => 'agents',
+			'Boat'          => 'boats',
+			'Booking'       => 'bookings',
 			'Bookingdetail' => 'booking_details',
-			'Company' => 'companies',
-			'Customer' => 'customers',
-			'Departure' => 'sessions',
-			'Location' => 'locations',
-			'Package' => 'packages',
+			'Company'       => 'companies',
+			'Customer'      => 'customers',
+			'Departure'     => 'sessions',
+			'Location'      => 'locations',
+			'Package'       => 'packages',
 			'Packagefacade' => 'packagefacades',
-			'Payment' => 'payments',
-			'Ticket' => 'tickets',
-			'Timetable' => 'timetables',
-			'Trip' => 'trips'
+			'Payment'       => 'payments',
+			'Ticket'        => 'tickets',
+			'Timetable'     => 'timetables',
+			'Trip'          => 'trips'
 	);
-	
-	
-	
+
+
+
 	/**
 	 * Array of all seeded models with their table names
 	 * @var array of seeded models (name => table)
 	*/
 	public static $seededModelTables = array(
-			'Agency' => 'agencies',
-			'Certificate' => 'certificates',
-			'Continent' => 'continents',
-			'Country' => 'countries',
-			'Currency' => 'currencies',
+			'Agency'         => 'agencies',
+			'Certificate'    => 'certificates',
+			'Continent'      => 'continents',
+			'Country'        => 'countries',
+			'Currency'       => 'currencies',
 			'Paymentgateway' => 'paymentgateways',
-			'Triptype' => 'triptypes'
+			'Triptype'       => 'triptypes'
 	);
-	
-	
-	
+
+
+
 	/**
 	 * Array of all pivot table names
 	 * @var array of pivot table names
@@ -60,6 +60,6 @@ class TestSettings {
 			'ticket_trip',
 			'trip_triptype'
 	);
-	
+
 }
 
