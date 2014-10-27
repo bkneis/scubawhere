@@ -271,7 +271,7 @@ function renderLocations() {
 	_.each(markerArray, function(marker) {
 		setTimeout(function() {
 			marker.setMap(gmap);
-		}, i * 400);
+		}, i * 200);
 		i++;
 	});
 
@@ -297,7 +297,7 @@ function renderAttachedLocations() {
 	_.each(markerArray, function(marker) {
 		setTimeout(function() {
 			marker.setMap(gmap);
-		}, i * 400);
+		}, i * 200);
 		i++;
 	});
 
