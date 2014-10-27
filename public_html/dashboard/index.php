@@ -57,6 +57,8 @@
 	<script src="/common/ckeditor/ckeditor.js"></script>
 	<script src="/common/ckeditor/adapters/jquery.js"></script>
 
+	<script src="/common/js/moment.min.js"></script>
+
 	<script src="/common/js/underscore-min.js"></script>
 
 	<script src="js/Controllers/Company.js"></script>

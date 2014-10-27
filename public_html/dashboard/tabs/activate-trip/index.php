@@ -150,7 +150,6 @@
 	</div>
 </div>
 
-<script src="/common/js/moment.min.js"></script>
 <script src="/common/js/fullcalendar.min.js"></script>
 
 <script src="/common/js/ui.min/jquery-ui.min.js"></script>
