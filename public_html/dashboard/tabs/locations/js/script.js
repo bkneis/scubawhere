@@ -81,7 +81,7 @@ function renderHomeLocation() {
 	var markerOptions = {
 		position:  new google.maps.LatLng( company.latitude, company.longitude ),
 		// map:       gmap,
-		title:     Base,
+		title:     'Home',
 		icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=1'
 	};
 	new google.maps.Marker(markerOptions);
