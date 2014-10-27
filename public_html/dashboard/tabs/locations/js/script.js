@@ -6,7 +6,7 @@ window.sw.longitudeInput = $('#newMarkerLongitude');
 
 Handlebars.registerHelper('renderTags', function(tags) {
 	// Do something
-	return '';
+	return '-';
 });
 
 getToken();
@@ -225,6 +225,10 @@ function loadLocationsInView(promise) {
 	Place.inside(params, function success(data) {
 		window.sw.locations = _.indexBy(data, 'id');
 
+		// Show feedback to user
+		$('#legend-available-locations-loader').hide();
+		$('#legend-available-locations-icon').show();
+
 		promises.loadedLocations.resolve();
 	});
 }
@@ -232,6 +236,10 @@ function loadAttachedLocations(promise) {
 
 	Place.attached(function success(data) {
 		window.sw.attachedLocations = _.indexBy(data, 'id');
+
+		// Show feedback to user
+		$('#legend-your-locations-loader').hide();
+		$('#legend-your-locations-icon').show();
 
 		promises.loadedAttachedLocations.resolve();
 	});
