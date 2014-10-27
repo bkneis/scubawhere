@@ -59,6 +59,15 @@
 
 	<script src="/common/js/underscore-min.js"></script>
 
+	<script src="js/Controllers/Company.js"></script>
+	<script>
+		// Load company info
+		Company.getCompany(function success(data) {
+			console.info('Company info loaded');
+			window.company = data;
+		});
+	</script>
+
 	<!-- ScubaWhere Files -->
 	<script src="js/ui.js"></script>
 	<script src="js/navigation.js"></script>
