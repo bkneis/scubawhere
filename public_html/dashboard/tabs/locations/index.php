@@ -17,15 +17,23 @@
 	<div class="row">
 		<div class="box50">
 			<label class="dgreyb">
-				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em;" />
+				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1.5em;" />
 				Your locations
 				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em;" />
 				Available locations
+				<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em;" />
+				New location
 			</label>
 		</div>
 
 		<div class="box50">
-			<div class="yellow-helper" style="margin-bottom: 0;">Click on the map to create a new location</div>
+			<!-- <div class="yellow-helper" style="margin-bottom: 0;">Click the map or an existing marker.</div> -->
+			<div class="dgreyf" style="font-size: 17px; padding-top: 2px; text-align: right;">
+				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 20%" />
+				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 20%" />
+				<button class="bttn dgreyb" style="margin-right: 5px;" id="showLocation">Show</button>
+				<button class="bttn blueb" style="margin-right: 10px;">Create</button>
+			</div>
 			<!-- <div class="padder">
 				<form id="save-location">
 					<div>
@@ -89,32 +97,69 @@
 		</tbody>
 	</table>
 	</div>-->
-</div>
 
-<script>
-function loadGoogleMaps() {
-	console.log('Start loading');
-	if( window.google && google.maps ) {
-		console.log('Google Maps already loaded');
-		initialise();
+	<div id="modalWindows" style="height: 0; visibilty: hidden;">
+		<script id="location-template" type="text/x-handlebars-template">
+			<div id="modal-{{id}}" class="reveal-modal">
+				<p style="text-transform: uppercase; float: right; line-height: 2.8em;">
+					{{#if attached}}
+						Your location
+					{{else}}
+						Available location
+					{{/if}}
+				</p>
+				<h2>{{{name}}}</h2>
+				<span>{{latitude}}, {{longitude}}</span>
+				<h3>Description</h3>
+				<p>{{{description}}}</p>
+				<h3>Tags</h3>
+				<p>{{renderTags tags}}</p>
 
-		return true;
+				<form>
+					{{#if attached}}
+						<input type="submit" value="Remove from your locations" class="detach-location bttn big-bttn redb" />
+					{{else}}
+						<input type="submit" value="Add to your locations" class="attach-location bttn big-bttn greenb" />
+					{{/if}}
+				</form>
+
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+
+		<script id="new-location-template" type="text/x-handlebars-template">
+			<div id="modal-new" class="reveal-modal">
+
+
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+	</div>
+
+	<script>
+	function loadGoogleMaps() {
+		console.log('Start loading');
+
+		if( window.google && google.maps ) {
+			console.log('Google Maps already loaded');
+			initialise();
+
+			return true;
+		}
+
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise';
+
+		document.body.appendChild(script);
+
+		console.log('Google Maps script appended');
 	}
+	</script>
 
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise';
+	<script src="/common/js/jquery.reveal.js"></script>
+	<script src="/common/js/rAF.js"></script>
 
-	document.body.appendChild(script);
-
-	console.log('Google Maps script appended');
-}
-</script>
-
-<script src="/common/js/jquery.tagsinput.min.js"></script>
-
-<script src="/common/js/jquery.reveal.js"></script>
-
-<script src="/dashboard/js/Controllers/Location.js"></script>
-<script src="tabs/locations/js/script.js"></script>
-
+	<script src="/dashboard/js/Controllers/Location.js"></script>
+	<script src="tabs/locations/js/script.js"></script>
+</div>

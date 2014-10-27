@@ -1,3 +1,6 @@
+// Set scubawhere namespace
+window.sw = {};
+
 //interactions with the API
 //run on page load
 $(function(){
@@ -42,20 +45,29 @@ $(function(){
 	});
 
 	//token
-	_token = window._token || $.ajax({
-		url: "/token",
-		type: "GET",
-		dataType: "html",
-		async: false,
-		success: function(data){
-			window._token = data;
-		}
-	});
+	if(!window._token)
+		getToken();
 });
 
 //************************************
 // FUNCTIONS
 //************************************
+
+function getToken() {
+	if(window.token || window._token)
+		return window.token || window._token;
+
+	$.ajax({
+		url: "/token",
+		type: "GET",
+		async: false,
+		success: function(data){
+			window._token = data;
+			window.token  = data;
+			return data;
+		}
+	});
+}
 
 function reproColor(id) { // Stands for: reproducible color
 
