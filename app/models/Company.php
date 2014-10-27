@@ -90,7 +90,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Agent');
 	}
-	
+
 	public function addons()
 	{
 		return $this->hasMany('Addon');
@@ -118,7 +118,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location');
+		return $this->belongsToMany('Location')->withTimestamps();
 	}
 
 	public function packages()

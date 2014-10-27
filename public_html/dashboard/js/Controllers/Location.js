@@ -54,8 +54,6 @@ var Place = {
 	},
 
 	detach: function(params, handleData){
-		$.post("/api/location/detach", params).done(function(data){
-			handleData(data);
-		});
+		$.post("/api/location/detach", params).done( handleData );
 	},
 };

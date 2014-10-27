@@ -502,8 +502,7 @@ function updateCalendarEntry(eventObject, redraw) {
 
 function showModalWindow(eventObject) {
 	// Create the modal window from session-template
-	var sessionTemplate = $("#session-template").html();
-	sessionTemplate     = Handlebars.compile(sessionTemplate);
+	if(!window.sw.sessionTemplate) window.sw.sessionTemplate = Handlebars.compile( $("#session-template").html() );
 
 	eventObject.boats = $.extend(true, {}, window.boats);
 	// console.log(eventObject.session);
@@ -516,7 +515,7 @@ function showModalWindow(eventObject) {
 	// console.log(eventObject);
 
 	$('#modalWindows')
-	.append( sessionTemplate(eventObject) )        // Create the modal
+	.append( window.sw.sessionTemplate(eventObject) )        // Create the modal
 	.children('#modal-' + eventObject.id)          // Directly find it and use it
 	.data('eventObject', eventObject)              // Assign the eventObject to the modal DOM element
 	.reveal({                                      // Open modal window | Options:

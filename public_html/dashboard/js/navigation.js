@@ -1,4 +1,3 @@
-
 $(function() {
     var newHash      = "",
         $mainContent = $("#content"),
@@ -74,4 +73,3 @@ $(function(){
 		}
 	});
 });
-

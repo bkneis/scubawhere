@@ -71,9 +71,9 @@
 	</script>
 
 	<!-- ScubaWhere Files -->
+	<script src="js/main.js"></script>
 	<script src="js/ui.js"></script>
 	<script src="js/navigation.js"></script>
-	<script src="js/main.js"></script>
 	<script src="js/validate.js"></script>
 
 </head>

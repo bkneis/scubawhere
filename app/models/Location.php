@@ -28,6 +28,6 @@ class Location extends Ardent {
 
 	public function companies()
 	{
-		return $this->belongsToMany('Company');
+		return $this->belongsToMany('Company')->withTimestamps();
 	}
 }

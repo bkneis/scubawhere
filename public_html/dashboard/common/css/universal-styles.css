@@ -286,10 +286,11 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 .colr  {text-align: right}
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ buttons */
 
-.bttn{
+.bttn {
 	display: inline-block;
 	border: none;
 	margin: 0px;
+	line-height: 2em;
 	color: #fff;
 	cursor: pointer;
 	text-transform: uppercase;
@@ -310,7 +311,7 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 
 .big-bttn{
 	font-size: 18px;
-	padding: 10px;
+	padding: 0 10px;
 }
 
 .small-bttn{
@@ -327,6 +328,8 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 
 .dgreyb{background-color: #4f4f4f}
 .dgreyf{color: #4f4f4f}
+.greyb{background-color: #4f4f4f}
+.greyf{color: #4f4f4f}
 
 .lgreyb{background-color: #c8c8c8}
 .lgreyf{color: #c8c8c8}
@@ -343,8 +346,6 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 .greenb{background-color: #229930}
 .greenf{color: #229930}
 
-.greyb{background-color: #4f4f4f}
-.greyf{color: #4f4f4f}
 
 .box30{
 	vertical-align: top;

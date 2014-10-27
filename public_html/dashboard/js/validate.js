@@ -12,30 +12,30 @@ $.fn.validateForm = function(){
 /*
 $.fn.validate = function(){
 	var minLen, maxLen, needsNum;
-	
+
 	if($(this).attr("data-min")){
 		mminLen = $(this).attr("data-min");
 	}
-	
+
 	if($(this).attr("data-max")){
 		maxLen = $(this).attr("data-max");
 	}
-	
+
 	if($(this).attr("data-needs-num")){
 		needsNum = true;
 	}
 	console.log(minLen + " " + maxLen + " " + needsNum);
-	
+
 }
 */
 
 $.fn.validateField = function(min, max){
 	var bool = true;
 	var val = $(this).val();
-	
+
 	//reset each to no error
 	$(this).validationAction(bool);
-	
+
 	//check if it has a value at all
 	if(val){
 		//it has a value, so check it..
@@ -46,25 +46,25 @@ $.fn.validateField = function(min, max){
 			bool = false;
 		}
 	}else{ bool = false; }
-	
+
 	//set to error if there is an error
 	$(this).validationAction(bool);
-	
-	
+
+
 	return bool;
 }
 
 $.fn.validateNumericField = function(min, max){
 	var bool = true;
 	var val = $(this).val();
-	
+
 	//reset each to no error
 	$(this).validationAction(bool);
-	
+
 	//check if it has a value at all
 	//and is a number
 	if((val) && ($.isNumeric(val))){
-		//check if min and max are set 
+		//check if min and max are set
 		if(min && max){
 			//it has a value, so check it..
 			if((val >= min) && (val <= max)){
@@ -75,9 +75,9 @@ $.fn.validateNumericField = function(min, max){
 			}
 		}//no? thats it then.
 	}else{ bool = false; }
-	
+
 	$(this).validationAction(bool);
-	
+
 	return bool;
 }
 
@@ -88,5 +88,5 @@ $.fn.validationAction = function(bool){
 	}else{
 		$(this).css("border-color", "red");
 	}
-	
+
 }
