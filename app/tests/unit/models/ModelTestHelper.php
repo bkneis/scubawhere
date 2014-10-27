@@ -7,12 +7,12 @@ class ModelTestHelper{
 
 	//Constants that can be used to quickly create & assert models
 
-	const TEST_NAME               = "Test name";
-	const TEST_NAME_UPDATE        = "New test name";
-	const TEST_DESCRIPTION        = "Test description";
-	const TEST_DESCRIPTION_UPDATE = "New test description";
+	const TEST_STRING             = "Test string";
+	const TEST_STRING_UPDATED     = "New test string";
 	const TEST_ABBR               = "TST";
-	const TEST_ABBR_UPDATE        = "NTST";
+	const TEST_ABBR_UPDATED       = "NTST";
+	const TEST_SYMBOL = "£";
+	const TEST_SYMBOL_UPDATED = "$";
 	const TEST_USERNAME           = "testuser";
 	const TEST_PASSWORD           = "testpassword";
 	const TEST_EMAIL              = "test@email.com";
@@ -70,20 +70,32 @@ class ModelTestHelper{
 	public static function createContinent($append = ""){
 		$entry = new Continent();
 		$entry->abbreviation = self::TEST_ABBR;
-		$entry->name = self::TEST_NAME.$append;
-		$entry->description = self::TEST_DESCRIPTION.$append;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
 		$entry->save();
 		return $entry->id;
 	}
 
 	public static function createCountry($continent_id, $currency_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Country();
+		$entry->continent_id = $continent_id;
+		$entry->continent_id = $currency_id;
+		$entry->abbreviation = self::TEST_ABBR;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->flag = self::TEST_STRING.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
-	public static function createCurrency($continent_id, $currency_id, $append = ""){
-		//TODO
-		return 0;
+	public static function createCurrency($append = ""){
+		$entry = new Currency();
+		$entry->code = self::TEST_ABBR;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->symbol = self::TEST_SYMBOL.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createCustomer($country_id, $company_id, $certificate_id, $append = ""){

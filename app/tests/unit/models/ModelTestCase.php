@@ -16,7 +16,10 @@ abstract class ModelTestCase extends TestCase {
 	{
 		parent::setUp();
 	}	
-	
+	/**
+	 * Provides functionality to clear any relevent tables for the test
+	 */
+	abstract public function refreshTables();
 	/**
 	 * Tests if a model is Created, Read, Updated, Soft Deleted, Restored & Force Deleted correctly
 	 */
@@ -36,6 +39,8 @@ abstract class ModelTestCase extends TestCase {
 	/**
 	 * Tests anything else related to the model
 	 */
-	abstract public function testEdges();	
+	abstract public function testEdges();
+	
+	
 	
 }

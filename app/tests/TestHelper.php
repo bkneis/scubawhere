@@ -97,7 +97,6 @@ class TestHelper{
 	 */
 	public static function dbRefresh($includeReset = false){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Refreshing.....");
 				
 			//@TODO Fix issue with rollbacks before this can be used
 			// 		if ($includeReset) {

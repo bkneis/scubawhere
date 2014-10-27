@@ -4,34 +4,39 @@ class ContinentModelTest extends ModelTestCase {
 		
 	public function setUp()
 	{		
-		//Make sure we start with fresh tables for each test
-		if (parent::$dbInitialised) {			
-			TestHelper::dbSeedTable('Continents');
-		}
 		parent::setUp();		
 	}
-		
+	
+	public function refreshTables(){
+		//Refresh any tables required for testing this model
+		TestHelper::dbSeedTable('continents');
+	}
+	
 	public function testCRUD(){
+		$this->refreshTables();
+		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
 		$continent = Continent::find($continent_id);
 		
 		$this->assertNotEquals(0, $continent->id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_ABBR, $continent->abbreviation, "Unexpected abbreviation value");
-		$this->assertEquals(ModelTestHelper::TEST_NAME, $continent->name, "Unexpected name value");
-		$this->assertEquals(ModelTestHelper::TEST_DESCRIPTION, $continent->description, "Unexpected description value");
+		$this->assertEquals(ModelTestHelper::TEST_STRING, $continent->name, "Unexpected name value");
+		$this->assertEquals(ModelTestHelper::TEST_STRING, $continent->description, "Unexpected description value");
+		$this->assertNotEquals("0000-00-00 00:00:00", $continent->created_at);
+		$this->assertNotEquals("0000-00-00 00:00:00", $continent->updated_at);
 				
 		//Update
-		$continent->abbreviation = ModelTestHelper::TEST_ABBR_UPDATE;
-		$continent->name = ModelTestHelper::TEST_NAME_UPDATE;
-		$continent->description = ModelTestHelper::TEST_DESCRIPTION_UPDATE;
+		$continent->abbreviation = ModelTestHelper::TEST_ABBR_UPDATED;
+		$continent->name = ModelTestHelper::TEST_STRING_UPDATED;
+		$continent->description = ModelTestHelper::TEST_STRING_UPDATED;
 		$continent->save();		
 		$continent = Continent::find($continent_id);
 		
 		$this->assertNotEquals(0, $continent->id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_ABBR_UPDATE, $continent->abbreviation, "Unexpected abbreviation value");
-		$this->assertEquals(ModelTestHelper::TEST_NAME_UPDATE, $continent->name, "Unexpected name value");
-		$this->assertEquals(ModelTestHelper::TEST_DESCRIPTION_UPDATE, $continent->description, "Unexpected description value");
+		$this->assertEquals(ModelTestHelper::TEST_ABBR_UPDATED, $continent->abbreviation, "Unexpected abbreviation value");
+		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $continent->name, "Unexpected name value");
+		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $continent->description, "Unexpected description value");
 				
 		//Delete
 		$continent->delete();
@@ -45,6 +50,7 @@ class ContinentModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
+		//$this->refreshTables();
 		//TODO
 	}
 	
@@ -54,6 +60,6 @@ class ContinentModelTest extends ModelTestCase {
 	
 	public function testEdges(){
 		$this->assertTrue(true);
-	}
+	}	
 	
 }
