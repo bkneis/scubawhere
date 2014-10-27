@@ -25,7 +25,7 @@ $(function(){
 
 	// Load locations & triptypes, then show default create trip form
 	// Promises are not supported in IE.. :( (http://caniuse.com/#feat=promises)
-	Place.getAttachedLocations(function(data) {
+	Place.attached(function(data) {
 		// window.places = _.indexBy(data, 'id');
 		window.places = data;
 
