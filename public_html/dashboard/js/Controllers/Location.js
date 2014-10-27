@@ -1,10 +1,10 @@
-var Locations = {
+var Place = {
 
 	//params need to be as follows:
 	//float latitude
 	//float longitude
 	//int limit
-	getLocationsAround: function(params, handleData) {
+	around: function(params, handleData) {
 		$.get("/company/locations", params).done(function(data){
 			handleData(data);
 		});
@@ -21,7 +21,7 @@ var Locations = {
 
 	//gets locations inside a rectangle
 	//requires one param - "area", as above
-	getLocationInside: function(params, handleData){
+	inside: function(params, handleData){
 		$.get("/company/locations", params).done(function(data){
 			handleData(data);
 		});
@@ -41,13 +41,13 @@ var Locations = {
 		});
 	},
 
-	getAttachedLocations: function(handleData) {
+	attached: function(handleData) {
 		$.get("/api/location/all").done(function(data){
 			handleData(data);
 		});
 	},
 
-	attachLocation: function(params, handleData){
+	attach: function(params, handleData){
 		$.post("/api/location/attach", params).done(function(data){
 			handleData(data);
 		});
@@ -59,4 +59,3 @@ var Locations = {
 		});
 	},
 };
-var Place = Locations;
