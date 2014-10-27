@@ -37,6 +37,7 @@ function initialise() {
 			removeAttachedFromLocations();
 
 			// Render all locations
+			renderHomeLocation();
 			renderLocations();
 			renderAttachedLocations();
 		});
@@ -74,6 +75,16 @@ function loadAttachedLocations(promise) {
 function removeAttachedFromLocations() {
 	// Remove all attached locations from the general locations collection
 	window.locations = _.omit(window.locations, _.keys(window.attachedLocations));
+}
+
+function renderHomeLocation() {
+	var markerOptions = {
+		position:  new google.maps.LatLng( company.latitude, company.longitude ),
+		// map:       gmap,
+		title:     Base,
+		icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=1'
+	};
+	new google.maps.Marker(markerOptions);
 }
 
 function renderLocations() {
