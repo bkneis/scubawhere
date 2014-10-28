@@ -119,7 +119,7 @@
 					{{#if attached}}
 						<input type="submit" value="Remove from your locations" class="detach-location bttn big-bttn redb" />
 					{{else}}
-						<input type="submit" value="Add to your locations" class="attach-location bttn big-bttn greenb" />
+						<input type="submit" value="Add to your locations" class="attach-location bttn big-bttn blueb" />
 					{{/if}}
 				</form>
 
@@ -160,24 +160,24 @@
 	</div>
 
 	<script>
-	function loadGoogleMaps() {
-		console.log('Start loading');
+		function loadGoogleMaps() {
+			console.log('Start loading');
 
-		if( window.google && google.maps ) {
-			console.log('Google Maps already loaded');
-			initialise();
+			if( window.google && google.maps ) {
+				console.log('Google Maps already loaded');
+				initialise();
 
-			return true;
+				return true;
+			}
+
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise';
+
+			document.body.appendChild(script);
+
+			console.log('Google Maps script appended');
 		}
-
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise';
-
-		document.body.appendChild(script);
-
-		console.log('Google Maps script appended');
-	}
 	</script>
 
 	<script src="/common/js/jquery.reveal.js"></script>

@@ -42,6 +42,15 @@ class LocationController extends Controller {
 			return Response::json( array('errors' => array('The location could not be found!')), 404 ); // 404 Not Found
 		}
 
+		// Check if location is currently used in a trip and if so, restrict detaching
+		$check = Auth::user()->trips()->whereHas('locations', function($query)
+		{
+			$query->where('id', Input::get('location_id'));
+		})->count();
+
+		if($check > 0)
+			return Response::json( array('errors' => array('The location cannot be removed! You are still using it for trips.')), 409 ); // 409 Conflict
+
 		Auth::user()->locations()->detach( Input::get('location_id') );
 
 		return Response::json( array('status' => 'The location has been detached from your profile.'), 200 ); // 200 OK

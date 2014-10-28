@@ -194,6 +194,15 @@ function initialise() {
 			$('#modalWindows .close-reveal-modal').click();
 
 			pageMssg(data.status, true);
+		}, function error(xhr) {
+
+			var data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.errors[0]);
 		});
 	});
 

@@ -53,7 +53,13 @@ var Place = {
 		});
 	},
 
-	detach: function(params, handleData){
-		$.post("/api/location/detach", params).done( handleData );
+	detach : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/location/detach",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	},
 };
