@@ -1,9 +1,12 @@
 <?php
 
 use LaravelBook\Ardent\Ardent;
+use ScubaWhere\Helper;
 
 class Triptype extends Ardent {
-	protected $guarded = array('id', 'created_at', 'updated_at');
+	protected $guarded = array('*');
+	protected $fillable = array();
+	protected $hidden = array('created_at', 'updated_at');
 
 	public static $rules = array();
 
