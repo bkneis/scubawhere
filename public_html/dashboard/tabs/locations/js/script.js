@@ -74,6 +74,10 @@ function initialise() {
 
 	// Define inputs behaviour
 	$('#showLocation').on('click', function(event) {
+		console.log("SHOW clicked");
+		if( window.sw.latitudeInput.val() == '' || window.sw.longitudeInput.val() == '')
+			return false;
+
 		var location = new google.maps.LatLng( window.sw.latitudeInput.val(), window.sw.longitudeInput.val() );
 
 		var startLat = gmap.getCenter().lat(),
@@ -105,6 +109,17 @@ function initialise() {
 
 		// Render the marker again (sometimes it didn't show after scrolling outside the viewwindow)
 		// placeNewMarker(location);
+	});
+
+	$('#createLocation').on('click', function(event) {
+		if( window.sw.latitudeInput.val() == '' || window.sw.longitudeInput.val() == '')
+			return false;
+
+		var markerObject = {
+			latitude:  window.sw.latitudeInput.val(),
+			longitude: window.sw.longitudeInput.val()
+		};
+		showModalWindow(markerObject);
 	});
 
 	// Define modal window button clicks
@@ -174,6 +189,56 @@ function initialise() {
 			window.sw.locations[markerObject.id] = window.sw.attachedLocations[markerObject.id];
 			// Delete from old collection
 			window.sw.attachedLocations = _.omit(window.sw.attachedLocations, markerObject.id);
+
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		});
+	});
+
+	$('#modalWindows').on('submit', '#create-location-form', function(event) {
+
+		event.preventDefault();
+
+		// Disable button and display loader
+		$(event.target).find('[type=submit]').prop('disabled', true).after('<div id="add-location-loader" class="loader"></div>');
+
+		var modal = $(event.target).closest('.reveal-modal');
+
+		var params = modal.find('form').serializeObject();
+		params._token = window._token || window.token;
+
+		Place.create(params, function success(data) {
+
+			// Communitcate success to user
+			$(event.target).find('[type=submit]').attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#add-location-loader').remove();
+
+			var location = params;
+			location.id = data.id;
+			delete location._token;
+
+			// Create marker
+			var markerOptions = {
+				id:        location.id,
+				attached:  true,
+				position:  new google.maps.LatLng( location.latitude, location.longitude ),
+				map:       gmap,
+				title:     location.name,
+				icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
+			};
+			window.sw.markers.push( new google.maps.Marker(markerOptions) );
+			window.sw.attachedLocations[location.id] = location;
+
+			// Remove and delete newMarker
+			google.maps.event.clearInstanceListeners(window.sw.newMarker);
+			window.sw.newMarker.setMap(null);
+			delete window.sw.newMarker;
+
+			// Reset coordinate inputs
+			window.sw.latitudeInput.val('');
+			window.sw.longitudeInput.val('');
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();
@@ -314,42 +379,52 @@ function renderAttachedLocations() {
 
 function placeNewMarker(location) {
 
-	if(window.sw.newMarker)
-		window.sw.newMarker.setPosition(location);
-	else {
-		// Create new marker
-		var markerOptions = {
-			position:  location,
-			draggable: true,
-			map:       gmap,
-			icon:      'http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
-		}
-		window.sw.newMarker = new google.maps.Marker(markerOptions);
-
-		google.maps.event.addListener(window.sw.newMarker, 'drag', function(event) {
-			updateLatLngInputs(event.latLng);
-		});
-
-		google.maps.event.addListener(window.sw.newMarker, 'click', function(event) {
-			//
-		});
+	if(window.sw.newMarker) {
+		// Remove old marker
+		google.maps.event.clearInstanceListeners(window.sw.newMarker);
+		window.sw.newMarker.setMap(null);
+		delete window.sw.newMarker;
 	}
+
+	// Create new marker
+	var markerOptions = {
+		position:  location,
+		draggable: true,
+		map:       gmap,
+		icon:      'http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
+	}
+	window.sw.newMarker = new google.maps.Marker(markerOptions);
+
+	google.maps.event.addListener(window.sw.newMarker, 'drag', function(event) {
+		updateLatLngInputs(event.latLng);
+	});
+
+	google.maps.event.addListener(window.sw.newMarker, 'click', function(event) {
+		showModalWindow({
+			latitude: event.latLng.lat(),
+			longitude: event.latLng.lng()
+		});
+	});
 
 	// Update inputs with new coordinates
 	updateLatLngInputs(location);
 }
 
-function updateLatLngInputs(location) {
-	window.sw.latitudeInput.val( location.lat() );
-	window.sw.longitudeInput.val( location.lng() );
+function updateLatLngInputs(location) { // Sync changes of the marker's location to the input fields
+
+	latitude = Math.round(location.lat() * 1000000) / 1000000;
+	longitude = Math.round(location.lng() * 1000000) / 1000000;
+
+	window.sw.latitudeInput.val( latitude );
+	window.sw.longitudeInput.val( longitude );
 }
 
 function showModalWindow(markerObject) {
 
-	// Create the modal window from location-template
-	if(!window.sw.locationTemplate) window.sw.locationTemplate = Handlebars.compile( $("#location-template").html() );
-
 	if(markerObject.id) {
+		// Create the modal window from location-template
+		if(!window.sw.locationTemplate) window.sw.locationTemplate = Handlebars.compile( $("#location-template").html() );
+
 		if(markerObject.attached)
 			var location = window.sw.attachedLocations[markerObject.id];
 		else
@@ -358,20 +433,43 @@ function showModalWindow(markerObject) {
 		location.attached = markerObject.attached;
 
 		$('#modalWindows')
-		.append( window.sw.locationTemplate(location) )        // Create the modal
-		.children('#modal-' + markerObject.id)        // Directly find it and use it
-		.data('markerObject', markerObject)           // Assign the eventObject to the modal DOM element
-		.reveal({                                     // Open modal window | Options:
-			animation: 'fadeAndPop',                  // fade, fadeAndPop, none
-			animationSpeed: 300,                      // how fast animtions are
-			closeOnBackgroundClick: true,             // if you click background will modal close?
-			dismissModalClass: 'close-modal',         // the class of a button or element that will close an open modal
-			'markerObject': markerObject,             // Submit by reference to later get it as this.eventObject for removal
+		.append( window.sw.locationTemplate(location) ) // Create the modal
+		.children('#modal-' + markerObject.id)          // Directly find it and use it
+		.data('markerObject', markerObject)             // Assign the eventObject to the modal DOM element
+		.reveal({                                       // Open modal window | Options:
+			animation: 'fadeAndPop',                    // fade, fadeAndPop, none
+			animationSpeed: 300,                        // how fast animtions are
+			closeOnBackgroundClick: true,               // if you click background will modal close?
+			dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
+			'markerObject': markerObject,               // Submit by reference to later get it as this.eventObject for removal
 			onFinishModal: function() {
 				$('#modal-' + this.markerObject.id).remove();
 			}
 		});
 	}
-	else
-		var location = {};
+	else {
+		// Create the modal window from location-template
+		if(!window.sw.newLocationTemplate) window.sw.newLocationTemplate = Handlebars.compile( $("#new-location-template").html() );
+
+		markerObject.latitude = Math.round(markerObject.latitude * 1000000) / 1000000;
+		markerObject.longitude = Math.round(markerObject.longitude * 1000000) / 1000000;
+
+		$('#modalWindows')
+		.append( window.sw.newLocationTemplate(markerObject) ) // Create the modal
+		.children('#modal-new')                                // Directly find it and use it
+		.reveal({                                              // Open modal window | Options:
+			animation: 'fadeAndPop',                           // fade, fadeAndPop, none
+			animationSpeed: 300,                               // how fast animtions are
+			closeOnBackgroundClick: true,                      // if you click background will modal close?
+			dismissModalClass: 'close-modal',                  // the class of a button or element that will close an open modal
+			onFinishModal: function() {
+				$('#modal-new').remove();
+			},
+			onOpenedModal: function() {
+				$('#new-location-name').focus();
+			}
+		});
+
+		CKEDITOR.replace( 'description' );
+	}
 }

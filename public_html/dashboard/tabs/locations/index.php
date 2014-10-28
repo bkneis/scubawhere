@@ -17,9 +17,9 @@
 	<div class="row">
 		<div class="box50">
 			<label class="dgreyb">
-				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1.5em; display: none;" id="legend-your-locations-icon" /><span class="loader" id="legend-your-locations-loader"></span>
+				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1.5em; display: none;" id="legend-your-locations-icon" /><span class="loader" id="legend-your-locations-loader" style="margin-top: -1em;"></span>
 				Your locations
-				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em; display: none;" id="legend-available-locations-icon" /><span class="loader" id="legend-available-locations-loader"></span>
+				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em; display: none;" id="legend-available-locations-icon" /><span class="loader" id="legend-available-locations-loader" style="margin-top: -1em;"></span>
 				Available locations
 				<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em;" />
 				New location
@@ -29,10 +29,10 @@
 		<div class="box50">
 			<!-- <div class="yellow-helper" style="margin-bottom: 0;">Click the map or an existing marker.</div> -->
 			<div class="dgreyf" style="font-size: 17px; padding-top: 2px; text-align: right;">
-				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 20%" />
-				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 20%" />
+				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 150px" />
+				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 150px" />
 				<button class="bttn dgreyb" style="margin-right: 5px;" id="showLocation">Show</button>
-				<button class="bttn blueb" style="margin-right: 10px;">Create</button>
+				<button class="bttn blueb" style="margin-right: 10px;" id="createLocation">Create</button>
 			</div>
 			<!-- <div class="padder">
 				<form id="save-location">
@@ -129,7 +129,30 @@
 
 		<script id="new-location-template" type="text/x-handlebars-template">
 			<div id="modal-new" class="reveal-modal">
+				<h2 class="margin-top: 0;">New location</h2>
+				<form id="create-location-form">
+					<div class="form-row">
+						<label>Name</label>
+						<input type="text" name="name" id="new-location-name" />
+					</div>
+					<div class="form-row">
+						Lat <input type="number" name="latitude" step="0.000001" min="-90" max="90" style="width: 150px" value="{{latitude}}" />
+						Long <input type="number" name="longitude" step="0.000001" min="-180" max="180" style="width: 150px" value="{{longitude}}" />
+					</div>
+					<div class="form-row">
+						<label class="field-label">Description</label>
+						<textarea name="description" id="description"></textarea>
+					</div>
+					<div class="form-row">
+						<label class="field-label">Tags &nbsp; <small>(comma-separated)</small></label>
+						<input type="text" name="tags" />
+					</div>
 
+					<div style="margin-top: 1em; text-align: right">
+						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
+						<input type="submit" value="Create" class="add-location bttn big-bttn blueb" />
+					</div>
+				</form>
 
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
@@ -158,6 +181,7 @@
 	</script>
 
 	<script src="/common/js/jquery.reveal.js"></script>
+	<script src="/common/js/jquery.serialize-object.min.js"></script>
 	<script src="/common/js/rAF.js"></script>
 
 	<script src="/dashboard/js/Controllers/Location.js"></script>
