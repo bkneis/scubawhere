@@ -149,8 +149,11 @@ class ModelTestHelper{
 	}
 
 	public static function createTriptype($append = ""){
-		//TODO
-		return 0;
+		$entry = new Triptype();
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
 }
