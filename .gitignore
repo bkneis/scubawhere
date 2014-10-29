@@ -13,4 +13,4 @@ error_log
 .settings
 .env.testing.php
 composer.phar
-app/tests/coverage
+app/tests/reports
