@@ -26,7 +26,6 @@ class PaymentgatewayModelTest extends ModelTestCase {
 				
 		//Update
 		$paymentgateway->name = ModelTestHelper::TEST_STRING_UPDATED;
-		$paymentgateway->description = ModelTestHelper::TEST_STRING_UPDATED;
 		$paymentgateway->save();		
 		$paymentgateway = Paymentgateway::find($paymentgateway_id);
 		
