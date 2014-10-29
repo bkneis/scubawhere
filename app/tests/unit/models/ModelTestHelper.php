@@ -33,8 +33,12 @@ class ModelTestHelper{
 	}
 
 	public static function createAgency($append = ""){
-		//TODO
-		return 0;
+		$entry = new Agency();
+		$entry->abbreviation = self::TEST_ABBR;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createAgent($company_id, $append = ""){
@@ -58,8 +62,13 @@ class ModelTestHelper{
 	}
 
 	public static function createCertificate($agency_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Certificate();
+		$entry->agency_id = $agency_id;
+		$entry->abbreviation = self::TEST_ABBR;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createCompany($country_id, $append = ""){
@@ -128,7 +137,7 @@ class ModelTestHelper{
 		return 0;
 	}
 
-	public static function createPayementgateway($append = ""){
+	public static function createPaymentgateway($append = ""){
 		$entry = new Paymentgateway();
 		$entry->name = self::TEST_STRING.$append;
 		$entry->save();

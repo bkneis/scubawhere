@@ -45,8 +45,7 @@ class PaymentgatewayModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		//$this->refreshTables();
-		//TODO
+		$this->assertTrue(true);
 	}
 	
 	public function testFunctions(){
