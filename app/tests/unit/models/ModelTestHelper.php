@@ -129,8 +129,10 @@ class ModelTestHelper{
 	}
 
 	public static function createPayementgateway($append = ""){
-		//TODO
-		return 0;
+		$entry = new Paymentgateway();
+		$entry->name = self::TEST_STRING.$append;
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createTicket($company_id, $append = ""){
