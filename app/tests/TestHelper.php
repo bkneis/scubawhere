@@ -126,14 +126,7 @@ class TestHelper{
 		if (App::runningUnitTests()) {
 			//Get count for each table & truncate it if its not empty
 			foreach ($modelTableArray as $model => $table){
-				if (count(DB::table($table)->get()) != 0) {
-					//Turn foreign key checks off <- USE WITH CAUTION!
-					DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-					//Delete all entries & reset indexes
-					DB::table($table)->truncate();
-					//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
-					DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-				}
+				self::dbClearTable($table);
 			}
 		}
 	}
@@ -149,12 +142,7 @@ class TestHelper{
 		if (App::runningUnitTests()) {
 			//Truncate every table in the array
 			foreach ($tableArray as $table){
-				//Turn foreign key checks off <- USE WITH CAUTION!
-				DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-				//Delete all entries & reset indexes
-				DB::table($table)->truncate();
-				//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
-				DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+				self::dbClearTable($table);
 			}
 		}
 	}
