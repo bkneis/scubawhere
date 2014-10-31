@@ -11,7 +11,7 @@ class ModelTestHelper{
 	const TEST_STRING_UPDATED     = "New test string";
 	const TEST_ABBR               = "TST";
 	const TEST_ABBR_UPDATED       = "NTST";
-	const TEST_SYMBOL = "£";
+	const TEST_SYMBOL = "Â£";
 	const TEST_SYMBOL_UPDATED = "$";
 	const TEST_USERNAME           = "testuser";
 	const TEST_PASSWORD           = "testpassword";
