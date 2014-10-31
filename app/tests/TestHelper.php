@@ -4,7 +4,7 @@
  * Helper class providing constants & functions to be used in tests.
  */
 class TestHelper{
-		
+
 	/**
 	 * Helper function to call any needed migrations on the test database
 	 */
@@ -15,9 +15,9 @@ class TestHelper{
 			Artisan::call('migrate');
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Helper function to clear all unseeded tables in the test database (including pivots)
 	 */
@@ -28,17 +28,17 @@ class TestHelper{
 			self::clearTables(TestSettings::$pivotTables);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Helper function to clear a table in the test database (including pivots)
 	 * @param string $table the name of the table to be
 	 */
 	public static function dbClearTable($table){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Clearing ".$table." table.....");
-			if (count(DB::table($table)->get()) != 0) {
+			if (DB::table($table)->count() != 0) {
+				echo("\nDB ".getenv('DATABASE_NAME').": Clearing ".$table." table.....");
 				//Turn foreign key checks off <- USE WITH CAUTION!
 				DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 				//Delete all entries & reset indexes
@@ -48,9 +48,9 @@ class TestHelper{
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Helper function to clear and reseed all seeded tables in the test database
 	 */
@@ -65,9 +65,9 @@ class TestHelper{
 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');// <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Helper function to clear and reseed a single seeded table in the test database
 	 * @param string $seederPrefix first part of the seeder class name (eg PREFIXTableSeeder)
@@ -83,9 +83,9 @@ class TestHelper{
 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');// <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Helper function to set up a 'clean' test database
 	 * It will do the following:
@@ -97,7 +97,7 @@ class TestHelper{
 	 */
 	public static function dbRefresh($includeReset = false){
 		if (App::runningUnitTests()) {
-				
+
 			//@TODO Fix issue with rollbacks before this can be used
 			// 		if ($includeReset) {
 			// 			echo("\nDB ".getenv('DATABASE_NAME').": Rolling back migrations.....");
@@ -108,15 +108,15 @@ class TestHelper{
 			// 			//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
 			// 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 			// 		}
-	
+
 			self::dbMigrate();
 			self::dbClear();
 			self::dbSeed();
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Private helper to quickly clear tables with models
 	 * This function will also assert that all of the tables are empty
@@ -126,20 +126,13 @@ class TestHelper{
 		if (App::runningUnitTests()) {
 			//Get count for each table & truncate it if its not empty
 			foreach ($modelTableArray as $model => $table){
-				if (count(DB::table($table)->get()) != 0) {
-					//Turn foreign key checks off <- USE WITH CAUTION!
-					DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-					//Delete all entries & reset indexes
-					DB::table($table)->truncate();
-					//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
-					DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-				}
+				self::dbClearTable($table);
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Private helper to quickly clear tables without models
 	 * This function will also assert that all of the tables are empty
@@ -149,18 +142,13 @@ class TestHelper{
 		if (App::runningUnitTests()) {
 			//Truncate every table in the array
 			foreach ($tableArray as $table){
-				//Turn foreign key checks off <- USE WITH CAUTION!
-				DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-				//Delete all entries & reset indexes
-				DB::table($table)->truncate();
-				//Turn foreign key checks on <- SHOULD RESET ANYWAY BUT JUST TO MAKE SURE!
-				DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+				self::dbClearTable($table);
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Drops & resets any event listeners associated with models.
 	 * Called in the <code>TestCase</code> <code>setUp()</code> function
@@ -179,5 +167,5 @@ class TestHelper{
 			}
 		}
 	}
-	
+
 }
