@@ -12,6 +12,8 @@ class AddInnoDBRelationBetweenCurrenciesAndCountriesTables extends Migration {
 	 */
 	public function up()
 	{
+		Artisan::call('db:seed', array('--class' => 'CurrenciesTableSeeder'));
+
 		DB::table('countries')->where('name', 'United Kingdom')->update( array('currency_id' => 52) );
 		DB::table('countries')->where('name', 'Australia')->update( array('currency_id' => 8) );
 		DB::table('countries')->where('name', 'USA')->update( array('currency_id' => 150) );
