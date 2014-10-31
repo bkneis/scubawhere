@@ -88,7 +88,7 @@ class ModelTestHelper{
 	public static function createCountry($continent_id, $currency_id, $append = ""){
 		$entry = new Country();
 		$entry->continent_id = $continent_id;
-		$entry->continent_id = $currency_id;
+		$entry->currency_id = $currency_id;
 		$entry->abbreviation = self::TEST_ABBR;
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
