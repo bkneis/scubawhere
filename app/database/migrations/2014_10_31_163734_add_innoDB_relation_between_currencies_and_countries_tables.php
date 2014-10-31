@@ -21,10 +21,16 @@ class AddInnoDBRelationBetweenCurrenciesAndCountriesTables extends Migration {
 		// For the seeded tables
 		DB::table('countries')->where('name', 'United States')->update( array('currency_id' => 150) );
 
+		// Turn foreign key checks off <- USE WITH CAUTION!
+		DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
 		Schema::table('countries', function($table)
 		{
 			$table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('restrict');
 		});
+
+		// Turn foreign key checks back on
+		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}
 
 	/**
@@ -38,6 +44,8 @@ class AddInnoDBRelationBetweenCurrenciesAndCountriesTables extends Migration {
 		{
 			$table->dropForeign('countries_currency_id_foreign');
 		});
+
+		DB::table('currencies')->delete(); // Delete all entries from currencies table
 	}
 
 }
