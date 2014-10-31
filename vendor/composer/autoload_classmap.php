@@ -112,6 +112,7 @@ return array(
     'CreateBoatsTable' => $baseDir . '/app/database/migrations/2014_02_17_020249_create_boats_table.php',
     'CreateBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_02_17_021844_create_booking_details_table.php',
     'CreateBookingsTable' => $baseDir . '/app/database/migrations/2014_02_17_021810_create_bookings_table.php',
+    'CreateCertificateCustomerPivotTable' => $baseDir . '/app/database/migrations/2014_10_31_222143_create_certificate_customer_pivot_table.php',
     'CreateCertificatesTable' => $baseDir . '/app/database/migrations/2014_02_17_021060_create_certificates_table.php',
     'CreateCompaniesTable' => $baseDir . '/app/database/migrations/2014_02_17_014940_create_companies_table.php',
     'CreateCompanyLocationPivotTable' => $baseDir . '/app/database/migrations/2014_06_04_094433_create_company_location_pivot_table.php',

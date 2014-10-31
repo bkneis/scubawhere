@@ -43,7 +43,6 @@ class CustomerController extends Controller {
 			// 'region_id',
 			'country_id',
 			'phone',
-			'certificate_id',
 			'last_dive'
 		);
 
@@ -55,6 +54,19 @@ class CustomerController extends Controller {
 		}
 
 		$customer = Auth::user()->customers()->save($customer);
+
+		$certificates = Input::get('certificates');
+		if( $certificates && !empty($certificates) && is_array($certificates) && is_numeric( $certificates[0] ) )
+		{
+			try
+			{
+				$trip->certificates()->sync($certificates);
+			}
+			catch(Exception $e)
+			{
+				return Response::json( array('errors' => array('Could not assign certificates to customer, \'certificates\' array is propably erroneous.')), 400 ); // 400 Bad Request
+			}
+		}
 
 		return Response::json( array('status' => 'OK. Customer created', 'id' => $customer->id), 201 ); // 201 Created
 	}
@@ -85,13 +97,25 @@ class CustomerController extends Controller {
 			// 'region_id',
 			'country_id',
 			'phone',
-			'certificate_id',
 			'last_dive'
 		);
 
 		if( !$customer->update($data) )
 		{
 			return Response::json( array('errors' => $customer->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		$certificates = Input::get('certificates');
+		if( $certificates && !empty($certificates) && is_array($certificates) && is_numeric( $certificates[0] ) )
+		{
+			try
+			{
+				$trip->certificates()->sync($certificates);
+			}
+			catch(Exception $e)
+			{
+				return Response::json( array('errors' => array('Could not assign certificates to customer, \'certificates\' array is propably erroneous.')), 400 ); // 400 Bad Request
+			}
 		}
 
 		return Response::json( array('status' => 'OK. Customer updated.'), 200 ); // 200 OK

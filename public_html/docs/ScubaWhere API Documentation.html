@@ -751,7 +751,7 @@ pre {
 <li><strong>@param</strong> integer region_id      The ID of the <code>region</code> the customer lives in (optional)</li>
 <li><strong>@param</strong> integer country_id     The ID of the <code>country</code> the customer lives in (optional)</li>
 <li><strong>@param</strong> string  phone          A contact telephone number (optional)</li>
-<li><strong>@param</strong> integer certificate_id The ID of the <code>certificate</code> that the customer holds (optional)</li>
+<li><strong>@param</strong> array   certificates   The IDs of the <code>certificates</code> that the customer holds as a simple array (optional)</li>
 <li><strong>@param</strong> string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                  Contains <code>status</code> and <code>id</code> of the newly created customer on success, <code>errors</code> on failure</li>
@@ -773,7 +773,7 @@ pre {
 <li><strong>@param</strong> integer region_id      The ID of the <code>region</code> the customer lives in (optional)</li>
 <li><strong>@param</strong> integer country_id     The ID of the <code>country</code> the customer lives in (optional)</li>
 <li><strong>@param</strong> string  phone          A contact telephone number (optional)</li>
-<li><strong>@param</strong> integer certificate_id The ID of the <code>certificate</code> that the customer holds (optional)</li>
+<li><strong>@param</strong> array   certificates   The IDs of the <code>certificates</code> that the customer holds as a simple array (optional)</li>
 <li><strong>@param</strong> string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function <a href="http://php.net/strtotime">strtotime</a>. (Example: <code>24-05-2014</code>) (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                  Contains <code>status</code> and <code>id</code> of the newly created customer on success, <code>errors</code> on failure</li>

@@ -14,7 +14,7 @@ class Certificate extends Ardent {
 	{
 		if( isset($this->abbreviation) )
 			$this->abbreviation = Helper::sanitiseBasicTags($this->abbreviation);
-		
+
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
@@ -29,6 +29,6 @@ class Certificate extends Ardent {
 
 	public function customers()
 	{
-		return $this->hasMany('Customer');
+		return $this->belongsToMany('Customer')->withTimestamps();
 	}
 }

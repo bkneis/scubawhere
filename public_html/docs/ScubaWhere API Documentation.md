@@ -368,7 +368,7 @@ Creates a new customer. The only *required* fields are `firstname` and `lastname
 - **@param** integer region_id      The ID of the `region` the customer lives in (optional)
 - **@param** integer country_id     The ID of the `country` the customer lives in (optional)
 - **@param** string  phone          A contact telephone number (optional)
-- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** array   certificates   The IDs of the `certificates` that the customer holds as a simple array (optional)
 - **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
 - &nbsp;
 - **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure
@@ -392,7 +392,7 @@ All parameters are optional (except the customer `id`).
 - **@param** integer region_id      The ID of the `region` the customer lives in (optional)
 - **@param** integer country_id     The ID of the `country` the customer lives in (optional)
 - **@param** string  phone          A contact telephone number (optional)
-- **@param** integer certificate_id The ID of the `certificate` that the customer holds (optional)
+- **@param** array   certificates   The IDs of the `certificates` that the customer holds as a simple array (optional)
 - **@param** string  last_dive      Date of the customer's last dive. Must be in a format understood by the PHP function [strtotime](http://php.net/strtotime). (Example: `24-05-2014`) (optional)
 - &nbsp;
 - **@return** JSON                  Contains `status` and `id` of the newly created customer on success, `errors` on failure

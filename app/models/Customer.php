@@ -18,7 +18,6 @@ class Customer extends Ardent {
 		// 'region_id',
 		'country_id',
 		'phone',
-		'certificate_id',
 		'last_dive'
 	);
 
@@ -35,7 +34,6 @@ class Customer extends Ardent {
 		'postcode'       => '',
 		'country_id'     => 'integer|exists:countries,id',
 		'phone'          => '',
-		'certificate_id' => 'integer|exists:certificates,id',
 		'last_dive'      => 'date'
 	);
 
@@ -86,9 +84,9 @@ class Customer extends Ardent {
 		return $this->belongsToMany('Booking', 'booking_details')->withPivot('ticket_id', 'session_id', 'package_id', 'is_lead');
 	}
 
-	public function certificate()
+	public function certificates()
 	{
-		return $this->belongsTo('Certificate');
+		return $this->belongsToMany('Certificate')->withTimestamps();
 	}
 
 	public function country()
