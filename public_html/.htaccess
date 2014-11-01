@@ -3,6 +3,10 @@
         Options -MultiViews
     </IfModule>
 
+    <IfModule pagespeed_module>
+        ModPagespeed off
+    </IfModule>
+
     RewriteEngine On
 
     # Exceptions...
