@@ -18,7 +18,7 @@ class ExtentBookingsTable extends Migration {
 			$table->string('currency', 3)->after('price');
 
 
-			$table->dropColumn('created_at', 'updated_at', 'manual', 'paid');
+			$table->dropColumn( array('created_at', 'updated_at', 'manual', 'paid') );
 
 			$table->integer('agent_id')->unsigned()->nullable()->default(null)->after('customer_id');
 			$table->string('source', 10)->after('agent_id')->nullable()->default(null); // Either 'telephone', 'email', 'facetoface' or 'frontend' (also possible: 'widget', 'other')
@@ -47,9 +47,9 @@ class ExtentBookingsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('bookings', function($table){
+		Schema::table('bookings', function($table) {
 
-			$table->dropColumn('reference', 'currency', 'agent_id', 'source', 'paid_cash', 'paid_creditcard', 'paid_cheque', 'paid_banktransfer', 'pay_online', 'pay_later', 'reserved', 'pick_up', 'drop_off', 'comments');
+			$table->dropColumn( array('reference', 'currency', 'agent_id', 'source', 'paid_cash', 'paid_creditcard', 'paid_cheque', 'paid_banktransfer', 'pay_online', 'pay_later', 'reserved', 'pick_up', 'drop_off', 'comments') );
 
 			$table->integer('company_id')->unsigned();
 			$table->integer('customer_id')->unsigned();

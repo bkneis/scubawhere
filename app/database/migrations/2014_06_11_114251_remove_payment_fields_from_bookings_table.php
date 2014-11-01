@@ -14,7 +14,7 @@ class RemovePaymentFieldsFromBookingsTable extends Migration {
 	{
 		Schema::table('bookings', function($table)
 		{
-			$table->dropColumn('paid_cash', 'paid_creditcard', 'paid_cheque', 'paid_banktransfer', 'pay_online', 'pay_later');
+			$table->dropColumn( array('paid_cash', 'paid_creditcard', 'paid_cheque', 'paid_banktransfer', 'pay_online', 'pay_later') );
 		});
 	}
 

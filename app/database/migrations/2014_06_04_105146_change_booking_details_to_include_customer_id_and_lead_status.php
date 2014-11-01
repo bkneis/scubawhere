@@ -37,7 +37,7 @@ class ChangeBookingDetailsToIncludeCustomerIdAndLeadStatus extends Migration {
 		Schema::table('booking_details', function($table)
 		{
 			$table->dropForeign('booking_details_customer_id_foreign');
-			$table->dropColumn('customer_id', 'is_lead');
+			$table->dropColumn( array('customer_id', 'is_lead') );
 		});
 
 		Schema::create('booking_customer', function($table)

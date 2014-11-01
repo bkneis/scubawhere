@@ -27,7 +27,7 @@ class FixBookingsTable extends Migration {
 	{
 		Schema::table('bookings', function($table)
 		{
-			$table->dropColumn('created_at', 'updated_at');
+			$table->dropColumn( array('created_at', 'updated_at') );
 		});
 	}
 
