@@ -128,6 +128,7 @@ return array(
     'CreatePasswordRemindersTable' => $baseDir . '/app/database/migrations/2014_02_17_002807_create_password_reminders_table.php',
     'CreatePaymentGatewaysTable' => $baseDir . '/app/database/migrations/2014_06_11_114105_create_payment_gateways_table.php',
     'CreatePaymentsTable' => $baseDir . '/app/database/migrations/2014_06_11_114106_create_payments_table.php',
+    'CreatePricesTable' => $baseDir . '/app/database/migrations/2014_10_31_231352_create_prices_table.php',
     'CreateRegionsTable' => $baseDir . '/app/database/migrations/2014_02_17_014920_create_regions_table.php',
     'CreateSessionsTable' => $baseDir . '/app/database/migrations/2014_02_17_021058_create_sessions_table.php',
     'CreateTicketTripTable' => $baseDir . '/app/database/migrations/2014_06_04_163225_create_ticket_trip_table.php',
