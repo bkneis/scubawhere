@@ -115,3 +115,26 @@ function colorOpacity(hex, opa) {
 
 	return rgb;
 }
+
+window.sw.randomStrings = [];
+function randomString() {
+	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+	var string_length = 15;
+	var result = '';
+	for (var i=0; i<string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		result += chars.substring(rnum,rnum+1);
+	}
+
+	if(_.indexOf(window.sw.randomStrings, result) >= 0)
+	{
+		// If the random string is not unique (unlikely, but possible) the function recursively calls itself again
+		return randomString();
+	}
+	else
+	{
+		// When the random string has been approved as unique, it is added to the list of generated strings and then returned
+		window.sw.randomStrings.push(result);
+		return result;
+	}
+}
