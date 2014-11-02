@@ -3,21 +3,18 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
-use PhilipBrown\Money\Currency;
 
 class Package extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'price', 'currency', 'capacity');
+	protected $fillable = array('name', 'description', 'capacity');
 
-	protected $appends = array('decimal_price', 'has_bookings', 'trashed');
+	protected $appends = array('has_bookings', 'trashed');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'price'       => 'required|numeric|min:0',
-		'currency'    => 'required|alpha|size:3|valid_currency',
 		'capacity'    => 'integer|min:0'
 	);
 
@@ -28,20 +25,6 @@ class Package extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-
-		$this->currency = Helper::currency($this->currency);
-	}
-
-	public function getDecimalPriceAttribute()
-	{
-		$currency = new Currency( $this->currency );
-
-		return number_format(
-			$this->price / $currency->getSubunitToUnit(), // number
-			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-			/* $currency->getDecimalMark() */ '.', // decimal seperator
-			/* $currency->getThousandsSeperator() */ ''
-		);
 	}
 
 	public function getHasBookingsAttribute()
@@ -69,6 +52,11 @@ class Package extends Ardent {
 	public function packagefacades()
 	{
 		return $this->hasMany('Packagefacade')->withTimestamps();
+	}
+
+	public function prices()
+	{
+		return $this->morphMany('Price', 'owner')->orderBy('fromMonth');
 	}
 
 	public function bookingdetails()

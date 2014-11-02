@@ -3,7 +3,6 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
-use PhilipBrown\Money\Currency;
 
 class Ticket extends Ardent {
 	use SoftDeletingTrait;
@@ -11,13 +10,11 @@ class Ticket extends Ardent {
 
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
 
-	protected $appends = array('decimal_price', 'has_bookings', 'trashed');
+	protected $appends = array('has_bookings', 'trashed');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => 'required',
-		'price'       => 'required|integer|min:0',
-		'currency'    => 'required|alpha|size:3|valid_currency'
 	);
 
 	public function beforeSave()
@@ -27,20 +24,6 @@ class Ticket extends Ardent {
 
 		if( isset($this->name) )
 			$this->name = Helper::sanitiseString($this->name);
-
-		$this->currency = Helper::currency($this->currency);
-	}
-
-	public function getDecimalPriceAttribute()
-	{
-		$currency = new Currency( $this->currency );
-
-		return number_format(
-			$this->price / $currency->getSubunitToUnit(), // number
-			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-			/* $currency->getDecimalMark() */ '.', // decimal seperator
-			/* $currency->getThousandsSeperator() */ ''
-		);
 	}
 
 	public function getHasBookingsAttribute()
@@ -70,7 +53,12 @@ class Ticket extends Ardent {
 
 	public function packages()
 	{
-		return $this->belongsToMany('Package')->withPivot('quantity');
+		return $this->belongsToMany('Package')->withPivot('quantity')->withTimestamps();
+	}
+
+	public function prices()
+	{
+		return $this->morphMany('Price', 'owner')->orderBy('fromMonth');
 	}
 
 	public function bookings()

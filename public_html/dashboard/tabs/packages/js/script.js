@@ -1,3 +1,8 @@
+var packageForm,
+    packageList,
+    priceInput,
+    ticketSelect;
+
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(ticketID) {
 	if(this.id == ticketID)
@@ -5,11 +10,9 @@ Handlebars.registerHelper('selected', function(ticketID) {
 	else
 		return '';
 });
-
 Handlebars.registerHelper('multiply', function(a, b) {
 	return (a * b).toFixed(2);
 });
-
 Handlebars.registerHelper('count', function(array) {
 	var sum = 0;
 	_.each(array, function(value) {
@@ -17,12 +20,20 @@ Handlebars.registerHelper('count', function(array) {
 	});
 	return sum;
 });
-
 Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
 
-var packageForm,
-	packageList,
-	ticketSelect;
+priceInput = Handlebars.compile( $('#price-input-template').html() )
+Handlebars.registerPartial('price_input', priceInput);
+
+window.sw.available_months=[{id:1,name:'January'},{id:2,name:'February'},{id:3,name:'March'},{id:4,name:'April'},{id:5,name:'May'},{id:6,name:'June'},{id:7,name:'July'},{id:8,name:'August'},{id:9,name:'September'},{id:10,name:'October'},{id:11,name:'November'},{id:12,name:'December'}];
+window.sw.default_price = {
+	id: randomString(),
+	fromDay   : 1,
+	fromMonth : 1,
+	untilDay  : 31,
+	untilMonth: 12,
+	available_months: window.sw.available_months,
+};
 
 $(function(){
 
@@ -31,8 +42,12 @@ $(function(){
 	renderPackageList();
 
 	// Default view: show create package form
-	packageForm = Handlebars.compile( $("#package-form-template").html() );
-	prepareEditForm();
+	Ticket.getAllTickets(function success(data) {
+		window.tickets = _.indexBy(data, 'id');
+
+		packageForm = Handlebars.compile( $("#package-form-template").html() );
+		renderEditForm();
+	});
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
 
@@ -50,7 +65,7 @@ $(function(){
 			$('form').data('hasChanged', false);
 
 			renderPackageList(function() {
-				prepareEditForm(data.id);
+				renderEditForm(data.id);
 			});
 
 		}, function error(xhr) {
@@ -90,16 +105,21 @@ $(function(){
 
 			pageMssg(data.status, true);
 
-			renderPackageList();
-
 			$('form').data('hasChanged', false);
 
-			// Because the page is not re-rendered like with add-package, we need to manually remove the error messages
-			$('.errors').remove();
+			if(data.id) {
+				renderPackageList(function() {
+					renderEditForm(data.id);
+				});
+			}
+			else {
+				var editedID = $('[name=id]').val();
+				window.packages[editedID].prices = data.prices;
+				// Reload edit form
+				renderEditForm(editedID);
 
-			$('#update-package').prop('disabled', false);
-			$('#save-loader').remove();
-
+				renderPackageList();
+			}
 		}, function error(xhr) {
 
 			data = JSON.parse(xhr.responseText);
@@ -122,14 +142,14 @@ $(function(){
 			pageMssg('Oops, something wasn\'t quite right');
 
 			$('#update-package').prop('disabled', false);
-			$('#save-loader').remove();
+			$('.loader').remove();
 		});
 	});
 
 	$('#package-form-container').on('change', '.ticket-select', function(event) {
 		$self     = $(event.target);
 		$quantity = $self.siblings('.quantity-input').first();
-		$price    = $self.siblings('.ticket-price').first();
+		$prices   = $self.siblings('.ticket-prices').first();
 
 		var id = $self.val();
 
@@ -139,14 +159,14 @@ $(function(){
 			$quantity.attr('name', '');
 			$quantity.val('');
 
-			$price.text( $price.attr('data-default') );
+			$prices.html( $prices.attr('data-default') );
 		}
 		else {
 			$quantity.prop('disabled', false);
 			$quantity.attr('name', 'tickets[' + id + '][quantity]');
 			$quantity.val(1);
 
-			$price.text(window.tickets[id].currency + ' ' + window.tickets[id].decimal_price);
+			$quantity.trigger('change');
 
 			// Check if empty ticket-select exists and if not, create and append one
 			if( $('.ticket-list').find('.quantity-input[disabled]').length == 0) {
@@ -157,20 +177,16 @@ $(function(){
 
 	$('#package-form-container').on('change', '.quantity-input', function(event) {
 		$quantity = $(event.target);
-		$price    = $quantity.siblings('.ticket-price').first();
+		$prices   = $quantity.siblings('.ticket-prices').first();
 		$ticket   = $quantity.siblings('.ticket-select').first();
 		id = $ticket.val();
 
-		var priceSum = ($quantity.val() * window.tickets[id].decimal_price).toFixed(2);
+		var html = '';
+		_.each(window.tickets[id].prices, function(p, index, list) {
+			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + p.currency + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
+		});
 
-		$price.text( window.tickets[id].currency + ' ' + priceSum );
-	});
-
-	$("#package-list-container").on('click', '#change-to-add-package', function(event){
-
-		event.preventDefault();
-
-		prepareEditForm();
+		$prices.html(html);
 	});
 
 	$('#package-form-container').on('click', '.remove-package', function(event){
@@ -205,7 +221,7 @@ $(function(){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-			Package.deactivePackage({
+			Package.deactivatePackage({
 				'id'    : $('#update-package-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			}, function success(data){
@@ -252,6 +268,27 @@ $(function(){
 			$('#save-loader').remove();
 		});
 	});
+
+	$("#package-list-container").on('click', '#change-to-add-package', function(event){
+
+		event.preventDefault();
+
+		renderEditForm();
+	});
+
+	$('#package-form-container').on('click', '.add-price', function(event) {
+		event.preventDefault();
+
+		window.sw.default_price.id = randomString();
+
+		$(event.target).before( priceInput(window.sw.default_price) );
+	});
+
+	$('#package-form-container').on('click', '.remove-price', function(event) {
+		event.preventDefault();
+
+		$(event.target).parent().remove();
+	});
 });
 
 function renderPackageList(callback) {
@@ -272,7 +309,7 @@ function renderPackageList(callback) {
 			if( $(event.target).is('strong') )
 				event.target = event.target.parentNode;
 
-			prepareEditForm( event.target.getAttribute('data-id') );
+			renderEditForm( event.target.getAttribute('data-id') );
 		});
 
 		if( typeof callback === 'function')
@@ -280,7 +317,7 @@ function renderPackageList(callback) {
 	});
 }
 
-function prepareEditForm(id) {
+function renderEditForm(id) {
 
 	if( unsavedChanges() ) {
 		var question = confirm("ATTENTION: All unsaved changes are lost!");
@@ -289,30 +326,21 @@ function prepareEditForm(id) {
 		}
 	}
 
-	// Load all tickets if not already available
-	if( typeof window.tickets !== 'object') {
-		Ticket.getAllTickets(function success(data) {
-			window.tickets = _.indexBy(data, 'id');
-
-			renderEditForm(id);
-		});
-	}
-	else {
-		renderEditForm(id);
-	}
-}
-
-function renderEditForm(id) {
-
 	var package;
 
-	if( id ) {
+	if(id) {
 		package = window.packages[id];
-		package.task = 'update';
+
+		package.task   = 'update';
 		package.update = true;
+
 		_.each(package.tickets, function(value, key, list) {
 			value.existing = true;
 			value.available_tickets = window.tickets;
+		});
+
+		_.each(package.prices, function(value, key, list) {
+			value.available_months = window.sw.available_months;
 		});
 	}
 	else {
@@ -320,12 +348,12 @@ function renderEditForm(id) {
 		package = {
 			task: 'add',
 			update: false,
-			decimal_price: '-',
 		};
 	}
+
 	package.available_tickets = window.tickets;
 
-	package.has_billing_details = package.billing_address || package.billing_email || package.billing_phone;
+	package.default_price = window.sw.default_price;
 
 	$('#package-form-container').empty().append( packageForm(package) );
 

@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="package-list-template">
 					<ul id="package-list" class="entity-list">
 						{{#each packages}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{count tickets}} tickets | {{decimal_price}}</li>
+							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{count tickets}} tickets</li>
 						{{else}}
 							<p>No packages available.</p>
 						{{/each}}
@@ -59,12 +59,16 @@
 							{{> ticket_select}}
 						</div>
 
-						<div class="form-row">
-							<label class="field-label">Package Price</label>
-							<select name="currency">
-								<option>GBP</option>
-							</select>
-							<input type="number" name="price" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
+						<div class="form-row prices-list">
+							<strong>Package prices</strong>
+							{{#each prices}}
+								{{> price_input}}
+							{{else}}
+								{{#with default_price}}
+									{{> price_input}}
+								{{/with}}
+							{{/each}}
+							<button class="bttn greenb add-price">&nbsp;&plus;&nbsp;</button>
 						</div>
 
 						<div class="form-row">
@@ -92,13 +96,46 @@
 					{{#each available_tickets}}
 						<option value="{{id}}"
 							{{#if ../existing}}
-								{{selected ../id}}
+								{{selected ../../id}}
 							{{/if}}
 						>{{{name}}}</option>
 					{{/each}}
 				</select>
+
 				Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
-				<span class="ticket-price" data-default="-">{{#if pivot.quantity}}{{currency}} {{multiply pivot.quantity decimal_price}}{{else}}-{{/if}}</span>
+				<span class="ticket-prices" data-default="-">
+					{{#if existing}}
+						{{#each prices}}
+							<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">{{fromDay}}/{{fromMonth}} - {{untilDay}}/{{untilMonth}}: {{currency}} {{multiply ../pivot.quantity decimal_price}}</span>
+						{{/each}}
+					{{else}}
+					-
+					{{/if}}
+				</span>
+			</p>
+		</script>
+
+		<script type="text/x-handlebars-template" id="price-input-template">
+			<p>
+				<select name="prices[{{id}}][currency]">
+					<option value="GBP">GBP</option>
+				</select>
+				<input type="number" name="prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
+				from
+				<input type="number" name="prices[{{id}}][fromDay]" value="{{fromDay}}" style="width: 50px;" min="1" max="31" step="1">
+				<select name="prices[{{id}}][fromMonth]">
+					{{#each available_months}}
+						<option value="{{id}}"{{selected ../fromMonth}}>{{name}}</option>
+					{{/each}}
+				</select>
+				until
+				<input type="number" name="prices[{{id}}][untilDay]" value="{{untilDay}}" style="width: 50px;" min="1" max="31" step="1">
+				<select name="prices[{{id}}][untilMonth]">
+					{{#each available_months}}
+						<option value="{{id}}"{{selected ../untilMonth}}>{{name}}</option>
+					{{/each}}
+				</select>
+				<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
 			</p>
 		</script>
 

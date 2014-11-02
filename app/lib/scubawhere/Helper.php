@@ -67,4 +67,16 @@ class Helper
 
 		return $currencies;
 	}
+
+
+
+	public static function normaliseArray($array)
+	{
+		$normalisedArray = [];
+		foreach($array as $value)
+		{
+			$normalisedArray[] = $value;
+		}
+		return $normalisedArray;
+	}
 }

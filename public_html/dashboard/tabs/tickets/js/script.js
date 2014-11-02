@@ -1,6 +1,10 @@
+var ticketForm,
+    ticketList,
+    priceInput;
+
 // Needs to be declared before the $(function) call
-Handlebars.registerHelper('selected', function(selectObject) {
-	if(this.terms == selectObject)
+Handlebars.registerHelper('selected', function(id) {
+	if(this.id == id)
 		return ' selected';
 	else
 		return '';
@@ -17,6 +21,34 @@ Handlebars.registerHelper('isEqualDeepPivot', function(compare, array, key, attr
 
 	return array[key].pivot[attribute] === compare ? string : '';
 });
+Handlebars.registerHelper('pricerange', function(prices) {
+	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
+	    max = 0;
+
+	if( prices.length === 1) {
+		return prices[0].currency + ' ' + prices[0].decimal_price;
+	}
+
+	_.each(prices, function(value) {
+		min = Math.min(value.decimal_price, min).toFixed(2);
+		max = Math.max(value.decimal_price, max).toFixed(2);
+	});
+
+	return prices[0].currency + ' ' + min + ' - ' + max;
+
+});
+priceInput = Handlebars.compile( $('#price-input-template').html() );
+Handlebars.registerPartial('price_input', priceInput);
+
+window.sw.available_months=[{id:1,name:'January'},{id:2,name:'February'},{id:3,name:'March'},{id:4,name:'April'},{id:5,name:'May'},{id:6,name:'June'},{id:7,name:'July'},{id:8,name:'August'},{id:9,name:'September'},{id:10,name:'October'},{id:11,name:'November'},{id:12,name:'December'}];
+window.sw.default_price = {
+	id: randomString(),
+	fromDay   : 1,
+	fromMonth : 1,
+	untilDay  : 31,
+	untilMonth: 12,
+	available_months: window.sw.available_months,
+};
 
 $(function () {
 
@@ -99,15 +131,21 @@ $(function () {
 
 			pageMssg(data.status, true);
 
-			renderTicketList();
-
 			$('form').data('hasChanged', false);
 
-			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
-			$('.errors').remove();
+			if(data.id) {
+				renderTicketList(function() {
+					renderEditForm(data.id);
+				});
+			}
+			else {
+				var editedID = $('[name=id]').val();
+				window.tickets[editedID].prices = data.prices;
+				// Reload edit form
+				renderEditForm(editedID);
 
-			$('#update-ticket').prop('disabled', false);
-			$('#update-ticket-form').find('#update-loader').remove();
+				renderTicketList();
+			}
 		}, function error(xhr) {
 
 			data = JSON.parse(xhr.responseText);
@@ -139,6 +177,20 @@ $(function () {
 		event.preventDefault();
 
 		renderEditForm();
+	});
+
+	$('#ticket-form-container').on('click', '.add-price', function(event) {
+		event.preventDefault();
+
+		window.sw.default_price.id = randomString();
+
+		$(event.target).before( priceInput(window.sw.default_price) );
+	});
+
+	$('#ticket-form-container').on('click', '.remove-price', function(event) {
+		event.preventDefault();
+
+		$(event.target).parent().remove();
 	});
 });
 
@@ -178,6 +230,10 @@ function renderEditForm(id) {
 		ticket.trips    = _.indexBy(ticket.trips, 'id');
 		ticket.boats    = _.indexBy(ticket.boats, 'id');
 		ticket.hasBoats = Object.keys(ticket.boats).length > 0;
+
+		_.each(ticket.prices, function(value, key, list) {
+			value.available_months = window.sw.available_months;
+		});
 	}
 	else {
 		ticket = {
@@ -189,6 +245,8 @@ function renderEditForm(id) {
 
 	ticket.available_trips = window.trips;
 	ticket.available_boats = window.boats;
+
+	ticket.default_price = window.sw.default_price;
 
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
 
