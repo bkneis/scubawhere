@@ -68,6 +68,9 @@
 			console.info('Company info loaded');
 			window.company = data;
 		});
+
+		// Set scubawhere namespace
+		window.sw = {};
 	</script>
 
 	<!-- ScubaWhere Files -->

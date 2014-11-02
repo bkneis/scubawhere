@@ -1,6 +1,3 @@
-// Set scubawhere namespace
-window.sw = {};
-
 //interactions with the API
 //run on page load
 $(function(){
