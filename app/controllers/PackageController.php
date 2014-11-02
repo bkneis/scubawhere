@@ -16,7 +16,7 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->packages()->with('tickets')->findOrFail( Input::get('id') );
+			return Auth::user()->packages()->withTrashed()->with('tickets')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -26,7 +26,12 @@ class PackageController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->packages()->withTrashed()->with('tickets')->get();
+		return Auth::user()->packages()->with('tickets', 'tickets.prices', 'prices')->get();
+	}
+
+	public function getAllWithTrashed()
+	{
+		return Auth::user()->packages()->withTrashed()->with('tickets', 'tickets.prices', 'prices')->get();
 	}
 
 	public function postAdd()

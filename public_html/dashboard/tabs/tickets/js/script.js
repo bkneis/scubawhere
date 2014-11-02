@@ -146,7 +146,7 @@ function renderTicketList(callback) {
 
 	$('#ticket-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Ticket.getAllTickets(function success(data) {
+	Ticket.getAllWithTrashed(function success(data) {
 
 		window.tickets = _.indexBy(data, 'id');
 		$('#ticket-list').remove();

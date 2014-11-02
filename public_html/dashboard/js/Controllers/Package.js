@@ -12,6 +12,12 @@ var Package = {
 		});
 	},
 
+	getAllWithTrashed : function(handleData) {
+		$.get("/api/package/all-with-trashed", function(data){
+			handleData(data);
+		});
+	},
+
 	createPackage : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",

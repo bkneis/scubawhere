@@ -4,6 +4,11 @@ var Trip = {
 			handleData(data);
 		});
 	},
+	getAllWithTrashed : function (handleData) {
+		$.get("/api/trip/all-with-trashed").done(function(data){
+			handleData(data);
+		});
+	},
 
 	getSpecificTrip : function (params, handleData) {
 		$.get("/api/trip", params).done(function(data){

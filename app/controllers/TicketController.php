@@ -25,24 +25,17 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips')->get();
+		return Auth::user()->tickets()->with('boats', 'trips', 'prices')->get();
 	}
 
-	public function postAdd()
-	{
-		$data = Input::only('name', 'description', 'price', 'currency');
-		$data['currency'] = Helper::currency( Input::get('currency') );
+	public function getAllWithTrashed()
+		{
+		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'prices')->get();
+		}
 
-		// Convert price to subunit
-		try
+	public function postAdd()
 		{
-			$currency = new Currency( $data['currency'] );
-		}
-		catch(InvalidCurrencyException $e)
-		{
-			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
-		}
-		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
+		$data = Input::only('name', 'description');
 
 		$ticket = new Ticket($data);
 

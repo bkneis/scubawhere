@@ -16,6 +16,12 @@ var Ticket = {
 		});
 	},
 
+	getAllWithTrashed : function(handleData){
+		$.get("/api/ticket/all-with-trashed", function(data){
+			handleData(data)
+		});
+	},
+
 	//Params
 	// trip_id
 	// name

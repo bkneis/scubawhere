@@ -258,7 +258,7 @@ function renderPackageList(callback) {
 
 	$('#package-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Package.getAllPackages(function success(data) {
+	Package.getAllWithTrashed(function success(data) {
 
 		window.packages = _.indexBy(data, 'id');
 		$('#package-list').remove();

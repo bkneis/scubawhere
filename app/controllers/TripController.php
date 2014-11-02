@@ -15,7 +15,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->trips()->with(
+			return Auth::user()->trips()->withTrashed()->with(
 				array(
 					'location',
 					'locations',
@@ -33,6 +33,17 @@ class TripController extends Controller {
 	public function getAll()
 	{
 		return Auth::user()->trips()->with(
+			array(
+				'location',
+				'locations',
+				'triptypes',
+			)
+		)->get();
+	}
+
+	public function getAllWithTrashed()
+	{
+		return Auth::user()->trips()->withTrashed()->with(
 			array(
 				'location',
 				'locations',
