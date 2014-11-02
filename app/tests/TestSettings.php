@@ -23,6 +23,7 @@ class TestSettings {
 			'Package'       => 'packages',
 			'Packagefacade' => 'packagefacades',
 			'Payment'       => 'payments',
+			'Price'         => 'prices',
 			'Ticket'        => 'tickets',
 			'Timetable'     => 'timetables',
 			'Trip'          => 'trips'
@@ -54,6 +55,7 @@ class TestSettings {
 			'accommodation_boat',
 			'addon_bookingdetail',
 			'boat_ticket',
+			'certificate_customer',
 			'company_location',
 			'location_trip',
 			'package_ticket',
