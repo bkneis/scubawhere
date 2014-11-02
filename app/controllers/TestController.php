@@ -1,8 +1,5 @@
 <?php
 
-/**
- * This controller lets you retrieve and save all data concerning companies. It will only return data for the logged in company. The methods in this controller require authentication.
- */
 class TestController extends Controller {
 
 	public function getRegister()

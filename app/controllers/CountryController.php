@@ -24,6 +24,6 @@ class CountryController extends Controller {
 
 	public function getAll()
 	{
-		return Country::get();
+		return Country::all();
 	}
 }

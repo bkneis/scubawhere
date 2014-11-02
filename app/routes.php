@@ -27,7 +27,7 @@ Route::get('secret_phpinfo', function()
 	phpinfo();
 });
 
-Route::controller('test', 'TestController');
+// Route::controller('test', 'TestController');
 
 Route::controller('password', 'PasswordController');
 
