@@ -5,7 +5,7 @@ use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
 class Price extends Ardent {                       // ↓ The price here is needed for creation of new ticket/package during update, when old one is booked
-	protected $fillable = array('new_decimal_price', 'price', 'currency', 'fromDay', 'fromMonth', 'untilDay', 'untilMonth');
+	protected $fillable = array('new_decimal_price', 'price', 'currency', 'from', 'until');
 
 	protected $appends = array('decimal_price');
 
@@ -16,10 +16,8 @@ class Price extends Ardent {                       // ↓ The price here is need
 		'new_decimal_price' => 'required|numeric|min:0',
 		'price'             => 'sometimes|integer|min:0',
 		'currency'          => 'required|alpha|size:3',
-		'fromDay'           => 'required|integer|between:1,31',
-		'untilDay'          => 'required|integer|between:1,31',
-		'fromMonth'         => 'required|integer|between:1,12',
-		'untilMonth'        => 'required|integer|between:1,12'
+		'from'              => 'required|required_with:until|size:10',
+		'until'             => 'sometimes|date',
 	);
 
 	public function beforeSave()

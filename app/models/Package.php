@@ -54,9 +54,14 @@ class Package extends Ardent {
 		return $this->hasMany('Packagefacade')->withTimestamps();
 	}
 
+	public function basePrices()
+	{
+		return $this->morphMany('Price', 'owner')->whereNull('until');
+	}
+
 	public function prices()
 	{
-		return $this->morphMany('Price', 'owner')->orderBy('fromMonth');
+		return $this->morphMany('Price', 'owner')->whereNotNull('until');
 	}
 
 	public function bookingdetails()

@@ -25,14 +25,20 @@ Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html())
 priceInput = Handlebars.compile( $('#price-input-template').html() )
 Handlebars.registerPartial('price_input', priceInput);
 
-window.sw.available_months=[{id:1,name:'January'},{id:2,name:'February'},{id:3,name:'March'},{id:4,name:'April'},{id:5,name:'May'},{id:6,name:'June'},{id:7,name:'July'},{id:8,name:'August'},{id:9,name:'September'},{id:10,name:'October'},{id:11,name:'November'},{id:12,name:'December'}];
+window.sw.default_first_base_price = {
+	id: randomString(),
+	from: '0000-00-00',
+	isBase: true,
+	isAlways: true,
+};
+window.sw.default_base_price = {
+	isBase: true,
+	from: moment().format('YYYY-MM-DD'),
+};
 window.sw.default_price = {
 	id: randomString(),
-	fromDay   : 1,
-	fromMonth : 1,
-	untilDay  : 31,
-	untilMonth: 12,
-	available_months: window.sw.available_months,
+	from: moment().format('YYYY-MM-DD'),
+	until: moment().add(3, 'months').format('YYYY-MM-DD'),
 };
 
 $(function(){
@@ -51,7 +57,7 @@ $(function(){
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
 
-	$("#package-form-container").on('click', '#add-package', function(event) {
+	$("#package-form-container").on('submit', '#add-package-form', function(event) {
 
 		event.preventDefault();
 
@@ -94,7 +100,7 @@ $(function(){
 		});
 	});
 
-	$("#package-form-container").on('click', '#update-package', function(event) {
+	$("#package-form-container").on('submit', '#update-package-form', function(event) {
 
 		event.preventDefault();
 
@@ -107,18 +113,19 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			if(data.id) {
+			if(data.id || data.base_prices || data.prices) {
+				if(!data.id)
+					data.id = $('#update-package-form input[name=id]').val();
+
 				renderPackageList(function() {
 					renderEditForm(data.id);
 				});
 			}
 			else {
-				var editedID = $('[name=id]').val();
-				window.packages[editedID].prices = data.prices;
-				// Reload edit form
-				renderEditForm(editedID);
-
 				renderPackageList();
+				// Remove the loader
+				$('#update-package').prop('disabled', false);
+				$('.loader').remove();
 			}
 		}, function error(xhr) {
 
@@ -160,6 +167,13 @@ $(function(){
 			$quantity.val('');
 
 			$prices.html( $prices.attr('data-default') );
+
+			// Check if more than one empty ticket-selects exist and if so, remove the extra one
+			var disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			var numberOfDisabledInputs = disabledInputs.length;
+			if( numberOfDisabledInputs > 1) {
+				disabledInputs.last().parent().remove();
+			}
 		}
 		else {
 			$quantity.prop('disabled', false);
@@ -169,7 +183,9 @@ $(function(){
 			$quantity.trigger('change');
 
 			// Check if empty ticket-select exists and if not, create and append one
-			if( $('.ticket-list').find('.quantity-input[disabled]').length == 0) {
+			var disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			var numberOfDisabledInputs = disabledInputs.length;
+			if( numberOfDisabledInputs == 0) {
 				$('.ticket-list').append( ticketSelect({available_tickets: window.tickets}) );
 			}
 		}
@@ -181,12 +197,14 @@ $(function(){
 		$ticket   = $quantity.siblings('.ticket-select').first();
 		id = $ticket.val();
 
+		/*
 		var html = '';
 		_.each(window.tickets[id].prices, function(p, index, list) {
 			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + p.currency + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
 		});
 
 		$prices.html(html);
+		*/
 	});
 
 	$('#package-form-container').on('click', '.remove-package', function(event){
@@ -276,6 +294,14 @@ $(function(){
 		renderEditForm();
 	});
 
+	$('#package-form-container').on('click', '.add-base-price', function(event) {
+		event.preventDefault();
+
+		window.sw.default_base_price.id = randomString();
+
+		$(event.target).before( priceInput(window.sw.default_base_price) );
+	});
+
 	$('#package-form-container').on('click', '.add-price', function(event) {
 		event.preventDefault();
 
@@ -339,8 +365,10 @@ function renderEditForm(id) {
 			value.available_tickets = window.tickets;
 		});
 
-		_.each(package.prices, function(value, key, list) {
-			value.available_months = window.sw.available_months;
+		_.each(package.base_prices, function(value, key, list) {
+			value.isBase = true;
+			if(value.from == '0000-00-00')
+				value.isAlways = true;
 		});
 	}
 	else {
@@ -348,17 +376,19 @@ function renderEditForm(id) {
 		package = {
 			task: 'add',
 			update: false,
+			base_prices: [ window.sw.default_first_base_price ],
 		};
 	}
 
 	package.available_tickets = window.tickets;
-
-	package.default_price = window.sw.default_price;
+	package.default_price     = window.sw.default_price;
 
 	$('#package-form-container').empty().append( packageForm(package) );
 
 	if(!id)
 		$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
 
 	setToken('[name=_token]');
 
@@ -370,6 +400,20 @@ function renderEditForm(id) {
 
 function unsavedChanges() {
 	return $('form').data('hasChanged');
+}
+
+function showMe(box, self) {
+
+	var div = $(box);
+
+	if( $(self).is(':checked') ) {
+		div.show(0);
+		div.find('input, select').prop('disabled', false);
+	}
+	else {
+		div.hide(0);
+		div.find('input, select').prop('disabled', true);
+	}
 }
 
 function setToken(element) {

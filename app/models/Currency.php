@@ -3,7 +3,7 @@
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Currency extends Ardent {	
+class Currency extends Ardent {
 	protected $guarded = array('*');
 	protected $fillable = array();
 	protected $hidden = array('created_at', 'updated_at');
@@ -14,17 +14,20 @@ class Currency extends Ardent {
 	{
 		if( isset($this->code) )
 			$this->code = Helper::sanitiseBasicTags($this->code);
-		
+
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
 		if( isset($this->name) )
 			$this->name = Helper::sanitiseString($this->name);
-		
+
+		/*
+		Because this model is never actually used to create a currency, only in testing, it is probably safe to ignore sanitising the symbol.
 		if( isset($this->symbol) )
 			$this->symbol = Helper::sanitiseString($this->symbol);
+		*/
 	}
-	
+
 	public function countries()
 	{
 		return $this->hasMany('Country');
