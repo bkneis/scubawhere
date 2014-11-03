@@ -23,7 +23,7 @@ app/tests/reports
 .cagefs/
 .cl.selector/
 .composer/
-.contactemail/
+.contactemail
 .cpanel/
 .fontconfig/
 .gnupg/
