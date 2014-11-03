@@ -10,8 +10,18 @@ class RegisterController extends Controller {
 		$company = new Company($data);
 
 		// Mass assigned insert with automatic validation
-		if($company->save())
+		if( $company->validate() )
 		{
+			$company->save();
+
+			// Connect the selected agencies
+			if( Input::has('agencies') )
+			{
+				$agencies = Input::get('agencies');
+				if( is_array($agencies) )
+					$company->agencies()->sync($agencies);
+			}
+
 			$request = Request::create('password/remind', 'POST', array('email' => $company->email));
 			return Route::dispatch($request);
 		}

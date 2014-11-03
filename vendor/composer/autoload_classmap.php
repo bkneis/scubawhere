@@ -108,6 +108,7 @@ return array(
     'CreateAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_13_142042_create_addon_booking_detail_pivot_table.php',
     'CreateAddonsTable' => $baseDir . '/app/database/migrations/2014_08_12_121905_create_addons_table.php',
     'CreateAgenciesTable' => $baseDir . '/app/database/migrations/2014_02_17_021059_create_agencies_table.php',
+    'CreateAgencyCompanyPivotTable' => $baseDir . '/app/database/migrations/2014_11_03_231722_create_agency_company_pivot_table.php',
     'CreateAgentsTable' => $baseDir . '/app/database/migrations/2014_05_20_134127_create_agents_table.php',
     'CreateBoatTicketTable' => $baseDir . '/app/database/migrations/2014_02_17_020907_create_boat_ticket_table.php',
     'CreateBoatsTable' => $baseDir . '/app/database/migrations/2014_02_17_020249_create_boats_table.php',
