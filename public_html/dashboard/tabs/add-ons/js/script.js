@@ -19,7 +19,7 @@ $(function(){
 	addonForm = Handlebars.compile( $("#addon-form-template").html() );
 	renderEditForm();
 
-	$("#addon-form-container").on('click', '#add-addon', function(event) {
+	$("#addon-form-container").on('submit', '#add-addon-form', function(event) {
 
 		event.preventDefault();
 
@@ -62,7 +62,7 @@ $(function(){
 		});
 	});
 
-	$("#addon-form-container").on('click', '#update-addon', function(event) {
+	$("#addon-form-container").on('submit', '#update-addon-form', function(event) {
 
 		event.preventDefault();
 
@@ -259,6 +259,11 @@ function renderEditForm(id) {
 	}
 
 	$('#addon-form-container').empty().append( addonForm(addon) );
+
+	if(!id)
+		$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
 
 	setToken('[name=_token]');
 

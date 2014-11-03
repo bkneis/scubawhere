@@ -57,7 +57,7 @@ $(function(){
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
 
-	$("#package-form-container").on('click', '#add-package', function(event) {
+	$("#package-form-container").on('submit', '#add-package-form', function(event) {
 
 		event.preventDefault();
 
@@ -100,7 +100,7 @@ $(function(){
 		});
 	});
 
-	$("#package-form-container").on('click', '#update-package', function(event) {
+	$("#package-form-container").on('submit', '#update-package-form', function(event) {
 
 		event.preventDefault();
 
@@ -387,6 +387,8 @@ function renderEditForm(id) {
 
 	if(!id)
 		$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
 
 	setToken('[name=_token]');
 
