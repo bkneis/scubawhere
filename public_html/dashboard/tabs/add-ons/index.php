@@ -48,7 +48,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Addon Description</label>
-							<textarea name="description" rows="3" cols="10">{{{description}}}</textarea>
+							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row">
@@ -70,7 +70,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="bttn blueb big-bttn" id="{{task}}-addon">{{task}} Addon</button>
+						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-addon" value="{{task}} Addon">
 
 					</form>
 				</div>

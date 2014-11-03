@@ -47,8 +47,8 @@
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Package Description (Optional)</label>
-							<textarea name="description" rows="3" cols="10">{{{description}}}</textarea>
+							<label class="field-label">Package Description</label>
+							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row ticket-list">
@@ -95,7 +95,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="bttn blueb big-bttn" id="{{task}}-package">{{task}} Package</button>
+						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-package" value="{{task}} Package">
 
 					</form>
 				</div>

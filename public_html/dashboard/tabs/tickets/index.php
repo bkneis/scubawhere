@@ -50,7 +50,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Ticket Description</label>
-							<textarea name="description">{{{description}}}</textarea>
+							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row">

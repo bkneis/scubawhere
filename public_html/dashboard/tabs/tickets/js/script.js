@@ -270,6 +270,8 @@ function renderEditForm(id) {
 	if(!id)
 		$('input[name=name]').focus();
 
+	CKEDITOR.replace( 'description' );
+
 	setToken('[name=_token]');
 
 	// Set up change monitoring
