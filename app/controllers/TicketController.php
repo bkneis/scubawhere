@@ -172,8 +172,9 @@ class TicketController extends Controller {
 
 			if( Input::has('boats') )
 			{
-				if( !empty( Input::get('boats') ) )
-					$data['boats'] = Input::get('boats');
+				$boats = Input::get('boats');
+				if( !empty( $boats ) )
+					$data['boats'] = $boats;
 				elseif( $ticket->boats()->count() > 0 )
 				{
 					$data['boats'] = array();
