@@ -55,6 +55,7 @@ class CertificateModelTest extends ModelTestCase {
 	public function testRelationships(){
 		//$this->refreshTables();
 		//TODO
+		$this->markTestIncomplete('This test is incomplete!');
 	}
 	
 	public function testFunctions(){
