@@ -14,7 +14,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->tickets()->withTrashed()->with('boats', 'trips')->findOrFail( Input::get('id') );
+			return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,12 +24,12 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->with('boats', 'trips', 'prices')->get();
+		return Auth::user()->tickets()->with('boats', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'prices')->get();
+		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function postAdd()
@@ -48,15 +48,36 @@ class TicketController extends Controller {
 		if( !is_array($trips) || empty($trips) )
 			return Response::json( array( 'errors' => array('The "trips" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
 
-		$prices = Input::get('prices');
+		// ####################### Prices #######################
+		$base_prices = Input::get('base_prices');
+		if( !is_array($base_prices) )
+			return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
 		// Filter out empty price inputs
-		$prices = array_filter($prices, function($element)
+		$base_prices = array_filter($base_prices, function($element)
 		{
 			return $element['new_decimal_price'] !== '';
 		});
-		// Check if 'prices' input array is given and not empty
-		if( !is_array($prices) || empty($prices) )
-			return Response::json( array( 'errors' => array('The "prices" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
+		// Check if 'prices' input array is now empty
+		if( empty($base_prices) )
+			return Response::json( array( 'errors' => array('You must submit at least one base price!')), 400 ); // 400 Bad Request
+
+		if( Input::has('prices') )
+		{
+			$prices = Input::get('prices');
+			if( !is_array($prices) )
+				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
+			// Filter out empty price inputs
+			$prices = array_filter($prices, function($element)
+			{
+				return $element['new_decimal_price'] !== '';
+			});
+			// Check if 'prices' input array is now empty
+			if( empty($prices) )
+				$prices = false;
+		}
+		else
+			$prices = false;
+		// ##################### End Prices #####################
 
 		// Required input has been validated, save the model
 		$ticket = Auth::user()->tickets()->save($ticket);
@@ -65,14 +86,26 @@ class TicketController extends Controller {
 		// TODO Validate existence and ownership of trip IDs
 		$ticket->trips()->sync( $trips );
 
-		// Normalise prices array
-		$prices = Helper::normaliseArray($prices);
-		// Create prices
-		foreach($prices as &$price)
+		// Normalise base_prices array
+		$base_prices = Helper::normaliseArray($base_prices);
+		// Create base_prices
+		foreach($base_prices as &$base_price)
 		{
-			$price = new Price($price);
+			$base_price = new Price($base_price);
 		}
-		$ticket->prices()->saveMany($prices);
+		$ticket->basePrices()->saveMany($base_prices);
+
+		if($prices)
+		{
+			// Normalise prices array
+			$prices = Helper::normaliseArray($prices);
+			// Create prices
+			foreach($prices as &$price)
+			{
+				$price = new Price($price);
+			}
+			$ticket->prices()->saveMany($prices);
+		}
 
 		// Ticket has been created, let's connect it to boats
 		$boats = Input::get('boats');
@@ -137,19 +170,41 @@ class TicketController extends Controller {
 
 		$data = Input::only('name', 'description');
 
-		$prices = Input::get('prices');
+		// ####################### Prices #######################
+		if( Input::has('base_prices') )
+		{
+			$base_prices = Input::get('base_prices');
+			if( !is_array($base_prices) )
+				return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
+			// Filter out empty price inputs
+			$base_prices = array_filter($base_prices, function($element)
+			{
+				return $element['new_decimal_price'] !== '';
+			});
+			// Check if 'base_prices' input array is now empty
+			if( empty($base_prices) )
+				$base_prices = false;
+		}
+		else
+			$base_prices = false;
+
 		if( Input::has('prices') )
 		{
+			$prices = Input::get('prices');
+			if( !is_array($prices) )
+				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
 			// Filter out empty price inputs
 			$prices = array_filter($prices, function($element)
 			{
 				return $element['new_decimal_price'] !== '';
 			});
+			// Check if 'prices' input array is now empty
+			if( empty($prices) )
+				$prices = false;
 		}
-		if( Input::has('prices') && !is_array($prices) || empty($prices) )
-			return Response::json( array('errors' => array('"Prices" must be of type array and cannot be empty.')), 406 ); // 406 Not Acceptable
-		elseif( Input::has('prices') )
-			$prices = Helper::normaliseArray($prices);
+		else
+			$prices = false;
+		// ##################### End Prices #####################
 
 		// Check if 'trips' input is an array, if given
 		$trips = Input::get('trips');
@@ -159,16 +214,23 @@ class TicketController extends Controller {
 		// Check if a booking exists for the ticket and whether a critical value is updated
 		if( $ticket->bookingdetails()->count() > 0 && (
 			   (!empty($trips) && $this->checkRemovedTripBookings($ticket->id, $ticket->trips()->lists('id'), $trips))
+			|| ($base_prices   && $this->checkPricesChanged($ticket->base_prices, $base_prices, true))
 			|| ($prices        && $this->checkPricesChanged($ticket->prices, $prices))
 		) )
 		{
 			// If yes, create a new ticket with the input data
-			$data['prices'] = $prices;
+
+			$data['base_prices'] = $base_prices;
+
+			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
+			if( $prices )
+				$data['prices'] = $prices;
 
 			// Replace all unavailable input data with data from the old ticket object
 			if( empty($data['name']) )        $data['name']        = $ticket->name;
 			if( empty($data['description']) ) $data['description'] = $ticket->description;
-			if( empty($data['prices']) )      $data['prices']      = $ticket->prices;
+			if( empty($data['base_prices']) ) $data['base_prices'] = $ticket->base_prices;
+			// if( empty($data['prices']) )      $data['prices']      = $ticket->prices;
 
 			if( Input::has('boats') )
 			{
@@ -214,7 +276,6 @@ class TicketController extends Controller {
 			{
 				$array[$package->id]['quantity'] = $package->pivot->quantity;
 			}
-
 			$newTicket->packages()->sync( $array );
 
 			return $response;
@@ -225,10 +286,33 @@ class TicketController extends Controller {
 			if( !$ticket->update($data) )
 				return Response::json( array('errors' => $ticket->errors()->all()), 406 ); // 406 Not Acceptable
 
-			if( Input::has('prices') )
+			if( $base_prices && $this->checkPricesChanged($ticket->base_prices, $base_prices, true) )
+			{
+				// Delete old base_prices
+				$ticket->basePrices()->delete();
+
+				// Normalise base_prices array
+				$base_prices = Helper::normaliseArray($base_prices);
+
+				// Create new base_prices
+				foreach($base_prices as &$base_price)
+				{
+					$base_price = new Price($base_price);
+				}
+				$ticket->basePrices()->saveMany($base_prices);
+
+				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
+			}
+			else
+				$base_prices = false; // Signal the front-end to NOT reload the form, because the base_price IDs didn't change
+
+			if( $prices && $this->checkPricesChanged($ticket->prices, $prices) )
 			{
 				// Delete old prices
 				$ticket->prices()->delete();
+
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
 
 				// Create new prices
 				foreach($prices as &$price)
@@ -236,7 +320,16 @@ class TicketController extends Controller {
 					$price = new Price($price);
 				}
 				$ticket->prices()->saveMany($prices);
+
+				$prices = true; // Signal the front-end to reload the form to show the new price IDs
 			}
+			elseif( !$prices )
+			{
+				$ticket->prices()->delete();
+				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
+			}
+			else
+				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
 			if( Input::has('boats') )
 			{
@@ -305,7 +398,7 @@ class TicketController extends Controller {
 			}
 
 			// When no problems occur, we return a success response
-			return Response::json( array('status' => 'OK. Ticket updated', 'prices' => $ticket->prices()->get()), 200 ); // 200 OK
+			return array('status' => 'OK. Ticket updated', 'base_prices' => $base_prices, 'prices' => $prices);
 		}
 	}
 
@@ -328,38 +421,39 @@ class TicketController extends Controller {
 		return false;
 	}
 
-	protected function checkPricesChanged($old_prices, $prices)
+	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
 	{
 		$old_prices = $old_prices->toArray();
 
+		// Compare number of prices
 		if(count($prices) !== count($old_prices)) return true;
 
-		// Reduce $old_prices to input fields
-		foreach($old_prices as &$old_price)
-		{
-			$old_price = array_intersect_key( $old_price, array('decimal_price' => '', 'currency' => '', 'fromDay' => '', 'fromMonth' => '', 'untilDay' => '', 'untilMonth' => '') );
-		}
+		// Keyify $old_prices and reduce them to input fields
+		$array = array();
+		$input_keys = array('decimal_price' => '', 'currency' => '', 'from' => '');
+		if(!$isBase)
+			$input_keys['until'] = '';
 
-		// Sort both to be able to compare them without keys
-		array_multisort($old_prices, $prices);
+		foreach($old_prices as $old_price)
+		{
+			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
+		}
+		$old_prices = $array; unset($array);
+
+		// Compare price IDs
+		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
+			return true;
 
 		/**
 		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
 		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
 		 * but since they represent the same info, the comparison works and returns the expected result.
 		 */
-		for($i = 0; $i < count($prices); $i++)
+		foreach($old_prices as $id => $old_price)
 		{
 			// Compare arrays in both directions
-			if( count( array_diff($prices[$i], $old_prices[$i]) ) > 0 )
-			{
+			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
 				return true;
-			}
-
-			if( count( array_diff($old_prices[$i], $prices[$i]) ) > 0 )
-			{
-				return true;
-			}
 		}
 
 		return false;

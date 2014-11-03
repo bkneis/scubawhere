@@ -56,9 +56,14 @@ class Ticket extends Ardent {
 		return $this->belongsToMany('Package')->withPivot('quantity')->withTimestamps();
 	}
 
+	public function basePrices()
+	{
+		return $this->morphMany('Price', 'owner')->whereNull('until');
+	}
+
 	public function prices()
 	{
-		return $this->morphMany('Price', 'owner')->orderBy('fromMonth');
+		return $this->morphMany('Price', 'owner')->whereNotNull('until');
 	}
 
 	public function bookings()

@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{pricerange prices}}</li>
+							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{pricerange base_prices}}</li>
 						{{else}}
 							<p>No tickets available.</p>
 						{{/each}}
@@ -53,16 +53,30 @@
 							<textarea name="description">{{{description}}}</textarea>
 						</div>
 
-						<div class="form-row prices-list">
-							<strong>Ticket prices</strong>
-							{{#each prices}}
+						<div class="form-row">
+							<strong>Set base prices for this ticket:</strong>
+							{{#each base_prices}}
 								{{> price_input}}
-							{{else}}
-								{{#with default_price}}
-									{{> price_input}}
-								{{/with}}
 							{{/each}}
-							<button class="bttn greenb add-price">&nbsp;&plus;&nbsp;</button>
+							<button class="bttn greenb add-base-price"> &plus; Add base price</button>
+						</div>
+
+						<div class="form-row">
+							<label>
+								<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+								Add seasonal price changes?
+							</label>
+							<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
+								<h3>Seasonal price changes</h3>
+								{{#each prices}}
+									{{> price_input}}
+								{{else}}
+									{{#with default_price}}
+										{{> price_input}}
+									{{/with}}
+								{{/each}}
+								<button class="bttn greenb add-price"> &plus; Add seasonal price</button>
+							</div>
 						</div>
 
 						<div class="form-row">
@@ -117,25 +131,25 @@
 
 		<script type="text/x-handlebars-template" id="price-input-template">
 			<p>
-				<select name="prices[{{id}}][currency]">
+				<select name="{{#if isBase}}base_{{/if}}prices[{{id}}][currency]">
 					<option value="GBP">GBP</option>
 				</select>
-				<input type="number" name="prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
-				from
-				<input type="number" name="prices[{{id}}][fromDay]" value="{{fromDay}}" style="width: 50px;" min="1" max="31" step="1">
-				<select name="prices[{{id}}][fromMonth]">
-					{{#each available_months}}
-						<option value="{{id}}"{{selected ../fromMonth}}>{{name}}</option>
-					{{/each}}
-				</select>
-				until
-				<input type="number" name="prices[{{id}}][untilDay]" value="{{untilDay}}" style="width: 50px;" min="1" max="31" step="1">
-				<select name="prices[{{id}}][untilMonth]">
-					{{#each available_months}}
-						<option value="{{id}}"{{selected ../untilMonth}}>{{name}}</option>
-					{{/each}}
-				</select>
-				<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
+				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
+
+				{{#unless isAlways}}
+					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
+				{{else}}
+					from <strong>the beginning of time</strong>
+					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+				{{/unless}}
+
+				{{#unless isBase}}
+					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
+				{{/unless}}
+
+				{{#unless isAlways}}
+					<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
+				{{/unless}}
 			</p>
 		</script>
 
