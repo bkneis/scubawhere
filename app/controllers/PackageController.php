@@ -15,7 +15,7 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->packages()->withTrashed()->with('tickets')->findOrFail( Input::get('id') );
+			return Auth::user()->packages()->withTrashed()->with('tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -25,12 +25,12 @@ class PackageController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->packages()->with('tickets', 'tickets.prices', 'prices')->get();
+		return Auth::user()->packages()->with('tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->packages()->withTrashed()->with('tickets', 'tickets.prices', 'prices')->get();
+		return Auth::user()->packages()->withTrashed()->with('tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function postAdd()
@@ -42,15 +42,36 @@ class PackageController extends Controller {
 		if( empty($tickets) )
 			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
 
-		$prices = Input::get('prices');
+		// ####################### Prices #######################
+		$base_prices = Input::get('base_prices');
+		if( !is_array($base_prices) )
+			return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
 		// Filter out empty price inputs
-		$prices = array_filter($prices, function($element)
+		$base_prices = array_filter($base_prices, function($element)
 		{
 			return $element['new_decimal_price'] !== '';
 		});
-		// Check if 'prices' input array is given and not empty
-		if( !is_array($prices) || empty($prices) )
-			return Response::json( array( 'errors' => array('The "prices" value must be an array and cannot be empty!')), 400 ); // 400 Bad Request
+		// Check if 'prices' input array is now empty
+		if( empty($base_prices) )
+			return Response::json( array( 'errors' => array('You must submit at least one base price!')), 400 ); // 400 Bad Request
+
+		if( Input::has('prices') )
+		{
+			$prices = Input::get('prices');
+			if( !is_array($prices) )
+				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
+			// Filter out empty price inputs
+			$prices = array_filter($prices, function($element)
+			{
+				return $element['new_decimal_price'] !== '';
+			});
+			// Check if 'prices' input array is now empty
+			if( empty($prices) )
+				$prices = false;
+		}
+		else
+			$prices = false;
+		// ##################### End Prices #####################
 
 		if( $data['capacity'] == 0)
 			$data['capacity'] = null;
@@ -74,14 +95,26 @@ class PackageController extends Controller {
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( $tickets );
 
-		// Normalise prices array
-		$prices = Helper::normaliseArray($prices);
-		// Create prices
-		foreach($prices as &$price)
+		// Normalise base_prices array
+		$base_prices = Helper::normaliseArray($base_prices);
+		// Create base_prices
+		foreach($base_prices as &$base_price)
 		{
-			$price = new Price($price);
+			$base_price = new Price($base_price);
 		}
-		$package->prices()->saveMany($prices);
+		$package->basePrices()->saveMany($base_prices);
+
+		if($prices)
+		{
+			// Normalise prices array
+			$prices = Helper::normaliseArray($prices);
+			// Create prices
+			foreach($prices as &$price)
+			{
+				$price = new Price($price);
+			}
+			$package->prices()->saveMany($prices);
+		}
 
 		return Response::json( array('status' => 'Package created and connected OK', 'id' => $package->id), 201 ); // 201 Created
 	}
@@ -105,19 +138,41 @@ class PackageController extends Controller {
 		if( empty($tickets) )
 			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
 
-		$prices = Input::get('prices');
+		// ####################### Prices #######################
+		if( Input::has('base_prices') )
+		{
+			$base_prices = Input::get('base_prices');
+			if( !is_array($base_prices) )
+				return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
+			// Filter out empty price inputs
+			$base_prices = array_filter($base_prices, function($element)
+			{
+				return $element['new_decimal_price'] !== '';
+			});
+			// Check if 'base_prices' input array is now empty
+			if( empty($base_prices) )
+				$base_prices = false;
+		}
+		else
+			$base_prices = false;
+
 		if( Input::has('prices') )
 		{
+			$prices = Input::get('prices');
+			if( !is_array($prices) )
+				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
 			// Filter out empty price inputs
 			$prices = array_filter($prices, function($element)
 			{
 				return $element['new_decimal_price'] !== '';
 			});
+			// Check if 'prices' input array is now empty
+			if( empty($prices) )
+				$prices = false;
 		}
-		if( Input::has('prices') && !is_array($prices) || empty($prices) )
-			return Response::json( array('errors' => array('"Prices" must be of type array and cannot be empty.')), 406 ); // 406 Not Acceptable
-		elseif( Input::has('prices') )
-			$prices = Helper::normaliseArray($prices);
+		else
+			$prices = false;
+		// ##################### End Prices #####################
 
 		if( $data['capacity'] == 0)
 			$data['capacity'] = null;
@@ -125,17 +180,24 @@ class PackageController extends Controller {
 		// Check if a booking exists for the package and whether a critical value is updated
 		if( $package->bookingdetails()->count() > 0 && (
 			   (!empty($tickets) && $this->checkTicketsChanged($package->tickets, $tickets))
+			|| ($base_prices     && $this->checkPricesChanged($package->base_prices, $base_prices, true))
 			|| ($prices          && $this->checkPricesChanged($package->prices, $prices))
 		) )
 		{
 			// If yes, create a new package with the input data
-			$data['prices'] = $prices;
+
+			$data['base_prices'] = $base_prices;
+
+			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
+			if( $prices )
+				$data['prices'] = $prices;
 
 			// Replace all unavailable input data with data from the old package object
 			if( empty($data['name']) )        $data['name']        = $package->name;
 			if( empty($data['description']) ) $data['description'] = $package->description;
 			if( empty($data['capacity']) )    $data['capacity']    = $package->capacity;
-			if( empty($data['prices']) )      $data['prices']      = $package->prices;
+			if( empty($data['base_prices']) ) $data['base_prices'] = $package->base_prices;
+			// if( empty($data['prices']) )      $data['prices']      = $package->prices;
 
 			if( !Input::has('tickets') )
 			{
@@ -177,10 +239,33 @@ class PackageController extends Controller {
 			if( Input::has('tickets') )
 				$package->tickets()->sync( Input::get('tickets') );
 
-			if( Input::has('prices') )
+			if( $base_prices && $this->checkPricesChanged($package->base_prices, $base_prices, true) )
+			{
+				// Delete old base_prices
+				$package->basePrices()->delete();
+
+				// Normalise base_prices array
+				$base_prices = Helper::normaliseArray($base_prices);
+
+				// Create new base_prices
+				foreach($base_prices as &$base_price)
+				{
+					$base_price = new Price($base_price);
+				}
+				$package->basePrices()->saveMany($base_prices);
+
+				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
+			}
+			else
+				$base_prices = false; // Signal the front-end to NOT reload the form, because the base_price IDs didn't change
+
+			if( $prices && $this->checkPricesChanged($package->prices, $prices) )
 			{
 				// Delete old prices
 				$package->prices()->delete();
+
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
 
 				// Create new prices
 				foreach($prices as &$price)
@@ -188,44 +273,54 @@ class PackageController extends Controller {
 					$price = new Price($price);
 				}
 				$package->prices()->saveMany($prices);
-			}
 
-			return array('status' => 'Package edited OK', 'prices' => $package->prices()->get());
+				$prices = true; // Signal the front-end to reload the form to show the new price IDs
+			}
+			elseif( !$prices )
+			{
+				$package->prices()->delete();
+				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
+			}
+			else
+				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
+
+			return array('status' => 'Package edited OK', 'base_prices' => $base_prices, 'prices' => $prices);
 		}
 	}
 
-	protected function checkPricesChanged($old_prices, $prices)
+	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
 	{
 		$old_prices = $old_prices->toArray();
 
+		// Compare number of prices
 		if(count($prices) !== count($old_prices)) return true;
 
-		// Reduce $old_prices to input fields
-		foreach($old_prices as &$old_price)
-		{
-			$old_price = array_intersect_key( $old_price, array('decimal_price' => '', 'currency' => '', 'fromDay' => '', 'fromMonth' => '', 'untilDay' => '', 'untilMonth' => '') );
-		}
+		// Keyify $old_prices and reduce them to input fields
+		$array = array();
+		$input_keys = array('decimal_price' => '', 'currency' => '', 'from' => '');
+		if(!$isBase)
+			$input_keys['until'] = '';
 
-		// Sort both to be able to compare them without keys
-		array_multisort($old_prices, $prices);
+		foreach($old_prices as $old_price)
+		{
+			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
+		}
+		$old_prices = $array; unset($array);
+
+		// Compare price IDs
+		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
+			return true;
 
 		/**
 		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
 		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
 		 * but since they represent the same info, the comparison works and returns the expected result.
 		 */
-		for($i = 0; $i < count($prices); $i++)
+		foreach($old_prices as $id => $old_price)
 		{
 			// Compare arrays in both directions
-			if( count( array_diff($prices[$i], $old_prices[$i]) ) > 0 )
-			{
+			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
 				return true;
-			}
-
-			if( count( array_diff($old_prices[$i], $prices[$i]) ) > 0 )
-			{
-				return true;
-			}
 		}
 
 		return false;
@@ -246,9 +341,7 @@ class PackageController extends Controller {
 		$old_tickets = $array;
 
 		// Compare keys (both ways)
-		if( count( array_diff_key($old_tickets, $tickets) ) > 0 )
-			return true;
-		if( count( array_diff_key($tickets, $old_tickets) ) > 0 )
+		if( count( array_merge( array_diff_key($old_tickets, $tickets), array_diff_key($tickets, $old_tickets) ) ) > 0 )
 			return true;
 
 		// Compare each quantity

@@ -69,7 +69,9 @@ class Helper
 	}
 
 
-
+	/**
+	 * Makes an array with keys into an array without keys
+	 */
 	public static function normaliseArray($array)
 	{
 		$normalisedArray = [];

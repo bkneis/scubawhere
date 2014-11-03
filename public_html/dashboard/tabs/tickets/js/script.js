@@ -40,14 +40,20 @@ Handlebars.registerHelper('pricerange', function(prices) {
 priceInput = Handlebars.compile( $('#price-input-template').html() );
 Handlebars.registerPartial('price_input', priceInput);
 
-window.sw.available_months=[{id:1,name:'January'},{id:2,name:'February'},{id:3,name:'March'},{id:4,name:'April'},{id:5,name:'May'},{id:6,name:'June'},{id:7,name:'July'},{id:8,name:'August'},{id:9,name:'September'},{id:10,name:'October'},{id:11,name:'November'},{id:12,name:'December'}];
+window.sw.default_first_base_price = {
+	id: randomString(),
+	from: '0000-00-00',
+	isBase: true,
+	isAlways: true,
+};
+window.sw.default_base_price = {
+	isBase: true,
+	from: moment().format('YYYY-MM-DD'),
+};
 window.sw.default_price = {
 	id: randomString(),
-	fromDay   : 1,
-	fromMonth : 1,
-	untilDay  : 31,
-	untilMonth: 12,
-	available_months: window.sw.available_months,
+	from: moment().format('YYYY-MM-DD'),
+	until: moment().add(3, 'months').format('YYYY-MM-DD'),
 };
 
 $(function () {
@@ -133,18 +139,19 @@ $(function () {
 
 			$('form').data('hasChanged', false);
 
-			if(data.id) {
+			if(data.id || data.base_prices || data.prices) {
+				if(!data.id)
+					data.id = $('#update-ticket-form input[name=id]').val();
+
 				renderTicketList(function() {
 					renderEditForm(data.id);
 				});
 			}
 			else {
-				var editedID = $('[name=id]').val();
-				window.tickets[editedID].prices = data.prices;
-				// Reload edit form
-				renderEditForm(editedID);
-
 				renderTicketList();
+				// Remove the loader
+				$('#update-ticket').prop('disabled', false);
+				$('.loader').remove();
 			}
 		}, function error(xhr) {
 
@@ -177,6 +184,14 @@ $(function () {
 		event.preventDefault();
 
 		renderEditForm();
+	});
+
+	$('#ticket-form-container').on('click', '.add-base-price', function(event) {
+		event.preventDefault();
+
+		window.sw.default_base_price.id = randomString();
+
+		$(event.target).before( priceInput(window.sw.default_base_price) );
 	});
 
 	$('#ticket-form-container').on('click', '.add-price', function(event) {
@@ -231,8 +246,10 @@ function renderEditForm(id) {
 		ticket.boats    = _.indexBy(ticket.boats, 'id');
 		ticket.hasBoats = Object.keys(ticket.boats).length > 0;
 
-		_.each(ticket.prices, function(value, key, list) {
-			value.available_months = window.sw.available_months;
+		_.each(ticket.base_prices, function(value, key, list) {
+			value.isBase = true;
+			if(value.from == '0000-00-00')
+				value.isAlways = true;
 		});
 	}
 	else {
@@ -240,15 +257,18 @@ function renderEditForm(id) {
 			task: 'add',
 			update: false,
 			hasBoats: false,
+			base_prices: [ window.sw.default_first_base_price ],
 		};
 	}
 
 	ticket.available_trips = window.trips;
 	ticket.available_boats = window.boats;
-
-	ticket.default_price = window.sw.default_price;
+	ticket.default_price   = window.sw.default_price;
 
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
+
+	if(!id)
+		$('input[name=name]').focus();
 
 	setToken('[name=_token]');
 
@@ -260,6 +280,20 @@ function renderEditForm(id) {
 
 function unsavedChanges() {
 	return $('form').data('hasChanged');
+}
+
+function showMe(box, self) {
+
+	var div = $(box);
+
+	if( $(self).is(':checked') ) {
+		div.show(0);
+		div.find('input, select').prop('disabled', false);
+	}
+	else {
+		div.hide(0);
+		div.find('input, select').prop('disabled', true);
+	}
 }
 
 function toggleBoatSelect(self) {
