@@ -75,6 +75,7 @@ Route::get('logout', function()
 
 // Needs to be unauthorized, because it's needed in registration
 Route::controller('api/country', 'CountryController');
+Route::controller('api/currency', 'CurrencyController');
 
 Route::group(array('before' => 'auth'), function()
 {

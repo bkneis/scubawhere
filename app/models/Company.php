@@ -30,6 +30,10 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'county'      => '',
 		'postcode'    => 'required',
 		'country_id'  => 'required|integer|exists:countries,id',
+		'business_email' => 'required',
+		'business_phone' => 'required',
+		'vat_number'  => 'required',
+		'registration_number' => 'required',
 		'latitude'    => 'numeric|between:-90,90',
 		'longitude'   => 'numeric|between:-180,180',
 		'phone'       => 'required',
@@ -40,7 +44,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'photo'       => '',
 		'video'       => '',
 		'views'       => 'integer'
-	);
+	); // add additonal fields to rules
 
 	public function beforeSave()
 	{
@@ -86,16 +90,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Accommodation');
 	}
 
-	public function agencies()
-	{
-		return $this->belongsToMany('Agency')->withTimestamps();
-	}
-
 	public function agents()
 	{
 		return $this->hasMany('Agent');
 	}
-
+	
 	public function addons()
 	{
 		return $this->hasMany('Addon');
@@ -123,7 +122,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location')->withTimestamps();
+		return $this->belongsToMany('Location');
 	}
 
 	public function packages()
