@@ -24,6 +24,6 @@ class CurrencyController extends Controller {
 
 	public function getAll()
 	{
-		return Currency::get();
+		return Currency::all();
 	}
 }

@@ -33,14 +33,14 @@ label {
 	display: block;
 	text-align: left;
 	margin-top: 0.5em;
-	margin-left: 57px;
+	/*margin-left: 57px;*/
 }
 
 #login-wrapper{
-	padding: 40px;
-	width: 400px;
+	padding: 20px;
+	width: 30%;
 	margin: 0px auto;
-	margin-top: 80px;
+	margin-top: 20px;
 	text-align: center;
 }
 
@@ -49,6 +49,25 @@ label {
 }
 
 #login-wrapper h1{
+	color: #4f4f4f;
+	text-align: center;
+	font-weight: 200;
+	font-size: 22px;
+}
+
+#register-wrapper{
+	padding: 20px;
+	width: 70%;
+	margin: 0px auto;
+	margin-top: 20px;
+	text-align: center;
+}
+
+#register-wrapper img{
+	margin-bottom: 20px;
+}
+
+#register-wrapper h1{
 	color: #4f4f4f;
 	text-align: center;
 	font-weight: 200;
@@ -184,3 +203,28 @@ footer{
 #register:hover{
 	background-color: rgba(0,0,0,0.4);
 }
+
+.certify {
+	display: block;
+	border: 1px solid #c8c8c8;
+	float: left;
+	padding: 0.5em 1em;
+	margin: 0 0.5em 0.5em 0;
+}
+
+.certify.checked {
+	border-color: #27ae60;
+	background-color: #2ecc71;
+}
+
+.container {
+	font-size: 18px;
+	text-align: center;
+	background-color: #fff;
+	padding: 20px 0px 40px 0px;
+	box-shadow: 0px 0px 9px rgba(0,0,0,0.48);
+	margin-bottom: 10px;
+	position: relative;
+	z-index: 100;
+}
+

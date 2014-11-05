@@ -14,7 +14,7 @@ class Agency extends Ardent {
 	{
 		if( isset($this->abbreviation) )
 			$this->abbreviation = Helper::sanitiseBasicTags($this->abbreviation);
-		
+
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
@@ -25,6 +25,11 @@ class Agency extends Ardent {
 	public function certificates()
 	{
 		return $this->hasMany('Certificate');
+	}
+
+	public function companies()
+	{
+		return $this->belongsToMany('Company')->withTimestamps();
 	}
 
 	public function customers()

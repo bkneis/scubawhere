@@ -75,6 +75,8 @@ Route::get('logout', function()
 
 // Needs to be unauthorized, because it's needed in registration
 Route::controller('api/country', 'CountryController');
+Route::controller('api/currency', 'CurrencyController');
+Route::controller('api/agency', 'AgencyController');
 
 Route::group(array('before' => 'auth'), function()
 {
@@ -87,7 +89,7 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/addon', 'AddonController');
 
-	Route::controller('api/agency', 'AgencyController');
+	//Route::controller('api/agency', 'AgencyController');
 
 	Route::controller('api/agent', 'AgentController');
 
