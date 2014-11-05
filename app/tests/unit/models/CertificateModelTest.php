@@ -53,9 +53,33 @@ class CertificateModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		//$this->refreshTables();
-		//TODO
-		$this->markTestIncomplete('This test is incomplete!');
+		$this->refreshTables();
+		
+		//Create/Read
+		$agency_id = ModelTestHelper::createAgency();
+		$certificate_id = ModelTestHelper::createCertificate($agency_id);
+		$certificate = Certificate::find($certificate_id);
+		
+		$this->assertEquals($agency_id, $certificate->agency->id, "Unexpected id value");
+		
+		//Update
+		$agency_id_updated = ModelTestHelper::createAgency('update');
+		$certificate->agency_id = $agency_id_updated;		
+		$certificate->save();
+		$certificate = Certificate::find($certificate_id);
+		
+		$this->assertEquals($agency_id_updated, $certificate->agency->id, "Unexpected id value");
+		
+		//Delete
+		$certificate->delete();
+		$agency = Agency::find($agency_id_updated);
+		
+		$this->assertNotNull($agency, "Could not find entry");
+		$this->assertEquals($agency_id_updated, $agency->id, "Unexpected id value");
+		
+		
+		
+		$this->markTestIncomplete('This test is incomplete!'); //(Customer)
 	}
 	
 	public function testFunctions(){
