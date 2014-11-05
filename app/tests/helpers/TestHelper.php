@@ -10,7 +10,6 @@ class TestHelper{
 	 */
 	public static function dbMigrate(){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Migrating.....");
 			//Migrate the database
 			Artisan::call('migrate');
 		}
@@ -23,7 +22,6 @@ class TestHelper{
 	 */
 	public static function dbClear(){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Clearing tables.....");
 			self::clearModelTables(TestSettings::$modelTables);
 			self::clearTables(TestSettings::$pivotTables);
 		}
@@ -38,7 +36,6 @@ class TestHelper{
 	public static function dbClearTable($table){
 		if (App::runningUnitTests()) {
 			if (DB::table($table)->count() != 0) {
-				echo("\nDB ".getenv('DATABASE_NAME').": Clearing ".$table." table.....");
 				//Turn foreign key checks off <- USE WITH CAUTION!
 				DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 				//Delete all entries & reset indexes
@@ -56,7 +53,6 @@ class TestHelper{
 	 */
 	public static function dbSeed(){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Seeding.....");
 			//Turn foreign key checks off
 			DB::statement('SET FOREIGN_KEY_CHECKS=0;');// <- USE WITH CAUTION!
 			//Seed tables
@@ -74,7 +70,6 @@ class TestHelper{
 	 */
 	public static function dbSeedTable($seederPrefix){
 		if (App::runningUnitTests()) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Seeding ".$seederPrefix.".....");
 			//Turn foreign key checks off
 			DB::statement('SET FOREIGN_KEY_CHECKS=0;');// <- USE WITH CAUTION!
 			//Seed tables
@@ -100,7 +95,6 @@ class TestHelper{
 
 			//@TODO Fix issue with rollbacks before this can be used
 			// 		if ($includeReset) {
-			// 			echo("\nDB ".getenv('DATABASE_NAME').": Rolling back migrations.....");
 			// 			//Turn foreign key checks off <- USE WITH CAUTION!
 			// 			DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 			// 			//Rollback all migrations
