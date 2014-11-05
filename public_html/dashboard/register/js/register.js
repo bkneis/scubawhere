@@ -9,22 +9,23 @@ function validateEmail(email){
 function validate(sectionNum){
 
 	var error = false;
-	//var errorMsg = "Please enter a valid ";
+	var section = "#section" + sectionNum;
+
+	$( ".required", section ).each(function( index ) {
+		$(this).css( "border", "2px #c8c8c8" );
+	});
 
 	if(sectionNum == 1) error = validateEmail($('[name="email"]').val());
 	else if(sectionNum == 2) error = validateEmail($('[name="businessEmail"]').val());
 
-	var section = "#section" + sectionNum;
 	$( ".required", section ).each(function( index ) {
 		if(!($( this ).val())) {
 			$(this).css( "border", "2px solid red" );
-			//errorMsg += $(this).msg;
 			error = true;
 		}
 	});
 
 	if(error){
-		//alert(errorMsg);
 		return false;
 	}
 	else {
@@ -96,7 +97,8 @@ function submitForm() {
 		data: info,
 		success: function(data){
 			console.log(data.status);
-			alert('Thank you for signing up with scuba where, we have recieved your details and will verify your account shortly. Thanks');
+			//alert('Thank you for signing up with scuba where, we have recieved your details and will verify your account shortly. Thanks');
+			window.location = "http://www.scubawhere.com/dashboard/thanks";
 		}
 	});
 
@@ -157,5 +159,18 @@ $(function(){
 		$('#currencies').append( currency_select_options );
 	});
 
+	var agency_options = '';
+	$.get("/api/agency/all", function(data) {
+		for(var key in data) {
+			agency_options += '<label class="certify"><input type="checkbox" value="'+data[key].id+'"><strong>'+data[key].abbreviation+'</strong><br></label>';
+		}
+		$('#agencies').append( agency_options );
+	});
+
 });
+
+
+						
+						
+					
 

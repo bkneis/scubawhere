@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Scuba Where | Dive Centre Register</title>
+	<title>Scuba Where | Dive Operator Register</title>
 
 	<script data-main="js/config" src="/common/js/jquery.js"></script>
 	<script data-main="js/config" src="/common/js/ui.min/jquery-ui.min.js"></script>
@@ -16,9 +16,10 @@
 <body>
 
 	<div id="register-wrapper">
-		<form action="#" method="post" id="regForm" accept-charset="utf-8">
+	<div class="container">
+		<!--<form action="#" method="post" id="regForm" accept-charset="utf-8">-->
 			<img src="/dashboard/common/img/ScubaWhere_logo.svg">
-			<h1>Dive Centre Dashboard Register</h1>
+			<h1>Dive Operator Dashboard Register</h1>
 		<div id="example-vertical">
 			<h3>General Info</h3>
 			<section>
@@ -32,26 +33,14 @@
 					<input style="width:100%" class="required"  type="text" id="email" name="email">
 					<label for="padi">Accepted Diving Instuitions</label>
 					<div id="agencies">
-					<label class="certify">
-						<input type="checkbox" name="padi" value="6">
-						<strong>PADI</strong><br>
-					</label>
-					<label class="certify">
-						<input type="checkbox" name="ssi" value="6">
-						<strong>SSI</strong><br>
-					</label>
-					<label class="certify">
-						<input type="checkbox" name="raid" value="6">
-						<strong>RAID</strong><br>
-					</label>
 					</div>
 				</div>
 				<div style="width:45%; float:left; padding-left:20px; text-align:left">
-					<label for="name">Dive Centre Name:</label>
+					<label for="name">Dive Operator Name:</label>
 					<input style="width:100%" class="required"  type="text" id="name" name="name">
-					<label for="name">Dive Centre Website (optional):</label>
+					<label for="name">Dive Operator Website (optional):</label>
 					<input style="width:100%" type="text" id="website" name="website">
-					<label for="description">CompanyBio (Optional):</label>
+					<label for="description">Company Bio (Optional):</label>
 					<textarea style="width:102%" rows="5" id="description" name="description"></textarea>
 				</div>
 				</div>
@@ -66,9 +55,9 @@
 					<input style="width:100%"  type="text" id="addr2" name="addr2">
 					<label for="city">City:</label>
 					<input style="width:100%" class="required"  type="text" id="city" name="city">
-					<label for="county">County:</label>
-					<input style="width:100%" class="required"  type="text" id="county" name="county">
-					<label for="postCode">Post Code:</label>
+					<label for="county">County / State:</label>
+					<input style="width:100%" type="text" id="county" name="county">
+					<label for="postCode">Post Code / Zip Code:</label>
 					<input style="width:100%" class="required"  type="text" id="postCode" name="postCode">
 				</div>
 				<div style="width:45%; float:left; padding-left:20px; text-align:left">
@@ -77,9 +66,9 @@
 					<label for="businessEmail">Business Email:</label>
 					<input style="width:100%" class="required"  type="text" id="businessEmail" name="businessEmail">
 					<label for="regNumber">Business Registration Number:</label>
-					<input style="width:102%" class="required"  type="text" id="regNumber" name="regNumber">
+					<input style="width:102%" type="text" id="regNumber" name="regNumber">
 					<label for="vatNumber">VAT Number:</label>
-					<input style="width:100%" class="required"  type="text" id="vatNumber" name="vatNumber">
+					<input style="width:100%" type="text" id="vatNumber" name="vatNumber">
 					<label for="countries">Please select your country:</label>
 					 <select id="countries" class="required" style="width:107%">
 					  <option value=""></option>
@@ -108,7 +97,8 @@
 			</div>
 			</section>
 		</div>
-		</form>
+		<!--</form>-->
+		</div>
 		<span><a href="/terms/">Terms</a> | <a href="/policy/">Policy</a></span>
 	</div>
 

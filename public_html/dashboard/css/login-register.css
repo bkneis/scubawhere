@@ -217,3 +217,14 @@ footer{
 	background-color: #2ecc71;
 }
 
+.container {
+	font-size: 18px;
+	text-align: center;
+	background-color: #fff;
+	padding: 20px 0px 40px 0px;
+	box-shadow: 0px 0px 9px rgba(0,0,0,0.48);
+	margin-bottom: 10px;
+	position: relative;
+	z-index: 100;
+}
+
