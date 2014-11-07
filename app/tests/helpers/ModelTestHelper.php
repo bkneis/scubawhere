@@ -17,8 +17,8 @@ class ModelTestHelper{
 	const TEST_ABBR_UPDATED = "NTS";
 	const TEST_SYMBOL = "£";
 	const TEST_SYMBOL_UPDATED = "$";
-	const TEST_BOOL = false;
-	const TEST_BOOL_UPDATED = true;
+	const TEST_BOOL = 0;
+	const TEST_BOOL_UPDATED = 1;
 	const TEST_USERNAME = "testuser";
 	const TEST_USERNAME_UPDATED = "newtestuser";
 	const TEST_PASSWORD = "testpassword";
@@ -27,8 +27,8 @@ class ModelTestHelper{
 	const TEST_EMAIL_UPDATED = "newtest@email.com";
 	const TEST_DATE = "2000-01-01 12:34:56";
 	const TEST_DATE_UPDATED = "2001-01-01 12:34:56";
-	const TEST_URL = "www.testurl.com";
-	const TEST_URL_UPDATED = "www.newtesturl.com";
+	const TEST_URL = "http://www.testurl.com";
+	const TEST_URL_UPDATED = "http://www.newtesturl.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
 	const TEST_ADDRESS_UPDATED = "456 Test Lane, Aplace, Somewhere, ABC 456";
 	const TEST_PHONE = "07123 456 789";
@@ -169,7 +169,7 @@ class ModelTestHelper{
 		$entry->country_id = $country_id;
 		
 		$entry->username = self::TEST_USERNAME.$append;
-		$entry->password = self::TEST_PASSWORD;
+		$entry->password = Hash::make(self::TEST_PASSWORD);
 		$entry->email = self::TEST_EMAIL;
 		$entry->verified = self::TEST_BOOL;
 		$entry->name = self::TEST_STRING.$append;
@@ -195,7 +195,7 @@ class ModelTestHelper{
 		$entry->video = self::TEST_STRING.$append;
 		$entry->views = self::TEST_INTEGER;
 		
-		$entry->save();
+		$entry->save();		
 		return $entry->id;
 	}
 
@@ -248,7 +248,7 @@ class ModelTestHelper{
 		$entry->lastname = self::TEST_STRING.$append;		
 		$entry->verified = self::TEST_BOOL;
 		$entry->birthday = self::TEST_DATE;
-		$entry->gender = self::TEST_STRING;		
+		$entry->gender = self::TEST_ABBR;		
 		$entry->address_1 = self::TEST_STRING;
 		$entry->address_2 = self::TEST_STRING;
 		$entry->city = self::TEST_STRING;
@@ -258,6 +258,7 @@ class ModelTestHelper{
 		$entry->last_dive = self::TEST_DATE;
 		
 		$entry->save();
+				
 		return $entry->id;
 	}
 
