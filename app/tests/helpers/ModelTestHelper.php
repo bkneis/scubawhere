@@ -164,8 +164,39 @@ class ModelTestHelper{
 	}
 
 	public static function createCompany($country_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Company();
+		
+		$entry->country_id = $country_id;
+		
+		$entry->username = self::TEST_USERNAME.$append;
+		$entry->password = self::TEST_PASSWORD;
+		$entry->email = self::TEST_EMAIL;
+		$entry->verified = self::TEST_BOOL;
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->address_1 = self::TEST_STRING;
+		$entry->address_2 = self::TEST_STRING;
+		$entry->city = self::TEST_STRING;
+		$entry->county = self::TEST_STRING;
+		$entry->postcode = self::TEST_STRING;
+		$entry->curreny = self::TEST_ABBR;		
+		$entry->business_email = self::TEST_EMAIL;
+		$entry->business_phone = self::TEST_PHONE;
+		$entry->vat_number = self::TEST_STRING;
+		$entry->registration_number = self::TEST_STRING;
+		$entry->latitude = self::TEST_DECIMAL;
+		$entry->longitude = self::TEST_DECIMAL;
+		$entry->phone = self::TEST_PHONE;
+		$entry->contact = self::TEST_STRING;
+		$entry->website = self::TEST_URL;
+		$entry->agency = self::TEST_BOOL;
+		$entry->logo = self::TEST_STRING.$append;
+		$entry->photo = self::TEST_STRING.$append;
+		$entry->video = self::TEST_STRING.$append;
+		$entry->views = self::TEST_INTEGER;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createContinent($append = ""){
@@ -206,34 +237,89 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createCustomer($country_id, $company_id, $certificate_id, $append = ""){
-		//TODO
-		return 0;
+	public static function createCustomer($country_id, $company_id, $append = ""){
+		$entry = new Customer();
+		
+		$entry->country_id = $country_id;
+		$entry->company_id = $company_id;
+		
+		$entry->email = self::TEST_EMAIL;
+		$entry->firstname = self::TEST_STRING.$append;
+		$entry->lastname = self::TEST_STRING.$append;		
+		$entry->verified = self::TEST_BOOL;
+		$entry->birthday = self::TEST_DATE;
+		$entry->gender = self::TEST_STRING;		
+		$entry->address_1 = self::TEST_STRING;
+		$entry->address_2 = self::TEST_STRING;
+		$entry->city = self::TEST_STRING;
+		$entry->county = self::TEST_STRING;
+		$entry->postcode = self::TEST_STRING;
+		$entry->phone = self::TEST_PHONE;
+		$entry->last_dive = self::TEST_DATE;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
-	public static function createDeparture($trip_id, $boat_id, $timetable_id, $append = ""){
-		//TODO
-		return 0;
+	public static function createDeparture($trip_id, $boat_id, $timetable_id){
+		$entry = new Departure();
+		
+		$entry->trip_id = $trip_id;
+		$entry->boat_id = $boat_id;
+		$entry->timetable_id = $timetable_id;
+		
+		$entry->start = self::TEST_DATE;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createLocation($append = ""){
-		//TODO
-		return 0;
+		$entry = new Location();
+				
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->latitude = self::TEST_DECIMAL;
+		$entry->longitude = self::TEST_DECIMAL;
+		$entry->tags = self::TEST_STRING;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createPackage($company_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Package();
+		
+		$entry->company_id = $company_id;
+		
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->capacity = self::TEST_INTEGER;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
-	public static function createPackagefacade($package_id, $append = ""){
-		//TODO
-		return 0;
+	public static function createPackagefacade($package_id){
+		$entry = new Packagefacade();
+		
+		$entry->package_id = $package_id;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
-	public static function createPayment($booking_id, $paymentgateway_id, $append = ""){
-		//TODO
-		return 0;
+	public static function createPayment($booking_id, $paymentgateway_id){
+		$entry = new Payment();
+		
+		$entry->booking_id = $booking_id;
+		$entry->paymentgateway_id = $paymentgateway_id;
+		
+		$entry->amount = self::TEST_INTEGER;
+		$entry->curreny = self::TEST_ABBR;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createPaymentgateway($append = ""){
@@ -246,18 +332,44 @@ class ModelTestHelper{
 	}
 
 	public static function createTicket($company_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Ticket();
+		
+		$entry->company_id = $company_id;
+		
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createTimetable($company_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Timetable();
+		
+		$entry->company_id = $company_id;
+		
+		$entry->weeks = self::TEST_INTEGER;
+		$entry->schedule = self::TEST_STRING.$append;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createTrip($company_id, $location_id, $append = ""){
-		//TODO
-		return 0;
+		$entry = new Trip();
+		
+		$entry->company_id = $company_id;
+		$entry->location_id = $location_id;
+		
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->duration = self::TEST_INTEGER;
+		$entry->photo = self::TEST_STRING.$append;
+		$entry->video = self::TEST_STRING.$append;
+		$entry->views = self::TEST_INTEGER;
+		
+		$entry->save();
+		return $entry->id;
 	}
 
 	public static function createTriptype($append = ""){
