@@ -50,7 +50,9 @@ class ContinentModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		$this->assertTrue(true);
+		//$this->refreshTables();
+		//TODO
+		$this->markTestIncomplete('This test is incomplete!');
 	}
 	
 	public function testFunctions(){
