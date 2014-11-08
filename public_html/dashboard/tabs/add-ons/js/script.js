@@ -243,6 +243,7 @@ function renderEditForm(id) {
 	else {
 		addon = {
 			task: 'add',
+			currency: window.company.currency,
 			/*name: 'TUI',
 			website: 'http://tui.com',
 			branch_name: 'Fishponds',

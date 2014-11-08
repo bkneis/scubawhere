@@ -17,7 +17,7 @@ class CompanyController extends Controller {
 
 	public function getIndex()
 	{
-        return Auth::user();
+        return Auth::user()->with('currency', 'country')->first();
 	}
 
 	public function getBoats()
@@ -76,7 +76,7 @@ class CompanyController extends Controller {
 			if( !$room->validate() )
 			{
 				$errors = $room->errors()->all();
-				$errors[] = "Something was wrong with the submitted data. The new accomodation '" . Helper::sanitiseString($details['name']) . "' could not be created.";
+				$errors[] = "Something was wrong with the submitted data. The new accommodation '" . Helper::sanitiseString($details['name']) . "' could not be created.";
 				return Response::json( array('errors' => $errors), 406 ); // 406 Not Acceptable
 			}
 

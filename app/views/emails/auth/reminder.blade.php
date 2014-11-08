@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
-	<head>
-		<meta charset="utf-8">
-		<title>ScubaWhere Passwort Reminder</title>
-	</head>
-	<body>
-		<!--<img src="http://scubawhere.com/dashboard/common/img/ScubaWhere_logo.svg">-->
-		<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+  <head>
+    <meta charset="utf-8">
+    <title>ScubaWhere Passwort Reminder</title>
+  </head>
+  <body>
+    <!--<img src="http://scubawhere.com/dashboard/common/img/ScubaWhere_logo.svg">-->
 
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -125,17 +124,17 @@
   </g>
 </svg>
 
-		<h2>Password Reminder</h2>
-		<p>
-			To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is only valid for 1 hour.)
-		</p>
-		<p>
-			If you did not initate a password reset, just ignore this email. Your current password is still valid.<br>
-			(It doesn't hurt to change the password every now and then, though.)
-		</p>
-		<p>
-			Kind regards,<br>
-			<a href="http://scubawhere.com">scubawhere.com</a>
-		</p>
-	</body>
+    <h2>Password Reminder</h2>
+    <p>
+      To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is only valid for 1 hour.)
+    </p>
+    <p>
+      If you did not initate a password reset, just ignore this email. Your current password is still valid.<br>
+      (It doesn't hurt to change the password every now and then, though.)
+    </p>
+    <p>
+      Kind regards,<br>
+      <a href="http://scubawhere.com">scubawhere.com</a>
+    </p>
+  </body>
 </html>

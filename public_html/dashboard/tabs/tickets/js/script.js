@@ -26,7 +26,7 @@ Handlebars.registerHelper('pricerange', function(prices) {
 	    max = 0;
 
 	if( prices.length === 1) {
-		return prices[0].currency + ' ' + prices[0].decimal_price;
+		return window.company.currency.symbol + ' ' + prices[0].decimal_price;
 	}
 
 	_.each(prices, function(value) {
@@ -34,8 +34,11 @@ Handlebars.registerHelper('pricerange', function(prices) {
 		max = Math.max(value.decimal_price, max).toFixed(2);
 	});
 
-	return prices[0].currency + ' ' + min + ' - ' + max;
+	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 
+});
+Handlebars.registerHelper('currency', function() {
+	return window.company.currency.symbol;
 });
 priceInput = Handlebars.compile( $('#price-input-template').html() );
 Handlebars.registerPartial('price_input', priceInput);

@@ -33,7 +33,7 @@ function validate(sectionNum){
 			$(this).css( "border", "2px #c8c8c8" );
 		});
 		return true;
-	} 
+	}
 }
 
 function validateAccount(){
@@ -46,46 +46,46 @@ function validateAccount(){
 
 function submitForm() {
 
-	var contactName = $('[name="contactName"]').val();
-	var email = $('[name="email"]').val();
-	var phone = $('[name="phone"]').val();
+	var contactName    = $('[name="contactName"]').val();
+	var email          = $('[name="email"]').val();
+	var phone          = $('[name="phone"]').val();
 	var diveCentreName = $('[name="name"]').val();
-	var website = $('[name="website"]').val();
-	var description = $('[name="description"]').val();
-	var businessPhone = $('[name="businessPhone"]').val();
-	var businessEmail = $('[name="businessEmail"]').val();
-	var addr1 = $('[name="addr1"]').val();
-	var addr2 = $('[name="addr2"]').val();
-	var regNumber = $('[name="regNumber"]').val();
-	var vatNumber = $('[name="vatNumber"]').val();
-	var currency = $('#currencies').val();
-	var country = $('#countries').val();
-	var username = $('[name="username"]').val();
-	var passwd = $('[name="passwd"]').val();
-	var city = $('[name="city"]').val();
-	var county = $('[name="county"]').val();
-	var postCode = $('[name="postCode"]').val();
+	var website        = $('[name="website"]').val();
+	var description    = $('[name="description"]').val();
+	var businessPhone  = $('[name="businessPhone"]').val();
+	var businessEmail  = $('[name="businessEmail"]').val();
+	var addr1          = $('[name="addr1"]').val();
+	var addr2          = $('[name="addr2"]').val();
+	var regNumber      = $('[name="regNumber"]').val();
+	var vatNumber      = $('[name="vatNumber"]').val();
+	var currency       = $('#currencies').val();
+	var country        = $('#countries').val();
+	var username       = $('[name="username"]').val();
+	var passwd         = $('[name="passwd"]').val();
+	var city           = $('[name="city"]').val();
+	var county         = $('[name="county"]').val();
+	var postCode       = $('[name="postCode"]').val();
 
 	var info = {
-		username : username,
-		password : passwd,
-		email : email,
-		name : diveCentreName,
-		description : description,
-		address_1 : addr1,
-		address_2 : addr2,
-		city : city,
-		county : county,
-		postcode : postCode,
-		country_id : country, // Possibly perform look up for currency though country selection
-		//currency : currency, ---- Wait til soren implements pivot to currency ids
-		phone : phone,
-		contact : contactName,
-		website : website,
-		business_phone : businessPhone,
-		business_email : businessEmail,
+		username            : username,
+		password            : passwd,
+		email               : email,
+		name                : diveCentreName,
+		description         : description,
+		address_1           : addr1,
+		address_2           : addr2,
+		city                : city,
+		county              : county,
+		postcode            : postCode,
+		country_id          : country, // Possibly perform look up for currency through country selection -- but do this as soon as the user selects a country
+		currency_id         : currency,
+		phone               : phone,
+		contact             : contactName,
+		website             : website,
+		business_phone      : businessPhone,
+		business_email      : businessEmail,
 		registration_number : regNumber,
-		vat_number : vatNumber
+		vat_number          : vatNumber
 	};
 
 	console.log(info);
@@ -124,18 +124,18 @@ $(function(){
 		        if(currentIndex == 0){ // This is the criteria for the first step
 		        	if(validate(1)) {
 		        		return true;
-		        	} 
+		        	}
 		        	else return false;
-		        	//return true;                     
+		        	//return true;
 		        }
 
 		        if(currentIndex == 1){
 		        	if(validate(2)) {
 		        		return true;
-		        	} 
+		        	}
 		        	else return false;
-		        	
-		        	//return true;   
+
+		        	//return true;
 		        }
 
 	    	}
@@ -170,7 +170,7 @@ $(function(){
 });
 
 
-						
-						
-					
+
+
+
 

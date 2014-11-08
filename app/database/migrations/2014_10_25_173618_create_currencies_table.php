@@ -14,11 +14,13 @@ class CreateCurrenciesTable extends Migration {
 	{
 		Schema::create('currencies', function($table)
 		{
-			$table->increments('id');			
+			$table->engine = 'InnoDB';
+
+			$table->increments('id');
 			$table->string('code', 8);
 			$table->string('name', 64);
-			$table->text('description');			
-			$table->string('symbol', 8);			
+			$table->text('description');
+			$table->string('symbol', 8);
 			$table->timestamps();
 		});
 	}

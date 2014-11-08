@@ -8,7 +8,6 @@ class Booking extends Ardent {
 		'agent_id',
 		'source',
 		// 'price',
-		'currency',
 		'discount',
 		// 'confirmed',
 		'reserved',
@@ -23,7 +22,6 @@ class Booking extends Ardent {
 		'agent_id'         => 'integer|exists:agents,id|required_without:source',
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
-		'currency'         => 'alpha|size:3|valid_currency',
 		'discount'         => 'integer|min:0',
 		'confirmed'        => 'integer|in:0,1',
 		'reserved'         => 'date|after:now',
@@ -46,7 +44,7 @@ class Booking extends Ardent {
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( $this->currency );
+		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number

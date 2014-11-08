@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Helper;
 
 class TripController extends Controller {
 

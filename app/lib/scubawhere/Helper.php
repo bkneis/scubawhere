@@ -68,7 +68,6 @@ class Helper
 		return $currencies;
 	}
 
-
 	/**
 	 * Makes an array with keys into an array without keys
 	 */

@@ -4,17 +4,23 @@ use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
 class Payment extends Ardent {
-	protected $fillable = array('amount', 'currency', 'paymentgateway_id');
+	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id');
 
 	public static $rules = array(
 		'amount'            => 'required|numeric|min:0',
-		'currency'          => 'required|alpha|size:3',
+		'currency_id'       => 'required|integer|exists:currencies, id',
 		'paymentgateway_id' => 'required|integer|exists:paymentgateways,id'
 	);
 
 	public function beforeSave()
 	{
 		$this->currency = Helper::currency($this->currency);
+
+		if( isset($this->amount) )
+		{
+			$currency = new Currency( $this->currency );
+			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
+		}
 	}
 
 	public function bookings()
