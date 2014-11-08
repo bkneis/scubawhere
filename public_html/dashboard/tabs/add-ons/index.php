@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list" class="entity-list">
 						{{#each addons}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{currency}} {{decimal_price}}</li>
+							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{currency.symbol}} {{decimal_price}}</li>
 						{{else}}
 							<p>No addons available.</p>
 						{{/each}}
@@ -53,9 +53,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Addon Price</label>
-							<select name="currency">
-								<option value = "GBP">GBP</option>
-							</select>
+							<span class="currency">{{currency.symbol}}</span>
 							<input type="text" name="price" placeholder="0.00" value="{{decimal_price}}">
 						</div>
 

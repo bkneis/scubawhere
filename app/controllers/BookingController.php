@@ -48,7 +48,6 @@ class BookingController extends Controller {
 		}
 
 		$data['price'] = 0;
-		$data['currency'] = Helper::currency();
 
 		$booking = new Booking($data);
 
@@ -386,14 +385,7 @@ class BookingController extends Controller {
 		// Convert discount to subunit
 		if( !empty($data['discount']) )
 		{
-			try
-			{
-				$currency = new Currency( $booking->currency );
-			}
-			catch(InvalidCurrencyException $e)
-			{
-				return Response::json( array( 'errors' => array('Could not read a valid currency from database!')), 500 ); // 500 Internal Server Error
-			}
+			$currency = new Currency( Auth::user()->currency->code );
 			$data['discount'] = (int) round( $data['discount'] * $currency->getSubunitToUnit() );
 		}
 

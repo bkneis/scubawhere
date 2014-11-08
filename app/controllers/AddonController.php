@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
 class AddonController extends Controller {
@@ -40,22 +39,11 @@ class AddonController extends Controller {
 			'name',
 			'description',
 			'price',
-			'currency',
 			'compulsory'
 		);
 
-		//Get currency code
-		$data['currency'] = Helper::currency( Input::get('currency') );
-
 		// Convert price to subunit
-		try
-		{
-			$currency = new Currency( $data['currency'] );
-		}
-		catch(InvalidCurrencyException $e)
-		{
-			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
-		}
+		$currency = new Currency( Auth::user()->currency->code );
 		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
 		//Check compulsory field.....
@@ -90,23 +78,12 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
-			'currency',
 			'price',
 			'compulsory'
 		);
 
-		//Get currency code
-		$data['currency'] = Helper::currency( Input::get('currency') );
-
 		// Convert price to subunit
-		try
-		{
-			$currency = new Currency( $data['currency'] );
-		}
-		catch(InvalidCurrencyException $e)
-		{
-			return Response::json( array( 'errors' => array('The currency is not a valid currency code!')), 400 ); // 400 Bad Request
-		}
+		$currency = new Currency( Auth::user()->currency->code );
 		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
 		//Check compulsory field.....

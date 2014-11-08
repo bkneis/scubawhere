@@ -5,8 +5,7 @@ class RegisterController extends Controller {
 
 	public function postCompany()
 	{
-		$data = Input::only('username', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
-		// add all otyher fields in companies table
+		$data = Input::only('username', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
 		$company = new Company($data);
 
 		// Mass assigned insert with automatic validation

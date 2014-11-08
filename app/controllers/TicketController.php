@@ -430,7 +430,7 @@ class TicketController extends Controller {
 
 		// Keyify $old_prices and reduce them to input fields
 		$array = array();
-		$input_keys = array('decimal_price' => '', 'currency' => '', 'from' => '');
+		$input_keys = array('decimal_price' => '', 'from' => '');
 		if(!$isBase)
 			$input_keys['until'] = '';
 

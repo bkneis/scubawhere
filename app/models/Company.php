@@ -30,7 +30,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'county'              => '',
 		'postcode'            => 'required',
 		'country_id'          => 'required|integer|exists:countries,id',
-		'currency'            => 'required|alpha|size:3|valid_currency',
+		'currency_id'         => 'required|integer|exists:currencies,id',
 		'business_email'      => 'required|email|unique:companies,email',
 		'business_phone'      => 'required',
 		'vat_number'          => '',
@@ -129,6 +129,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->belongsTo('Country');
 	}
 
+	public function currency()
+	{
+		return $this->belongsTo('Currency');
+	}
+
 	public function customers()
 	{
 		return $this->hasMany('Customer');
@@ -167,10 +172,10 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	/**
 	 * Booking relations
 	 */
-	public function booked_packages()
+	/*public function booked_packages()
 	{
 		return $this->hasManyThrough('Package', 'Booking');
-	}
+	}*/
 
 	public function booked_sessions()
 	{

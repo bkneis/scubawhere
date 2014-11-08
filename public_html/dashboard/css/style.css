@@ -745,3 +745,8 @@ span.box-tool{
 	border-color: #27ae60;
 	background-color: #2ecc71;
 }
+
+.currency {
+	font-size: 18px;
+	margin-right: 0.5em;
+}

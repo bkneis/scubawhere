@@ -133,9 +133,7 @@
 
 		<script type="text/x-handlebars-template" id="price-input-template">
 			<p>
-				<select name="{{#if isBase}}base_{{/if}}prices[{{id}}][currency]">
-					<option value="GBP">GBP</option>
-				</select>
+				<span class="currency">{{currency}}</span>
 				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
 
 				{{#unless isAlways}}
