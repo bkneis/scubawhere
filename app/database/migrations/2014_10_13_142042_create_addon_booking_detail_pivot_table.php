@@ -14,6 +14,8 @@ class CreateAddonBookingdetailPivotTable extends Migration {
 	{
 		Schema::create('addon_bookingdetail', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('addon_id')->unsigned();
 			$table->integer('bookingdetail_id')->unsigned();
 
