@@ -27,8 +27,8 @@ class ModelTestHelper{
 	const TEST_EMAIL_UPDATED = "newtest@email.com";
 	const TEST_DATE = "2000-01-01 12:34:56";
 	const TEST_DATE_UPDATED = "2001-01-01 12:34:56";
-	const TEST_URL = "http://www.testurl.com";
-	const TEST_URL_UPDATED = "http://www.newtesturl.com";
+	const TEST_URL = "http://www.scubawhere.com";
+	const TEST_URL_UPDATED = "http://www.google.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
 	const TEST_ADDRESS_UPDATED = "456 Test Lane, Aplace, Somewhere, ABC 456";
 	const TEST_PHONE = "07123 456 789";
@@ -179,7 +179,7 @@ class ModelTestHelper{
 		$entry->city = self::TEST_STRING;
 		$entry->county = self::TEST_STRING;
 		$entry->postcode = self::TEST_STRING;
-		$entry->curreny = self::TEST_ABBR;		
+		$entry->currency = self::TEST_ABBR;		
 		$entry->business_email = self::TEST_EMAIL;
 		$entry->business_phone = self::TEST_PHONE;
 		$entry->vat_number = self::TEST_STRING;
