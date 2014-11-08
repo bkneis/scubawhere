@@ -23,17 +23,17 @@ class PasswordController extends Controller {
 		}) )
 		{
 			case Password::INVALID_USER:
-				return View::make('password.remind')->with('error', Lang::get($response));
-				// return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+				// return View::make('password.remind')->with('error', Lang::get($response));
+				return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
 
 			case Password::REMINDER_SENT:
-				return View::make('password.remind')->with('status', Lang::get($response));
-				// return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+				// return View::make('password.remind')->with('status', Lang::get($response));
+				return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
 
 			default:
 				Session::set('error', 'Nothing happend I\'m afraid...');
-				return View::make('password.remind');
-				// return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
+				// return View::make('password.remind');
+				return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
 		}
 	}
 
@@ -54,11 +54,11 @@ class PasswordController extends Controller {
 			'email', 'password', 'password_confirmation', 'token'
 		);
 
-		$response = Password::reset($credentials, function($company, $password)
+		$response = Password::reset($credentials, function($company, $password) use ($credentials)
 		{
 			$company->password = Hash::make($password);
 
-			if(!$company->updateUniques())
+			if( !$company->save() )
 			{
 				return View::make('password.reset', array('error' => $company->errors()->first(), 'email' => $credentials['email'], 'token' => $credentials['token']));
 			}

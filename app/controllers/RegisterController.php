@@ -5,7 +5,7 @@ class RegisterController extends Controller {
 
 	public function postCompany()
 	{
-		$data = Input::only('username', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
+		$data = Input::only('username', 'contact', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
 
 		try
 		{
@@ -17,15 +17,14 @@ class RegisterController extends Controller {
 			return Response::json( array('errors' => array('The country could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$address = implode( ',', array(
+		$address = urlencode( implode( ',', array(
 			$data['address_1'],
 			$data['address_2'],
 			$data['postcode'],
 			$data['city'],
 			$data['county'],
 			$country->name,
-		) );
-
+		) ) );
 		$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		$result = curl_exec( $ch );
