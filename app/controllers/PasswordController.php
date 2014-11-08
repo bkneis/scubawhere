@@ -57,13 +57,7 @@ class PasswordController extends Controller {
 		$response = Password::reset($credentials, function($company, $password) use ($credentials)
 		{
 			$company->password = Hash::make($password);
-
-			if( !$company->save() )
-			{
-				return View::make('password.reset', array('error' => $company->errors()->first(), 'email' => $credentials['email'], 'token' => $credentials['token']));
-			}
-
-			Auth::login($company);
+			$company->updateUniques();
 		});
 
 		if( is_object($response) )
@@ -77,7 +71,7 @@ class PasswordController extends Controller {
 				return View::make('password.reset', array('error' => Lang::get($response), 'email' => $credentials['email'], 'token' => $credentials['token']));
 
 			case Password::PASSWORD_RESET:
-				return View::make('password.reset', array('email' => $credentials['email'], 'status' => 'A new password has been set.<br><a href="../dashboard/login/">Log in</a>'));
+				return View::make('password.reset', array('email' => $credentials['email'], 'status' => 'A new password has been set.<br><br><a href="../dashboard/login/">Log in</a>'));
 		}
 	}
 

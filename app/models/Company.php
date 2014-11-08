@@ -68,13 +68,13 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 			$this->county = Helper::sanitiseString($this->county);
 
 		if( isset($this->business_phone) )
-			$this->phone = Helper::sanitiseString($this->business_phone);
+			$this->business_phone = Helper::sanitiseString($this->business_phone);
 
 		if( isset($this->vat_number) )
-			$this->phone = Helper::sanitiseString($this->vat_number);
+			$this->vat_number = Helper::sanitiseString($this->vat_number);
 
 		if( isset($this->registration_number) )
-			$this->phone = Helper::sanitiseString($this->registration_number);
+			$this->registration_number = Helper::sanitiseString($this->registration_number);
 
 		if( isset($this->phone) )
 			$this->phone = Helper::sanitiseString($this->phone);
