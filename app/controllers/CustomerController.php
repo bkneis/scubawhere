@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-// use ScubaWhere\Helper;
 
 class CustomerController extends Controller {
 
