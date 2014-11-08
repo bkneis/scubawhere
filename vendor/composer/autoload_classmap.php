@@ -1144,6 +1144,7 @@ return array(
     'MakeCustomerTableGenderNullable' => $baseDir . '/app/database/migrations/2014_07_15_030404_make_customer_table_gender_nullable.php',
     'MakeDiscountColumnOnBookingTableIntoInteger' => $baseDir . '/app/database/migrations/2014_07_26_164147_make_discount_column_on_booking_table_into_integer.php',
     'MakeFieldsInCompanyTableNullable' => $baseDir . '/app/database/migrations/2014_11_08_152034_make_fields_in_company_table_nullable.php',
+    'MakeOtherFieldsNullableOnCompaniesTable' => $baseDir . '/app/database/migrations/2014_11_08_180948_make_other_fields_nullable_on_companies_table.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mews\\Purifier\\Facades\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Facades/Purifier.php',
     'Mews\\Purifier\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Purifier.php',
