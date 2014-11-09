@@ -61,7 +61,6 @@ class ModelTestHelper{
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->price = self::TEST_INTEGER;
-		$entry->curreny = self::TEST_ABBR;
 		$entry->compulsory = self::TEST_BOOL;
 		
 		$entry->save();
@@ -123,7 +122,6 @@ class ModelTestHelper{
 		$entry->reference = self::TEST_REFERENCE;
 		$entry->source = self::TEST_STRING.$append;
 		$entry->price = self::TEST_INTEGER;
-		$entry->curreny = self::TEST_ABBR;
 		$entry->discount = self::TEST_INTEGER;
 		$entry->confirmed = self::TEST_BOOL;
 		$entry->reserved = self::TEST_DATE;		
@@ -163,10 +161,11 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createCompany($country_id, $append = ""){
+	public static function createCompany($country_id, $currency_id, $append = ""){
 		$entry = new Company();
 		
 		$entry->country_id = $country_id;
+		$entry->currency_id = $currency_id;
 		
 		$entry->username = self::TEST_USERNAME.$append;
 		$entry->password = Hash::make(self::TEST_PASSWORD);
@@ -178,8 +177,7 @@ class ModelTestHelper{
 		$entry->address_2 = self::TEST_STRING;
 		$entry->city = self::TEST_STRING;
 		$entry->county = self::TEST_STRING;
-		$entry->postcode = self::TEST_STRING;
-		$entry->currency = self::TEST_ABBR;		
+		$entry->postcode = self::TEST_STRING;		
 		$entry->business_email = self::TEST_EMAIL;
 		$entry->business_phone = self::TEST_PHONE;
 		$entry->vat_number = self::TEST_STRING;
@@ -189,7 +187,6 @@ class ModelTestHelper{
 		$entry->phone = self::TEST_PHONE;
 		$entry->contact = self::TEST_STRING;
 		$entry->website = self::TEST_URL;
-		$entry->agency = self::TEST_BOOL;
 		$entry->logo = self::TEST_STRING.$append;
 		$entry->photo = self::TEST_STRING.$append;
 		$entry->video = self::TEST_STRING.$append;
@@ -317,7 +314,6 @@ class ModelTestHelper{
 		$entry->paymentgateway_id = $paymentgateway_id;
 		
 		$entry->amount = self::TEST_INTEGER;
-		$entry->curreny = self::TEST_ABBR;
 		
 		$entry->save();
 		return $entry->id;
@@ -328,6 +324,18 @@ class ModelTestHelper{
 		
 		$entry->name = self::TEST_STRING.$append;
 		
+		$entry->save();
+		return $entry->id;
+	}
+	
+	public static function createPrice($owner_id){
+		$entry = new Price();
+	
+		$entry->owner_type = self::TEST_STRING.$append;
+		$entry->price = self::TEST_INTEGER;
+		$entry->from = self::TEST_DATE;
+		$entry->until = self::TEST_DATE;
+	
 		$entry->save();
 		return $entry->id;
 	}
