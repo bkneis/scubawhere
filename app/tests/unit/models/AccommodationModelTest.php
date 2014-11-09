@@ -10,6 +10,7 @@ class AccommodationModelTest extends ModelTestCase {
 	public function refreshTables(){
 		//Refresh any tables required for testing this model
 		TestHelper::dbClearTable('accommodations');
+		TestHelper::dbClearTable('companies');
 	}
 	
 	public function testCRUD(){

@@ -28,13 +28,15 @@ class ModelTestHelper{
 	const TEST_DATE = "2000-01-01 12:34:56";
 	const TEST_DATE_UPDATED = "2001-01-01 12:34:56";
 	const TEST_URL = "http://www.scubawhere.com";
-	const TEST_URL_UPDATED = "http://www.google.com";
+	const TEST_URL_UPDATED = "https://www.facebook.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
 	const TEST_ADDRESS_UPDATED = "456 Test Lane, Aplace, Somewhere, ABC 456";
 	const TEST_PHONE = "07123 456 789";
 	const TEST_PHONE_UPDATED = "07456 789 123";
 	const TEST_REFERENCE = "ABCD1234";
 	const TEST_REFERENCE_UPDATED = "EFGH5678";
+	const TEST_TERMS = "fullamount";
+	const TEST_TERMS_UPDATED = "banned";
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -93,9 +95,9 @@ class ModelTestHelper{
 		$entry->billing_phone = self::TEST_PHONE;
 		$entry->billing_email = self::TEST_EMAIL;
 		$entry->commission = self::TEST_DECIMAL;
-		$entry->terms = self::TEST_STRING;
+		$entry->terms = self::TEST_TERMS;
 		
-		$entry->save();
+		$entry->save();		
 		return $entry->id;
 	}
 
