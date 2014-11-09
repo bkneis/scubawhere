@@ -58,18 +58,12 @@ class CountryModelTest extends ModelTestCase {
 		$this->assertTrue(true);
 	}
 	
-	public function testRelationships(){
-		//$this->refreshTables();
-		//TODO
-		$this->markTestIncomplete('This test is incomplete!');
-	}
-	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}
 	
 	public function testEdges(){
 		$this->assertTrue(true);
-	}	
+	}
 	
 }
