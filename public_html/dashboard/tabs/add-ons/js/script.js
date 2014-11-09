@@ -24,7 +24,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#add-addon').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Addon.createAddon( $('#add-addon-form').serialize(), function success(data) {
 
@@ -67,7 +67,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#update-addon').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Addon.updateAddon( $('#update-addon-form').serialize(), function success(data) {
 

@@ -65,7 +65,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#add-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Package.createPackage( $('#add-package-form').serialize(), function success(data) {
 
@@ -108,7 +108,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#update-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Package.updatePackage( $('#update-package-form').serialize(), function success(data) {
 
