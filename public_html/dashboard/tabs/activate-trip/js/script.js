@@ -447,6 +447,7 @@ $(function() {
 
 				// Remove original session
 				eventObject = $form.closest('.reveal-modal').data('eventObject');
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 				// Close modal window
 				$('#modalWindows .close-reveal-modal').click();
