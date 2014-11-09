@@ -80,7 +80,7 @@ class AgentModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->assertTrue(true);
+		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
 	public function testEdges(){

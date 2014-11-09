@@ -25,8 +25,8 @@ class ModelTestHelper{
 	const TEST_PASSWORD_UPDATED = "newtestpassword";
 	const TEST_EMAIL = "test@email.com";
 	const TEST_EMAIL_UPDATED = "newtest@email.com";
-	const TEST_DATE = "2000-01-01 12:34:56";
-	const TEST_DATE_UPDATED = "2001-01-01 12:34:56";
+	const TEST_DATE = "2020-01-01 12:34:56";
+	const TEST_DATE_UPDATED = "2021-01-01 12:34:56";
 	const TEST_URL = "http://www.scubawhere.com";
 	const TEST_URL_UPDATED = "https://www.facebook.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
@@ -37,6 +37,8 @@ class ModelTestHelper{
 	const TEST_REFERENCE_UPDATED = "EFGH5678";
 	const TEST_TERMS = "fullamount";
 	const TEST_TERMS_UPDATED = "banned";
+	const TEST_SOURCE = "telephone";
+	const TEST_SOURCE_UPDATED = "email";
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -122,7 +124,7 @@ class ModelTestHelper{
 		$entry->agent_id = $agent_id;
 		
 		$entry->reference = self::TEST_REFERENCE;
-		$entry->source = self::TEST_STRING.$append;
+		$entry->source = self::TEST_SOURCE;
 		$entry->price = self::TEST_INTEGER;
 		$entry->discount = self::TEST_INTEGER;
 		$entry->confirmed = self::TEST_BOOL;

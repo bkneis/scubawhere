@@ -49,9 +49,10 @@ class AddonModelTest extends ModelTestCase {
 				
 		//Delete
 		$addon->delete();
-		$addon = Addon::find($addon_id);
-		
+		$addon = Addon::find($addon_id);		
 		$this->assertNull($addon, "Addon not deleted");
+		
+		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
 	}
 	
 	public function testValidation(){
@@ -59,7 +60,7 @@ class AddonModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->assertTrue(true);
+		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
 	public function testEdges(){
