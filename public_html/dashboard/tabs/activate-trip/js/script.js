@@ -113,6 +113,12 @@ $(function() {
 				$('#fetch-events-loader').remove();
 			});
 		},
+		eventRender: function(event, element) {
+			// Intercept the event rendering to inject the non-html-escaped version of the title
+			// Needed for trip names with special characters in it (like ó, à, etc.)
+			console.log(element);
+			element.find('.fc-title').html(event.title);
+		},
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
 		drop: function(date) { // This function is called when something is dropped
