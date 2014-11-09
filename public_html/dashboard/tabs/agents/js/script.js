@@ -5,6 +5,10 @@ Handlebars.registerHelper('selected', function(selectObject) {
 	else
 		return '';
 });
+Handlebars.registerHelper('isBanned', function() {
+	if(this.terms == 'banned')
+		return new Handlebars.SafeString(' class="banned"');
+});
 
 var agentForm,
 	agentList;

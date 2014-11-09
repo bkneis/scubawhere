@@ -17,7 +17,7 @@ class CompanyController extends Controller {
 
 	public function getIndex()
 	{
-        return Auth::user()->with('currency', 'country')->first();
+        return Auth::user();
 	}
 
 	public function getBoats()

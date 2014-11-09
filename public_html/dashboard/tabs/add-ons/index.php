@@ -54,7 +54,7 @@
 						<div class="form-row">
 							<label class="field-label">Addon Price</label>
 							<span class="currency">{{currency.symbol}}</span>
-							<input type="text" name="price" placeholder="0.00" value="{{decimal_price}}">
+							<input type="number" name="price" placeholder="0.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
 						</div>
 
 						<div class="form-row">

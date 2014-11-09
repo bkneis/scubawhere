@@ -695,6 +695,25 @@ span.box-tool{
 
 }
 
+.banned {
+	position: relative;
+}
+.banned::after {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 5px;
+	top: 0;
+	background-image: url(./../img/icons/banned.png);
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-color: inherit;
+	height: 100%;
+	width: 1.25em;
+
+}
+
 .dashed-border {
 	margin: 1em;
 	border: dashed rgb(211, 211, 211);

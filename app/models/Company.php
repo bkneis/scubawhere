@@ -11,6 +11,8 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	protected $guarded = array('id', 'password', 'verified', 'views', 'remember_token', 'created_at', 'updated_at');
 
+	protected $appends = array('currency', 'country');
+
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
@@ -90,6 +92,16 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 		if( isset($this->video) )
 			$this->video = Helper::sanitiseString($this->video);
+	}
+
+	public function getCurrencyAttribute()
+	{
+		return $this->currency()->first();
+	}
+
+	public function getCountryAttribute()
+	{
+		return $this->country()->first();
 	}
 
 	public function accommodations()
