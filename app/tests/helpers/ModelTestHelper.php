@@ -27,6 +27,8 @@ class ModelTestHelper{
 	const TEST_EMAIL_UPDATED = "newtest@email.com";
 	const TEST_DATE = "2020-01-01 12:34:56";
 	const TEST_DATE_UPDATED = "2021-01-01 12:34:56";
+	const TEST_DAY = "1982-02-03";
+	const TEST_DAY_UPDATED = "1989-12-29";
 	const TEST_URL = "http://www.scubawhere.com";
 	const TEST_URL_UPDATED = "https://www.facebook.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
@@ -250,7 +252,7 @@ class ModelTestHelper{
 		$entry->firstname = self::TEST_STRING.$append;
 		$entry->lastname = self::TEST_STRING.$append;		
 		$entry->verified = self::TEST_BOOL;
-		$entry->birthday = self::TEST_DATE;
+		$entry->birthday = self::TEST_DAY;
 		$entry->gender = self::TEST_GENDER;		
 		$entry->address_1 = self::TEST_STRING;
 		$entry->address_2 = self::TEST_STRING;
@@ -258,7 +260,7 @@ class ModelTestHelper{
 		$entry->county = self::TEST_STRING;
 		$entry->postcode = self::TEST_STRING;
 		$entry->phone = self::TEST_PHONE;
-		$entry->last_dive = self::TEST_DATE;
+		$entry->last_dive = self::TEST_DAY;
 		
 		$entry->save();		
 		return $entry->id;

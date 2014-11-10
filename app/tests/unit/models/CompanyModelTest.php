@@ -23,6 +23,8 @@ class CompanyModelTest extends ModelTestCase {
 		$company = Company::find($company_id);
 		
 		$this->assertNotEquals(0, $company->id, "Unexpected id value");
+		$this->assertEquals($country_id, $company->country_id, "Unexpected id value");
+		$this->assertEquals($currency_id, $company->currency_id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_USERNAME, $company->username, "Unexpected username value");
 		$this->assertTrue(Hash::check(ModelTestHelper::TEST_PASSWORD, $company->password), "Unexpected password value");
 		$this->assertEquals(ModelTestHelper::TEST_EMAIL, $company->email, "Unexpected email value");
