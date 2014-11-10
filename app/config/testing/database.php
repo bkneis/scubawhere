@@ -5,10 +5,10 @@ return array(
 	'connections' => array(
 		'mysqltest' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'test'/*.getenv('TEST_ENV_NUMBER')*/,
-			'username'  => getenv('MYSQL_USER'),
-			'password'  => getenv('MYSQL_PASSWORD'),
+			'host'      => getenv('DATABASE_HOST'),
+			'database'  => getenv('DATABASE_NAME'),
+			'username'  => getenv('DATABASE_USERNAME'),
+			'password'  => getenv('DATABASE_PASSWORD'),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
