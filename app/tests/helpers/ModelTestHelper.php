@@ -39,6 +39,8 @@ class ModelTestHelper{
 	const TEST_TERMS_UPDATED = "banned";
 	const TEST_SOURCE = "telephone";
 	const TEST_SOURCE_UPDATED = "email";
+	const TEST_GENDER = 1;
+	const TEST_GENDER_UPDATED = 2;
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -249,7 +251,7 @@ class ModelTestHelper{
 		$entry->lastname = self::TEST_STRING.$append;		
 		$entry->verified = self::TEST_BOOL;
 		$entry->birthday = self::TEST_DATE;
-		$entry->gender = self::TEST_ABBR;		
+		$entry->gender = self::TEST_GENDER;		
 		$entry->address_1 = self::TEST_STRING;
 		$entry->address_2 = self::TEST_STRING;
 		$entry->city = self::TEST_STRING;
@@ -258,8 +260,7 @@ class ModelTestHelper{
 		$entry->phone = self::TEST_PHONE;
 		$entry->last_dive = self::TEST_DATE;
 		
-		$entry->save();
-				
+		$entry->save();		
 		return $entry->id;
 	}
 
