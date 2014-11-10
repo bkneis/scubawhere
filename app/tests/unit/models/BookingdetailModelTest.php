@@ -10,9 +10,6 @@ class BookingdetailModelTest extends ModelTestCase {
 	public function refreshTables(){
 		//Refresh any tables required for testing this model
 		TestHelper::dbClearTable('booking_details');
-		TestHelper::dbClearTable('continents');
-		TestHelper::dbClearTable('currencies');
-		TestHelper::dbClearTable('countries');
 		TestHelper::dbClearTable('companies');
 		TestHelper::dbClearTable('agents');
 		TestHelper::dbClearTable('locations');
@@ -23,7 +20,6 @@ class BookingdetailModelTest extends ModelTestCase {
 		TestHelper::dbClearTable('bookings');
 		TestHelper::dbClearTable('customers');
 		TestHelper::dbClearTable('tickets');
-		TestHelper::dbClearTable('continents');
 		TestHelper::dbClearTable('sessions');
 		TestHelper::dbClearTable('packagefacades');
 	}
@@ -48,13 +44,15 @@ class BookingdetailModelTest extends ModelTestCase {
 		$ticket_id = ModelTestHelper::createTicket($company_id);
 		$session_id = ModelTestHelper::createDeparture($trip_id, $boat_id, $timetable_id);
 		$packagefacade_id = ModelTestHelper::createPackagefacade($package_id);		
-		
 		$bookingdetail_id = ModelTestHelper::createBoookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id);
 		$bookingdetail = Bookingdetail::find($bookingdetail_id);
 		
 		$this->assertNotEquals(0, $bookingdetail->id, "Unexpected id value");
-		$this->assertEquals($company_id, $bookingdetail->company_id, "Unexpected id value");
-		
+		$this->assertEquals($booking_id, $bookingdetail->booking_id, "Unexpected id value");
+		$this->assertEquals($customer_id, $bookingdetail->customer_id, "Unexpected id value");
+		$this->assertEquals($ticket_id, $bookingdetail->ticket_id, "Unexpected id value");
+		$this->assertEquals($session_id, $bookingdetail->session_id, "Unexpected id value");
+		$this->assertEquals($packagefacade_id, $bookingdetail->packagefacade_id, "Unexpected id value");		
 		$this->assertEquals(ModelTestHelper::TEST_BOOL, $bookingdetail->is_lead, "Unexpected is_lead value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $bookingdetail->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $bookingdetail->updated_at);

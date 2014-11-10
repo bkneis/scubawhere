@@ -29,7 +29,14 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		TestHelper::refreshListeners();
 	}
 
-	
+	public function assertEqualsDecimal($expected, $actual, $message = "", $delta = 0){
+		if (($actual >= ($expected - $delta) && ($actual <= ($expected + $delta)))) {
+			$this->assertTrue(true);
+		} else {
+			$this->assertTrue(false, $message." - values not within delta");
+		}
+		
+	}
 	
 	/**
 	 * Creates the application.
