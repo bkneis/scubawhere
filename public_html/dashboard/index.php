@@ -42,6 +42,8 @@
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.tagsinput.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
 
+	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome/css/font-awesome.min.css">
+
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="../common/favicon.ico" />
 
@@ -89,7 +91,9 @@
 	<div id="page">
 		<!-- tabbed navigation and sidebar LEFT -->
 		<div id="sidebar">
-			<div id="tab-title">Admin Panel</div>
+			<div id="tab-title">
+				Admin Panel
+			</div>
 			<!-- <div id="dc-info">
 				<div id="dc-name"></div>
 				<div id="dc-uname"></div>
@@ -101,88 +105,72 @@
 			<ul id="sidenav">
 				<li data-load="dashboard">
 					<div>
-						<img src="img/icons/dashboard-icon.png" />
+						<i class="fa fa-tachometer"></i>
 						<span>Dashboard</span>
 					</div>
 				</li>
 
-				<li>
+				<li data-load="add-booking">
 					<div>
-						<img src="img/icons/profile-icon.png" />
-						<span>Agents</span>
-						<span class="arrow"></span>
+						<i class="fa fa-plus"></i>
+						<!-- <i class="fa fa-plus-square-o"></i> -->
+						<span>Add Booking</span>
 					</div>
-					<ul>
-						<li data-load="agents">Manage Agents</li>
-					</ul>
 				</li>
 
-				<li>
+				<li data-load="find-booking">
 					<div>
-						<img src="img/icons/booking-icon.png" />
-						<span>Booking</span>
-						<span class="arrow"></span>
+						<i class="fa fa-pencil"></i>
+						<!-- <i class="fa fa-pencil-square-o"></i> -->
+						<span>Manage Bookings</span>
 					</div>
-					<ul>
-						<li data-load="add-booking">Add Booking</li>
-						<li data-load="find-booking">Find Booking</li>
-						<li data-load="trip-booking">Trip Bookings</li>
-					</ul>
 				</li>
 
-				<li>
+				<li data-load="reviews">
 					<div>
-						<img src="img/icons/trip-icon.png" />
-						<span>Trip Management</span>
-						<span class="arrow"></span>
-					</div>
-
-					<ul>
-						<li data-load="trips">Trips</li>
-						<li data-load="activate-trip">Activate Trips</li>
-						<li data-load="tickets">Tickets</li>
-						<li data-load="packages">Packages</li>
-						<li data-load="locations">Locations</li>
-					</ul>
-				</li>
-
-				<li>
-					<div>
-						<img src="img/icons/trip-icon.png" />
-						<span>Resources</span>
-						<span class="arrow"></span>
-					</div>
-
-					<ul>
-						<li data-load="boats">Boats</li>
-						<li data-load="add-ons">Add-ons</li>
-						<!--<li data-load="crew">Crew</li>-->
-					</ul>
-				</li>
-
-				<li>
-					<div>
-						<img src="img/icons/reviews-icon.png" />
+						<i class="fa fa-comments"></i>
+						<!-- <i class="fa fa-users"></i> -->
 						<span>Reviews</span>
-						<span class="arrow"></span>
 					</div>
+				</li>
 
-					<ul>
-						<li data-load="reviews">Recent Reviews</li>
-					</ul>
+				<li data-load="reports">
+					<div>
+						<!-- <i class="fa fa-university"></i> -->
+						<i class="fa fa-line-chart"></i>
+						<!-- <i class="fa fa-usd"></i> -->
+						<!-- <i class="fa fa-file-text-o"></i> -->
+						<span>Financial Reports</span>
+					</div>
 				</li>
 
 				<li>
 					<div>
-						<img src="img/icons/profile-icon.png" />
-						<span>Profile</span>
+						<!-- <i class="fa fa-briefcase"></i> -->
+						<!-- <i class="fa fa-bullhorn"></i> -->
+						<!-- <i class="fa fa-paper-plane"></i> -->
+						<i class="fa fa-sitemap"></i>
+						<span>Management</span>
 						<span class="arrow"></span>
 					</div>
-
 					<ul>
-						<li>Analytics</li>
-						<li>Edit Profile</li>
+						<li data-load="accommodations">Accommodations</li>
+						<li data-load="activate-trip">Activate Trips</li>
+						<li data-load="add-ons">Add-ons</li>
+						<li data-load="agents">Agents</li>
+						<li data-load="boats">Boats</li>
+						<li data-load="locations">Locations</li>
+						<li data-load="packages">Packages</li>
+						<li data-load="tickets">Tickets</li>
+						<li data-load="trips">Trips</li>
 					</ul>
+				</li>
+
+				<li data-load="settings">
+					<div>
+						<i class="fa fa-cog"></i>
+						<span>Settings</span>
+					</div>
 				</li>
 			</ul>
 		</div>
