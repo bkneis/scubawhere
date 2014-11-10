@@ -3,35 +3,35 @@
 		<div class="metro-nav">
             <div class="metro-nav-block nav-block-orange">
                 <a data-original-title="" href="#">
-                    <i class="icon-user"></i>
+                    <i class="fa fa-user"></i>
                     <div class="info">321</div>
                     <div class="status">Agents</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-olive">
                 <a data-original-title="" href="#">
-                    <i class="icon-tags"></i>
+                    <i class="fa fa-tags"></i>
                     <div class="info">+970</div>
                     <div class="status">Bookings</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-block-yellow">
                 <a data-original-title="" href="#">
-                    <i class="icon-user"></i>
+                    <i class="fa fa-user"></i>
                     <div class="info">49</div>
                     <div class="status">Customers</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-block-green double">
                 <a data-original-title="" href="#">
-                    <i class="icon-globe"></i>
+                    <i class="fa fa-globe"></i>
                     <div class="info">+897</div>
                     <div class="status">Dives booked</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-block-red">
                 <a data-original-title="" href="#">
-                    <i class="icon-bar-chart"></i>
+                    <i class="fa fa-bar-chart"></i>
                     <div class="info">+288</div>
                     <div class="status">Trips</div>
                 </a>
@@ -40,35 +40,35 @@
         <div class="metro-nav">
             <div class="metro-nav-block nav-light-purple">
                 <a data-original-title="" href="#">
-                    <i class="icon-tags"></i>
+                    <i class="fa fa-tags"></i>
                     <div class="info">29</div>
                     <div class="status">Tickets</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-light-blue double">
                 <a data-original-title="" href="#">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                     <div class="info">$37624</div>
                     <div class="status">Packages</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-light-green">
                 <a data-original-title="" href="#">
-                    <i class="icon-flag"></i>
+                    <i class="fa fa-flag"></i>
                     <div class="info">123</div>
                     <div class="status">Locations</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-light-brown">
                 <a data-original-title="" href="#">
-                    <i class="icon-remove-sign"></i>
+                    <i class="fa fa-remove"></i>
                     <div class="info">34</div>
                     <div class="status">Cancelled</div>
                 </a>
             </div>
             <div class="metro-nav-block nav-block-grey ">
                 <a data-original-title="" href="#">
-                    <i class="icon-external-link"></i>
+                    <i class="fa fa-external-link"></i>
                     <div class="info">$53412</div>
                     <div class="status">Total revenue</div>
                 </a>
@@ -80,9 +80,9 @@
         <!-- BEGIN Portlet PORTLET-->
         <div class="widget red">
             <div class="widget-title">
-                <h4><i class="icon-edit"></i> Boat Capacity Report</h4>
+                <h4><i class="fa fa-edit"></i> Boat Capacity Report</h4>
                 <span class="tools">
-                    <a class="icon-chevron-down" onclick="slideDown('boat-capacity')"></a>
+                    <a class="fa fa-chevron-down" onclick="slideDown('boat-capacity')"></a>
                 </span>
             </div>
             <div id="boat-capacity" class="widget-body">
@@ -119,9 +119,9 @@
     <!-- BEGIN Portlet PORTLET-->
     <!-- <div class="widget yellow">
         <div class="widget-title">
-            <h4><i class="icon-edit"></i> Calendar</h4>
+            <h4><i class="fa fa-edit"></i> Calendar</h4>
             <span class="tools">
-                <a class="icon-chevron-down" onclick="slideDown('calendar')"></a>
+                <a class="fa fa-chevron-down" onclick="slideDown('calendar')"></a>
             </span>
         </div>
         <div id="calendar" class="widget-body">
@@ -137,9 +137,9 @@
         <!-- BEGIN Portlet PORTLET-->
         <div class="widget purple">
             <div class="widget-title">
-                <h4><i class="icon-edit"></i> Todays Trips</h4>
+                <h4><i class="fa fa-edit"></i> Todays Trips</h4>
                 <span class="tools">
-                    <a class="icon-chevron-down" onclick="slideDown('todays-trips')"></a>
+                    <a class="fa fa-chevron-down" onclick="slideDown('todays-trips')"></a>
                 </span>
             </div>
             <div id="todays-trips" class="widget-body">
@@ -156,9 +156,9 @@
         <!-- BEGIN Portlet PORTLET-->
         <!-- <div class="widget blue">
             <div class="widget-title">
-                <h4><i class="icon-edit"></i> Locations</h4>
+                <h4><i class="fa fa-edit"></i> Locations</h4>
                 <span class="tools">
-                    <a class="icon-chevron-down" onclick="slideDown('locations')"></a>
+                    <a class="fa fa-chevron-down" onclick="slideDown('locations')"></a>
                 </span>
             </div>
             <div id="locations" class="widget-body">
@@ -171,7 +171,6 @@
 </div>
 
 <link href="tabs/dashboard/css/style.css" rel="stylesheet" />
-<link href="tabs/dashboard/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
 <!-- <script type="text/javascript" src="tabs/locations/js/gmaps.js"></script>
 <script type="text/javascript" src="tabs/dashboard/js/maps.js"></script> -->
 <script type="text/javascript" src="tabs/dashboard/js/script.js"></script>

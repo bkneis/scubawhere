@@ -259,8 +259,10 @@ ul#sidenav .arrow{
 	position: relative;
 }
 
-ul#sidenav img{
-	height: 25px;
+ul#sidenav i{
+	font-size: 25px;
+	width: 30px;
+	text-align: center;
 }
 
 ul#sidenav > li > ul{ display: none; padding: 0px; }
