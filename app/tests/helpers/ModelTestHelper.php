@@ -9,8 +9,8 @@ class ModelTestHelper{
 
 	const TEST_STRING = "Test string";
 	const TEST_STRING_UPDATED = "New test string";
-	const TEST_INTEGER = 100;
-	const TEST_INTEGER_UPDATED = 200;
+	const TEST_INTEGER = 10;
+	const TEST_INTEGER_UPDATED = 20;
 	const TEST_DECIMAL = 1.1;
 	const TEST_DECIMAL_UPDATED = 2.2;
 	const TEST_ABBR = "TST";
@@ -43,6 +43,8 @@ class ModelTestHelper{
 	const TEST_SOURCE_UPDATED = "email";
 	const TEST_GENDER = 1;
 	const TEST_GENDER_UPDATED = 2;
+	const TEST_JSON = '[{"this":"is", "some":"json"}]';
+	const TEST_JSON_UPDATED = '[{"this":"is", "updated":"json"}]';
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -363,13 +365,13 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createTimetable($company_id, $append = ""){
+	public static function createTimetable($company_id){
 		$entry = new Timetable();
 
 		$entry->company_id = $company_id;
 
 		$entry->weeks = self::TEST_INTEGER;
-		$entry->schedule = self::TEST_STRING.$append;
+		$entry->schedule = self::TEST_JSON;
 
 		$entry->save();
 		return $entry->id;
