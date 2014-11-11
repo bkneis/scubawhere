@@ -141,7 +141,7 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createBoookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id){
+	public static function createBookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id){
 		$entry = new Bookingdetail();
 
 		$entry->booking_id = $booking_id;
@@ -252,29 +252,17 @@ class ModelTestHelper{
 		$entry->firstname = self::TEST_STRING.$append;
 		$entry->lastname = self::TEST_STRING.$append;
 		$entry->verified = self::TEST_BOOL;
-<<<<<<< HEAD
 		$entry->birthday = self::TEST_DAY;
-		$entry->gender = self::TEST_GENDER;		
-=======
-		$entry->birthday = self::TEST_DATE;
-		$entry->gender = self::TEST_ABBR;
->>>>>>> origin/development
+		$entry->gender = self::TEST_GENDER;
 		$entry->address_1 = self::TEST_STRING;
 		$entry->address_2 = self::TEST_STRING;
 		$entry->city = self::TEST_STRING;
 		$entry->county = self::TEST_STRING;
 		$entry->postcode = self::TEST_STRING;
 		$entry->phone = self::TEST_PHONE;
-<<<<<<< HEAD
 		$entry->last_dive = self::TEST_DAY;
 		
-		$entry->save();		
-=======
-		$entry->last_dive = self::TEST_DATE;
-
 		$entry->save();
-
->>>>>>> origin/development
 		return $entry->id;
 	}
 

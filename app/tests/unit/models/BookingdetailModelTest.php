@@ -44,7 +44,7 @@ class BookingdetailModelTest extends ModelTestCase {
 		$ticket_id = ModelTestHelper::createTicket($company_id);
 		$session_id = ModelTestHelper::createDeparture($trip_id, $boat_id, $timetable_id);
 		$packagefacade_id = ModelTestHelper::createPackagefacade($package_id);		
-		$bookingdetail_id = ModelTestHelper::createBoookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id);
+		$bookingdetail_id = ModelTestHelper::createBookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id);
 		$bookingdetail = Bookingdetail::find($bookingdetail_id);
 		
 		$this->assertNotEquals(0, $bookingdetail->id, "Unexpected id value");
