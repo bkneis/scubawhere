@@ -314,10 +314,11 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createPayment($booking_id, $paymentgateway_id){
+	public static function createPayment($booking_id, $currency_id, $paymentgateway_id){
 		$entry = new Payment();
 
 		$entry->booking_id = $booking_id;
+		$entry->currency_id = $currency_id;
 		$entry->paymentgateway_id = $paymentgateway_id;
 
 		$entry->amount = self::TEST_INTEGER;

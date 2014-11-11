@@ -8,18 +8,16 @@ class Payment extends Ardent {
 
 	public static $rules = array(
 		'amount'            => 'required|numeric|min:0',
-		'currency_id'       => 'required|integer|exists:currencies, id',
+		'currency_id'       => 'required|integer|exists:currencies,id',
 		'paymentgateway_id' => 'required|integer|exists:paymentgateways,id'
 	);
 
 	public function beforeSave()
 	{
-		$this->currency = Helper::currency($this->currency);
-
 		if( isset($this->amount) )
 		{
-			$currency = new Currency( $this->currency );
-			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
+// 			$currency = new Currency( $this->currency );
+// 			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
 		}
 	}
 
@@ -31,6 +29,11 @@ class Payment extends Ardent {
 	public function paymentgateways()
 	{
 		return $this->belongsTo('Paymentgateway');
+	}
+	
+	public function currency()
+	{
+		return $this->belongsTo('Currency');
 	}
 
 }
