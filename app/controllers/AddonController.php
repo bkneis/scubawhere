@@ -15,7 +15,7 @@ class AddonController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->addons()->findOrFail( Input::get('id') );
+			return Auth::user()->addons()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -26,6 +26,11 @@ class AddonController extends Controller {
 	public function getAll()
 	{
 		return Auth::user()->addons()->get();
+	}
+
+	public function getAllWithTrashed()
+	{
+		return Auth::user()->addons()->withTrashed()->get();
 	}
 
 	public function getCompulsory()

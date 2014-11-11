@@ -88,6 +88,7 @@
 						<div class="form-row">
 							<label class="field-label">Max. group size per boat</label>
 							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
+							(Enter 0 or nothing for <i>no limit</i>)
 						</div>
 
 						{{#if update}}

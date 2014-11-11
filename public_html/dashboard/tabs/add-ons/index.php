@@ -89,5 +89,5 @@
 	</div>
 </div>
 
-<script src="/dashboard/js/Controllers/Addons.js"></script>
+<script src="/dashboard/js/Controllers/Addon.js"></script>
 <script src="tabs/add-ons/js/script.js"></script>

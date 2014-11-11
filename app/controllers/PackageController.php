@@ -197,7 +197,6 @@ class PackageController extends Controller {
 			if( empty($data['description']) ) $data['description'] = $package->description;
 			if( empty($data['capacity']) )    $data['capacity']    = $package->capacity;
 			if( empty($data['base_prices']) ) $data['base_prices'] = $package->base_prices;
-			// if( empty($data['prices']) )      $data['prices']      = $package->prices;
 
 			if( !Input::has('tickets') )
 			{
@@ -284,7 +283,7 @@ class PackageController extends Controller {
 			else
 				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
-			return array('status' => 'Package edited OK', 'base_prices' => $base_prices, 'prices' => $prices);
+			return array('status' => 'OK. Package updated', 'base_prices' => $base_prices, 'prices' => $prices);
 		}
 	}
 

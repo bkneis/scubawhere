@@ -11,7 +11,7 @@ class Addon extends Ardent {
 
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
-	protected $appends = array('decimal_price', 'has_bookings', 'trashed', 'currency');
+	protected $appends = array('decimal_price', 'currency', 'has_bookings', 'trashed');
 
 	protected $fillable = array(
 		'name',

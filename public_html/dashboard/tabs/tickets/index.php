@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{pricerange base_prices}}</li>
+							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{pricerange base_prices prices}}</li>
 						{{else}}
 							<p>No tickets available.</p>
 						{{/each}}

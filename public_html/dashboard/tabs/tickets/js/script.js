@@ -21,13 +21,18 @@ Handlebars.registerHelper('isEqualDeepPivot', function(compare, array, key, attr
 
 	return array[key].pivot[attribute] === compare ? string : '';
 });
-Handlebars.registerHelper('pricerange', function(prices) {
+Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
 	    max = 0;
 
-	if( prices.length === 1) {
-		return window.company.currency.symbol + ' ' + prices[0].decimal_price;
+	if( base_prices.length === 1 && prices.length === 0) {
+		return window.company.currency.symbol + ' ' + base_prices[0].decimal_price;
 	}
+
+	_.each(base_prices, function(value) {
+		min = Math.min(value.decimal_price, min).toFixed(2);
+		max = Math.max(value.decimal_price, max).toFixed(2);
+	});
 
 	_.each(prices, function(value) {
 		min = Math.min(value.decimal_price, min).toFixed(2);
@@ -35,7 +40,6 @@ Handlebars.registerHelper('pricerange', function(prices) {
 	});
 
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
-
 });
 Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
