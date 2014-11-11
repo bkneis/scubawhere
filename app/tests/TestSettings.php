@@ -10,7 +10,7 @@ class TestSettings {
 	 * @var array of unseeded models (name => table)
 	 */
 	public static $modelTables = array(
-			'Accommodation' => 'accommodations',
+			'Boatroom'      => 'boatrooms',
 			'Addon'         => 'addons',
 			'Agent'         => 'agents',
 			'Boat'          => 'boats',
@@ -52,7 +52,7 @@ class TestSettings {
 	 * @var array of pivot table names
 	*/
 	public static $pivotTables = array(
-			'accommodation_boat',
+			'boat_boatroom',
 			'addon_bookingdetail',
 			'boat_ticket',
 			'certificate_customer',

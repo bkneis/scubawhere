@@ -104,9 +104,9 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->country()->first();
 	}
 
-	public function accommodations()
+	public function boatrooms()
 	{
-		return $this->hasMany('Accommodation');
+		return $this->hasMany('Boatroom');
 	}
 
 	public function agencies()

@@ -3,7 +3,7 @@
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Accommodation extends Ardent {
+class Boatroom extends Ardent {
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
 
 	public static $rules = array(

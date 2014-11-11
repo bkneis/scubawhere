@@ -28,8 +28,9 @@ body{ background-color: #34495e; }
 *******************************
 */
 #guts{
-	width: 80%;
-	display: inline-block;
+	/* width: 80%;
+	display: inline-block; */
+	overflow: auto;
 	background-color: #ffffff;
 	position: relative;
 	min-height: 478px;
@@ -66,7 +67,10 @@ body{ background-color: #34495e; }
 
 /*				GENERIC STYLES
 *******************************/
-#page{ padding-top: 50px; }
+#page{
+	padding-top: 50px;
+	overflow: auto;
+}
 
 .floating{
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
@@ -188,11 +192,11 @@ body{ background-color: #34495e; }
 *******************************
 */
 #sidebar{
-	width: 20%;
+	width: 200px;
 	min-height: 478px;
 	height: 100%;
 	float: left;
-	display: inline-block;
+	/* display: inline-block; */
 	background-color: #34495e;
 }
 
