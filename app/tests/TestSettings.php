@@ -10,7 +10,7 @@ class TestSettings {
 	 * @var array of unseeded models (name => table)
 	 */
 	public static $modelTables = array(
-			'Accommodation' => 'accommodations',
+			'Accommodation' => 'boatrooms',
 			'Addon'         => 'addons',
 			'Agent'         => 'agents',
 			'Boat'          => 'boats',
