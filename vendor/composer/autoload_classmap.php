@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AccommodationModelTest' => $baseDir . '/app/tests/unit/models/AccommodationModelTest.php',
     'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
@@ -40,6 +39,7 @@ return array(
     'Boat' => $baseDir . '/app/models/Boat.php',
     'BoatModelTest' => $baseDir . '/app/tests/unit/models/BoatModelTest.php',
     'Boatroom' => $baseDir . '/app/models/Boatroom.php',
+    'BoatroomModelTest' => $baseDir . '/app/tests/unit/models/BoatroomModelTest.php',
     'Booking' => $baseDir . '/app/models/Booking.php',
     'BookingController' => $baseDir . '/app/controllers/BookingController.php',
     'BookingModelTest' => $baseDir . '/app/tests/unit/models/BookingModelTest.php',
