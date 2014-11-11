@@ -54,6 +54,10 @@ class PriceModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->markTestIncomplete('This test needs to be completed!');
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

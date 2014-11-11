@@ -52,6 +52,16 @@ class CertificateModelTest extends ModelTestCase {
 		$this->assertTrue(true);
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$agency_id = ModelTestHelper::createAgency();
+		$certificate_id = ModelTestHelper::createCertificate($agency_id);
+		$certificate = Certificate::find($certificate_id);
+	
+		$this->assertNotNull($certificate->agency, "Unexpected agency relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

@@ -59,6 +59,19 @@ class AddonModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+		
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$addon_id = ModelTestHelper::createAddon($company_id);
+		$addon = Addon::find($addon_id);
+		
+		$this->assertNotNull($addon->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

@@ -66,6 +66,21 @@ class TripModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$location_id = ModelTestHelper::createLocation();
+		$trip_id = ModelTestHelper::createTrip($company_id, $location_id);
+		$trip = Trip::find($trip_id);
+	
+		$this->assertNotNull($trip->company, "Unexpected company relationship value");
+		$this->assertNotNull($trip->location, "Unexpected location relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

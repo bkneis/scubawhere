@@ -79,6 +79,19 @@ class AgentModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$agent = Agent::find($agent_id);
+	
+		$this->assertNotNull($agent->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

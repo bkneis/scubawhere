@@ -42,6 +42,20 @@ class PackagefacadeModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$package_id = ModelTestHelper::createPackage($company_id);
+		$packagefacade_id = ModelTestHelper::createPackagefacade($package_id);
+		$packagefacade = Packagefacade::find($packagefacade_id);
+	
+		$this->assertNotNull($packagefacade->package, "Unexpected package relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

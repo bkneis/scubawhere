@@ -62,6 +62,25 @@ class DepartureModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$location_id = ModelTestHelper::createLocation();
+		$trip_id = ModelTestHelper::createTrip($company_id, $location_id);
+		$boat_id = ModelTestHelper::createBoat($company_id);
+		$timetable_id = ModelTestHelper::createTimetable($company_id);		
+		$departure_id = ModelTestHelper::createDeparture($trip_id, $boat_id, $timetable_id);
+		$departure = Departure::find($departure_id);
+	
+		$this->assertNotNull($departure->trip, "Unexpected trip relationship value");
+		$this->assertNotNull($departure->boat, "Unexpected boat relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

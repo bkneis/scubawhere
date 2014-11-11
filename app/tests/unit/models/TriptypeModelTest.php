@@ -46,6 +46,10 @@ class TriptypeModelTest extends ModelTestCase {
 		$this->assertTrue(true);
 	}
 	
+	public function testRelationships(){
+		$this->assertTrue(true);
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

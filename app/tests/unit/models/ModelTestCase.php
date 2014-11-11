@@ -27,7 +27,11 @@ abstract class ModelTestCase extends TestCase {
 	/**
 	 * Tests model validation messages
 	 */
-	abstract public function testValidation();	
+	abstract public function testValidation();
+	/**
+	 * Tests model belongsTo relationships only
+	 */
+	abstract public function testRelationships();
 	/**
 	 * Tests any functions extending the model
 	 */

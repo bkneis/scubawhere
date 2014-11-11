@@ -84,6 +84,20 @@ class CustomerModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$customer_id = ModelTestHelper::createCustomer($country_id, $company_id);
+		$customer = Customer::find($customer_id);
+	
+		$this->assertNotNull($customer->country, "Unexpected country relationship value");
+		$this->assertNotNull($customer->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

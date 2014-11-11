@@ -55,6 +55,10 @@ class LocationModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->assertTrue(true);
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

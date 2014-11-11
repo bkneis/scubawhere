@@ -51,6 +51,19 @@ class TimetableModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$timetable_id = ModelTestHelper::createTimetable($company_id);
+		$timetable = Timetable::find($timetable_id);
+	
+		$this->assertNotNull($timetable->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

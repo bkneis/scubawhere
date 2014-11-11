@@ -56,6 +56,24 @@ class PaymentModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$booking_id = ModelTestHelper::createBooking($company_id, $agent_id);
+		$paymentgateway_id = ModelTestHelper::createPaymentgateway();		
+		$payment_id = ModelTestHelper::createPayment($booking_id, $currency_id, $paymentgateway_id);
+		$payment = Payment::find($payment_id);
+	
+		$this->assertNotNull($payment->booking, "Unexpected booking relationship value");
+		$this->assertNotNull($payment->currency, "Unexpected currency relationship value");
+		$this->assertNotNull($payment->paymentgateway, "Unexpected paymentgateway relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}

@@ -53,6 +53,19 @@ class TicketModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+public function testRelationships(){
+		$this->refreshTables();
+		
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$ticket_id = ModelTestHelper::createTicket($company_id);
+		$ticket = Ticket::find($ticket_id);
+		
+		$this->assertNotNull($ticket->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}

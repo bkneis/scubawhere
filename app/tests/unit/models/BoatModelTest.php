@@ -58,6 +58,19 @@ class BoatModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
+	public function testRelationships(){
+		$this->refreshTables();
+	
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$boat_id = ModelTestHelper::createBoat($company_id);
+		$boat = Boat::find($boat_id);
+	
+		$this->assertNotNull($boat->company, "Unexpected company relationship value");
+	}
+	
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}
