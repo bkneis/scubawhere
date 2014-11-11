@@ -15,7 +15,7 @@ class Price extends Ardent {                       // ↓ The price here is need
 	public static $rules = array(
 		'new_decimal_price' => 'required|numeric|min:0',
 		'price'             => 'sometimes|integer|min:0',
-		'from'              => 'required|required_with:until|size:10',
+		'from'              => 'required|required_with:until|date',
 		'until'             => 'sometimes|date',
 	);
 

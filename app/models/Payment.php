@@ -16,8 +16,8 @@ class Payment extends Ardent {
 	{
 		if( isset($this->amount) )
 		{
-// 			$currency = new Currency( $this->currency );
-// 			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
+			$currency = new Currency( $this->currency );
+			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
 		}
 	}
 

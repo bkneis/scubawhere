@@ -338,11 +338,14 @@ class ModelTestHelper{
 
 	public static function createPrice($owner_id){
 		$entry = new Price();
+		
+		$entry->owner_id = $owner_id;
 
-		$entry->owner_type = self::TEST_STRING.$append;
+		$entry->owner_type = self::TEST_STRING;
+		$entry->new_decimal_price = self::TEST_INTEGER;
 		$entry->price = self::TEST_INTEGER;
-		$entry->from = self::TEST_DATE;
-		$entry->until = self::TEST_DATE;
+		$entry->from = self::TEST_DAY;
+		$entry->until = self::TEST_DAY;
 
 		$entry->save();
 		return $entry->id;
