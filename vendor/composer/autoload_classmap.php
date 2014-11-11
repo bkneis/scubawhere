@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Accommodation' => $baseDir . '/app/models/Accommodation.php',
+    'AccommodationController' => $baseDir . '/app/controllers/AccommodationController.php',
     'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
@@ -110,6 +112,7 @@ return array(
     'CountryController' => $baseDir . '/app/controllers/CountryController.php',
     'CountryModelTest' => $baseDir . '/app/tests/unit/models/CountryModelTest.php',
     'CreateAccommodationBoatTable' => $baseDir . '/app/database/migrations/2014_02_17_020518_create_accommodation_boat_table.php',
+    'CreateAccommodationBookingTable' => $baseDir . '/app/database/migrations/2014_11_11_191720_create_accommodation_booking_table.php',
     'CreateAccommodationsTable' => $baseDir . '/app/database/migrations/2014_02_17_020436_create_accommodations_table.php',
     'CreateAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_13_142042_create_addon_booking_detail_pivot_table.php',
     'CreateAddonsTable' => $baseDir . '/app/database/migrations/2014_08_12_121905_create_addons_table.php',
@@ -1721,6 +1724,7 @@ return array(
     'RemoveUnneededIdColumns' => $baseDir . '/app/database/migrations/2014_02_19_143751_remove_unneeded_id_columns.php',
     'RenameAccommodationsTableToBoatrooms' => $baseDir . '/app/database/migrations/2014_11_11_081111_rename_accommodations_table_to_boatrooms.php',
     'RenameAllAccommodationIdInstancesToBoatroomId' => $baseDir . '/app/database/migrations/2014_11_11_084413_rename_all_accommodation_id_instances_to_boatroom_id.php',
+    'RenameQuantityToCapacityOnAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_11_210332_rename_quantity_to_capacity_on_accommodations_table.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',

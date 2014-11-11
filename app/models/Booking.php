@@ -59,6 +59,11 @@ class Booking extends Ardent {
 		return $this->getDecimalPriceAttribute();
 	}
 
+	public function accommodations()
+	{
+		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'date', 'nights')->withTimestamps();
+	}
+
 	public function customers()
 	{
 		return $this->belongsToMany('Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->withTimestamps();
