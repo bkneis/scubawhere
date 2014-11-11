@@ -108,7 +108,7 @@
 												{{#if accommodations}}
 													<optgroup label="Limit to:">
 														{{#each accommodations}}
-															<option value="{{id}}"{{isEqualDeepPivot id ../../../boats ../../id 'accommodation_id' ' selected'}}>{{name}}</option>
+															<option value="{{id}}"{{isEqualDeepPivot id ../../../boats ../../id 'boatroom_id' ' selected'}}>{{name}}</option>
 														{{/each}}
 													</optgroup>
 												{{/if}}

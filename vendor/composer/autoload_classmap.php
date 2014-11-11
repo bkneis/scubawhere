@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Accommodation' => $baseDir . '/app/models/Accommodation.php',
     'AccommodationModelTest' => $baseDir . '/app/tests/unit/models/AccommodationModelTest.php',
     'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
@@ -40,6 +39,7 @@ return array(
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boat' => $baseDir . '/app/models/Boat.php',
     'BoatModelTest' => $baseDir . '/app/tests/unit/models/BoatModelTest.php',
+    'Boatroom' => $baseDir . '/app/models/Boatroom.php',
     'Booking' => $baseDir . '/app/models/Booking.php',
     'BookingController' => $baseDir . '/app/controllers/BookingController.php',
     'BookingModelTest' => $baseDir . '/app/tests/unit/models/BookingModelTest.php',
@@ -1719,6 +1719,7 @@ return array(
     'RemoveUnneededColumnsFromCustomers' => $baseDir . '/app/database/migrations/2014_05_24_203935_remove_unneeded_columns_from_customers.php',
     'RemoveUnneededIdColumns' => $baseDir . '/app/database/migrations/2014_02_19_143751_remove_unneeded_id_columns.php',
     'RenameAccommodationsTableToBoatrooms' => $baseDir . '/app/database/migrations/2014_11_11_081111_rename_accommodations_table_to_boatrooms.php',
+    'RenameAllAccommodationIdInstancesToBoatroomId' => $baseDir . '/app/database/migrations/2014_11_11_084413_rename_all_accommodation_id_instances_to_boatroom_id.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
