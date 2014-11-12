@@ -218,7 +218,7 @@ function renderTicketList(callback) {
 		window.tickets = _.indexBy(data, 'id');
 		$('#ticket-list').remove();
 		$('#ticket-list-container .loader').remove();
-
+		console.log(data);
 		$("#ticket-list-container").append( ticketList({tickets : data}) );
 
 		if(typeof callback === 'function')
