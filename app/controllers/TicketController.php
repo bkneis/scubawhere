@@ -112,25 +112,25 @@ class TicketController extends Controller {
 		if( $boats && !empty($boats) ) // only if the parameter is given/submitted
 		{
 			$sync = array();
-			foreach( $boats as $boat_id => $accommodation_id )
+			foreach( $boats as $boat_id => $boatroom_id )
 			{
-				// The validator fails when accommodation_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
-				if( !empty($accommodation_id) )
+				// The validator fails when boatroom_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
+				if( !empty($boatroom_id) )
 				{
 					$validator = Validator::make(
 						array(
-							'boat_id'          => $boat_id,
-							'accommodation_id' => $accommodation_id
+							'boat_id'     => $boat_id,
+							'boatroom_id' => $boatroom_id
 						),
 						array(
-							'boat_id'          => 'integer|exists:boats,id',
-							'accommodation_id' => 'integer|exists:accommodations,id'
+							'boat_id'     => 'integer|exists:boats,id',
+							'boatroom_id' => 'integer|exists:boatrooms,id'
 						)
 					);
 				}
 				else
 				{
-					$accommodation_id = null;
+					$boatroom_id = null;
 					$validator = Validator::make(
 						array(
 							'boat_id' => $boat_id
@@ -146,7 +146,7 @@ class TicketController extends Controller {
 					return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
 				}
 
-				$sync[$boat_id] = array('accommodation_id' => $accommodation_id);
+				$sync[$boat_id] = array('boatroom_id' => $boatroom_id);
 			}
 			$ticket->boats()->sync( $sync );
 		}
@@ -242,7 +242,7 @@ class TicketController extends Controller {
 					$data['boats'] = array();
 					foreach($ticket->boats as $boat) // Includes pivot data by default
 					{
-						$data['boats'][$boat->id] = $boat->pivot->accommodation_id;
+						$data['boats'][$boat->id] = $boat->pivot->boatroom_id;
 					}
 				}
 			}
@@ -338,7 +338,7 @@ class TicketController extends Controller {
 				if( $boats && !empty($boats) ) // only if the parameter is given/submitted
 				{
 					$sync = array();
-					foreach( $boats as $boat_id => $accommodation_id )
+					foreach( $boats as $boat_id => $boatroom_id )
 					{
 						// If the boat array is submitted empty, meaning all boats should be detached, skip all this and go directly to sync
 						if( empty($boat_id) )
@@ -347,23 +347,23 @@ class TicketController extends Controller {
 							break;
 						}
 
-						// The validator fails when accommodation_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
-						if( !empty($accommodation_id) )
+						// The validator fails when boatroom_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
+						if( !empty($boatroom_id) )
 						{
 							$validator = Validator::make(
 								array(
-									'boat_id'          => $boat_id,
-									'accommodation_id' => $accommodation_id
+									'boat_id'     => $boat_id,
+									'boatroom_id' => $boatroom_id
 								),
 								array(
-									'boat_id'          => 'integer|exists:boats,id',
-									'accommodation_id' => 'integer|exists:accommodations,id'
+									'boat_id'     => 'integer|exists:boats,id',
+									'boatroom_id' => 'integer|exists:boatrooms,id'
 								)
 							);
 						}
 						else
 						{
-							$accommodation_id = null;
+							$boatroom_id = null;
 							$validator = Validator::make(
 								array(
 									'boat_id' => $boat_id
@@ -379,7 +379,7 @@ class TicketController extends Controller {
 							return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
 						}
 
-						$sync[$boat_id] = array('accommodation_id' => $accommodation_id);
+						$sync[$boat_id] = array('boatroom_id' => $boatroom_id);
 					}
 					$ticket->boats()->sync( $sync );
 				}
@@ -430,7 +430,7 @@ class TicketController extends Controller {
 
 		// Keyify $old_prices and reduce them to input fields
 		$array = array();
-		$input_keys = array('decimal_price' => '', 'currency' => '', 'from' => '');
+		$input_keys = array('decimal_price' => '', 'from' => '');
 		if(!$isBase)
 			$input_keys['until'] = '';
 

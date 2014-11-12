@@ -11,20 +11,18 @@ class Addon extends Ardent {
 
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
-	protected $appends = array('decimal_price', 'has_bookings', 'trashed');
+	protected $appends = array('decimal_price', 'currency', 'has_bookings', 'trashed');
 
 	protected $fillable = array(
 		'name',
 		'description',
 		'price',
-		'currency',
 		'compulsory'
 	);
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'currency'    => 'required|alpha|size:3|valid_currency',
 		'price'       => 'required|integer|min:0',
 		'compulsory'  => 'required|boolean'
 	);
@@ -46,7 +44,7 @@ class Addon extends Ardent {
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( $this->currency );
+		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number
@@ -64,6 +62,11 @@ class Addon extends Ardent {
 	public function getTrashedAttribute()
 	{
 		return $this->trashed();
+	}
+
+	public function getCurrencyAttribute()
+	{
+		return Auth::user()->currency;
 	}
 
 	/* public function bookings()

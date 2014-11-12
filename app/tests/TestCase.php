@@ -21,17 +21,18 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		parent::setUp();		
 		//Make sure at least one refresh is done
 		if (!self::$dbInitialised) {
-			echo("\nDB ".getenv('DATABASE_NAME').": Initialising.....");
 			TestHelper::dbRefresh(true);
 			self::$dbInitialised = true;
-			echo("\nDB ".getenv('DATABASE_NAME').": Initialisation complete!");
 		}
 		
 		//TODO keep an eye on this - might be needed but it does slow things down
 		TestHelper::refreshListeners();
 	}
 
-	
+	public function assertEqualsDecimal($expected, $actual, $message = "", $delta = 0){		
+		$this->assertGreaterThan($expected - $delta, $actual, $message." - value not within delta");
+		$this->assertLessThan($expected + $delta, $actual, $message." - value not within delta");
+	}
 	
 	/**
 	 * Creates the application.

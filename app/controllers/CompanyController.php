@@ -22,48 +22,48 @@ class CompanyController extends Controller {
 
 	public function getBoats()
 	{
-		$boats =  Auth::user()->boats()->with('accommodations')->get();
-		$accommodations = Auth::user()->accommodations()->get();
+		$boats =  Auth::user()->boats()/*->with('boatrooms')*/->get();
+		$boatrooms = Auth::user()->boatrooms()->get();
 
-		return Response::json( array( 'boats' => $boats->toArray(), 'accommodations' => $accommodations->toArray() ) );
+		return Response::json( array( 'boats' => $boats->toArray(), 'accommodations' => $boatrooms->toArray() ) );
 	}
 
 	public function postBoats()
 	{
-		// Doing the accommodations first, because the boats rely on their correct IDs
-		$presentRooms = array_flip( Auth::user()->accommodations()->lists('id') );
+		// Doing the boatrooms first, because the boats rely on their correct IDs
+		$presentRooms = array_flip( Auth::user()->boatrooms()->lists('id') );
 		$inputRooms = Input::get('accommodations');
 
 		if( empty($inputRooms) )
 			$inputRooms = array();
 
-		// Find out what accommodations got deleted
+		// Find out what boatrooms got deleted
 		$diffRooms = array_diff_key($presentRooms, $inputRooms);
-		// Remove these deleted accommodations from the database
+		// Remove these deleted boatrooms from the database
 		if( count($diffRooms) > 0 )
 		{
 			try
 			{
-				Auth::user()->accommodations()->whereIn( 'id', array_keys($diffRooms) )->delete();
+				Auth::user()->boatrooms()->whereIn( 'id', array_keys($diffRooms) )->delete();
 			}
 			catch(QueryException $e)
 			{
-				return Response::json( array('errors' => array("Some accommodations could not be deleted because they are still assigned to boats. Please reload the page to see the current state.")), 409 ); // 409 Conflict
+				return Response::json( array('errors' => array("Some boatrooms could not be deleted because they are still assigned to boats. Please reload the page to see the current state.")), 409 ); // 409 Conflict
 			}
 		}
 
-		// Find all already present accommodations
+		// Find all already present boatrooms
 		$intersectRooms = array_intersect_key($inputRooms, $presentRooms);
-		// Update these present accommodations
+		// Update these present boatrooms
 		foreach($intersectRooms as $id => $details)
 		{
 			// Clean the Input array from unwanted fields
 			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'photo') ) );
 
-			$room = Auth::user()->accommodations()->find($id)->update( $reducedDetails );
+			$room = Auth::user()->boatrooms()->find($id)->update( $reducedDetails );
 		}
 
-		// Find all new accommodations
+		// Find all new boatrooms
 		$newRooms = array_diff_key($inputRooms, $presentRooms);
 		$keyPartners = array();
 		foreach( $newRooms as $id => $details)
@@ -71,17 +71,17 @@ class CompanyController extends Controller {
 			// Clean the Input array from unwanted fields
 			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'photo') ) );
 
-			$room = new Accommodation($reducedDetails);
+			$room = new Boatroom($reducedDetails);
 			$room->company_id = Auth::user()->id;
 			if( !$room->validate() )
 			{
 				$errors = $room->errors()->all();
-				$errors[] = "Something was wrong with the submitted data. The new accomodation '" . Helper::sanitiseString($details['name']) . "' could not be created.";
+				$errors[] = "Something was wrong with the submitted data. The new boatroom '" . Helper::sanitiseString($details['name']) . "' could not be created.";
 				return Response::json( array('errors' => $errors), 406 ); // 406 Not Acceptable
 			}
 
 			// Save the relation between the old ID and the official ID in an array for later
-			$room = Auth::user()->accommodations()->save($room);
+			$room = Auth::user()->boatrooms()->save($room);
 			$keyPartners[$id] = $room->id;
 		}
 
@@ -131,7 +131,7 @@ class CompanyController extends Controller {
 
 			if( isset( $details['accommodations'] ) )
 			{
-				// Construct the accommodations array to sync to the pivot table (needs to include the 'capacity' field for the pivot table)
+				// Construct the boatrooms array to sync to the pivot table (needs to include the 'capacity' field for the pivot table)
 				$sync = array();
 				$utilisation = 0;
 				foreach( $details['accommodations'] as $id => $capacity )
@@ -167,7 +167,7 @@ class CompanyController extends Controller {
 					$sync[$id] = array('capacity' => $capacity);
 				}
 
-				$boat->accommodations()->sync( $sync );
+				$boat->boatrooms()->sync( $sync );
 			}
 		}
 
@@ -177,7 +177,7 @@ class CompanyController extends Controller {
 
 	public function getAccommodations()
 	{
-		return Auth::user()->accommodations()->get();
+		return Auth::user()->boatrooms()->get();
 	}
 
 	public function getTriptypes()

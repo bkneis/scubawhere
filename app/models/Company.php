@@ -9,7 +9,9 @@ use ScubaWhere\Helper;
 class Company extends Ardent implements UserInterface, RemindableInterface {
 	use RemindableTrait;
 
-	protected $guarded = array('id', 'password', 'verified', 'views', 'created_at', 'updated_at');
+	protected $guarded = array('id', 'password', 'verified', 'views', 'remember_token', 'created_at', 'updated_at');
+
+	protected $appends = array('currency', 'country');
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -19,32 +21,30 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password');
 
 	public static $rules = array(
-		'username'    => 'required|alpha_dash|between:4,64|different:name|unique:companies,username',
-		'password'    => 'size:60',
-		'email'       => 'required|email|unique:companies,email',
-		'name'        => 'required',
-		'description' => '',
-		'address_1'   => 'required',
-		'address_2'   => '',
-		'city'        => 'required',
-		'county'      => '',
-		'postcode'    => 'required',
-		'country_id'  => 'required|integer|exists:countries,id',
-		'business_email' => 'required',
-		'business_phone' => 'required',
-		'vat_number'  => '',
+		'username'            => 'required|alpha_dash|between:4,64|different:name|unique:companies,username',
+		'password'            => 'size:60',
+		'email'               => 'required|email|unique:companies,email',
+		'name'                => 'required',
+		'description'         => '',
+		'address_1'           => 'required',
+		'address_2'           => '',
+		'city'                => 'required',
+		'county'              => '',
+		'postcode'            => 'required',
+		'country_id'          => 'required|integer|exists:countries,id',
+		'currency_id'         => 'required|integer|exists:currencies,id',
+		'business_email'      => 'required|email|unique:companies,email',
+		'business_phone'      => 'required',
+		'vat_number'          => '',
 		'registration_number' => '',
-		'latitude'    => 'numeric|between:-90,90',
-		'longitude'   => 'numeric|between:-180,180',
-		'phone'       => 'required',
-		'contact'     => '',
-		'website'     => 'active_url',
-		'agency'      => 'digits:1',
-		'logo'        => '',
-		'photo'       => '',
-		'video'       => '',
-		'views'       => 'integer'
-	); // add additonal fields to rules
+		'phone'               => 'required',
+		'contact'             => 'required',
+		'website'             => 'active_url',
+		'logo'                => '',
+		'photo'               => '',
+		'video'               => '',
+		'views'               => 'integer'
+	);
 
 	public function beforeSave()
 	{
@@ -69,6 +69,15 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		if( isset($this->county) )
 			$this->county = Helper::sanitiseString($this->county);
 
+		if( isset($this->business_phone) )
+			$this->business_phone = Helper::sanitiseString($this->business_phone);
+
+		if( isset($this->vat_number) )
+			$this->vat_number = Helper::sanitiseString($this->vat_number);
+
+		if( isset($this->registration_number) )
+			$this->registration_number = Helper::sanitiseString($this->registration_number);
+
 		if( isset($this->phone) )
 			$this->phone = Helper::sanitiseString($this->phone);
 
@@ -85,24 +94,44 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 			$this->video = Helper::sanitiseString($this->video);
 	}
 
+	public function getCurrencyAttribute()
+	{
+		return $this->currency()->first();
+	}
+
+	public function getCountryAttribute()
+	{
+		return $this->country()->first();
+	}
+
 	public function accommodations()
 	{
 		return $this->hasMany('Accommodation');
+	}
+
+	public function addons()
+	{
+		return $this->hasMany('Addon');
+	}
+
+	public function agencies()
+	{
+		return $this->belongsToMany('Agency')->withTimestamps();
 	}
 
 	public function agents()
 	{
 		return $this->hasMany('Agent');
 	}
-	
-	public function addons()
-	{
-		return $this->hasMany('Addon');
-	}
 
 	public function boats()
 	{
 		return $this->hasMany('Boat');
+	}
+
+	public function boatrooms()
+	{
+		return $this->hasMany('Boatroom');
 	}
 
 	public function bookings()
@@ -115,6 +144,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->belongsTo('Country');
 	}
 
+	public function currency()
+	{
+		return $this->belongsTo('Currency');
+	}
+
 	public function customers()
 	{
 		return $this->hasMany('Customer');
@@ -122,7 +156,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location');
+		return $this->belongsToMany('Location')->withTimestamps();
 	}
 
 	public function packages()
@@ -153,10 +187,10 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	/**
 	 * Booking relations
 	 */
-	public function booked_packages()
+	/*public function booked_packages()
 	{
 		return $this->hasManyThrough('Package', 'Booking');
-	}
+	}*/
 
 	public function booked_sessions()
 	{

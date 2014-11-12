@@ -5,7 +5,7 @@ use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
 class Price extends Ardent {                       // ↓ The price here is needed for creation of new ticket/package during update, when old one is booked
-	protected $fillable = array('new_decimal_price', 'price', 'currency', 'from', 'until');
+	protected $fillable = array('new_decimal_price', 'price', 'from', 'until');
 
 	protected $appends = array('decimal_price');
 
@@ -15,8 +15,7 @@ class Price extends Ardent {                       // ↓ The price here is need
 	public static $rules = array(
 		'new_decimal_price' => 'required|numeric|min:0',
 		'price'             => 'sometimes|integer|min:0',
-		'currency'          => 'required|alpha|size:3',
-		'from'              => 'required|required_with:until|size:10',
+		'from'              => 'required|required_with:until|date',
 		'until'             => 'sometimes|date',
 	);
 
@@ -24,7 +23,7 @@ class Price extends Ardent {                       // ↓ The price here is need
 	{
 		if( isset($this->new_decimal_price) )
 		{
-			$currency = new Currency( Helper::currency($this->currency) );
+			$currency = new Currency( Auth::user()->currency->code );
 			$this->price = (int) round( $this->new_decimal_price * $currency->getSubunitToUnit() );
 			unset($this->new_decimal_price);
 		}
@@ -32,7 +31,7 @@ class Price extends Ardent {                       // ↓ The price here is need
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( $this->currency );
+		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number

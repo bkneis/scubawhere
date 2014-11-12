@@ -56,12 +56,7 @@ function initialise() {
 
 			// Register marker onclick behaviour
 			_.each(window.sw.markers, function(marker) {
-				google.maps.event.addListener(marker, 'click', function(event) {
-					var markerObject = this;
-
-					// Show modal window
-					showModalWindow(markerObject);
-				});
+				google.maps.event.addListener(marker, 'click', existingMarkerClick);
 			});
 		});
 	});
@@ -74,7 +69,6 @@ function initialise() {
 
 	// Define inputs behaviour
 	$('#showLocation').on('click', function(event) {
-		console.log("SHOW clicked");
 		if( window.sw.latitudeInput.val() == '' || window.sw.longitudeInput.val() == '')
 			return false;
 
@@ -237,7 +231,9 @@ function initialise() {
 				title:     location.name,
 				icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 			};
-			window.sw.markers.push( new google.maps.Marker(markerOptions) );
+			var marker = new google.maps.Marker(markerOptions);
+			google.maps.event.addListener(marker, 'click', existingMarkerClick);
+			window.sw.markers.push(marker);
 			window.sw.attachedLocations[location.id] = location;
 
 			// Remove and delete newMarker
@@ -426,6 +422,13 @@ function updateLatLngInputs(location) { // Sync changes of the marker's location
 
 	window.sw.latitudeInput.val( latitude );
 	window.sw.longitudeInput.val( longitude );
+}
+
+function existingMarkerClick(event) {
+	var markerObject = this;
+
+	// Show modal window
+	showModalWindow(markerObject);
 }
 
 function showModalWindow(markerObject) {

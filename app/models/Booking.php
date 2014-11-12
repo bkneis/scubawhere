@@ -8,7 +8,6 @@ class Booking extends Ardent {
 		'agent_id',
 		'source',
 		// 'price',
-		'currency',
 		'discount',
 		// 'confirmed',
 		'reserved',
@@ -23,7 +22,6 @@ class Booking extends Ardent {
 		'agent_id'         => 'integer|exists:agents,id|required_without:source',
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
-		'currency'         => 'alpha|size:3|valid_currency',
 		'discount'         => 'integer|min:0',
 		'confirmed'        => 'integer|in:0,1',
 		'reserved'         => 'date|after:now',
@@ -46,10 +44,10 @@ class Booking extends Ardent {
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( $this->currency );
+		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
-			$this->price / $currency->getSubunitToUnit(), // number
+			($this->price - $this->discount) / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''
@@ -59,6 +57,11 @@ class Booking extends Ardent {
 	public function decimal_price()
 	{
 		return $this->getDecimalPriceAttribute();
+	}
+
+	public function accommodations()
+	{
+		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'date', 'nights')->withTimestamps();
 	}
 
 	public function customers()
@@ -71,10 +74,10 @@ class Booking extends Ardent {
 		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->first();
 	}
 
-	public function addons()
+	/*public function addons()
 	{
 		return $this->hasManyThrough('Addon', 'Bookingdetail');
-	}
+	}*/
 
 	public function bookingdetails()
 	{
@@ -84,6 +87,11 @@ class Booking extends Ardent {
 	public function company()
 	{
 		return $this->belongsTo('Company');
+	}
+	
+	public function agent()
+	{
+		return $this->belongsTo('Agent');
 	}
 
 	/*public function packages()
@@ -109,7 +117,7 @@ class Booking extends Ardent {
 	public function updatePrice()
 	{
 		// TODO Do this properly with currency check
-
+		/*
 		$packagesSum = 0;
 		$this->packagefacades()->distinct()->with('package')->get()->each(function($packagefacade) use ($packagesSum)
 		{
@@ -121,7 +129,8 @@ class Booking extends Ardent {
 		// $addonSum    = $this->addons()->sum('price');
 
 		$this->price = $packagesSum + $ticketsSum /*+ $addonSum*/;
-
+		/*
 		$this->save();
+		*/
 	}
 }

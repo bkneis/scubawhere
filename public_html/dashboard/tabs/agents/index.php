@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="agent-list-template">
 					<ul id="agent-list" class="entity-list">
 						{{#each agents}}
-							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{{branch_name}}}</li>
+							<li data-id="{{id}}"{{isBanned}}><strong>{{{name}}}</strong> | {{{branch_name}}}</li>
 						{{else}}
 							<p>No agents available.</p>
 						{{/each}}

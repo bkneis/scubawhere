@@ -30,11 +30,6 @@ class Country extends Ardent {
 		return $this->belongsTo('Continent');
 	}
 
-	public function regions()
-	{
-		return $this->hasMany('Region');
-	}
-
 	public function companies()
 	{
 		return $this->hasMany('Company');

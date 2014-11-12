@@ -14,6 +14,7 @@ class TestSettings {
 			'Addon'         => 'addons',
 			'Agent'         => 'agents',
 			'Boat'          => 'boats',
+			'Boatroom'      => 'boatrooms',
 			'Booking'       => 'bookings',
 			'Bookingdetail' => 'booking_details',
 			'Company'       => 'companies',
@@ -26,7 +27,7 @@ class TestSettings {
 			'Price'         => 'prices',
 			'Ticket'        => 'tickets',
 			'Timetable'     => 'timetables',
-			'Trip'          => 'trips'
+			'Trip'          => 'trips',
 	);
 
 
@@ -42,7 +43,7 @@ class TestSettings {
 			'Country'        => 'countries',
 			'Currency'       => 'currencies',
 			'Paymentgateway' => 'paymentgateways',
-			'Triptype'       => 'triptypes'
+			'Triptype'       => 'triptypes',
 	);
 
 
@@ -52,15 +53,16 @@ class TestSettings {
 	 * @var array of pivot table names
 	*/
 	public static $pivotTables = array(
-			'accommodation_boat',
+			'accommodation_booking',
 			'addon_bookingdetail',
+			'boat_boatroom',
 			'boat_ticket',
 			'certificate_customer',
 			'company_location',
 			'location_trip',
 			'package_ticket',
 			'ticket_trip',
-			'trip_triptype'
+			'trip_triptype',
 	);
 
 }

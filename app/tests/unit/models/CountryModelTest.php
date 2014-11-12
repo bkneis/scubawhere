@@ -6,16 +6,8 @@ class CountryModelTest extends ModelTestCase {
 	{		
 		parent::setUp();		
 	}
-	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('countries');
-		TestHelper::dbSeedTable('continents');
-		TestHelper::dbSeedTable('currencies');
-	}
-	
+		
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
@@ -59,8 +51,13 @@ class CountryModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		//$this->refreshTables();
-		//TODO
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$country = Country::find($country_id);
+	
+		$this->assertNotNull($country->continent, "Unexpected continent relationship value");
+		$this->assertNotNull($country->currency, "Unexpected currency relationship value");
 	}
 	
 	public function testFunctions(){
@@ -69,6 +66,6 @@ class CountryModelTest extends ModelTestCase {
 	
 	public function testEdges(){
 		$this->assertTrue(true);
-	}	
+	}
 	
 }

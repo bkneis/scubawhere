@@ -87,6 +87,8 @@ Route::group(array('before' => 'auth.basic'), function()
 
 	Route::controller('company', 'CompanyController');
 
+	Route::controller('api/accommodation', 'AccommodationController');
+
 	Route::controller('api/addon', 'AddonController');
 
 	//Route::controller('api/agency', 'AgencyController');

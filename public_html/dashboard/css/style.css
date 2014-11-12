@@ -28,8 +28,9 @@ body{ background-color: #34495e; }
 *******************************
 */
 #guts{
-	width: 80%;
-	display: inline-block;
+	/* width: 80%;
+	display: inline-block; */
+	overflow: auto;
 	background-color: #ffffff;
 	position: relative;
 	min-height: 478px;
@@ -66,7 +67,10 @@ body{ background-color: #34495e; }
 
 /*				GENERIC STYLES
 *******************************/
-#page{ padding-top: 50px; }
+#page{
+	padding-top: 50px;
+	overflow: auto;
+}
 
 .floating{
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
@@ -188,11 +192,11 @@ body{ background-color: #34495e; }
 *******************************
 */
 #sidebar{
-	width: 20%;
+	width: 200px;
 	min-height: 478px;
 	height: 100%;
 	float: left;
-	display: inline-block;
+	/* display: inline-block; */
 	background-color: #34495e;
 }
 
@@ -259,8 +263,10 @@ ul#sidenav .arrow{
 	position: relative;
 }
 
-ul#sidenav img{
-	height: 25px;
+ul#sidenav i{
+	font-size: 25px;
+	width: 30px;
+	text-align: center;
 }
 
 ul#sidenav > li > ul{ display: none; padding: 0px; }
@@ -695,6 +701,25 @@ span.box-tool{
 
 }
 
+.banned {
+	position: relative;
+}
+.banned::after {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 5px;
+	top: 0;
+	background-image: url(./../img/icons/banned.png);
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-color: inherit;
+	height: 100%;
+	width: 1.25em;
+
+}
+
 .dashed-border {
 	margin: 1em;
 	border: dashed rgb(211, 211, 211);
@@ -744,4 +769,9 @@ span.box-tool{
 .triptype.checked {
 	border-color: #27ae60;
 	background-color: #2ecc71;
+}
+
+.currency {
+	font-size: 18px;
+	margin-right: 0.5em;
 }

@@ -88,6 +88,7 @@
 						<div class="form-row">
 							<label class="field-label">Max. group size per boat</label>
 							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
+							(Enter 0 or nothing for <i>no limit</i>)
 						</div>
 
 						{{#if update}}
@@ -133,10 +134,8 @@
 
 		<script type="text/x-handlebars-template" id="price-input-template">
 			<p>
-				<select name="{{#if isBase}}base_{{/if}}prices[{{id}}][currency]">
-					<option value="GBP">GBP</option>
-				</select>
-				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" style="width: 100px;" min="0">
+				<span class="currency">{{currency}}</span>
+				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
 
 				{{#unless isAlways}}
 					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">

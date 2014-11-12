@@ -69,6 +69,11 @@ class Customer extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
+	public function accommodations()
+	{
+		return $this->belongsToMany('Accommodation', 'accommodation_booking')->withPivot('booking_id', 'date', 'nights')->withTimestamps();
+	}
+
 	public function addons()
 	{
 		return $this->hasManyThrough('Addon', 'Bookingdetail');
@@ -91,6 +96,6 @@ class Customer extends Ardent {
 
 	public function country()
 	{
-		return $this->hasOne('Country');
+		return $this->belongsTo('Country');
 	}
 }

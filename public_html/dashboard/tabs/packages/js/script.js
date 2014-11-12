@@ -20,6 +20,9 @@ Handlebars.registerHelper('count', function(array) {
 	});
 	return sum;
 });
+Handlebars.registerHelper('currency', function() {
+	return window.company.currency.symbol;
+});
 Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
 
 priceInput = Handlebars.compile( $('#price-input-template').html() )
@@ -62,7 +65,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#add-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Package.createPackage( $('#add-package-form').serialize(), function success(data) {
 
@@ -105,7 +108,7 @@ $(function(){
 		event.preventDefault();
 
 		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('#update-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		Package.updatePackage( $('#update-package-form').serialize(), function success(data) {
 
@@ -200,7 +203,7 @@ $(function(){
 		/*
 		var html = '';
 		_.each(window.tickets[id].prices, function(p, index, list) {
-			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + p.currency + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
+			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + window.company.currency.symbol + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
 		});
 
 		$prices.html(html);
@@ -366,7 +369,8 @@ function renderEditForm(id) {
 		});
 
 		_.each(package.base_prices, function(value, key, list) {
-			value.isBase = true;
+			value.isBase   = true;
+
 			if(value.from == '0000-00-00')
 				value.isAlways = true;
 		});

@@ -415,7 +415,7 @@
 						<select id="addons" onChange=""><option value="0">Addons...</option>
 						<script id="addons-template" type="text/x-handlebars-template">
 							{{#each addons}}
-								<option id=addon{{id}}>{{name}} - {{price}} {{currency}}</option> 
+								<option id=addon{{id}}>{{name}} - {{price}} {{currency}}</option>
 							{{/each}}
 						</script>
 						</select></p>
@@ -604,8 +604,8 @@
 		    	}//,
 		    	//'option', 'height', 200,
 	    		//'option', 'width', 300
-	     
-	    	
+
+
 	    });
 
 
@@ -621,4 +621,4 @@
 	<script src="/dashboard/js/Controllers/Booking.js"></script>
 	<script src="/dashboard/js/Controllers/Trip.js"></script>
 	<script src="/dashboard/js/Controllers/Customer.js"></script>
-	<script src="/dashboard/js/Controllers/Addons.js"></script>
+	<script src="/dashboard/js/Controllers/Addon.js"></script>
