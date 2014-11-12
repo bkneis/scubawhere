@@ -14,12 +14,11 @@ abstract class ModelTestCase extends TestCase {
 	 */
 	public function setUp()
 	{
+		if (parent::$dbInitialised) {
+			TestHelper::dbClear();
+		}
 		parent::setUp();
 	}	
-	/**
-	 * Provides functionality to clear any relevent tables for the test
-	 */
-	abstract public function refreshTables();
 	/**
 	 * Tests if a model is Created, Read, Updated, Soft Deleted, Restored & Force Deleted correctly
 	 */
@@ -27,7 +26,11 @@ abstract class ModelTestCase extends TestCase {
 	/**
 	 * Tests model validation messages
 	 */
-	abstract public function testValidation();	
+	abstract public function testValidation();
+	/**
+	 * Tests model belongsTo relationships only
+	 */
+	abstract public function testRelationships();
 	/**
 	 * Tests any functions extending the model
 	 */

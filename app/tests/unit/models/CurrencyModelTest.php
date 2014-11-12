@@ -7,20 +7,14 @@ class CurrencyModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('currencies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
-		
+				
 		//Create/Read
 		$currency_id = ModelTestHelper::createCurrency();
 		$currency = Currency::find($currency_id);
 		
 		$this->assertNotEquals(0, $currency->id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_ABBR, $currency->code, "Unexpected code value");
+		$this->assertEquals(ModelTestHelper::TEST_CURRENCY, $currency->code, "Unexpected code value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING, $currency->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING, $currency->description, "Unexpected description value");
 		$this->assertEquals(ModelTestHelper::TEST_SYMBOL, $currency->symbol, "Unexpected symbol value");
@@ -28,7 +22,7 @@ class CurrencyModelTest extends ModelTestCase {
 		$this->assertNotEquals("0000-00-00 00:00:00", $currency->updated_at);
 				
 		//Update
-		$currency->code = ModelTestHelper::TEST_ABBR_UPDATED;
+		$currency->code = ModelTestHelper::TEST_CURRENCY_UPDATED;
 		$currency->name = ModelTestHelper::TEST_STRING_UPDATED;
 		$currency->description = ModelTestHelper::TEST_STRING_UPDATED;
 		$currency->symbol = ModelTestHelper::TEST_SYMBOL_UPDATED;
@@ -36,7 +30,7 @@ class CurrencyModelTest extends ModelTestCase {
 		$currency = Currency::find($currency_id);
 		
 		$this->assertNotEquals(0, $currency->id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_ABBR_UPDATED, $currency->code, "Unexpected code value");
+		$this->assertEquals(ModelTestHelper::TEST_CURRENCY_UPDATED, $currency->code, "Unexpected code value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $currency->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $currency->description, "Unexpected description value");
 		$this->assertEquals(ModelTestHelper::TEST_SYMBOL_UPDATED, $currency->symbol, "Unexpected symbol value");
@@ -49,6 +43,10 @@ class CurrencyModelTest extends ModelTestCase {
 	}
 	
 	public function testValidation(){
+		$this->assertTrue(true);
+	}
+	
+	public function testRelationships(){
 		$this->assertTrue(true);
 	}
 	

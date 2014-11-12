@@ -88,6 +88,11 @@ class Booking extends Ardent {
 	{
 		return $this->belongsTo('Company');
 	}
+	
+	public function agent()
+	{
+		return $this->belongsTo('Agent');
+	}
 
 	/*public function packages()
 	{

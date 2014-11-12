@@ -7,13 +7,7 @@ class AgencyModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('agencies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$agency_id = ModelTestHelper::createAgency();
@@ -46,6 +40,10 @@ class AgencyModelTest extends ModelTestCase {
 	}
 	
 	public function testValidation(){
+		$this->assertTrue(true);
+	}
+	
+	public function testRelationships(){
 		$this->assertTrue(true);
 	}
 	

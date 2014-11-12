@@ -7,15 +7,7 @@ class BookingModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('bookings');
-		TestHelper::dbClearTable('companies');
-		TestHelper::dbClearTable('agents');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read		
 		$continent_id = ModelTestHelper::createContinent();
@@ -72,6 +64,19 @@ class BookingModelTest extends ModelTestCase {
 	
 	public function testValidation(){
 		$this->markTestIncomplete('This test needs to be completed!');
+	}
+	
+	public function testRelationships(){
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$booking_id = ModelTestHelper::createBooking($company_id, $agent_id);
+		$booking = Booking::find($booking_id);
+	
+		$this->assertNotNull($booking->company, "Unexpected company relationship value");
+		$this->assertNotNull($booking->agent, "Unexpected agent relationship value");
 	}
 	
 	public function testFunctions(){

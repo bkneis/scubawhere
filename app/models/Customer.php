@@ -96,6 +96,6 @@ class Customer extends Ardent {
 
 	public function country()
 	{
-		return $this->hasOne('Country');
+		return $this->belongsTo('Country');
 	}
 }

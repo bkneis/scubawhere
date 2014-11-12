@@ -7,13 +7,7 @@ class PaymentgatewayModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('paymentgateways');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$paymentgateway_id = ModelTestHelper::createPaymentgateway();
@@ -40,6 +34,10 @@ class PaymentgatewayModelTest extends ModelTestCase {
 	}
 	
 	public function testValidation(){
+		$this->assertTrue(true);
+	}
+	
+	public function testRelationships(){
 		$this->assertTrue(true);
 	}
 	

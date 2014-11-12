@@ -7,14 +7,7 @@ class CertificateModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('certificates');
-		TestHelper::dbSeedTable('agencies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$agency_id = ModelTestHelper::createAgency();
@@ -50,6 +43,14 @@ class CertificateModelTest extends ModelTestCase {
 	
 	public function testValidation(){
 		$this->assertTrue(true);
+	}
+	
+	public function testRelationships(){	
+		$agency_id = ModelTestHelper::createAgency();
+		$certificate_id = ModelTestHelper::createCertificate($agency_id);
+		$certificate = Certificate::find($certificate_id);
+	
+		$this->assertNotNull($certificate->agency, "Unexpected agency relationship value");
 	}
 	
 	public function testFunctions(){

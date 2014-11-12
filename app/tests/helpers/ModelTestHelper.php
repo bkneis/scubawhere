@@ -9,8 +9,8 @@ class ModelTestHelper{
 
 	const TEST_STRING = "Test string";
 	const TEST_STRING_UPDATED = "New test string";
-	const TEST_INTEGER = 100;
-	const TEST_INTEGER_UPDATED = 200;
+	const TEST_INTEGER = 10;
+	const TEST_INTEGER_UPDATED = 20;
 	const TEST_DECIMAL = 1.1;
 	const TEST_DECIMAL_UPDATED = 2.2;
 	const TEST_ABBR = "TST";
@@ -27,6 +27,8 @@ class ModelTestHelper{
 	const TEST_EMAIL_UPDATED = "newtest@email.com";
 	const TEST_DATE = "2020-01-01 12:34:56";
 	const TEST_DATE_UPDATED = "2021-01-01 12:34:56";
+	const TEST_DAY = "1982-02-03";
+	const TEST_DAY_UPDATED = "1989-12-29";
 	const TEST_URL = "http://www.scubawhere.com";
 	const TEST_URL_UPDATED = "https://www.facebook.com";
 	const TEST_ADDRESS = "123 Test Lane, Aplace, Somewhere, ABC 123";
@@ -39,6 +41,12 @@ class ModelTestHelper{
 	const TEST_TERMS_UPDATED = "banned";
 	const TEST_SOURCE = "telephone";
 	const TEST_SOURCE_UPDATED = "email";
+	const TEST_GENDER = 1;
+	const TEST_GENDER_UPDATED = 2;
+	const TEST_JSON = '[{"this":"is", "some":"json"}]';
+	const TEST_JSON_UPDATED = '[{"this":"is", "updated":"json"}]';
+	const TEST_CURRENCY = "GBP";
+	const TEST_CURRENCY_UPDATED = "USD";
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -137,7 +145,7 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createBoookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id){
+	public static function createBookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id){
 		$entry = new Bookingdetail();
 
 		$entry->booking_id = $booking_id;
@@ -229,7 +237,7 @@ class ModelTestHelper{
 	public static function createCurrency($append = ""){
 		$entry = new Currency();
 
-		$entry->code = self::TEST_ABBR;
+		$entry->code = self::TEST_CURRENCY;
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->symbol = self::TEST_SYMBOL.$append;
@@ -248,18 +256,17 @@ class ModelTestHelper{
 		$entry->firstname = self::TEST_STRING.$append;
 		$entry->lastname = self::TEST_STRING.$append;
 		$entry->verified = self::TEST_BOOL;
-		$entry->birthday = self::TEST_DATE;
-		$entry->gender = self::TEST_ABBR;
+		$entry->birthday = self::TEST_DAY;
+		$entry->gender = self::TEST_GENDER;
 		$entry->address_1 = self::TEST_STRING;
 		$entry->address_2 = self::TEST_STRING;
 		$entry->city = self::TEST_STRING;
 		$entry->county = self::TEST_STRING;
 		$entry->postcode = self::TEST_STRING;
 		$entry->phone = self::TEST_PHONE;
-		$entry->last_dive = self::TEST_DATE;
-
+		$entry->last_dive = self::TEST_DAY;
+		
 		$entry->save();
-
 		return $entry->id;
 	}
 
@@ -311,10 +318,11 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createPayment($booking_id, $paymentgateway_id){
+	public static function createPayment($booking_id, $currency_id, $paymentgateway_id){
 		$entry = new Payment();
 
 		$entry->booking_id = $booking_id;
+		$entry->currency_id = $currency_id;
 		$entry->paymentgateway_id = $paymentgateway_id;
 
 		$entry->amount = self::TEST_INTEGER;
@@ -334,11 +342,14 @@ class ModelTestHelper{
 
 	public static function createPrice($owner_id){
 		$entry = new Price();
+		
+		$entry->owner_id = $owner_id;
 
-		$entry->owner_type = self::TEST_STRING.$append;
+		$entry->owner_type = self::TEST_STRING;
+		$entry->new_decimal_price = self::TEST_INTEGER;
 		$entry->price = self::TEST_INTEGER;
-		$entry->from = self::TEST_DATE;
-		$entry->until = self::TEST_DATE;
+		$entry->from = self::TEST_DAY;
+		$entry->until = self::TEST_DAY;
 
 		$entry->save();
 		return $entry->id;
@@ -356,13 +367,13 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createTimetable($company_id, $append = ""){
+	public static function createTimetable($company_id){
 		$entry = new Timetable();
 
 		$entry->company_id = $company_id;
 
 		$entry->weeks = self::TEST_INTEGER;
-		$entry->schedule = self::TEST_STRING.$append;
+		$entry->schedule = self::TEST_JSON;
 
 		$entry->save();
 		return $entry->id;

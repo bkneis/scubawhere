@@ -7,14 +7,7 @@ class AddonModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('addons');
-		TestHelper::dbClearTable('companies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
@@ -57,6 +50,17 @@ class AddonModelTest extends ModelTestCase {
 	
 	public function testValidation(){
 		$this->markTestIncomplete('This test needs to be completed!');
+	}
+	
+	public function testRelationships(){
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$addon_id = ModelTestHelper::createAddon($company_id);
+		$addon = Addon::find($addon_id);
+		
+		$this->assertNotNull($addon->company, "Unexpected company relationship value");
 	}
 	
 	public function testFunctions(){

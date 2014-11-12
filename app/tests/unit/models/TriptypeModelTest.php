@@ -7,13 +7,7 @@ class TriptypeModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('triptypes');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$triptype_id = ModelTestHelper::createTriptype();
@@ -43,6 +37,10 @@ class TriptypeModelTest extends ModelTestCase {
 	}
 	
 	public function testValidation(){
+		$this->assertTrue(true);
+	}
+	
+	public function testRelationships(){
 		$this->assertTrue(true);
 	}
 	
