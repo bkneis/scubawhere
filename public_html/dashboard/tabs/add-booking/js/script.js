@@ -8,43 +8,7 @@ var customersArray = [];
 
 var init = false;
 
-window.token;
-$.get("/token", null, function(data) {
-	window.token = data;
-});
 
-// Load all of the agents, tickets and packages for dive center to select
-$(function(){
-
-	var ticketSource = $("#tickets-list-template").html();
-	var ticketTemplate = Handlebars.compile(ticketSource);
-
-	Ticket.getAllTickets(function(data){
-		$("#available-tickets").append(ticketTemplate({tickets:data}));
-	});
-
-	var agentSource = $("#agents-list-template").html();
-	var agentTemplate = Handlebars.compile(agentSource);
-
-	Agent.getAllAgents(function(data){
-		$("#agents").append(agentTemplate({agents:data}));
-	});
-
-	var packageSource = $("#packages-list-template").html();
-	var packageTemplate = Handlebars.compile(packageSource);
-
-	Package.getAllPackages(function(data){
-		$("#available-packages").append(packageTemplate({packages:data}));
-	});
-
-	var addonsSource = $("#addons-template").html();
-	var addonsTemplate = Handlebars.compile(addonsSource);
-
-	Addon.getAllAddons(function(data){
-		$("#addons").append(addonsTemplate({addons:data}));
-	});
-
-});
 
 // Dispaly agents option if source of booking is through an agent
 function validateSob() {
