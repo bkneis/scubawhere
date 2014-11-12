@@ -104,9 +104,14 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->country()->first();
 	}
 
-	public function boatrooms()
+	public function accommodations()
 	{
-		return $this->hasMany('Boatroom');
+		return $this->hasMany('Accommodation');
+	}
+
+	public function addons()
+	{
+		return $this->hasMany('Addon');
 	}
 
 	public function agencies()
@@ -119,14 +124,14 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Agent');
 	}
 
-	public function addons()
-	{
-		return $this->hasMany('Addon');
-	}
-
 	public function boats()
 	{
 		return $this->hasMany('Boat');
+	}
+
+	public function boatrooms()
+	{
+		return $this->hasMany('Boatroom');
 	}
 
 	public function bookings()

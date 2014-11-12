@@ -47,7 +47,7 @@ class Booking extends Ardent {
 		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
-			$this->price / $currency->getSubunitToUnit(), // number
+			($this->price - $this->discount) / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''
@@ -57,6 +57,11 @@ class Booking extends Ardent {
 	public function decimal_price()
 	{
 		return $this->getDecimalPriceAttribute();
+	}
+
+	public function accommodations()
+	{
+		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'date', 'nights')->withTimestamps();
 	}
 
 	public function customers()
@@ -69,10 +74,10 @@ class Booking extends Ardent {
 		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->first();
 	}
 
-	public function addons()
+	/*public function addons()
 	{
 		return $this->hasManyThrough('Addon', 'Bookingdetail');
-	}
+	}*/
 
 	public function bookingdetails()
 	{
@@ -112,7 +117,7 @@ class Booking extends Ardent {
 	public function updatePrice()
 	{
 		// TODO Do this properly with currency check
-
+		/*
 		$packagesSum = 0;
 		$this->packagefacades()->distinct()->with('package')->get()->each(function($packagefacade) use ($packagesSum)
 		{
@@ -124,7 +129,8 @@ class Booking extends Ardent {
 		// $addonSum    = $this->addons()->sum('price');
 
 		$this->price = $packagesSum + $ticketsSum /*+ $addonSum*/;
-
+		/*
 		$this->save();
+		*/
 	}
 }
