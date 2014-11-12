@@ -7,14 +7,7 @@ class LocationModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('locations');
-		TestHelper::dbClearTable('companies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read		
 		$location_id = ModelTestHelper::createLocation();

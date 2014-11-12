@@ -7,15 +7,7 @@ class BookingModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('bookings');
-		TestHelper::dbClearTable('companies');
-		TestHelper::dbClearTable('agents');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read		
 		$continent_id = ModelTestHelper::createContinent();
@@ -75,8 +67,6 @@ class BookingModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		$this->refreshTables();
-			
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);

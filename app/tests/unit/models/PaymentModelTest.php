@@ -7,17 +7,7 @@ class PaymentModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('payments');
-		TestHelper::dbClearTable('companies');
-		TestHelper::dbClearTable('agents');
-		TestHelper::dbClearTable('bookings');
-		TestHelper::dbClearTable('paymentgateways');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
@@ -56,9 +46,7 @@ class PaymentModelTest extends ModelTestCase {
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
 	
-	public function testRelationships(){
-		$this->refreshTables();
-	
+	public function testRelationships(){	
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);

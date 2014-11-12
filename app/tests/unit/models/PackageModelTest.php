@@ -7,14 +7,7 @@ class PackageModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('packages');
-		TestHelper::dbClearTable('companies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
@@ -57,8 +50,6 @@ class PackageModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		$this->refreshTables();
-	
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);

@@ -7,14 +7,8 @@ class CurrencyModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbSeedTable('currencies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
-		
+				
 		//Create/Read
 		$currency_id = ModelTestHelper::createCurrency();
 		$currency = Currency::find($currency_id);

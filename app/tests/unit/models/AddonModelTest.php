@@ -7,14 +7,7 @@ class AddonModelTest extends ModelTestCase {
 		parent::setUp();		
 	}
 	
-	public function refreshTables(){
-		//Refresh any tables required for testing this model
-		TestHelper::dbClearTable('addons');
-		TestHelper::dbClearTable('companies');
-	}
-	
 	public function testCRUD(){
-		$this->refreshTables();
 		
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
@@ -60,8 +53,6 @@ class AddonModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		$this->refreshTables();
-		
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
