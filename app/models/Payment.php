@@ -2,6 +2,7 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+//use PhilipBrown\Money\Currency;
 
 class Payment extends Ardent {
 	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id');
@@ -16,17 +17,18 @@ class Payment extends Ardent {
 	{
 		if( isset($this->amount) )
 		{
-			$currency = new Currency( $this->currency );
+			$db_currency = Currency::find($this->currency_id);
+			$currency = new PhilipBrown\Money\Currency($db_currency->code);
 			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
 		}
 	}
 
-	public function bookings()
+	public function booking()
 	{
 		return $this->belongsTo('Booking');
 	}
 
-	public function paymentgateways()
+	public function paymentgateway()
 	{
 		return $this->belongsTo('Paymentgateway');
 	}
