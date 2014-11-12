@@ -45,6 +45,8 @@ class ModelTestHelper{
 	const TEST_GENDER_UPDATED = 2;
 	const TEST_JSON = '[{"this":"is", "some":"json"}]';
 	const TEST_JSON_UPDATED = '[{"this":"is", "updated":"json"}]';
+	const TEST_CURRENCY = "GBP";
+	const TEST_CURRENCY_UPDATED = "USD";
 
 	//Create valid entries for each model & return its id
 	//Each function also supplies a way to append data
@@ -235,7 +237,7 @@ class ModelTestHelper{
 	public static function createCurrency($append = ""){
 		$entry = new Currency();
 
-		$entry->code = self::TEST_ABBR;
+		$entry->code = self::TEST_CURRENCY;
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->symbol = self::TEST_SYMBOL.$append;
