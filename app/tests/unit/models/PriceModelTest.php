@@ -50,6 +50,7 @@ class PriceModelTest extends ModelTestCase {
 		//Delete
 		$price->delete();
 		$price = Price::find($price_id);
+		$this->assertNull($price, "Price not deleted");
 	}
 	
 	public function testValidation(){
