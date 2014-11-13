@@ -40,12 +40,23 @@ class AddonModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $addon->price, "Unexpected price value");
 		$this->assertEquals(ModelTestHelper::TEST_BOOL_UPDATED, $addon->compulsory, "Unexpected compulsory value");
 				
-		//Delete
-		$addon->delete();
-		$addon = Addon::find($addon_id);		
-		$this->assertNull($addon, "Addon not deleted");
+		//Delete - soft, restore, force
+		$addon->delete();		
+		$addon = Addon::find($addon_id);
+		$this->assertNull($addon, "Addon not soft deleted");
 		
-		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
+		$addon = Addon::onlyTrashed()->where('id', '=', $addon_id)->first();
+		$this->assertNotNull($addon, "Addon soft deleted but cant be found");
+		$this->assertNotNull($addon->deleted_at);
+		
+		Addon::onlyTrashed()->where('id', '=', $addon_id)->restore();
+		$addon = Addon::find($addon_id);
+		$this->assertNotNull($addon, "Addon not restored");
+		$this->assertNull($addon->deleted_at);
+				
+		Addon::withTrashed()->where('id', '=', $addon_id)->forceDelete();
+		$addon = Addon::withTrashed()->where('id', '=', $addon_id)->first();
+		$this->assertNull($addon, "Addon not force deleted");
 	}
 	
 	public function testValidation(){

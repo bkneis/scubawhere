@@ -37,12 +37,23 @@ class PackageModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $package->description, "Unexpected description value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $package->capacity, "Unexpected capacity value");
 				
-		//Delete
-		$package->delete();
-		$package = Package::find($package_id);		
-		$this->assertNull($package, "Package not deleted");
+		//Delete - soft, restore, force
+		$package->delete();		
+		$package = Package::find($package_id);
+		$this->assertNull($package, "Package not soft deleted");
 		
-		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
+		$package = Package::onlyTrashed()->where('id', '=', $package_id)->first();
+		$this->assertNotNull($package, "Package soft deleted but cant be found");
+		$this->assertNotNull($package->deleted_at);
+		
+		Package::onlyTrashed()->where('id', '=', $package_id)->restore();
+		$package = Package::find($package_id);
+		$this->assertNotNull($package, "Package not restored");
+		$this->assertNull($package->deleted_at);
+				
+		Package::withTrashed()->where('id', '=', $package_id)->forceDelete();
+		$package = Package::withTrashed()->where('id', '=', $package_id)->first();
+		$this->assertNull($package, "Package not force deleted");
 	}
 	
 	public function testValidation(){

@@ -34,12 +34,23 @@ class TicketModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $ticket->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $ticket->description, "Unexpected description value");
 				
-		//Delete
-		$ticket->delete();
-		$ticket = Ticket::find($ticket_id);		
-		$this->assertNull($ticket, "Ticket not deleted");
+		//Delete - soft, restore, force
+		$ticket->delete();		
+		$ticket = Ticket::find($ticket_id);
+		$this->assertNull($ticket, "Ticket not soft deleted");
 		
-		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
+		$ticket = Ticket::onlyTrashed()->where('id', '=', $ticket_id)->first();
+		$this->assertNotNull($ticket, "Ticket soft deleted but cant be found");
+		$this->assertNotNull($ticket->deleted_at);
+		
+		Ticket::onlyTrashed()->where('id', '=', $ticket_id)->restore();
+		$ticket = Ticket::find($ticket_id);
+		$this->assertNotNull($ticket, "Ticket not restored");
+		$this->assertNull($ticket->deleted_at);
+				
+		Ticket::withTrashed()->where('id', '=', $ticket_id)->forceDelete();
+		$ticket = Ticket::withTrashed()->where('id', '=', $ticket_id)->first();
+		$this->assertNull($ticket, "Ticket not force deleted");
 	}
 	
 	public function testValidation(){

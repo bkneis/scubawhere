@@ -38,12 +38,23 @@ class DepartureModelTest extends ModelTestCase {
 		$this->assertNotEquals(0, $departure->id, "Unexpected id value");		
 		$this->assertEquals(ModelTestHelper::TEST_DATE_UPDATED, $departure->start, "Unexpected start value");
 				
-		//Delete
-		$departure->delete();
-		$departure = Departure::find($departure_id);		
-		$this->assertNull($departure, "Departure not deleted");
+		//Delete - soft, restore, force
+		$departure->delete();		
+		$departure = Departure::find($departure_id);
+		$this->assertNull($departure, "Departure not soft deleted");
 		
-		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
+		$departure = Departure::onlyTrashed()->where('id', '=', $departure_id)->first();
+		$this->assertNotNull($departure, "Departure soft deleted but cant be found");
+		$this->assertNotNull($departure->deleted_at);
+		
+		Departure::onlyTrashed()->where('id', '=', $departure_id)->restore();
+		$departure = Departure::find($departure_id);
+		$this->assertNotNull($departure, "Departure not restored");
+		$this->assertNull($departure->deleted_at);
+				
+		Departure::withTrashed()->where('id', '=', $departure_id)->forceDelete();
+		$departure = Departure::withTrashed()->where('id', '=', $departure_id)->first();
+		$this->assertNull($departure, "Departure not force deleted");
 	}
 	
 	public function testValidation(){

@@ -48,12 +48,23 @@ class TripModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $trip->video, "Unexpected video value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $trip->views, "Unexpected views value");
 				
-		//Delete
-		$trip->delete();
-		$trip = Trip::find($trip_id);		
-		$this->assertNull($trip, "Trip not deleted");
+		//Delete - soft, restore, force
+		$trip->delete();		
+		$trip = Trip::find($trip_id);
+		$this->assertNull($trip, "Trip not soft deleted");
 		
-		$this->markTestIncomplete('This test needs to be completed! - SOFT DELETIONS');
+		$trip = Trip::onlyTrashed()->where('id', '=', $trip_id)->first();
+		$this->assertNotNull($trip, "Trip soft deleted but cant be found");
+		$this->assertNotNull($trip->deleted_at);
+		
+		Trip::onlyTrashed()->where('id', '=', $trip_id)->restore();
+		$trip = Trip::find($trip_id);
+		$this->assertNotNull($trip, "Trip not restored");
+		$this->assertNull($trip->deleted_at);
+				
+		Trip::withTrashed()->where('id', '=', $trip_id)->forceDelete();
+		$trip = Trip::withTrashed()->where('id', '=', $trip_id)->first();
+		$this->assertNull($trip, "Trip not force deleted");
 	}
 	
 	public function testValidation(){
