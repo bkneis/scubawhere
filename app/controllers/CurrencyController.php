@@ -23,6 +23,6 @@ class CurrencyController extends Controller {
 
 	public function getAll()
 	{
-		return Currency::all();
+		return Currency::orderBy('name')->get();
 	}
 }

@@ -24,14 +24,14 @@ body{
 }
 
 p {
-	width: 300px;
+	/* width: 300px; */
 	margin-left: auto;
 	margin-right: auto;
 }
 
 label {
 	display: block;
-	text-align: left;
+	/* text-align: left; */
 	margin-top: 0.5em;
 	/*margin-left: 57px;*/
 }
@@ -92,6 +92,13 @@ form {
 	margin-bottom: 10px;
 	position: relative;
 	z-index: 100;
+}
+
+
+#register-form {
+	padding: 0;
+	box-shadow: none;
+	margin-bottom: 0;
 }
 
 
@@ -227,4 +234,16 @@ footer{
 	position: relative;
 	z-index: 100;
 }
+
+.register-col {
+	width:45%;
+	float:left;
+	padding-right:45px;
+	text-align:left;
+}
+
+.register-col input[type='text']{
+	width:100%;
+}
+
 

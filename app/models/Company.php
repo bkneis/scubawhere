@@ -33,7 +33,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'postcode'            => 'required',
 		'country_id'          => 'required|integer|exists:countries,id',
 		'currency_id'         => 'required|integer|exists:currencies,id',
-		'business_email'      => 'required|email|unique:companies,email',
+		'business_email'      => 'required|email|unique:companies,business_email',
 		'business_phone'      => 'required',
 		'vat_number'          => '',
 		'registration_number' => '',

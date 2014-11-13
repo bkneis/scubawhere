@@ -1,7 +1,7 @@
 <?php
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RegisterController extends Controller {
-
 
 	public function postCompany()
 	{
