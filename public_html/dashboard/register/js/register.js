@@ -49,41 +49,6 @@ function validateAccount(){
 	} return false;
 }
 
-/*$('#register-form').submit(function(e){
-	var form = $(this);
-	var params = form.serializeArray();
-	$.ajax({
-		url: "/register/company",
-		type: "POST",
-		dataType: "json",
-		data: params,
-		success: function(data){
-			console.log(data.status);
-			completed = true;
-			$("#steps").steps("next");
-		}
-	});
-	return false;
-});*/
-
-$('#registerBtn').click(function(e){
-	event.preventDefault();
-	var form = $('#register-form');
-	var params = form.serialize();
-	$.ajax({
-		url: "/register/company",
-		type: "POST",
-		dataType: "json",
-		data: params,
-		success: function(data){
-			console.log(data.status);
-			completed = true;
-			$("#steps").steps("next");
-		}
-	});
-});
-
-
 $(function(){
 
 	$.get("/api/country/all", function(data) {
@@ -110,11 +75,39 @@ $(function(){
 		$('#agencies').html( agency_options );
 	});
 
+	$('#register-form').submit(function(event){
 
+		event.preventDefault();
 
+		var form = $(this);
 
+		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
+		var params = form.serializeArray();
+		$.ajax({
+			url: "/register/company",
+			type: "POST",
+			// dataType: "json",
+			data: params,
+			success: function(data){
+				console.log(data.status);
+				completed = true;
+				$("#steps").steps("next");
 
+				form.find('#save-loader').remove();
+			},
+			error: function(xhr) {
+
+				data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				// TODO Show validation errors
+
+				$('.submit').prop('disabled', false);
+				form.find('#save-loader').remove();
+			}
+		});
+	});
 
 	$("#steps").steps({
 		headerTag: "h3",

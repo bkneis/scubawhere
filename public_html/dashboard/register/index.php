@@ -58,24 +58,24 @@
 					<input class="required"  type="text" id="city" name="city">
 					<label for="county">County / State (optional):</label>
 					<input type="text" id="county" name="county">
-					<label for="postCode">Post Code / Zip Code:</label>
-					<input class="required"  type="text" id="postCode" name="postCode">
+					<label for="postcode">Post Code / Zip Code:</label>
+					<input class="required"  type="text" id="postcode" name="postcode">
 				</div>
 				<div class="register-col">
 					<label for="business_phone">Business Phone Number:</label>
 					<input class="required"  type="text" id="business_phone" name="business_phone">
 					<label for="business_email">Business Email:</label>
 					<input class="required"  type="text" id="business_email" name="business_email">
-					<label for="registration_umber">Business Registration Number:</label>
-					<input style="width:102%" type="text" id="registration_umber" name="registration_umber">
+					<label for="registration_number">Business Registration Number (optional):</label>
+					<input type="text" id="registration_number" name="registration_number">
 					<label for="vat_number">VAT Number (optional):</label>
 					<input type="text" id="vat_number" name="vat_number">
 					<label for="country_id">Please select your country:</label>
-					 <select id="country_id" class="required" style="width:107%">
+					 <select class="required" id="country_id" name="country_id">
 					  <option value="">Please select</option>
 					</select>
 					 <label for="currency_id">Please select your currency:</label>
-					 <select id="currency_id" class="required" style="width:107%">
+					 <select class="required" id="currency_id" name="currency_id">
 					  <option value="">Please select</option>
 					</select>
 				</div>
@@ -88,10 +88,7 @@
 				<h3>Just one more thing...</h3>
 				<label for="username">Please enter your username:</label>
 				<input style="width:280px; text-align:center; margin: 0 auto;" class="required"  type="text" id="username" name="username">
-				<button id="registerBtn" onclick="" class="submit bttn blueb">
-				Create Account
-				<!--<div id="save-loader" class="loader"></div>-->
-			</button>
+				<input type="submit" class="submit register-bttn bttn blueb" value="Create Account">
 			</form>
 			</div>
 			</div>
