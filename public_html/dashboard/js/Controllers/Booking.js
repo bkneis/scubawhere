@@ -1,15 +1,11 @@
 var Booking = {
 	//params = int id (the ID of the wanted session)
-	getSecificBooking: function(params, handleData) {
-		$.get("/api/booking", params).done(function(data){
-			handleData(data);
-		});
+	get: function(params, handleData) {
+		$.get("/api/booking", params).done(handleData);
 	},
 
-	getAllBookings: function(handleData) {
-		$.get("/api/booking/all").done(function(data){
-			handleData(data);
-		});
+	getAll: function(handleData) {
+		$.get("/api/booking/all").done(handleData);
 	},
 
 	/**
@@ -116,4 +112,4 @@ var Booking = {
 			error: errorFn
 		});
 	}
-}
+};
