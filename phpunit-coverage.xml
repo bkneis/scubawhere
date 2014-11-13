@@ -27,4 +27,10 @@
 	        lowUpperBound="50" highLowerBound="85" />
 	</logging>
 
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">./app/</directory>            
+        </whitelist>
+	</filter>
+    
 </phpunit>
