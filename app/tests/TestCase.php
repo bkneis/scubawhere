@@ -29,10 +29,24 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		TestHelper::refreshListeners();
 	}
 
-	public function assertEqualsDecimal($expected, $actual, $message = "", $delta = 0){		
+	
+	
+	/**
+	 * Custom assertion to handle decimal values.
+	 * A delta is used to check accurracy and negate any 'junk'
+	 * at the end of the expected value.
+	 * @param number $expected value
+	 * @param number $actual value
+	 * @param string $message to display on fail
+	 * @param number $delta range that actual value must fall within
+	 */
+	public function assertEqualsDecimal($expected, $actual, $message = "", $delta = 0)
+	{		
 		$this->assertGreaterThan($expected - $delta, $actual, $message." - value not within delta");
 		$this->assertLessThan($expected + $delta, $actual, $message." - value not within delta");
 	}
+	
+	
 	
 	/**
 	 * Creates the application.

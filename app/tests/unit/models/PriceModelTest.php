@@ -10,12 +10,7 @@ class PriceModelTest extends ModelTestCase {
 	public function testCRUD(){
 		
 		//We must have an authenticated Company for Price to grab its currency value
-		$continent_id = ModelTestHelper::createContinent();
-		$currency_id = ModelTestHelper::createCurrency();
-		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
-		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
-		$company = Company::find($company_id);
-		$this->be($company);
+		$this->be(TestHelper::createAuthenticationCompany());
 		
 		//Create/Read
 		$owner_id = 1;		
