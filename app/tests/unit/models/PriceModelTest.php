@@ -9,7 +9,7 @@ class PriceModelTest extends ModelTestCase {
 	
 	public function testCRUD(){
 		
-		//We must have an authenticated Company for Price to grab its currency value
+		//We must have an authenticated Company to grab its currency value
 		$this->be(TestHelper::createAuthenticationCompany());
 		
 		//Create/Read
@@ -53,11 +53,18 @@ class PriceModelTest extends ModelTestCase {
 	}
 	
 	public function testRelationships(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$this->assertTrue(true);
 	}
 	
-	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+	public function testFunctions(){		
+		//We must have an authenticated Company to grab its currency value
+		$this->be(TestHelper::createAuthenticationCompany());
+		
+		$owner_id = 1;
+		$price_id = ModelTestHelper::createPrice($owner_id);
+		$price = Price::find($price_id);
+		
+		$this->assertEquals("10.00", $price->decimal_price, "Unexpected decimal_price value");
 	}
 	
 	public function testEdges(){

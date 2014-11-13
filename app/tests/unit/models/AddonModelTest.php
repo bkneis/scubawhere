@@ -75,7 +75,20 @@ class AddonModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		//We must have an authenticated Company to grab its currency value
+		$this->be(TestHelper::createAuthenticationCompany());
+		
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);		
+		$addon_id = ModelTestHelper::createAddon($company_id);
+		$addon = Addon::find($addon_id);
+		
+		$this->assertEquals("10.00", $addon->decimal_price, "Unexpected decimal_price value");
+		$this->assertEquals(ModelTestHelper::TEST_CURRENCY, $addon->currency->code, "Unexpected currency value");
+		$this->assertFalse($addon->has_bookings, "Unexpected has_bookings value");
+		$this->assertFalse($addon->trashed, "Unexpected trashed value");
 	}
 	
 	public function testEdges(){

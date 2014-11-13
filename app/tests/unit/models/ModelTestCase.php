@@ -32,7 +32,7 @@ abstract class ModelTestCase extends TestCase {
 	 */
 	abstract public function testRelationships();
 	/**
-	 * Tests any functions extending the model
+	 * Tests any functions and attributes extending the model
 	 */
 	abstract public function testFunctions();
 	/**

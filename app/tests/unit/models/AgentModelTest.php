@@ -84,7 +84,14 @@ class AgentModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$agent = Agent::find($agent_id);
+		
+		$this->assertFalse($agent->has_bookings, "Unexpected has_bookings value");
 	}
 	
 	public function testEdges(){

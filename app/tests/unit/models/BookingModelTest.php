@@ -80,7 +80,18 @@ class BookingModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		//We must have an authenticated Company to grab its currency value
+		$this->be(TestHelper::createAuthenticationCompany());
+		
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$booking_id = ModelTestHelper::createBooking($company_id, $agent_id);
+		$booking = Booking::find($booking_id);
+		
+		$this->assertEquals("0.00", $booking->decimal_price, "Unexpected decimal_price value");//0.00 due to discount
 	}
 	
 	public function testEdges(){

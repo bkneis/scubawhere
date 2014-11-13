@@ -79,7 +79,22 @@ class DepartureModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$agent_id = ModelTestHelper::createAgent($company_id);
+		$location_id = ModelTestHelper::createLocation();
+		$trip_id = ModelTestHelper::createTrip($company_id, $location_id);
+		$boat_id = ModelTestHelper::createBoat($company_id);
+		$timetable_id = ModelTestHelper::createTimetable($company_id);		
+		$departure_id = ModelTestHelper::createDeparture($trip_id, $boat_id, $timetable_id);
+		$departure = Departure::find($departure_id);
+		
+		$this->assertNotNull($departure->capacity, "Unexpected capacity value");
+		$this->assertEquals(0, $departure->capacity[0], "Unexpected capacity (bookings) value");
+		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $departure->capacity[1], "Unexpected capacity (boat) value");
+		$this->assertFalse($departure->trashed, "Unexpected trashed value");
 	}
 	
 	public function testEdges(){

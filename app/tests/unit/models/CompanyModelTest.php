@@ -122,7 +122,14 @@ class CompanyModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$company = Company::find($company_id);
+		
+		$this->assertEquals(ModelTestHelper::TEST_CURRENCY, $company->currency->code, "Unexpected currency value");
+		$this->assertEquals(ModelTestHelper::TEST_ABBR, $company->country->abbreviation, "Unexpected country value");
 	}
 	
 	public function testEdges(){

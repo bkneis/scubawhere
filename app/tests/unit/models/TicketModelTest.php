@@ -69,7 +69,15 @@ class TicketModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$ticket_id = ModelTestHelper::createTicket($company_id);
+		$ticket = Ticket::find($ticket_id);
+		
+		$this->assertFalse($ticket->has_bookings, "Unexpected has_bookings value");
+		$this->assertFalse($ticket->trashed, "Unexpected trashed value");
 	}
 	
 	public function testEdges(){

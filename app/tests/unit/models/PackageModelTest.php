@@ -72,7 +72,15 @@ class PackageModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$package_id = ModelTestHelper::createPackage($company_id);
+		$package = Package::find($package_id);
+		
+		$this->assertFalse($package->has_bookings, "Unexpected has_bookings value");
+		$this->assertFalse($package->trashed, "Unexpected trashed value");
 	}
 	
 	public function testEdges(){

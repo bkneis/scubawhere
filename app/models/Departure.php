@@ -31,6 +31,11 @@ class Departure extends Ardent {
 	{
 		return array( $this->bookingdetails()->count(), $this->boat()->first()->capacity );
 	}
+	
+	public function getTrashedAttribute()
+	{
+		return $this->trashed();
+	}
 
 	public function addons()
 	{

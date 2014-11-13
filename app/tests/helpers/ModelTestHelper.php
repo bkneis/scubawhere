@@ -181,7 +181,7 @@ class ModelTestHelper{
 
 		$entry->username = self::TEST_USERNAME.$append;
 		$entry->password = Hash::make(self::TEST_PASSWORD);
-		$entry->email = self::TEST_EMAIL;
+		$entry->email = self::TEST_EMAIL.$append;
 		$entry->verified = self::TEST_BOOL;
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
@@ -190,7 +190,7 @@ class ModelTestHelper{
 		$entry->city = self::TEST_STRING;
 		$entry->county = self::TEST_STRING;
 		$entry->postcode = self::TEST_STRING;
-		$entry->business_email = self::TEST_EMAIL;
+		$entry->business_email = self::TEST_EMAIL.$append;
 		$entry->business_phone = self::TEST_PHONE;
 		$entry->vat_number = self::TEST_STRING;
 		$entry->registration_number = self::TEST_STRING;

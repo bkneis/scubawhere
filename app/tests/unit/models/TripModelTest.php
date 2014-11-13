@@ -85,7 +85,15 @@ class TripModelTest extends ModelTestCase {
 	}
 	
 	public function testFunctions(){
-		$this->markTestIncomplete('This test needs to be completed!');
+		$continent_id = ModelTestHelper::createContinent();
+		$currency_id = ModelTestHelper::createCurrency();
+		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$location_id = ModelTestHelper::createLocation();
+		$trip_id = ModelTestHelper::createTrip($company_id, $location_id);
+		$trip = Trip::find($trip_id);
+		
+		$this->assertTrue($trip->deletable, "Unexpected deletable value");
 	}
 	
 	public function testEdges(){

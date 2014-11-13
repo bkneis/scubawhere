@@ -151,7 +151,7 @@ class TestHelper{
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
-		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$company_id = ModelTestHelper::createCompany($country_id, $currency_id, "AUTH");
 		$company = Company::find($company_id);
 		return $company;
 	}
