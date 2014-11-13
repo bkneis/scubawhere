@@ -6,6 +6,16 @@
     color: #FFFFFF!important;
 }
 
+.mb0 { margin-bottom: 0!important; }
+.mb5 { margin-bottom: 5px!important; }
+.mb10 { margin-bottom: 10px!important; }
+
+.two-col-split li {
+    display: inline-block;
+    width: 49%;
+    min-height: 150px;
+}
+
 #left_nav {
     width:250px;
 }
