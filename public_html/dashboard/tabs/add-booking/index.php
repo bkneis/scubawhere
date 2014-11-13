@@ -5,6 +5,9 @@
 		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">Ticket</a></li>
 		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">Customers</a></li>
 		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">Sessions</a></li>
+		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">Addons</a></li>
+		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">Extra Details</a></li>
+		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">Summary</a></li>
 	</ul>
 
 	<div class="tab-content">
@@ -315,7 +318,7 @@
 							<td>{{friendlyDate start}}</td>
 							<td>{{tripFinish start trip.duration}}</td>
 							<td>{{trip.name}}</td>
-							<td id="free-spaces-{{id}}">{{freeSpaces capacity}}</td>
+							<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
 							<td>{{boat.name}}</td>
 							<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
 						</tr>
@@ -323,7 +326,65 @@
 				</script>
 			</div>
 		</div>
+		<div role="tabpanel" class="tab-pane fade in active" id="addon-tab">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="page-header">
+						<h2>Addon Selection <small>Do you require any addons?</small></h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Select Addons</h2>
+						</div>
+						<div class="panel-body">
+							<ul class="list-group" id="addons">
+							</ul>
+						</div>
+					</div>
+					<script id="addons-template" type="text/x-handlebars-template">
+						{{#each addons}}
+							<li data-id="{{id}}" class="list-group-item">
+								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
+    							<p>{{description}}</p>
+    							<div class="row">
+    								<div class="col-sm-4">
+    									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
+    								</div>
+    								<div class="col-sm-3 pull-right">
+		    							<div class="input-group">
+		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
+		    								<span class="input-group-btn">
+		    									<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
+		    								</span>
+		    							</div>
+	    							</div>
+    							</div>
+							</li>
+						{{/each}}
+					</script>
+				</div>
+				<div class="col-sm-4">
+					<ul class="list-group">
+						<li class="list-group-item active">
+							<h4 class="list-group-item-heading">Addons Basket</h4>
+							<p class="list-group-item-text">Total: <span id="addons-total">0</span></p>
+						</li>
+						<li class="list-group-item" id="addons-basket">
 
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary addon-finish pull-right">Next</a>
+				</div>
+			</div>
+		</div>
 		<div role="tabpanel" class="tab-pane fade" id="settings-tab">...</div>
 	</div>
 </div>
@@ -571,47 +632,6 @@
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
 	<link rel="stylesheet" href="common/css/select2-bootstrap.css" type="text/css" />
 	<script type="text/javascript" src="common/js/select2.min.js"></script>
-
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
-	<!-- Calendar-->
-	<link rel='stylesheet' href='tabs/add-booking/calendar/fullcalendar.css' />
-	<!--<script src='tabs/add-booking/calendar/lib/jquery.min.js'></script>-->
-	<script src='tabs/add-booking/calendar/lib/moment.min.js'></script>
-	<script src='tabs/add-booking/calendar/fullcalendar.js'></script>
-	<script>
-	$(document).ready(function() {
-
-	    // page is now ready, initialize the calendar...
-
-	    $('#calendar').fullCalendar({
-	        // put your options and callbacks here
-	        eventClick: function(calEvent, view) {
-
-	        	sessionID = calEvent.sessionID;
-	        	startDate = calEvent.start;
-	        	endDate = calEvent.end;
-
-
-		        alert('Trip selected: ' + calEvent.title);
-		        //alert(sessionID);
-		        //alert('Session ID: ' + calEvent.sessionID);
-		        //alert('View: ' + view.name);
-
-		        // change the border color just for fun
-		        $(this).css('border-color', 'red');
-
-		    	}//,
-		    	//'option', 'height', 200,
-	    		//'option', 'width', 300
-
-
-	    });
-
-
-
-	});
-	</script>
 
 	<!--Controllers-->
 	<script src="/dashboard/js/Controllers/Agent.js"></script>
