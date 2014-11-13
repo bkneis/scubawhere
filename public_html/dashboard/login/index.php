@@ -16,7 +16,7 @@
 <body>
 
 	<div id="login-wrapper">
-
+	<div id="login-form">
 		<form action="#" id="loginForm" method="post" accept-charset="utf-8">
 			<img src="/dashboard/common/img/ScubaWhere_logo.svg">
 			<h1>Dive Centre Dashboard Login</h1>
@@ -36,6 +36,7 @@
 			</button>
 
 		</form>
+		</div>
 		<span>Forgot your password? <a href="../../password/remind">Click here.</a></span>
 	</div>
 

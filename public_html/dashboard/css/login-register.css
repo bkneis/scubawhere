@@ -83,7 +83,7 @@ label {
 }
 
 /* form */
-form {
+#login-form form {
 	font-size: 18px;
 	text-align: center;
 	background-color: #fff;
@@ -227,4 +227,16 @@ footer{
 	position: relative;
 	z-index: 100;
 }
+
+.register-col {
+	width:45%; 
+	float:left; 
+	padding-right:45px; 
+	text-align:left;
+}
+
+.register-col input[type='text']{
+	width:100%;
+}
+
 
