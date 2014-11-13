@@ -86,73 +86,78 @@ $('#registerBtn').click(function(e){
 
 $(function(){
 
-	$("#steps").steps({
-		    headerTag: "h3",
-		    bodyTag: "section",
-		    transitionEffect: "slideLeft",
-		    enableFinishButton: false,
-		    onStepChanging : function (event, currentIndex, newIndex) {
-
-	        // Always allow going backward even if the current step contains invalid fields!
-	        if (currentIndex > newIndex)
-	        {
-	        	return true;
-	        }
-
-	        if(errorChecking){
-
-	        	if(completed){
-		        	return true;
-		        }
-
-		        if(currentIndex == 0){ // This is the criteria for the first step
-		        	if(validate(1)) {
-		        		return true;
-		        	}
-		        	else return false;
-		        	//return true;
-		        }
-
-		        if(currentIndex == 1){
-		        	if(validate(2)) {
-		        		return true;
-		        	}
-		        	else return false;
-		        }
-
-	    	}
-	    	else return true;
-	    }
-	    });
-
-	var country_select_options = '';
 	$.get("/api/country/all", function(data) {
+		var country_select_options = '';
 		for(var key in data) {
-			country_select_options += '<option value="' + data[key].id + '">' + data[key].name + '</option>';
+			country_select_options += '<option data-currency-id="' + data[key].currency_id + '" value="' + data[key].id + '">' + data[key].name + '</option>';
 		}
 		$('#country_id').append( country_select_options );
 	});
 
-	var currency_select_options = '';
 	$.get("/api/currency/all", function(data) {
+		var currency_select_options = '';
 		for(var key in data) {
 			currency_select_options += '<option value="' + data[key].id + '">' + data[key].name + '</option>';
 		}
 		$('#currency_id').append( currency_select_options );
 	});
 
-	var agency_options = '';
 	$.get("/api/agency/all", function(data) {
+		var agency_options = '';
 		for(var key in data) {
 			agency_options += '<label class="certify"><input id="agencies[]" name="agencies[]" type="checkbox" value="'+data[key].id+'"><strong>'+data[key].abbreviation+'</strong><br></label>';
 		}
-		$('#agencies').append( agency_options );
+		$('#agencies').html( agency_options );
 	});
 
+
+
+
+
+
+
+	$("#steps").steps({
+		headerTag: "h3",
+		bodyTag: "section",
+		transitionEffect: "slideLeft",
+		enableFinishButton: false,
+		onStepChanging : function (event, currentIndex, newIndex) {
+
+			// Always allow going backward even if the current step contains invalid fields!
+			if (currentIndex > newIndex) {
+				return true;
+			}
+
+			if(errorChecking) {
+
+				if(completed) {
+					return true;
+				}
+
+				if(currentIndex == 0) { // This is the criteria for the first step
+					if(validate(1)) {
+						return true;
+					}
+					else return false;
+					//return true;
+				}
+
+				if(currentIndex == 1) {
+					if(validate(2)) {
+						return true;
+					}
+					else return false;
+				}
+			}
+			else return true;
+		},
+		onStepChanged: function(event, currentIndex, priorIndex) {
+			$('#steps-p-' + currentIndex).find('input').first().focus();
+		}
+	});
+
+	$('#country_id').change(function(event) {
+		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');
+		$('#currency_id option').filter('[value=' + currency_id + ']').prop('selected', true);
+	});
 });
-
-
-
-
-
-

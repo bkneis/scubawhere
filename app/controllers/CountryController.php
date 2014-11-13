@@ -23,6 +23,6 @@ class CountryController extends Controller {
 
 	public function getAll()
 	{
-		return Country::all();
+		return Country::orderBy('name')->get();
 	}
 }
