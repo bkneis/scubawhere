@@ -24,7 +24,7 @@ class BookingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->bookings()->with('customers')->get();
+		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country', 'customers')->get();
 	}
 
 	public function postInit()
