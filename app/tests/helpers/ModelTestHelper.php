@@ -405,5 +405,4 @@ class ModelTestHelper{
 		$entry->save();
 		return $entry->id;
 	}
-
 }
