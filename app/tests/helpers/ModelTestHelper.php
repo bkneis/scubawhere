@@ -59,7 +59,7 @@ class ModelTestHelper{
 
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
-		$entry->price = self::TEST_INTEGER;
+		$entry->new_decimal_price = self::TEST_INTEGER;
 		$entry->compulsory = self::TEST_BOOL;
 
 		$entry->save();
@@ -265,7 +265,7 @@ class ModelTestHelper{
 		$entry->postcode = self::TEST_STRING;
 		$entry->phone = self::TEST_PHONE;
 		$entry->last_dive = self::TEST_DAY;
-		
+
 		$entry->save();
 		return $entry->id;
 	}
@@ -342,7 +342,7 @@ class ModelTestHelper{
 
 	public static function createPrice($owner_id){
 		$entry = new Price();
-		
+
 		$entry->owner_id = $owner_id;
 
 		$entry->owner_type = self::TEST_STRING;
