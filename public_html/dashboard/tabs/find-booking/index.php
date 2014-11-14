@@ -40,9 +40,9 @@
 				<table>
 					<thead>
 						<tr>
-							<th width=""></th>
+							<th width="10"></th>
 							<th>Reference</th>
-							<th>Customer</th>
+							<th>Customer Name</th>
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Country</th>
