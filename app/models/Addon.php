@@ -16,6 +16,7 @@ class Addon extends Ardent {
 	protected $fillable = array(
 		'name',
 		'description',
+		'new_decimal_price',
 		'price',
 		'compulsory'
 	);
@@ -23,7 +24,7 @@ class Addon extends Ardent {
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'price'       => 'required|integer|min:0',
+		'price'       => 'sometimes|integer|min:0',
 		'compulsory'  => 'required|boolean'
 	);
 
@@ -35,8 +36,12 @@ class Addon extends Ardent {
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
-		if( isset($this->price) )
-			$this->price = Helper::sanitiseString($this->price);
+		if( isset($this->new_decimal_price) )
+		{
+			$currency = new Currency( Auth::user()->currency->code );
+			$this->price = (int) round( $this->new_decimal_price * $currency->getSubunitToUnit() );
+			unset($this->new_decimal_price);
+		}
 
 		if( isset($this->compulsory) )
 			$this->compulsory = Helper::sanitiseString($this->compulsory);

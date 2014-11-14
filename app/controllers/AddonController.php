@@ -43,13 +43,9 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
-			'price',
+			'new_decimal_price',
 			'compulsory'
 		);
-
-		// Convert price to subunit
-		$currency = new Currency( Auth::user()->currency->code );
-		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
 		//Check compulsory field.....
 		if (empty($data['compulsory'])) {
@@ -83,13 +79,9 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
-			'price',
+			'new_decimal_price',
 			'compulsory'
 		);
-
-		// Convert price to subunit
-		$currency = new Currency( Auth::user()->currency->code );
-		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
 		//Check compulsory field.....
 		if (empty($data['compulsory'])) {
