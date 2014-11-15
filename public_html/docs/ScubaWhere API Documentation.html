@@ -415,6 +415,11 @@ pre {
 	opacity: 1;
 }
 
+.made-with {
+  display: block;
+  text-align: center;
+}
+
 @media screen and (max-width: 550px) {
 	h1, h2, h3 {
 		line-height: 1.25;
@@ -507,10 +512,119 @@ pre {
 <li><strong>@return</strong> integer <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
 </ul>
 <h2>Accommodations</h2>
+<p>Accommodations are hotels/hostels/dorms that are provided by the dive operator (mostly in remote areas). These accommodations do not have a seperate address or contact info but are managed directly by the dive operator.</p>
 <h3>Retrieve all accommodations</h3>
-<p><code>GET /company/accommodations</code></p>
+<p><code>GET /api/accommodation/all</code></p>
+<p><code>GET /api/accommodation/all-with-trashed</code></p>
 <ul>
 <li><strong>@return</strong> JSON    An array of <code>accommodation</code> objects</li>
+</ul>
+<h3>Create an accommodation</h3>
+<p><code>POST /api/accommodation/add</code></p>
+<p>Creates a new accommodation.</p>
+<ul>
+<li><strong>@param</strong> string  name        A name for the accommodation</li>
+<li><strong>@param</strong> string  description A description for the accommodation</li>
+<li><strong>@param</strong> decimal capacity    How many entities of the accommodation are available</li>
+<li><strong>@param</strong> Prices  base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Prices  prices      See <a href="#Prices">#Prices</a></li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and <code>id</code> of the newly created accommodation on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update an accommodation</h3>
+<p><code>POST /api/accommodation/edit</code></p>
+<p>Updates an accommodation. All parameters except <code>id</code> are optional.</p>
+<blockquote>
+<h4>Important</h4>
+<p>The response <em>can</em> contain an <code>id</code> field. If it <em>does</em> it means that the accommodation could not simply be updated because it has already been booked. Instead the old accommodation has been <strong>deactivated</strong> and has been replaced with an updated accommodation in the system. The returned <code>id</code> is the new ID of the accommodation and must be used from now on!</p>
+<p>The following fields will create a new accommodation when they are updated and the (old) accommodation has already been booked: <code>base_prices</code>, <code>prices</code>.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the accommodation to be updated</li>
+<li><strong>@param</strong> string  name        A name for the accommodation</li>
+<li><strong>@param</strong> string  description A description for the accommodation</li>
+<li><strong>@param</strong> decimal capacity    How many entities of the accommodation are available</li>
+<li><strong>@param</strong> Prices  base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Prices  prices      See <a href="#Prices">#Prices</a></li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure (can contain <code>id</code>, see <strong>Important</strong> section above)</li>
+</ul>
+<h3>Deactivate an accommodation</h3>
+<p><code>POST /api/accommodation/deactivate</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the accommodation to be deactivated</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Restore an accommodation</h3>
+<p><code>POST /api/accommodation/restore</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the accommodation to be restored</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete an accommodation</h3>
+<p><code>POST /api/accommodation/delete</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the accommodation to be deleted</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Addons</h2>
+<h3>Retrieve all addons</h3>
+<p><code>GET /api/addon/all</code></p>
+<p><code>GET /api/addon/all-with-trashed</code></p>
+<p><code>GET /api/addon/compulsory</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>accommodation</code> objects</li>
+</ul>
+<h3>Create an addon</h3>
+<p><code>POST /api/addon/add</code></p>
+<ul>
+<li><strong>@param</strong> string  name              A name of the new addon</li>
+<li><strong>@param</strong> string  description       A description for the new addon</li>
+<li><strong>@param</strong> float   new<em>decimal</em>price A price for the new addon</li>
+<li><strong>@param</strong> tinyint compulsory        Whether this addon is compulsory or not. <code>1</code> for true, <code>0</code> for false (optional, default: false)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                     Contains <code>status</code> and <code>id</code> of the newly created addon on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update an addon</h3>
+<p><code>POST /api/addon/add</code></p>
+<p>Updates an addon. All parameters, except the <code>id</code> are optional.</p>
+<blockquote>
+<h4>Important</h4>
+<p>The response <em>can</em> contain an <code>id</code> field. If it <em>does</em> it means that the addon could not simply be updated because it has already been booked. Instead the old addon has been <strong>deactivated</strong> and has been replaced with an updated addon in the system. The returned <code>id</code> is the new ID of the addon and must be used from now on!</p>
+<p>The following fields will create a new addon when they are updated and the (old) addon has already been booked: <code>new_decimal_price</code>.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id                The ID of the addon to be updated</li>
+<li><strong>@param</strong> string  name              A name of the new addon</li>
+<li><strong>@param</strong> string  description       A description for the new addon</li>
+<li><strong>@param</strong> float   new<em>decimal</em>price A price for the new addon</li>
+<li><strong>@param</strong> tinyint compulsory        Whether this addon is compulsory or not. <code>1</code> for true, <code>0</code> for false (optional, default: false)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                     Contains <code>status</code> on success, <code>errors</code> on failure (can contain <code>id</code>, see above)</li>
+</ul>
+<h3>Deactivate an addon</h3>
+<p><code>POST /api/addon/deactivate</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the addon to be deactivated</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Restore an addon</h3>
+<p><code>POST /api/addon/restore</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the addon to be restored</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete an addon</h3>
+<p><code>POST /api/addon/delete</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the addon to be deleted</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Agencies &amp; Certificates</h2>
 <h3>Recieve all agencies and related certificates</h3>
@@ -523,7 +637,7 @@ pre {
 <h3>Retrieve a specific agent</h3>
 <p><code>GET /api/agent</code></p>
 <ul>
-<li><strong>@param</strong>	integer	id      	The ID of the wanted agent</li>
+<li><strong>@param</strong>	integer	id   The ID of the wanted agent</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON    An <code>agent</code> object</li>
 </ul>
@@ -552,7 +666,7 @@ pre {
 </ul>
 <h3>Update an agent</h3>
 <p><code>POST /api/agent/edit</code></p>
-<p>All parameters are optional (except the agent <code>id</code>).</p>
+<p>All parameters except <code>id</code> are optional.</p>
 <ul>
 <li><strong>@param</strong> integer id              The ID of the agent to be updated</li>
 <li><strong>@param</strong> string  name            The name of the travel agent</li>
@@ -569,35 +683,80 @@ pre {
 <li><strong>@return</strong> JSON                   Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Boats</h2>
-<h3>Retrieve all accommodations &amp; boats</h3>
-<p><code>GET /company/boats</code></p>
+<h3>Retrieve all boats</h3>
+<p><code>GET /api/boat/all</code></p>
 <ul>
-<li><strong>@return</strong> JSON    An object containing an <code>accommodations</code> array and a <code>boats</code> array</li>
+<li><strong>@return</strong> JSON    An array of <code>boat</code> objects with included <code>boatroom</code> objects</li>
 </ul>
-<h3>Add new, update and delete accommodations &amp; boats</h3>
-<p><code>POST /company/boats</code></p>
-<p>Submit the whole form with the following structure:</p>
-<p><em>The IDs 1 &amp; 2 are just examples. Please use the real IDs that are retrieved from the API</em></p>
-<pre><code>&lt;input name=&quot;accommodations[1][name]&quot; value=&quot;My Accommodation&quot;&gt;
-&lt;input name=&quot;accommodations[1][description]&quot; value=&quot;This room is brilliant!&quot;&gt;
-&lt;input name=&quot;accommodations[2][name]&quot; value=&quot;Double Room&quot;&gt;
-&lt;input name=&quot;accommodations[2][description]&quot; value=&quot;A room for two people&quot;&gt;
-
-&lt;input name=&quot;boats[1][name]&quot; value=&quot;My Boat&quot;&gt;
-&lt;input name=&quot;boats[1][description]&quot; value=&quot;This is my first boat&quot;&gt;
-&lt;input name=&quot;boats[1][capacity]&quot; value=&quot;35&quot;&gt;
-&lt;input name=&quot;boats[1][photo]&quot; value=&quot;JPG_01234.jpg&quot;&gt;
-&lt;input name=&quot;boats[1][accommodations][1]&quot; value=&quot;20&quot;&gt; &lt;!-- This specifies the capacity of the accommodation on this particular boat --&gt;
-&lt;input name=&quot;boats[1][accommodations][2]&quot; value=&quot;15&quot;&gt;
-...
-</code></pre>
-
-<p>When <strong>creating new accommodations or boats</strong>, simply make their ID a random string, but continue to use this random ID whenever you refer to the entity throughout the form. The random ID is replaced by the real one in the system when the request is submitted.</p>
+<h3>Create a boat</h3>
+<p><code>POST /api/boat/add</code></p>
+<p>Creates a new boat.</p>
 <ul>
-<li><strong>@param</strong> array accommodations An associative array of the structure described above</li>
-<li><strong>@param</strong> array boats          An associative array of the structure described above</li>
+<li><strong>@param</strong> string  name        A name for the boat</li>
+<li><strong>@param</strong> string  description A description for the boat</li>
+<li><strong>@param</strong> decimal capacity    How many people fit on the boat</li>
+<li><strong>@param</strong> array   boatrooms   The input field must be named <code>boatrooms[{id}][capacity]</code> and its value needs to be the capacity of the boatroom on this boat</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and <code>id</code> of the newly created boat on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update a boat</h3>
+<p><code>POST /api/boat/edit</code></p>
+<p>Updates a boat. All paramets except <code>id</code> are optional.</p>
+<blockquote>
+<h4>Important</h4>
+<p>If <code>boatrooms</code> is not provided, all attached boatrooms will be removed!</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the boat to be updated</li>
+<li><strong>@param</strong> string  name        A name for the boat</li>
+<li><strong>@param</strong> string  description A description for the boat</li>
+<li><strong>@param</strong> decimal capacity    How many people fit on the boat</li>
+<li><strong>@param</strong> array   boatrooms   The input field must be named <code>boatrooms[{id}][capacity]</code> and its value needs to be the capacity of the boatroom on this boat</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete a boat</h3>
+<p><code>POST /api/boat/delete</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the boat to be deleted</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Boatrooms</h2>
+<h3>Retrieve all boatrooms</h3>
+<p><code>GET /api/boatroom/all</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>boatroom</code> objects</li>
+</ul>
+<h3>Create a boatroom</h3>
+<p><code>POST /api/boatroom/add</code></p>
+<p>Creates a new boatroom.</p>
+<ul>
+<li><strong>@param</strong> string  name         A name for the boatroom</li>
+<li><strong>@param</strong> string  description  A description for the boatroom</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                Contains <code>status</code> and <code>id</code> of the newly created boatroom on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update a boatroom</h3>
+<p><code>POST /api/boatroom/edit</code></p>
+<p>Updates a boatroom. All paramets except <code>id</code> are optional.</p>
+<blockquote>
+<h4>Important</h4>
+<p>If <code>boatrooms</code> is not provided, all attached boatrooms will be removed!</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> integer id           The ID of the boatroom to be updated</li>
+<li><strong>@param</strong> string  name         A name for the boatroom</li>
+<li><strong>@param</strong> string  description  A description for the boatroom</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete a boatroom</h3>
+<p><code>POST /api/boatroom/delete</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the boatroom to be deleted</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Bookings</h2>
 <p>The ideal booking process is throughoutly documented in a <a href="https://www.facebook.com/notes/scuba-where/the-booking-process-manifest/498190260280790">Facebook Document</a>.</p>
@@ -850,6 +1009,84 @@ var area   = [north, west, south, east];
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
+<h2>Packages</h2>
+<h3>Retrieve all packages</h3>
+<p><code>GET /api/package/all</code></p>
+<p><code>GET /api/package/all-with-trashed</code></p>
+<ul>
+<li><strong>@return</strong> JSON    An array of <code>package</code> objects with included <code>tickets</code></li>
+</ul>
+<h3>Create a new package</h3>
+<p><code>POST /api/package/add/</code></p>
+<ul>
+<li><strong>@param</strong> string  name        A name for the package</li>
+<li><strong>@param</strong> string  description A description for the package</li>
+<li><strong>@param</strong> integer capacity    How many people can go on the same session with this package (<code>null</code>,<code>0</code> for <em>no limit</em>)</li>
+<li><strong>@param</strong> Price   base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Price   prices      See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> array   tickets     The input field must be named <code>tickets[{id}][quantity]</code> and its value needs to be the quantity of the tickets of this kind included in this package</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and <code>id</code> of the newly created ticket on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Update a package</h3>
+<p><code>POST /api/package/edit</code></p>
+<p>Updates a package. All parameters except <code>id</code> &amp; <code>tickets</code> are optional.</p>
+<blockquote>
+<h4>Important</h4>
+<p>The response <em>can</em> contain an <code>id</code> field. If it <em>does</em> it means that the package could not simply be updated because it has already been booked. Instead the old package has been <strong>deactivated</strong> and has been replaced with an updated package in the system. The returned <code>id</code> is the new ID of the package and must be used from now on!</p>
+<p>The following fields will create a new package when they are updated and the (old) package has already been booked: <code>tickets</code>, <code>base_prices</code>, <code>prices</code>.</p>
+</blockquote>
+<ul>
+<li><strong>@param</strong> string  name        A name for the package</li>
+<li><strong>@param</strong> string  description A description for the package</li>
+<li><strong>@param</strong> integer capacity    How many people can go on the same session with this package (<code>null</code>,<code>0</code> for <em>no limit</em>)</li>
+<li><strong>@param</strong> Price   base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Price   prices      See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> array   tickets     The input field must be named <code>tickets[{id}][quantity]</code> and its value needs to be the quantity of the tickets of this kind included in this package</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure (can contain <code>id</code>, see <strong>Important</strong> section above)</li>
+</ul>
+<h3>Deactivate a package</h3>
+<p><code>POST /api/package/deactivate</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the package to be deactivated</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Restore a package</h3>
+<p><code>POST /api/package/restore</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the package to be restored</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Delete a package</h3>
+<p><code>POST /api/package/delete</code></p>
+<ul>
+<li><strong>@param</strong> integer id          The ID of the package to be deleted</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h2>Prices</h2>
+<p><code>base_prices</code> and <code>prices</code> arrays must have the following structure:</p>
+<pre><code>[
+    {id}: {
+        'new_decimal_price': 14.99,
+        'from': '2014-11-15',
+        'until': '2015-05-14'
+    },
+    {id}: {
+        'new_decimal_price': ...
+    }
+]
+</code></pre>
+
+<p><code>{id}</code> is the <code>id</code> of an existing price or a random alpha-numerical sequence for new prices. </p>
+<p>The <code>until</code> parameter is only necessary for seasonal prices (not for base-prices).</p>
+<blockquote>
+<h4>Important</h4>
+<p>The <code>from</code> parameter should be <code>'0000-00-00'</code> for the initial base-price.</p>
+</blockquote>
 <h2>Search</h2>
 <h3>Search for customers by email</h3>
 <p><code>GET /api/search/customers</code></p>
@@ -872,7 +1109,7 @@ var area   = [north, west, south, east];
 <ul>
 <li><strong>@return</strong> JSON    An array of <code>session</code> objects (without connected objects)</li>
 </ul>
-<p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_accommodations_&amp;_boats">#Retrieve all accommodations &amp; boats</a>.</em></p>
+<p><em>To retrieve the related <code>trip</code> and <code>boat</code> objects, please refer to <a href="#Retrieve_a_specific_trip">#Retrieve a specific trip</a>, <a href="#Retrieve_all_trips">#Retrieve all trips</a> and <a href="#Retrieve_all_boats">#Retrieve all boats</a>.</em></p>
 <h3>Search for sessions by filter</h3>
 <p><code>GET /api/session/filter</code></p>
 <p>Returns filtered sessions.</p>
@@ -957,6 +1194,7 @@ var area   = [north, west, south, east];
 </ul>
 <h3>Retrieve all tickets</h3>
 <p><code>GET /api/ticket/all</code></p>
+<p><code>GET /api/ticket/all-with-trashed</code></p>
 <ul>
 <li><strong>@return</strong> JSON    An array of <code>ticket</code> objects, complete with details of connected <code>boats</code> and lists of <code>accommodation_id</code>s</li>
 </ul>
@@ -967,8 +1205,8 @@ var area   = [north, west, south, east];
 <li><strong>@param</strong> integer trip_id     The ID of the <code>trip</code> that the ticket belongs to</li>
 <li><strong>@param</strong> string  name        A name for the ticket</li>
 <li><strong>@param</strong> string  description A description for the ticket</li>
-<li><strong>@param</strong> decimal price       The price (will be rounded to two decimals)</li>
-<li><strong>@param</strong> string  currency    Three letter international code (optional, default: dive center's country's currency)</li>
+<li><strong>@param</strong> Price   base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Price   prices      See <a href="#Prices">#Prices</a></li>
 <li><strong>@param</strong> array   trips       A simple array of <code>trip_id</code>s that the ticket is eligable for</li>
 <li><strong>@param</strong> array   boats       An array of <code>boat_id</code> =&gt; <code>accommodation_id</code> associations (can be empty)</li>
 <li>&nbsp;</li>
@@ -988,8 +1226,8 @@ var area   = [north, west, south, east];
 <li><strong>@param</strong> integer trip_id     The ID of the <code>trip</code> that the ticket belongs to</li>
 <li><strong>@param</strong> string  name        A name for the ticket</li>
 <li><strong>@param</strong> string  description A description for the ticket</li>
-<li><strong>@param</strong> decimal price       The price (will be rounded to two decimals)</li>
-<li><strong>@param</strong> string  currency    The currency that the price is in</li>
+<li><strong>@param</strong> Price   base_prices See <a href="#Prices">#Prices</a></li>
+<li><strong>@param</strong> Price   prices      See <a href="#Prices">#Prices</a></li>
 <li><strong>@param</strong> array   boats       An array of <code>boat_id</code> =&gt; <code>accommodation_id</code> associations (can be empty)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON               Contains <code>status</code>, or <code>status</code> and <code>id</code> of the updated ticket on success, <code>errors</code> on failure</li>
@@ -1063,6 +1301,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <h3>Retrieve all trips</h3>
 <p><code>GET /api/trip/all</code></p>
+<p><code>GET /api/trip/all-with-trashed</code></p>
 <ul>
 <li><strong>@return</strong> JSON    An array of <code>trip</code> objects, complete with details of the pick-up <code>location</code>, all <code>locations</code> in the itinary and all connected <code>triptypes</code></li>
 </ul>
@@ -1123,6 +1362,17 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>15<sup>th</sup> November 2014</h3>
+<ul>
+<li><strong>@added</strong> <a href="#Accommodations">#Accommodations</a> section</li>
+<li><strong>@added</strong> <a href="#Addons">#Addons</a> section</li>
+<li><strong>@added</strong> <a href="#Packages">#Packages</a> section</li>
+<li><strong>@added</strong> <a href="#Boatrooms">#Boatrooms</a> section</li>
+<li><strong>@added</strong> <a href="#Prices">#Prices</a> section</li>
+<li><strong>@added</strong> <code>all-with-trashed</code> API methods</li>
+<li><strong>@edit</strong>  Updated <a href="#Boats">#Boats</a> section to comply with new API</li>
+<li><strong>@edit</strong>  Changed all relevant <code>price</code> &amp; <code>currency</code> input fields to <code>base_prices</code> &amp; <code>prices</code></li>
+</ul>
 <h3>26<sup>th</sup> October 2014</h3>
 <ul>
 <li><strong>@added</strong> Expandable &amp; responsive main menu</li>
