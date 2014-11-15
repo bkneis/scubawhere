@@ -534,3 +534,16 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 .dashboard-stat.purple {
   background-color: #852b99;
 }
+
+.certify {
+	display: block;
+	border: 1px solid #c8c8c8;
+	float: left;
+	padding: 0.5em 1em;
+	margin: 0 0.5em 0.5em 0;
+}
+
+.certify.checked {
+	border-color: #27ae60;
+	background-color: #2ecc71;
+}
