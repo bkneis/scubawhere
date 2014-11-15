@@ -82,17 +82,38 @@ class AddonController extends Controller {
 			'compulsory'
 		);
 
-		//Check compulsory field.....
+		// Check compulsory field
 		if (empty($data['compulsory'])) {
 			$data['compulsory'] = 0;
 		}
 
-		if( !$addon->update($data) )
+		if($addon->has_bookings && $data['new_decimal_price'] && $data['new_decimal_price'] != $addon->decimal_price)
 		{
-			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+			// Create new addon and deactivate the old one
 
-		return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
+			// Replace all unavailable input data with data from the old addon object
+			if( empty($data['name']) )              $data['name']              = $addon->name;
+			if( empty($data['description']) )       $data['description']       = $addon->description;
+			if( empty($data['new_decimal_price']) ) $data['new_decimal_price'] = $addon->decimal_price;
+			if( empty($data['compulsory']) )        $data['compulsory']        = $addon->compulsory;
+
+			// SoftDelete the old addon
+			$addon->delete();
+
+			// Dispatch add-addon route with all data
+			$request = Request::create('api/addon/add', 'POST', $data);
+			return Route::dispatch($request);
+		}
+		else {
+			// Just update the addon
+
+			if( !$addon->update($data) )
+			{
+				return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
+		}
 	}
 
 	public function postDeactivate()
