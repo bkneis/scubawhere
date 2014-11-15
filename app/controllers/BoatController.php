@@ -85,6 +85,10 @@ class BoatController extends Controller {
 			$boatrooms = Input::get('boatrooms');
 			$boat->boatrooms()->sync( $boatrooms );
 		}
+		else {
+			// Remove all boatrooms from the boat
+			$boat->boatrooms()->detach();
+		}
 
 		return Response::json( array('status' => 'OK. Boat updated.'), 200 ); // 200 OK
 	}
