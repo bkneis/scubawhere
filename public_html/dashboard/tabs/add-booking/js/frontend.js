@@ -53,12 +53,6 @@ $(function(){
 		$("#trips").append(tripTemplate({trips:data}));
 	});
 
-	var packageTemplate = Handlebars.compile($("#packages-list-template").html());
-
-	Package.getAllPackages(function(data){
-		$("#available-packages").append(packageTemplate({packages:data}));
-	});
-
 	var addonsTemplate = Handlebars.compile($("#addons-template").html());
 
 	Addon.getAllAddons(function(data){
@@ -214,29 +208,40 @@ $(document).ready(function() {
 	}
 
 	$(document).on('click', '.assign-session', function() {
+		var ticket = $('#session-tickets').children('.active').first();
+		var btn = $(this);
+
 		var sessionId = $(this).data('id');
 		var customerId = $('#session-customers').children('.active').first().data('id');
-		var ticketId = $('#session-tickets').children('.active').first().data('id');
+		var ticketId = ticket.data('id');
 
-		booking.session_id = sessionId;
-		booking.customer_id = customerId;
-		booking.ticket_id = ticketId;
+		if($('#session-tickets').children('.list-group-item').length > 0) {
+			booking.session_id = sessionId;
+			booking.customer_id = customerId;
+			booking.ticket_id = ticketId;
 
-		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
+			$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
+			btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
-		var params = [
-			{name: "_token", value: window.token},
-			{name: "booking_id", value: booking.id},
-			{name: "customer_id", value: customerId},
-			{name: "is_lead", value: false},
-			{name: "ticket_id", value: ticketId},
-			{name: "session_id", value: sessionId}
-		];
+			var params = [
+				{name: "_token", value: window.token},
+				{name: "booking_id", value: booking.id},
+				{name: "customer_id", value: customerId},
+				{name: "is_lead", value: false},
+				{name: "ticket_id", value: ticketId},
+				{name: "session_id", value: sessionId}
+			];
 
-		Booking.addDetails(params, function(data) {
-			compileSessionsList();
-			btn.html('Assign');
-		});
+			Booking.addDetails(params, function(data) {
+				compileSessionsList();
+				btn.html('Assign');
+				ticket.remove();
+			});
+
+		}else{
+			
+		}
+
 	});
 
 	var addonTotal = 0;
