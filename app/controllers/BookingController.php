@@ -391,6 +391,116 @@ class BookingController extends Controller {
 		return array('status' => 'OK. Addon removed.', 'price' => $booking->decimal_price());
 	}
 
+	public function postAddAccommodation()
+	{
+		/**
+		 * Required input parameters
+		 *
+		 * booking_id
+		 * accommodation_id
+		 * customer_id
+		 * date
+		 * nights
+		 */
+
+		// Check if the booking belongs to the company
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the accommodation belongs to the company
+		try
+		{
+			if( !Input::get('accommodation_id') ) throw new ModelNotFoundException();
+			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('accommodation_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the customer belongs to the company
+		try
+		{
+			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$date = Input::get('date');
+		$nights = Input::get('nights');
+		$validator = Validator::make(
+			array(
+				'date' => $date,
+				'nights' => $nights
+			),
+			array(
+				'date' => 'required|date|after:'.date('Y-m-d'/*, strtotime('yesterday')*/),
+				'nights' => 'required|integer|min:1'
+			)
+		);
+
+		if( $validator->fails() )
+		{
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+		}
+
+		$booking->accommodations()->attach( $accommodation->id, array('date' => $date, 'nights' => $nights) );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Accommodation added.', 'price' => $booking->decimal_price());
+	}
+
+	public function postRemoveAccommodation()
+	{
+		/**
+		 * Required input parameters
+		 *
+		 * booking_id
+		 * accommodation_id
+		 * customer_id
+		 */
+
+		if( !Input::has('booking_id') )
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+
+		if( !Input::has('accommodation_id') )
+			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+
+		if( !Input::has('customer_id') )
+			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+
+		try
+		{
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$accommodation_id = Input::get('accommodation_id');
+
+		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
+		$booking->accommodations()->detach( $accommodation_id );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Accommodation removed.', 'price' => $booking->decimal_price());
+	}
+
 	public function postEditInfo()
 	{
 		/**
