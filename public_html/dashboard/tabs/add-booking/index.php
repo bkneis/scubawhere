@@ -192,9 +192,7 @@
 						<li href="#" class="list-group-item active">
 							<h4 class="list-group-item-heading">Added Customers</h4>
 						</li>
-						<div id="added-customers">
-
-						</div>
+						<div id="added-customers"></div>
 						<script id="added-customers-template" type="text/x-handlebars-template">
 							<li href="#" class="list-group-item">
 								<h4 class="list-group-item-heading">{{firstname}} {{lastname}}</h4>
@@ -330,6 +328,7 @@
 				</div>
 			</div>
 		</div>
+<<<<<<< HEAD
 		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
 			<div class="row">
 				<div class="col-xs-12">
