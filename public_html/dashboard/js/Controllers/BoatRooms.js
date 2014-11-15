@@ -1,17 +1,17 @@
-var Boats = {
+var BoatRooms = {
 
 	get : function(params, handleData) {
-		$.get("/api/boats", params, handleData);
+		$.get("/api/boatrooms", params, handleData);
 	},
 
 	getAll : function(handleData) {
-		$.get("/api/boats/all", handleData);
+		$.get("/api/boatrooms/all", handleData);
 	},
 
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/boats/add",
+			url: "/api/boatrooms/add",
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -21,7 +21,7 @@ var Boats = {
 	update : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/boats/edit",
+			url: "/api/boatrooms/edit",
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -31,7 +31,7 @@ var Boats = {
 	delete : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
-			url: "/api/boats/delete",
+			url: "/api/boatrooms/delete",
 			data: params,
 			success: handleData,
 			error: errorFn
