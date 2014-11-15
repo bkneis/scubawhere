@@ -215,33 +215,39 @@ $(document).ready(function() {
 		var customerId = $('#session-customers').children('.active').first().data('id');
 		var ticketId = ticket.data('id');
 
-		if($('#session-tickets').children('.list-group-item').length > 0) {
-			booking.session_id = sessionId;
-			booking.customer_id = customerId;
-			booking.ticket_id = ticketId;
+		booking.session_id = sessionId;
+		booking.customer_id = customerId;
+		booking.ticket_id = ticketId;
 
-			$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
-			btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
+		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
+		btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
-			var params = [
-				{name: "_token", value: window.token},
-				{name: "booking_id", value: booking.id},
-				{name: "customer_id", value: customerId},
-				{name: "is_lead", value: false},
-				{name: "ticket_id", value: ticketId},
-				{name: "session_id", value: sessionId}
-			];
+		var params = [
+			{name: "_token", value: window.token},
+			{name: "booking_id", value: booking.id},
+			{name: "customer_id", value: customerId},
+			{name: "is_lead", value: false},
+			{name: "ticket_id", value: ticketId},
+			{name: "session_id", value: sessionId}
+		];
 
-			Booking.addDetails(params, function(data) {
-				compileSessionsList();
-				btn.html('Assign');
-				ticket.remove();
-			});
-
-		}else{
+		Booking.addDetails(params, function(data) {
+			compileSessionsList();
+			btn.html('Assign');
 			
-		}
+			if($('#session-tickets').children('.list-group-item').length == 1) {
+				$('.session-requirements').slideUp();
+			}
 
+			ticket.remove();
+		});
+
+		
+
+	});
+
+	$(document).on('click', '.sessions-finish', function() {
+		$('[data-target="#addon-tab"]').tab('show');
 	});
 
 	var addonTotal = 0;

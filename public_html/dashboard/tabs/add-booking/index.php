@@ -226,7 +226,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row session-requirements">
 				<div class="col-sm-4 col-sm-offset-2">
 					<div class="panel panel-default">
 						<div class="panel-heading">
@@ -323,6 +323,11 @@
 						</tr>
 					{{/each}}
 				</script>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary sessions-finish pull-right">Next</a>
+				</div>
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
