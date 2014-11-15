@@ -199,10 +199,17 @@ $(document).ready(function() {
 		});
 	}
 
-	function compileSessionsList() {
+	$(document).on('submit', '#session-filters', function(e) {
+		e.preventDefault();
+		compileSessionsList($(this).serialize());
+	});
+
+	function compileSessionsList(params) {
+		if(typeof(params)==='undefined') params = "";
+		
 		var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
 
-		Session.filter("", function(data){
+		Session.filter(params, function(data){
 			$("#sessions-table tbody").html('').append(sessionsTemplate({sessions:data}));
 		});
 	}
@@ -232,11 +239,12 @@ $(document).ready(function() {
 		];
 
 		Booking.addDetails(params, function(data) {
-			compileSessionsList();
+			compileSessionsList($("#session-filters").serialize());
 			btn.html('Assign');
 			
 			if($('#session-tickets').children('.list-group-item').length == 1) {
 				$('.session-requirements').slideUp();
+				$('.assign-session').attr("disabled", "disabled");
 			}
 
 			ticket.remove();

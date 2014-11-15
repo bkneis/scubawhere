@@ -259,68 +259,81 @@
 				</div>
 			</div>
 			<div class="row">
-				<form class="form-inline" role="form">
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="" class="col-sm-5 control-label">After:</label>
-							<div class="col-sm-7">
-								<input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+				<div class="col-sm-12 col-lg-8 col-lg-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Assign to Session</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row ">
+								<form role="form" id="session-filters">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label for="after">After:</label>
+											<input type="date" class="form-control" name="after" placeholder="dd/mm/yyyy">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label for="before">Before:</label>
+											<input type="date" class="form-control" name="before" placeholder="dd/mm/yyyy">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label for="trips">Trip:</label>
+											<select id="trips" name="trip_id" class="form-control select2">
+												<option selected="selected">Choose trip...</option>
+											</select>
+											<script id="trips-list-template" type="text/x-handlebars-template">
+												{{#each trips}}
+													<option value="{{id}}">{{name}}</option>
+												{{/each}}
+											</script>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label for="">&nbsp;</label>
+											<button type="submit" class="btn btn-primary btn-block">Filter</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table class="table table-condensed" id="sessions-table">
+										<thead>
+											<tr>
+												<th>Start</th>
+												<th>Finish</th>
+												<th>Trip</th>
+												<th>Free Spaces</th>
+												<th>Boat</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											
+										</tbody>
+									</table>
+								</div>
+								<script id="sessions-table-template" type="text/x-handlebars-template">
+									{{#each sessions}}
+										<tr>
+											<td>{{friendlyDate start}}</td>
+											<td>{{tripFinish start trip.duration}}</td>
+											<td>{{trip.name}}</td>
+											<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
+											<td>{{boat.name}}</td>
+											<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
+										</tr>
+									{{/each}}
+								</script>
 							</div>
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="" class="col-sm-5 control-label">Before:</label>
-							<div class="col-sm-7">
-								<input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="" class="col-sm-5 control-label">Trip:</label>
-							<div class="col-sm-7">
-								<select id="trips" name="trips" class="form-control select2"></select>
-							</div>
-							<script id="trips-list-template" type="text/x-handlebars-template">
-								{{#each trips}}
-									<option value="{{id}}">{{name}}</option>
-								{{/each}}
-							</script>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="row">
-				<div class="col-md-10 col-md-offset-1">
-					<table class="table table-condensed" id="sessions-table">
-						<thead>
-							<tr>
-								<th>Start</th>
-								<th>Finish</th>
-								<th>Trip</th>
-								<th>Free Spaces</th>
-								<th>Boat</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							
-						</tbody>
-					</table>
 				</div>
-				<script id="sessions-table-template" type="text/x-handlebars-template">
-					{{#each sessions}}
-						<tr>
-							<td>{{friendlyDate start}}</td>
-							<td>{{tripFinish start trip.duration}}</td>
-							<td>{{trip.name}}</td>
-							<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
-							<td>{{boat.name}}</td>
-							<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
-						</tr>
-					{{/each}}
-				</script>
 			</div>
 			<div class="row">
 				<div class="col-xs-12">
@@ -328,7 +341,6 @@
 				</div>
 			</div>
 		</div>
-<<<<<<< HEAD
 		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
 			<div class="row">
 				<div class="col-xs-12">
@@ -338,7 +350,39 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Step 1: Select Addons</h2>
+						</div>
+						<div class="panel-body">
+							<ul class="list-group" id="addons">
+							</ul>
+						</div>
+					</div>
+					<script id="addons-template" type="text/x-handlebars-template">
+						{{#each addons}}
+							<li data-id="{{id}}" class="list-group-item">
+								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
+    							<p>{{description}}</p>
+    							<div class="row">
+    								<div class="col-sm-4">
+    									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
+    								</div>
+    								<div class="col-sm-5 pull-right">
+		    							<div class="input-group">
+		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
+		    								<span class="input-group-btn">
+		    									<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
+		    								</span>
+		    							</div>
+	    							</div>
+    							</div>
+							</li>
+						{{/each}}
+					</script>
+				</div>
+				<div class="col-sm-4">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h2 class="panel-title">Select Addons</h2>
@@ -357,7 +401,7 @@
     								<div class="col-sm-4">
     									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
     								</div>
-    								<div class="col-sm-3 pull-right">
+    								<div class="col-sm-5 pull-right">
 		    							<div class="input-group">
 		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
 		    								<span class="input-group-btn">
