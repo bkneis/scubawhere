@@ -75,7 +75,7 @@ $(function () {
 		window.trips = _.indexBy(data, 'id');
 
 			Boat.getAll(function success(data){
-				window.boats = _.indexBy(data.boats, 'id');
+				window.boats = _.indexBy(data, 'id');
 
 				ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
 				renderEditForm();
