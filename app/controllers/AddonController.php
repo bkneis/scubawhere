@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use PhilipBrown\Money\Currency;
 
 class AddonController extends Controller {
 

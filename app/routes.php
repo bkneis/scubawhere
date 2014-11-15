@@ -106,6 +106,10 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::controller('api/agent', 'AgentController');
 
+	Route::controller('api/boat', 'BoatController');
+
+	Route::controller('api/boatroom', 'BoatroomController');
+
 	Route::controller('api/booking', 'BookingController');
 
 	Route::controller('api/customer', 'CustomerController');
