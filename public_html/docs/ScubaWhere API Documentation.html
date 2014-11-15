@@ -813,22 +813,44 @@ pre {
 <p><code>POST /api/booking/add-addon</code></p>
 <p>Adds an addon to a customer-session combination.</p>
 <ul>
-<li><strong>@param</strong>	integer	booking_id	The ID of the  <code>booking</code></li>
-<li><strong>@param</strong>	integer	session_id	The ID of the  <code>session</code> that the addon should be added to</li>
-<li><strong>@param</strong>	integer customer_id	The ID of the  <code>customer</code> the addon is for</li>
-<li><strong>@param</strong>	integer	addon_id	The ID of the  <code>addon</code> to add</li>
-<li><strong>@param</strong>	integer	quantity	How many of this addon should be added (optional)</li>
+<li><strong>@param</strong> integer booking_id  The ID of the  <code>booking</code></li>
+<li><strong>@param</strong> integer session_id  The ID of the  <code>session</code> that the addon should be added to</li>
+<li><strong>@param</strong> integer customer_id The ID of the  <code>customer</code> the addon is for</li>
+<li><strong>@param</strong> integer addon_id    The ID of the  <code>addon</code> to add</li>
+<li><strong>@param</strong> integer quantity    How many of this addon should be added (optional)</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Remove addon from booking</h3>
 <p><code>POST /api/booking/remove-addon</code></p>
 <p>Removes an addon from a customer-session combination.</p>
 <ul>
-<li><strong>@param</strong>	integer	booking_id	The ID of the  <code>booking</code></li>
-<li><strong>@param</strong>	integer	session_id	The ID of the  <code>session</code> that the addon should be removed from</li>
-<li><strong>@param</strong>	integer customer_id	The ID of the  <code>customer</code> the addon was booked for</li>
-<li><strong>@param</strong>	integer	addon_id	The ID of the  <code>addon</code> to remove</li>
+<li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code></li>
+<li><strong>@param</strong> integer session_id  The ID of the <code>session</code> that the addon should be removed from</li>
+<li><strong>@param</strong> integer customer_id The ID of the <code>customer</code> the addon was booked for</li>
+<li><strong>@param</strong> integer addon_id    The ID of the <code>addon</code> to remove</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON               Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Add accommodation to booking</h3>
+<p><code>POST /api/booking/add-accommodation</code></p>
+<p>Adds an accommodation to a booking.</p>
+<ul>
+<li><strong>@param</strong> integer booking_id       The ID of the <code>booking</code> that the accommodation should be added to</li>
+<li><strong>@param</strong> integer accommodation_id The ID of the <code>accommodation</code> to add</li>
+<li><strong>@param</strong> integer customer_id      The ID of the <code>customer</code> the accommodation is for</li>
+<li><strong>@param</strong> string  date             Date of the first evening</li>
+<li><strong>@param</strong> integer nights           The number of nights the accommodation should be booked for</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON                    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Remove accommodation from booking</h3>
+<p><code>POST /api/booking/remove-accommodation</code></p>
+<p>Removes an accommodation from a booking.</p>
+<ul>
+<li><strong>@param</strong> integer booking_id       The ID of the <code>booking</code> that the accommodation should be removed from</li>
+<li><strong>@param</strong> integer accommodation_id The ID of the <code>accommodation</code> to remove</li>
+<li><strong>@param</strong> integer customer_id      The ID of the <code>customer</code> the accommodation was for</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
 </ul>
@@ -1370,6 +1392,7 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 <li><strong>@added</strong> <a href="#Boatrooms">#Boatrooms</a> section</li>
 <li><strong>@added</strong> <a href="#Prices">#Prices</a> section</li>
 <li><strong>@added</strong> <code>all-with-trashed</code> API methods</li>
+<li><strong>@added</strong> <a href="#Add_accommodation_to_booking">#Add accommodation to booking</a>, <a href="#Remove_accommodation_from_booking">#Remove accommodation from booking</a> methods</li>
 <li><strong>@edit</strong>  Updated <a href="#Boats">#Boats</a> section to comply with new API</li>
 <li><strong>@edit</strong>  Changed all relevant <code>price</code> &amp; <code>currency</code> input fields to <code>base_prices</code> &amp; <code>prices</code></li>
 </ul>

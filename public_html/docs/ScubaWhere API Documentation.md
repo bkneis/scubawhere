@@ -438,13 +438,13 @@ Remove a ticket from a booking. This method doesn't need the ticketID, because t
 
 Adds an addon to a customer-session combination.
 
-- **@param**	integer	booking_id	The ID of the  `booking`
-- **@param**	integer	session_id	The ID of the  `session` that the addon should be added to
-- **@param**	integer customer_id	The ID of the  `customer` the addon is for
-- **@param**	integer	addon_id	The ID of the  `addon` to add
-- **@param**	integer	quantity	How many of this addon should be added (optional)
+- **@param** integer booking_id  The ID of the  `booking`
+- **@param** integer session_id  The ID of the  `session` that the addon should be added to
+- **@param** integer customer_id The ID of the  `customer` the addon is for
+- **@param** integer addon_id    The ID of the  `addon` to add
+- **@param** integer quantity    How many of this addon should be added (optional)
 - &nbsp;
-- **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
+- **@return** JSON               Contains `status` and the new total booking price on success, `errors` on failure
 
 ### Remove addon from booking
 
@@ -452,10 +452,36 @@ Adds an addon to a customer-session combination.
 
 Removes an addon from a customer-session combination.
 
-- **@param**	integer	booking_id	The ID of the  `booking`
-- **@param**	integer	session_id	The ID of the  `session` that the addon should be removed from
-- **@param**	integer customer_id	The ID of the  `customer` the addon was booked for
-- **@param**	integer	addon_id	The ID of the  `addon` to remove
+- **@param** integer booking_id  The ID of the `booking`
+- **@param** integer session_id  The ID of the `session` that the addon should be removed from
+- **@param** integer customer_id The ID of the `customer` the addon was booked for
+- **@param** integer addon_id    The ID of the `addon` to remove
+- &nbsp;
+- **@return** JSON               Contains `status` and the new total booking price on success, `errors` on failure
+
+### Add accommodation to booking
+
+`POST /api/booking/add-accommodation`
+
+Adds an accommodation to a booking.
+
+- **@param** integer booking_id       The ID of the `booking` that the accommodation should be added to
+- **@param** integer accommodation_id The ID of the `accommodation` to add
+- **@param** integer customer_id      The ID of the `customer` the accommodation is for
+- **@param** string  date             Date of the first evening
+- **@param** integer nights           The number of nights the accommodation should be booked for
+- &nbsp;
+- **@return** JSON                    Contains `status` and the new total booking price on success, `errors` on failure
+
+### Remove accommodation from booking
+
+`POST /api/booking/remove-accommodation`
+
+Removes an accommodation from a booking.
+
+- **@param** integer booking_id       The ID of the `booking` that the accommodation should be removed from
+- **@param** integer accommodation_id The ID of the `accommodation` to remove
+- **@param** integer customer_id      The ID of the `customer` the accommodation was for
 - &nbsp;
 - **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
 
@@ -1076,6 +1102,7 @@ Delete an existing trip.
 - **@added** [#Boatrooms](#Boatrooms) section
 - **@added** [#Prices](#Prices) section
 - **@added** `all-with-trashed` API methods
+- **@added** [#Add accommodation to booking](#Add_accommodation_to_booking), [#Remove accommodation from booking](#Remove_accommodation_from_booking) methods
 - **@edit**  Updated [#Boats](#Boats) section to comply with new API
 - **@edit**  Changed all relevant `price` & `currency` input fields to `base_prices` & `prices`
 
