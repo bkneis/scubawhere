@@ -23,8 +23,8 @@ $(function() {
 		initDraggables();
 	});
 
-	Boat.getAllBoats(function(data) {
-		window.boats = _.indexBy(data.boats, 'id');
+	Boat.getAll(function(data) {
+		window.boats = _.indexBy(data, 'id');
 	});
 
 	$.get("/token", null, function(data) {
