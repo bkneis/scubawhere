@@ -2,21 +2,15 @@ var companyForm;
 var errorsHTML;
 
 $(function() {
-
-	companyForm = Handlebars.compile( $("#company-form-template").html());
-	renderEditForm();
-
-	CKEDITOR.replace('description');
-
 	$.get("/api/agency/all", function(data) {
-		var agency_options = '';
-		for(var key in data) {
-			agency_options += '<label class="certify"><input id="agencies[]" name="agencies[]" type="checkbox" value="'+data[key].id+'"><strong>'+data[key].abbreviation+'</strong><br></label>';
-		}
-		$('#agencies').html( agency_options );
+		window.company.agencies       = _.indexBy(window.company.agencies, 'id');
+		window.company.other_agencies = _.omit ( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
+
+		companyForm = Handlebars.compile( $("#company-form-template").html());
+		renderEditForm();
 	});
 
-	$('#update-company-form').submit(function(event){
+	$('#company-form-container').on('submit', '#update-company-form', function(event) {
 
 		event.preventDefault();
 
@@ -56,6 +50,10 @@ $(function() {
 			}
 		});
 	});
+
+	$('#company-form-container').on('click', '#send-password', function(event) {
+		event.preventDefault();
+	});
 });
 
 function renderEditForm() {
@@ -67,6 +65,8 @@ function renderEditForm() {
 
 	//console.log(window.company);
 	$('#company-form-container').empty().append( companyForm(window.company) );
+
+	CKEDITOR.replace('description');
 
 	setToken('[name=_token]');
 

@@ -4,7 +4,7 @@
 			<script type="text/x-handlebars-template" id="company-form-template">
 			<form id="update-company-form">
 				<div class="box50">
-				<label class="dgreyb">Account Information</label>
+					<label class="dgreyb">Account Information</label>
 					<div class="padder">
 
 						<div class="form-row">
@@ -34,7 +34,19 @@
 						<div class="form-row" style="overflow:auto;">
 							<label>Accepted Diving Instuitions</label>
 							<div id="agencies">
-								<div id="save-loader" class="loader"></div>
+								{{#each agencies}}
+									<label class="certify">
+										<input type="checkbox" name="agencies[]" value="{{id}}" checked>
+										<strong>{{abbreviation}}</strong>
+									</label>
+								{{/each}}
+								<p style="clear: both;"></p>
+								{{#each other_agencies}}
+									<label class="certify">
+										<input type="checkbox" name="agencies[]" value="{{id}}">
+										<strong>{{abbreviation}}</strong>
+									</label>
+								{{/each}}
 							</div>
 						</div>
 
@@ -128,6 +140,5 @@
 		</script>
 
 	</div>
+	<script src="/dashboard/tabs/settings/js/script.js"></script>
 </div>
-
-<script src="/dashboard/tabs/settings/js/script.js"></script>
