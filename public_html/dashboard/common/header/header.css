@@ -55,7 +55,7 @@
 }
 
 .nav-opt{
-	float: left;
+	float: right;
 	padding-left: 30px;
 	padding-right: 30px;
 	color: #ffffff;
@@ -64,22 +64,18 @@
 
 .nav-opt a:link{
 	color: #fff;
-	text-decoration: none;
 }
 
 .nav-opt a:hover{
 	color: #4a9cff;
-	text-decoration: none;
 }
 
 .nav-opt a:visited{
 	color: #fff;
-	text-decoration: none;
 }
 
 .nav-opt a:active{
 	color: #fff;
-	text-decoration: none;
 }
 
 #logout{
