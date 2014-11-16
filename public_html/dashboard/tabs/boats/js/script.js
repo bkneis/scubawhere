@@ -80,7 +80,7 @@ $(function (){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-boats-form').prepend(errorsHTML)
+				$('#update-boats-form').prepend(errorsHTML);
 				$('.remove-boat').prop('disabled', false);
 				$('.loader').remove();
 			});

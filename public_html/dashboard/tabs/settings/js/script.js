@@ -5,6 +5,8 @@ $(function() {
 	companyForm = Handlebars.compile( $("#company-form-template").html());
 	renderEditForm();
 
+	CKEDITOR.replace('description');
+
 	$.get("/api/agency/all", function(data) {
 		var agency_options = '';
 		for(var key in data) {
@@ -29,7 +31,40 @@ $(function() {
 		$('#currency_id').append( currency_select_options );
 	});
 
-	CKEDITOR.replace('description');
+	$('#update-company-form').submit(function(event){
+
+		event.preventDefault();
+
+		var form = $(this);
+
+		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+		var params = form.serializeArray();
+		$.ajax({
+			url: "/company/update",
+			type: "POST",
+			// dataType: "json",
+			data: params,
+			success: function(data){
+				console.log(data.status);
+				form.find('#save-loader').remove();
+			},
+			error: function(xhr) {
+				data = JSON.parse(xhr.responseText);
+				//console.log(data);
+
+				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				errorsHTML = errorsHTML(data);
+
+				// Render error messages
+				$('.errors').remove();
+				$('#company-form-container').prepend(errorsHTML);
+				$('.submit').prop('disabled', false);
+				$('.loader').remove();
+			}
+		});
+	});
+
 });
 
 function renderEditForm() {
@@ -39,6 +74,7 @@ function renderEditForm() {
 		if( !question) return false;
 	}
 
+	//console.log(window.company);
 	$('#company-form-container').empty().append( companyForm(window.company) );
 
 	setToken('[name=_token]');
