@@ -9,7 +9,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Username : </label>
-							<input type="text" name="email" value="{{username}}"></input>
+							<input type="text" name="username" value="{{username}}"></input>
 						</div>
 
 						<div class="form-row">

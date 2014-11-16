@@ -57,9 +57,10 @@ class CompanyController extends Controller {
 		$company = Auth::user();
 
 		// Mass assigned insert with automatic validation
+		$company->fill($data);
 		if($company->updateUniques())
 		{
-			return array('status' => 'OK. Company data updated');
+			return array('status' => 'OK. Company data updated', 'company' => $company);
 		}
 		else
 		{

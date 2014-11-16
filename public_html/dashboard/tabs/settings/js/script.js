@@ -16,22 +16,6 @@ $(function() {
 		$('#agencies').html( agency_options );
 	});
 
-	$.get("/api/country/all", function(data) {
-		var country_select_options = '';
-		for(var key in data) {
-			country_select_options += '<option data-currency-id="' + data[key].currency_id + '" value="' + data[key].id + '">' + data[key].name + '</option>';
-		}
-		$('#country_id').append( country_select_options );
-	});
-
-	$.get("/api/currency/all", function(data) {
-		var currency_select_options = '';
-		for(var key in data) {
-			currency_select_options += '<option value="' + data[key].id + '">' + data[key].name + '</option>';
-		}
-		$('#currency_id').append( currency_select_options );
-	});
-
 	$('#update-company-form').submit(function(event){
 
 		event.preventDefault();
@@ -40,19 +24,26 @@ $(function() {
 
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		var params = form.serializeArray();
+		var params = form.serialize();
 		$.ajax({
 			url: "/company/update",
 			type: "POST",
 			// dataType: "json",
 			data: params,
 			success: function(data){
-				console.log(data.status);
-				form.find('#save-loader').remove();
+				// Assign updated company data to window.company object
+				window.company = data.company;
+
+				pageMssg(data.status, true);
+
+				$('form').data('hasChanged', false);
+
+				$('.submit').prop('disabled', false);
+				$('.loader').remove();
 			},
 			error: function(xhr) {
 				data = JSON.parse(xhr.responseText);
-				//console.log(data);
+				pageMssg('Oops, something wasn\'t quite right');
 
 				errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
@@ -65,7 +56,6 @@ $(function() {
 			}
 		});
 	});
-
 });
 
 function renderEditForm() {
