@@ -15,3 +15,27 @@
         width: 1120px!important;
     }
 }
+
+.nav-wizard>li {
+    display: inline-block!important;
+}
+
+.nav-wizard>li>a {
+    position: relative;
+    width: 120px;
+    height: 24px;
+    background: #34495E;
+    padding: 2px 0!important;
+    text-align: center;
+}
+
+.nav-wizard>li>a:before {
+    content: " ";
+    position: absolute;
+    border-top: 12px solid #EEEEEE;
+    border-bottom: 12px solid #EEEEEE;
+    left: 100%;
+    top: 0;
+    border-left: 24px solid #34495E;
+    -webkit-transform:rotate(360deg)
+}

@@ -1,5 +1,5 @@
 <div class="container">
-	<ul class="nav nav-tabs" role="tablist">
+	<ul class="nav nav-wizard" role="tablist">
 		<li role="presentation" class="active"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#source-tab">Source</a></li>
 		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">Ticket</a></li>
 		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">Customers</a></li>
