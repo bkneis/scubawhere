@@ -1,4 +1,5 @@
 var booking = {};
+var sessions = [];
 
 window.token;
 $.get("/token", null, function(data) {
@@ -73,6 +74,22 @@ $(document).ready(function() {
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	var token = getToken();
+
+	//Form Wizard
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		if(!$(e.target).hasClass('done') && !$(e.target).hasClass('selected')) {
+			$(e.relatedTarget).toggleClass('selected done');
+			$(e.target).addClass('selected').tab('show');
+		}
+	});
+
+	$('a[data-toggle="tab"]').on('click', function (e) {
+		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
+			return false;
+		}
+	});
+
+	//Sources
 
 	$(document).on('click', '.booking-source a', function() {
 		listGroupRadio($(this), 'btn-primary');
@@ -178,7 +195,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$(document).on('click', '.clear-customer', function() {
+	$(document).on('click', '.clear-form', function() {
 		$(this).parents('form')[0].reset();
 	});
 
@@ -222,9 +239,8 @@ $(document).ready(function() {
 		var customerId = $('#session-customers').children('.active').first().data('id');
 		var ticketId = ticket.data('id');
 
-		booking.session_id = sessionId;
-		booking.customer_id = customerId;
-		booking.ticket_id = ticketId;
+		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
+		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
 
 		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
 		btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
@@ -247,12 +263,42 @@ $(document).ready(function() {
 				$('.assign-session').attr("disabled", "disabled");
 			}
 
+			addAddonSession(sessions);
+
 			ticket.remove();
 		});
 
 		
 
 	});
+
+	//Add the session to the addons page
+	function addAddonSession(sessions) {
+		var addonSessionsTemplate = Handlebars.compile($("#addon-sessions-template").html());
+
+		$.each(sessions, function(i, session) {
+			//Build "sessions" (or in database terms, booking_details)
+			var param = "id="+session.customer_id;
+			Customer.getCustomer(param, function(data) {
+				session.customer = data;
+			});
+
+			var param = "id="+session.ticket_id;
+			Ticket.getTicket(param, function(data) {
+				session.ticket = data.firstname+" "+data.lastname;
+			});
+
+			var param = "id="+session.id;
+			Session.getSecificSession(param, function(data) {
+				session.start = data.start;
+				Trip.getTrip(param, function(data) {
+					session.trip = data.name;
+				});
+			});
+		});
+
+		$("#addon-sessions").html('').append(addonSessionsTemplate(sessions));
+	}
 
 	$(document).on('click', '.sessions-finish', function() {
 		$('[data-target="#addon-tab"]').tab('show');
@@ -299,16 +345,16 @@ $(document).ready(function() {
 		$('#addons-total').html('£'+addonTotal);
 	});
 
-	$(document).on('click', '.addon-finish', function() {
+	$(document).on('click', '.add-addon', function() {
 		var btn = $(this);
-		btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+		btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
 
 		$('#addons-basket').children('.addon-item').each(function(k,v) {
 			var params = [
 				{name: "_token", value: window.token},
 				{name: "booking_id", value: booking.id},
-				{name: "session_id", value: booking.session_id},
-				{name: "customer_id", value: booking.customer_id},
+				{name: "session_id", value: booking.id},
+				{name: "customer_id", value: booking.id},
 				{name: "addon_id", value: $(v).data("id")},
 				{name: "quantity", value: $(v).find(".qty").text()}
 			];
@@ -316,13 +362,32 @@ $(document).ready(function() {
 			console.log(params);
 
 			Booking.addAddon(params, function(data) {
-				btn.html('Next');
+				btn.html('Add');
 				$('[data-target="#detail-tab"]').tab('show');
 			});
 		});
 
 		
 	});
+
+	$(document).on('submit', '#extra-form', function(e) {
+		e.preventDefault();
+
+		var btn = $(this).find('[type="submit"]');
+		btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+
+		var params = $(this).serializeArray();
+		params.push({name: "_token", value: window.token});
+		params.push({name: "booking_id", value: booking.id});
+
+		console.log(params);
+		
+		Booking.editInfo(params, function(data) {
+			btn.html('Next');
+			$('[data-target="#summary-tab"]').tab('show');
+		});
+	});
+
 
 });
 

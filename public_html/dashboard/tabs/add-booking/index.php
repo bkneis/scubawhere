@@ -1,12 +1,47 @@
 <div class="container">
 	<ul class="nav nav-wizard" role="tablist">
-		<li role="presentation" class="active"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#source-tab">Source</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">Ticket</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">Customers</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">Sessions</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">Addons</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">Extra Details</a></li>
-		<li role="presentation"><a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">Summary</a></li>
+		<li role="presentation" class="active">
+			<a href="javascript:void(0)" class="selected" role="tab" data-toggle="tab" data-target="#source-tab">
+                <span class="step-number">1</span>
+                <span class="step-description">1. Sources<br><small>Choose a source</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">
+				<span class="step-number">2</span>
+                <span class="step-description">2. Tickets<br><small>Choose tickets</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">
+				<span class="step-number">3</span>
+                <span class="step-description">3. Customers<br><small>Choose customers</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
+				<span class="step-number">4</span>
+                <span class="step-description">4. Sessions<br><small>Assign to session</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">
+				<span class="step-number">5</span>
+                <span class="step-description">5. Addons<br><small>Choose addons</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
+				<span class="step-number">6</span>
+                <span class="step-description">6. Extra Details<br><small>Extra information</small></span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
+				<span class="step-number">7</span>
+                <span class="step-description">7. Summary<br><small>Booking summary</small></span>
+			</a>
+		</li>
 	</ul>
 
 	<div class="tab-content">
@@ -179,7 +214,7 @@
 									<div class="row">
 										<div class="col-xs-12">
 											<button type="submit" class="btn btn-primary new-customer pull-right" style="margin-left:5px;">Create</button>
-											<a href="javascript:void(0);" class="btn btn-warning clear-customer pull-right">Clear</a>
+											<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 										</div>
 									</div>
 								</div>
@@ -283,7 +318,7 @@
 										<div class="form-group">
 											<label for="trips">Trip:</label>
 											<select id="trips" name="trip_id" class="form-control select2">
-												<option selected="selected">Choose trip...</option>
+												<option selected="selected" value="">Choose trip...</option>
 											</select>
 											<script id="trips-list-template" type="text/x-handlebars-template">
 												{{#each trips}}
@@ -353,43 +388,37 @@
 				<div class="col-sm-4">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2 class="panel-title">Step 1: Select Addons</h2>
+							<h2 class="panel-title">Step 1: Select the session/customer combination</h2>
 						</div>
 						<div class="panel-body">
-							<ul class="list-group" id="addons">
-							</ul>
+							<div class="list-group" id="addon-sessions">
+							</div>
 						</div>
+						<script id="addon-sessions-template" type="text/x-handlebars-template">
+							{#each sessions}
+								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
+									<h4 class="list-group-item-heading">{{customerName}}</h4>
+									<p class="list-group-item-text"></p>
+								</a>
+							{/each}
+						</script>
 					</div>
-					<script id="addons-template" type="text/x-handlebars-template">
-						{{#each addons}}
-							<li data-id="{{id}}" class="list-group-item">
-								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
-    							<p>{{description}}</p>
-    							<div class="row">
-    								<div class="col-sm-4">
-    									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
-    								</div>
-    								<div class="col-sm-5 pull-right">
-		    							<div class="input-group">
-		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
-		    								<span class="input-group-btn">
-		    									<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
-		    								</span>
-		    							</div>
-	    							</div>
-    							</div>
-							</li>
-						{{/each}}
-					</script>
 				</div>
 				<div class="col-sm-4">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2 class="panel-title">Select Addons</h2>
+							<h2 class="panel-title">Step 2: Select Addons</h2>
 						</div>
 						<div class="panel-body">
 							<ul class="list-group" id="addons">
 							</ul>
+						</div>
+						<div class="panel-footer">
+							<div class="row">
+								<div class="col-xs-12">
+									<a href="javascript:void(0);" class="btn btn-primary add-addon">Add</a>
+								</div>
+							</div>
 						</div>
 					</div>
 					<script id="addons-template" type="text/x-handlebars-template">
@@ -432,7 +461,72 @@
 				</div>
 			</div>
 		</div>
-		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
+		<div role="tabpanel" class="tab-pane fade" id="extra-tab">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="page-header">
+						<h2>Extra Details <small>Is there anything else we should know?</small></h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 col-xs-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Extra Information (Optional)</h2>
+						</div>
+							<form id="extra-form" class="form-horizontal">
+								<fieldset>
+									<div class="panel-body">
+										<div class="form-group">
+											<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Time</label>
+											<div class="col-md-4">
+												<input id="pick-up-time" name="pick_up_time" class="form-control" type="text">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="pick-up-location" class="col-sm-4 control-label">Pick Up Location</label>
+											<div class="col-md-8">
+												<input id="pick-up-location" name="pick_up_location" class="form-control">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="pick-up-location" class="col-sm-4 control-label">Discount</label>
+											<div class="col-md-8">
+												<input id="discount" name="discount" class="form-control" type="number">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="pick-up-location" class="col-sm-4 control-label">Reserved Until</label>
+											<div class="col-md-8">
+												<input id="reserved" name="reserved" class="form-control">
+											</div>
+										</div>
+										<div class="form-group col-xs-12">
+											<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?"></textarea>
+										</div>
+									</div>
+									<div class="panel-footer">
+										<div class="row">
+											<div class="col-xs-12">
+												<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Next</button>
+												<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary extra-finish pull-right">Next</a>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="tab-pane fade" id="summary-tab">
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="page-header">
@@ -441,39 +535,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">Select Addons</h2>
-						</div>
-						<div class="panel-body">
-							<ul class="list-group" id="addons">
-							</ul>
-						</div>
-					</div>
-					<script id="addons-template" type="text/x-handlebars-template">
-						{{#each addons}}
-							<li data-id="{{id}}" class="list-group-item">
-								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
-    							<p>{{description}}</p>
-    							<div class="row">
-    								<div class="col-sm-4">
-    									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
-    								</div>
-    								<div class="col-sm-3 pull-right">
-		    							<div class="input-group">
-		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
-		    								<span class="input-group-btn">
-		    									<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
-		    								</span>
-		    							</div>
-	    							</div>
-    							</div>
-							</li>
-						{{/each}}
-					</script>
-				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-12">
 					<ul class="list-group">
 						<li class="list-group-item active">
 							<h4 class="list-group-item-heading">Addons Basket</h4>

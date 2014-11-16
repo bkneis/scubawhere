@@ -16,26 +16,115 @@
     }
 }
 
+.nav-wizard {
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.nav-wizard:after {
+    content: " ";
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 2px;
+    -moz-border-radius: 1px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    background: #D5D5D5;
+    z-index: 1;
+}
+
 .nav-wizard>li {
-    display: inline-block!important;
+    float: left;
+    display: block;
+    width: 12.5%;
 }
 
 .nav-wizard>li>a {
+    font-size: 14px;
+    color: #656d78;
+    text-decoration: none;
+    display: block;
+    line-height: 18px;
+    padding: 10px 20px 15px 0px;
     position: relative;
-    width: 120px;
-    height: 24px;
-    background: #34495E;
-    padding: 2px 0!important;
-    text-align: center;
+}
+
+.nav-wizard>li>a .step-number {
+    display: none;
+}
+
+.nav-wizard>li>a .step-description small {
+    color: #999;
+    font-weight: 300;
 }
 
 .nav-wizard>li>a:before {
     content: " ";
     position: absolute;
-    border-top: 12px solid #EEEEEE;
-    border-bottom: 12px solid #EEEEEE;
-    left: 100%;
-    top: 0;
-    border-left: 24px solid #34495E;
-    -webkit-transform:rotate(360deg)
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 2px;
+    background: #D5D5D5;
+    z-index: 2;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+.nav-wizard>li>a:after {
+    content: " ";
+    position: absolute;
+    bottom: -10px;
+    left: 0px;
+    width: 22px;
+    height: 22px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #FFF;
+    border: 3px solid #D5D5D5;
+    z-index: 3;
+    text-align: center;
+    line-height: 17px;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+    color: #DDD;
+}
+
+.nav-wizard>li>a.selected:before {
+    background: #656d78;
+}
+
+.nav-wizard>li>a.selected:after {
+    border-color: #656d78;
+    content: "\f0da";
+    font-family: FontAwesome;
+    color: #656d78;
+    font-size: 13px;
+    padding-left: 2px;
+}
+
+.nav-wizard>li>a.done:before {
+    background: #95b75d;
+}
+
+.nav-wizard>li>a.done:after {
+    border-color: #95b75d;
+    content: "\f00c";
+    font-family: FontAwesome;
+    color: #95b75d;
+    font-size: 10px;
 }

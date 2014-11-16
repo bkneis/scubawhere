@@ -97,6 +97,16 @@ var Booking = {
 		});
 	},
 
+	editInfo: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/booking/edit-info",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	validateBooking: function(params, handleData, errorFn){
 		$.ajax({
 			type: "GET",

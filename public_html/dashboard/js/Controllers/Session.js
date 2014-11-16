@@ -1,6 +1,6 @@
 var Session = {
 	//params = int id (the ID of the wanted session)
-	getSecificSession: function(params, handleData) {
+	getSpecificSession: function(params, handleData) {
 		$.get("/api/session", params).done(function(data){
 			handleData(data);
 		});
