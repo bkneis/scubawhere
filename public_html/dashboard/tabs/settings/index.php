@@ -2,10 +2,10 @@
 	<div class="row">
 		<div id="company-form-container">
 			<script type="text/x-handlebars-template" id="company-form-template">
+			<form id="update-company-form">
 				<div class="box50">
 				<label class="dgreyb">Account Information</label>
 					<div class="padder">
-						<form id="update-company-form">
 
 						<div class="form-row">
 							<label class="field-label">Username : </label>
@@ -55,66 +55,68 @@
 					</div>
 				</div>
 
-			<div class="box50">
-			<label class="dgreyb">Business Information</label>
-				<div class="padder">
+				<div class="box50">
+				<label class="dgreyb">Business Information</label>
+					<div class="padder">
 
-					<div class="form-row">
-						<label class="field-label">Business Address 1 : </label>
-						<input type="text" name="address_1" value="{{address_1}}"></input>
+						<div class="form-row">
+							<label class="field-label">Business Address 1 : </label>
+							<input type="text" name="address_1" value="{{address_1}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">Business Address 2 : </label>
+							<input type="text" name="address_2" value="{{address_2}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">City : </label>
+							<input type="text" name="city" value="{{city}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">County / State : </label>
+							<input type="text" name="county" value="{{county}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">Post code / zip code : </label>
+							<input type="text" name="postcode" value="{{postcode}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">Business phone : </label>
+							<input type="text" name="business_phone" value="{{business_phone}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">Business email : </label>
+							<input type="text" name="business_email" value="{{business_email}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">Registration number : </label>
+							<input type="text" name="registration_number" value="{{registration_number}}"></input>
+						</div>
+
+						<div class="form-row">
+							<label class="field-label">VAT number : </label>
+							<input type="text" name="vat_number" value="{{vat_number}}"></input>
+						</div>
+
+						<div class="form-row">
+							<input type="submit" class="submit register-bttn bttn blueb" value="Update Account">
+						</div>
+
+						<input type="hidden" name="_token">
+
 					</div>
-
-					<div class="form-row">
-						<label class="field-label">Business Address 2 : </label>
-						<input type="text" name="address_2" value="{{address_2}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">City : </label>
-						<input type="text" name="city" value="{{city}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">County / State : </label>
-						<input type="text" name="county" value="{{county}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">Post code / zip code : </label>
-						<input type="text" name="postcode" value="{{postcode}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">Business phone : </label>
-						<input type="text" name="business_phone" value="{{business_phone}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">Business email : </label>
-						<input type="text" name="business_email" value="{{business_email}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">Registration number : </label>
-						<input type="text" name="registration_number" value="{{registration_number}}"></input>
-					</div>
-
-					<div class="form-row">
-						<label class="field-label">VAT number : </label>
-						<input type="text" name="vat_number" value="{{vat_number}}"></input>
-					</div>
-
-					<div class="form-row">
-						<input type="submit" class="submit register-bttn bttn blueb" value="Update Account">
-					</div>
-
-					<input type="hidden" name="_token">
-					
 				</div>
 			</form>
 			</script>
+		</div>
 
-			<script type="text/x-handlebars-template" id="errors-template">
+		<script type="text/x-handlebars-template" id="errors-template">
 			<div class="yellow-helper errors" style="color: #E82C0C;">
 				<strong>There are a few problems with the form:</strong>
 				<ul>
@@ -124,8 +126,6 @@
 				</ul>
 			</div>
 		</script>
-
-		</div>
 
 	</div>
 </div>

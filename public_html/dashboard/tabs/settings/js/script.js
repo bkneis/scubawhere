@@ -1,4 +1,5 @@
 var companyForm;
+var errorsHTML;
 
 $(function() {
 
