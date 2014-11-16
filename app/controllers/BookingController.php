@@ -444,7 +444,7 @@ class BookingController extends Controller {
 				'nights' => $nights
 			),
 			array(
-				'date' => 'required|date|after:'.date('Y-m-d'/*, strtotime('yesterday')*/),
+				'date' => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago')),
 				'nights' => 'required|integer|min:1'
 			)
 		);

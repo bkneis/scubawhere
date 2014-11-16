@@ -116,12 +116,17 @@ $(function() {
 		eventRender: function(event, element) {
 			// Intercept the event rendering to inject the non-html-escaped version of the title
 			// Needed for trip names with special characters in it (like ó, à, etc.)
-			console.log(element);
 			element.find('.fc-title').html(event.title);
 		},
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
 		drop: function(date) { // This function is called when something is dropped
+
+			// Check if the dropped-on date is in the past
+			if( moment().startOf('day').diff(date) > 0 ) {
+				pageMssg('You cannot create sessions in the past.');
+				return false;
+			}
 
 			// Retrieve the dropped element's stored Event Object
 			var originalEventObject = $(this).data('eventObject');
@@ -239,7 +244,7 @@ $(function() {
 	$('#modalWindows').on('click', '.submit-session', function(event) {
 
 		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+		$(event.target).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
@@ -269,7 +274,7 @@ $(function() {
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 
 			// Remake the moment-object
 			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
@@ -282,11 +287,22 @@ $(function() {
 			$('#modalWindows .close-reveal-modal').click();
 
 			pageMssg(data.status, true);
+		},
+		function error(xhr) {
+
+			data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			pageMssg(data.errors[0]);
+
+			// Communicate error to user
+			$(event.target).prop('disabled', false);
+			$('#save-loader').remove();
 		});
 	});
 
 	// The UPDATE button
-	$('#modalWindows').on('click', '.update-session', function(event) {
+	$('#modalWindows').on('click', '.update-session', function success(event) {
 
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
@@ -313,7 +329,7 @@ $(function() {
 		}
 
 		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader"></div>');
+		$(event.target).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		// Write new time into session object
 		eventObject.session.start.hours(starthours).minutes(startminutes);
@@ -325,11 +341,11 @@ $(function() {
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
-		Session.updateSession(eventObject.session, function success(data){
+		Session.updateSession(eventObject.session, function success(data) {
 
 			// Communicate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 
 			// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
 			delete eventObject.session.handle_timetable;
@@ -344,6 +360,17 @@ $(function() {
 			$('#modalWindows .close-reveal-modal').click();
 
 			pageMssg(data.status, true);
+		},
+		function error(xhr) {
+
+			data = JSON.parse(xhr.responseText);
+			console.log(data);
+
+			pageMssg(data.errors[0]);
+
+			// Communicate error to user
+			$(event.target).prop('disabled', false);
+			$('#save-loader').remove();
 		});
 
 	});
@@ -372,7 +399,7 @@ $(function() {
 		}
 
 		// Disable button and display loader
-		$(event.target).prop('disabled', true).after('<div id="save-ticket-loader" class="loader" style="float: left;"></div>');
+		$(event.target).prop('disabled', true).after('<div id="save-loader" class="loader" style="float: left;"></div>');
 
 		eventObject.session._token = window.token;
 
@@ -386,7 +413,7 @@ $(function() {
 
 			// Communitcate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-ticket-loader').remove();
+			$('#save-loader').remove();
 
 			if(eventObject.session.handle_timetable === 'following')
 				$('#calendar').fullCalendar('refetchEvents');
@@ -413,7 +440,7 @@ $(function() {
 
 						// Communitcate success to user
 						$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-						$('#save-ticket-loader').remove();
+						$('#save-loader').remove();
 
 						eventObject.session.deleted_at = true;
 
@@ -430,7 +457,10 @@ $(function() {
 				}
 			}
 			else {
-				pageMssg(xhr.responseText);
+				data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
 			}
 		});
 	});
@@ -519,7 +549,12 @@ function showModalWindow(eventObject) {
 	}
 	eventObject.boats[ eventObject.session.boat_id ].selected = true;
 
-	// console.log(eventObject);
+	// Check if session lies in the past or is deactivated and consequently disable editing
+	if( typeof eventObject.deactivated === 'undefined' )
+		if( eventObject.session.deleted_at || moment().diff(eventObject.start) > 0 )
+			eventObject.deactivated = true;
+		else
+			eventObject.deactivated = false;
 
 	$('#modalWindows')
 	.append( window.sw.sessionTemplate(eventObject) )        // Create the modal
@@ -546,19 +581,20 @@ function showModalWindow(eventObject) {
 		},
 	});
 
-	// Set timetable form _token
-	if(window._token)
-		$('#modalWindows [name="_token"]').val(_token);
-
-	$.ajax({
-		url: "/token",
-		type: "GET",
-		dataType: "html",
-		success: function(_token) {
-			$('#modalWindows [name="_token"]').val(_token);
-			window._token = _token;
-		}
-	});
+	// Set timetable form token
+	if(window.token)
+		$('#modalWindows [name="_token"]').val(window.token);
+	else {
+		$.ajax({
+			url: "/token",
+			type: "GET",
+			dataType: "html",
+			success: function(token) {
+				$('#modalWindows [name="_token"]').val(token);
+				window.token = token;
+			}
+		});
+	}
 }
 
 function toggleWeek(self) {

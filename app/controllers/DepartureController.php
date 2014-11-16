@@ -226,6 +226,12 @@ class DepartureController extends Controller {
 	{
 		$data = Input::only('start', 'boat_id');
 
+		$isPast = $this->isPast( $data['start'] );
+		if( $isPast instanceof Response )
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Creating sessions in the past is not allowed.')), 412 ); // 412 Precondition Failed
+
 		try
 		{
 			if( !Input::get('trip_id') ) throw new ModelNotFoundException();
@@ -270,6 +276,12 @@ class DepartureController extends Controller {
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
+
+		$isPast = $this->isPast( $departure->start );
+		if( $isPast instanceof Response )
+			return $isPast;
+		if( !empty($departure->deleted_at) || $isPast )
+			return Response::json( array('errors' => array('Updating past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
 
 		if( empty($departure->timetable_id) )
 		{
@@ -361,6 +373,12 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$isPast = $this->isPast( $departure->start );
+		if( $isPast instanceof Response )
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Deactivating past sessions is not allowed.')), 412 ); // 412 Precondition Failed
+
 		if( $departure->timetable_id )
 		{
 			switch( Input::get('handle_timetable') )
@@ -408,6 +426,12 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$isPast = $this->isPast( $departure->start );
+		if( $isPast instanceof Response )
+			return $isPast;
+		if( !empty($departure->deleted_at) || $isPast )
+			return Response::json( array('errors' => array('Deleting past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
+
 		if( $departure->timetable_id )
 		{
 			switch( Input::get('handle_timetable') )
@@ -448,6 +472,34 @@ class DepartureController extends Controller {
 		}
 
 		return array('status' => 'OK. Session deleted');
+	}
+
+	// Check if date lies in the past (local time)
+	protected function isPast($datestring) {
+		$earth_uri       = "http://www.earthtools.org/timezone/".Auth::user()->latitude."/".Auth::user()->longitude;
+		$earth_response  = simplexml_load_file($earth_uri);
+		try
+		{
+			$local_time = new DateTime($earth_response->localtime);
+		}
+		catch(Exception $e)
+		{
+			// Another solution that has maybe more relieablity: http://worldtime.io/api/geo
+
+			Mail::send('emails.error-report', array('message' => 'Earthtools API is not available!', 'variable' => $earth_response), function($message)
+			{
+				$message->to('soren@scubawhere.com')->subject('Scubawhere Earthtools Error');
+			});
+
+			return Response::json( array('errors' => array('The earthtools.org API is not available. Please try again later or contact scubawhere support.')), 500 ); // 500 Internal Server Error
+		}
+
+		$departure_start = new DateTime($datestring);
+
+		if($departure_start < $local_time )
+			return true;
+
+		return false;
 	}
 
 }
