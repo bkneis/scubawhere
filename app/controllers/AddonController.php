@@ -101,8 +101,12 @@ class AddonController extends Controller {
 			$addon->delete();
 
 			// Dispatch add-addon route with all data
+			$originalInput = Request::input();
+			$data['_token'] = Input::get('_token');
 			$request = Request::create('api/addon/add', 'POST', $data);
+			Request::replace($request->input());
 			return Route::dispatch($request);
+			Request::replace($originalInput);
 		}
 		else {
 			// Just update the addon

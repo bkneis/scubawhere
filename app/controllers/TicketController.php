@@ -261,8 +261,12 @@ class TicketController extends Controller {
 			// TODO MAYBE: Unconnect the original ticket from boats
 
 			// Dispatch add-ticket route with all data
+			$originalInput = Request::input();
+			$data['_token'] = Input::get('_token');
 			$request = Request::create('api/ticket/add', 'POST', $data);
+			Request::replace($request->input());
 			$response = Route::dispatch($request);
+			Request::replace($originalInput);
 
 			// Connect the new ticket to the same packages as the old one (trips is done during creation)
 			$newID = $response->getData()->id;
