@@ -562,8 +562,10 @@ class BookingController extends Controller {
 
 		// "Validation" rules
 		return array(
-			"email" => !empty( $booking->lead_customer()->email ),
-			"phone" => !empty( $booking->lead_customer()->phone ),
+			"email"      => !empty( $booking->lead_customer->email ),
+			"phone"      => !empty( $booking->lead_customer->phone ),
+			"gender"     => !empty( $booking->lead_customer->gender ),
+			"country_id" => !empty( $booking->lead_customer->country_id )
 		);
 	}
 

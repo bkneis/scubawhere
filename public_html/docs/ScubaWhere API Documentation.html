@@ -486,28 +486,34 @@ pre {
 </ul>
 <h3>Register a company</h3>
 <p><code>POST /register/company</code></p>
-<p>This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to <a href="http://scubawhere.com/companypasswordreset">http://scubawhere.com/&#8203;companypasswordreset?email=<code>email</code>&amp;token=<code>token</code></a>. On how to transmit this form, refer to <a href="#Reset_a_company's_password">#Reset a company's password</a> in the documentation.</p>
+<p>This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to <a href="http://scubawhere.com/password/reset">http://scubawhere.com/password/reset?email=<code>email</code>&amp;token=<code>token</code></a>. On how to transmit this form, refer to <a href="#Reset_a_company's_password">#Reset a company's password</a> in the documentation.</p>
 <ul>
-<li><strong>@param</strong>	string	username	The chosen username</li>
-<li><strong>@param</strong>	string	email   	The company's contact email adress</li>
-<li><strong>@param</strong>	string	name    	The full legal company name</li>
-<li><strong>@param</strong>	string	address_1	The first address line</li>
-<li><strong>@param</strong>	string	address_2	The second address line (optional)</li>
-<li><strong>@param</strong>	string	city    	The city the company is based in</li>
-<li><strong>@param</strong>	string	county  	The county the company is based in</li>
-<li><strong>@param</strong>	string	postcode	The postcode of the company's address</li>
-<li><strong>@param</strong>	integer	region_id	The ID of the corresponding region of the company</li>
-<li><strong>@param</strong>	integer	country_id	The ID of the corresponding country of the company</li>
-<li><strong>@param</strong>	string	phone   	The company's contact telephone number</li>
-<li><strong>@param</strong>	string	website 	The company's website (optional)</li>
+<li><strong>@param</strong>	string	username        	The chosen username</li>
+<li><strong>@param</strong>	string	contact         	The main contact person's name</li>
+<li><strong>@param</strong>	text	description     	The company's info/bio (optional)</li>
+<li><strong>@param</strong>	string	email           	The company's contact email adress</li>
+<li><strong>@param</strong>	string	name            	The full legal company name</li>
+<li><strong>@param</strong>	string	address_1       	The first address line</li>
+<li><strong>@param</strong>	string	address_2       	The second address line (optional)</li>
+<li><strong>@param</strong>	string	postcode        	The postcode of the company's address</li>
+<li><strong>@param</strong>	string	county          	The county the company is based in (optional)</li>
+<li><strong>@param</strong>	string	city             	The city the company is based in</li>
+<li><strong>@param</strong>	integer	country_id      	The ID of the corresponding country of the company</li>
+<li><strong>@param</strong>	integer	currency_id     	The ID of the corresponding currency of the company</li>
+<li><strong>@param</strong>	string	business_pone</li>
+<li><strong>@param</strong>	string	business_email</li>
+<li><strong>@param</strong>	string	vat_number      	(optional)</li>
+<li><strong>@param</strong>	string	registration_number	The company's business registration number (optional)</li>
+<li><strong>@param</strong>	string	phone           	The company's contact telephone number</li>
+<li><strong>@param</strong>	string	website         	The company's website (optional)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Check if username or email already exists</h3>
 <p><code>GET /register/exists</code></p>
 <ul>
-<li><strong>@param</strong>	string	field   	Either   <code>username</code> or <code>email</code></li>
-<li><strong>@param</strong>	string	value   	The username or email address to check</li>
+<li><strong>@param</strong> string field  Either <code>'username'</code>, <code>'email'</code> or <code>'business_email'</code></li>
+<li><strong>@param</strong> string value  The username or email address to check</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> integer <code>0</code> (FALSE) if no record was found, otherwise <code>1</code> (TRUE)</li>
 </ul>
@@ -872,7 +878,9 @@ pre {
 <blockquote>
 <h4>Available tests</h4>
 <p><strong>email</strong> Tests if the lead customer has an email<br>
-<strong>phone</strong> Tests if the lead customer has a phone number</p>
+<strong>phone</strong> Tests if the lead customer has a phone number<br>
+<strong>gender</strong> Tests if the lead customer has a gender<br>
+<strong>country_id</strong> Tests if the lead customer has a country</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong>  integer booking_id The ID of the booking to be checked</li>
@@ -884,6 +892,29 @@ pre {
 <p><code>GET /company</code></p>
 <ul>
 <li><strong>@return</strong> JSON    The <code>company</code> object</li>
+</ul>
+<h3>Update a company</h3>
+<p><code>POST /company/update</code></p>
+<p>Update a company's data. All fields are optional.</p>
+<ul>
+<li><strong>@param</strong>	string	username        	The chosen username</li>
+<li><strong>@param</strong>	string	contact         	The main contact person's name</li>
+<li><strong>@param</strong>	text	description     	The company's info/bio (optional)</li>
+<li><strong>@param</strong>	string	email           	The company's contact email adress</li>
+<li><strong>@param</strong>	string	name            	The full legal company name</li>
+<li><strong>@param</strong>	string	address_1       	The first address line</li>
+<li><strong>@param</strong>	string	address_2       	The second address line (optional)</li>
+<li><strong>@param</strong>	string	postcode        	The postcode of the company's address</li>
+<li><strong>@param</strong>	string	county          	The county the company is based in (optional)</li>
+<li><strong>@param</strong>	string	city             	The city the company is based in</li>
+<li><strong>@param</strong>	string	business_pone</li>
+<li><strong>@param</strong>	string	business_email</li>
+<li><strong>@param</strong>	string	vat_number      	(optional)</li>
+<li><strong>@param</strong>	string	registration_number	The company's business registration number (optional)</li>
+<li><strong>@param</strong>	string	phone           	The company's contact telephone number</li>
+<li><strong>@param</strong>	string	website         	The company's website (optional)</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h2>Countries</h2>
 <h3>Recieve all countries</h3>
@@ -1384,6 +1415,13 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>16<sup>th</sup> November 2014</h3>
+<ul>
+<li><strong>@added</strong> <a href="#Update_a_company">#Update a company</a> section</li>
+<li><strong>@edit</strong>  Updated available fields for <a href="#Register_a_company">#Register a company</a></li>
+<li><strong>@edit</strong>  Added <code>business_email</code> to tests in <a href="#Check_if_a_username_or_email_already_exists">#Check if a username or email already exists</a></li>
+<li><strong>@edit</strong>  Added <code>gender</code> and <code>country_id</code> to checks in <a href="#Validate_a_booking">#Validate a booking</a></li>
+</ul>
 <h3>15<sup>th</sup> November 2014</h3>
 <ul>
 <li><strong>@added</strong> <a href="#Accommodations">#Accommodations</a> section</li>

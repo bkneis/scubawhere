@@ -69,6 +69,9 @@ class RegisterController extends Controller {
 			case 'email':
 				$exists = Company::where('email', '=', $value)->exists();
 				break;
+			case 'business_email':
+				$exists = Company::where('business_email', '=', $value)->exists();
+				break;
 			default:
 				return Response::json( array('errors' => array('Field name not supported.')), 406 ); // 406 Not Acceptable
 		}

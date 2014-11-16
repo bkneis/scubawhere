@@ -55,20 +55,26 @@ Logs a company out by their session key cookie, if logged in.
 
 `POST /register/company`
 
-This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to [http://scubawhere.com/&#8203;companypasswordreset?email=`email`&token=`token`](http://scubawhere.com/companypasswordreset). On how to transmit this form, refer to [#Reset a company's password](#Reset_a_company's_password) in the documentation.
+This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to [http://scubawhere.com/password/reset?email=`email`&token=`token`](http://scubawhere.com/password/reset). On how to transmit this form, refer to [#Reset a company's password](#Reset_a_company's_password) in the documentation.
 
-- **@param**	string	username	The chosen username
-- **@param**	string	email   	The company's contact email adress
-- **@param**	string	name    	The full legal company name
-- **@param**	string	address_1	The first address line
-- **@param**	string	address_2	The second address line (optional)
-- **@param**	string	city    	The city the company is based in
-- **@param**	string	county  	The county the company is based in
-- **@param**	string	postcode	The postcode of the company's address
-- **@param**	integer	region_id	The ID of the corresponding region of the company
-- **@param**	integer	country_id	The ID of the corresponding country of the company
-- **@param**	string	phone   	The company's contact telephone number
-- **@param**	string	website 	The company's website (optional)
+- **@param**	string	username        	The chosen username
+- **@param**	string	contact         	The main contact person's name
+- **@param**	text	description     	The company's info/bio (optional)
+- **@param**	string	email           	The company's contact email adress
+- **@param**	string	name            	The full legal company name
+- **@param**	string	address_1       	The first address line
+- **@param**	string	address_2       	The second address line (optional)
+- **@param**	string	postcode        	The postcode of the company's address
+- **@param**	string	county          	The county the company is based in (optional)
+- **@param**	string	city             	The city the company is based in
+- **@param**	integer	country_id      	The ID of the corresponding country of the company
+- **@param**	integer	currency_id     	The ID of the corresponding currency of the company
+- **@param**	string	business_pone
+- **@param**	string	business_email
+- **@param**	string	vat_number      	(optional)
+- **@param**	string	registration_number	The company's business registration number (optional)
+- **@param**	string	phone           	The company's contact telephone number
+- **@param**	string	website         	The company's website (optional)
 - &nbsp;
 - **@return** JSON    Contains `status` on success, `errors` on failure
 
@@ -76,8 +82,8 @@ This route creates a new company in the database and attemps to send a password 
 
 `GET /register/exists`
 
-- **@param**	string	field   	Either   `username` or `email`
-- **@param**	string	value   	The username or email address to check
+- **@param** string field  Either `'username'`, `'email'` or `'business_email'`
+- **@param** string value  The username or email address to check
 - &nbsp;
 - **@return** integer `0` (FALSE) if no record was found, otherwise `1` (TRUE)
 
@@ -506,7 +512,9 @@ Return an array containing boolean values for various important tests.
 
 > #### Available tests
 > **email** Tests if the lead customer has an email<br>
-> **phone** Tests if the lead customer has a phone number
+> **phone** Tests if the lead customer has a phone number<br>
+> **gender** Tests if the lead customer has a gender<br>
+> **country_id** Tests if the lead customer has a country
 
 - **@param**  integer booking_id The ID of the booking to be checked
 - &nbsp;
@@ -519,6 +527,31 @@ Return an array containing boolean values for various important tests.
 `GET /company`
 
 - **@return** JSON    The `company` object
+
+### Update a company
+
+`POST /company/update`
+
+Update a company's data. All fields are optional.
+
+- **@param**	string	username        	The chosen username
+- **@param**	string	contact         	The main contact person's name
+- **@param**	text	description     	The company's info/bio (optional)
+- **@param**	string	email           	The company's contact email adress
+- **@param**	string	name            	The full legal company name
+- **@param**	string	address_1       	The first address line
+- **@param**	string	address_2       	The second address line (optional)
+- **@param**	string	postcode        	The postcode of the company's address
+- **@param**	string	county          	The county the company is based in (optional)
+- **@param**	string	city             	The city the company is based in
+- **@param**	string	business_pone
+- **@param**	string	business_email
+- **@param**	string	vat_number      	(optional)
+- **@param**	string	registration_number	The company's business registration number (optional)
+- **@param**	string	phone           	The company's contact telephone number
+- **@param**	string	website         	The company's website (optional)
+- &nbsp;
+- **@return** JSON    Contains `status` on success, `errors` on failure
 
 ## Countries
 
@@ -1094,8 +1127,13 @@ Delete an existing trip.
 
 ## Changelog
 
-### 15<sup>th</sup> November 2014
+### 16<sup>th</sup> November 2014
+- **@added** [#Update a company](#Update_a_company) section
+- **@edit**  Updated available fields for [#Register a company](#Register_a_company)
+- **@edit**  Added `business_email` to tests in [#Check if a username or email already exists](#Check_if_a_username_or_email_already_exists)
+- **@edit**  Added `gender` and `country_id` to checks in [#Validate a booking](#Validate_a_booking)
 
+### 15<sup>th</sup> November 2014
 - **@added** [#Accommodations](#Accommodations) section
 - **@added** [#Addons](#Addons) section
 - **@added** [#Packages](#Packages) section
