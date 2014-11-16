@@ -22,13 +22,6 @@ Route::get('/', function()
 	return Redirect::to('blog/');
 });
 
-Route::get('secret_phpinfo', function()
-{
-	phpinfo();
-});
-
-// Route::controller('test', 'TestController');
-
 Route::controller('password', 'PasswordController');
 
 Route::controller('register', 'RegisterController');

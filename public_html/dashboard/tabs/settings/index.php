@@ -14,7 +14,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Change Password : </label>
-							<button id="send-password" class="bttn blueb">Send password remainder email</button>
+							<button id="send-password" class="bttn blueb">Send password reminder email</button>
 						</div>
 
 						<div class="form-row">

@@ -28,17 +28,23 @@ class PasswordController extends Controller {
 		switch( $response )
 		{
 			case Password::INVALID_USER:
+				if(Request::ajax())
+					return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+
 				return View::make('password.remind')->with('error', Lang::get($response));
-				// return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
 
 			case Password::REMINDER_SENT:
+				if(Request::ajax())
+					return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+
 				return View::make('password.remind')->with('status', Lang::get($response));
-				// return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
 
 			default:
+				if(Request::ajax())
+					return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
+
 				Session::set('error', 'Nothing happend I\'m afraid...');
 				return View::make('password.remind');
-				// return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
 		}
 	}
 

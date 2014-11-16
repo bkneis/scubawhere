@@ -22,7 +22,6 @@ $(function() {
 		$.ajax({
 			url: "/company/update",
 			type: "POST",
-			// dataType: "json",
 			data: params,
 			success: function(data){
 				// Assign updated company data to window.company object
@@ -53,6 +52,22 @@ $(function() {
 
 	$('#company-form-container').on('click', '#send-password', function(event) {
 		event.preventDefault();
+
+		$.ajax({
+			url: "/password/remind",
+			type: "POST",
+			data: {'email': window.company.email},
+			success: function(data) {
+				pageMssg(data.status, true);
+			},
+			error: function(xhr) {
+				data = JSON.parse(xhr.responseText);
+				if(xhr.status == 500)
+					pageMssg('Server error: ' + data.errors[0]);
+				else
+					pageMssg(data.errors[0]);
+			}
+		});
 	});
 });
 
