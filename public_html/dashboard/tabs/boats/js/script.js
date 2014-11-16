@@ -52,6 +52,7 @@ $(function (){
 
 	$("#boats-form-container").on('click', '.remove-room', function(event){
 		event.preventDefault();
+		$('form').data('hasChanged', true);
 		$(event.target).parent().remove();
 	});
 

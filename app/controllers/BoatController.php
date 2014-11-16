@@ -75,19 +75,31 @@ class BoatController extends Controller {
 			'capacity'
 		);
 
-		if( !$boat->update($data) )
-		{
-			return Response::json( array('errors' => $boat->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+		$boatroom_ids = DB::table('boat_ticket')->where('boat_id', $boat->id)->whereNotNull('boatroom_id')->lists('boatroom_id');
+		// $boatroom_ids = $boat->tickets()->wherePivot('boatroom_id', '!=', null)->lists('pivot.boatroom_id');
 
 		if( Input::has('boatrooms') )
 		{
 			$boatrooms = Input::get('boatrooms');
+
+			// Check if removed boatrooms are attached to tickets for this boat
+			if( count(array_diff($boatroom_ids, array_keys($boatrooms))) > 0 )
+				return Response::json( array('errors' => array('At least one boatroom can not be removed because it is still used for a ticket.')), 409); // 409 Conflict
+
 			$boat->boatrooms()->sync( $boatrooms );
 		}
 		else {
+			// Check if any boatrooms are still used by a ticket
+			if( count($boatroom_ids) > 0 )
+				return Response::json( array('errors' => array('At least one boatroom can not be removed because it is still used for a ticket.')), 409); // 409 Conflict
+
 			// Remove all boatrooms from the boat
 			$boat->boatrooms()->detach();
+		}
+
+		if( !$boat->update($data) )
+		{
+			return Response::json( array('errors' => $boat->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
 		return Response::json( array('status' => 'OK. Boat updated.'), 200 ); // 200 OK

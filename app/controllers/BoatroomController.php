@@ -127,7 +127,7 @@ class BoatroomController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom can not be removed because it is still used in sessions.')), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The boatroom can not be removed because it is still used in tickets and boats.')), 409); // 409 Conflict
 		}
 
 		return array('status' => 'Ok. Boatroom deleted');
