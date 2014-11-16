@@ -54,6 +54,8 @@ class CompanyController extends Controller {
 			}
 		}
 
+		$company = Auth::user();
+
 		// Mass assigned insert with automatic validation
 		if($company->updateUniques())
 		{
