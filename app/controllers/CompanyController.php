@@ -20,21 +20,49 @@ class CompanyController extends Controller {
         return Auth::user();
 	}
 
-	public function getBoats()
+	public function postUpdate()
 	{
-		$boats =  Auth::user()->boats()/*->with('boatrooms')*/->get();
-		$boatrooms = Auth::user()->boatrooms()->get();
+		$data = Input::only('username', 'contact', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
 
-		return Response::json( array(
-			'boats'          => $boats->toArray(),
-			'accommodations' => $boatrooms->toArray(),
-			'boatrooms'      => $boatrooms->toArray()
-		) );
-	}
+		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
+		{
+			$country = Auth::user()->country;
 
-	public function getAccommodations()
-	{
-		return Auth::user()->boatrooms()->get();
+			$address = urlencode( implode( ',', array(
+				$data['address_1'],
+				$data['address_2'],
+				$data['postcode'],
+				$data['city'],
+				$data['county'],
+				$country->name,
+			) ) );
+			$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			$result = curl_exec( $ch );
+			curl_close( $ch );
+			$result = json_decode( $result );
+
+			if($result->status === "OK")
+			{
+				$data['latitude']  = $result->results[0]->geometry->location->lat;
+				$data['longitude'] = $result->results[0]->geometry->location->lng;
+			}
+			else
+			{
+				$data['latitude']  = 0;
+				$data['longitude'] = 0;
+			}
+		}
+
+		// Mass assigned insert with automatic validation
+		if($company->updateUniques())
+		{
+			return array('status' => 'OK. Company data updated');
+		}
+		else
+		{
+			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
+		}
 	}
 
 	public function getTriptypes()
