@@ -781,3 +781,7 @@ span.box-tool{
 	display: inline-block;
 	padding-right: 2em;
 }
+
+#company-form-container input[type='text'] {
+	width:100%;
+}
