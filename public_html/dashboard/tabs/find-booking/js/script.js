@@ -15,6 +15,9 @@ $(function() {
 	var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 
 	Booking.getAll(function(data) {
+		_.each(data, function(element) {
+			element.lead_customer = element.lead_customer[0];
+		});
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 	});
 });
