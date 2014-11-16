@@ -47,8 +47,12 @@ class RegisterController extends Controller {
 		// Mass assigned insert with automatic validation
 		if($company->save())
 		{
-			$request = Request::create('password/remind', 'POST', array('email' => $company->email));
+
+			$originalInput = Request::input();
+			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
+			Request::replace($request->input());
 			return Route::dispatch($request);
+			Request::replace($originalInput);
 		}
 		else
 		{
