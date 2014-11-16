@@ -47,6 +47,7 @@ class RegisterController extends Controller {
 		// Mass assigned insert with automatic validation
 		if($company->save())
 		{
+			$company->agencies()->sync( Input::get('agencies') );
 
 			$originalInput = Request::input();
 			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));

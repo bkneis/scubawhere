@@ -60,6 +60,9 @@ class CompanyController extends Controller {
 		$company->fill($data);
 		if($company->updateUniques())
 		{
+			if( Input::has('agencies') )
+				$company->agencies()->sync( Input::get('agencies') );
+
 			return array('status' => 'OK. Company data updated', 'company' => $company);
 		}
 		else

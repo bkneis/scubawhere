@@ -11,7 +11,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	protected $guarded = array('id', 'password', 'verified', 'views', 'remember_token', 'created_at', 'updated_at');
 
-	protected $appends = array('currency', 'country');
+	protected $appends = array('currency', 'country', 'agencies');
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -102,6 +102,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	public function getCountryAttribute()
 	{
 		return $this->country()->first();
+	}
+
+	public function getAgenciesAttribute()
+	{
+		return $this->agencies()->get();
 	}
 
 	public function accommodations()
