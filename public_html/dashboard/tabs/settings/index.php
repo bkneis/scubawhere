@@ -40,7 +40,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Dive operator name : </label>
-							<input type="text" name="name" id="{{name}}"></input>
+							<input type="text" name="name" value="{{name}}"></input>
 						</div>
 
 						<div class="form-row">
