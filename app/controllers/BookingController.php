@@ -159,6 +159,25 @@ class BookingController extends Controller {
 		if( $check > 0 )
 			return Response::json( array('errors' => array('The customer is already booked on the session!')), 403 ); // 403 Forbidden
 
+		// Validate that the ticket/package can be booked for this session
+		try
+		{
+			$departure->trip->tickets()->where(function($query) use ($package)
+			{
+				if( isset($package) )
+				{
+					$query->whereHas('packages', function($query) use ($package)
+					{
+						$query->where('id', $package->id);
+					});
+				}
+			})->findOrFail( $ticket->id );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
+		}
+
 		// Validate remaining capacity on session
 		$capacity = $departure->getCapacityAttribute();
 		if( $capacity[0] >= $capacity[1] )
