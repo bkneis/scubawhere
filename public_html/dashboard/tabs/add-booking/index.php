@@ -596,5 +596,4 @@
 <script src="/dashboard/js/Controllers/Customer.js"></script>
 <script src="/dashboard/js/Controllers/Addon.js"></script>
 <!--My scripts-->
-<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
 <script type="text/javascript" src="tabs/add-booking/js/frontend.js"></script>
