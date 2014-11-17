@@ -149,6 +149,16 @@ class BookingController extends Controller {
 		if( !is_bool($is_lead) )
 			$is_lead = false;
 
+		// Validate that the customer is not already booked for this session
+		$check = Auth::user()->bookings()->whereHas('bookingdetails', function($query) use ($customer, $departure)
+		{
+			$query
+				->where('customer_id', $customer->id)
+				->where('session_id', $departure->id);
+		})->count();
+		if( $check > 0 )
+			return Response::json( array('errors' => array('The customer is already booked on the session!')), 403 ); // 403 Forbidden
+
 		// Validate remaining capacity on session
 		$capacity = $departure->getCapacityAttribute();
 		if( $capacity[0] >= $capacity[1] )
