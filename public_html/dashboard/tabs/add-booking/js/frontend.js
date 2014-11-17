@@ -227,6 +227,7 @@ $(document).ready(function() {
 		var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
 
 		Session.filter(params, function(data){
+			console.log(data);
 			$("#sessions-table tbody").html('').append(sessionsTemplate({sessions:data}));
 		});
 	}
@@ -239,7 +240,6 @@ $(document).ready(function() {
 		var customerId = $('#session-customers').children('.active').first().data('id');
 		var ticketId = ticket.data('id');
 
-		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
 		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
 
 		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
@@ -263,8 +263,6 @@ $(document).ready(function() {
 				$('.assign-session').attr("disabled", "disabled");
 			}
 
-			addAddonSession(sessions);
-
 			ticket.remove();
 		});
 
@@ -272,65 +270,113 @@ $(document).ready(function() {
 
 	});
 
+	$(document).on('click', '.sessions-finish', function() {
+		$(this).html('<i class="fa fa-cog fa-spin"></i> Loading...');
+		generateAddonSessions(sessions);
+	});
+
 	//Add the session to the addons page
-	function addAddonSession(sessions) {
+	function generateAddonSessions(sessions) {
 		var addonSessionsTemplate = Handlebars.compile($("#addon-sessions-template").html());
+		var handleData = [];
+		var maxSessions = sessions.length;
 
 		$.each(sessions, function(i, session) {
+			var handleItem = [];
 			//Build "sessions" (or in database terms, booking_details)
-			var param = "id="+session.customer_id;
-			Customer.getCustomer(param, function(data) {
-				session.customer = data;
+			Customer.getCustomer("id="+session.customer_id, function(data) {
+				handleItem.customer = data.firstname+" "+data.lastname;
 			});
 
-			var param = "id="+session.ticket_id;
-			Ticket.getTicket(param, function(data) {
-				session.ticket = data.firstname+" "+data.lastname;
+			Ticket.getTicket("id="+session.ticket_id, function(data) {
+				handleItem.ticket = data.name;
 			});
 
-			var param = "id="+session.id;
-			Session.getSecificSession(param, function(data) {
-				session.start = data.start;
-				Trip.getTrip(param, function(data) {
-					session.trip = data.name;
+			Session.getSpecificSession("id="+session.id, function(data) {
+				handleItem.start = data.start;
+
+				Trip.getSpecificTrip("id="+data.trip_id, function(data) {
+					handleItem.trip = data.name;
+
+					//We are doing this in here to wait for all ajax to finish
+					handleData.push({"id":session.id, "customer":handleItem.customer, "customer_id":session.customer_id, "ticket":handleItem.ticket, "start":handleItem.start, "trip":handleItem.trip});
+					console.log("Handle Data");
+					console.log(handleData);
+					//On the last loop, render the view
+					if(i == (maxSessions-1))
+					{
+						$("#addon-sessions").html('').append(addonSessionsTemplate({sessions:handleData}));
+						$('[data-target="#addon-tab"]').tab('show');
+					}
 				});
 			});
 		});
 
-		$("#addon-sessions").html('').append(addonSessionsTemplate(sessions));
 	}
 
-	$(document).on('click', '.sessions-finish', function() {
-		$('[data-target="#addon-tab"]').tab('show');
-	});
-
 	var addonTotal = 0;
-	$(document).on('click', '.add-addon', function() {
-		var id = $(this).data('id');
-		var basePrice = parseFloat($(this).parents('li').find('.price').text());
-		var name = $(this).parents('li').find('.addon-name').text();
-		var inputQty = parseInt($(this).parents('li').find('input[name="qty"]').val(), 10);
+	$(document).on('click', '.assign-addon', function() {
+		var addon = [];
+		addon.id = $(this).data('id');
+		addon.basePrice = parseFloat($(this).parents('li').find('.price').text());
+		addon.name = $(this).parents('li').find('.addon-name').text();
+		addon.inputQty = parseInt($(this).parents('li').find('input[name="qty"]').val(), 10);
 
-		if($('#addons-basket').find('#addon-'+id).length) {
-			var qty = parseInt($('#addon-'+id).find('.qty').text(), 10);
-			var price = parseFloat($('#addon-'+id).find('.price').text(), 10);
+		var summaryItem = $('#addons-summary').find('[data-id="'+addon.id+'"]');
 
-			$('#addon-'+id).find('.qty').text(qty+inputQty);
-			$('#addon-'+id).find('.price').text((basePrice*inputQty)+price);
+		if(summaryItem.length) {
+			addon.qty = parseInt(summaryItem.find('.qty').text(), 10);
+			addon.price = parseFloat(summaryItem.find('.price').text(), 10);
+
+			summaryItem.find('.qty').text(addon.qty+addon.inputQty);
+			summaryItem.find('.price').text((addon.basePrice*addon.inputQty)+addon.price);
+			
+			addonTotal += (addon.basePrice * addon.inputQty);
+			$('#addons-summary-total').html(addonTotal);
 		}else{
-			var qty = inputQty;
-			var price = (basePrice * qty);
-			$('#addons-basket').append('<p class="list-group-item-text addon-item" id="addon-'+id+'" data-id="'+id+'"><a href="javascript:void(0);" title="Click to remove addon" class="remove-addon" data-id="'+id+'">'+name+'</a> <span class="badge qty">'+qty+'</span> <span class="price pull-right">'+price+'</span></p>');
+			addToAddonSummary(addon);
 		}
 
-		addonTotal += (basePrice * inputQty);
-		$('#addons-total').html('£'+addonTotal);
+		addonTotal += (addon.basePrice * addon.inputQty);
+		$('#addons-summary-total').html(addonTotal);
+		
 	});
+
+
+	var handleSummary = [];
+	function addToAddonSummary(addon) {
+
+		var selectedSubBooking = $('#addon-sessions').find('.active');
+		addon.sessionId = selectedSubBooking.data('id');
+		addon.customer = selectedSubBooking.find('.customer-name').text();
+		addon.customerId = selectedSubBooking.data('customer-id');
+		addon.ticket = selectedSubBooking.find('.ticket-name').text();
+		addon.trip = selectedSubBooking.find('.trip-name').text();
+		addon.start = selectedSubBooking.find('.start-date').text();
+
+		handleSummary.push({
+			"id":addon.id,
+			"customer_id":addon.customerId,
+			"session_id":addon.sessionId,
+			"customer":addon.customer,
+			"ticket":addon.ticket,
+			"trip":addon.trip,
+			"start":addon.start,
+			"addon":addon.name,
+			"price":addon.basePrice,
+			"qty":addon.inputQty
+		});
+
+		console.log(handleSummary);
+
+		var addonsSummaryTemplate = Handlebars.compile($("#addons-summary-template").html());
+		$("#addons-summary").html('').append(addonsSummaryTemplate({addonsSummary:handleSummary}));
+	}
 
 	$(document).on('click', '.remove-addon', function() {
 		var id = $(this).data('id');
-		var addon = $('#addon-'+id);
-		var price = $('#addon-'+id).find('.price').text();
+		var addon = $('#addons-summary').find('[data-id="'+id+'"]');
+		var price = addon.find('.price').text();
 		var basePrice = $('#baseprice-'+id).text();
 		var qty = parseInt(addon.find('.qty').text(), 10);
 
@@ -342,20 +388,20 @@ $(document).ready(function() {
 		}
 
 		addonTotal -= basePrice;
-		$('#addons-total').html('£'+addonTotal);
+		$('#addons-summary-total').html('£'+addonTotal);
 	});
 
-	$(document).on('click', '.add-addon', function() {
+	$(document).on('click', '.addon-finish', function() {
 		var btn = $(this);
 		btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
 
-		$('#addons-basket').children('.addon-item').each(function(k,v) {
+		$('#addons-summary').children('.summary-item').each(function(k,v) {
 			var params = [
 				{name: "_token", value: window.token},
 				{name: "booking_id", value: booking.id},
-				{name: "session_id", value: booking.id},
-				{name: "customer_id", value: booking.id},
-				{name: "addon_id", value: $(v).data("id")},
+				{name: "session_id", value: $(v).data("session-id")},
+				{name: "customer_id", value: $(v).data("customer-id")},
+				{name: "addon_id", value: $(v).data("addon-id")},
 				{name: "quantity", value: $(v).find(".qty").text()}
 			];
 

@@ -385,22 +385,24 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2 class="panel-title">Step 1: Select the session/customer combination</h2>
+							<h2 class="panel-title">Step 1: Select the sub-booking</h2>
 						</div>
 						<div class="panel-body">
 							<div class="list-group" id="addon-sessions">
 							</div>
 						</div>
 						<script id="addon-sessions-template" type="text/x-handlebars-template">
-							{#each sessions}
-								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
-									<h4 class="list-group-item-heading">{{customerName}}</h4>
-									<p class="list-group-item-text"></p>
+							{{#each sessions}}
+								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}"  data-customer-id="{{customer_id}}">
+									<h4 class="list-group-item-heading"><span class="customer-name">{{customer}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{trip}}</span></p>
+									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate start}}</span></p>
 								</a>
-							{/each}
+							{{/each}}
 						</script>
 					</div>
 				</div>
@@ -412,13 +414,6 @@
 						<div class="panel-body">
 							<ul class="list-group" id="addons">
 							</ul>
-						</div>
-						<div class="panel-footer">
-							<div class="row">
-								<div class="col-xs-12">
-									<a href="javascript:void(0);" class="btn btn-primary add-addon">Add</a>
-								</div>
-							</div>
 						</div>
 					</div>
 					<script id="addons-template" type="text/x-handlebars-template">
@@ -434,7 +429,7 @@
 		    							<div class="input-group">
 		    								<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
 		    								<span class="input-group-btn">
-		    									<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
+		    									<button data-id="{{id}}" class="btn btn-primary btn-sm assign-addon" type="button">Add</button>
 		    								</span>
 		    							</div>
 	    							</div>
@@ -443,16 +438,37 @@
 						{{/each}}
 					</script>
 				</div>
-				<div class="col-sm-4">
-					<ul class="list-group">
-						<li class="list-group-item active">
-							<h4 class="list-group-item-heading">Addons Basket</h4>
-							<p class="list-group-item-text">Total: <span id="addons-total">0</span></p>
-						</li>
-						<li class="list-group-item" id="addons-basket">
+				<div class="col-sm-5">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h2 class="panel-title">Addons Summary (Total: <span id="addons-summary-total">0.00</span>)</h2>
+						</div>
+						<div class="panel-body">
+							<ul class="list-group" id="addons-summary">
 
-						</li>
-					</ul>
+							</ul>
+						</div>
+					</div>
+					<script id="addons-summary-template" type="text/x-handlebars-template">
+						{{#each addonsSummary}}
+							<li class="list-group-item summary-item" data-addon-id="{{id}}" data-session-id="{{session_id}}"  data-customer-id="{{customer_id}}">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">{{customer}}</h4>
+										<p class="list-group-item-text"><strong>Ticket:</strong> {{ticket}}</p>
+										<p class="list-group-item-text"><strong>Trip:</strong> {{trip}}</p>
+										<p class="list-group-item-text"><strong>Date:</strong> {{start}}</p>
+									</div>
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">Addon</h4>
+										<p class="list-group-item-text">Name: {{addon}}</h4>
+										<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
+										<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{qty}}</span></p>
+									</div>
+								</div>
+							</li>
+						{{/each}}
+					</script>
 				</div>
 			</div>
 			<div class="row">
