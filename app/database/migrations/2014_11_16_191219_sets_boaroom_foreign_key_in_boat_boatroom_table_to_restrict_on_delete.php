@@ -16,7 +16,7 @@ class SetsBoaroomForeignKeyInBoatBoatroomTableToRestrictOnDelete extends Migrati
 		{
 			$table->dropForeign('accommodation_boat_boatroom_id_foreign');
 
-			$table->dropIndex('accommodation_boat_accommodation_id_foreign');
+			$table->dropIndex('accommodation_boat_boatroom_id_foreign');
 
 			$table->foreign('boatroom_id')->references('id')->on('boatrooms')->onUpdate('cascade')->onDelete('restrict');
 		});
