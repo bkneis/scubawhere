@@ -159,7 +159,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-7">
-					<div class="panel panel-primary">
+					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Existing Customer</h3>
 						</div>
@@ -186,7 +186,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="panel panel-default form-horizontal">
+
+					<div class="panel panel-success form-horizontal">
 						<div class="panel-heading">
 							<h3 class="panel-title">New Customer</h3>
 						</div>
@@ -231,16 +232,17 @@
 						</li>
 						<div id="added-customers"></div>
 						<script id="added-customers-template" type="text/x-handlebars-template">
-							<li href="#" class="list-group-item">
-								<h4 class="list-group-item-heading">{{firstname}} {{lastname}}</h4>
+							<li href="#" class="list-group-item" data-id="{{id}}">
+								<h4 class="list-group-item-heading">{{firstname}} {{lastname}} <small><span class="label label-warning is-lead"></span></small></h4>
 								<p class="list-group-item-text">
 									<a href="mailto:{{email}}">{{email}}</a><br>
 									{{address_1}}<br>
 									{{city}}, {{county}}, {{postcode}}<br>
 									<abbr title="Phone">P:</abbr> {{phone}}
 								</p>
-								<a href="javascript:void(0);" class="btn btn-primary btn-sm" data-id="{{id}}">Edit</a>
-								<a href="javascript:void(0);" class="btn btn-danger btn-sm remove-customer">Remove</a>
+								<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-id="{{id}}">Edit</a>
+								<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer">Remove</a>
+								<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
 							</li>
 						</script>
 					</ul>
@@ -357,14 +359,16 @@
 								</div>
 								<script id="sessions-table-template" type="text/x-handlebars-template">
 									{{#each sessions}}
-										<tr>
-											<td>{{friendlyDate start}}</td>
-											<td>{{tripFinish start trip.duration}}</td>
-											<td>{{trip.name}}</td>
-											<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
-											<td>{{boat.name}}</td>
-											<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
-										</tr>
+										{{#unless deleted_at}}
+											<tr>
+												<td>{{friendlyDate start}}</td>
+												<td>{{tripFinish start trip.duration}}</td>
+												<td>{{trip.name}}</td>
+												<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
+												<td>{{boat.name}}</td>
+												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
+											</tr>
+										{{/unless}}
 									{{/each}}
 								</script>
 							</div>

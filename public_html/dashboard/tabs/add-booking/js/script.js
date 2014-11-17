@@ -143,7 +143,9 @@ $(document).on('click', '.add-customer', function() {
 });
 
 $(document).on('click', '.remove-customer', function() {
+	var id = $(this).data('id');
 	$(this).parents('.list-group-item').remove();
+	removeBookingCustomer(id);
 });
 
 $(document).on('submit', '#new-customer', function(e) {
@@ -162,7 +164,17 @@ $(document).on('click', '.clear-form', function() {
 	$(this).parents('form')[0].reset();
 });
 
+$(document).on('click', '.lead-customer', function() {
+	var id = $(this).data('id');
+	$("#session-customers").find('[data-id="'+id+'"]').siblings().data('lead', 0);
+	$("#session-customers").find('[data-id="'+id+'"]').data('lead', 1);
+
+	$("#added-customers").find('li[data-id="'+id+'"]').siblings().data('lead', 0).find('.is-lead').html('');
+	$("#added-customers").find('li[data-id="'+id+'"]').data('lead', 1).find('.is-lead').html('Lead');
+});
+
 $(document).on('click', '.customers-finish', function() {
+	$('#added-customers').children('li');
 	$('[data-target="#session-tab"]').tab('show');
 	compileSessionsList();
 });
@@ -182,7 +194,6 @@ $(document).on('click', '.assign-session', function() {
 
 	sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
 
-	$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
 	var params = [
@@ -195,8 +206,10 @@ $(document).on('click', '.assign-session', function() {
 	];
 
 	Booking.addDetails(params, function(data) {
+		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
+
 		compileSessionsList($("#session-filters").serialize());
-		btn.html('Assign');
+		
 		
 		if($('#session-tickets').children('.list-group-item').length == 1) {
 			$('.session-requirements').slideUp();
@@ -204,10 +217,10 @@ $(document).on('click', '.assign-session', function() {
 		}
 
 		ticket.remove();
+	}, function (xhr) {
+		console.log(xhr.responseText);
+		btn.html('Assign');
 	});
-
-	
-
 });
 
 $(document).on('click', '.sessions-finish', function() {
@@ -336,6 +349,10 @@ function addBookingCustomer(id) {
 		$("#added-customers").append(addedCustomersTemplate(data));
 		$("#session-customers").append(sessionCustomersTemplate(data));
 	});
+}
+
+function removeBookingCustomer(id) {
+	$('#session-customers').find('[data-id="'+id+'"]').remove();
 }
 
 function addBookingTicket(id) {
