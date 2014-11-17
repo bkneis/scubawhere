@@ -307,7 +307,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$bookingdetail->addons()->attach( $addon->id, array('quantity', $quantity) );
+		$bookingdetail->addons()->attach( $addon->id, array('quantity' => $quantity) );
 
 		// Update booking price
 		$booking->updatePrice();
