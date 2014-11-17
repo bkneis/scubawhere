@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use PhilipBrown\Money\Currency;
 
 class AddonController extends Controller {
 
@@ -43,13 +42,9 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
-			'price',
+			'new_decimal_price',
 			'compulsory'
 		);
-
-		// Convert price to subunit
-		$currency = new Currency( Auth::user()->currency->code );
-		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
 
 		//Check compulsory field.....
 		if (empty($data['compulsory'])) {
@@ -83,25 +78,46 @@ class AddonController extends Controller {
 		$data = Input::only(
 			'name',
 			'description',
-			'price',
+			'new_decimal_price',
 			'compulsory'
 		);
 
-		// Convert price to subunit
-		$currency = new Currency( Auth::user()->currency->code );
-		$data['price'] = (int) round( $data['price'] * $currency->getSubunitToUnit() );
-
-		//Check compulsory field.....
+		// Check compulsory field
 		if (empty($data['compulsory'])) {
 			$data['compulsory'] = 0;
 		}
 
-		if( !$addon->update($data) )
+		if($addon->has_bookings && $data['new_decimal_price'] && $data['new_decimal_price'] != $addon->decimal_price)
 		{
-			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+			// Create new addon and deactivate the old one
 
-		return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
+			// Replace all unavailable input data with data from the old addon object
+			if( empty($data['name']) )              $data['name']              = $addon->name;
+			if( empty($data['description']) )       $data['description']       = $addon->description;
+			if( empty($data['new_decimal_price']) ) $data['new_decimal_price'] = $addon->decimal_price;
+			if( empty($data['compulsory']) )        $data['compulsory']        = $addon->compulsory;
+
+			// SoftDelete the old addon
+			$addon->delete();
+
+			// Dispatch add-addon route with all data
+			$originalInput = Request::input();
+			$data['_token'] = Input::get('_token');
+			$request = Request::create('api/addon/add', 'POST', $data);
+			Request::replace($request->input());
+			return Route::dispatch($request);
+			Request::replace($originalInput);
+		}
+		else {
+			// Just update the addon
+
+			if( !$addon->update($data) )
+			{
+				return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
+		}
 	}
 
 	public function postDeactivate()

@@ -5,7 +5,7 @@ class RegisterController extends Controller {
 
 	public function postCompany()
 	{
-		$data = Input::only('username', 'contact', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
+		$data = Input::only('username', 'contact', 'description', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
 
 		try
 		{
@@ -47,8 +47,13 @@ class RegisterController extends Controller {
 		// Mass assigned insert with automatic validation
 		if($company->save())
 		{
-			$request = Request::create('password/remind', 'POST', array('email' => $company->email));
+			$company->agencies()->sync( Input::get('agencies') );
+
+			$originalInput = Request::input();
+			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
+			Request::replace($request->input());
 			return Route::dispatch($request);
+			Request::replace($originalInput);
 		}
 		else
 		{
@@ -68,6 +73,9 @@ class RegisterController extends Controller {
 				break;
 			case 'email':
 				$exists = Company::where('email', '=', $value)->exists();
+				break;
+			case 'business_email':
+				$exists = Company::where('business_email', '=', $value)->exists();
 				break;
 			default:
 				return Response::json( array('errors' => array('Field name not supported.')), 406 ); // 406 Not Acceptable

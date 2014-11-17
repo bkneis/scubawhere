@@ -31,7 +31,7 @@ p {
 
 label {
 	display: block;
-	text-align: left;
+	/* text-align: left; */
 	margin-top: 0.5em;
 	/*margin-left: 57px;*/
 }
@@ -83,7 +83,7 @@ label {
 }
 
 /* form */
-#login-form form {
+form {
 	font-size: 18px;
 	text-align: center;
 	background-color: #fff;
@@ -92,6 +92,13 @@ label {
 	margin-bottom: 10px;
 	position: relative;
 	z-index: 100;
+}
+
+
+#register-form {
+	padding: 0;
+	box-shadow: none;
+	margin-bottom: 0;
 }
 
 
@@ -204,19 +211,6 @@ footer{
 	background-color: rgba(0,0,0,0.4);
 }
 
-.certify {
-	display: block;
-	border: 1px solid #c8c8c8;
-	float: left;
-	padding: 0.5em 1em;
-	margin: 0 0.5em 0.5em 0;
-}
-
-.certify.checked {
-	border-color: #27ae60;
-	background-color: #2ecc71;
-}
-
 .container {
 	font-size: 18px;
 	text-align: center;
@@ -229,9 +223,9 @@ footer{
 }
 
 .register-col {
-	width:45%; 
-	float:left; 
-	padding-right:45px; 
+	width:45%;
+	float:left;
+	padding-right:45px;
 	text-align:left;
 }
 

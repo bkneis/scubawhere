@@ -55,20 +55,26 @@ Logs a company out by their session key cookie, if logged in.
 
 `POST /register/company`
 
-This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to [http://scubawhere.com/&#8203;companypasswordreset?email=`email`&token=`token`](http://scubawhere.com/companypasswordreset). On how to transmit this form, refer to [#Reset a company's password](#Reset_a_company's_password) in the documentation.
+This route creates a new company in the database and attemps to send a password reminder email to the submitted email address. The email contains a link to [http://scubawhere.com/password/reset?email=`email`&token=`token`](http://scubawhere.com/password/reset). On how to transmit this form, refer to [#Reset a company's password](#Reset_a_company's_password) in the documentation.
 
-- **@param**	string	username	The chosen username
-- **@param**	string	email   	The company's contact email adress
-- **@param**	string	name    	The full legal company name
-- **@param**	string	address_1	The first address line
-- **@param**	string	address_2	The second address line (optional)
-- **@param**	string	city    	The city the company is based in
-- **@param**	string	county  	The county the company is based in
-- **@param**	string	postcode	The postcode of the company's address
-- **@param**	integer	region_id	The ID of the corresponding region of the company
-- **@param**	integer	country_id	The ID of the corresponding country of the company
-- **@param**	string	phone   	The company's contact telephone number
-- **@param**	string	website 	The company's website (optional)
+- **@param**	string	username        	The chosen username
+- **@param**	string	contact         	The main contact person's name
+- **@param**	text	description     	The company's info/bio (optional)
+- **@param**	string	email           	The company's contact email adress
+- **@param**	string	name            	The full legal company name
+- **@param**	string	address_1       	The first address line
+- **@param**	string	address_2       	The second address line (optional)
+- **@param**	string	postcode        	The postcode of the company's address
+- **@param**	string	county          	The county the company is based in (optional)
+- **@param**	string	city             	The city the company is based in
+- **@param**	integer	country_id      	The ID of the corresponding country of the company
+- **@param**	integer	currency_id     	The ID of the corresponding currency of the company
+- **@param**	string	business_pone
+- **@param**	string	business_email
+- **@param**	string	vat_number      	(optional)
+- **@param**	string	registration_number	The company's business registration number (optional)
+- **@param**	string	phone           	The company's contact telephone number
+- **@param**	string	website         	The company's website (optional)
 - &nbsp;
 - **@return** JSON    Contains `status` on success, `errors` on failure
 
@@ -76,18 +82,147 @@ This route creates a new company in the database and attemps to send a password 
 
 `GET /register/exists`
 
-- **@param**	string	field   	Either   `username` or `email`
-- **@param**	string	value   	The username or email address to check
+- **@param** string field  Either `'username'`, `'email'` or `'business_email'`
+- **@param** string value  The username or email address to check
 - &nbsp;
 - **@return** integer `0` (FALSE) if no record was found, otherwise `1` (TRUE)
 
 ## Accommodations
 
+Accommodations are hotels/hostels/dorms that are provided by the dive operator (mostly in remote areas). These accommodations do not have a seperate address or contact info but are managed directly by the dive operator.
+
 ### Retrieve all accommodations
 
-`GET /company/accommodations`
+`GET /api/accommodation/all`
+
+`GET /api/accommodation/all-with-trashed`
 
 - **@return** JSON    An array of `accommodation` objects
+
+### Create an accommodation
+
+`POST /api/accommodation/add`
+
+Creates a new accommodation.
+
+- **@param** string  name        A name for the accommodation
+- **@param** string  description A description for the accommodation
+- **@param** decimal capacity    How many entities of the accommodation are available
+- **@param** Prices  base_prices See [#Prices](#Prices)
+- **@param** Prices  prices      See [#Prices](#Prices)
+- &nbsp;
+- **@return** JSON               Contains `status` and `id` of the newly created accommodation on success, `errors` on failure
+
+### Update an accommodation
+
+`POST /api/accommodation/edit`
+
+Updates an accommodation. All parameters except `id` are optional.
+
+> #### Important
+> The response *can* contain an `id` field. If it *does* it means that the accommodation could not simply be updated because it has already been booked. Instead the old accommodation has been **deactivated** and has been replaced with an updated accommodation in the system. The returned `id` is the new ID of the accommodation and must be used from now on!
+>
+> The following fields will create a new accommodation when they are updated and the (old) accommodation has already been booked: `base_prices`, `prices`.
+
+- **@param** integer id          The ID of the accommodation to be updated
+- **@param** string  name        A name for the accommodation
+- **@param** string  description A description for the accommodation
+- **@param** decimal capacity    How many entities of the accommodation are available
+- **@param** Prices  base_prices See [#Prices](#Prices)
+- **@param** Prices  prices      See [#Prices](#Prices)
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure (can contain `id`, see **Important** section above)
+
+### Deactivate an accommodation
+
+`POST /api/accommodation/deactivate`
+
+- **@param** integer id          The ID of the accommodation to be deactivated
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Restore an accommodation
+
+`POST /api/accommodation/restore`
+
+- **@param** integer id          The ID of the accommodation to be restored
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Delete an accommodation
+
+`POST /api/accommodation/delete`
+
+- **@param** integer id          The ID of the accommodation to be deleted
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+## Addons
+
+### Retrieve all addons
+
+`GET /api/addon/all`
+
+`GET /api/addon/all-with-trashed`
+
+`GET /api/addon/compulsory`
+
+- **@return** JSON    An array of `accommodation` objects
+
+### Create an addon
+
+`POST /api/addon/add`
+
+- **@param** string  name              A name of the new addon
+- **@param** string  description       A description for the new addon
+- **@param** float   new_decimal_price A price for the new addon
+- **@param** tinyint compulsory        Whether this addon is compulsory or not. `1` for true, `0` for false (optional, default: false)
+- &nbsp;
+- **@return** JSON                     Contains `status` and `id` of the newly created addon on success, `errors` on failure
+
+### Update an addon
+
+`POST /api/addon/add`
+
+Updates an addon. All parameters, except the `id` are optional.
+
+
+> #### Important
+> The response *can* contain an `id` field. If it *does* it means that the addon could not simply be updated because it has already been booked. Instead the old addon has been **deactivated** and has been replaced with an updated addon in the system. The returned `id` is the new ID of the addon and must be used from now on!
+>
+> The following fields will create a new addon when they are updated and the (old) addon has already been booked: `new_decimal_price`.
+
+- **@param** integer id                The ID of the addon to be updated
+- **@param** string  name              A name of the new addon
+- **@param** string  description       A description for the new addon
+- **@param** float   new_decimal_price A price for the new addon
+- **@param** tinyint compulsory        Whether this addon is compulsory or not. `1` for true, `0` for false (optional, default: false)
+- &nbsp;
+- **@return** JSON                     Contains `status` on success, `errors` on failure (can contain `id`, see above)
+
+### Deactivate an addon
+
+`POST /api/addon/deactivate`
+
+- **@param** integer id          The ID of the addon to be deactivated
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Restore an addon
+
+`POST /api/addon/restore`
+
+- **@param** integer id          The ID of the addon to be restored
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Delete an addon
+
+`POST /api/addon/delete`
+
+- **@param** integer id          The ID of the addon to be deleted
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
 
 ## Agencies & Certificates
 
@@ -105,7 +240,7 @@ Use this API call to populate an agency and (subsequent) certificate drop-down/s
 
 `GET /api/agent`
 
-- **@param**	integer	id      	The ID of the wanted agent
+- **@param**	integer	id   The ID of the wanted agent
 - &nbsp;
 - **@return** JSON    An `agent` object
 
@@ -139,7 +274,7 @@ Creates a new (travel) agent. All fields that are **not** marked *(optional)* ar
 
 `POST /api/agent/edit`
 
-All parameters are optional (except the agent `id`).
+All parameters except `id` are optional.
 
 - **@param** integer id              The ID of the agent to be updated
 - **@param** string  name            The name of the travel agent
@@ -157,39 +292,91 @@ All parameters are optional (except the agent `id`).
 
 ## Boats
 
-### Retrieve all accommodations & boats
+### Retrieve all boats
 
-`GET /company/boats`
+`GET /api/boat/all`
 
-- **@return** JSON    An object containing an `accommodations` array and a `boats` array
+- **@return** JSON    An array of `boat` objects with included `boatroom` objects
 
-### Add new, update and delete accommodations & boats
+### Create a boat
 
-`POST /company/boats`
+`POST /api/boat/add`
 
-Submit the whole form with the following structure:
+Creates a new boat.
 
-*The IDs 1 & 2 are just examples. Please use the real IDs that are retrieved from the API*
+- **@param** string  name        A name for the boat
+- **@param** string  description A description for the boat
+- **@param** decimal capacity    How many people fit on the boat
+- **@param** array   boatrooms   The input field must be named `boatrooms[{id}][capacity]` and its value needs to be the capacity of the boatroom on this boat
+- &nbsp;
+- **@return** JSON               Contains `status` and `id` of the newly created boat on success, `errors` on failure
 
-	<input name="accommodations[1][name]" value="My Accommodation">
-	<input name="accommodations[1][description]" value="This room is brilliant!">
-	<input name="accommodations[2][name]" value="Double Room">
-	<input name="accommodations[2][description]" value="A room for two people">
+### Update a boat
 
-	<input name="boats[1][name]" value="My Boat">
-	<input name="boats[1][description]" value="This is my first boat">
-	<input name="boats[1][capacity]" value="35">
-	<input name="boats[1][photo]" value="JPG_01234.jpg">
-	<input name="boats[1][accommodations][1]" value="20"> <!-- This specifies the capacity of the accommodation on this particular boat -->
-	<input name="boats[1][accommodations][2]" value="15">
-	...
+`POST /api/boat/edit`
 
-When **creating new accommodations or boats**, simply make their ID a random string, but continue to use this random ID whenever you refer to the entity throughout the form. The random ID is replaced by the real one in the system when the request is submitted.
+Updates a boat. All paramets except `id` are optional.
 
-- **@param** array accommodations An associative array of the structure described above
-- **@param** array boats          An associative array of the structure described above
+> #### Important
+> If `boatrooms` is not provided, all attached boatrooms will be removed!
+
+- **@param** integer id          The ID of the boat to be updated
+- **@param** string  name        A name for the boat
+- **@param** string  description A description for the boat
+- **@param** decimal capacity    How many people fit on the boat
+- **@param** array   boatrooms   The input field must be named `boatrooms[{id}][capacity]` and its value needs to be the capacity of the boatroom on this boat
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Delete a boat
+
+`POST /api/boat/delete`
+
+- **@param** integer id          The ID of the boat to be deleted
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+## Boatrooms
+
+### Retrieve all boatrooms
+
+`GET /api/boatroom/all`
+
+- **@return** JSON    An array of `boatroom` objects
+
+### Create a boatroom
+
+`POST /api/boatroom/add`
+
+Creates a new boatroom.
+
+- **@param** string  name         A name for the boatroom
+- **@param** string  description  A description for the boatroom
+- &nbsp;
+- **@return** JSON                Contains `status` and `id` of the newly created boatroom on success, `errors` on failure
+
+### Update a boatroom
+
+`POST /api/boatroom/edit`
+
+Updates a boatroom. All paramets except `id` are optional.
+
+> #### Important
+> If `boatrooms` is not provided, all attached boatrooms will be removed!
+
+- **@param** integer id           The ID of the boatroom to be updated
+- **@param** string  name         A name for the boatroom
+- **@param** string  description  A description for the boatroom
 - &nbsp;
 - **@return** JSON                Contains `status` on success, `errors` on failure
+
+### Delete a boatroom
+
+`POST /api/boatroom/delete`
+
+- **@param** integer id          The ID of the boatroom to be deleted
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
 
 ## Bookings
 
@@ -257,13 +444,13 @@ Remove a ticket from a booking. This method doesn't need the ticketID, because t
 
 Adds an addon to a customer-session combination.
 
-- **@param**	integer	booking_id	The ID of the  `booking`
-- **@param**	integer	session_id	The ID of the  `session` that the addon should be added to
-- **@param**	integer customer_id	The ID of the  `customer` the addon is for
-- **@param**	integer	addon_id	The ID of the  `addon` to add
-- **@param**	integer	quantity	How many of this addon should be added (optional)
+- **@param** integer booking_id  The ID of the  `booking`
+- **@param** integer session_id  The ID of the  `session` that the addon should be added to
+- **@param** integer customer_id The ID of the  `customer` the addon is for
+- **@param** integer addon_id    The ID of the  `addon` to add
+- **@param** integer quantity    How many of this addon should be added (optional)
 - &nbsp;
-- **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
+- **@return** JSON               Contains `status` and the new total booking price on success, `errors` on failure
 
 ### Remove addon from booking
 
@@ -271,10 +458,36 @@ Adds an addon to a customer-session combination.
 
 Removes an addon from a customer-session combination.
 
-- **@param**	integer	booking_id	The ID of the  `booking`
-- **@param**	integer	session_id	The ID of the  `session` that the addon should be removed from
-- **@param**	integer customer_id	The ID of the  `customer` the addon was booked for
-- **@param**	integer	addon_id	The ID of the  `addon` to remove
+- **@param** integer booking_id  The ID of the `booking`
+- **@param** integer session_id  The ID of the `session` that the addon should be removed from
+- **@param** integer customer_id The ID of the `customer` the addon was booked for
+- **@param** integer addon_id    The ID of the `addon` to remove
+- &nbsp;
+- **@return** JSON               Contains `status` and the new total booking price on success, `errors` on failure
+
+### Add accommodation to booking
+
+`POST /api/booking/add-accommodation`
+
+Adds an accommodation to a booking.
+
+- **@param** integer booking_id       The ID of the `booking` that the accommodation should be added to
+- **@param** integer accommodation_id The ID of the `accommodation` to add
+- **@param** integer customer_id      The ID of the `customer` the accommodation is for
+- **@param** string  date             Date of the first evening
+- **@param** integer nights           The number of nights the accommodation should be booked for
+- &nbsp;
+- **@return** JSON                    Contains `status` and the new total booking price on success, `errors` on failure
+
+### Remove accommodation from booking
+
+`POST /api/booking/remove-accommodation`
+
+Removes an accommodation from a booking.
+
+- **@param** integer booking_id       The ID of the `booking` that the accommodation should be removed from
+- **@param** integer accommodation_id The ID of the `accommodation` to remove
+- **@param** integer customer_id      The ID of the `customer` the accommodation was for
 - &nbsp;
 - **@return** JSON    Contains `status` and the new total booking price on success, `errors` on failure
 
@@ -299,7 +512,9 @@ Return an array containing boolean values for various important tests.
 
 > #### Available tests
 > **email** Tests if the lead customer has an email<br>
-> **phone** Tests if the lead customer has a phone number
+> **phone** Tests if the lead customer has a phone number<br>
+> **gender** Tests if the lead customer has a gender<br>
+> **country_id** Tests if the lead customer has a country
 
 - **@param**  integer booking_id The ID of the booking to be checked
 - &nbsp;
@@ -312,6 +527,31 @@ Return an array containing boolean values for various important tests.
 `GET /company`
 
 - **@return** JSON    The `company` object
+
+### Update a company
+
+`POST /company/update`
+
+Update a company's data. All fields are optional.
+
+- **@param**	string	username        	The chosen username
+- **@param**	string	contact         	The main contact person's name
+- **@param**	text	description     	The company's info/bio (optional)
+- **@param**	string	email           	The company's contact email adress
+- **@param**	string	name            	The full legal company name
+- **@param**	string	address_1       	The first address line
+- **@param**	string	address_2       	The second address line (optional)
+- **@param**	string	postcode        	The postcode of the company's address
+- **@param**	string	county          	The county the company is based in (optional)
+- **@param**	string	city             	The city the company is based in
+- **@param**	string	business_pone
+- **@param**	string	business_email
+- **@param**	string	vat_number      	(optional)
+- **@param**	string	registration_number	The company's business registration number (optional)
+- **@param**	string	phone           	The company's contact telephone number
+- **@param**	string	website         	The company's website (optional)
+- &nbsp;
+- **@return** JSON    Contains `status` on success, `errors` on failure
 
 ## Countries
 
@@ -481,6 +721,95 @@ Detach a formerly attached location from a company.
 - &nbsp;
 - **@return** JSON               Contains `status` on success, `errors` on failure
 
+## Packages
+
+### Retrieve all packages
+
+`GET /api/package/all`
+
+`GET /api/package/all-with-trashed`
+
+- **@return** JSON    An array of `package` objects with included `tickets`
+
+### Create a new package
+
+`POST /api/package/add/`
+
+- **@param** string  name        A name for the package
+- **@param** string  description A description for the package
+- **@param** integer capacity    How many people can go on the same session with this package (`null`,`0` for *no limit*)
+- **@param** Price   base_prices See [#Prices](#Prices)
+- **@param** Price   prices      See [#Prices](#Prices)
+- **@param** array   tickets     The input field must be named `tickets[{id}][quantity]` and its value needs to be the quantity of the tickets of this kind included in this package
+- &nbsp;
+- **@return** JSON               Contains `status` and `id` of the newly created ticket on success, `errors` on failure
+
+### Update a package
+
+`POST /api/package/edit`
+
+Updates a package. All parameters except `id` & `tickets` are optional.
+
+> #### Important
+> The response *can* contain an `id` field. If it *does* it means that the package could not simply be updated because it has already been booked. Instead the old package has been **deactivated** and has been replaced with an updated package in the system. The returned `id` is the new ID of the package and must be used from now on!
+>
+> The following fields will create a new package when they are updated and the (old) package has already been booked: `tickets`, `base_prices`, `prices`.
+
+- **@param** string  name        A name for the package
+- **@param** string  description A description for the package
+- **@param** integer capacity    How many people can go on the same session with this package (`null`,`0` for *no limit*)
+- **@param** Price   base_prices See [#Prices](#Prices)
+- **@param** Price   prices      See [#Prices](#Prices)
+- **@param** array   tickets     The input field must be named `tickets[{id}][quantity]` and its value needs to be the quantity of the tickets of this kind included in this package
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure (can contain `id`, see **Important** section above)
+
+### Deactivate a package
+
+`POST /api/package/deactivate`
+
+- **@param** integer id          The ID of the package to be deactivated
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Restore a package
+
+`POST /api/package/restore`
+
+- **@param** integer id          The ID of the package to be restored
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+### Delete a package
+
+`POST /api/package/delete`
+
+- **@param** integer id          The ID of the package to be deleted
+- &nbsp;
+- **@return** JSON               Contains `status` on success, `errors` on failure
+
+## Prices
+
+`base_prices` and `prices` arrays must have the following structure:
+
+	[
+		{id}: {
+			'new_decimal_price': 14.99,
+			'from': '2014-11-15',
+			'until': '2015-05-14'
+		},
+		{id}: {
+			'new_decimal_price': ...
+		}
+	]
+
+`{id}` is the `id` of an existing price or a random alpha-numerical sequence for new prices. 
+
+The `until` parameter is only necessary for seasonal prices (not for base-prices).
+
+> #### Important
+> The `from` parameter should be `'0000-00-00'` for the initial base-price.
+
 ## Search
 
 ### Search for customers by email 
@@ -509,7 +838,7 @@ This can be used to populate a drop-down list of suggestions when searching for 
 
 - **@return** JSON    An array of `session` objects (without connected objects)
 
-*To retrieve the related `trip` and `boat` objects, please refer to [#Retrieve a specific trip](#Retrieve_a_specific_trip), [#Retrieve all trips](#Retrieve_all_trips) and [#Retrieve all accommodations & boats](#Retrieve_all_accommodations_&_boats).*
+*To retrieve the related `trip` and `boat` objects, please refer to [#Retrieve a specific trip](#Retrieve_a_specific_trip), [#Retrieve all trips](#Retrieve_all_trips) and [#Retrieve all boats](#Retrieve_all_boats).*
 
 ### Search for sessions by filter
 
@@ -603,6 +932,8 @@ Deactivating a session means it can no longer be selected for booking, but is st
 
 `GET /api/ticket/all`
 
+`GET /api/ticket/all-with-trashed`
+
 - **@return** JSON    An array of `ticket` objects, complete with details of connected `boats` and lists of `accommodation_id`s
 
 ### Create a ticket
@@ -614,8 +945,8 @@ Creates a new ticket for a trip.
 - **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
 - **@param** string  name        A name for the ticket
 - **@param** string  description A description for the ticket
-- **@param** decimal price       The price (will be rounded to two decimals)
-- **@param** string  currency    Three letter international code (optional, default: dive center's country's currency)
+- **@param** Price   base_prices See [#Prices](#Prices)
+- **@param** Price   prices      See [#Prices](#Prices)
 - **@param** array   trips       A simple array of `trip_id`s that the ticket is eligable for
 - **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
 - &nbsp;
@@ -638,8 +969,8 @@ It is **not** recommended that the `trip_id` be *updated* (although the function
 - **@param** integer trip_id     The ID of the `trip` that the ticket belongs to
 - **@param** string  name        A name for the ticket
 - **@param** string  description A description for the ticket
-- **@param** decimal price       The price (will be rounded to two decimals)
-- **@param** string  currency    The currency that the price is in
+- **@param** Price   base_prices See [#Prices](#Prices)
+- **@param** Price   prices      See [#Prices](#Prices)
 - **@param** array   boats       An array of `boat_id` => `accommodation_id` associations (can be empty)
 - &nbsp;
 - **@return** JSON               Contains `status`, or `status` and `id` of the updated ticket on success, `errors` on failure
@@ -723,6 +1054,8 @@ The HTML form must submit the following structure:
 
 `GET /api/trip/all`
 
+`GET /api/trip/all-with-trashed`
+
 - **@return** JSON    An array of `trip` objects, complete with details of the pick-up `location`, all `locations` in the itinary and all connected `triptypes`
 
 ### Retrieve all triptypes
@@ -793,6 +1126,23 @@ Delete an existing trip.
 &nbsp;
 
 ## Changelog
+
+### 16<sup>th</sup> November 2014
+- **@added** [#Update a company](#Update_a_company) section
+- **@edit**  Updated available fields for [#Register a company](#Register_a_company)
+- **@edit**  Added `business_email` to tests in [#Check if a username or email already exists](#Check_if_a_username_or_email_already_exists)
+- **@edit**  Added `gender` and `country_id` to checks in [#Validate a booking](#Validate_a_booking)
+
+### 15<sup>th</sup> November 2014
+- **@added** [#Accommodations](#Accommodations) section
+- **@added** [#Addons](#Addons) section
+- **@added** [#Packages](#Packages) section
+- **@added** [#Boatrooms](#Boatrooms) section
+- **@added** [#Prices](#Prices) section
+- **@added** `all-with-trashed` API methods
+- **@added** [#Add accommodation to booking](#Add_accommodation_to_booking), [#Remove accommodation from booking](#Remove_accommodation_from_booking) methods
+- **@edit**  Updated [#Boats](#Boats) section to comply with new API
+- **@edit**  Changed all relevant `price` & `currency` input fields to `base_prices` & `prices`
 
 ### 26<sup>th</sup> October 2014
 - **@added** Expandable & responsive main menu

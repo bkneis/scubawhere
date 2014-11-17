@@ -176,9 +176,13 @@ class AccommodationController extends Controller {
 
 			// TODO MAYBE: Unconnect the original ticket from boats
 
-			// Dispatch add-ticket route with all data and return result
+			// Dispatch add-accommodation route with all data and return result
+			$originalInput = Request::input();
+			$data['_token'] = Input::get('_token');
 			$request = Request::create('api/accommodation/add', 'POST', $data);
+			Request::replace($request->input());
 			return Route::dispatch($request);
+			Request::replace($originalInput);
 		}
 		else
 		{

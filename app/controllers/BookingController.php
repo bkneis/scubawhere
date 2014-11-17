@@ -24,7 +24,7 @@ class BookingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->bookings()->with('customers')->get();
+		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country', 'customers')->get();
 	}
 
 	public function postInit()
@@ -81,7 +81,7 @@ class BookingController extends Controller {
 		// Check if all IDs exist and belong to the signed-in company
 		try
 		{
-			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -91,7 +91,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
 			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -101,7 +101,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
+			if( !Input::has('ticket_id') ) throw new ModelNotFoundException();
 			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -111,7 +111,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('session_id') ) throw new ModelNotFoundException();
+			if( !Input::has('session_id') ) throw new ModelNotFoundException();
 			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
@@ -119,7 +119,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( Input::get('packagefacade_id') )
+		if( Input::has('packagefacade_id') )
 		{
 			try
 			{
@@ -132,7 +132,7 @@ class BookingController extends Controller {
 
 			$package = $packagefacade->package();
 		}
-		elseif( Input::get('package_id') )
+		elseif( Input::has('package_id') )
 		{
 			try
 			{
@@ -149,6 +149,35 @@ class BookingController extends Controller {
 		if( !is_bool($is_lead) )
 			$is_lead = false;
 
+		// Validate that the customer is not already booked for this session
+		$check = Auth::user()->bookings()->whereHas('bookingdetails', function($query) use ($customer, $departure)
+		{
+			$query
+				->where('customer_id', $customer->id)
+				->where('session_id', $departure->id);
+		})->count();
+		if( $check > 0 )
+			return Response::json( array('errors' => array('The customer is already booked on the session!')), 403 ); // 403 Forbidden
+
+		// Validate that the ticket/package can be booked for this session
+		try
+		{
+			$departure->trip->tickets()->where(function($query) use ($package)
+			{
+				if( isset($package) )
+				{
+					$query->whereHas('packages', function($query) use ($package)
+					{
+						$query->where('id', $package->id);
+					});
+				}
+			})->findOrFail( $ticket->id );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
+		}
+
 		// Validate remaining capacity on session
 		$capacity = $departure->getCapacityAttribute();
 		if( $capacity[0] >= $capacity[1] )
@@ -157,10 +186,9 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session is already fully booked!'), 'capacity' => $capacity), 403 ); // 403 Forbidden
 		}
 
+		// Validate remaining package capacity on session
 		if( isset($package) && !empty($package->capacity) )
 		{
-			// Validate remaining package capacity on session
-
 			// Package's capacity is *not* infinite and must be checked
 			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($q) use ($package)
 			{
@@ -169,9 +197,8 @@ class BookingController extends Controller {
 
 			if( $usedUp >= $package->capacity )
 			{
+				// TODO Check for extra one-time packages for this session and their capacity
 
-				// Check for extra one-time packages for this session and their capacity
-				// TODO
 				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
 			}
 		}
@@ -272,7 +299,40 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( Input::get('quantity') )
+		// Check if the booking belongs to the company
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the session belongs to the company
+		try
+		{
+			if( !Input::get('session_id') ) throw new ModelNotFoundException();
+			Auth::user()->departures()->findOrFail( Input::get('session_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the customer belongs to the company
+		try
+		{
+			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( Input::has('quantity') )
 		{
 			$quantity = Input::get('quantity');
 			$validator = Validator::make(
@@ -292,15 +352,17 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('booking_id') )  throw new ModelNotFoundException();
-			if( !Input::get('session_id') )  throw new ModelNotFoundException();
-			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			if( !Input::has('booking_id') )  throw new ModelNotFoundException();
+			if( !Input::has('session_id') )  throw new ModelNotFoundException();
+			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
 
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 			$bookingdetail = $booking->bookingdetails()
 				->where('session_id', Input::get('session_id'))
 				->where('customer_id', Input::get('customer_id'))
 				->first();
+
+			if( count($bookingdetail) < 1 ) throw new ModelNotFoundException();
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -328,28 +390,142 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('booking_id') )  throw new ModelNotFoundException();
-			if( !Input::get('session_id') )  throw new ModelNotFoundException();
-			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			if( !Input::has('booking_id') )  throw new ModelNotFoundException();
+			if( !Input::has('session_id') )  throw new ModelNotFoundException();
+			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
 
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
-			$bookingdetails = $booking->bookingdetails()
+			$bookingdetail = $booking->bookingdetails()
 				->where('session_id', Input::get('session_id'))
 				->where('customer_id', Input::get('customer_id'))
 				->first();
+
+			if( count($bookingdetail) < 1 ) throw new ModelNotFoundException();
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$addon_id = Input::get('addon_id');
+
 		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
-		$bookingdetails->detach( $addon->id );
+		$bookingdetail->addons()->detach( $addon_id );
 
 		// Update booking price
 		$booking->updatePrice();
 
 		return array('status' => 'OK. Addon removed.', 'price' => $booking->decimal_price());
+	}
+
+	public function postAddAccommodation()
+	{
+		/**
+		 * Required input parameters
+		 *
+		 * booking_id
+		 * accommodation_id
+		 * customer_id
+		 * date
+		 * nights
+		 */
+
+		// Check if the booking belongs to the company
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the accommodation belongs to the company
+		try
+		{
+			if( !Input::get('accommodation_id') ) throw new ModelNotFoundException();
+			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('accommodation_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the customer belongs to the company
+		try
+		{
+			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$date = Input::get('date');
+		$nights = Input::get('nights');
+		$validator = Validator::make(
+			array(
+				'date' => $date,
+				'nights' => $nights
+			),
+			array(
+				'date' => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago')),
+				'nights' => 'required|integer|min:1'
+			)
+		);
+
+		if( $validator->fails() )
+		{
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+		}
+
+		$booking->accommodations()->attach( $accommodation->id, array('date' => $date, 'nights' => $nights) );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Accommodation added.', 'price' => $booking->decimal_price());
+	}
+
+	public function postRemoveAccommodation()
+	{
+		/**
+		 * Required input parameters
+		 *
+		 * booking_id
+		 * accommodation_id
+		 * customer_id
+		 */
+
+		if( !Input::has('booking_id') )
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+
+		if( !Input::has('accommodation_id') )
+			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+
+		if( !Input::has('customer_id') )
+			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+
+		try
+		{
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$accommodation_id = Input::get('accommodation_id');
+
+		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
+		$booking->accommodations()->detach( $accommodation_id );
+
+		// Update booking price
+		$booking->updatePrice();
+
+		return array('status' => 'OK. Accommodation removed.', 'price' => $booking->decimal_price());
 	}
 
 	public function postEditInfo()
@@ -413,8 +589,10 @@ class BookingController extends Controller {
 
 		// "Validation" rules
 		return array(
-			"email" => !empty( $booking->lead_customer()->email ),
-			"phone" => !empty( $booking->lead_customer()->phone ),
+			"email"      => !empty( $booking->lead_customer->email ),
+			"phone"      => !empty( $booking->lead_customer->phone ),
+			"gender"     => !empty( $booking->lead_customer->gender ),
+			"country_id" => !empty( $booking->lead_customer->country_id )
 		);
 	}
 

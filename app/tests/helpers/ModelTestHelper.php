@@ -106,7 +106,6 @@ class ModelTestHelper{
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->capacity = self::TEST_INTEGER;
-		$entry->photo = self::TEST_STRING.$append;
 
 		$entry->save();
 		return $entry->id;
@@ -119,7 +118,6 @@ class ModelTestHelper{
 
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
-		$entry->photo = self::TEST_STRING.$append;
 
 		$entry->save();
 		return $entry->id;
@@ -265,7 +263,7 @@ class ModelTestHelper{
 		$entry->postcode = self::TEST_STRING;
 		$entry->phone = self::TEST_PHONE;
 		$entry->last_dive = self::TEST_DAY;
-		
+
 		$entry->save();
 		return $entry->id;
 	}
@@ -342,7 +340,7 @@ class ModelTestHelper{
 
 	public static function createPrice($owner_id){
 		$entry = new Price();
-		
+
 		$entry->owner_id = $owner_id;
 
 		$entry->owner_type = self::TEST_STRING;

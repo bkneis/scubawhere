@@ -775,3 +775,13 @@ span.box-tool{
 	font-size: 18px;
 	margin-right: 0.5em;
 }
+
+.boatroom-name {
+	font-size: 18px;
+	display: inline-block;
+	padding-right: 2em;
+}
+
+#company-form-container input[type='text'] {
+	width:100%;
+}

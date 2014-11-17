@@ -22,13 +22,6 @@ Route::get('/', function()
 	return Redirect::to('blog/');
 });
 
-Route::get('secret_phpinfo', function()
-{
-	phpinfo();
-});
-
-// Route::controller('test', 'TestController');
-
 Route::controller('password', 'PasswordController');
 
 Route::controller('register', 'RegisterController');
@@ -105,6 +98,10 @@ Route::group(array('before' => 'auth.basic'), function()
 	//Route::controller('api/agency', 'AgencyController');
 
 	Route::controller('api/agent', 'AgentController');
+
+	Route::controller('api/boat', 'BoatController');
+
+	Route::controller('api/boatroom', 'BoatroomController');
 
 	Route::controller('api/booking', 'BookingController');
 

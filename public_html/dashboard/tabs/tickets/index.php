@@ -105,9 +105,9 @@
 											{{name}}
 											<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;"{{inArray id ../boats '' ' disabled'}}>
 												<option value="">All room types</option>
-												{{#if accommodations}}
+												{{#if boatrooms}}
 													<optgroup label="Limit to:">
-														{{#each accommodations}}
+														{{#each boatrooms}}
 															<option value="{{id}}"{{isEqualDeepPivot id ../../../boats ../../id 'boatroom_id' ' selected'}}>{{name}}</option>
 														{{/each}}
 													</optgroup>
