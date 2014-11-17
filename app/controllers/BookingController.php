@@ -81,7 +81,7 @@ class BookingController extends Controller {
 		// Check if all IDs exist and belong to the signed-in company
 		try
 		{
-			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
 			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -91,7 +91,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
+			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
 			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -101,7 +101,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('ticket_id') ) throw new ModelNotFoundException();
+			if( !Input::has('ticket_id') ) throw new ModelNotFoundException();
 			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -111,7 +111,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			if( !Input::get('session_id') ) throw new ModelNotFoundException();
+			if( !Input::has('session_id') ) throw new ModelNotFoundException();
 			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
@@ -119,7 +119,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( Input::get('packagefacade_id') )
+		if( Input::has('packagefacade_id') )
 		{
 			try
 			{
@@ -132,7 +132,7 @@ class BookingController extends Controller {
 
 			$package = $packagefacade->package();
 		}
-		elseif( Input::get('package_id') )
+		elseif( Input::has('package_id') )
 		{
 			try
 			{
@@ -186,10 +186,9 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session is already fully booked!'), 'capacity' => $capacity), 403 ); // 403 Forbidden
 		}
 
+		// Validate remaining package capacity on session
 		if( isset($package) && !empty($package->capacity) )
 		{
-			// Validate remaining package capacity on session
-
 			// Package's capacity is *not* infinite and must be checked
 			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($q) use ($package)
 			{
@@ -198,9 +197,8 @@ class BookingController extends Controller {
 
 			if( $usedUp >= $package->capacity )
 			{
+				// TODO Check for extra one-time packages for this session and their capacity
 
-				// Check for extra one-time packages for this session and their capacity
-				// TODO
 				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
 			}
 		}
