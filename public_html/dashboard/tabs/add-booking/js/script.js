@@ -127,6 +127,8 @@ $(document).on('click', '.remove-ticket', function() {
 	}else{
 		ticket.remove();
 	}
+
+	removeBookingTicket(id);
 });
 
 $(document).on('click', '.tickets-finish', function() {
@@ -343,6 +345,10 @@ function addBookingTicket(id) {
 	Ticket.getTicket(param, function success(data){
 		$("#session-tickets").append(sessionTicketsTemplate(data));
 	});
+}
+
+function removeBookingTicket(id) {
+	$("#session-tickets").find('[data-id="'+id+'"]').remove();
 }
 
 function compileSessionsList(params) {

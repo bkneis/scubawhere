@@ -167,7 +167,9 @@
 							<div class="form-group">
 								<label for="existing-customers" class="col-sm-4 control-label">Name</label>
 								<div class="col-sm-8">
-									<select id="existing-customers" name="existing-customers" class="form-control select2"></select>
+									<select id="existing-customers" name="existing-customers" class="form-control select2">
+										<option selected="selected" value="">Choose a customer...</option>
+									</select>
 									<script id="customers-list-template" type="text/x-handlebars-template">
 										{{#each customers}}
 											<option value="{{id}}">{{firstname}} {{lastname}} - {{email}}</option>
@@ -596,4 +598,4 @@
 <script src="/dashboard/js/Controllers/Customer.js"></script>
 <script src="/dashboard/js/Controllers/Addon.js"></script>
 <!--My scripts-->
-<script type="text/javascript" src="tabs/add-booking/js/frontend.js"></script>
+<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
