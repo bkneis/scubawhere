@@ -66,7 +66,13 @@
 					Boat for this session:&nbsp;
 					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{/if}}{{/if}}>
 						{{#each boats}}
-							<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+							{{#if deleted_at}}
+								{{#if selected}}
+									<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+								{{/if}}
+							{{else}}
+								<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+							{{/if}}
 						{{/each}}
 					</select>
 				</p>
@@ -146,7 +152,7 @@
 					</div>
 				{{else}}
 					<div style="margin-top: 1em; text-align: center; color: gray;">
-						Editing past sessions is not possible.
+						Past sessions cannot be edited.
 					</div>
 				{{/unless}}
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>

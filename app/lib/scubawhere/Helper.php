@@ -41,6 +41,22 @@ class Helper
 		}
 	}
 
+
+	// Check if date lies in the past (local time)
+	public static function isPast($datestring) {
+		$local_time = self::localTime();
+
+		if( !($local_time instanceof \DateTime) )
+			return $local_time;
+
+		$departure_start = new \DateTime($datestring);
+
+		if($departure_start < $local_time )
+			return true;
+
+		return false;
+	}
+
 	public static function booking_reference_number() {
 
 		$length = 4;

@@ -1,9 +1,13 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
 class Boat extends Ardent {
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
+
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
 
 	public static $rules = array(
@@ -37,5 +41,10 @@ class Boat extends Ardent {
 	public function tickets()
 	{
 		return $this->belongsToMany('Ticket')->withPivot('boatroom_id')->withTimestamps();
+	}
+
+	public function departures()
+	{
+		return $this->hasMany('Departure');
 	}
 }

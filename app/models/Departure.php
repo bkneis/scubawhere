@@ -4,8 +4,6 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 
 class Departure extends Ardent {
-	// Superseeded by traits as of the update to Laravel 4.2 (http://laravel.com/docs/upgrade#upgrade-4.2)
-	// protected $softDelete = true;
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
@@ -29,7 +27,7 @@ class Departure extends Ardent {
 
 	public function getCapacityAttribute()
 	{
-		return array( $this->bookingdetails()->count(), $this->boat()->first()->capacity );
+		return array( $this->bookingdetails()->count(), $this->boat()->withTrashed()->first()->capacity );
 	}
 
 	public function addons()
@@ -49,7 +47,7 @@ class Departure extends Ardent {
 
 	public function boat()
 	{
-		return $this->belongsTo('Boat');
+		return $this->belongsTo('Boat')->withTrashed();
 	}
 
 	public function bookings()

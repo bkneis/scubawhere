@@ -233,7 +233,7 @@ class DepartureController extends Controller {
 	{
 		$data = Input::only('start', 'boat_id');
 
-		$isPast = $this->isPast( $data['start'] );
+		$isPast = Helper::isPast( $data['start'] );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
@@ -284,7 +284,7 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
+		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
@@ -380,7 +380,7 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
+		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
@@ -433,7 +433,7 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
+		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
@@ -455,7 +455,7 @@ class DepartureController extends Controller {
 
 					$sessions->each( function($session)
 					{
-						if( $session->bookingdetails()->count() == 0 )
+						if( $session->bookingdetails()->count() === 0 )
 							$session->forceDelete();
 						else
 							$session->delete(); // SoftDelete
@@ -475,25 +475,10 @@ class DepartureController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('Cannot delete session. It has already been booked!')), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot delete session. It has been booked!')), 409 ); // 409 Conflict
 		}
 
 		return array('status' => 'OK. Session deleted');
-	}
-
-	// Check if date lies in the past (local time)
-	protected function isPast($datestring) {
-		$local_time = Helper::localTime();
-
-		if( !($local_time instanceof DateTime) )
-			return $local_time;
-
-		$departure_start = new DateTime($datestring);
-
-		if($departure_start < $local_time )
-			return true;
-
-		return false;
 	}
 
 }
