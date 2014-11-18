@@ -232,22 +232,111 @@
 						</li>
 						<div id="added-customers"></div>
 						<script id="added-customers-template" type="text/x-handlebars-template">
-							<li href="#" class="list-group-item" data-id="{{id}}">
+							<li href="#" class="list-group-item" data-id="{{id}}" data-lead="0" data-country-id="{{country_id}}">
 								<h4 class="list-group-item-heading">{{firstname}} {{lastname}} <small><span class="label label-warning is-lead"></span></small></h4>
 								<p class="list-group-item-text">
-									<a href="mailto:{{email}}">{{email}}</a><br>
+									<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
 									{{address_1}}<br>
 									{{city}}, {{county}}, {{postcode}}<br>
-									<abbr title="Phone">P:</abbr> {{phone}}
+									<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
 								</p>
-								<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-id="{{id}}">Edit</a>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer">Remove</a>
+								<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
+								<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer" data-id="{{id}}">Remove</a>
 								<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
 							</li>
 						</script>
 					</ul>
 				</div>
 			</div>
+				<div class="modal fade" id="edit-customer-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">Edit Customer</h4>
+							</div>
+							<form id="edit-customer-form" role="form">
+								<div class="modal-body">
+									<fieldset id="edit-customer-details"></fieldset>
+									<fieldset id="edit-customer-countries">
+										<div class="form-group">
+											<label for="country_id">Country</label>
+											<select id="country_id" name="country_id" class="form-control select2">
+												<option value="">Choose Country...</option>
+											</select>
+											<script id="countries-template" type="text/x-handlebars-template">
+												{{#each countries}}
+													<option value="{{id}}">{{name}}</option>
+												{{/each}}
+											</script>
+										</div>
+									</fieldset>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary">Save changes</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<script id="edit-customer-template" type="text/x-handlebars-template">
+					<input type="hidden" name="id" value="{{id}}">
+					<div class="form-group">
+						<label for="email" class="col-sm-4 control-label">Email</label>
+						<div class="col-sm-8">
+							<input type="email" name="email" class="form-control" placeholder="Email" value="{{email}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-4 control-label">First Name</label>
+						<div class="col-sm-8">
+							<input type="text" name="firstname" class="form-control" placeholder="First Name" value="{{firstname}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-4 control-label">Last Name</label>
+						<div class="col-sm-8">
+							<input type="text" name="lastname" class="form-control" placeholder="Last Name" value="{{lastname}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="address_1" class="col-sm-4 control-label">Address 1</label>
+						<div class="col-sm-8">
+							<input type="text" name="address_1" class="form-control" placeholder="Address 1" value="{{address_1}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="address_2" class="col-sm-4 control-label">Address 2</label>
+						<div class="col-sm-8">
+							<input type="text" name="address_2" class="form-control" placeholder="Address 2" value="{{address_2}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="city" class="col-sm-4 control-label">City</label>
+						<div class="col-sm-8">
+							<input type="text" name="city" class="form-control" placeholder="City" value="{{city}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="county" class="col-sm-4 control-label">County</label>
+						<div class="col-sm-8">
+							<input type="text" name="county" class="form-control" placeholder="County" value="{{county}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="postcode" class="col-sm-4 control-label">Postcode</label>
+						<div class="col-sm-8">
+							<input type="text" name="postcode" class="form-control" placeholder="Post Code" value="{{postcode}}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="phone" class="col-sm-4 control-label">Phone</label>
+						<div class="col-sm-8">
+							<input type="text" name="phone" class="form-control" placeholder="Phone" value="{{phone}}">
+						</div>
+					</div>
+				</script>
 			<div class="row">
 				<div class="col-xs-12">
 					<a href="javascript:void(0);" class="btn btn-primary customers-finish pull-right">Next</a>
