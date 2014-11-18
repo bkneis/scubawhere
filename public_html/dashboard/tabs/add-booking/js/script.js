@@ -25,8 +25,6 @@ Handlebars.registerHelper("friendlyDate", function(d) {
 
 Handlebars.registerHelper("priceRange", function(prices) {
 	
-	console.log(prices);
-
 	if(prices.length > 1) {
 		var min=null, max=null;
 		$.each(prices, function(i,v) {
@@ -44,7 +42,6 @@ Handlebars.registerHelper("priceRange", function(prices) {
 		return prices[0].decimal_price;
 	}
 
-	console.log(prices);
 });
 
 // Load all of the agents, tickets and packages for dive center to select
@@ -83,7 +80,8 @@ $(function(){
 	var countriesTemplate = Handlebars.compile($("#countries-template").html());
 
 	$.get("/api/country/all", function(data) {
-		$("#country_id").append(countriesTemplate({countries:data}));
+		$("#add-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
+		$("#edit-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
 	});
 
 });
@@ -295,9 +293,9 @@ $(document).on('click', '.assign-session', function() {
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
 	if(customerId == booking.lead_id) {
-		var isLead = true;
+		var isLead = 1;
 	}else{
-		var isLead = false;
+		var isLead = 0;
 	}
 
 	var params = [
@@ -308,6 +306,8 @@ $(document).on('click', '.assign-session', function() {
 		{name: "ticket_id", value: ticketId},
 		{name: "session_id", value: sessionId}
 	];
+
+	console.log(params);
 
 	Booking.addDetails(params, function(data) {
 		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
@@ -392,8 +392,6 @@ $(document).on('click', '.addon-finish', function() {
 			{name: "quantity", value: $(v).find(".qty").text()}
 		];
 
-		console.log(params);
-
 		Booking.addAddon(params, function(data) {
 			btn.html('Save');
 			$('[data-target="#extra-tab"]').tab('show');
@@ -424,6 +422,7 @@ $(document).ready(function() {
 	$('#agent-info').hide();
 	$('#existing-customers').select2();
 	$('#trips').select2();
+	$('#country_id').select2();
 
 	//Form Wizard
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

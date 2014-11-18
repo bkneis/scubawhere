@@ -212,6 +212,57 @@
 											<input id="customer-lastname" name="lastname" class="form-control">
 										</div>
 									</div>
+									<div class="form-group">
+										<label for="address_1" class="col-sm-4 control-label">Address 1</label>
+										<div class="col-sm-8">
+											<input type="text" name="address_1" class="form-control" placeholder="Address 1">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="address_2" class="col-sm-4 control-label">Address 2</label>
+										<div class="col-sm-8">
+											<input type="text" name="address_2" class="form-control" placeholder="Address 2">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="city" class="col-sm-4 control-label">City</label>
+										<div class="col-sm-8">
+											<input type="text" name="city" class="form-control" placeholder="City">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="county" class="col-sm-4 control-label">County</label>
+										<div class="col-sm-8">
+											<input type="text" name="county" class="form-control" placeholder="County">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="postcode" class="col-sm-4 control-label">Postcode</label>
+										<div class="col-sm-8">
+											<input type="text" name="postcode" class="form-control" placeholder="Post Code">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="phone" class="col-sm-4 control-label">Phone</label>
+										<div class="col-sm-8">
+											<input type="text" name="phone" class="form-control" placeholder="Phone">
+										</div>
+									</div>
+									<fieldset id="add-customer-countries">
+										<div class="form-group">
+											<label for="country_id" class="col-sm-4 control-label">Country</label>
+											<div class="col-sm-8">
+												<select id="country_id" name="country_id" class="form-control select2">
+													<option value="">Choose Country...</option>
+												</select>
+											</div>
+											<script id="countries-template" type="text/x-handlebars-template">
+												{{#each countries}}
+													<option value="{{id}}">{{name}}</option>
+												{{/each}}
+											</script>
+										</div>
+									</fieldset>
 								</div>
 								<div class="panel-footer">
 									<div class="row">
@@ -246,6 +297,11 @@
 							</li>
 						</script>
 					</ul>
+					<div class="row">
+						<div class="col-xs-12">
+							<a href="javascript:void(0);" class="btn btn-primary customers-finish pull-right">Next</a>
+						</div>
+					</div>
 				</div>
 			</div>
 				<div class="modal fade" id="edit-customer-modal">
@@ -337,11 +393,6 @@
 						</div>
 					</div>
 				</script>
-			<div class="row">
-				<div class="col-xs-12">
-					<a href="javascript:void(0);" class="btn btn-primary customers-finish pull-right">Next</a>
-				</div>
-			</div>
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="session-tab">
