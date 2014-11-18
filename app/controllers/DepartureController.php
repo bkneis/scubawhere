@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Helper;
 
 class DepartureController extends Controller {
 
@@ -481,23 +482,10 @@ class DepartureController extends Controller {
 
 	// Check if date lies in the past (local time)
 	protected function isPast($datestring) {
-		$earth_uri       = "http://www.earthtools.org/timezone/".Auth::user()->latitude."/".Auth::user()->longitude;
-		$earth_response  = simplexml_load_file($earth_uri);
-		try
-		{
-			$local_time = new DateTime($earth_response->localtime);
-		}
-		catch(Exception $e)
-		{
-			// Another solution that has maybe more relieablity: http://worldtime.io/api/geo
+		$local_time = Helper::localTime();
 
-			Mail::send('emails.error-report', array('message' => 'Earthtools API is not available!', 'variable' => $earth_response), function($message)
-			{
-				$message->to('soren@scubawhere.com')->subject('Scubawhere Earthtools Error');
-			});
-
-			return Response::json( array('errors' => array('The earthtools.org API is not available. Please try again later or contact scubawhere support.')), 500 ); // 500 Internal Server Error
-		}
+		if( $local_time instanceof Response )
+			return $local_time;
 
 		$departure_start = new DateTime($datestring);
 
