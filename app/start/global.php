@@ -102,7 +102,7 @@ $app_start_time = microtime(true);
 App::finish(function() use ($app_start_time) {
 
 	// Do not log file requests
-	if( strpos(Request::path(), '.') === false )
+	if( strpos(Request::path(), '.') !== false )
 		return true;
 
 	// Do not log status page requests
