@@ -197,27 +197,32 @@ class DepartureController extends Controller {
 		}
 
 		// Filter by capacity/availability
-		$departures = $departures->filter(function($departure) use ($package, $options)
+		if( !$options['with_full'] )
 		{
-			$boatCapacity = $departure->getCapacityAttribute();
-			if( $boatCapacity[0] >= $boatCapacity[1] )
+			$departures = $departures->filter(function($departure) use ($package, $options)
 			{
-				// Session/Boat full/overbooked
-				if( !$options['with_full'] )
-					return false;
-			}
-
-			if( $package )
-			{
-				$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
-				if( $usedUp >= $package->capacity )
+				$capacity = $departure->getCapacityAttribute();
+				if( $capacity[0] >= $capacity[1] )
 				{
+					// Session/Boat full/overbooked
 					return false;
 				}
-			}
 
-			return true;
-		});
+				if( $package && !empty($package->capacity) )
+				{
+					$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
+					{
+						$query->where('package_id', $package->id);
+					})->count();
+					if( $usedUp >= $package->capacity )
+					{
+						return false;
+					}
+				}
+
+				return true;
+			});
+		}
 
 		return $departures;
 	}
