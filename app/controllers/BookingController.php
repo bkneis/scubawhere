@@ -192,11 +192,10 @@ class BookingController extends Controller {
 		if( isset($package) && !empty($package->capacity) )
 		{
 			// Package's capacity is *not* infinite and must be checked
-			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($q) use ($package)
+			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
 			{
-				$q->where('package_id', $package->id);
+				$query->where('package_id', $package->id);
 			})->count();
-
 			if( $usedUp >= $package->capacity )
 			{
 				// TODO Check for extra one-time packages for this session and their capacity
