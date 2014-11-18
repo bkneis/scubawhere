@@ -435,8 +435,8 @@ class DepartureController extends Controller {
 		$isPast = $this->isPast( $departure->start );
 		if( $isPast instanceof Response )
 			return $isPast;
-		if( !empty($departure->deleted_at) || $isPast )
-			return Response::json( array('errors' => array('Deleting past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
+		if( $isPast )
+			return Response::json( array('errors' => array('Deleting past sessions is not allowed.')), 412 ); // 412 Precondition Failed
 
 		if( $departure->timetable_id )
 		{

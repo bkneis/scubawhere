@@ -549,12 +549,12 @@ function showModalWindow(eventObject) {
 	}
 	eventObject.boats[ eventObject.session.boat_id ].selected = true;
 
-	// Check if session lies in the past or is deactivated and consequently disable editing
-	if( typeof eventObject.deactivated === 'undefined' )
-		if( eventObject.session.deleted_at || moment().diff(eventObject.start) > 0 )
-			eventObject.deactivated = true;
+	// Check if session lies in the past
+	if( typeof eventObject.isPast === 'undefined' )
+		if( moment().diff(eventObject.start) > 0 )
+			eventObject.isPast = true;
 		else
-			eventObject.deactivated = false;
+			eventObject.isPast = false;
 
 	$('#modalWindows')
 	.append( window.sw.sessionTemplate(eventObject) )        // Create the modal
