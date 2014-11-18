@@ -23,6 +23,30 @@ Handlebars.registerHelper("friendlyDate", function(d) {
 	return friendlyDate(d);
 });
 
+Handlebars.registerHelper("priceRange", function(prices) {
+	
+	console.log(prices);
+
+	if(prices.length > 1) {
+		var min=null, max=null;
+		$.each(prices, function(i,v) {
+			var price = parseFloat(v.decimal_price).toFixed(2);
+			if ((min===null) || (price < min)) { min = price; }
+			if ((max===null) || (price > max)) { max = price; }
+		});
+		if(min != max) {
+			return min+" - "+max;
+		}else{
+			return min;
+		}
+  		
+	}else{
+		return prices[0].decimal_price;
+	}
+
+	console.log(prices);
+});
+
 // Load all of the agents, tickets and packages for dive center to select
 $(function(){
 
