@@ -80,6 +80,12 @@ $(function(){
 		$("#existing-customers").append(customersTemplate({customers:data}));
 	});
 
+	var countriesTemplate = Handlebars.compile($("#countries-template").html());
+
+	$.get("/api/country/all", function(data) {
+		$("#country_id").append(countriesTemplate({countries:data}));
+	});
+
 });
 
 var token = getToken();
@@ -181,16 +187,11 @@ $(document).on('click', '.edit-customer', function() {
 	Customer.getCustomer("id="+id, function(data) {
 		$("#edit-customer-details").html('').append(editCustomerTemplate(data));
 
-		var countriesTemplate = Handlebars.compile($("#countries-template").html());
-		$.get("/api/country/all", function(data) {
-			$("#country_id").html('').append(countriesTemplate({countries:data}));
-
-			$('#country_id option').each(function(i,v) {
-				if($(v).val() == id) {
-					$('#country_id').val(id);
-				}
-			});
-		});
+		if(data.country_id) {
+			$('#country_id').val(data.country_id);
+		}else{
+			$('#country_id').val("");
+		}
 	});
 });
 
