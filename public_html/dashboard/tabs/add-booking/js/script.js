@@ -288,8 +288,6 @@ $(document).on('click', '.assign-session', function() {
 	var customerId = $('#session-customers').children('.active').first().data('id');
 	var ticketId = ticket.data('id');
 
-	sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
-
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
 	if(customerId == booking.lead_id) {
@@ -313,6 +311,7 @@ $(document).on('click', '.assign-session', function() {
 		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
 
 		compileSessionsList($("#session-filters").serialize());
+		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
 		
 		
 		if($('#session-tickets').children('.list-group-item').length == 1) {
@@ -329,6 +328,8 @@ $(document).on('click', '.assign-session', function() {
 
 $(document).on('click', '.sessions-finish', function() {
 	$(this).html('<i class="fa fa-cog fa-spin"></i> Loading...');
+	console.log("===== Sessions =====");
+	console.log(sessions);
 	generateAddonSessions(sessions);
 });
 
