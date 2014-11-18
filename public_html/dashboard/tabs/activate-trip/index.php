@@ -133,10 +133,13 @@
 							<button class="submit-session bttn big-bttn blueb">Activate</button>
 						{{else}}
 							{{#unless isPast}}
-								<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
 								{{#unless session.deleted_at}}
+									<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
 									<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
 									<button class="update-session bttn big-bttn blueb">Update</button>
+								{{else}}
+									<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
+									<input type="radio" name="handle_timetable" value="only_this" checked style="visibility: hidden;">
 								{{/unless}}
 							{{/unless}}
 						{{/if}}

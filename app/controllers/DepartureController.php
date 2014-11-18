@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 
 class DepartureController extends Controller {
@@ -233,7 +234,7 @@ class DepartureController extends Controller {
 		$data = Input::only('start', 'boat_id');
 
 		$isPast = $this->isPast( $data['start'] );
-		if( $isPast instanceof Response )
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Creating sessions in the past is not allowed.')), 412 ); // 412 Precondition Failed
@@ -284,7 +285,7 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
 			return Response::json( array('errors' => array('Updating past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
@@ -380,7 +381,7 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Deactivating past sessions is not allowed.')), 412 ); // 412 Precondition Failed
@@ -433,7 +434,7 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Deleting past sessions is not allowed.')), 412 ); // 412 Precondition Failed
@@ -484,7 +485,7 @@ class DepartureController extends Controller {
 	protected function isPast($datestring) {
 		$local_time = Helper::localTime();
 
-		if( $local_time instanceof Response )
+		if( !($local_time instanceof DateTime) )
 			return $local_time;
 
 		$departure_start = new DateTime($datestring);
