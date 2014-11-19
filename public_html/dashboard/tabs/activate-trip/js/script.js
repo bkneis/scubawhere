@@ -267,7 +267,8 @@ $(function() {
 			eventObject.session.id = data.id;
 
 			// console.log(eventObject.session);
-			updateCalendarEntry(eventObject, true);
+			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+			$('#calendar').fullCalendar('refetchEvents');
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();
