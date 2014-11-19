@@ -284,13 +284,19 @@ $(document).on('click', '.assign-session', function() {
 	var ticket = $('#session-tickets').children('.active').first();
 	var btn = $(this);
 
-	var sessionId = $(this).data('id');
-	var customerId = $('#session-customers').children('.active').first().data('id');
-	var ticketId = ticket.data('id');
+	var bookingdetail = {};
+
+	bookingdetail.sessionId = $(this).data('id');
+	bookingdetail.sessionStart = $(this).parents('tr').find('.session-start').text();
+	bookingdetail.sessionTrip = $(this).parents('tr').find('.session-trip').text().trim();
+	bookingdetail.customerId = $('#session-customers').children('.active').first().data('id');
+	bookingdetail.customerName = $('#session-customers').children('.active').first().text().trim();
+	bookingdetail.ticketId = ticket.data('id');
+	bookingdetail.ticketName = ticket.text().trim();
 
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
-	if(customerId == booking.lead_id) {
+	if(bookingdetail.customerId == booking.lead_id) {
 		var isLead = 1;
 	}else{
 		var isLead = 0;
@@ -299,37 +305,68 @@ $(document).on('click', '.assign-session', function() {
 	var params = [
 		{name: "_token", value: window.token},
 		{name: "booking_id", value: booking.id},
-		{name: "customer_id", value: customerId},
+		{name: "customer_id", value: bookingdetail.customerId},
 		{name: "is_lead", value: isLead},
-		{name: "ticket_id", value: ticketId},
-		{name: "session_id", value: sessionId}
+		{name: "ticket_id", value: bookingdetail.ticketId},
+		{name: "session_id", value: bookingdetail.sessionId}
 	];
 
-	console.log(params);
-
 	Booking.addDetails(params, function(data) {
-		$("#free-spaces"+sessionId).html('<i class="fa fa-refresh fa-spin"></i>');
+		addToAssignedSessions(bookingdetail);
+
+		$("#free-spaces"+(bookingdetail.sessionId)).html('<i class="fa fa-refresh fa-spin"></i>');
 
 		compileSessionsList($("#session-filters").serialize());
-		sessions.push({"id": sessionId, "customer_id": customerId, "ticket_id": ticketId});
-		
-		
-		if($('#session-tickets').children('.list-group-item').length == 1) {
+		sessions.push({"id": bookingdetail.sessionId, "customer_id": bookingdetail.customerId, "ticket_id": bookingdetail.ticketId});
+		console.log(sessions);
+			
+		if($('#session-tickets').children('.unused-ticket').length == 1) {
 			$('.session-requirements').slideUp();
 			$('.assign-session').attr("disabled", "disabled");
 		}
 
-		ticket.remove();
-	}, function (xhr) {
-		console.log(xhr.responseText);
+		ticket.removeClass('unused-ticket');
+	}, function() {
 		btn.html('Assign');
 	});
 });
 
+$(document).on('click', '.unassign-session', function() {
+	var item = $(this).parents('li');
+	var customerId = $(this).data('customer-id');
+	var sessionId = $(this).data('session-id');
+	var ticketId = $(this).data('ticket-id');
+
+	$(this).html('<i class="fa fa-cog fa-spin"></i>');
+
+	var params = [
+		{name: "_token", value: window.token},
+		{name: "booking_id", value: booking.id},
+		{name: "customer_id", value: customerId},
+		{name: "session_id", value: sessionId}
+	];
+
+	//Remove the session-customer-ticket at end of loop otherwise loop will carry on through deleted
+	var maxLoops = sessions.length;
+	$.each(sessions, function(i,v) {
+		if(v.id == sessionId) {
+			var r = i;
+		}
+
+		if(i == (maxLoops - 1)) {
+			sessions.splice(r,1);
+		}
+	});
+
+	Booking.removeDetails(params, function() {
+		item.remove();
+		$('#session-tickets').find('[data-id="'+ticketId+'"]').addClass('unused-ticket');
+	});
+	
+});
+
 $(document).on('click', '.sessions-finish', function() {
 	$(this).html('<i class="fa fa-cog fa-spin"></i> Loading...');
-	console.log("===== Sessions =====");
-	console.log(sessions);
 	generateAddonSessions(sessions);
 });
 
@@ -512,6 +549,12 @@ function addToAddonSummary(addon) {
 
 	var addonsSummaryTemplate = Handlebars.compile($("#addons-summary-template").html());
 	$("#addons-summary").html('').append(addonsSummaryTemplate({addonsSummary:handleSummary}));
+}
+
+function addToAssignedSessions(bookingDetail) {
+	console.log(bookingDetail);
+	var addedBookingdetailsTemplate = Handlebars.compile($("#added-bookingdetails-template").html());
+	$("#added-bookingdetails").append(addedBookingdetailsTemplate(bookingDetail));
 }
 
 //Add the session to the addons page

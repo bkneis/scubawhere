@@ -425,7 +425,7 @@
 								</div>
 							</div>
 							<script id="session-tickets-template" type="text/x-handlebars-template">
-								<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
+								<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio unused-ticket">
 									{{name}}
 								</a>
 							</script>
@@ -495,9 +495,9 @@
 											{{#each sessions}}
 											{{#unless deleted_at}}
 											<tr>
-												<td>{{friendlyDate start}}</td>
-												<td>{{tripFinish start trip.duration}}</td>
-												<td>{{trip.name}}</td>
+												<td class="session-start">{{friendlyDate start}}</td>
+												<td class="session-end">{{tripFinish start trip.duration}}</td>
+												<td class="session-trip">{{trip.name}}</td>
 												<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
 												<td>{{boat.name}}</td>
 												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
@@ -512,16 +512,17 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<ul class="list-group">
+					<ul class="list-group" id="added-bookingdetails">
 						<li href="#" class="list-group-item active">
 							<h4 class="list-group-item-heading">Assigned Sessions</h4>
 						</li>
-						<div id="added-bookingdetails"></div>
 						<script id="added-bookingdetails-template" type="text/x-handlebars-template">
-							<li href="#" class="list-group-item">
-								<h4 class="list-group-item-heading"></h4>
-								<p class="list-group-item-text"></p>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-bookingdetail">Remove</a>
+							<li class="list-group-item">
+								<h4 class="list-group-item-heading"><span class="customer-name">{{customerName}}</span></h4>
+								<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticketName}}</span></p>
+								<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{sessionTrip}}</span></p>
+								<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{sessionStart}}</span></p>
+								<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-customer-id="{{customerId}}" data-session-id="{{sessionId}}" data-ticket-id="{{ticketId}}">Unassign</a>
 							</li>
 						</script>
 					</ul>
@@ -553,12 +554,12 @@
 						</div>
 						<script id="addon-sessions-template" type="text/x-handlebars-template">
 							{{#each sessions}}
-							<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}"  data-customer-id="{{customer_id}}">
-								<h4 class="list-group-item-heading"><span class="customer-name">{{customer}}</span></h4>
-								<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket}}</span></p>
-								<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{trip}}</span></p>
-								<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate start}}</span></p>
-							</a>
+								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}"  data-customer-id="{{customer_id}}">
+									<h4 class="list-group-item-heading"><span class="customer-name">{{customer}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{trip}}</span></p>
+									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate start}}</span></p>
+								</a>
 							{{/each}}
 						</script>
 					</div>
