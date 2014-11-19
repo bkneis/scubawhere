@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use ScubaWhere\Helper;
 
 class BoatController extends Controller {
 
@@ -25,6 +26,11 @@ class BoatController extends Controller {
 	public function getAll()
 	{
 		return Auth::user()->boats()->with('boatrooms')->get();
+	}
+
+	public function getAllWithTrashed()
+	{
+		return Auth::user()->boats()->withTrashed()->with('boatrooms')->get();
 	}
 
 	public function postAdd()
@@ -156,12 +162,25 @@ class BoatController extends Controller {
 
 		try
 		{
-			// $boat->forceDelete();
-			$boat->delete();
+			$boat->forceDelete();
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The boat can not be removed because it is still used in sessions.')), 409); // 409 Conflict
+			if( $boat->tickets()->count() > 0 )
+				return Response::json( array('errors' => array('The boat can not be removed because it is still used in tickets.')), 409); // 409 Conflict
+
+			// Check if the boat is only used in past sessions
+			// Gets latest session's start date and compares to user's local time
+			$isPast = Helper::isPast( $boat->departures()->withTrashed()->orderBy('start', 'DESC')->first()->start );
+			if( gettype($isPast) === 'object' ) // Is error Response
+				return $isPast;
+			if( !$isPast )
+				return Response::json( array('errors' => array('The boat can not be removed because it is still used in future sessions.')), 409); // 409 Conflict
+
+			// Need to recreate the Boat object, because otherwise it will try to execute the forceDelete SQL query
+			// TODO Is there a better way?
+			$boat = Auth::user()->boats()->find( Input::get('id') );
+			$boat->delete(); // Soft delete
 		}
 
 		return array('status' => 'Ok. Boat deleted');

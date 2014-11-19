@@ -149,15 +149,17 @@ class BookingController extends Controller {
 		if( !is_bool($is_lead) )
 			$is_lead = false;
 
-		// Validate that the customer is not already booked for this session
-		$check = Auth::user()->bookings()->whereHas('bookingdetails', function($query) use ($customer, $departure)
-		{
-			$query
-				->where('customer_id', $customer->id)
-				->where('session_id', $departure->id);
-		})->count();
+		// Validate that the customer is not already booked for this session on another booking
+		$check = Auth::user()->bookings()
+			->whereNotIn('id', array($booking->id))
+			->whereHas('bookingdetails', function($query) use ($customer, $departure)
+			{
+				$query
+					->where('customer_id', $customer->id)
+					->where('session_id', $departure->id);
+			})->count();
 		if( $check > 0 )
-			return Response::json( array('errors' => array('The customer is already booked on the session!')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The customer is already booked on this session in another booking!')), 403 ); // 403 Forbidden
 
 		// Validate that the ticket/package can be booked for this session
 		try
@@ -192,11 +194,10 @@ class BookingController extends Controller {
 		if( isset($package) && !empty($package->capacity) )
 		{
 			// Package's capacity is *not* infinite and must be checked
-			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($q) use ($package)
+			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
 			{
-				$q->where('package_id', $package->id);
+				$query->where('package_id', $package->id);
 			})->count();
-
 			if( $usedUp >= $package->capacity )
 			{
 				// TODO Check for extra one-time packages for this session and their capacity

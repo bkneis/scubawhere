@@ -32,7 +32,7 @@
 					{{#if isNew}}
 						New session
 					{{else}}
-						{{#unless deactivated}}
+						{{#unless session.deleted_at}}
 							Update session
 						{{/unless}}
 					{{/if}}
@@ -48,8 +48,8 @@
 						<td><strong>Departure time</strong></td>
 						<td>
 							<small><span style="display: inline-block; width: 49px">hour</span><span>minutes</span></small><br>
-							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;"{{#if deactivated}} disabled{{/if}}>:
-							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"{{#if deactivated}} disabled{{/if}}> h
+							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;"{{#if session.deleted_at}} disabled{{/if}}>:
+							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"{{#if session.deleted_at}} disabled{{/if}}> h
 						</td>
 					</tr>
 					<tr>
@@ -64,14 +64,21 @@
 
 				<p>
 					Boat for this session:&nbsp;
-					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if deactivated}} disabled{{/if}}{{/if}}>
+					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{/if}}{{/if}}>
 						{{#each boats}}
-							<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+							{{#if deleted_at}}
+								{{#if selected}}
+									<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+								{{/if}}
+							{{else}}
+								<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+							{{/if}}
 						{{/each}}
 					</select>
 				</p>
 
-				{{#unless deactivated}}
+				{{#unless isPast}}
+					{{#unless session.deleted_at}}
 					{{#unless isNew}}
 					{{#unless session.timetable_id}}
 						<label><input type="checkbox" onchange="toggleTimetableForm();"> <h3 style="display: inline-block;">Define a repeating timetable</h3></label>
@@ -124,20 +131,28 @@
 						</div>
 					{{/unless}}
 					{{/unless}}
+					{{/unless}}
 
 					<div style="margin-top: 1em; text-align: right">
 						{{#if isNew}}
 							<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
 							<button class="submit-session bttn big-bttn blueb">Activate</button>
 						{{else}}
-							<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
-							<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-							<button class="update-session bttn big-bttn blueb">Update</button>
+							{{#unless isPast}}
+								{{#unless session.deleted_at}}
+									<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
+									<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
+									<button class="update-session bttn big-bttn blueb">Update</button>
+								{{else}}
+									<button class="delete-session bttn redb" style="float:left; line-height: 2em; margin-top: 0.7em;">Delete</button>
+									<input type="radio" name="handle_timetable" value="only_this" checked style="visibility: hidden;">
+								{{/unless}}
+							{{/unless}}
 						{{/if}}
 					</div>
 				{{else}}
 					<div style="margin-top: 1em; text-align: center; color: gray;">
-						Editing past or deactivated sessions is not allowed.
+						Past sessions cannot be edited.
 					</div>
 				{{/unless}}
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>

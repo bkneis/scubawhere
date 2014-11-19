@@ -17,6 +17,46 @@ class Helper
 		return Purifier::clean($string);
 	}
 
+	public static function localTime()
+	{
+		$earth_uri       = "http://www.earthtools.org/timezone/".\Auth::user()->latitude."/".\Auth::user()->longitude;
+		$earth_response  = simplexml_load_file($earth_uri);
+		try
+		{
+			return new \DateTime($earth_response->localtime);
+		}
+		catch(\Exception $e)
+		{
+			// Another solution that has maybe more reliablity: http://worldtime.io/api/geo
+
+			\Mail::send('emails.error-report', array(
+				'content' => 'Earthtools API is not available! User: '.\Auth::user()->username.', Route: '.\Request::method().' '.\Request::path(),
+				'variable' => $earth_response
+			), function($message)
+			{
+				$message->to('soren@scubawhere.com')->subject('Scubawhere Earthtools Error');
+			});
+
+			return \Response::json( array('errors' => array('The earthtools.org API is not available. Please try again later or contact scubawhere support.')), 500 ); // 500 Internal Server Error
+		}
+	}
+
+
+	// Check if date lies in the past (local time)
+	public static function isPast($datestring) {
+		$local_time = self::localTime();
+
+		if( !($local_time instanceof \DateTime) )
+			return $local_time;
+
+		$departure_start = new \DateTime($datestring);
+
+		if($departure_start < $local_time )
+			return true;
+
+		return false;
+	}
+
 	public static function booking_reference_number() {
 
 		$length = 4;

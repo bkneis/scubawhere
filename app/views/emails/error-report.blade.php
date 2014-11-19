@@ -7,10 +7,10 @@
 <body>
 	<h1>Error Report</h1>
 	<p>
-		{{{ $message }}}
+		{{ $content }}
 	</p>
 	<p>
-		{{{ print_r($variable, true) }}}
+		{{ var_dump($variable) }}
 	<p>
 </body>
 </html>

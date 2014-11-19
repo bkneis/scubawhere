@@ -97,6 +97,28 @@ require app_path().'/filters.php';
 |
 */
 
+// Register app response time tracking
+$app_start_time = microtime(true);
+App::finish(function() use ($app_start_time) {
+
+	// Do not log file requests
+	if( strpos(Request::path(), '.') !== false )
+		return true;
+
+	// Do not log status page requests
+	if(Request::path() === 'status')
+		return true;
+
+	// Set performance log file location
+	Log::useFiles(storage_path().'/logs/performance.log');
+
+	// Log app execution duration with HTTP method and requested route
+	Log::info( round( (microtime(true) - $app_start_time) * 1000, 3 ) . ' ' . Request::method() . " /" . Request::path() );
+
+	// Restore original log file location - not necessary, because this runs after the response has been sent and the application finished
+	// Log::useFiles(storage_path().'/logs/laravel.log');
+});
+
 Validator::extend('valid_json', function($attribute, $value, $parameters)
 {
 	return json_decode($value) != null;

@@ -24,6 +24,7 @@ return array(
     'AddQuantityColumnToAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_14_010948_add_quantity_column_to_addon_bookingdetail_pivot_table.php',
     'AddRegisterDetailsToCompanies' => $baseDir . '/app/database/migrations/2014_11_03_123343_add_register_details_to_companies.php',
     'AddRememberTokenToCompaniesBecauseOfLaravelUpdate' => $baseDir . '/app/database/migrations/2014_05_08_171023_add_remember_token_to_companies_because_of_laravel_update.php',
+    'AddSoftDeletionToBoatsTable' => $baseDir . '/app/database/migrations/2014_11_18_165840_add_soft_deletion_to_boats_table.php',
     'Addon' => $baseDir . '/app/models/Addon.php',
     'AddonController' => $baseDir . '/app/controllers/AddonController.php',
     'AddonModelTest' => $baseDir . '/app/tests/unit/models/AddonModelTest.php',

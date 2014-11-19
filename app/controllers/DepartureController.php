@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use ScubaWhere\Helper;
 
 class DepartureController extends Controller {
 
@@ -197,27 +199,32 @@ class DepartureController extends Controller {
 		}
 
 		// Filter by capacity/availability
-		$departures = $departures->filter(function($departure) use ($package, $options)
+		if( !$options['with_full'] )
 		{
-			$boatCapacity = $departure->getCapacityAttribute();
-			if( $boatCapacity[0] >= $boatCapacity[1] )
+			$departures = $departures->filter(function($departure) use ($package, $options)
 			{
-				// Session/Boat full/overbooked
-				if( !$options['with_full'] )
-					return false;
-			}
-
-			if( $package )
-			{
-				$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
-				if( $usedUp >= $package->capacity )
+				$capacity = $departure->getCapacityAttribute();
+				if( $capacity[0] >= $capacity[1] )
 				{
+					// Session/Boat full/overbooked
 					return false;
 				}
-			}
 
-			return true;
-		});
+				if( $package && !empty($package->capacity) )
+				{
+					$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
+					{
+						$query->where('package_id', $package->id);
+					})->count();
+					if( $usedUp >= $package->capacity )
+					{
+						return false;
+					}
+				}
+
+				return true;
+			});
+		}
 
 		return $departures;
 	}
@@ -226,8 +233,8 @@ class DepartureController extends Controller {
 	{
 		$data = Input::only('start', 'boat_id');
 
-		$isPast = $this->isPast( $data['start'] );
-		if( $isPast instanceof Response )
+		$isPast = Helper::isPast( $data['start'] );
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Creating sessions in the past is not allowed.')), 412 ); // 412 Precondition Failed
@@ -277,8 +284,8 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
 			return Response::json( array('errors' => array('Updating past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
@@ -373,8 +380,8 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Deactivating past sessions is not allowed.')), 412 ); // 412 Precondition Failed
@@ -426,11 +433,11 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = $this->isPast( $departure->start );
-		if( $isPast instanceof Response )
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
-		if( !empty($departure->deleted_at) || $isPast )
-			return Response::json( array('errors' => array('Deleting past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
+		if( $isPast )
+			return Response::json( array('errors' => array('Deleting past sessions is not allowed.')), 412 ); // 412 Precondition Failed
 
 		if( $departure->timetable_id )
 		{
@@ -448,7 +455,7 @@ class DepartureController extends Controller {
 
 					$sessions->each( function($session)
 					{
-						if( $session->bookingdetails()->count() == 0 )
+						if( $session->bookingdetails()->count() === 0 )
 							$session->forceDelete();
 						else
 							$session->delete(); // SoftDelete
@@ -468,38 +475,10 @@ class DepartureController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('Cannot delete session. It has already been booked!')), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot delete session. It has been booked!')), 409 ); // 409 Conflict
 		}
 
 		return array('status' => 'OK. Session deleted');
-	}
-
-	// Check if date lies in the past (local time)
-	protected function isPast($datestring) {
-		$earth_uri       = "http://www.earthtools.org/timezone/".Auth::user()->latitude."/".Auth::user()->longitude;
-		$earth_response  = simplexml_load_file($earth_uri);
-		try
-		{
-			$local_time = new DateTime($earth_response->localtime);
-		}
-		catch(Exception $e)
-		{
-			// Another solution that has maybe more relieablity: http://worldtime.io/api/geo
-
-			Mail::send('emails.error-report', array('message' => 'Earthtools API is not available!', 'variable' => $earth_response), function($message)
-			{
-				$message->to('soren@scubawhere.com')->subject('Scubawhere Earthtools Error');
-			});
-
-			return Response::json( array('errors' => array('The earthtools.org API is not available. Please try again later or contact scubawhere support.')), 500 ); // 500 Internal Server Error
-		}
-
-		$departure_start = new DateTime($datestring);
-
-		if($departure_start < $local_time )
-			return true;
-
-		return false;
 	}
 
 }

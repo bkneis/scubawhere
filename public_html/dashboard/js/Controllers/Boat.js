@@ -8,6 +8,10 @@ var Boat = {
 		$.get("/api/boat/all", handleData);
 	},
 
+	getAllWithTrashed : function(handleData) {
+		$.get("/api/boat/all-with-trashed", handleData);
+	},
+
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",

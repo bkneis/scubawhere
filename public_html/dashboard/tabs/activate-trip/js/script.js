@@ -23,7 +23,7 @@ $(function() {
 		initDraggables();
 	});
 
-	Boat.getAll(function(data) {
+	Boat.getAllWithTrashed(function(data) {
 		window.boats = _.indexBy(data, 'id');
 	});
 
@@ -185,18 +185,6 @@ $(function() {
 		},
 	});
 
-	/* HACK	*/
-	/* setTimeout(function() {
-		$('#calendar').fullCalendar( 'today' );
-	}, 100); */
-
-	$('#modalWindows').on('change', '.boatSelect', function(event) {
-		var eventObject = $(event.target).closest('.reveal-modal').data('eventObject');
-
-		// Assign selected value
-		eventObject.session.newBoat_id = event.target.value;
-	});
-
 	$('#modalWindows').on('change', '.starthours, .startminutes', function(event) {
 		// Validation and correction
 		if(event.target.value < 0) event.target.value = 0;
@@ -261,9 +249,7 @@ $(function() {
 
 		eventObject.session._token = window.token;
 
-		// debugger;
-		eventObject.session.boat_id = eventObject.session.newBoat_id || eventObject.session.boat_id;
-		// debugger;
+		eventObject.session.boat_id = modal.find('[name=boat_id]').val();
 
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
@@ -281,7 +267,8 @@ $(function() {
 			eventObject.session.id = data.id;
 
 			// console.log(eventObject.session);
-			updateCalendarEntry(eventObject, true);
+			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+			$('#calendar').fullCalendar('refetchEvents');
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();
@@ -336,7 +323,7 @@ $(function() {
 
 		eventObject.session._token = window.token;
 
-		eventObject.session.boat_id = eventObject.session.newBoat_id || eventObject.session.boat_id;
+		eventObject.session.boat_id = modal.find('[name=boat_id]').val();
 
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
@@ -428,14 +415,15 @@ $(function() {
 
 			pageMssg(data.status, true);
 		}, function error(xhr) {
-			if(xhr.status == 409) {
+			if(xhr.status == 409 && !eventObject.session.deleted_at) {
 				var message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
 				var question = confirm(message);
 				if( question ) {
 					// Deactivate
 					Session.deactivateSession({
 						'id': eventObject.session.id,
-						'_token': eventObject.session._token
+						'_token': eventObject.session._token,
+						'handle_timetable': 'only_this'
 					}, function success(data) {
 
 						// Communitcate success to user
@@ -448,8 +436,11 @@ $(function() {
 
 						pageMssg(data.status, true);
 
+						// Close modal window
+						$('#modalWindows .close-reveal-modal').click();
+
 						// TODO Hack!
-						window.location.reload();
+						// window.location.reload();
 					});
 				}
 				else {
@@ -543,18 +534,16 @@ function showModalWindow(eventObject) {
 
 	eventObject.boats = $.extend(true, {}, window.boats);
 	// console.log(eventObject.session);
-	if(!eventObject.session.boat_id) {
-		// Set default
-		eventObject.session.boat_id = _.values(eventObject.boats)[0].id;
+	if(eventObject.session.boat_id) {
+		eventObject.boats[ eventObject.session.boat_id ].selected = true;
 	}
-	eventObject.boats[ eventObject.session.boat_id ].selected = true;
 
-	// Check if session lies in the past or is deactivated and consequently disable editing
-	if( typeof eventObject.deactivated === 'undefined' )
-		if( eventObject.session.deleted_at || moment().diff(eventObject.start) > 0 )
-			eventObject.deactivated = true;
+	// Check if session lies in the past
+	if( typeof eventObject.isPast === 'undefined' )
+		if( moment().diff(eventObject.start) > 0 )
+			eventObject.isPast = true;
 		else
-			eventObject.deactivated = false;
+			eventObject.isPast = false;
 
 	$('#modalWindows')
 	.append( window.sw.sessionTemplate(eventObject) )        // Create the modal
