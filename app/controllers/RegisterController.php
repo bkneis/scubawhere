@@ -25,7 +25,7 @@ class RegisterController extends Controller {
 			$data['county'],
 			$country->name,
 		) ) );
-		$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address );
+		$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key=AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk' );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		$result = curl_exec( $ch );
 		curl_close( $ch );
