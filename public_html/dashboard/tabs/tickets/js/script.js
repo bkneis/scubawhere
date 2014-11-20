@@ -185,8 +185,8 @@ $(function () {
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#save-ticket').prop('disabled', false);
-			$('#save-loader').remove();
+			$('#update-ticket').prop('disabled', false);
+			$('.loader').remove();
 		});
 	});
 

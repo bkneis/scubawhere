@@ -41,6 +41,16 @@ class Price extends Ardent {                       // ↓ The price here is need
 		);
 	}
 
+	public function setFromAttribute($value)
+	{
+		$this->attributes['from'] = $value === '0000-00-00' ? '1901-12-14' : $value;
+	}
+
+	public function getFromAttribute($value)
+	{
+		return $value === '1901-12-14' ? '0000-00-00' : $value;
+	}
+
 	public function owner()
 	{
 		return $this->morphTo();

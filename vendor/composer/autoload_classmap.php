@@ -449,6 +449,7 @@ return array(
     'Doctrine\\DBAL\\Version' => $vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL/Version.php',
     'EditSessionsTable' => $baseDir . '/app/database/migrations/2014_03_24_155948_edit_sessions_table.php',
     'EditTimetablesTable' => $baseDir . '/app/database/migrations/2014_03_24_161126_edit_timetables_table.php',
+    'EmptyAccommodationsTableAndDeleteAccommodationPrices' => $baseDir . '/app/database/migrations/2014_11_20_211435_empty_accommodations_table_and_delete_accommodation_prices.php',
     'ExtentBookingsTable' => $baseDir . '/app/database/migrations/2014_05_20_141137_extent_bookings_table.php',
     'File_ANSI' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ANSI.php',
     'File_ASN1' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ASN1.php',

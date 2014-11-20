@@ -79,21 +79,16 @@ class TicketController extends Controller {
 			$prices = false;
 		// ##################### End Prices #####################
 
-		// Required input has been validated, save the model
-		$ticket = Auth::user()->tickets()->save($ticket);
-
-		// Ticket has been created, let's connect it to trips
-		// TODO Validate existence and ownership of trip IDs
-		$ticket->trips()->sync( $trips );
-
 		// Normalise base_prices array
 		$base_prices = Helper::normaliseArray($base_prices);
 		// Create base_prices
 		foreach($base_prices as &$base_price)
 		{
 			$base_price = new Price($base_price);
+
+			if( !$base_price->validate() )
+				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
 		}
-		$ticket->basePrices()->saveMany($base_prices);
 
 		if($prices)
 		{
@@ -103,7 +98,23 @@ class TicketController extends Controller {
 			foreach($prices as &$price)
 			{
 				$price = new Price($price);
+
+				if( !$price->validate() )
+					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
 			}
+		}
+
+		// Required input has been validated, save the model
+		$ticket = Auth::user()->tickets()->save($ticket);
+
+		// Ticket has been created, let's connect it to trips
+		// TODO Validate existence and ownership of trip IDs
+		$ticket->trips()->sync( $trips );
+
+		// Save prices
+		$ticket->basePrices()->saveMany($base_prices);
+		if($prices)
+		{
 			$ticket->prices()->saveMany($prices);
 		}
 
@@ -257,43 +268,56 @@ class TicketController extends Controller {
 		}
 		else
 		{
+			$base_prices_changed = $base_prices && $this->checkPricesChanged($ticket->base_prices, $base_prices, true);
+			$prices_changed      = $prices && $this->checkPricesChanged($ticket->prices, $prices);
+
+			if($base_prices_changed)
+			{
+				// Normalise base_prices array
+				$base_prices = Helper::normaliseArray($base_prices);
+				// Create base_prices
+				foreach($base_prices as &$base_price)
+				{
+					$base_price = new Price($base_price);
+
+					if( !$base_price->validate() )
+						return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
+			if($prices_changed)
+			{
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
+				// Create prices
+				foreach($prices as &$price)
+				{
+					Clockwork::info($price);
+					$price = new Price($price);
+					Clockwork::info($price);
+
+					if( !$price->validate() )
+						return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
 			// If not, simply update it
 			if( !$ticket->update($data) )
 				return Response::json( array('errors' => $ticket->errors()->all()), 406 ); // 406 Not Acceptable
 
-			if( $base_prices && $this->checkPricesChanged($ticket->base_prices, $base_prices, true) )
+			if( $base_prices_changed )
 			{
 				// Delete old base_prices
 				$ticket->basePrices()->delete();
-
-				// Normalise base_prices array
-				$base_prices = Helper::normaliseArray($base_prices);
-
-				// Create new base_prices
-				foreach($base_prices as &$base_price)
-				{
-					$base_price = new Price($base_price);
-				}
 				$ticket->basePrices()->saveMany($base_prices);
 
 				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
 			}
-			else
-				$base_prices = false; // Signal the front-end to NOT reload the form, because the base_price IDs didn't change
 
-			if( $prices && $this->checkPricesChanged($ticket->prices, $prices) )
+			if( $prices_changed )
 			{
 				// Delete old prices
 				$ticket->prices()->delete();
-
-				// Normalise prices array
-				$prices = Helper::normaliseArray($prices);
-
-				// Create new prices
-				foreach($prices as &$price)
-				{
-					$price = new Price($price);
-				}
 				$ticket->prices()->saveMany($prices);
 
 				$prices = true; // Signal the front-end to reload the form to show the new price IDs
@@ -301,10 +325,7 @@ class TicketController extends Controller {
 			elseif( !$prices )
 			{
 				$ticket->prices()->delete();
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 			}
-			else
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
 			// Ticket has been updated, let's connect it to boats
 			$boats = Input::get('boats');

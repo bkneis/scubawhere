@@ -68,23 +68,16 @@ class AccommodationController extends Controller {
 			$prices = false;
 		// ##################### End Prices #####################
 
-		$accommodation = new Accommodation($data);
-
-		if( !$accommodation->validate() )
-		{
-			return Response::json( array('errors' => $accommodation->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		$accommodation = Auth::user()->accommodations()->save($accommodation);
-
 		// Normalise base_prices array
 		$base_prices = Helper::normaliseArray($base_prices);
 		// Create base_prices
 		foreach($base_prices as &$base_price)
 		{
 			$base_price = new Price($base_price);
+
+			if( !$base_price->validate() )
+				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
 		}
-		$accommodation->basePrices()->saveMany($base_prices);
 
 		if($prices)
 		{
@@ -94,7 +87,25 @@ class AccommodationController extends Controller {
 			foreach($prices as &$price)
 			{
 				$price = new Price($price);
+
+				if( !$price->validate() )
+					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
 			}
+		}
+
+		$accommodation = new Accommodation($data);
+
+		if( !$accommodation->validate() )
+		{
+			return Response::json( array('errors' => $accommodation->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		$accommodation = Auth::user()->accommodations()->save($accommodation);
+
+		// Save prices
+		$accommodation->basePrices()->saveMany($base_prices);
+		if($prices)
+		{
 			$accommodation->prices()->saveMany($prices);
 		}
 
@@ -186,44 +197,55 @@ class AccommodationController extends Controller {
 		}
 		else
 		{
+			$base_prices_changed = $base_prices && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true);
+			$prices_changed      = $prices && $this->checkPricesChanged($accommodation->prices, $prices);
+
+			if($base_prices_changed)
+			{
+				// Normalise base_prices array
+				$base_prices = Helper::normaliseArray($base_prices);
+				// Create base_prices
+				foreach($base_prices as &$base_price)
+				{
+					$base_price = new Price($base_price);
+
+					if( !$base_price->validate() )
+						return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
+			if($prices_changed)
+			{
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
+				// Create prices
+				foreach($prices as &$price)
+				{
+					$price = new Price($price);
+
+					if( !$price->validate() )
+						return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
 			if( !$accommodation->update($data) )
 			{
 				return Response::json( array('errors' => $accommodation->errors()->all()), 406 ); // 406 Not Acceptable
 			}
 
-			if( $base_prices && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true) )
+			if( $base_prices_changed )
 			{
 				// Delete old base_prices
 				$accommodation->basePrices()->delete();
-
-				// Normalise base_prices array
-				$base_prices = Helper::normaliseArray($base_prices);
-
-				// Create new base_prices
-				foreach($base_prices as &$base_price)
-				{
-					$base_price = new Price($base_price);
-				}
 				$accommodation->basePrices()->saveMany($base_prices);
 
 				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
 			}
-			else
-				$base_prices = false; // Signal the front-end to NOT reload the form, because the base_price IDs didn't change
 
-			if( $prices && $this->checkPricesChanged($accommodation->prices, $prices) )
+			if( $prices_changed )
 			{
 				// Delete old prices
 				$accommodation->prices()->delete();
-
-				// Normalise prices array
-				$prices = Helper::normaliseArray($prices);
-
-				// Create new prices
-				foreach($prices as &$price)
-				{
-					$price = new Price($price);
-				}
 				$accommodation->prices()->saveMany($prices);
 
 				$prices = true; // Signal the front-end to reload the form to show the new price IDs
@@ -231,10 +253,7 @@ class AccommodationController extends Controller {
 			elseif( !$prices )
 			{
 				$accommodation->prices()->delete();
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 			}
-			else
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
 			return array('status' => 'OK. Accommodation updated', 'base_prices' => $base_prices, 'prices' => $prices);
 		}
@@ -332,6 +351,9 @@ class AccommodationController extends Controller {
 		{
 			return Response::json( array('errors' => array('The accommodation can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
 		}
+
+		// If deletion worked, delete associated prices
+		Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
 
 		return array('status' => 'Ok. Accommodation deleted');
 	}
