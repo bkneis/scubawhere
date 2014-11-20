@@ -237,7 +237,7 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Creating sessions in the past is not allowed.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Sessions cannot be created in the past.')), 412 ); // 412 Precondition Failed
 
 		try
 		{
@@ -288,15 +288,15 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
-			return Response::json( array('errors' => array('Updating past or deactivated sessions is not allowed.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past or deactivated sessions cannot be updated.')), 412 ); // 412 Precondition Failed
 
 		if( empty($departure->timetable_id) )
 		{
-			// TODO Check if boat belongs to logged in company
-			if( Input::get('start') )
+			if( Input::has('start') )
 				$departure->start   = Input::get('start');
 
-			if( Input::get('boat_id') )
+			// TODO Check if boat belongs to logged in company
+			if( Input::has('boat_id') )
 			{
 				$departure->boat_id = Input::get('boat_id');
 
@@ -306,7 +306,7 @@ class DepartureController extends Controller {
 				if($capacity[0] > $capacity[1])
 					return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
 
-				if($capacity[0] > 0 && Input::get('start') && Input::get('start') != $departure->start) {
+				if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $departure->start) {
 					return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 				}
 			}
@@ -384,7 +384,7 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Deactivating past sessions is not allowed.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past sessions cannot be deactivated.')), 412 ); // 412 Precondition Failed
 
 		if( $departure->timetable_id )
 		{
@@ -437,7 +437,7 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Deleting past sessions is not allowed.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past sessions cannot be deleted.')), 412 ); // 412 Precondition Failed
 
 		if( $departure->timetable_id )
 		{
