@@ -24,7 +24,6 @@ Handlebars.registerHelper("friendlyDate", function(d) {
 });
 
 Handlebars.registerHelper("priceRange", function(prices) {
-	
 	if(prices.length > 1) {
 		var min=null, max=null;
 		$.each(prices, function(i,v) {
@@ -38,8 +37,10 @@ Handlebars.registerHelper("priceRange", function(prices) {
 			return min;
 		}
   		
-	}else{
+	}else if(prices.length == 1){
 		return prices[0].decimal_price;
+	}else{
+		return "hmmm";
 	}
 
 });
@@ -56,6 +57,7 @@ $(function(){
 	var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
 
 	Ticket.getAllTickets(function(data){
+			console.log(data);
 		$("#tickets").append(ticketTemplate({tickets:data}));
 	});
 
@@ -318,7 +320,6 @@ $(document).on('click', '.assign-session', function() {
 
 		compileSessionsList($("#session-filters").serialize());
 		sessions.push({"id": bookingdetail.sessionId, "customer_id": bookingdetail.customerId, "ticket_id": bookingdetail.ticketId});
-		console.log(sessions);
 			
 		if($('#session-tickets').children('.unused-ticket').length == 1) {
 			$('.session-requirements').slideUp();
@@ -552,7 +553,6 @@ function addToAddonSummary(addon) {
 }
 
 function addToAssignedSessions(bookingDetail) {
-	console.log(bookingDetail);
 	var addedBookingdetailsTemplate = Handlebars.compile($("#added-bookingdetails-template").html());
 	$("#added-bookingdetails").append(addedBookingdetailsTemplate(bookingDetail));
 }

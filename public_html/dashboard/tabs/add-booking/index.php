@@ -124,7 +124,7 @@
 							<a role="button" class="btn btn-default btn-lg btn-ticket" data-id="{{id}}">
 								<p class="ticket-icon"><i class="fa fa-ticket fa-2x"></i></p>
 								<p class="text-center ticket-name">{{name}}</p>
-								<p class="text-center ticket-price">{{priceRange prices}}</p>
+								<p class="text-center ticket-price">{{priceRange base_prices}}</p>
 							</a>
 						</div>
 						{{/each}}
