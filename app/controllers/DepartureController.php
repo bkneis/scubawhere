@@ -386,39 +386,33 @@ class DepartureController extends Controller {
 		if( $isPast )
 			return Response::json( array('errors' => array('Past sessions cannot be deactivated.')), 412 ); // 412 Precondition Failed
 
-		if( $departure->timetable_id )
-		{
-			switch( Input::get('handle_timetable') )
-			{
-				case 'only_this': break;
-				case 'following':
-
-					// Get all affected sessions
-					$sessions = Auth::user()->departures()
-						->where('start', '>=', $departure->start)
-						->where('timetable_id', $departure->timetable_id)
-						->with('bookingdetails')
-						->get();
-
-					$sessions->each( function($session)
-					{
-						if( $session->bookingdetails()->count() == 0 )
-							$session->forceDelete();
-						else
-							$session->delete(); // SoftDelete
-					});
-
-					return array('status' => 'OK. All sessions either deleted or deactivated.');
-				break;
-				default:
-					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
-				break;
-			}
-		}
 
 		$departure->delete(); // SoftDelete
 
 		return array('status' => 'OK. Session deactivated');
+	}
+
+	public function postRestore()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$departure = Auth::user()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Past sessions cannot be restored.')), 412 ); // 412 Precondition Failed
+
+		$departure->restore();
+
+		return array('status' => 'OK. Session restored');
 	}
 
 	public function postDelete()

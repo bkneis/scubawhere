@@ -80,5 +80,11 @@ var Session = {
 		$.post("/api/session/deactivate", params, function(data){
 			handleData(data);
 		});
+	},
+
+	restoreSession: function(params, handleData) {
+		$.post("/api/session/restore", params, function(data){
+			handleData(data);
+		});
 	}
 };

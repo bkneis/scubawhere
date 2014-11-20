@@ -875,35 +875,41 @@ All parameters are **optional**.
 
 ### Update a session
 
+`POST /api/session/edit`
+
 > #### Important
 > This function can have four different failure responses:
 >
-> - `HTTP 400 Bad Request`    Validation errors of the submitted data.
-> - `HTTP 404 Not Found`      The session/departure could not be found.
-> - `HTTP 406 Not Acceptable` The new boat's capacity is too small.
-> - `HTTP 409 Conflict`       Cannot move session. It has already been booked!
+> - `HTTP 400 Bad Request`         Validation errors of the submitted data.
+> - `HTTP 404 Not Found`           The session/departure could not be found.
+> - `HTTP 406 Not Acceptable`      The new boat's capacity is too small.
+> - `HTTP 409 Conflict`            Cannot move session. It has already been booked!
+> - `HTTP 412 Precondition Failed` The session lies in the past and thus cannot be updated
 
-`POST /api/session/edit`
-
-- **@param** integer id      The ID of the `session` to be edited
-- **@param** string  start   The start datetime of the session in UTC (format: `YYYY-MM-DD HH:mm:ss`)
-- **@param** integer boat_id The ID of the `boat` that carries this session
+- **@param** integer id               The ID of the `session` to be edited
+- **@param** string  start            The start datetime of the session in UTC (format: `YYYY-MM-DD HH:mm:ss`)
+- **@param** integer boat_id          The ID of the `boat` that carries this session
+- **@param** string  handle_timetable If the session is timetabled, this must either be `'following'` or `'only_this'` to designate how other sessions in the same timetable should be handled
 - &nbsp;
-- **@return** JSON           Contains `status` on success, `errors` on failure
+- **@return** JSON                    Contains `status` on success, `errors` on failure
 
 ### Delete a session
 
+`POST /api/session/delete`
+
 > #### Important
-> This function can have two different failure responses:
+> This function can have three different failure responses:
 >
-> - `HTTP 404` The session could not be found.
-> - `HTTP 409` Cannot delete session. It has already been booked!
+> - `HTTP 404`                     The session could not be found.
+> - `HTTP 409`                     Cannot delete session. It has already been booked!
+> - `HTTP 412 Precondition Failed` The session lies in the past and thus cannot be updated
 >
 > In the second case it is recommended to ask the user to [#deactivate the session](#Deactivate_a_session) instead.
 
-- **@param** integer id The ID of the session to delete
+- **@param** integer id               The ID of the session to delete
+- **@param** string  handle_timetable If the session is timetabled, this must either be `'following'` or `'only_this'` to designate how other sessions in the same timetable should be handled
 - &nbsp;
-- **@return** JSON      Contains `status` on success, `errors` on failure
+- **@return** JSON                    Contains `status` on success, `errors` on failure
 
 ### Deactivate a session
 
@@ -912,9 +918,19 @@ All parameters are **optional**.
 Deactivating a session means it can no longer be selected for booking, but is still in the system and the bookings are still valid.
 
 > #### Important
-> This function is intended to be used if a session cannot be deleted because it has been booked, to sort out the rebooking of the affected customers while no new bookings can be created.
+> This function is intended to be used if a session cannot be deleted because it has been booked, to sort out the rebooking of the affected customers while no new bookings can be created for this session.
 
 - **@param** integer id The ID of the session to deactivate
+- &nbsp;
+- **@return** JSON      Contains `status` on success, `errors` on failure
+
+### Restore a session
+
+`POST /api/session/restore`
+
+Restores a deactivated session, so it can be booked again.
+
+- **@param** integer id The ID of the session to restore
 - &nbsp;
 - **@return** JSON      Contains `status` on success, `errors` on failure
 
@@ -1126,6 +1142,11 @@ Delete an existing trip.
 &nbsp;
 
 ## Changelog
+
+### 20<sup>th</sup> November 2014
+- **@added** [#Restore a session](#Restore_a_session) method
+- **@edit**  Added `handle_timetable` parameter to methods in [#Sessions](#Sessions) section
+- **@edit**  Fixed some typos
 
 ### 16<sup>th</sup> November 2014
 - **@added** [#Update a company](#Update_a_company) section

@@ -359,7 +359,40 @@ $(function() {
 			$(event.target).prop('disabled', false);
 			$('#save-loader').remove();
 		});
+	});
 
+	// The RESTORE button
+	$('#modalWindows').on('click', '.restore-session', function(event) {
+
+		var modal = $(event.target).closest('.reveal-modal');
+		var eventObject = modal.data('eventObject');
+
+		// Disable button and display loader
+		$(event.target).prop('disabled', true).after('<div id="save-loader" class="loader" style="float: left;"></div>');
+
+		eventObject.session._token = window.token;
+
+		Session.restoreSession({
+			'id'              : eventObject.session.id,
+			'_token'          : eventObject.session._token
+		}, function success(data) {
+
+			// Communicate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-loader').remove();
+
+			$('#calendar').fullCalendar('refetchEvents');
+
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		}, function error(xhr) {
+			data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0]);
+			$(event.target).prop('disabled', false);
+			$('#save-loader').remove();
+		});
 	});
 
 	// The DELETE button

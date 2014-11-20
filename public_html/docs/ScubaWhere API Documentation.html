@@ -1192,48 +1192,61 @@ var area   = [north, west, south, east];
 </ul>
 <p><em>The correct <code>timetable_id</code> is set automatically on the session from which a new <code>timetable</code> is created. For more information about timetables see <a href="#Create_a_timetable">#Create a timetable</a>.</em></p>
 <h3>Update a session</h3>
+<p><code>POST /api/session/edit</code></p>
 <blockquote>
 <h4>Important</h4>
 <p>This function can have four different failure responses:</p>
 <ul>
-<li><code>HTTP 400 Bad Request</code>    Validation errors of the submitted data.</li>
-<li><code>HTTP 404 Not Found</code>      The session/departure could not be found.</li>
-<li><code>HTTP 406 Not Acceptable</code> The new boat's capacity is too small.</li>
-<li><code>HTTP 409 Conflict</code>       Cannot move session. It has already been booked!</li>
+<li><code>HTTP 400 Bad Request</code>         Validation errors of the submitted data.</li>
+<li><code>HTTP 404 Not Found</code>           The session/departure could not be found.</li>
+<li><code>HTTP 406 Not Acceptable</code>      The new boat's capacity is too small.</li>
+<li><code>HTTP 409 Conflict</code>            Cannot move session. It has already been booked!</li>
+<li><code>HTTP 412 Precondition Failed</code> The session lies in the past and thus cannot be updated</li>
 </ul>
 </blockquote>
-<p><code>POST /api/session/edit</code></p>
 <ul>
-<li><strong>@param</strong> integer id      The ID of the <code>session</code> to be edited</li>
-<li><strong>@param</strong> string  start   The start datetime of the session in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>)</li>
-<li><strong>@param</strong> integer boat_id The ID of the <code>boat</code> that carries this session</li>
+<li><strong>@param</strong> integer id               The ID of the <code>session</code> to be edited</li>
+<li><strong>@param</strong> string  start            The start datetime of the session in UTC (format: <code>YYYY-MM-DD HH:mm:ss</code>)</li>
+<li><strong>@param</strong> integer boat_id          The ID of the <code>boat</code> that carries this session</li>
+<li><strong>@param</strong> string  handle_timetable If the session is timetabled, this must either be <code>'following'</code> or <code>'only_this'</code> to designate how other sessions in the same timetable should be handled</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON           Contains <code>status</code> on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON                    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Delete a session</h3>
+<p><code>POST /api/session/delete</code></p>
 <blockquote>
 <h4>Important</h4>
-<p>This function can have two different failure responses:</p>
+<p>This function can have three different failure responses:</p>
 <ul>
-<li><code>HTTP 404</code> The session could not be found.</li>
-<li><code>HTTP 409</code> Cannot delete session. It has already been booked!</li>
+<li><code>HTTP 404</code>                     The session could not be found.</li>
+<li><code>HTTP 409</code>                     Cannot delete session. It has already been booked!</li>
+<li><code>HTTP 412 Precondition Failed</code> The session lies in the past and thus cannot be updated</li>
 </ul>
 <p>In the second case it is recommended to ask the user to <a href="#Deactivate_a_session">#deactivate the session</a> instead.</p>
 </blockquote>
 <ul>
-<li><strong>@param</strong> integer id The ID of the session to delete</li>
+<li><strong>@param</strong> integer id               The ID of the session to delete</li>
+<li><strong>@param</strong> string  handle_timetable If the session is timetabled, this must either be <code>'following'</code> or <code>'only_this'</code> to designate how other sessions in the same timetable should be handled</li>
 <li>&nbsp;</li>
-<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+<li><strong>@return</strong> JSON                    Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Deactivate a session</h3>
 <p><code>POST /api/session/deactivate</code></p>
 <p>Deactivating a session means it can no longer be selected for booking, but is still in the system and the bookings are still valid.</p>
 <blockquote>
 <h4>Important</h4>
-<p>This function is intended to be used if a session cannot be deleted because it has been booked, to sort out the rebooking of the affected customers while no new bookings can be created.</p>
+<p>This function is intended to be used if a session cannot be deleted because it has been booked, to sort out the rebooking of the affected customers while no new bookings can be created for this session.</p>
 </blockquote>
 <ul>
 <li><strong>@param</strong> integer id The ID of the session to deactivate</li>
+<li>&nbsp;</li>
+<li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
+</ul>
+<h3>Restore a session</h3>
+<p><code>POST /api/session/restore</code></p>
+<p>Restores a deactivated session, so it can be booked again.</p>
+<ul>
+<li><strong>@param</strong> integer id The ID of the session to restore</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON      Contains <code>status</code> on success, <code>errors</code> on failure</li>
 </ul>
@@ -1415,6 +1428,12 @@ Sun &lt;input type=&quot;checkbox&quot; name=&quot;schedule[2][]&quot; value=&qu
 </ul>
 <p>&nbsp;</p>
 <h2>Changelog</h2>
+<h3>20<sup>th</sup> November 2014</h3>
+<ul>
+<li><strong>@added</strong> <a href="#Restore_a_session">#Restore a session</a> method</li>
+<li><strong>@edit</strong>  Added <code>handle_timetable</code> parameter to methods in <a href="#Sessions">#Sessions</a> section</li>
+<li><strong>@edit</strong>  Fixed some typos</li>
+</ul>
 <h3>16<sup>th</sup> November 2014</h3>
 <ul>
 <li><strong>@added</strong> <a href="#Update_a_company">#Update a company</a> section</li>
