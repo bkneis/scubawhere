@@ -69,7 +69,7 @@ $(function () {
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
 	renderTicketList();
 
-	//Render initial form and ticket list
+	// Render initial form and ticket list
 
 	Trip.getAllTrips(function success(data){
 		window.trips = _.indexBy(data, 'id');
@@ -77,8 +77,12 @@ $(function () {
 			Boat.getAll(function success(data){
 				window.boats = _.indexBy(data, 'id');
 
-				ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
-				renderEditForm();
+					Boatroom.getAll(function success(data){
+						window.boatrooms = _.indexBy(data, 'id');
+
+					ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
+					renderEditForm();
+					});
 			});
 	});
 
@@ -247,11 +251,13 @@ function renderEditForm(id) {
 	if(id) {
 		ticket = window.tickets[id];
 
-		ticket.task     = 'update';
-		ticket.update   = true;
-		ticket.trips    = _.indexBy(ticket.trips, 'id');
-		ticket.boats    = _.indexBy(ticket.boats, 'id');
-		ticket.hasBoats = Object.keys(ticket.boats).length > 0;
+		ticket.task         = 'update';
+		ticket.update       = true;
+		ticket.trips        = _.indexBy(ticket.trips, 'id');
+		ticket.boats        = _.indexBy(ticket.boats, 'id');
+		ticket.boatrooms    = _.indexBy(ticket.boatrooms, 'id');
+		ticket.hasBoats     = Object.keys(ticket.boats).length > 0;
+		ticket.hasBoatrooms = Object.keys(ticket.boatrooms).length > 0;
 
 		_.each(ticket.base_prices, function(value, key, list) {
 			value.isBase = true;
@@ -264,13 +270,15 @@ function renderEditForm(id) {
 			task: 'add',
 			update: false,
 			hasBoats: false,
+			hasBoatrooms: false,
 			base_prices: [ window.sw.default_first_base_price ],
 		};
 	}
 
-	ticket.available_trips = window.trips;
-	ticket.available_boats = window.boats;
-	ticket.default_price   = window.sw.default_price;
+	ticket.available_trips     = window.trips;
+	ticket.available_boats     = window.boats;
+	ticket.available_boatrooms = window.boatrooms;
+	ticket.default_price       = window.sw.default_price;
 
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
 
@@ -303,27 +311,6 @@ function showMe(box, self) {
 		div.hide(0);
 		div.find('input, select').prop('disabled', true);
 	}
-}
-
-function toggleBoatSelect(self) {
-	self = $(self);
-	select = self.parent().children('select');
-
-	if( self.is(':checked') )
-	{
-		select.removeAttr('disabled');
-	}
-	else
-	{
-		select.prop('disabled', true);
-	}
-}
-
-function toggleShowBoats() {
-	$('#boat-select').toggle();
-
-	// Set all child inputs to not-checked and trigger disabling of select fields
-	$('#boat-select').find('[type=checkbox]').attr('checked', false).trigger('change');
 }
 
 function setToken(element) {

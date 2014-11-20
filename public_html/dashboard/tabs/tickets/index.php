@@ -92,32 +92,37 @@
 						</div>
 
 						<div class="form-row">
-
 							<label style="display: block;">
-								<input type="checkbox" onclick="toggleShowBoats()"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
+								<input type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
 							</label>
 							<div class="dashed-border" id="boat-select"{{#unless hasBoats}} style="display:none;"{{/unless}}>
 								<p>Please select the boats that you want this ticket to be eligible for:</p>
 								{{#each available_boats}}
 									<p>
 										<label>
-											<input type="checkbox" onchange="toggleBoatSelect(this);"{{inArray id ../boats ' checked'}}>
+											<input type="checkbox" name="boats[]" value="{{id}}"{{inArray id ../boats ' checked'}}>
 											{{name}}
-											<select class="accom-select" name="boats[{{id}}]" style="margin-left: 1em;"{{inArray id ../boats '' ' disabled'}}>
-												<option value="">All room types</option>
-												{{#if boatrooms}}
-													<optgroup label="Limit to:">
-														{{#each boatrooms}}
-															<option value="{{id}}"{{isEqualDeepPivot id ../../../boats ../../id 'boatroom_id' ' selected'}}>{{name}}</option>
-														{{/each}}
-													</optgroup>
-												{{/if}}
-											</select>
 										</label>
 									</p>
 								{{/each}}
 							</div>
+						</div>
 
+						<div class="form-row">
+							<label style="display: block;">
+								<input type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain boatrooms?</strong>
+							</label>
+							<div class="dashed-border" id="boatroom-select"{{#unless hasBoatrooms}} style="display:none;"{{/unless}}>
+								<p>Please select the boatrooms that you want this ticket to be eligible for:</p>
+								{{#each available_boatrooms}}
+									<p>
+										<label>
+											<input type="checkbox" name="boatrooms[]" value="{{id}}"{{inArray id ../boatrooms ' checked'}}>
+											{{name}}
+										</label>
+									</p>
+								{{/each}}
+							</div>
 						</div>
 
 						{{#if update}}
@@ -169,6 +174,7 @@
 </div>
 
 <script src="/dashboard/js/Controllers/Boat.js"></script>
+<script src="/dashboard/js/Controllers/Boatroom.js"></script>
 <script src="/dashboard/js/Controllers/Trip.js"></script>
 <script src="/dashboard/js/Controllers/Ticket.js"></script>
 <script src="tabs/tickets/js/script.js"></script>

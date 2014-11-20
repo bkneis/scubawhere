@@ -1,4 +1,4 @@
-var BoatRoom = {
+var Boatroom = {
 
 	get : function(params, handleData) {
 		$.get("/api/boatroom", params, handleData);

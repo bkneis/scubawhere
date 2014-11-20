@@ -27,6 +27,8 @@ class Departure extends Ardent {
 
 	public function getCapacityAttribute()
 	{
+		// TODO Also calculate utilisation by boatrooms
+
 		return array( $this->bookingdetails()->count(), $this->boat()->withTrashed()->first()->capacity );
 	}
 

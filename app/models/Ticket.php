@@ -48,7 +48,12 @@ class Ticket extends Ardent {
 
 	public function boats()
 	{
-		return $this->belongsToMany('Boat')->withPivot('boatroom_id')->withTimestamps();
+		return $this->belongsToMany('Boat')->withTimestamps();
+	}
+
+	public function boatrooms()
+	{
+		return $this->belongsToMany('Boatroom', 'boat_ticket')->withTimestamps();
 	}
 
 	public function packages()

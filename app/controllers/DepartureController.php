@@ -133,7 +133,7 @@ class DepartureController extends Controller {
 		  ticket and then (conditionally) to package.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat', 'trip')
+		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat', 'boat.boatrooms', 'trip')
 		->whereHas('trip', function($query) use ($trip, $ticket, $package)
 		{
 			$query

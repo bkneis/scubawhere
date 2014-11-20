@@ -14,7 +14,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Auth::user()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,12 +24,12 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->with('boats', 'trips', 'basePrices', 'prices')->get();
+		return Auth::user()->tickets()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->tickets()->withTrashed()->with('boats', 'trips', 'basePrices', 'prices')->get();
+		return Auth::user()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function postAdd()
@@ -111,44 +111,16 @@ class TicketController extends Controller {
 		$boats = Input::get('boats');
 		if( $boats && !empty($boats) ) // only if the parameter is given/submitted
 		{
-			$sync = array();
-			foreach( $boats as $boat_id => $boatroom_id )
-			{
-				// The validator fails when boatroom_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
-				if( !empty($boatroom_id) )
-				{
-					$validator = Validator::make(
-						array(
-							'boat_id'     => $boat_id,
-							'boatroom_id' => $boatroom_id
-						),
-						array(
-							'boat_id'     => 'integer|exists:boats,id',
-							'boatroom_id' => 'integer|exists:boatrooms,id'
-						)
-					);
-				}
-				else
-				{
-					$boatroom_id = null;
-					$validator = Validator::make(
-						array(
-							'boat_id' => $boat_id
-						),
-						array(
-							'boat_id' => 'integer|exists:boats,id'
-						)
-					);
-				}
+			// TODO Validate that all boat_ids belong to company
+			$ticket->boats()->sync( $boats );
+		}
 
-				if( $validator->fails() )
-				{
-					return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
-				}
-
-				$sync[$boat_id] = array('boatroom_id' => $boatroom_id);
-			}
-			$ticket->boats()->sync( $sync );
+		// Ticket has been created, let's connect it to boatrooms
+		$boatrooms = Input::get('boatrooms');
+		if( $boatrooms && !empty($boatrooms) ) // only if the parameter is given/submitted
+		{
+			// TODO Validate that all boatroom_ids belong to company
+			$ticket->boatrooms()->sync( $boatrooms );
 		}
 
 		// Success
@@ -237,14 +209,13 @@ class TicketController extends Controller {
 				$boats = Input::get('boats');
 				if( !empty( $boats ) )
 					$data['boats'] = $boats;
-				elseif( $ticket->boats()->count() > 0 )
-				{
-					$data['boats'] = array();
-					foreach($ticket->boats as $boat) // Includes pivot data by default
-					{
-						$data['boats'][$boat->id] = $boat->pivot->boatroom_id;
-					}
-				}
+			}
+
+			if( Input::has('boatrooms') )
+			{
+				$boatrooms = Input::get('boatrooms');
+				if( !empty( $boatrooms ) )
+					$data['boatrooms'] = $boatrooms;
 			}
 
 			if( empty($trips) )
@@ -335,63 +306,30 @@ class TicketController extends Controller {
 			else
 				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
-			if( Input::has('boats') )
+			// Ticket has been updated, let's connect it to boats
+			$boats = Input::get('boats');
+			if( $boats && !empty($boats) ) // only if the parameter is given/submitted
 			{
-				// Ticket has been updated, let's connect it to boats
-				$boats = Input::get('boats');
-				if( $boats && !empty($boats) ) // only if the parameter is given/submitted
-				{
-					$sync = array();
-					foreach( $boats as $boat_id => $boatroom_id )
-					{
-						// If the boat array is submitted empty, meaning all boats should be detached, skip all this and go directly to sync
-						if( empty($boat_id) )
-						{
-							$sync = array();
-							break;
-						}
-
-						// The validator fails when boatroom_id is submitted as '' (which means null but is valid), so we have to conditionally route around it
-						if( !empty($boatroom_id) )
-						{
-							$validator = Validator::make(
-								array(
-									'boat_id'     => $boat_id,
-									'boatroom_id' => $boatroom_id
-								),
-								array(
-									'boat_id'     => 'integer|exists:boats,id',
-									'boatroom_id' => 'integer|exists:boatrooms,id'
-								)
-							);
-						}
-						else
-						{
-							$boatroom_id = null;
-							$validator = Validator::make(
-								array(
-									'boat_id' => $boat_id
-								),
-								array(
-									'boat_id' => 'integer|exists:boats,id'
-								)
-							);
-						}
-
-						if( $validator->fails() )
-						{
-							return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
-						}
-
-						$sync[$boat_id] = array('boatroom_id' => $boatroom_id);
-					}
-					$ticket->boats()->sync( $sync );
-				}
+				// TODO Validate that all boat_ids belong to company
+				$ticket->boats()->sync( $boats );
 			}
 			else
 			{
 				// Remove all boats from this ticket
 				$ticket->boats()->detach();
+			}
+
+			// Ticket has been updated, let's connect it to boatrooms
+			$boatrooms = Input::get('boatrooms');
+			if( $boatrooms && !empty($boatrooms) ) // only if the parameter is given/submitted
+			{
+				// TODO Validate that all boatroom_ids belong to company
+				$ticket->boatrooms()->sync( $boatrooms );
+			}
+			else
+			{
+				// Remove all boatrooms from this ticket
+				$ticket->boatrooms()->detach();
 			}
 
 			// Check if 'trips' input array is not empty

@@ -66,12 +66,12 @@ $(function (){
 			Boat.delete({
 				'id'    : $('#update-boats-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
-			}, 
+			},
 			function success(data){
 				pageMssg(data.status, true);
 				renderBoatList();
 				renderEditForm();
-			}, 
+			},
 			function error(xhr){
 				data = JSON.parse(xhr.responseText);
 				//console.log(data);
@@ -95,15 +95,15 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-			BoatRoom.delete({
+			Boatroom.delete({
 				'id'    : $('#update-boatrooms-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
-			}, 
+			},
 			function success(data){
 				pageMssg(data.status, true);
 				renderBoatList();
 				renderRoomEditForm();
-			}, 
+			},
 			function error(xhr){
 				data = JSON.parse(xhr.responseText);
 				//console.log(data);
@@ -150,7 +150,7 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 	$("#boats-form-container").on('submit', '#add-boatrooms-form', function(event){
 		event.preventDefault();
 		$('#add-boatroom').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		BoatRoom.create($('#add-boatrooms-form').serialize(), function success(data){
+		Boatroom.create($('#add-boatrooms-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
@@ -209,7 +209,7 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 	$("#boats-form-container").on('submit', '#update-boatrooms-form', function(event){
 		event.preventDefault();
 		$('#update-boatroom').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		BoatRoom.update($('#update-boatrooms-form').serialize(), function success(data){
+		Boatroom.update($('#update-boatrooms-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
@@ -253,7 +253,7 @@ function renderBoatList(callback) {
 		if(typeof callback === 'function') callback();
 	});
 
-	BoatRoom.getAll(function success(data) {
+	Boatroom.getAll(function success(data) {
 		window.boatrooms = _.indexBy(data, 'id');
 		roomTypes = data;
 		$('#boatrooms-list').remove();
