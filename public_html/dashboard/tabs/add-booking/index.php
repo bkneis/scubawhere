@@ -158,7 +158,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6 col-md-offset-1">
+				<div class="col-md-7">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Existing Customer</h3>
@@ -268,7 +268,7 @@
 						</form>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<ul class="list-group">
 						<li href="#" class="list-group-item active">
 							<h4 class="list-group-item-heading">Added Customers</h4>
@@ -704,26 +704,8 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="page-header">
-							<h2>Addon Selection <small>Do you require any addons?</small></h2>
+							<h2>Summary <small>The summary will be here.</small></h2>
 						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<ul class="list-group">
-							<li class="list-group-item active">
-								<h4 class="list-group-item-heading">Addons Basket</h4>
-								<p class="list-group-item-text">Total: <span id="addons-total">0</span></p>
-							</li>
-							<li class="list-group-item" id="addons-basket">
-
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<a href="javascript:void(0);" class="btn btn-primary addon-finish pull-right">Next</a>
 					</div>
 				</div>
 			</div>
