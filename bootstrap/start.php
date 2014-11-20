@@ -29,7 +29,7 @@ $env = $app->detectEnvironment(array(
 	'local_soren' => array('homestead'),
 	'local_bryan' => array('laptop1'),
 	'local_jon'   => array('JonWindows'),
-	'local_jonathan'   => array('Jonnerz-LAPTOP'),
+	'local_jonathan'   => array('Jonnerz-LAPTOP', 'Jonnerz-PC')
 
 ));
 

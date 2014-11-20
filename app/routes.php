@@ -82,7 +82,7 @@ Route::controller('api/country', 'CountryController');
 Route::controller('api/currency', 'CurrencyController');
 Route::controller('api/agency', 'AgencyController');
 
-Route::group(array('before' => 'auth'), function()
+Route::group(array('before' => 'auth.basic'), function()
 {
 	Route::get('token', function()
 	{

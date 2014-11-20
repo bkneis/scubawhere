@@ -164,16 +164,18 @@ class BookingController extends Controller {
 		// Validate that the ticket/package can be booked for this session
 		try
 		{
-			$departure->trip->tickets()->where(function($query) use ($package)
+			if( isset($package) )
 			{
-				if( isset($package) )
+				$departure->trip->tickets()->where(function($query) use ($package)
 				{
+				
 					$query->whereHas('packages', function($query) use ($package)
 					{
 						$query->where('id', $package->id);
 					});
-				}
-			})->findOrFail( $ticket->id );
+					
+				})->findOrFail( $ticket->id );
+			}
 		}
 		catch(ModelNotFoundException $e)
 		{
