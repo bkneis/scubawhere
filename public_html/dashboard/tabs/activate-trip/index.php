@@ -48,8 +48,8 @@
 						<td><strong>Departure time</strong></td>
 						<td>
 							<small><span style="display: inline-block; width: 49px">hour</span><span>minutes</span></small><br>
-							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;"{{#if session.deleted_at}} disabled{{/if}}>:
-							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"{{#if session.deleted_at}} disabled{{/if}}> h
+							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}>:
+							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}> h
 						</td>
 					</tr>
 					<tr>
@@ -64,7 +64,7 @@
 
 				<p>
 					Boat for this session:&nbsp;
-					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{/if}}{{/if}}>
+					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
 						{{#each boats}}
 							{{#if deleted_at}}
 								{{#if selected}}
