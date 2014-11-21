@@ -41,7 +41,6 @@ class Helper
 		}
 	}
 
-
 	// Check if date lies in the past (local time)
 	public static function isPast($datestring) {
 		$local_time = self::localTime();
@@ -53,6 +52,44 @@ class Helper
 
 		if($departure_start < $local_time )
 			return true;
+
+		return false;
+	}
+
+	public static function checkPricesChanged($old_prices, $prices, $isBase = false)
+	{
+		$old_prices = $old_prices->toArray();
+
+		// Compare number of prices
+		if(count($prices) !== count($old_prices)) return true;
+
+		// Keyify $old_prices and reduce them to input fields
+		$array = array();
+		$input_keys = array('decimal_price' => '', 'from' => '');
+		if(!$isBase)
+			$input_keys['until'] = '';
+
+		foreach($old_prices as $old_price)
+		{
+			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
+		}
+		$old_prices = $array; unset($array);
+
+		// Compare price IDs
+		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
+			return true;
+
+		/**
+		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
+		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
+		 * but since they represent the same info, the comparison works and returns the expected result.
+		 */
+		foreach($old_prices as $id => $old_price)
+		{
+			// Compare arrays in both directions
+			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
+				return true;
+		}
 
 		return false;
 	}
@@ -75,37 +112,6 @@ class Helper
 		}
 
 		return $string;
-	}
-
-	/**
-	 * Validates a currency code, takes Input::('currency') if no parameter provided
-	 * @param  string $currency The currency code to validate
-	 * @return string           A correctly formatted currency string
-	 */
-	public static function currency($currency = false)
-	{
-		if($currency === false)
-		{
-			// Return the company's default currency
-
-			// Until properly implemented, we are only returning properly formatted Great Britain Pounds
-			return 'GBP';
-		}
-		else
-		{
-			return strtoupper($currency);
-		}
-	}
-
-	public static function currencies()
-	{
-		$currencies = array(
-			'GBP',
-			'EUR',
-			'USD'
-			);
-
-		return $currencies;
 	}
 
 	/**

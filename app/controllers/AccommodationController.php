@@ -260,8 +260,8 @@ class AccommodationController extends Controller {
 
 		// Check if a booking exists for the accommodation and whether a critical value is updated
 		if( $accommodation->bookings()->count() > 0 && (
-			   ($base_prices     && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true))
-			|| ($prices          && $this->checkPricesChanged($accommodation->prices, $prices))
+			   ($base_prices     && Helper::checkPricesChanged($accommodation->base_prices, $base_prices, true))
+			|| ($prices          && Helper::checkPricesChanged($accommodation->prices, $prices))
 		) )
 		{
 			// If yes, create a new accommodation with the input data
@@ -293,8 +293,8 @@ class AccommodationController extends Controller {
 		}
 		else
 		{
-			$base_prices_changed = $base_prices && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true);
-			$prices_changed      = $prices && $this->checkPricesChanged($accommodation->prices, $prices);
+			$base_prices_changed = $base_prices && Helper::checkPricesChanged($accommodation->base_prices, $base_prices, true);
+			$prices_changed      = $prices && Helper::checkPricesChanged($accommodation->prices, $prices);
 
 			if($base_prices_changed)
 			{
@@ -353,44 +353,6 @@ class AccommodationController extends Controller {
 
 			return array('status' => 'OK. Accommodation updated', 'base_prices' => $base_prices, 'prices' => $prices);
 		}
-	}
-
-	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
-	{
-		$old_prices = $old_prices->toArray();
-
-		// Compare number of prices
-		if(count($prices) !== count($old_prices)) return true;
-
-		// Keyify $old_prices and reduce them to input fields
-		$array = array();
-		$input_keys = array('decimal_price' => '', 'from' => '');
-		if(!$isBase)
-			$input_keys['until'] = '';
-
-		foreach($old_prices as $old_price)
-		{
-			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
-		}
-		$old_prices = $array; unset($array);
-
-		// Compare price IDs
-		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
-			return true;
-
-		/**
-		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
-		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
-		 * but since they represent the same info, the comparison works and returns the expected result.
-		 */
-		foreach($old_prices as $id => $old_price)
-		{
-			// Compare arrays in both directions
-			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
-				return true;
-		}
-
-		return false;
 	}
 
 	public function postDeactivate()
