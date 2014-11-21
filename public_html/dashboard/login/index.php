@@ -4,7 +4,7 @@
 	<title>Scuba Where | Dive Centre Login</title>
 
 
-	<script src="/common/js/jquery.js"></script>
+	<script src="/common/js/jquery.min.js"></script>
 	<script src="/common/js/ui.min/jquery-ui.min.js"></script>
 
 	<script src="/dashboard/login/js/login.js"></script>
