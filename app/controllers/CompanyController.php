@@ -20,164 +20,55 @@ class CompanyController extends Controller {
         return Auth::user();
 	}
 
-	public function getBoats()
+	public function postUpdate()
 	{
-		$boats =  Auth::user()->boats()/*->with('boatrooms')*/->get();
-		$boatrooms = Auth::user()->boatrooms()->get();
+		$data = Input::only('username', 'contact', 'description', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website');
 
-		return Response::json( array( 'boats' => $boats->toArray(), 'accommodations' => $boatrooms->toArray() ) );
-	}
-
-	public function postBoats()
-	{
-		// Doing the boatrooms first, because the boats rely on their correct IDs
-		$presentRooms = array_flip( Auth::user()->boatrooms()->lists('id') );
-		$inputRooms = Input::get('accommodations');
-
-		if( empty($inputRooms) )
-			$inputRooms = array();
-
-		// Find out what boatrooms got deleted
-		$diffRooms = array_diff_key($presentRooms, $inputRooms);
-		// Remove these deleted boatrooms from the database
-		if( count($diffRooms) > 0 )
+		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
-			try
+			$country = Auth::user()->country;
+
+			$address = urlencode( implode( ',', array(
+				$data['address_1'],
+				$data['address_2'],
+				$data['postcode'],
+				$data['city'],
+				$data['county'],
+				$country->name,
+			) ) );
+			$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			$result = curl_exec( $ch );
+			curl_close( $ch );
+			$result = json_decode( $result );
+
+			if($result->status === "OK")
 			{
-				Auth::user()->boatrooms()->whereIn( 'id', array_keys($diffRooms) )->delete();
+				$data['latitude']  = $result->results[0]->geometry->location->lat;
+				$data['longitude'] = $result->results[0]->geometry->location->lng;
 			}
-			catch(QueryException $e)
+			else
 			{
-				return Response::json( array('errors' => array("Some boatrooms could not be deleted because they are still assigned to boats. Please reload the page to see the current state.")), 409 ); // 409 Conflict
+				$data['latitude']  = 0;
+				$data['longitude'] = 0;
 			}
 		}
 
-		// Find all already present boatrooms
-		$intersectRooms = array_intersect_key($inputRooms, $presentRooms);
-		// Update these present boatrooms
-		foreach($intersectRooms as $id => $details)
+		$company = Auth::user();
+
+		// Mass assigned insert with automatic validation
+		$company->fill($data);
+		if($company->updateUniques())
 		{
-			// Clean the Input array from unwanted fields
-			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'photo') ) );
+			if( Input::has('agencies') )
+				$company->agencies()->sync( Input::get('agencies') );
 
-			$room = Auth::user()->boatrooms()->find($id)->update( $reducedDetails );
+			return array('status' => 'OK. Company data updated', 'company' => $company);
 		}
-
-		// Find all new boatrooms
-		$newRooms = array_diff_key($inputRooms, $presentRooms);
-		$keyPartners = array();
-		foreach( $newRooms as $id => $details)
+		else
 		{
-			// Clean the Input array from unwanted fields
-			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'photo') ) );
-
-			$room = new Boatroom($reducedDetails);
-			$room->company_id = Auth::user()->id;
-			if( !$room->validate() )
-			{
-				$errors = $room->errors()->all();
-				$errors[] = "Something was wrong with the submitted data. The new boatroom '" . Helper::sanitiseString($details['name']) . "' could not be created.";
-				return Response::json( array('errors' => $errors), 406 ); // 406 Not Acceptable
-			}
-
-			// Save the relation between the old ID and the official ID in an array for later
-			$room = Auth::user()->boatrooms()->save($room);
-			$keyPartners[$id] = $room->id;
+			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
 		}
-
-		// ############## Now on to the boats ###############
-
-		// First, remove deleted boats from database
-		$presentBoats = array_flip( Auth::user()->boats()->lists('id') );
-		$inputBoats = Input::get('boats');
-
-		if( empty($inputBoats) )
-			$inputBoats = array();
-
-		// Find out what boats got deleted
-		$diffBoats = array_diff_key($presentBoats, $inputBoats);
-		// Remove these deleted boats from the database
-		if( count($diffBoats) > 0 )
-		{
-			try
-			{
-				Auth::user()->boats()->whereIn( 'id', array_keys($diffBoats) )->delete();
-			}
-			catch(QueryException $e)
-			{
-				return Response::json( array('errors' => array('Some boats could not be deleted because they are still assigned to tickets or sessions. Please reload the page to see the current state.')), 409 ); // 409 Conflict
-			}
-		}
-
-		// Taking care of new and existing boats:
-		foreach( $inputBoats as $id => $details )
-		{
-			// Only allow 'whitelisted' fields on the $details array
-			$reducedDetails = array_intersect_key( $details, array_flip( array('name', 'description', 'capacity', 'photo') ) );
-
-			try
-			{
-				// If the boat allready exists, we can just update its details
-				if( !$id ) throw new ModelNotFoundException();
-				$boat = Auth::user()->boats()->findOrFail($id);
-				$boat->update($reducedDetails);
-			}
-			catch(ModelNotFoundException $e)
-			{
-				// In case the boat doesn't exist yet, we create it
-				$boat = new Boat($reducedDetails);
-				$boat = Auth::user()->boats()->save($boat);
-			}
-
-			if( isset( $details['accommodations'] ) )
-			{
-				// Construct the boatrooms array to sync to the pivot table (needs to include the 'capacity' field for the pivot table)
-				$sync = array();
-				$utilisation = 0;
-				foreach( $details['accommodations'] as $id => $capacity )
-				{
-					// Replace old IDs with their official ID
-					if( array_key_exists($id, $keyPartners) )
-						$id = $keyPartners[$id];
-
-					$validator = Validator::make(
-						array(
-							'id' => $id,
-							'capacity' => $capacity
-						),
-						array(
-							'id' => 'integer',
-							'capacity' => 'required|integer'
-						)
-					);
-
-					if( $validator->fails() )
-					{
-						return Response::json( array('errors' => $validator->messages()->all()), 406 ); // 406 Not Acceptable
-					}
-
-					// Test whether the capacity of the room exceeds the overall capacity of the boat
-					$utilisation += $capacity;
-					if($utilisation > $boat->capacity)
-					{
-						// Silently jump all following accomodations and continue after the loop
-						break;
-					}
-
-					$sync[$id] = array('capacity' => $capacity);
-				}
-
-				$boat->boatrooms()->sync( $sync );
-			}
-		}
-
-		// If all went well and no exeption was thrown, return OK
-		return Response::json( array('status' => 'All went down OK.') );
-	}
-
-	public function getAccommodations()
-	{
-		return Auth::user()->boatrooms()->get();
 	}
 
 	public function getTriptypes()

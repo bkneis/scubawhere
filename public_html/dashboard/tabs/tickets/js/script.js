@@ -1,6 +1,7 @@
 var ticketForm,
     ticketList,
-    priceInput;
+    priceInput,
+    promises = {};
 
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(id) {
@@ -67,19 +68,35 @@ $(function () {
 
 	// Handlebars Prep
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
-	renderTicketList();
+	ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
 
-	//Render initial form and ticket list
+	// Render initial form and ticket list
+	renderTicketList();
+	window.promises.loadedTrips     = $.Deferred();
+	window.promises.loadedBoats     = $.Deferred();
+	window.promises.loadedBoatrooms = $.Deferred();
+
+	window.promises.loadedTrips.done(function() {
+		window.promises.loadedBoats.done(function() {
+			window.promises.loadedBoatrooms.done(function() {
+					renderEditForm();
+			});
+		});
+	});
 
 	Trip.getAllTrips(function success(data){
 		window.trips = _.indexBy(data, 'id');
+		window.promises.loadedTrips.resolve();
+	});
 
-			Boat.getAllBoats(function success(data){
-				window.boats = _.indexBy(data.boats, 'id');
+	Boat.getAll(function success(data){
+		window.boats = _.indexBy(data, 'id');
+		window.promises.loadedBoats.resolve();
+	});
 
-				ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
-				renderEditForm();
-			});
+	Boatroom.getAll(function success(data){
+		window.boatrooms = _.indexBy(data, 'id');
+		window.promises.loadedBoatrooms.resolve();
 	});
 
 	$('#ticket-list-container').on('click', 'li', function(event) {
@@ -181,8 +198,8 @@ $(function () {
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#save-ticket').prop('disabled', false);
-			$('#save-loader').remove();
+			$('#update-ticket').prop('disabled', false);
+			$('.loader').remove();
 		});
 	});
 
@@ -225,7 +242,7 @@ function renderTicketList(callback) {
 		window.tickets = _.indexBy(data, 'id');
 		$('#ticket-list').remove();
 		$('#ticket-list-container .loader').remove();
-
+		console.log(data);
 		$("#ticket-list-container").append( ticketList({tickets : data}) );
 
 		if(typeof callback === 'function')
@@ -247,11 +264,13 @@ function renderEditForm(id) {
 	if(id) {
 		ticket = window.tickets[id];
 
-		ticket.task     = 'update';
-		ticket.update   = true;
-		ticket.trips    = _.indexBy(ticket.trips, 'id');
-		ticket.boats    = _.indexBy(ticket.boats, 'id');
-		ticket.hasBoats = Object.keys(ticket.boats).length > 0;
+		ticket.task         = 'update';
+		ticket.update       = true;
+		ticket.trips        = _.indexBy(ticket.trips, 'id');
+		ticket.boats        = _.indexBy(ticket.boats, 'id');
+		ticket.boatrooms    = _.indexBy(ticket.boatrooms, 'id');
+		ticket.hasBoats     = Object.keys(ticket.boats).length > 0;
+		ticket.hasBoatrooms = Object.keys(ticket.boatrooms).length > 0;
 
 		_.each(ticket.base_prices, function(value, key, list) {
 			value.isBase = true;
@@ -264,13 +283,15 @@ function renderEditForm(id) {
 			task: 'add',
 			update: false,
 			hasBoats: false,
+			hasBoatrooms: false,
 			base_prices: [ window.sw.default_first_base_price ],
 		};
 	}
 
-	ticket.available_trips = window.trips;
-	ticket.available_boats = window.boats;
-	ticket.default_price   = window.sw.default_price;
+	ticket.available_trips     = window.trips;
+	ticket.available_boats     = window.boats;
+	ticket.available_boatrooms = window.boatrooms;
+	ticket.default_price       = window.sw.default_price;
 
 	$('#ticket-form-container').empty().append( ticketForm(ticket) );
 
@@ -303,27 +324,6 @@ function showMe(box, self) {
 		div.hide(0);
 		div.find('input, select').prop('disabled', true);
 	}
-}
-
-function toggleBoatSelect(self) {
-	self = $(self);
-	select = self.parent().children('select');
-
-	if( self.is(':checked') )
-	{
-		select.removeAttr('disabled');
-	}
-	else
-	{
-		select.prop('disabled', true);
-	}
-}
-
-function toggleShowBoats() {
-	$('#boat-select').toggle();
-
-	// Set all child inputs to not-checked and trigger disabling of select fields
-	$('#boat-select').find('[type=checkbox]').attr('checked', false).trigger('change');
 }
 
 function setToken(element) {

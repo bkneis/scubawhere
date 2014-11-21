@@ -170,9 +170,12 @@
 				return true;
 			}
 
+			var key = '';
+			if(window.location.host === 'scubawhere.com') key = '&key=AIzaSyAzTfKvssUjEK4Reyg3RD7lBAT6vGZG4hk';
+
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
-			script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise';
+			script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise' + key;
 
 			document.body.appendChild(script);
 

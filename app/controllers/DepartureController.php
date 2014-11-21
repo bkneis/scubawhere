@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use ScubaWhere\Helper;
 
 class DepartureController extends Controller {
 
@@ -131,7 +133,7 @@ class DepartureController extends Controller {
 		  ticket and then (conditionally) to package.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat')
+		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat', 'boat.boatrooms', 'trip')
 		->whereHas('trip', function($query) use ($trip, $ticket, $package)
 		{
 			$query
@@ -197,27 +199,32 @@ class DepartureController extends Controller {
 		}
 
 		// Filter by capacity/availability
-		$departures = $departures->filter(function($departure) use ($package, $options)
+		if( !$options['with_full'] )
 		{
-			$boatCapacity = $departure->getCapacityAttribute();
-			if( $boatCapacity[0] >= $boatCapacity[1] )
+			$departures = $departures->filter(function($departure) use ($package, $options)
 			{
-				// Session/Boat full/overbooked
-				if( !$options['with_full'] )
-					return false;
-			}
-
-			if( $package )
-			{
-				$usedUp = $departure->bookings()->wherePivot('package_id', $package->id)->count();
-				if( $usedUp >= $package->capacity )
+				$capacity = $departure->getCapacityAttribute();
+				if( $capacity[0] >= $capacity[1] )
 				{
+					// Session/Boat full/overbooked
 					return false;
 				}
-			}
 
-			return true;
-		});
+				if( $package && !empty($package->capacity) )
+				{
+					$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
+					{
+						$query->where('package_id', $package->id);
+					})->count();
+					if( $usedUp >= $package->capacity )
+					{
+						return false;
+					}
+				}
+
+				return true;
+			});
+		}
 
 		return $departures;
 	}
@@ -225,6 +232,12 @@ class DepartureController extends Controller {
 	public function postAdd()
 	{
 		$data = Input::only('start', 'boat_id');
+
+		$isPast = Helper::isPast( $data['start'] );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Sessions cannot be created in the past.')), 412 ); // 412 Precondition Failed
 
 		try
 		{
@@ -271,13 +284,19 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( !empty($departure->deleted_at) || $isPast )
+			return Response::json( array('errors' => array('Past or deactivated sessions cannot be updated.')), 412 ); // 412 Precondition Failed
+
 		if( empty($departure->timetable_id) )
 		{
-			// TODO Check if boat belongs to logged in company
-			if( Input::get('start') )
+			if( Input::has('start') )
 				$departure->start   = Input::get('start');
 
-			if( Input::get('boat_id') )
+			// TODO Check if boat belongs to logged in company
+			if( Input::has('boat_id') )
 			{
 				$departure->boat_id = Input::get('boat_id');
 
@@ -287,7 +306,7 @@ class DepartureController extends Controller {
 				if($capacity[0] > $capacity[1])
 					return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
 
-				if($capacity[0] > 0 && Input::get('start') && Input::get('start') != $departure->start) {
+				if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $departure->start) {
 					return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 				}
 			}
@@ -361,39 +380,39 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( $departure->timetable_id )
-		{
-			switch( Input::get('handle_timetable') )
-			{
-				case 'only_this': break;
-				case 'following':
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Past sessions cannot be deactivated.')), 412 ); // 412 Precondition Failed
 
-					// Get all affected sessions
-					$sessions = Auth::user()->departures()
-						->where('start', '>=', $departure->start)
-						->where('timetable_id', $departure->timetable_id)
-						->with('bookingdetails')
-						->get();
-
-					$sessions->each( function($session)
-					{
-						if( $session->bookingdetails()->count() == 0 )
-							$session->forceDelete();
-						else
-							$session->delete(); // SoftDelete
-					});
-
-					return array('status' => 'OK. All sessions either deleted or deactivated.');
-				break;
-				default:
-					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
-				break;
-			}
-		}
 
 		$departure->delete(); // SoftDelete
 
 		return array('status' => 'OK. Session deactivated');
+	}
+
+	public function postRestore()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			$departure = Auth::user()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail();
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Past sessions cannot be restored.')), 412 ); // 412 Precondition Failed
+
+		$departure->restore();
+
+		return array('status' => 'OK. Session restored');
 	}
 
 	public function postDelete()
@@ -408,6 +427,12 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		$isPast = Helper::isPast( $departure->start );
+		if( gettype($isPast) === 'object' ) // Is error Response
+			return $isPast;
+		if( $isPast )
+			return Response::json( array('errors' => array('Past sessions cannot be deleted.')), 412 ); // 412 Precondition Failed
+
 		if( $departure->timetable_id )
 		{
 			switch( Input::get('handle_timetable') )
@@ -424,7 +449,7 @@ class DepartureController extends Controller {
 
 					$sessions->each( function($session)
 					{
-						if( $session->bookingdetails()->count() == 0 )
+						if( $session->bookingdetails()->count() === 0 )
 							$session->forceDelete();
 						else
 							$session->delete(); // SoftDelete
@@ -444,7 +469,7 @@ class DepartureController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('Cannot delete session. It has already been booked!')), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot delete session. It has been booked!')), 409 ); // 409 Conflict
 		}
 
 		return array('status' => 'OK. Session deleted');

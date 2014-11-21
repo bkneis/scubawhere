@@ -106,7 +106,6 @@ class ModelTestHelper{
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->capacity = self::TEST_INTEGER;
-		$entry->photo = self::TEST_STRING.$append;
 
 		$entry->save();
 		return $entry->id;
@@ -119,7 +118,6 @@ class ModelTestHelper{
 
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
-		$entry->photo = self::TEST_STRING.$append;
 
 		$entry->save();
 		return $entry->id;

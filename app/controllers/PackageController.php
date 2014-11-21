@@ -73,6 +73,31 @@ class PackageController extends Controller {
 			$prices = false;
 		// ##################### End Prices #####################
 
+		// Normalise base_prices array
+		$base_prices = Helper::normaliseArray($base_prices);
+		// Create base_prices
+		foreach($base_prices as &$base_price)
+		{
+			$base_price = new Price($base_price);
+
+			if( !$base_price->validate() )
+				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		if($prices)
+		{
+			// Normalise prices array
+			$prices = Helper::normaliseArray($prices);
+			// Create prices
+			foreach($prices as &$price)
+			{
+				$price = new Price($price);
+
+				if( !$price->validate() )
+					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+		}
+
 		if( $data['capacity'] == 0)
 			$data['capacity'] = null;
 
@@ -95,24 +120,10 @@ class PackageController extends Controller {
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( $tickets );
 
-		// Normalise base_prices array
-		$base_prices = Helper::normaliseArray($base_prices);
-		// Create base_prices
-		foreach($base_prices as &$base_price)
-		{
-			$base_price = new Price($base_price);
-		}
+		// Save prices
 		$package->basePrices()->saveMany($base_prices);
-
 		if($prices)
 		{
-			// Normalise prices array
-			$prices = Helper::normaliseArray($prices);
-			// Create prices
-			foreach($prices as &$price)
-			{
-				$price = new Price($price);
-			}
 			$package->prices()->saveMany($prices);
 		}
 
@@ -216,12 +227,47 @@ class PackageController extends Controller {
 
 			// TODO MAYBE: Unconnect the original ticket from boats
 
-			// Dispatch add-ticket route with all data and return result
+			// Dispatch add-package route with all data and return result
+			$originalInput = Request::input();
+			$data['_token'] = Input::get('_token');
 			$request = Request::create('api/package/add', 'POST', $data);
+			Request::replace($request->input());
 			return Route::dispatch($request);
+			Request::replace($originalInput);
 		}
 		else
 		{
+			$base_prices_changed = $base_prices && $this->checkPricesChanged($package->base_prices, $base_prices, true);
+			$prices_changed      = $prices && $this->checkPricesChanged($package->prices, $prices);
+
+			if($base_prices_changed)
+			{
+				// Normalise base_prices array
+				$base_prices = Helper::normaliseArray($base_prices);
+				// Create base_prices
+				foreach($base_prices as &$base_price)
+				{
+					$base_price = new Price($base_price);
+
+					if( !$base_price->validate() )
+						return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
+			if($prices_changed)
+			{
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
+				// Create prices
+				foreach($prices as &$price)
+				{
+					$price = new Price($price);
+
+					if( !$price->validate() )
+						return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+			}
+
 			if( !$package->update($data) )
 			{
 				return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
@@ -238,39 +284,19 @@ class PackageController extends Controller {
 			if( Input::has('tickets') )
 				$package->tickets()->sync( Input::get('tickets') );
 
-			if( $base_prices && $this->checkPricesChanged($package->base_prices, $base_prices, true) )
+			if( $base_prices_changed )
 			{
 				// Delete old base_prices
 				$package->basePrices()->delete();
-
-				// Normalise base_prices array
-				$base_prices = Helper::normaliseArray($base_prices);
-
-				// Create new base_prices
-				foreach($base_prices as &$base_price)
-				{
-					$base_price = new Price($base_price);
-				}
 				$package->basePrices()->saveMany($base_prices);
 
 				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
 			}
-			else
-				$base_prices = false; // Signal the front-end to NOT reload the form, because the base_price IDs didn't change
 
-			if( $prices && $this->checkPricesChanged($package->prices, $prices) )
+			if( $prices_changed )
 			{
 				// Delete old prices
 				$package->prices()->delete();
-
-				// Normalise prices array
-				$prices = Helper::normaliseArray($prices);
-
-				// Create new prices
-				foreach($prices as &$price)
-				{
-					$price = new Price($price);
-				}
 				$package->prices()->saveMany($prices);
 
 				$prices = true; // Signal the front-end to reload the form to show the new price IDs
@@ -278,10 +304,7 @@ class PackageController extends Controller {
 			elseif( !$prices )
 			{
 				$package->prices()->delete();
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 			}
-			else
-				$prices = false; // Signal the front-end to NOT reload the form, because the price IDs didn't change
 
 			return array('status' => 'OK. Package updated', 'base_prices' => $base_prices, 'prices' => $prices);
 		}

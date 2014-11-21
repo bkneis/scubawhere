@@ -3,7 +3,7 @@
 <head>
 	<title>Scuba Where | Dive Operator Register</title>
 
-	<script src="/common/js/jquery.js"></script>
+	<script src="/common/js/jquery.min.js"></script>
 	<script src="js/jquery.steps.min.js"></script>
 	<script src="js/register.js"></script>
 

@@ -17,23 +17,34 @@ class PasswordController extends Controller {
 	 */
 	public function postRemind()
 	{
-		switch ( $response = Password::remind(Input::only('email'), function($message)
+		$response = Password::remind(Input::only('email'), function($message)
 		{
-			$message->subject('ScubaWhere Password Reminder');
-		}) )
+			if( Input::has('welcome'))
+				$message->subject('Welcome to ScubawhereRMS');
+			else
+				$message->subject('Scubawhere Password Reminder');
+		});
+
+		switch( $response )
 		{
 			case Password::INVALID_USER:
-				// return View::make('password.remind')->with('error', Lang::get($response));
-				return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+				if(Request::ajax())
+					return Response::json( array('errors' => array(Lang::get($response))), 406 ); // 406 Not Acceptable
+
+				return View::make('password.remind')->with('error', Lang::get($response));
 
 			case Password::REMINDER_SENT:
-				// return View::make('password.remind')->with('status', Lang::get($response));
-				return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+				if(Request::ajax())
+					return Response::json( array('status' => Lang::get($response)), 201 ); // 201 Created
+
+				return View::make('password.remind')->with('status', Lang::get($response));
 
 			default:
+				if(Request::ajax())
+					return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
+
 				Session::set('error', 'Nothing happend I\'m afraid...');
-				// return View::make('password.remind');
-				return Response::json( array('errors' => array('Nothing happend I\'m afraid...')), 500); // 500 Internal Server Error
+				return View::make('password.remind');
 		}
 	}
 

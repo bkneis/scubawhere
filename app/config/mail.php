@@ -55,7 +55,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'hello@scubawhere.com', 'name' => 'ScubaWhere.com'),
+	'from' => array('address' => 'hello@scubawhere.com', 'name' => 'Scubawhere.com'),
 
 	/*
 	|--------------------------------------------------------------------------

@@ -37,12 +37,10 @@
 
 	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel='stylesheet' href='css/fullcalendar.css' />
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-
-	<link rel="stylesheet" type="text/css" href="/common/css/jquery.tagsinput.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
-
 	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="../common/favicon.ico" />
@@ -50,11 +48,11 @@
 	<!-- dash config js -->
 
 	<!-- Third Party Libraries -->
-	<script src="/common/js/jquery.js"></script>
+	<script src="/common/js/jquery.min.js"></script>
 
 	<script src="/common/js/hashchange.min.js"></script>
 
-	<script src="/common/js/handlebars.js"></script>
+	<script src="/common/js/handlebars.min.js"></script>
 
 	<script src="/common/ckeditor/ckeditor.js"></script>
 	<script src="/common/ckeditor/adapters/jquery.js"></script>
@@ -69,6 +67,8 @@
 		Company.getCompany(function success(data) {
 			console.info('Company info loaded');
 			window.company = data;
+
+			$('.username').text(window.company.username);
 		});
 
 		// Set scubawhere namespace
@@ -123,6 +123,13 @@
 						<i class="fa fa-pencil"></i>
 						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
+					</div>
+				</li>
+
+				<li data-load="calendar">
+					<div>
+						<i class="fa fa-calendar"></i>
+						<span>Calendar</span>
 					</div>
 				</li>
 

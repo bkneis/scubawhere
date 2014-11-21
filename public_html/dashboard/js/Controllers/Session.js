@@ -1,6 +1,6 @@
 var Session = {
 	//params = int id (the ID of the wanted session)
-	getSecificSession: function(params, handleData) {
+	getSpecificSession: function(params, handleData) {
 		$.get("/api/session", params).done(function(data){
 			handleData(data);
 		});
@@ -34,7 +34,7 @@ var Session = {
 	filter: function(params, handleData, errorFn) {
 		$.ajax({
 			type: "GET",
-			url: "/api/session/filter", // TODO replace all controllers' Math.random() appendices with a central function (http://api.jquery.com/ajaxSend/) to manipulate the URL on GET requests
+			url: "/api/session/filter",
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -46,9 +46,13 @@ var Session = {
 	// @param string  start        The start datetime of the session. Must be interpretable by the strtotime PHP function
 	// @param integer boat_id      The ID of the boat that carries this session
 	// @param integer timetable_id The ID of the related timetable (optional)
-	createSession: function(params, handleData) {
-		$.post("/api/session/add", params, function(data){
-			handleData(data);
+	createSession: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/session/add",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 
@@ -72,9 +76,14 @@ var Session = {
 		});
 	},
 
-	//params id of session
 	deactivateSession: function(params, handleData) {
 		$.post("/api/session/deactivate", params, function(data){
+			handleData(data);
+		});
+	},
+
+	restoreSession: function(params, handleData) {
+		$.post("/api/session/restore", params, function(data){
 			handleData(data);
 		});
 	}

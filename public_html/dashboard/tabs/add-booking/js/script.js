@@ -1,546 +1,612 @@
-var bookingID;
-var sessionID = 0;
-var startDate;
-var endDate;
-var bookingCost = 0;
-//var numCustomers = 0;
-var customersArray = [];
-
-var init = false;
+var booking = {};
+var sessions = [];
 
 window.token;
 $.get("/token", null, function(data) {
 	window.token = data;
 });
 
+Handlebars.registerHelper("freeSpaces", function(capacity) {
+	var freeSpaces = capacity[1] - capacity[0];
+	return freeSpaces;
+});
+
+Handlebars.registerHelper("tripFinish", function(start, duration) {
+	var d = new Date(start);
+	d.setHours(d.getHours()+duration);
+	var f = d.toISOString().slice(0, 19).replace('T', ' ');
+
+	return friendlyDate(f);
+});
+
+Handlebars.registerHelper("friendlyDate", function(d) {
+	return friendlyDate(d);
+});
+
+Handlebars.registerHelper("priceRange", function(prices) {
+	if(prices.length > 1) {
+		var min=null, max=null;
+		$.each(prices, function(i,v) {
+			var price = parseFloat(v.decimal_price).toFixed(2);
+			if ((min===null) || (price < min)) { min = price; }
+			if ((max===null) || (price > max)) { max = price; }
+		});
+		if(min != max) {
+			return min+" - "+max;
+		}else{
+			return min;
+		}
+  		
+	}else if(prices.length == 1){
+		return prices[0].decimal_price;
+	}else{
+		return "hmmm";
+	}
+
+});
+
 // Load all of the agents, tickets and packages for dive center to select
 $(function(){
 
-	var ticketSource = $("#tickets-list-template").html();
-	var ticketTemplate = Handlebars.compile(ticketSource);
-
-	Ticket.getAllTickets(function(data){
-		$("#available-tickets").append(ticketTemplate({tickets:data}));
-	});
-
-	var agentSource = $("#agents-list-template").html();
-	var agentTemplate = Handlebars.compile(agentSource);
+	var agentTemplate = Handlebars.compile($("#agents-list-template").html());
 
 	Agent.getAllAgents(function(data){
 		$("#agents").append(agentTemplate({agents:data}));
 	});
 
-	var packageSource = $("#packages-list-template").html();
-	var packageTemplate = Handlebars.compile(packageSource);
+	var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
 
-	Package.getAllPackages(function(data){
-		$("#available-packages").append(packageTemplate({packages:data}));
+	Ticket.getAllTickets(function(data){
+			console.log(data);
+		$("#tickets").append(ticketTemplate({tickets:data}));
 	});
 
-	var addonsSource = $("#addons-template").html();
-	var addonsTemplate = Handlebars.compile(addonsSource);
+	var tripTemplate = Handlebars.compile($("#trips-list-template").html());
+
+	Trip.getAllTrips(function(data){
+		$("#trips").append(tripTemplate({trips:data}));
+	});
+
+	var addonsTemplate = Handlebars.compile($("#addons-template").html());
 
 	Addon.getAllAddons(function(data){
 		$("#addons").append(addonsTemplate({addons:data}));
 	});
 
+	var customersTemplate = Handlebars.compile($("#customers-list-template").html());
+
+	Customer.getAllCustomers(function(data){
+		$("#existing-customers").append(customersTemplate({customers:data}));
+	});
+
+	var countriesTemplate = Handlebars.compile($("#countries-template").html());
+
+	$.get("/api/country/all", function(data) {
+		$("#add-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
+		$("#edit-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
+	});
+
 });
 
-// Dispaly agents option if source of booking is through an agent
-function validateSob() {
-	var choice = document.getElementById("sob").value;
-	if(choice == "agent") {
-		document.getElementById('agent-info').style.display = 'block';
+var token = getToken();
+
+//Sources
+
+$(document).on('click', '.booking-source a', function() {
+	listGroupRadio($(this), 'btn-primary');
+
+	if($(this).data('type') == 'agent') {
+		$('#agent-info').slideDown();
+	}else{
+		$('#agent-info').slideUp();
 	}
-	else {
-		document.getElementById('agent-info').style.display = 'none';
+});
+
+$(document).on('click', '.list-group-radio', function(e) {
+	listGroupRadio($(this));
+});
+
+$(document).on('click', '.source-finish', function() {
+	$(this).html('<i class="fa fa-cog fa-spin"></i> Initiating...');
+
+	var type = $('.booking-source').children('.active').first().data("type");
+
+	if(type == "agent") {
+		var agentId = $('#agents').children('.active').data('id');
+		var params = [{name: "_token", value: window.token}, {name: "agent_id", value: agentId}];
+	}else{
+		var params = [{name: "_token", value: window.token}, {name: "source", value: type}];
 	}
-}
 
-//Initiate the booking process by sending API source of booking details, either agent_id or source
-//Also recieve back booking ID to add details to
-function initiate() {
+	Booking.initiate(params, function(data) {
+		$('[data-target="#ticket-tab"]').tab('show');
+		booking.id = data.id;
+	});
+});
 
-	if(!init){
-		var choice = document.getElementById("sob").value;
+//Tickets
 
+$(document).on('click', '.btn-ticket', function() {
+	//Get data from the ticket
+	var id = $(this).data('id');
+	var name = $(this).find('.ticket-name').html();
 
-		if(choice == "agent") {
-			var agentID = document.getElementById("agents").value;
-			// var agentID = agents.options[agents.selectedIndex].id;
-			var data = {_token : window.token, agent_id : agentID};
+	//Get the specific font awesome icon (without size increase)
+	var icon = $(this).find('.fa').attr('class').split(' ')[1];
+
+	//Check if ticket is already in basket
+	if($('#basket').find('#ticket-'+id).length) {
+		var qty = parseInt($('#ticket-'+id).find('.qty').text(), 10);
+
+		$('#ticket-'+id).find('.qty').text(qty+1);
+	}else{
+		var qty = 1;
+		$('#basket').append('<p class="list-group-item-text" id="ticket-'+id+'"><i class="fa '+icon+'"></i> <a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="'+id+'">'+name+'</a> <span class="badge qty">'+qty+'</span></p>');
+	}
+
+	addBookingTicket(id);
+});
+
+$(document).on('click', '.remove-ticket', function() {
+	var id = $(this).data('id');
+	var ticket = $('#ticket-'+id);
+	var qty = parseInt(ticket.find('.qty').text(), 10);
+
+	if(qty > 1) {
+		ticket.find('.qty').text(qty-1);
+	}else{
+		ticket.remove();
+	}
+
+	removeBookingTicket(id);
+});
+
+$(document).on('click', '.tickets-finish', function() {
+	$('[data-target="#customer-tab"]').tab('show');	
+});
+
+//Customers
+
+$(document).on('click', '.add-customer', function() {
+	var id = $('#existing-customers').val();
+	var btn = $(this);
+
+	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
+
+	addBookingCustomer(id, function() {
+		btn.html('Add to booking');
+	});
+});
+
+$(document).on('click', '.edit-customer', function() {
+	var id = $(this).data('id');
+
+	$('#edit-customer-modal').modal('show');
+
+	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
+	Customer.getCustomer("id="+id, function(data) {
+		$("#edit-customer-details").html('').append(editCustomerTemplate(data));
+
+		if(data.country_id) {
+			$('#country_id').val(data.country_id);
+		}else{
+			$('#country_id').val("");
 		}
-		else {
-			var data = {_token : window.token, source : choice};
-		}
+	});
+});
 
-		Booking.initiate(data, function success(data) {
-			alert("Booking initiated");
-			bookingID = data.id;
-			console.log(bookingID);
+$(document).on('submit', '#edit-customer-form', function(e) {
+	e.preventDefault();
+
+	var id = $("#edit-customer-details").find('input[name="id"]').val();
+	var params = $(this).serializeArray();
+	var btn = $(this).find('button[type="submit"]');
+
+	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+
+	params.push({name: "_token", value: window.token});
+	params.push({name: "id", value: id});
+
+	Customer.updateCustomer(params, function() {
+		addBookingCustomer(id, function() {
+			btn.html('Save');
+			$('#edit-customer-modal').modal('hide');
 		});
+	});
+});
 
-		init = true;
+$(document).on('click', '.remove-customer', function() {
+	var id = $(this).data('id');
+	$(this).parents('.list-group-item').remove();
+	removeBookingCustomer(id);
+});
+
+$(document).on('submit', '#new-customer', function(e) {
+	e.preventDefault();
+	var form = $(this);
+	var params = form.serializeArray();
+	var btn = $(this).find('button[type="submit"]');
+
+	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
+
+	params.push({name: "_token", value: window.token});
+
+	Customer.createCustomer(params, function success(data){
+		addBookingCustomer(data.id, function() {
+			btn.html('Add Customer');
+			form[0].reset();
+		});
+	});
+});
+
+$(document).on('click', '.clear-form', function() {
+	$(this).parents('form')[0].reset();
+});
+
+$(document).on('click', '.lead-customer', function() {
+	var id = $(this).data('id');
+	$("#session-customers").find('[data-id="'+id+'"]').attr('data-lead', 1).siblings('li').attr('data-lead', 0);
+
+	$("#added-customers").find('[data-id="'+id+'"]').siblings('li').attr('data-lead', 0).find('.is-lead').html('');
+	$("#added-customers").find('[data-id="'+id+'"]').attr('data-lead', 1).find('.is-lead').html('Lead');
+});
+
+$(document).on('click', '.customers-finish', function() {
+	var leadCustomer = $('#added-customers').children('li[data-lead="1"]');
+
+	var emailCheck = leadCustomer.find('.customer-email').text().length;
+	var phoneCheck = leadCustomer.find('.customer-phone').text().length;
+	var countryCheck = leadCustomer.data('country-id');
+
+	if(!leadCustomer.length) {
+		alert("Please designate a lead customer.");
+		return false;
+	}else if(!emailCheck) {
+		alert("Lead customer requires an email!");
+		return false;
+	}else if(!phoneCheck) {
+		alert("Lead customer requires a phone number!");
+		return false;
+	}else if(!countryCheck) {
+		alert("Lead customer requires a country!");
+		return false;
+	}else{
+		booking.lead_id = leadCustomer.data('id')
+		$('[data-target="#session-tab"]').tab('show');
+		compileSessionsList();
 	}
-}
+});
 
-// Add selected ticket to both list and select box for dive center to select when filtering through sessions and assigning to a customer
-function selectTicket(ticket, id, price) {
+$(document).on('submit', '#session-filters', function(e) {
+	e.preventDefault();
+	compileSessionsList($(this).serialize());
+});
 
-	var customerTickets = document.getElementById("customer-tickets");
-	var option = document.createElement("option");
-	option.text = ticket;
-	option.value = id;
-	option.setAttribute("data-price", price);
-	bookingCost += parseFloat(price);
-	var totalBookingCost = document.getElementById("totalBookingCost");
-	totalBookingCost.innerHTML = bookingCost;
-	//console.log(bookingCost);
-	customerTickets.add(option);
+$(document).on('click', '.assign-session', function() {
+	var ticket = $('#session-tickets').children('.active').first();
+	var btn = $(this);
 
-	var selectedTickets = document.getElementById("selected-tickets");
-	var entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(ticket));
-	selectedTickets.appendChild(entry);
+	var bookingdetail = {};
 
-	alert(ticket + " was added")
+	bookingdetail.sessionId = $(this).data('id');
+	bookingdetail.sessionStart = $(this).parents('tr').find('.session-start').text();
+	bookingdetail.sessionTrip = $(this).parents('tr').find('.session-trip').text().trim();
+	bookingdetail.customerId = $('#session-customers').children('.active').first().data('id');
+	bookingdetail.customerName = $('#session-customers').children('.active').first().text().trim();
+	bookingdetail.ticketId = ticket.data('id');
+	bookingdetail.ticketName = ticket.text().trim();
 
-}
+	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
-// Same as selectTicket but for packages
-function selectPackage(package, id, price) {
+	if(bookingdetail.customerId == booking.lead_id) {
+		var isLead = 1;
+	}else{
+		var isLead = 0;
+	}
 
-	/*var customerPackages = document.getElementById("customer-packages");
-	var option = document.createElement("option");
-	option.text = package;
-	option.value = id;
-	option.setAttribute("data-price", price);*/
-	bookingCost += parseFloat(price);
-	var totalBookingCost = document.getElementById("totalBookingCost");
-	totalBookingCost.innerHTML = bookingCost;
-	//customerPackages.add(option);
+	var params = [
+		{name: "_token", value: window.token},
+		{name: "booking_id", value: booking.id},
+		{name: "customer_id", value: bookingdetail.customerId},
+		{name: "is_lead", value: isLead},
+		{name: "ticket_id", value: bookingdetail.ticketId},
+		{name: "session_id", value: bookingdetail.sessionId}
+	];
 
-	var selectedPackages = document.getElementById("selected-tickets");
-	var entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(package));
-	selectedPackages.appendChild(entry);
-	alert(package + " was added");
+	Booking.addDetails(params, function(data) {
+		addToAssignedSessions(bookingdetail);
+
+		$("#free-spaces"+(bookingdetail.sessionId)).html('<i class="fa fa-refresh fa-spin"></i>');
+
+		compileSessionsList($("#session-filters").serialize());
+		sessions.push({"id": bookingdetail.sessionId, "customer_id": bookingdetail.customerId, "ticket_id": bookingdetail.ticketId});
+			
+		if($('#session-tickets').children('.unused-ticket').length == 1) {
+			$('.session-requirements').slideUp();
+			$('.assign-session').attr("disabled", "disabled");
+		}
+
+		ticket.removeClass('unused-ticket');
+	}, function() {
+		btn.html('Assign');
+	});
+});
+
+$(document).on('click', '.unassign-session', function() {
+	var item = $(this).parents('li');
+	var customerId = $(this).data('customer-id');
+	var sessionId = $(this).data('session-id');
+	var ticketId = $(this).data('ticket-id');
+
+	$(this).html('<i class="fa fa-cog fa-spin"></i>');
+
+	var params = [
+		{name: "_token", value: window.token},
+		{name: "booking_id", value: booking.id},
+		{name: "customer_id", value: customerId},
+		{name: "session_id", value: sessionId}
+	];
+
+	//Remove the session-customer-ticket at end of loop otherwise loop will carry on through deleted
+	var maxLoops = sessions.length;
+	$.each(sessions, function(i,v) {
+		if(v.id == sessionId) {
+			var r = i;
+		}
+
+		if(i == (maxLoops - 1)) {
+			sessions.splice(r,1);
+		}
+	});
+
+	Booking.removeDetails(params, function() {
+		item.remove();
+		$('#session-tickets').find('[data-id="'+ticketId+'"]').addClass('unused-ticket');
+	});
+	
+});
+
+$(document).on('click', '.sessions-finish', function() {
+	$(this).html('<i class="fa fa-cog fa-spin"></i> Loading...');
+	generateAddonSessions(sessions);
+});
+
+var addonTotal = 0;
+$(document).on('click', '.assign-addon', function() {
+	var addon = [];
+	addon.id = $(this).data('id');
+	addon.basePrice = parseFloat($(this).parents('li').find('.price').text());
+	addon.name = $(this).parents('li').find('.addon-name').text();
+	addon.inputQty = parseInt($(this).parents('li').find('input[name="qty"]').val(), 10);
+
+	var summaryItem = $('#addons-summary').find('[data-addon-id="'+addon.id+'"]');
+
+	if(summaryItem.length) {
+		addon.qty = parseInt(summaryItem.find('.qty').text(), 10);
+		addon.price = parseFloat(summaryItem.find('.price').text(), 10);
+
+		summaryItem.find('.qty').text(addon.qty+addon.inputQty);
+		summaryItem.find('.price').text((addon.basePrice*addon.inputQty)+addon.price);
+		
+		addonTotal += (addon.basePrice * addon.inputQty);
+		$('#addons-summary-total').html(addonTotal);
+	}else{
+		addToAddonSummary(addon);
+	}
+
+	addonTotal += (addon.basePrice * addon.inputQty);
+	$('#addons-summary-total').html(addonTotal);
+	
+});
+
+$(document).on('click', '.remove-addon', function() {
+	var id = $(this).data('id');
+	var addon = $('#addons-summary').find('[data-id="'+id+'"]');
+	var price = addon.find('.price').text();
+	var basePrice = $('#baseprice-'+id).text();
+	var qty = parseInt(addon.find('.qty').text(), 10);
+
+	if(qty > 1) {
+		addon.find('.qty').text(qty-1);
+		addon.find('.price').text(price-basePrice);
+	}else{
+		addon.remove();
+	}
+
+	addonTotal -= basePrice;
+	$('#addons-summary-total').html('£'+addonTotal);
+});
+
+$(document).on('click', '.addon-finish', function() {
+	var btn = $(this);
+	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+
+	$('#addons-summary').children('.summary-item').each(function(k,v) {
+		var params = [
+			{name: "_token", value: window.token},
+			{name: "booking_id", value: booking.id},
+			{name: "session_id", value: $(v).data("session-id")},
+			{name: "customer_id", value: $(v).data("customer-id")},
+			{name: "addon_id", value: $(v).data("addon-id")},
+			{name: "quantity", value: $(v).find(".qty").text()}
+		];
+
+		Booking.addAddon(params, function(data) {
+			btn.html('Save');
+			$('[data-target="#extra-tab"]').tab('show');
+		});
+	});
+
+	
+});
+
+$(document).on('submit', '#extra-form', function(e) {
+	e.preventDefault();
+
+	var btn = $(this).find('[type="submit"]');
+	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+
+	var params = $(this).serializeArray();
+	params.push({name: "_token", value: window.token});
+	params.push({name: "booking_id", value: booking.id});
+	
+	Booking.editInfo(params, function(data) {
+		btn.html('Next');
+		$('[data-target="#summary-tab"]').tab('show');
+	});
+});
+
+$(document).ready(function() {
+
+	$('#agent-info').hide();
+	$('#existing-customers').select2();
+	$('#trips').select2();
+	$('#country_id').select2();
+
+	//Form Wizard
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		if(!$(e.target).hasClass('done') && !$(e.target).hasClass('selected')) {
+			$(e.relatedTarget).toggleClass('selected done');
+			$(e.target).addClass('selected').tab('show');
+		}
+	});
+
+	$('a[data-toggle="tab"]').on('click', function (e) {
+		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
+			return false;
+		}
+	});
+
+});
+
+function addBookingCustomer(id, done) {
 
 	var param = "id=" + id;
-		var customerPackageTickets = document.getElementById("customer-tickets");
-		Package.getPackage(param, function success(data){
-			console.log(data.tickets);
-			console.log(data);
-			var numTickets = data.tickets.length;
-			for(var i=0; i < numTickets; i++) {
-				var quantity = data.tickets[i].pivot.quantity;
-				var optGroup = document.createElement('optgroup')
-				optGroup.label = package;
-				for(var j=0; j < quantity; j++){
-					var option = document.createElement("option");
-					option.text = data.tickets[i].name;
-					option.value = data.tickets[i].id;
-					option.setAttribute("data-price", (price / quantity));
-					option.setAttribute("data-package", id);
-					optGroup.appendChild(option);
-					//customerPackageTickets.add(option);
-				}
-				customerPackageTickets.add(optGroup);
-			}
-		}); 
 
+	var addedCustomersTemplate = Handlebars.compile($("#added-customers-template").html());
+	var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
+
+	Customer.getCustomer(param, function success(data){
+		$("#added-customers").find('li[data-id="'+id+'"]').remove();
+		$("#session-customers").find('a[data-id="'+id+'"]').remove();
+
+		$("#added-customers").append(addedCustomersTemplate(data));
+		$("#session-customers").append(sessionCustomersTemplate(data));
+		done();
+	});
 }
 
-// This is to load the second select box
-
-	/*var packageID = document.getElementById("customer-packages").value;
-
-	if(packageID == 0) {
-		document.getElementById("packages-select").style.display = "none";
-		document.getElementById("tickets-select").style.display = "inline";
-	}
-	else {
-		var i;
-		var customerPackageTickets = document.getElementById("customer-tickets");
-		//var customerPackageTickets = document.getElementById("customer-package-tickets");
-		var customerTickets = document.getElementById("tickets-select");
-
-		//customerPackageTickets.style.display = "inline";
-		//customerTickets.style.display = "none";
-
-		var param = "id=" + packageID;
-		Package.getPackage(param, function success(data){
-			//console.log(data.tickets);
-			var numTickets = data.tickets.length;
-			for(i=0; i < numTickets; i++) {
-				var option = document.createElement("option");
-				option.text = data.tickets[i].name;
-				option.value = data.tickets[i].id;
-				customerPackageTickets.add(option);
-			}
-		}); 
-	}
-
-}*/ 
-
-function selectPackageTicket() {
-
-		var param = "id=" + packageID;
-		var customerPackageTickets = document.getElementById("customer-tickets");
-		Package.getPackage(param, function success(data){
-			//console.log(data.tickets);
-			var numTickets = data.tickets.length;
-			for(var i=0; i < numTickets; i++) {
-				var option = document.createElement("option");
-				option.text = data.tickets[i].name;
-				option.value = data.tickets[i].id;
-				customerPackageTickets.add(option);
-			}
-		});
+function removeBookingCustomer(id) {
+	$('#session-customers').find('[data-id="'+id+'"]').remove();
 }
 
-function getToday() {
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-	var yyyy = today.getFullYear();
+function addBookingTicket(id) {
+	var param = "id=" + id;
+	var sessionTicketsTemplate = Handlebars.compile($("#session-tickets-template").html());
 
-	if(dd<10) {
-		dd='0'+dd
-	} 
-
-	if(mm<10) {
-		mm='0'+mm
-	} 
-
-	today = yyyy + '-' + mm + '-' + dd;
-	//alert(today);
-	return today;
+	Ticket.getTicket(param, function success(data){
+		$("#session-tickets").append(sessionTicketsTemplate(data));
+	});
 }
 
-function showSessions() {
+function removeBookingTicket(id) {
+	$("#session-tickets").find('[data-id="'+id+'"]').remove();
+}
 
-	$('#calendar').fullCalendar('removeEvents');  //Removes all events
-
-	var i;
-	//var ticketID = 10;
-	var ticketID = document.getElementById("customer-tickets").value;
-	//console.log(ticketID);
+function compileSessionsList(params) {
+	if(typeof(params)==='undefined') params = "";
 	
-	//var param = "ticket_id=" + ticketID + "&after=2014-07-01";
-	var param = "ticket_id=" + ticketID + "&after=" + getToday();
-	var param2;
+	var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
 
-	window.sessions;
-	window.trips;
+	Session.filter(params, function(data){
+		$("#sessions-table tbody").html('').append(sessionsTemplate({sessions:data}));
+	});
+}
 
-	Session.filter(param, function success(data) {
 
-		window.sessions = _.indexBy(data, 'id');
-		//console.log(window.sessions);
+var handleSummary = [];
+function addToAddonSummary(addon) {
 
-		_.each(window.sessions, function(value) {
+	var selectedSubBooking = $('#addon-sessions').find('.active');
+	addon.sessionId = selectedSubBooking.data('id');
+	addon.customer = selectedSubBooking.find('.customer-name').text();
+	addon.customerId = selectedSubBooking.data('customer-id');
+	addon.ticket = selectedSubBooking.find('.ticket-name').text();
+	addon.trip = selectedSubBooking.find('.trip-name').text();
+	addon.start = selectedSubBooking.find('.start-date').text();
 
-			param2 = "id=" + value.trip_id;
-			//console.log(param2);
+	handleSummary.push({
+		"id":addon.id,
+		"customer_id":addon.customerId,
+		"session_id":addon.sessionId,
+		"customer":addon.customer,
+		"ticket":addon.ticket,
+		"trip":addon.trip,
+		"start":addon.start,
+		"addon":addon.name,
+		"price":addon.basePrice,
+		"qty":addon.inputQty
+	});
 
-			Trip.getSpecificTrips(param2, function success(data2){
+	var addonsSummaryTemplate = Handlebars.compile($("#addons-summary-template").html());
+	$("#addons-summary").html('').append(addonsSummaryTemplate({addonsSummary:handleSummary}));
+}
 
-				var startTime = $.fullCalendar.moment.utc(window.sessions[value.id].start);
-				var endTime = $.fullCalendar.moment(startTime).add('hours', data2.duration);
-				//var endTime = $.fullCalendar.moment(startTime).add('hours', window.sessions[value.id].duration);
-				//console.log(window.sessions[value.id].duration);
-				//console.log("duration " + data2.duration);
+function addToAssignedSessions(bookingDetail) {
+	var addedBookingdetailsTemplate = Handlebars.compile($("#added-bookingdetails-template").html());
+	$("#added-bookingdetails").append(addedBookingdetailsTemplate(bookingDetail));
+}
 
-				var event = 
+//Add the session to the addons page
+function generateAddonSessions(sessions) {
+	var addonSessionsTemplate = Handlebars.compile($("#addon-sessions-template").html());
+	var handleData = [];
+	var maxSessions = sessions.length;
+
+	$.each(sessions, function(i, session) {
+		var handleItem = [];
+		//Build "sessions" (or in database terms, booking_details)
+		Customer.getCustomer("id="+session.customer_id, function(data) {
+			handleItem.customer = data.firstname+" "+data.lastname;
+		});
+
+		Ticket.getTicket("id="+session.ticket_id, function(data) {
+			handleItem.ticket = data.name;
+		});
+
+		Session.getSpecificSession("id="+session.id, function(data) {
+			handleItem.start = data.start;
+
+			Trip.getSpecificTrip("id="+data.trip_id, function(data) {
+				handleItem.trip = data.name;
+
+				//We are doing this in here to wait for all ajax to finish
+				handleData.push({"id":session.id, "customer":handleItem.customer, "customer_id":session.customer_id, "ticket":handleItem.ticket, "start":handleItem.start, "trip":handleItem.trip});
+
+				//On the last loop, render the view
+				if(i == (maxSessions-1))
 				{
-					title : data2.name,
-					start : startTime,
-					end : endTime,
-					sessionID : window.sessions[value.id].id
-				};
-				$('#calendar').fullCalendar( 'renderEvent', event, true );
-				//console.log(event);
+					$("#addon-sessions").html('').append(addonSessionsTemplate({sessions:handleData}));
+					$('[data-target="#addon-tab"]').tab('show');
+				}
 			});
 		});
-
-		
 	});
 
 }
 
-function validateLead(params) {
-	var email = params.email;
-	var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-	if (!filter.test(email)) {
-		alert('Please provide a valid email address');
-		return false;
-	}
-	else if(!params.phone.match(/^\d+$/)){
-		alert("Please enter a valid phone number");
-		return false;
-	}
-	else if(params.firstname == "" || params.firstname == null || params.lastname == "" || params.lastname == null || params.country_id == 0){
-		alert("Please fill in all details for lead customer");
-		return false;
-	}
-	else return true;
+function listGroupRadio(selector, additionalClass) {
+	//This function treats list-group-items (http://getbootstrap.com/components/#list-group) like radios buttons
+	selector.siblings().removeClass('active '+additionalClass, selector.siblings().hasClass('active '+additionalClass));
+	selector.toggleClass('active '+additionalClass, !selector.siblings().hasClass('active '+additionalClass));
 }
 
-function addCustomer(count, checkLead){
+function friendlyDate(date) {
+	var d = new Date(date);
 
-	var btn = document.getElementById("add-cust-"+count);
-	if(btn.getAttribute("task") == "edit") {
-		editCustomer(count);
-	}
-	else {
+	//Adds 0 to single digits for date/times.
+	function addZ(n){return n<10? '0'+n:''+n;}
 
-		var firstName = document.getElementById("fname"+count).value;
-		var lastName = document.getElementById("lname"+count).value;
-		var customerID;
-		var validated = false;
-
-		var params = 
-		{
-			_token : window.token,
-			firstname : firstName,
-			lastname : lastName,
-			email : null,
-			country_id : 1,
-			phone : null
-		};
-
-		//var checkLead = document.getElementById("is_lead"+count).checked;
-		console.log(checkLead);
-
-		if(checkLead){ // So they are the lead customer
-			params.email = document.getElementById("email"+count).value;
-			//params.country_id = document.getElementById("leadCountry").value;
-			params.country_id = 1;
-			params.phone = document.getElementById("phone"+count).value;
-
-			validated = validateLead(params);
-		}
-		else {
-			if(params.firstname == "" || params.lastname == "" ){
-				alert("Please fill in the customers first and last name");
-			}
-			else {
-				validated = true;
-			}
-		}
-
-		if(validated) {
-			Customer.createCustomer(params, function sucess(data){
-				console.log(data);
-			//document.getElementById("add-cust-"+count).style.display = "none";
-			document.getElementById("add-cust-"+count).innerHTML = "Edit Customer";
-			customerID = data.id;
-
-			var customerSelect = document.getElementById("customers");
-			var option = document.createElement("option");
-			option.text = firstName + " " + lastName;
-			option.value = customerID;
-			option.setAttribute("data-lead", checkLead);
-			option.setAttribute("data-count", count);
-			customerSelect.add(option);
-			//numCustomers++;
-			document.getElementById("assign-ticket").style.display = "inline";
-			var customerObject = {count : count, id : customerID};
-			customersArray.push(customerObject);
-			btn.setAttribute("task", "edit");
-			console.log(customersArray);
-		});
-		}
-
-	}
-}
-
-function editCustomer(count) {
-
-	console.log(count);
-	var i;
-	var custID;
-	var validated = false;
-	for(i = 0; i < customersArray.length; i++){
-		if(customersArray[i].count == count){
-			custID = customersArray[i].id;
-			console.log(custID);
-			break;
-		}
-	}
-
-	var firstName = document.getElementById("fname"+count).value;
-	var lastName = document.getElementById("lname"+count).value;
-
-	var params = 
-	{
-		_token : window.token,
-		id : custID,
-		firstname : firstName,
-		lastname : lastName,
-		email : null,
-		country_id : 1,
-		phone : null
-	};
-
-	var checkLead = document.getElementById("is_lead"+count).checked;
-	console.log(checkLead);
-
-	if(checkLead){ // So they are the lead customer
-		params.email = document.getElementById("email"+count).value;
-		params.country_id = 1;
-		params.phone = document.getElementById("phone"+count).value;
-		validated = validateLead(params);
-	}
-	else {
-		if(params.firstname == "" || params.lastname == "" ){
-			alert("Please fill in the customers first and last name");
-		}
-		else {
-			validated = true;
-		}
-	}
-
-	if(validated){
-		Customer.updateCustomer(params, function success(data) {
-			console.log(data);
-			alert("Customer Updated");
-		});
-	}
-}
-
-function test9() {
-	$('#calendar').fullCalendar('render');
-}
-
-function addAddon(){
-	var addons = document.getElementById('addons');
-	var addonIDsub = addons.options[addons.selectedIndex].id;
-	var addonID = addonIDsub.substring(5);
-	var customerID = document.getElementById("customers").value;
-
-	var params = 
-	{
-		_token : window.token,
-		booking_id : bookingID,
-		session_id : sessionID,
-		customer_id : customerID,
-		addon_id : addonID
-	};
-
-	Booking.addAddon(params, function success(data){
-		console.log(data);
-	});
-}
-
-// Used to assign customers their ticket and send API call to add detials of booking
-function assignTicket() {
-
-	var validated = false;
-	var customer = document.getElementById("customers");
-	var trip = document.getElementById("customer-tickets");
-
-	if(customer.value == 0 || trip.value == 0 || sessionID == 0) {
-		alert("Please select a customer a ticket and a session to assign the trip");
-	}
-	else {
-		validated = true;
-	}
-
-	if(validated){
-
-		var customerID = document.getElementById("customers").value;
-		var isLead = customer.options[customer.selectedIndex].getAttribute("data-lead"); //- TRY NOW ADDED!!!!!!!!!!!
-		//var customerCount = document.getElementById("customers").getAttribute("data-count");
-		var ticketID = trip.value;
-		//var packageID = document.getElementById("customer-packages").value;
-		var packageID = trip.options[trip.selectedIndex].getAttribute("data-package");
-		var customerName = customer.options[customer.selectedIndex].text;
-		var tripName = trip.options[trip.selectedIndex].text;
-		var price = trip.options[trip.selectedIndex].getAttribute("data-price");
-		//console.log(trip.options[trip.selectedIndex]); // chnage vars for trip to ticket
-		var params = 
-		{
-			_token : window.token,
-			booking_id : bookingID,
-			customer_id : customerID,
-			is_lead : isLead,
-			ticket_id : ticketID,
-			session_id : sessionID,
-			package_id : packageID
-		};
-		/*if(ticketID == 0){
-			ticketID = document.getElementById("customer-package-tickets").value;
-		}*/
-		
-		Booking.addDetails(params, function success(data){
-			console.log(data);
-			trip.remove(trip.selectedIndex);
-			var table = document.getElementById("customers-trips-table");
-			//alert(isLead); - TALK TO SOREN, ALWAYS SAVES TO DB AS 0
-			var row = table.insertRow(-1);
-			var cell1 = row.insertCell(0);
-			var cell2 = row.insertCell(1);
-			var cell3 = row.insertCell(2);
-			var cell4 = row.insertCell(3);
-			var cell5 = row.insertCell(4);
-			cell1.innerHTML = customerName;
-			cell2.innerHTML = tripName;
-			cell3.innerHTML = String(startDate).slice(0, -8);
-			cell4.innerHTML = String(endDate).slice(0, -8);
-			cell5.innerHTML = price;
-			alert("Trip Assigned");
-			if(document.getElementById("customer-tickets").length == 1){
-				$.fancybox.close();
-			}
-			$('#calendar').fullCalendar('removeEvents');
-			sessionID = 0;
-		});
-	
-		var numAddons = document.getElementById("addons").length;
-		console.log(numAddons);
-		if(numAddons > 1){
-			addAddon();
-		}
-
-	}
-}
-
-function validateBooking() {
-
-	var cash = document.getElementById('pay-cash').value;
-	var card = document.getElementById('pay-card').value;
-	var cheque = document.getElementById('pay-cheque').value;
-	var bank = document.getElementById('pay-bank').value;
-	var pob = document.getElementById('pay-pob').value;
-
-	/*var params = {
-		_token : window.token,
-		booking_id : bookingID
-	}*/
-	var params = "booking_id=" + bookingID;
-
-	if((cash + card + cheque + bank + pob) == bookingCost){
-		console.log(params);
-		Booking.validateBooking(params, function success(data){
-			console.log(data);
-			alert('Booking is validated, you can view/edit your booking in manage bookings');
-		})
-	}
-	else {
-		alert('Please ensure the amount paid is the same as the total booking cost');
-	}
-}
-
-function refreshCal() {
-
-	$("#calendar").fullCalendar( 'changeView', 'basicWeek' );
-
-}
-
-function selectAddons() {
-
-	
+	//Why doesn't javascript have a nice Date like PHP?!
+	return d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear())+" "+(addZ(d.getHours()))+":"+(addZ(d.getMinutes()));
 }

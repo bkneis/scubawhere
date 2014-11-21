@@ -1,23 +1,44 @@
 var Boat = {
-	//No params required
-	getAllBoats : function (handleData) {
-		$.get("/company/boats").done(function(data){
-			handleData(data);
+
+	get : function(params, handleData) {
+		$.get("/api/boat", params, handleData);
+	},
+
+	getAll : function(handleData) {
+		$.get("/api/boat/all", handleData);
+	},
+
+	getAllWithTrashed : function(handleData) {
+		$.get("/api/boat/all-with-trashed", handleData);
+	},
+
+	create : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/boat/add",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 
-	//this will create, edit or delete accomodations and boats
-	//param needs to be a serialised form - check docs for format
-	setBoat : function (form, handleData) {
-		$.post("/company/boats", form).done(function(data){
-			handleData(data);
+	update : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/boat/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 
-	//get all accommodations - no params
-	getAccommodations : function (handleData) {
-		$.get("/company/boats").done(function(data){
-			handleData(data);
+	delete : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/boat/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	}
 };

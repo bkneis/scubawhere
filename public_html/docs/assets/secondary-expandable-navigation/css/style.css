@@ -62,7 +62,7 @@ Main components
   /* background-color: #f5f4e9; */
   background-color: white;
   z-index: 2;
-  padding-top: 5%;
+  padding-top: 2em;
   /* Force Hardware Acceleration in WebKit */
   -webkit-transform: translateZ(0);
   -webkit-backface-visibility: hidden;
@@ -75,11 +75,11 @@ Main components
 }
 .cd-main-content.lateral-menu-is-open {
   /* translate to show the lateral menu - all content needs to be put in the .cd-main-content to translate*/
-  -webkit-transform: translateX(-260px);
-  -moz-transform: translateX(-260px);
-  -ms-transform: translateX(-260px);
-  -o-transform: translateX(-260px);
-  transform: translateX(-260px);
+  -webkit-transform: translateX(-280px);
+  -moz-transform: translateX(-280px);
+  -ms-transform: translateX(-280px);
+  -o-transform: translateX(-280px);
+  transform: translateX(-280px);
 }
 
 #cd-menu-trigger {
@@ -98,14 +98,16 @@ Main components
   -webkit-transition-duration: 0.4s;
   -moz-transition-duration: 0.4s;
   transition-duration: 0.4s;
+
+  font-family: sans-serif;
 }
 #cd-menu-trigger.lateral-menu-is-open {
   /* translate to show the lateral menu */
-  -webkit-transform: translateX(-260px);
-  -moz-transform: translateX(-260px);
-  -ms-transform: translateX(-260px);
-  -o-transform: translateX(-260px);
-  transform: translateX(-260px);
+  -webkit-transform: translateX(-280px);
+  -moz-transform: translateX(-280px);
+  -ms-transform: translateX(-280px);
+  -o-transform: translateX(-280px);
+  transform: translateX(-280px);
 }
 #cd-menu-trigger.is-fixed {
   position: fixed;
@@ -238,7 +240,7 @@ Main components
   }
   #cd-menu-trigger .cd-menu-text {
     display: inline-block;
-    line-height: 3em;
+    line-height: 3.3em;
   }
   #cd-menu-trigger .cd-menu-icon {
     left: auto;
@@ -259,7 +261,7 @@ Main components
   visibility: hidden;
   /* the secondary navigation is covered by the main element */
   z-index: 1;
-  width: 260px;
+  width: 280px;
   background-color: #242e30;
   overflow-y: auto;
   /* Force Hardware Acceleration in WebKit */
@@ -347,10 +349,4 @@ Main components
   -ms-transform: translateY(-50%) rotate(90deg);
   -o-transform: translateY(-50%) rotate(90deg);
   transform: translateY(-50%) rotate(90deg);
-}
-
-.made-with {
-  display: block;
-  margin-top: 3em;
-  text-align: center;
 }

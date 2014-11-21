@@ -21,7 +21,6 @@ class BoatroomModelTest extends ModelTestCase {
 		$this->assertEquals($company_id, $boatroom->company_id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING, $boatroom->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING, $boatroom->description, "Unexpected description value");
-		$this->assertEquals(ModelTestHelper::TEST_STRING, $boatroom->photo, "Unexpected photo value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $boatroom->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $boatroom->updated_at);
 
@@ -35,7 +34,6 @@ class BoatroomModelTest extends ModelTestCase {
 		$this->assertNotEquals(0, $boatroom->id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $boatroom->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $boatroom->description, "Unexpected description value");
-		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $boatroom->photo, "Unexpected photo value");
 
 		//Delete
 		$boatroom->delete();
@@ -47,7 +45,7 @@ class BoatroomModelTest extends ModelTestCase {
 	public function testValidation(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
-	
+
 	public function testRelationships(){
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
@@ -55,7 +53,7 @@ class BoatroomModelTest extends ModelTestCase {
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$boatroom_id = ModelTestHelper::createBoatroom($company_id);
 		$boatroom = Boatroom::find($boatroom_id);
-	
+
 		$this->assertNotNull($boatroom->company, "Unexpected company relationship value");
 	}
 
