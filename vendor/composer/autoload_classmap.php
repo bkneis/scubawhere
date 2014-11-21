@@ -21,6 +21,8 @@ return array(
     'AddForeignKeysToBookingCustomerTable' => $baseDir . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
     'AddIdColumnToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_10_13_141916_add_id_column_to_booking_details_table.php',
     'AddInnoDBRelationBetweenCurrenciesAndCountriesTables' => $baseDir . '/app/database/migrations/2014_10_31_163734_add_innoDB_relation_between_currencies_and_countries_tables.php',
+    'AddParentColumnToAddonsTable' => $baseDir . '/app/database/migrations/2014_11_21_233944_add_parent_column_to_addons_table.php',
+    'AddParentIdColumnToTicketsPackagesAndAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_21_224408_add_parent_id_column_to_tickets_packages_and_accommodations_table.php',
     'AddQuantityColumnToAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_14_010948_add_quantity_column_to_addon_bookingdetail_pivot_table.php',
     'AddRegisterDetailsToCompanies' => $baseDir . '/app/database/migrations/2014_11_03_123343_add_register_details_to_companies.php',
     'AddRememberTokenToCompaniesBecauseOfLaravelUpdate' => $baseDir . '/app/database/migrations/2014_05_08_171023_add_remember_token_to_companies_because_of_laravel_update.php',

@@ -237,12 +237,12 @@ function renderTicketList(callback) {
 
 	$('#ticket-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Ticket.getAllWithTrashed(function success(data) {
+	Ticket.getAllTickets(function success(data) {
 
 		window.tickets = _.indexBy(data, 'id');
 		$('#ticket-list').remove();
 		$('#ticket-list-container .loader').remove();
-		console.log(data);
+
 		$("#ticket-list-container").append( ticketList({tickets : data}) );
 
 		if(typeof callback === 'function')

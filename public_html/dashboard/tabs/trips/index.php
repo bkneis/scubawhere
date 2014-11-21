@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="trip-list-template">
 					<ul id="trip-list" class="entity-list">
 						{{#each trips}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{readable duration}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{readable duration}}</li>
 						{{else}}
 							<p>No trips available.</p>
 						{{/each}}
@@ -28,19 +28,12 @@
 						<div class="form-row">
 							<label class="field-label">Trip Name</label>
 							<input type="text" name="name" value="{{{name}}}" style="width: 350px;">
-							{{#if trashed}}
-								<strong style="color: #FF7163;">(Deactivated)</strong>
-							{{/if}}
 
 							{{#if update}}
-								{{#if trashed}}
-									<span class="box-tool blueb restore-trip" style="color: white;">Restore</span>
+								{{#if deletable}}
+									<span class="box-tool redb remove-trip" style="color: white;">Remove</span>
 								{{else}}
-									{{#if deletable}}
-										<span class="box-tool redb remove-trip" style="color: white;">Remove</span>
-									{{else}}
-										<span class="questionmark-tooltip" title="This trip has tickets or sessions associated with it. It can not be removed." style="float: right;">?</span><span class="box-tool redb disabled" style="color: white;">Remove</span>
-									{{/if}}
+									<span class="questionmark-tooltip" title="This trip has tickets or sessions associated with it. It can not be removed." style="float: right;">?</span><span class="box-tool redb disabled" style="color: white;">Remove</span>
 								{{/if}}
 							{{/if}}
 						</div>

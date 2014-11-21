@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list" class="entity-list">
 						{{#each addons}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{currency.symbol}} {{decimal_price}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency.symbol}} {{decimal_price}}</li>
 						{{else}}
 							<p>No addons available.</p>
 						{{/each}}
@@ -28,21 +28,9 @@
 						<div class="form-row">
 							<label class="field-label">Addon Name</label>
 							<input type="text" name="name" value="{{{name}}}">
-							{{#if trashed}}
-								<strong style="color: #FF7163;">(Deactivated)</strong>
-							{{/if}}
 
 							{{#if update}}
-								{{#if trashed}}
-									<span class="box-tool blueb restore-addon" style="color: white;">Restore</span>
-								{{else}}
-									{{#if has_bookings}}
-										<span class="questionmark-tooltip" style="float: right;" title="This addon has been booked at least once. That is why it can only be deactivated and not removed.">?</span>
-										<span class="box-tool redb deactivate-addon" style="color: white;">Deactivate</span>
-									{{else}}
-										<span class="box-tool redb remove-addon" style="color: white;">Remove</span>
-									{{/if}}
-								{{/if}}
+								<span class="box-tool redb {{#if has_bookings}}deactivate-addon{{else}}remove-addon{{/if}}" style="color: white;">Remove</span>
 							{{/if}}
 						</div>
 

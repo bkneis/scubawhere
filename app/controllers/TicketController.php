@@ -34,7 +34,7 @@ class TicketController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description');
+		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		$ticket = new Ticket($data);
 
@@ -208,6 +208,8 @@ class TicketController extends Controller {
 			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
 			if( $prices )
 				$data['prices'] = $prices;
+
+			$data['parent_id'] = $ticket->id;
 
 			// Replace all unavailable input data with data from the old ticket object
 			if( empty($data['name']) )        $data['name']        = $ticket->name;

@@ -8,14 +8,17 @@ class Accommodation extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'capacity');
+	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
 
-	protected $appends = array('has_bookings', 'trashed');
+	protected $appends = array('has_bookings');
+
+	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'capacity'    => 'integer|min:1'
+		'capacity'    => 'integer|min:1',
+		'parent_id'   => 'integer|min:1'
 	);
 
 	public function beforeSave()
@@ -30,11 +33,6 @@ class Accommodation extends Ardent {
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookings()->count() > 0;
-	}
-
-	public function getTrashedAttribute()
-	{
-		return $this->trashed();
 	}
 
 	public function company()

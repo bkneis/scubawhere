@@ -131,7 +131,7 @@ class AccommodationController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name',	'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// ####################### Prices #######################
 		$base_prices = Input::get('base_prices');
@@ -272,6 +272,8 @@ class AccommodationController extends Controller {
 			if( $prices )
 				$data['prices'] = $prices;
 
+			$data['parent_id'] = $accommodation->id;
+
 			// Replace all unavailable input data with data from the old accommodation object
 			if( empty($data['name']) )        $data['name']        = $accommodation->name;
 			if( empty($data['description']) ) $data['description'] = $accommodation->description;
@@ -372,6 +374,7 @@ class AccommodationController extends Controller {
 		return array('status' => 'OK. Accommodation deactivated');
 	}
 
+	/*
 	public function postRestore()
 	{
 		try
@@ -388,6 +391,7 @@ class AccommodationController extends Controller {
 
 		return array('status' => 'OK. Accommodation restored');
 	}
+	*/
 
 	public function postDelete()
 	{

@@ -143,7 +143,7 @@ $(function(){
 	});
 
 	$('#addon-form-container').on('click', '.deactivate-addon', function(event){
-		var check = confirm('Do you really want to deactivate this addon?');
+		var check = confirm('Do you really want to remove this addon?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -157,19 +157,18 @@ $(function(){
 
 				renderAddonList();
 
-				window.addons[ $('#update-addon-form input[name=id]').val() ].trashed = true;
-
-				renderEditForm( $('#update-addon-form input[name=id]').val() );
+				renderEditForm();
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
 
-				$('.remove-addon').prop('disabled', false);
+				$('.deactivate-addon').prop('disabled', false);
 				$('#save-loader').remove();
 			});
 		}
 	});
 
+	/*
 	$('#addon-form-container').on('click', '.restore-addon', function(event){
 
 		// Show loading indicator
@@ -184,17 +183,18 @@ $(function(){
 
 			renderAddonList();
 
-			window.addons[ $('#update-addon-form input[name=id]').val() ].trashed = false;
+			window.addons[ $('#update-addon-form input[name=id]').val() ].deleted_at = false;
 
 			renderEditForm( $('#update-addon-form input[name=id]').val() );
 		}, function error(xhr){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('.remove-addon').prop('disabled', false);
+			$('.restore-addon').prop('disabled', false);
 			$('#save-loader').remove();
 		});
 	});
+	*/
 });
 
 function renderAddonList(callback) {

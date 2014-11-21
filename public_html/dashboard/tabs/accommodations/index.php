@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="accommodation-list-template">
 					<ul id="accommodation-list" class="entity-list">
 						{{#each accommodations}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{capacity}} | {{pricerange base_prices prices}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{capacity}} | {{pricerange base_prices prices}}</li>
 						{{else}}
 							<p>No accommodations available.</p>
 						{{/each}}
@@ -28,21 +28,9 @@
 						<div class="form-row">
 							<label class="field-label">Accommodation Name</label>
 							<input type="text" name="name" value="{{{name}}}">
-							{{#if trashed}}
-								<strong style="color: #FF7163;">(Deactivated)</strong>
-							{{/if}}
 
 							{{#if update}}
-								{{#if trashed}}
-									<span class="box-tool blueb restore-accommodation" style="color: white;">Restore</span>
-								{{else}}
-									{{#if has_bookings}}
-										<span class="questionmark-tooltip" style="float: right;" title="This accommodation has been booked at least once. That is why it can only be deactivated and not removed.">?</span>
-										<span class="box-tool redb deactivate-accommodation" style="color: white;">Deactivate</span>
-									{{else}}
-										<span class="box-tool redb remove-accommodation" style="color: white;">Remove</span>
-									{{/if}}
-								{{/if}}
+								<span class="box-tool redb {{#if has_bookings}}deactivate-accommodation{{else}}remove-accommodation{{/if}}" style="color: white;">Remove</span>
 							{{/if}}
 						</div>
 

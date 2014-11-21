@@ -48,6 +48,7 @@ var Package = {
 		});
 	},
 
+	/*
 	restorePackage : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
@@ -57,6 +58,7 @@ var Package = {
 			error: errorFn
 		});
 	},
+	*/
 
 	deletePackage : function(params, handleData, errorFn){
 		$.ajax({

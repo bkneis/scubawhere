@@ -68,7 +68,7 @@
 			console.info('Company info loaded');
 			window.company = data;
 
-			$('.username').text(window.company.username);
+			$('.username').text(window.company.name);
 		});
 
 		// Set scubawhere namespace

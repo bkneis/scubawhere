@@ -35,7 +35,7 @@ class PackageController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// Validate that tickets are supplied
 		$tickets = Input::get('tickets');
@@ -203,6 +203,8 @@ class PackageController extends Controller {
 			if( $prices )
 				$data['prices'] = $prices;
 
+			$data['parent_id'] = $package->id;
+
 			// Replace all unavailable input data with data from the old package object
 			if( empty($data['name']) )        $data['name']        = $package->name;
 			if( empty($data['description']) ) $data['description'] = $package->description;
@@ -365,6 +367,7 @@ class PackageController extends Controller {
 		return array('status' => 'OK. Package deactivated');
 	}
 
+	/*
 	public function postRestore()
 	{
 		try
@@ -381,6 +384,7 @@ class PackageController extends Controller {
 
 		return array('status' => 'OK. Package restored');
 	}
+	*/
 
 	public function postDelete()
 	{
