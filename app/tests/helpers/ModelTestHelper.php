@@ -52,6 +52,19 @@ class ModelTestHelper{
 	//Each function also supplies a way to append data
 	//to quickly create models with different values.
 
+	public static function createAccommodation($company_id, $append = ""){
+		$entry = new Accommodation();
+	
+		$entry->company_id = $company_id;
+	
+		$entry->name = self::TEST_STRING.$append;
+		$entry->description = self::TEST_STRING.$append;
+		$entry->capacity = self::TEST_INTEGER;
+	
+		$entry->save();
+		return $entry->id;
+	}
+	
 	public static function createAddon($company_id, $append = ""){
 		$entry = new Addon();
 
