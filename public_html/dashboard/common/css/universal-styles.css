@@ -547,3 +547,8 @@ tfoot > tr			{ border-top: 1px solid #c8c8c8 }
 	border-color: #27ae60;
 	background-color: #2ecc71;
 }
+
+.soldout {
+	font-size : 14px;
+	color: #f00;
+}
