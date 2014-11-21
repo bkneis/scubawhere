@@ -1,6 +1,6 @@
 <div id="wrapper">
 	<div class="row">
-		<!--<div class="box100">
+		<div class="box100">
 			<label class="purpleb">Filters</label>
 			<div id='filter' class="padder">
 				<p>Display :
@@ -26,8 +26,8 @@
 						<option value=""></option>
 					</select>
 				</div>-->
-			<!--</div>
-		</div>-->
+			</div>
+		</div>
 	</div>
 
 	<div id='calendar'></div>
