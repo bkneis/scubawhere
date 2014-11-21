@@ -190,8 +190,8 @@ function getTripEvents(start, end, timezone, callback) {
 
 		// Create eventObjects
 		_.each(sessions, function(value) {
-			var booked = data[value.trip_id].capacity[0];
-			var capacity = data[value.trip_id].capacity[1];
+			var booked = value.capacity[0];
+			var capacity = value.capacity[1];
 			var ticketsLeft = capacity - booked;
 			var sameDay = true;
 			if(window.trips[value.trip_id].duration > 24) sameDay = false;
