@@ -1,13 +1,19 @@
-<IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews
-    </IfModule>
+# To be removed for production
+<IfModule pagespeed_module>
+    ModPagespeed off
+</IfModule>
 
-    <IfModule pagespeed_module>
-        ModPagespeed off
-    </IfModule>
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
 
     RewriteEngine On
+
+    # Rewrite non-www to www
+    RewriteCond %{HTTP_HOST} !^www\.
+    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
     # Exceptions...
     RewriteCond %{REQUEST_URI} !^/phpmyadmin
@@ -19,10 +25,10 @@
     # Redirect all requests to /coming-soon/* to /blog/*
     Redirect 301 /coming-soon /blog
 
-    # Redirect Trailing Slashes...
+    # Redirect Trailing Slashes
     RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-    # Handle Front Controller...
+    # Handle Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

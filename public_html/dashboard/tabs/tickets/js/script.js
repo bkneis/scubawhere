@@ -1,6 +1,7 @@
 var ticketForm,
     ticketList,
-    priceInput;
+    priceInput,
+    promises = {};
 
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(id) {
@@ -67,23 +68,35 @@ $(function () {
 
 	// Handlebars Prep
 	ticketList = Handlebars.compile( $("#ticket-list-template").html() );
-	renderTicketList();
+	ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
 
 	// Render initial form and ticket list
+	renderTicketList();
+	window.promises.loadedTrips     = $.Deferred();
+	window.promises.loadedBoats     = $.Deferred();
+	window.promises.loadedBoatrooms = $.Deferred();
+
+	window.promises.loadedTrips.done(function() {
+		window.promises.loadedBoats.done(function() {
+			window.promises.loadedBoatrooms.done(function() {
+					renderEditForm();
+			});
+		});
+	});
 
 	Trip.getAllTrips(function success(data){
 		window.trips = _.indexBy(data, 'id');
+		window.promises.loadedTrips.resolve();
+	});
 
-			Boat.getAll(function success(data){
-				window.boats = _.indexBy(data, 'id');
+	Boat.getAll(function success(data){
+		window.boats = _.indexBy(data, 'id');
+		window.promises.loadedBoats.resolve();
+	});
 
-					Boatroom.getAll(function success(data){
-						window.boatrooms = _.indexBy(data, 'id');
-
-					ticketForm = Handlebars.compile( $("#ticket-form-template").html() );
-					renderEditForm();
-					});
-			});
+	Boatroom.getAll(function success(data){
+		window.boatrooms = _.indexBy(data, 'id');
+		window.promises.loadedBoatrooms.resolve();
 	});
 
 	$('#ticket-list-container').on('click', 'li', function(event) {

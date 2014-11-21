@@ -1,5 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Yesteryear);
-@import url(http://fonts.googleapis.com/css?family=Kite+One);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 #nav{
@@ -20,7 +18,6 @@
 }
 
 #logo{
-	font-family: 'Yesteryear', cursive;
 	float: left;
 	line-height: 1;
 	margin-top: 3px;
