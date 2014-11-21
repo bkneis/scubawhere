@@ -33,6 +33,102 @@ class AccommodationController extends Controller {
 		return Auth::user()->accommodations()->withTrashed()->with('basePrices', 'prices')->get();
 	}
 
+	public function getFilter()
+	{
+		/**
+		 * Valid input parameter
+		 * accommodation_id
+		 * after
+		 * before
+		 * with_full
+		 */
+
+		$data = Input::only('after', 'before', 'accommodation_id');
+		$data['with_full'] = Input::get('with_full', false);
+
+		// Transform parameter strings into DateTime objects
+		$data['after']  = new DateTime( $data['after'] ); // Defaults to NOW, when parameter is NULL
+		if( empty( $data['before'] ) )
+		{
+			if( $data['after'] > new DateTime('now') )
+			{
+				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
+				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
+				$data['before']->add( new DateInterval('P1M') ); // Extends the date 1 month into the future
+			}
+			else
+			{
+				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
+				$data['before'] = new DateTime('+1 month');
+			}
+		}
+		else
+		{
+			// If a 'before' date is submitted, simply use it
+			$data['before'] = new DateTime( $data['before'] );
+		}
+
+		if( $data['after'] > $data['before'] )
+		{
+			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
+		}
+
+		// Check the integrity of the supplied parameters
+		$validator = Validator::make( $data, array(
+			'after'            => 'date|required_with:before',
+			'before'           => 'date',
+			'accommodation_id' => 'integer|min:1',
+			'with_full'        => 'boolean'
+		) );
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+
+		if( !empty( $data['accommodation_id'] ) )
+		{
+			try
+			{
+				$accommodation = Auth::user()->accommodations()->findOrFail( $data['accommodation_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$accommodation = false;
+
+		$current_date = clone $data['after'];
+		$result = array();
+
+		$accommodations = Auth::user()->accommodations()->where(function($query) use ($accommodation)
+		{
+			if( $accommodation )
+				$query->where('id', $accommodation->id);
+		})
+		->get();
+
+		do
+		{
+			$key = $current_date->format('Y-m-d');
+
+			$result[$key] = array();
+
+			$accommodations->each(function($el) use ($key, &$result, $current_date)
+			{
+				$result[$key][$el->id] = array(
+					$el->customers()->wherePivot('start', '<=', $current_date)->wherePivot('end', '>', $current_date)->count(),
+					$el->capacity
+				);
+			});
+
+			$current_date->add( new DateInterval('P1D') );
+		}
+		while( $current_date <= $data['before'] );
+
+		return $result;
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('name',	'description', 'capacity');
