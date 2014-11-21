@@ -3,10 +3,10 @@
 @section('content')
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">Mean API response time</h3>
+			<h3 class="panel-title">Mean API response time [ms]</h3>
 		</div>
-		<div class="panel-body">
-			<span id="total-average"></span> ms
+		<div class="panel-body" id="daily-average">
+			<canvas id="chart-daily-average" width="668" height="200"></canvas>
 		</div>
 	</div>
 
@@ -28,17 +28,59 @@
 
 @section('scripts')
 	<script src="/common/js/underscore-min.js"></script>
-	{{-- <script src="/common/chart/Chart.js"></script> --}}
+	<script src="/common/chart/Chart.min.js"></script>
 	<script>
 		"use strict";
 
 		var data = {{ $data }};
+		var html;
+		var monthNamesShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		var daysSubScript   = function(day) {
+			// Special case for 11, 12 and 13
+			if(day > 9 && day < 14) return 'th';
 
-		// Total average response time
-		var average = Math.round( _.reduce(data, function(memo, el) {
-			return memo + el.duration * 1;
-		}, 0) / data.length );
-		document.getElementById('total-average').innerHTML = average;
+			var subScript = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
+			return subScript[day % 10];
+		};
+
+		// Daily average response times
+		// Group by day
+		var days = _.groupBy(data, 'date');
+		// Calulate average duration per group
+		days = _.each(days, function(dayGroup, date) {
+			days[date] = {
+				date: date,
+				duration: Math.round( _.reduce(dayGroup, function(memo, el) {
+					return memo + el.duration * 1;
+				}, 0) / dayGroup.length )
+			}
+		});
+		// Take only the last 30 days
+		var dates = Object.keys(days).slice(-30);
+		days = _.pick(days, dates);
+		// Transform date strings
+		dates = _.map(dates, function(el, key) {
+
+			var year  = el.slice(0, 4);
+			var month = parseInt( el.slice(5, 7), 10 );
+			var day   = parseInt( el.slice( -2 ), 10 );
+			return day + daysSubScript(day);
+		});
+		var ctx = document.getElementById("chart-daily-average").getContext("2d");
+		var chartData = {
+			labels: dates,
+			datasets: [{
+				label: "Daily Average Response Time",
+				fillColor: "rgba(151,187,205,0.2)",
+				strokeColor: "rgba(151,187,205,1)",
+				pointColor: "rgba(151,187,205,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,1)",
+				data: _.pluck(days, 'duration')
+			}]
+		};
+		var myLineChart = new Chart(ctx).Line(chartData, {pointHitDetectionRadius : 6});
 
 		// Total slowest routes
 		// Group by route
@@ -59,7 +101,7 @@
 		// Take only the top 5
 		// routes = routes.slice(0, 5);
 		// Render list HTML
-		var html = '';
+		html = '';
 		var warningClass;
 		_.each(routes, function(el) {
 			warningClass = '';
