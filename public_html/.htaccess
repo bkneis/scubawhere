@@ -15,7 +15,7 @@
     RewriteCond %{HTTP_HOST} !^www\.
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
-    # Exceptions...
+    # Do not handle these routes with laravel
     RewriteCond %{REQUEST_URI} !^/phpmyadmin
     RewriteCond %{REQUEST_URI} !^/blog
     RewriteCond %{REQUEST_URI} !^/dashboard
