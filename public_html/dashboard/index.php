@@ -103,12 +103,6 @@
 			<!-- Navigation including accordion drop down menus -->
 
 			<ul id="sidenav">
-				<li data-load="calendar">
-					<div>
-						<i class="fa fa-calendar"></i>
-						<span>Calendar</span>
-					</div>
-				</li>
 				<li data-load="dashboard">
 					<div>
 						<i class="fa fa-tachometer"></i>
@@ -129,6 +123,13 @@
 						<i class="fa fa-pencil"></i>
 						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
+					</div>
+				</li>
+
+				<li data-load="calendar">
+					<div>
+						<i class="fa fa-calendar"></i>
+						<span>Calendar</span>
 					</div>
 				</li>
 

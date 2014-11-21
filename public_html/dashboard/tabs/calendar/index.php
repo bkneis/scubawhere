@@ -1,31 +1,36 @@
 <div id="wrapper">
 	<div class="row">
 		<div class="box100">
-			<label class="purpleb">Filters</label>
-			<div id='filter' class="padder">
-				<p>Display :
-					<a onclick="">All</a> | 
-					<a onclick="">Trips</a> | 
-					<a onclick="">Accomodations</a>
-				</p>
-				<!--<div class="form-row">
-					<label class="form-label">Filter by : </label>
-					<select id="filter-option">
-						<option value=""></option>
-					</select>
+			<!--<label class="purpleb">Filters</label>-->
+			<div class="collapsible" id="section1">Filters<span></span></div>
+			<div id="filters" class="padder">
+				<div class="container">
+    				<div class="content">
+					<p>Display :
+						<a onclick="filter">All</a> | 
+						<a class="filter filter-active" onclick="">Trips</a> | 
+						<a onclick="filter">Accomodations</a>
+					</p>
+					<!--<div class="form-row">
+						<label class="form-label">Filter by : </label>
+						<select id="filter-option">
+							<option value=""></option>
+						</select>
+					</div>
+					<div class="form-row">
+						<label class="form-label">Boats : </label>
+						<select id="boats">
+							<option value=""></option>
+						</select>
+					</div>
+					<div class="form-row">
+						<label class="form-label">Trips : </label>
+						<select id="trips">
+							<option value=""></option>
+						</select>
+					</div>-->
+					</div>
 				</div>
-				<div class="form-row">
-					<label class="form-label">Boats : </label>
-					<select id="boats">
-						<option value=""></option>
-					</select>
-				</div>
-				<div class="form-row">
-					<label class="form-label">Trips : </label>
-					<select id="trips">
-						<option value=""></option>
-					</select>
-				</div>-->
 			</div>
 		</div>
 	</div>
@@ -88,6 +93,9 @@
 
 <script src="/common/js/ui.min/jquery-ui.min.js"></script>
 <script src="/common/js/jquery.reveal.js"></script>
+
+<script type="text/javascript" src="/common/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/common/js/jquery.collapsible.js"></script>
 
 <script src="js/Controllers/Trip.js"></script>
 <script src="js/Controllers/Boat.js"></script>

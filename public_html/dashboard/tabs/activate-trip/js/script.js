@@ -73,6 +73,7 @@ $(function() {
 			left: '',
 			center: 'title',
 		},
+		defaultView : 'basicWeek',
 		timezone: false,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
