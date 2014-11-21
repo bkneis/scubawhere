@@ -78,7 +78,7 @@
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Capacity</label>
+							<label class="field-label">Number of Rooms/Beds</label>
 							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 						</div>
 
