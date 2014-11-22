@@ -90,7 +90,7 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
  */
-Booking.prototype.addDetails = function(params, successFn, errorFn) {
+Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	params.booking_id = this.id;
 
