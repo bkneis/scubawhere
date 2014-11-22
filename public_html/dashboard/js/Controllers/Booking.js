@@ -13,7 +13,7 @@ var Booking = function(data) {
  ********************************
  */
 
-/*
+/**
  * Takes the required booking's ID and calls the success callback with a Booking object as its only parameter
  *
  * @param  {integer} id The ID of te required session
@@ -75,7 +75,7 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 };
 
 /**
- * Add a ticket to a booking.
+ * Add a ticket/customer/package combo to a booking.
  *
  * @param {object} params The parameters, as described here:
  * Required parameters:
@@ -96,7 +96,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 	params.booking_id = this.id;
 
 	// Determine whether we need to inject a packagefacade_id into the request
-	var existingDetail = !package_id || _.find(this.bookingdetails, function(detail) {
+	var existingDetail = !params.package_id || _.find(this.bookingdetails, function(detail) {
 		// First, test the customer_id
 		if( detail.customer.id != params.customer_id )
 			return false;
@@ -109,7 +109,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 		if( detail.packagefacade.package.id == params.package_id)
 			return true;
 	});
-	if( package_id && existingDetail !== undefined )
+	if( params.package_id && existingDetail !== undefined )
 		params.packagefacade_id = existingDetail.packagefacade.id;
 
 	$.ajax({
@@ -132,14 +132,14 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				detail.packagefacade = {
 					id: data.packagefacade_id,
 					package: window.packages[params.package_id]
-				}
+				};
 			}
 
-			this.bookingdetails[] = detail;
+			this.bookingdetails.push(detail);
 
 			this.decimal_price = data.decimal_price;
 
-			successFn(data.status)
+			successFn(data.status);
 		},
 		error: errorFn
 	});
