@@ -12,7 +12,7 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 });
 
 Handlebars.registerHelper("tripFinish", function(start, duration) {
-	var d = new Date(start);
+	var d = new Date(Date.parse(start));
 	d.setHours(d.getHours()+duration);
 	var f = d.toISOString().slice(0, 19).replace('T', ' ');
 
@@ -312,6 +312,9 @@ $(document).on('click', '.assign-session', function() {
 		{name: "ticket_id", value: bookingdetail.ticketId},
 		{name: "session_id", value: bookingdetail.sessionId}
 	];
+
+	console.log("Session Params");
+	console.log(params);
 
 	Booking.addDetails(params, function(data) {
 		addToAssignedSessions(bookingdetail);

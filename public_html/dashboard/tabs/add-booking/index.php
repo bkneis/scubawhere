@@ -1,4 +1,4 @@
-<div class="container">
+<div id="wrapper">
 	<ul class="nav nav-wizard" role="tablist">
 		<li role="presentation" class="active">
 			<a href="javascript:void(0)" class="selected" role="tab" data-toggle="tab" data-target="#source-tab">
@@ -581,7 +581,7 @@
 							<p>{{description}}</p>
 							<div class="row">
 								<div class="col-sm-4">
-									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{price}}</span></p>
+									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
 								</div>
 								<div class="col-sm-5 pull-right">
 									<div class="input-group">
@@ -619,13 +619,18 @@
 								</div>
 								<div class="col-md-6">
 									<h4 class="list-group-item-heading">Addon</h4>
-									<p class="list-group-item-text">Name: {{addon}}</h4>
-										<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
-										<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{qty}}</span></p>
-									</div>
+									<p class="list-group-item-text">Name: {{addon}}</p>
+									<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
+									<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{qty}}</span></p>
 								</div>
-							</li>
-							{{/each}}
+							</div>
+							<div class="row">
+								<div class="form-group">
+									<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);"  data-id="{{id}}">Remove</a>
+								</div>
+							</div>
+						</li>
+						{{/each}}
 						</script>
 					</div>
 				</div>
@@ -718,7 +723,7 @@
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
 	<!--Bootstrap-->
-	<link rel="stylesheet" href="common/css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="common/css/bootstrap.css" type="text/css" />
 	<script type="text/javascript" src="common/js/bootstrap.min.js"></script>
 
 	<!--Select 2-->
