@@ -31,6 +31,7 @@ $(function() {
 		},
 		defaultView : 'basicWeek',
 		timezone: false,
+		height : 450,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
 			getTripEvents(start, end, timezone, callback);
@@ -67,6 +68,7 @@ $(function() {
     	else {
     		$("#filter").empty();
     		filterBy = "all";
+    		$('#calendar').fullCalendar( 'refetchEvents' );
     	}
     });
 
