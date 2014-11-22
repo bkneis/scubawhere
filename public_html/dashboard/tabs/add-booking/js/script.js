@@ -110,7 +110,7 @@ $(document).on('click', '.booking-source a', function() {
 	}
 
 });
-
+var countriesTemplate = Handlebars.compile($("#countries-template").html());
 $(document).on('click', '.source-finish', function() {
 
 	//Get that cog spinning!
@@ -138,24 +138,27 @@ $(document).on('click', '.source-finish', function() {
 *************************
 */
 
+booking.selectedTickets = [];
+var ticketsBasketTemplate = Handlebars.compile($("#tickets-basket-template").html());
+
 $(document).on('click', '.btn-ticket', function() {
 	
-	//Get data from the ticket
+	//Get ticket id
 	var id = $(this).data('id');
 
-	//Get the specific font awesome icon (without size increase)
-	var icon = $(this).find('.fa').attr('class').split(' ')[1];
+	//Check if ticket is already selected
+	if(typeof booking.selectedTickets[id] != "undefined") {
 
-	//Check if ticket is already in basket
-	if($('#basket').find('#ticket-'+id).length) {
-		var qty = parseInt($('#ticket-'+id).find('.qty').text(), 10);
-
-		$('#ticket-'+id).find('.qty').text(qty+1);
+		//Increase quantity by 1
+		booking.selectedTickets[id].qty += 1;
 	}else{
-		var qty = 1;
+
+		//Add ticket to selectedTickets, index and increase qty.
+		booking.selectedTickets[id] = window.tickets[id];
+		booking.selectedTickets[id].qty = 1;
 	}
 
-	addBookingTicket(id);
+	$("#tickets-basket").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
 });
 
 $(document).on('click', '.remove-ticket', function() {

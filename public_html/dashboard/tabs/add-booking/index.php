@@ -141,11 +141,13 @@
 						</li>
 					</ul>
 					<script id="tickets-basket-template" type="text/x-handlebars-template">
+					{{#each tickets}}
 						<p class="list-group-item-text">
 							<i class="fa fa-ticket"></i> 
 							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{name}}</a> 
 							<span class="badge qty">{{qty}}</span>
 						</p>
+					{{/each}}
 					</script>
 				</div>
 			</div>
