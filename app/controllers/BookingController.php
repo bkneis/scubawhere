@@ -98,11 +98,12 @@ class BookingController extends Controller {
 		 * Valid input parameters
 		 * booking_id
 		 * customer_id
-		 * is_lead
 		 * ticket_id
 		 * session_id
+		 *
 		 * package_id (optional)
 		 * packagefacade_id (optional)
+		 * is_lead (optional)
 		 */
 
 		// Check if all IDs exist and belong to the signed-in company
@@ -249,13 +250,14 @@ class BookingController extends Controller {
 			}
 		}
 
-		// If all checks completed successfully, write into database
+		// If there is a package, but no packagefacade yet, create a new packagefacade
 		if( $package && !isset($packagefacade) )
 		{
 			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
 			$packagefacade->save();
 		}
 
+		// If all checks completed successfully, write into database
 		$booking->customers()->attach( $customer->id,
 			array(
 				'is_lead'          => $is_lead,
@@ -268,7 +270,12 @@ class BookingController extends Controller {
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Booking details added.', 'customers' => $booking->customers()->get(), 'price' => $booking->decimal_price()); // 200 OK
+		return array(
+			'status' => 'OK. Booking details added.',
+			'decimal_price' => $booking->decimal_price,
+			'ticket_decimal_price' => $ticket->calculatePrice($departure->start),
+			'packagefacade_id' => $package ? $packagefacade->id : false
+		); // 200 OK
 	}
 
 	public function postRemoveDetails()
