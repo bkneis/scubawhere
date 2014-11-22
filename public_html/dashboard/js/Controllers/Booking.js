@@ -60,6 +60,7 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 		type: "POST",
 		url: "/api/booking/init",
 		data: params,
+		context: this,
 		success: function(data) {
 			this.id = data.id;
 			this.reference = data.reference;
@@ -115,6 +116,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 		type: "POST",
 		url: "/api/booking/add-detail",
 		data: params,
+		context: this,
 		success: function(data) {
 			var detail = {
 				customer: window.customers[params.customer_id],
