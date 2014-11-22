@@ -316,35 +316,61 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 	});
 };
 
+/**
+ * Edits additional information about the booking
+ * @param  {object} params    Can contain:
+ * - pick_up_location {string}
+ * - pick_up_time     {string} Must be formatted as 'YYYY-MM-DD HH:mm:ss'
+ * - discount         {float}  The discount value gets substracted from the final booking price
+ * - comment          {text}
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.editInfo = function(params, successFn, errorFn) {
 
+	params.booking_id = this.id;
 
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/edit-info",
+		data: params,
+		context: this,
+		success: function(data) {
 
+			if(params.pick_up_location) this.pick_up_location = params.pick_up_location;
+			if(params.pick_up_time)     this.pick_up_time     = params.pick_up_time;
+			if(params.discount)         this.discount         = params.discount;
+			if(params.comment)          this.comment          = params.comment;
 
+			this.decimal_price = data.decimal_price;
 
-// All following has not been adapted yet!
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
 
+/**
+ * Validate that all required lead customer fields are provided
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.validate = function(successFn, errorFn){
 
-
-
-
-
-
-Booking.prototype.editInfo = function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/booking/edit-info",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
+	var params = {
+		booking_id: this.id
 	};
 
-Booking.prototype.validateBooking = function(params, handleData, errorFn){
-		$.ajax({
-			type: "GET",
-			url: "/api/booking/validate",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	};
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/validate",
+		data: params,
+		context: this,
+		success: function(data) {
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};

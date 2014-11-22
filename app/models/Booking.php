@@ -47,7 +47,26 @@ class Booking extends Ardent {
 		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
-			($this->price - $this->discount) / $currency->getSubunitToUnit(), // number
+			($this->price) / $currency->getSubunitToUnit() - $this->discount, // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
+	}
+
+	public function setDiscountAttribute($value)
+	{
+		$currency = new Currency( Auth::user()->currency->code );
+
+		$this->attributes['discount'] = (int) round( $value * $currency->getSubunitToUnit() );
+	}
+
+	public function getDiscountAttribute($value)
+	{
+		$currency = new Currency( Auth::user()->currency->code );
+
+		return number_format(
+			$value / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''

@@ -579,23 +579,16 @@ class BookingController extends Controller {
 			'pick_up_location', // Just text
 			'pick_up_time',     // Must be datetime
 			'discount',         // Should be decimal
-			'reserved',         // Must be datetime
-			'comment');         // Text
-
-		// Convert discount to subunit
-		if( !empty($data['discount']) )
-		{
-			$currency = new Currency( Auth::user()->currency->code );
-			$data['discount'] = (int) round( $data['discount'] * $currency->getSubunitToUnit() );
-		}
-
+			// 'reserved',      // Must be datetime
+			'comment'           // Text
+		);
 
 		if( !$booking->update($data) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return Response::json( array('status' => 'OK. Booking information updated.', 'booking' => $booking), 200 ); // 200 OK
+		return array('status' => 'OK. Booking information updated.', 'decimal_price' => $booking->decimal_price);
 
 	}
 
@@ -611,13 +604,29 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// "Validation" rules
-		return array(
-			"email"      => !empty( $booking->lead_customer->email ),
-			"phone"      => !empty( $booking->lead_customer->phone ),
-			"gender"     => !empty( $booking->lead_customer->gender ),
-			"country_id" => !empty( $booking->lead_customer->country_id )
+		$values = array(
+			"email"      => $booking->lead_customer()->first()->email,
+			"phone"      => $booking->lead_customer()->first()->phone,
+			"gender"     => $booking->lead_customer()->first()->gender,
+			"country_id" => $booking->lead_customer()->first()->country_id
 		);
+
+		$rules = array(
+			"email"      => 'required',
+			"phone"      => 'required',
+			"gender"     => 'required',
+			"country_id" => 'required'
+		);
+		$messages = array(
+			'required' => 'The lead customer\'s :attribute is missing.',
+		);
+
+		$validator = Validator::make($values, $rules, $messages);
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->errors()->all()), 406 ); // 406 Not Acceptable
+
+		return array('status' => 'This booking is valid.');
 	}
 
 	public function getPayments()
