@@ -9,23 +9,25 @@ class Addon extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $guarded = array('id', 'created_at', 'updated_at');
-
-	protected $appends = array('decimal_price', 'currency', 'has_bookings', 'trashed');
-
 	protected $fillable = array(
 		'name',
 		'description',
 		'new_decimal_price',
 		'price',
-		'compulsory'
+		'compulsory',
+		'parent_id'
 	);
+
+	protected $appends = array('decimal_price', 'currency', 'has_bookings');
+
+	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
 		'price'       => 'sometimes|integer|min:0',
-		'compulsory'  => 'required|boolean'
+		'compulsory'  => 'required|boolean',
+		'parent_id'   => 'integer|min:1'
 	);
 
 	public function beforeSave()
@@ -62,11 +64,6 @@ class Addon extends Ardent {
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookingdetails()->count() > 0;
-	}
-
-	public function getTrashedAttribute()
-	{
-		return $this->trashed();
 	}
 
 	public function getCurrencyAttribute()

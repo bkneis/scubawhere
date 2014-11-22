@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{pricerange base_prices prices}}</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices prices}}</li>
 						{{else}}
 							<p>No tickets available.</p>
 						{{/each}}
@@ -28,22 +28,10 @@
 						<div class="form-row">
 							<label class="field-label">Ticket Name</label>
 							<input type="text" name="name" value="{{{name}}}">
-							{{#if trashed}}
-								<strong style="color: #FF7163;">(Deactivated)</strong>
-							{{/if}}
 
 							{{!-- TODO Enable deletion and deactivation of ticktes, including all necessary checks
 							{{#if update}}
-								{{#if trashed}}
-									<span class="box-tool blueb restore-ticket" style="color: white;">Restore</span>
-								{{else}}
-									{{#if has_bookings}}
-										<span class="questionmark-tooltip" style="float: right;" title="This ticket has been booked at least once. That is why it can only be deactivated and not removed.">?</span>
-										<span class="box-tool redb deactivate-ticket" style="color: white;">Deactivate</span>
-									{{else}}
-										<span class="box-tool redb remove-ticket" style="color: white;">Remove</span>
-									{{/if}}
-								{{/if}}
+								<span class="box-tool redb {{#if has_bookings}}deactivate-ticket{{else}}remove-ticket{{/if}}" style="color: white;">Remove</span>
 							{{/if}}
 							--}}
 						</div>

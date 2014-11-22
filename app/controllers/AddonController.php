@@ -43,7 +43,8 @@ class AddonController extends Controller {
 			'name',
 			'description',
 			'new_decimal_price',
-			'compulsory'
+			'compulsory',
+			'parent_id' // Please NEVER use parent_id in the front-end!
 		);
 
 		//Check compulsory field.....
@@ -91,6 +92,8 @@ class AddonController extends Controller {
 		{
 			// Create new addon and deactivate the old one
 
+			$data['parent_id'] = $addon->id;
+
 			// Replace all unavailable input data with data from the old addon object
 			if( empty($data['name']) )              $data['name']              = $addon->name;
 			if( empty($data['description']) )       $data['description']       = $addon->description;
@@ -122,7 +125,6 @@ class AddonController extends Controller {
 
 	public function postDeactivate()
 	{
-
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
@@ -138,6 +140,7 @@ class AddonController extends Controller {
 		return array('status' => 'OK. Addon deactivated');
 	}
 
+	/*
 	public function postRestore()
 	{
 		try
@@ -154,6 +157,7 @@ class AddonController extends Controller {
 
 		return array('status' => 'OK. Addon restored');
 	}
+	*/
 
 	public function postDelete()
 	{

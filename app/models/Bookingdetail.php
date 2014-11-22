@@ -8,11 +8,18 @@ class Bookingdetail extends Ardent {
 
 	protected $table = 'booking_details';
 
+	protected $hidden = array('id');
+
 	public static $rules = array();
 
 	public function beforeSave()
 	{
 		//
+	}
+
+	public function addons()
+	{
+		return $this->belongsToMany('Addon')->withTrashed()->withPivot('quantity')->withTimestamps();
 	}
 
 	public function booking()
@@ -32,12 +39,12 @@ class Bookingdetail extends Ardent {
 
 	public function ticket()
 	{
-		return $this->belongsTo('Ticket');
+		return $this->belongsTo('Ticket')->withTrashed();
 	}
 
 	public function session()
 	{
-		return $this->belongsTo('Departure');
+		return $this->belongsTo('Departure')->withTrashed();
 	}
 
 	public function packagefacade()
@@ -45,13 +52,10 @@ class Bookingdetail extends Ardent {
 		return $this->belongsTo('Packagefacade');
 	}
 
+	/*
 	public function package()
 	{
-		return $this->hasManyThrough('Package', 'Packagefacade')->first();
+		return $this->hasManyThrough('Package', 'Packagefacade');
 	}
-
-	public function addons()
-	{
-		return $this->belongsToMany('Addon')->withPivot('quantity')->withTimestamps();
-	}
+	*/
 }

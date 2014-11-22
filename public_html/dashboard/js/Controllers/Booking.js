@@ -1,12 +1,12 @@
-var Booking = {
+var Booking = function() {};
 	//params = int id (the ID of the wanted session)
-	get: function(params, handleData) {
+Booking.get = function(params, handleData) {
 		$.get("/api/booking", params).done(handleData);
-	},
+	};
 
-	getAll: function(handleData) {
+Booking.getAll = function(handleData) {
 		$.get("/api/booking/all").done(handleData);
-	},
+	};
 
 	/**
 	 * Initate a booking with either the 'source' of the booking or the 'agent_id'.
@@ -32,7 +32,7 @@ var Booking = {
 	 *
 	 * On success, data.id will contain the bookingID.
 	 */
-	initiate: function(params, handleData, errorFn) {
+Booking.initiate = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/init",
@@ -40,7 +40,7 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	},
+	};
 
 	/**
 	 * Add a ticket to a booking.
@@ -48,18 +48,18 @@ var Booking = {
 	 * - _token
 	 * - booking_id
 	 * - customer_id
-	 * - is_lead
 	 * - ticket_id
 	 * - session_id
 	 *
 	 * Optional parameter:
 	 * - package_id
+	 * - is_lead
 	 *
 	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.
 	 *                                'xhr.responseText' contains the API response in plaintext]
 	 */
-	addDetails: function(params, handleData, errorFn) {
+Booking.addDetails = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/add-details",
@@ -67,7 +67,7 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	},
+	};
 
 	/**
 	 * Remove a ticket from a booking.
@@ -83,7 +83,7 @@ var Booking = {
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.
 	 *                                'xhr.responseText' contains the API response in plaintext]
 	 */
-	removeDetails: function(params, handleData, errorFn) {
+Booking.removeDetails = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/remove-details",
@@ -91,9 +91,9 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	},
+	};
 
-	editInfo: function(params, handleData, errorFn) {
+Booking.editInfo = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/edit-info",
@@ -101,9 +101,9 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	},
+	};
 
-	validateBooking: function(params, handleData, errorFn){
+Booking.validateBooking = function(params, handleData, errorFn){
 		$.ajax({
 			type: "GET",
 			url: "/api/booking/validate",
@@ -111,9 +111,9 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	},
+	};
 
-	addAddon: function(params, handleData, errorFn){
+Booking.addAddon = function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/add-addon",
@@ -121,5 +121,4 @@ var Booking = {
 			success: handleData,
 			error: errorFn
 		});
-	}
-};
+	};

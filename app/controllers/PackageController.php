@@ -35,7 +35,7 @@ class PackageController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// Validate that tickets are supplied
 		$tickets = Input::get('tickets');
@@ -191,8 +191,8 @@ class PackageController extends Controller {
 		// Check if a booking exists for the package and whether a critical value is updated
 		if( $package->bookingdetails()->count() > 0 && (
 			   (!empty($tickets) && $this->checkTicketsChanged($package->tickets, $tickets))
-			|| ($base_prices     && $this->checkPricesChanged($package->base_prices, $base_prices, true))
-			|| ($prices          && $this->checkPricesChanged($package->prices, $prices))
+			|| ($base_prices     && Helper::checkPricesChanged($package->base_prices, $base_prices, true))
+			|| ($prices          && Helper::checkPricesChanged($package->prices, $prices))
 		) )
 		{
 			// If yes, create a new package with the input data
@@ -202,6 +202,8 @@ class PackageController extends Controller {
 			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
 			if( $prices )
 				$data['prices'] = $prices;
+
+			$data['parent_id'] = $package->id;
 
 			// Replace all unavailable input data with data from the old package object
 			if( empty($data['name']) )        $data['name']        = $package->name;
@@ -237,8 +239,8 @@ class PackageController extends Controller {
 		}
 		else
 		{
-			$base_prices_changed = $base_prices && $this->checkPricesChanged($package->base_prices, $base_prices, true);
-			$prices_changed      = $prices && $this->checkPricesChanged($package->prices, $prices);
+			$base_prices_changed = $base_prices && Helper::checkPricesChanged($package->base_prices, $base_prices, true);
+			$prices_changed      = $prices && Helper::checkPricesChanged($package->prices, $prices);
 
 			if($base_prices_changed)
 			{
@@ -348,34 +350,6 @@ class PackageController extends Controller {
 		return false;
 	}
 
-	protected function checkTicketsChanged($old_tickets, $tickets)
-	{
-		$old_tickets = $old_tickets->toArray();
-
-		if(count($tickets) !== count($old_tickets)) return true;
-
-		// Convert $old_tickets into same format as $tickets
-		$array = [];
-		foreach($old_tickets as $old_ticket)
-		{
-			$array[$old_ticket['id']]['quantity'] = $old_ticket['pivot']['quantity'];
-		}
-		$old_tickets = $array;
-
-		// Compare keys (both ways)
-		if( count( array_merge( array_diff_key($old_tickets, $tickets), array_diff_key($tickets, $old_tickets) ) ) > 0 )
-			return true;
-
-		// Compare each quantity
-		foreach($old_tickets as $key => $old_ticket)
-		{
-			if( $old_ticket['quantity'] != $tickets[$key]['quantity'] ) // Needs to compare int with numerical string
-				return true;
-		}
-
-		return false;
-	}
-
 	public function postDeactivate()
 	{
 		try
@@ -393,6 +367,7 @@ class PackageController extends Controller {
 		return array('status' => 'OK. Package deactivated');
 	}
 
+	/*
 	public function postRestore()
 	{
 		try
@@ -409,6 +384,7 @@ class PackageController extends Controller {
 
 		return array('status' => 'OK. Package restored');
 	}
+	*/
 
 	public function postDelete()
 	{

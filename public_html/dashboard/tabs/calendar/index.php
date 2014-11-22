@@ -6,29 +6,38 @@
 			<div id="filters" class="padder">
 				<div class="container">
     				<div class="content">
-					<p>Display :
-						<a onclick="filter">All</a> | 
-						<a class="filter filter-active" onclick="">Trips</a> | 
-						<a onclick="filter">Accomodations</a>
-					</p>
-					<!--<div class="form-row">
-						<label class="form-label">Filter by : </label>
-						<select id="filter-option">
-							<option value=""></option>
-						</select>
-					</div>
-					<div class="form-row">
-						<label class="form-label">Boats : </label>
-						<select id="boats">
-							<option value=""></option>
-						</select>
-					</div>
-					<div class="form-row">
-						<label class="form-label">Trips : </label>
-						<select id="trips">
-							<option value=""></option>
-						</select>
-					</div>-->
+	    				<div class="form-row">
+							<label class="form-label">Display : </label>
+								<a class="filter filter-active" onclick="">Trips</a> | 
+								<a onclick="filter">Accomodations</a>
+						</div>
+						<div class="form-row">
+							<label class="form-label">Filter by : </label>
+							<select id="filter-options">
+								<option value=""></option>
+								<option value="boat">Boats</option>
+								<option value="trip">Trips</option>
+							</select>
+						</div>
+						<div id="filter"></div>
+						<script type="text/x-handlebars-template" id="boats-list-template">
+							<label class="form-label">Boats : </label>
+							<select class="filter" id="boats">
+								<option value="all"></option>
+								{{#each boats}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							</select>
+						</script>
+						<script type="text/x-handlebars-template" id="trips-list-template">
+							<label class="form-label">Trips : </label>
+							<select class="filter" id="trips">
+								<option value="all"></option>
+								{{#each trips}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							</select>
+						</script>
 					</div>
 				</div>
 			</div>
@@ -78,7 +87,7 @@
 						<td>{{#unless ticketsLeft}}
 								<span class="soldout">SOLD OUT</span>
 							{{else}}
-								{{ticketsLeft}} / {{capacity}} | <a href="#add-booking">BOOK NOW</a>
+								{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
 							{{/unless}}
 						</td>
 					</tr>

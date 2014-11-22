@@ -34,7 +34,7 @@ class TicketController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description');
+		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		$ticket = new Ticket($data);
 
@@ -197,8 +197,8 @@ class TicketController extends Controller {
 		// Check if a booking exists for the ticket and whether a critical value is updated
 		if( $ticket->bookingdetails()->count() > 0 && (
 			   (!empty($trips) && $this->checkRemovedTripBookings($ticket->id, $ticket->trips()->lists('id'), $trips))
-			|| ($base_prices   && $this->checkPricesChanged($ticket->base_prices, $base_prices, true))
-			|| ($prices        && $this->checkPricesChanged($ticket->prices, $prices))
+			|| ($base_prices   && Helper::checkPricesChanged($ticket->base_prices, $base_prices, true))
+			|| ($prices        && Helper::checkPricesChanged($ticket->prices, $prices))
 		) )
 		{
 			// If yes, create a new ticket with the input data
@@ -208,6 +208,8 @@ class TicketController extends Controller {
 			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
 			if( $prices )
 				$data['prices'] = $prices;
+
+			$data['parent_id'] = $ticket->id;
 
 			// Replace all unavailable input data with data from the old ticket object
 			if( empty($data['name']) )        $data['name']        = $ticket->name;
@@ -268,8 +270,8 @@ class TicketController extends Controller {
 		}
 		else
 		{
-			$base_prices_changed = $base_prices && $this->checkPricesChanged($ticket->base_prices, $base_prices, true);
-			$prices_changed      = $prices && $this->checkPricesChanged($ticket->prices, $prices);
+			$base_prices_changed = $base_prices && Helper::checkPricesChanged($ticket->base_prices, $base_prices, true);
+			$prices_changed      = $prices && Helper::checkPricesChanged($ticket->prices, $prices);
 
 			if($base_prices_changed)
 			{
@@ -378,44 +380,6 @@ class TicketController extends Controller {
 		foreach($departures as $departure)
 		{
 			if( $departure->bookingdetails()->where('ticket_id', $ticket_id)->count() > 0 )
-				return true;
-		}
-
-		return false;
-	}
-
-	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
-	{
-		$old_prices = $old_prices->toArray();
-
-		// Compare number of prices
-		if(count($prices) !== count($old_prices)) return true;
-
-		// Keyify $old_prices and reduce them to input fields
-		$array = array();
-		$input_keys = array('decimal_price' => '', 'from' => '');
-		if(!$isBase)
-			$input_keys['until'] = '';
-
-		foreach($old_prices as $old_price)
-		{
-			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
-		}
-		$old_prices = $array; unset($array);
-
-		// Compare price IDs
-		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
-			return true;
-
-		/**
-		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
-		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
-		 * but since they represent the same info, the comparison works and returns the expected result.
-		 */
-		foreach($old_prices as $id => $old_price)
-		{
-			// Compare arrays in both directions
-			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
 				return true;
 		}
 

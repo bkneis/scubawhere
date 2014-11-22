@@ -10,30 +10,43 @@ class Ticket extends Ardent {
 
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
 
-	protected $appends = array('has_bookings', 'trashed');
+	protected $appends = array('has_bookings');
+
+	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
-		'description' => 'required',
+		'description' => '',
+		'parent_id'   => 'integer|min:1'
 	);
 
 	public function beforeSave()
 	{
-		if( isset($this->description) )
-			$this->description = Helper::sanitiseBasicTags($this->description);
-
 		if( isset($this->name) )
 			$this->name = Helper::sanitiseString($this->name);
-	}
+
+		if( isset($this->description) )
+			$this->description = Helper::sanitiseBasicTags($this->description);
+}
 
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookings()->count() > 0;
 	}
 
-	public function getTrashedAttribute()
-	{
-		return $this->trashed();
+	public function calculatePrice($start) {
+		$price = Price::where(Price::$owner_id_column_name, $this->id)
+		     ->where(Price::$owner_type_column_name, 'Ticket')
+		     ->where('from', '<=', $start)
+		     ->where(function($query) use ($start)
+		     {
+		     	$query->whereNull('until')
+		     	      ->orWhere('until', '>=', $start);
+		     })
+		     ->orderBy('id', 'DESC')
+		     ->first();
+
+		$this->decimal_price = $price->decimal_price;
 	}
 
 	public function company()

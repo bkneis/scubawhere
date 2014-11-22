@@ -42,6 +42,7 @@ var Accommodation = {
 		});
 	},
 
+	/*
 	restore : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
@@ -51,6 +52,7 @@ var Accommodation = {
 			error: errorFn
 		});
 	},
+	*/
 
 	delete : function(params, handleData, errorFn){
 		$.ajax({
