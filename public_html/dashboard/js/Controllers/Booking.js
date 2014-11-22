@@ -1,46 +1,91 @@
-var Booking = function() {};
-	//params = int id (the ID of the wanted session)
-Booking.get = function(params, handleData) {
-		$.get("/api/booking", params).done(handleData);
-	};
+var Booking = function(data) {
+	if(data !== undefined)
+		$.extend(this, data);
+};
 
-Booking.getAll = function(handleData) {
-		$.get("/api/booking/all").done(handleData);
-	};
 
-	/**
-	 * Initate a booking with either the 'source' of the booking or the 'agent_id'.
-	 * Source must be one of telephone, email, facetoface.
-	 *
-	 * So 'params' should be an object, either
-	 *
-	 * {
-	 *     _token: ...,
-	 *     source: 'telephone'
-	 * } (for example)
-	 *
-	 * or
-	 *
-	 * {
-	 *     _token: ...,
-	 *     agent_id: 2
-	 * } (also an example)
-	 *
-	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
-	 * @param  {function} errorFn    [recieves xhr object as first parameter.
-	 *                                'xhr.responseText' contains the API response in plaintext]
-	 *
-	 * On success, data.id will contain the bookingID.
-	 */
-Booking.initiate = function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/booking/init",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	};
+/*
+ ********************************
+ ******* STATIC FUNCTIONS *******
+ ********************************
+ */
+
+/*
+ * @param integer id The ID of te required session
+ *
+ * Takes the required booking's ID and calls the success callback with a Booking object as its only parameter
+ */
+Booking.get = function(id, success) {
+	$.get("/api/booking", {id: id}, function(data) {
+		success( new Booking(data) );
+	});
+};
+
+/*
+ * Calls success callback with unaltered JSON data
+ */
+Booking.getAll = function(success) {
+	$.get("/api/booking/all", success);
+};
+
+
+/*
+ ********************************
+ ******* OBJECT FUNCTIONS *******
+ ********************************
+ */
+
+/**
+ * Initate a booking with either the 'source' of the booking or the 'agent_id'.
+ * Source must be one of (telephone, email, facetoface).
+ *
+ * @param {object}    Object containing _token and either source or agent_id. Examples:
+ * {
+ *     _token: ...,
+ *     source: 'telephone' (for example)
+ * }
+ * {
+ *     _token: ...,
+ *     agent_id: 2 (also an example)
+ * }
+ *
+ * @param  {function} successFn [recieves API 'data.status' as first and only parameter]
+ * @param  {function} errorFn   [recieves xhr object as first parameter.
+ *                                'xhr.responseText' contains the API response in plaintext]
+ */
+Booking.prototype.initiate = function(params, successFn, errorFn) {
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/init",
+		data: params,
+		success: function(data) {
+			this.id = data.id;
+			this.reference = data.reference;
+
+			this.source = params.source || null;
+			this.agent_id = params.agent_id || null;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+
+
+
+
+
+
+
+// All following has not been adapted yet!
+
+
+
+
+
+
+
 
 	/**
 	 * Add a ticket to a booking.
@@ -59,7 +104,7 @@ Booking.initiate = function(params, handleData, errorFn) {
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.
 	 *                                'xhr.responseText' contains the API response in plaintext]
 	 */
-Booking.addDetails = function(params, handleData, errorFn) {
+Booking.prototype.addDetails = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/add-details",
@@ -83,7 +128,7 @@ Booking.addDetails = function(params, handleData, errorFn) {
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.
 	 *                                'xhr.responseText' contains the API response in plaintext]
 	 */
-Booking.removeDetails = function(params, handleData, errorFn) {
+Booking.prototype.removeDetails = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/remove-details",
@@ -93,7 +138,7 @@ Booking.removeDetails = function(params, handleData, errorFn) {
 		});
 	};
 
-Booking.editInfo = function(params, handleData, errorFn) {
+Booking.prototype.editInfo = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/edit-info",
@@ -103,7 +148,7 @@ Booking.editInfo = function(params, handleData, errorFn) {
 		});
 	};
 
-Booking.validateBooking = function(params, handleData, errorFn){
+Booking.prototype.validateBooking = function(params, handleData, errorFn){
 		$.ajax({
 			type: "GET",
 			url: "/api/booking/validate",
@@ -113,7 +158,7 @@ Booking.validateBooking = function(params, handleData, errorFn){
 		});
 	};
 
-Booking.addAddon = function(params, handleData, errorFn){
+Booking.prototype.addAddon = function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
 			url: "/api/booking/add-addon",
