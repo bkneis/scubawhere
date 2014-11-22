@@ -198,6 +198,16 @@ class DepartureController extends Controller {
 			});
 		}
 
+		// Conditionally filter by boatrooms
+		if( $ticket && $ticket->boatrooms()->count() > 0)
+		{
+			$boatroomIDs = $ticket->boatrooms()->lists('id');
+			$departures->filter(function($departure) use ($boatroomIDs)
+			{
+				return count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
+			});
+		}
+
 		// Filter by capacity/availability
 		if( !$options['with_full'] )
 		{

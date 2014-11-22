@@ -102,7 +102,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('ticket_id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
+			$ticket = Auth::user()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -112,7 +112,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -164,22 +164,36 @@ class BookingController extends Controller {
 		// Validate that the ticket/package can be booked for this session
 		try
 		{
-			if( isset($package) )
+			$departure->trip->tickets()->where(function($query) use ($package)
 			{
-				$departure->trip->tickets()->where(function($query) use ($package)
+				if( isset($package) )
 				{
-				
 					$query->whereHas('packages', function($query) use ($package)
 					{
 						$query->where('id', $package->id);
 					});
-					
-				})->findOrFail( $ticket->id );
-			}
+				}
+			})->findOrFail( $ticket->id );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this session\'s trip.')), 403 ); // 403 Forbidden
+		}
+
+		// Check if the session's boat is allowed for the ticket
+		if( $ticket->boats()->count() > 0 )
+		{
+			$boatIDs = $ticket->boats()->lists('id');
+			if( in_array($departure->boat_id, $boatIDs) )
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat.')), 403 ); // 403 Forbidden
+		}
+
+		// Check if the session's boat's boatrooms are allowed for the ticket
+		if( $ticket->boatrooms()->count() > 0)
+		{
+			$boatroomIDs = $ticket->boatrooms()->lists('id');
+			if( count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0 )
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatrooms.')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining capacity on session
