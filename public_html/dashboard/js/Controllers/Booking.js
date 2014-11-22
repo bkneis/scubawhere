@@ -180,6 +180,9 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
  */
 Booking.prototype.addAddon = function(params, successFn, errorFn){
+
+	params.booking_id = this.id;
+
 	$.ajax({
 		type: "POST",
 		url: "/api/booking/add-addon",
