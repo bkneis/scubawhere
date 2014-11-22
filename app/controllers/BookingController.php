@@ -540,15 +540,16 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$accommodation_id = Input::get('accommodation_id');
-
 		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
-		$booking->accommodations()->detach( $accommodation_id );
+		$booking->accommodations()
+			->where('id', Input::get('accommodation_id') )
+			->wherePivot('customer_id', Input::get('customer_id'))
+			->detach();
 
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Accommodation removed.', 'price' => $booking->decimal_price());
+		return array('status' => 'OK. Accommodation removed.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postEditInfo()

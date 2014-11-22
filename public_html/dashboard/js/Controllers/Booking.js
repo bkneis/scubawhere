@@ -283,14 +283,45 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 	});
 };
 
+/**
+ * Removes an accommodation from the booking
+ * @param {object} params      Must contain
+ * - _token
+ * - accommodation_id
+ * - customer_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/remove-accommodation",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.accommodations = _.reject(this.accommodations, function(accommodation) {
+				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
+			});
+
+			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+
 
 
 
 
 // All following has not been adapted yet!
-
-
-
 
 
 
