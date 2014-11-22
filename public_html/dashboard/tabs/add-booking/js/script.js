@@ -1,6 +1,3 @@
-var booking = {};
-var sessions = [];
-
 window.token;
 $.get("/token", null, function(data) {
 	window.token = data;
@@ -57,7 +54,7 @@ $(function(){
 	var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
 
 	Ticket.getAllTickets(function(data){
-			console.log(data);
+		window.tickets = _.indexBy(data, 'id');
 		$("#tickets").append(ticketTemplate({tickets:data}));
 	});
 
@@ -76,7 +73,13 @@ $(function(){
 	var customersTemplate = Handlebars.compile($("#customers-list-template").html());
 
 	Customer.getAllCustomers(function(data){
+		window.customers = _.indexBy(data, 'id');
 		$("#existing-customers").append(customersTemplate({customers:data}));
+	});
+
+	Session.filter('', function(data){
+		window.sessions = _.indexBy(data, 'id');
+		
 	});
 
 	var countriesTemplate = Handlebars.compile($("#countries-template").html());
@@ -88,29 +91,32 @@ $(function(){
 
 });
 
-var token = getToken();
-
 //Sources
 
+var booking = new Booking();
+
 $(document).on('click', '.booking-source a', function() {
+	//Converts bootsrap list into a "radio button style" form element
 	listGroupRadio($(this), 'btn-primary');
 
+	//If agent select, display list of agents
 	if($(this).data('type') == 'agent') {
 		$('#agent-info').slideDown();
 	}else{
 		$('#agent-info').slideUp();
 	}
-});
 
-$(document).on('click', '.list-group-radio', function(e) {
-	listGroupRadio($(this));
 });
 
 $(document).on('click', '.source-finish', function() {
+
+	//Get that cog spinning!
 	$(this).html('<i class="fa fa-cog fa-spin"></i> Initiating...');
 
+	//Find the source type that has been selected
 	var type = $('.booking-source').children('.active').first().data("type");
 
+	//If agent type selected, find the selected agent and prepare the ajax params
 	if(type == "agent") {
 		var agentId = $('#agents').children('.active').data('id');
 		var params = [{name: "_token", value: window.token}, {name: "agent_id", value: agentId}];
@@ -118,9 +124,8 @@ $(document).on('click', '.source-finish', function() {
 		var params = [{name: "_token", value: window.token}, {name: "source", value: type}];
 	}
 
-	Booking.initiate(params, function(data) {
+	booking.initiate(params, function(data) {
 		$('[data-target="#ticket-tab"]').tab('show');
-		booking.id = data.id;
 	});
 });
 
@@ -478,6 +483,10 @@ $(document).ready(function() {
 		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
 			return false;
 		}
+	});
+
+	$(document).on('click', '.list-group-radio', function(e) {
+		listGroupRadio($(this));
 	});
 
 });
