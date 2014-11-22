@@ -394,41 +394,51 @@ class BookingController extends Controller {
 	{
 		/**
 		 * Required input parameters
-		 *
 		 * booking_id
-		 * session_id
-		 * customer_id
+		 * bookingdetail_id
 		 * addon_id
 		 */
 
+		// Check if the addon belongs to the company
 		try
 		{
-			if( !Input::has('booking_id') )  throw new ModelNotFoundException();
-			if( !Input::has('session_id') )  throw new ModelNotFoundException();
-			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
-
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
-			$bookingdetail = $booking->bookingdetails()
-				->where('session_id', Input::get('session_id'))
-				->where('customer_id', Input::get('customer_id'))
-				->first();
-
-			if( count($bookingdetail) < 1 ) throw new ModelNotFoundException();
+			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
+			$addon = Auth::user()->addons()->findOrFail( Input::get('addon_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('This combination of IDs could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$addon_id = Input::get('addon_id');
+		// Check if the booking belongs to the company
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if the bookingdetail belongs to the booking
+		try
+		{
+			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
+			$bookingdetail = $booking->bookingdetails()->findOrFail( Input::get('bookingdetail_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
 
 		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
-		$bookingdetail->addons()->detach( $addon_id );
+		$bookingdetail->addons()->detach( $addon->id );
 
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Addon removed.', 'price' => $booking->decimal_price());
+		return array('status' => 'OK. Addon removed.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postAddAccommodation()
@@ -439,8 +449,8 @@ class BookingController extends Controller {
 		 * booking_id
 		 * accommodation_id
 		 * customer_id
-		 * date
-		 * nights
+		 * start
+		 * end
 		 */
 
 		// Check if the booking belongs to the company
@@ -476,16 +486,16 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$date = Input::get('date');
-		$nights = Input::get('nights');
+		$start = Input::get('start');
+		$end = Input::get('end');
 		$validator = Validator::make(
 			array(
-				'date' => $date,
-				'nights' => $nights
+				'start' => $start,
+				'end'   => $end
 			),
 			array(
-				'date' => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago')),
-				'nights' => 'required|integer|min:1'
+				'start' => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago')),
+				'end'   => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago'))
 			)
 		);
 
@@ -494,12 +504,12 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
 
-		$booking->accommodations()->attach( $accommodation->id, array('date' => $date, 'nights' => $nights) );
+		$booking->accommodations()->attach( $accommodation->id, array('start' => $start, 'end' => $end) );
 
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Accommodation added.', 'price' => $booking->decimal_price());
+		return array('status' => 'OK. Accommodation added.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postRemoveAccommodation()

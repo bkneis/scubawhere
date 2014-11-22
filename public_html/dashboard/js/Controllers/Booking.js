@@ -207,6 +207,81 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 	});
 };
 
+/**
+ * Removes an addon from the booking
+ * @param {object} params      Must contain
+ * - _token
+ * - bookingdetail_id
+ * - addon_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.removeAddon = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/remove-addon",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			var detail = _.find(this.bookingdetails, function(detail) {
+				return detail.id == params.bookingdetail_id;
+			});
+
+			detail.addons = _.reject(detail.addons, function(addon) {
+				return addon.id == params.addon_id;
+			});
+
+			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Adds an accommodation to the booking
+ * @param {object} params      Must contain
+ * - _token
+ * - accommodation_id
+ * - customer_id
+ * - start            (Date: YYYY-MM-DD)
+ * - end              (Date: YYYY-MM-DD)
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/add-accommodation",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			var accommodation = window.accommodations[params.accommodation_id];
+			accommodation.pivot = {
+				start: params.start,
+				end: params.end
+			};
+
+			this.accommodations.push( accommodation );
+
+			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
 
 
 

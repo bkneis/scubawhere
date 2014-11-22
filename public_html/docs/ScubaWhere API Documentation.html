@@ -807,7 +807,7 @@ pre {
 <li><strong>@return</strong> JSON               Contains <code>status</code> and a list of attached <code>customers</code> on success, <code>errors</code> on failure</li>
 </ul>
 <h3>Remove ticket from booking</h3>
-<p><code>POST /api/booking/remove-details</code></p>
+<p><code>POST /api/booking/remove-detail</code></p>
 <p>Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see <a href="#Add_ticket_to_booking">#Add ticket to booking</a>.)</p>
 <ul>
 <li><strong>@param</strong> integer booking_id  The ID of the <code>booking</code> that the details should be removed from (most likely the ID returned in <a href="#Start_a_booking">#Start a booking</a>)</li>
@@ -846,8 +846,8 @@ pre {
 <li><strong>@param</strong> integer booking_id       The ID of the <code>booking</code> that the accommodation should be added to</li>
 <li><strong>@param</strong> integer accommodation_id The ID of the <code>accommodation</code> to add</li>
 <li><strong>@param</strong> integer customer_id      The ID of the <code>customer</code> the accommodation is for</li>
-<li><strong>@param</strong> string  date             Date of the first evening</li>
-<li><strong>@param</strong> integer nights           The number of nights the accommodation should be booked for</li>
+<li><strong>@param</strong> string  start            Date of the first evening (<code>YYYY-MM-DD</code>)</li>
+<li><strong>@param</strong> string  end              Date of when the customer leaves the accommodation (<code>YYYY-MM-DD</code>)</li>
 <li>&nbsp;</li>
 <li><strong>@return</strong> JSON                    Contains <code>status</code> and the new total booking price on success, <code>errors</code> on failure</li>
 </ul>
