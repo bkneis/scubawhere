@@ -35,6 +35,37 @@ class Accommodation extends Ardent {
 		return $this->bookings()->count() > 0;
 	}
 
+	public function calculatePrice($start, $end) {
+		$current_date = new DateTime($start);
+		$end = new DateTime($end);
+
+		$totalPrice = 0;
+		$numberOfDays = 0;
+
+		// Find the price for each night
+		do
+		{
+			$date = $current_date->format('Y-m-d');
+
+			$totalPrice += Price::where(Price::$owner_id_column_name, $this->id)
+				->where(Price::$owner_type_column_name, 'Accommodation')
+				->where('from', '<=', $date)
+				->where(function($query) use ($date)
+				{
+					$query->whereNull('until')
+					      ->orWhere('until', '>=', $date);
+				})
+				->orderBy('id', 'DESC')
+				->first()->decimal_price;
+
+			$current_date->add( new DateInterval('P1D') );
+			$numberOfDays++;
+		}
+		while( $current_date < $end );
+
+		$this->decimal_price = $totalPrice / $numberOfDays;
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('Company');

@@ -56,12 +56,13 @@ class Booking extends Ardent {
 
 	public function decimal_price()
 	{
+		// TODO Tombstone
 		return $this->getDecimalPriceAttribute();
 	}
 
 	public function accommodations()
 	{
-		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'date', 'nights')->withTimestamps();
+		return $this->belongsToMany('Accommodation')->withTrashed()->withPivot('customer_id', 'start', 'end')->withTimestamps();
 	}
 
 	public function customers()
@@ -71,7 +72,7 @@ class Booking extends Ardent {
 
 	public function lead_customer()
 	{
-		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->withTimestamps();
+		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withTimestamps();
 	}
 
 	/*public function addons()
@@ -88,7 +89,7 @@ class Booking extends Ardent {
 	{
 		return $this->belongsTo('Company');
 	}
-	
+
 	public function agent()
 	{
 		return $this->belongsTo('Agent');

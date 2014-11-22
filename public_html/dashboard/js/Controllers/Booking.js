@@ -48,12 +48,12 @@ var Booking = {
 	 * - _token
 	 * - booking_id
 	 * - customer_id
-	 * - is_lead
 	 * - ticket_id
 	 * - session_id
 	 *
 	 * Optional parameter:
 	 * - package_id
+	 * - is_lead
 	 *
 	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
 	 * @param  {function} errorFn    [recieves xhr object as first parameter.

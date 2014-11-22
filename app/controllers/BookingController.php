@@ -14,7 +14,34 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->bookings()->with('customers')->findOrFail( Input::get('id') );
+			$booking = Auth::user()->bookings()
+			->with(
+				'lead_customer',
+					'lead_customer.country',
+				'bookingdetails',
+					'bookingdetails.customer',
+						'bookingdetails.customer.country',
+					'bookingdetails.session',
+						'bookingdetails.session.trip',
+					'bookingdetails.ticket',
+					'bookingdetails.packagefacade',
+						'bookingdetails.packagefacade.package',
+					'bookingdetails.addons',
+				'accommodations'
+			)
+			->findOrFail( Input::get('id') );
+
+			$booking->bookingdetails->each(function($detail)
+			{
+				$detail->ticket->calculatePrice( $detail->session->start );
+			});
+
+			$booking->accommodations->each(function($detail)
+			{
+				$detail->calculatePrice( $detail->pivot->start, $detail->pivot->end );
+			});
+
+			return $booking;
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -143,10 +170,12 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 			}
 		}
+		else
+			$package = false;
 
 		// Check if this customer is supposed to be the lead customer
 		$is_lead = Input::get('is_lead');
-		if( !is_bool($is_lead) )
+		if( empty($is_lead) )
 			$is_lead = false;
 
 		// Validate that the customer is not already booked for this session on another booking
@@ -166,7 +195,7 @@ class BookingController extends Controller {
 		{
 			$departure->trip->tickets()->where(function($query) use ($package)
 			{
-				if( isset($package) )
+				if( $package )
 				{
 					$query->whereHas('packages', function($query) use ($package)
 					{
@@ -221,7 +250,7 @@ class BookingController extends Controller {
 		}
 
 		// If all checks completed successfully, write into database
-		if( isset($package) && !isset($packagefacade) )
+		if( $package && !isset($packagefacade) )
 		{
 			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
 			$packagefacade->save();
@@ -232,7 +261,7 @@ class BookingController extends Controller {
 				'is_lead'          => $is_lead,
 				'ticket_id'        => $ticket->id,
 				'session_id'       => $departure->id,
-				'packagefacade_id' => isset($package) ? $packagefacade->id : null
+				'packagefacade_id' => $package ? $packagefacade->id : null
 			)
 		);
 

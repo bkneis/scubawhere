@@ -44,7 +44,7 @@ class Departure extends Ardent {
 
 	public function trip()
 	{
-		return $this->belongsTo('Trip');
+		return $this->belongsTo('Trip')->withTrashed();
 	}
 
 	public function boat()

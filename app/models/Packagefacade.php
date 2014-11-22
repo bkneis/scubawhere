@@ -22,6 +22,6 @@ class Packagefacade extends Ardent {
 
 	public function package()
 	{
-		return $this->belongsTo('Package');
+		return $this->belongsTo('Package')->withTrashed();
 	}
 }
