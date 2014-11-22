@@ -55,7 +55,7 @@ $(function(){
 
 	Ticket.getAllTickets(function(data){
 		window.tickets = _.indexBy(data, 'id');
-		$("#tickets").append(ticketTemplate({tickets:data}));
+		$("#tickets-list").append(ticketTemplate({tickets:data}));
 	});
 
 	var tripTemplate = Handlebars.compile($("#trips-list-template").html());
@@ -79,7 +79,6 @@ $(function(){
 
 	Session.filter('', function(data){
 		window.sessions = _.indexBy(data, 'id');
-		
 	});
 
 	var countriesTemplate = Handlebars.compile($("#countries-template").html());
@@ -91,9 +90,13 @@ $(function(){
 
 });
 
-//Sources
+var booking = new Booking(); //Start the engines
 
-var booking = new Booking();
+/*
+*************************
+******** Sources ********
+*************************
+*/
 
 $(document).on('click', '.booking-source a', function() {
 	//Converts bootsrap list into a "radio button style" form element
@@ -129,12 +132,16 @@ $(document).on('click', '.source-finish', function() {
 	});
 });
 
-//Tickets
+/*
+*************************
+******** Tickets ********
+*************************
+*/
 
 $(document).on('click', '.btn-ticket', function() {
+	
 	//Get data from the ticket
 	var id = $(this).data('id');
-	var name = $(this).find('.ticket-name').html();
 
 	//Get the specific font awesome icon (without size increase)
 	var icon = $(this).find('.fa').attr('class').split(' ')[1];
@@ -146,7 +153,6 @@ $(document).on('click', '.btn-ticket', function() {
 		$('#ticket-'+id).find('.qty').text(qty+1);
 	}else{
 		var qty = 1;
-		$('#basket').append('<p class="list-group-item-text" id="ticket-'+id+'"><i class="fa '+icon+'"></i> <a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="'+id+'">'+name+'</a> <span class="badge qty">'+qty+'</span></p>');
 	}
 
 	addBookingTicket(id);

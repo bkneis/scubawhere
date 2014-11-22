@@ -115,7 +115,7 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-8">
-					<div class="form-group" id="tickets">
+					<div class="form-group" id="tickets-list">
 						
 					</div>
 					<script id="tickets-list-template" type="text/x-handlebars-template">
@@ -136,10 +136,17 @@
 							<h4 class="list-group-item-heading">Basket</h4>
 							<p class="list-group-item-text">Total tickets: <span id="basket-total">0</span></p>
 						</li>
-						<li class="list-group-item" id="basket">
-
+						<li class="list-group-item" id="tickets-basket">
+							
 						</li>
 					</ul>
+					<script id="tickets-basket-template" type="text/x-handlebars-template">
+						<p class="list-group-item-text">
+							<i class="fa fa-ticket"></i> 
+							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{name}}</a> 
+							<span class="badge qty">{{qty}}</span>
+						</p>
+					</script>
 				</div>
 			</div>
 			<div class="row">
