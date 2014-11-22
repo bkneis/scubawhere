@@ -113,7 +113,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	$.ajax({
 		type: "POST",
-		url: "/api/booking/add-details",
+		url: "/api/booking/add-detail",
 		data: params,
 		success: function(data) {
 			var detail = {

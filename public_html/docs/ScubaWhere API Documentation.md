@@ -414,7 +414,7 @@ The ideal booking process is throughoutly documented in a [Facebook Document](ht
 
 ### Add ticket to booking
 
-`POST /api/booking/add-details`
+`POST /api/booking/add-detail`
 
 Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
 

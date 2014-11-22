@@ -92,7 +92,7 @@ class BookingController extends Controller {
 		return Response::json( array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference), 201 ); // 201 Created
 	}
 
-	public function postAddDetails()
+	public function postAddDetail()
 	{
 		/**
 		 * Valid input parameters
