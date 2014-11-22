@@ -43,14 +43,8 @@ Booking.getAll = function(success) {
  * Source must be one of (telephone, email, facetoface).
  *
  * @param {object} Object containing _token and either source or agent_id. Examples:
- * {
- *     _token: ...,
- *     source: 'telephone' (for example)
- * }
- * {
- *     _token: ...,
- *     agent_id: 2 (also an example)
- * }
+ * - _token
+ * - source (telephone, email, facetoface) || agent_id
  *
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
@@ -77,16 +71,13 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 /**
  * Add a ticket/customer/package combo to a booking.
  *
- * @param {object} params The parameters, as described here:
- * Required parameters:
+ * @param {object} params      Must contain:
  * - _token
  * - customer_id
  * - ticket_id
  * - session_id
- *
- * Optional parameter:
- * - package_id
- * - is_lead
+ * - package_id (optional)
+ * - is_lead (optional)
  *
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
@@ -119,6 +110,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 			var detail = {
+				id: data.id,
 				customer: window.customers[params.customer_id],
 				is_lead: params.is_lead || false,
 				session: window.sessions[params.session_id],
@@ -145,7 +137,72 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 	});
 };
 
+/**
+ * Remove a ticket/customer/package combo from a booking.
+ * @param {object} params      Must contain
+ * - _token
+ * - bookingdetail_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/remove-detail",
+		data: params,
+		context: this,
+		success: function(data) {
+			this.bookingdetails = _.reject(this.bookingdetails, function(detail) {
+				return detail.id == params.bookingdetail_id
+			});
+
+			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Adds an addon to the booking
+ * @param {object} params      Must contain
+ * - _token
+ * - bookingdetail_id
+ * - addon_id
+ * - quantity (optional, default: 1)
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.addAddon = function(params, successFn, errorFn){
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/add-addon",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			var addon = window.addons[params.addon_id];
+			addon.pivot = {
+				quantity: params.quantity
+			};
+
+			_.find(this.bookingdetails, function(detail) {
+				return detail.id == params.bookingdetail_id;
+			}).addons.push( addon );
+
+			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
 
 
 
@@ -163,30 +220,6 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 
 
-	/**
-	 * Remove a ticket from a booking.
-	 * Required parameters:
-	 * - _token
-	 * - booking_id
-	 * - customer_id
-	 * - session_id
-	 *
-	 * A booking details record should be uniquely identifyable by the combination of customer_id and session_id (because one customer can't really book one session twice).
-	 *
-	 * @param  {function} handleData [recieves API 'data' as first and only parameter]
-	 * @param  {function} errorFn    [recieves xhr object as first parameter.
-	 *                                'xhr.responseText' contains the API response in plaintext]
-	 */
-Booking.prototype.removeDetails = function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/booking/remove-details",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	};
-
 Booking.prototype.editInfo = function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
@@ -201,16 +234,6 @@ Booking.prototype.validateBooking = function(params, handleData, errorFn){
 		$.ajax({
 			type: "GET",
 			url: "/api/booking/validate",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	};
-
-Booking.prototype.addAddon = function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/booking/add-addon",
 			data: params,
 			success: handleData,
 			error: errorFn
