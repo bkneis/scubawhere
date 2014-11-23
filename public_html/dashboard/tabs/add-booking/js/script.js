@@ -208,6 +208,7 @@ $(document).on('click', '.edit-customer', function() {
 
 	//Set the country dropdown to the customers country (if they have one)
 	$('#country_id').val(window.customers[id].country_id);
+	$('#country_id option[value="'+window.customers[id].country_id+'"]').attr('selected', 'selected');
 });
 
 $(document).on('click', '.remove-customer', function() {
@@ -236,7 +237,7 @@ $(document).on('submit', '#edit-customer-form', function(e) {
 
 			btn.html('Save');
 			$('#edit-customer-modal').modal('hide');
-			
+
 			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 		});
 	});
