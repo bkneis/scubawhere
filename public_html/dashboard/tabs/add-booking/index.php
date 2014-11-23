@@ -641,7 +641,7 @@
 											<p class="list-group-item-text">Name: {{name}}</p>
 											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
 											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{quantity}}</span></p>
-											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);"  data-id="{{id}}">Remove</a>
+											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>
 										{{/each}}
 									</div>
 								</div>

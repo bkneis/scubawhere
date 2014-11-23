@@ -407,44 +407,24 @@ $('#addon-tab').on('click', '.add-addon', function() {
 });
 
 $('#addon-tab').on('click', '.remove-addon', function() {
-	var id = $(this).data('id');
-	var addon = $('#addons-summary').find('[data-id="'+id+'"]');
-	var price = addon.find('.price').text();
-	var basePrice = $('#baseprice-'+id).text();
-	var qty = parseInt(addon.find('.qty').text(), 10);
+	var btn = $(this);
+	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
-	if(qty > 1) {
-		addon.find('.qty').text(qty-1);
-		addon.find('.price').text(price-basePrice);
-	}else{
-		addon.remove();
-	}
+	var params = {};
+	params._token = window.token;
+	params.bookingdetail_id = $(this).data('bookingdetail-id');
+	params.addon_id = $(this).data('id');
 
-	addonTotal -= basePrice;
-	$('#addons-summary-total').html('£'+addonTotal);
+	booking.removeAddon(params, function() {
+		btn.html('Remove');
+		$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
+	});
 });
 
 $('#addon-tab').on('click', '.addon-finish', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
 
-	$('#addons-summary').children('.summary-item').each(function(k,v) {
-		var params = [
-			{name: "_token", value: window.token},
-			{name: "booking_id", value: booking.id},
-			{name: "session_id", value: $(v).data("session-id")},
-			{name: "customer_id", value: $(v).data("customer-id")},
-			{name: "addon_id", value: $(v).data("addon-id")},
-			{name: "quantity", value: $(v).find(".qty").text()}
-		];
-
-		Booking.addAddon(params, function(data) {
-			btn.html('Save');
-			$('[data-target="#extra-tab"]').tab('show');
-		});
-	});
-
-	
 });
 
 $(document).on('submit', '#extra-form', function(e) {
