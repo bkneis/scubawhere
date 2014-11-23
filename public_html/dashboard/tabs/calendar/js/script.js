@@ -1,13 +1,17 @@
-var filterBy = "";
-var filter = "";
+var filterByBoat = false;
+var filterByTrip = false;
+var boatFilter;
+var tripFilter;
 var boatsList;
 var tripsList;
+var display = "trips";
 $(function() {
 
 	window.trips;
 	window.boats;
 	window.token;
 	window.sessions;
+	window.accommodations;
 
 	boatsList = Handlebars.compile($("#boats-list-template").html());
 	tripsList = Handlebars.compile($("#trips-list-template").html());
@@ -22,6 +26,10 @@ $(function() {
 		window.boats = _.indexBy(data, 'id');
 	});
 
+	Accommodation.getAll(function(data) {
+		window.accommodations = _.indexBy(data, 'id');
+	});
+
 	/* Initialize the calendar
 	--------------------------*/
 	$('#calendar').fullCalendar({
@@ -34,7 +42,8 @@ $(function() {
 		height : 450,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
-			getTripEvents(start, end, timezone, callback);
+			if(display == "trips") getTripEvents(start, end, timezone, callback);
+			if(display == "accommodations") getAccomEvents(start, end, timezone, callback);
 		},
 		eventRender: function(event, element) {
 			// Intercept the event rendering to inject the non-html-escaped version of the title
@@ -49,36 +58,63 @@ $(function() {
 		},
 	});
 
-	$('.collapsible').collapsible({
+	/*$('.collapsible').collapsible({
         defaultOpen: 'filters'
-    });
+    });*/
 
     $('#filter-options').on('change', function(event) {
     	event.preventDefault();
     	if($("#filter-options").val() == 'boat') {
-    		$("#filter").empty();
+    		$("div#filter-settings option[value=boat]").attr('disabled', true);
+    		$("#filter-options").val('all');
     		$("#filter").append( boatsList({boats : window.boats}) );
-    		filterBy = "boat_id";
     	} 
     	else if($("#filter-options").val() == 'trip') {
-    		$("#filter").empty();
+    		$("div#filter-settings option[value=trip]").attr('disabled', true);
+    		$("#filter-options").val('all');
     		$("#filter").append( tripsList({trips : window.trips}) );
-    		filterBy = "trip_id";
-    	}
-    	else {
-    		$("#filter").empty();
-    		filterBy = "all";
-    		$('#calendar').fullCalendar( 'refetchEvents' );
     	}
     });
 
     $("#filter").on('change', '.filter', function(event){
     	event.preventDefault();
-    	filter = this.options[this.selectedIndex].value;
-    	if(filter == "all") filterBy = "all";
-    	else filterBy = this.id;
+    	//console.log(this.options[this.selectedIndex].value);
+    	console.log(filter);
+    	if(this.id == "boats") {
+    		if(filter == "all") filterByBoat = false;
+    		else filterByBoat = true;
+    		filterByBoat = true;
+    		boatFilter = this.options[this.selectedIndex].value;
+    		//console.log(boatFilter);
+    	}
+    	else if(this.id == "trips") {
+    		var filter = $("#trips:selected").val();
+    		if(filter == "all") filterByTrip = false;
+    		else filterByTrip = true;
+    		filterByTrip = true;
+    		tripFilter = this.options[this.selectedIndex].value;
+    		console.log("trip filter =  ",tripFilter);
+    	}
     	$('#calendar').fullCalendar( 'refetchEvents' );
-    })
+    });
+
+    $("#filters").on('click', '#remove-boats-filter', function(event){
+		event.preventDefault();
+		filterByBoat = false;
+		boatFilter = null;
+		$("div#filter-settings option[value=boat]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
+
+	$("#filters").on('click', '#remove-trips-filter', function(event){
+		event.preventDefault();
+		filterByTrip = false;
+		tripFilter = null;
+		$("div#filter-settings option[value=trip]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
 });
 
@@ -204,9 +240,7 @@ function getTripEvents(start, end, timezone, callback) {
 		'before': end.format(),
 		'with_full': 1
 	};
-	if(filterBy == "trips") sessionFilters.trip_id = filter;
-	var filterBoats = false;
-	if(filterBy == "boats") filterBoats = true;
+	if(filterByTrip) sessionFilters.trip_id = tripFilter;
 	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
 		sessions = _.indexBy(data, 'id');
@@ -217,10 +251,8 @@ function getTripEvents(start, end, timezone, callback) {
 
 		// Create eventObjects
 		_.each(sessions, function(value) {
-			if(filterBoats) {
-				var boatID = $("#"+filterBy).val()
-				if(boatID == value.boat_id) {
-
+			if(filterByBoat) {
+				if(boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
 					var ticketsLeft = capacity - booked;
@@ -288,3 +320,38 @@ function getTripEvents(start, end, timezone, callback) {
 
 }
 
+function getAccomEvents(start, end, timezone, callback) {
+
+	$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
+	var sessionFilters = {
+		'after': start.format(),
+		'before': end.format(),
+		'with_full': 1
+	};
+	Accommodation.filter(sessionFilters, function success(data) {
+
+		console.log(data);
+		events = [];
+
+		_.each(data, function(value, key) {
+		    var start = new moment(key);
+
+		    _.each(value, function(util, id) {
+		        var eventObject = {
+		            start: start,
+		            title: window.accommodations[ id ].name,
+		            color : "#4B0082"
+		            //utilisation: util // This is the [0, 20] array
+		        };
+		        events.push( eventObject );
+		        //$('#calendar').renderEvent(eventObject);
+		    });
+		});
+
+		callback(events);
+		$('#fetch-events-loader').remove();
+	},
+	function error(xhr){
+		$('.loader').remove();
+	});
+}

@@ -62,5 +62,15 @@ var Accommodation = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	filter : function(params, handleData, errorFn){
+		$.ajax({
+			type: "GET",
+			url: "/api/accommodation/filter",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 };
