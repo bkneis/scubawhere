@@ -93,7 +93,6 @@ class AddonModelTest extends ModelTestCase {
 		$this->assertEquals("10.00", $addon->decimal_price, "Unexpected decimal_price value");
 		$this->assertEquals(ModelTestHelper::TEST_CURRENCY, $addon->currency->code, "Unexpected currency value");
 		$this->assertFalse($addon->has_bookings, "Unexpected has_bookings value");
-		$this->assertFalse($addon->trashed, "Unexpected trashed value");
 	}
 
 	public function testEdges(){

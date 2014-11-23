@@ -86,9 +86,8 @@ class AccommodationModelTest extends ModelTestCase {
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$accommodation_id = ModelTestHelper::createAccommodation($company_id);
 		$accommodation = Accommodation::find($accommodation_id);
-		
+
 		$this->assertFalse($accommodation->has_bookings, "Unexpected has_bookings value");
-		$this->assertFalse($accommodation->trashed, "Unexpected trashed value");
 	}
 
 	public function testEdges(){

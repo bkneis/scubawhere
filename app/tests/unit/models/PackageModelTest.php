@@ -80,7 +80,6 @@ class PackageModelTest extends ModelTestCase {
 		$package = Package::find($package_id);
 
 		$this->assertFalse($package->has_bookings, "Unexpected has_bookings value");
-		$this->assertFalse($package->trashed, "Unexpected trashed value");
 	}
 
 	public function testEdges(){
