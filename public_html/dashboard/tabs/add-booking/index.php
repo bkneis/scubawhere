@@ -31,15 +31,21 @@
 			</a>
 		</li>
 		<li role="presentation">
+			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
+				<span class="step-number">7</span>
+				<span class="step-description">7. Accommodation<br><small>Choose accommodation</small></span>
+			</a>
+		</li>
+		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
-				<span class="step-number">6</span>
-				<span class="step-description">6. Extra Details<br><small>Extra information</small></span>
+				<span class="step-number">7</span>
+				<span class="step-description">7. Extra Details<br><small>Extra information</small></span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
-				<span class="step-number">7</span>
-				<span class="step-description">7. Summary<br><small>Booking summary</small></span>
+				<span class="step-number">8</span>
+				<span class="step-description">8. Summary<br><small>Booking summary</small></span>
 			</a>
 		</li>
 	</ul>
@@ -85,7 +91,7 @@
 							<h2 class="panel-title">Select Agent</h2>
 						</div>
 						<div class="panel-body">
-							<div class="list-group" id="agents">
+							<div class="list-group" id="agents-list">
 							</div>
 						</div>
 					</div>
@@ -458,13 +464,13 @@
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="after">After:</label>
-													<input type="date" class="form-control" name="after" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datetime" name="after" placeholder="dd/mm/yyyy">
 												</div>
 											</div>
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="before">Before:</label>
-													<input type="date" class="form-control" name="before" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datetime" name="before" placeholder="dd/mm/yyyy">
 												</div>
 											</div>
 											<div class="col-sm-4">
@@ -552,6 +558,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
 			<div class="row">
 				<div class="col-xs-12">
@@ -588,29 +595,29 @@
 							<h2 class="panel-title">Step 2: Select Addons</h2>
 						</div>
 						<div class="panel-body">
-							<ul class="list-group" id="addons">
+							<ul class="list-group" id="addons-list">
 							</ul>
 						</div>
 					</div>
-					<script id="addons-template" type="text/x-handlebars-template">
+					<script id="addons-list-template" type="text/x-handlebars-template">
 						{{#each addons}}
-						<li data-id="{{id}}" class="list-group-item">
-							<h4 class="list-group-item-heading addon-name">{{name}}</h4>
-							<p>{{description}}</p>
-							<div class="row">
-								<div class="col-sm-4">
-									<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
-								</div>
-								<div class="col-sm-5 pull-right">
-									<div class="input-group">
-										<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
-										<span class="input-group-btn">
-											<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
-										</span>
+							<li data-id="{{id}}" class="list-group-item">
+								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
+								<p>{{description}}</p>
+								<div class="row">
+									<div class="col-sm-4">
+										<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
+									</div>
+									<div class="col-sm-5 pull-right">
+										<div class="input-group">
+											<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
+											<span class="input-group-btn">
+												<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
+											</span>
+										</div>
 									</div>
 								</div>
-							</div>
-						</li>
+							</li>
 						{{/each}}
 					</script>
 				</div>
@@ -647,91 +654,200 @@
 								</div>
 							</li>
 						{{/each}}
+					</script>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary addon-finish pull-right">Next</a>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="tab-pane fade" id="accommodation-tab">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="page-header">
+						<h2>Accommodation Selection <small>Do you require any accommodation?</small></h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Step 1: Select the customer</h2>
+						</div>
+						<div class="panel-body">
+							<div class="list-group" id="accommodation-customers">
+							</div>
+						</div>
+						<script id="accommodation-customers-template" type="text/x-handlebars-template">
+							{{#each customers}}
+								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
+									<h4 class="list-group-item-heading"><span class="customer-name">{{firstname}} {{lastname}}</span></h4>
+									{{#each bookingdetails}}
+										<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
+										<p class="list-group-item-text"><strong>Session Date:</strong> <span class="ticket-name">{{friendlyDate session.start}}</span></p>
+									{{/each}}
+								</a>
+							{{/each}}
 						</script>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<a href="javascript:void(0);" class="btn btn-primary addon-finish pull-right">Next</a>
-					</div>
-				</div>
-			</div>
-			<div role="tabpanel" class="tab-pane fade" id="extra-tab">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="page-header">
-							<h2>Extra Details <small>Is there anything else we should know?</small></h2>
+				<div class="col-sm-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Step 2: Select Accommodation</h2>
+						</div>
+						<div class="panel-body">
+							<ul class="list-group" id="accommodations-list">
+							</ul>
 						</div>
 					</div>
+					<script id="accommodations-list-template" type="text/x-handlebars-template">
+						{{#each accommodations}}
+							<li data-id="{{id}}" class="list-group-item">
+								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
+								<p>{{description}}</p>
+								<div class="row">
+									<form id="accommodation-form">					
+										<div class="form-group">
+											<label for="" class="col-sm-1 control-label">From:</label>
+											<div class="col-sm-4">
+												<input type="date" value="2014-11-11" id="accommodation-start" name="accommodation-start" data-id="{{id}}" class="form-control input-sm">
+											</div>
+											<label class="col-sm-1 control-label">From:</label>
+											<div class="col-sm-4">
+												<input type="date" id="accommodation-end" name="accommodation-end" data-id="{{id}}" class="form-control input-sm">
+											</div>
+											<button class="btn btn-primary btn-sm add-accommodation">Add</button>
+										</div>
+									</div>
+								</div>
+							</li>
+						{{/each}}
+					</script>
 				</div>
-				<div class="row">
-					<div class="col-md-6 col-md-offset-3 col-xs-12">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h2 class="panel-title">Extra Information (Optional)</h2>
-							</div>
-							<form id="extra-form" class="form-horizontal">
-								<fieldset>
-									<div class="panel-body">
-										<div class="form-group">
-											<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Time</label>
-											<div class="col-md-4">
-												<input id="pick-up-time" name="pick_up_time" class="form-control" type="text">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pick-up-location" class="col-sm-4 control-label">Pick Up Location</label>
-											<div class="col-md-8">
-												<input id="pick-up-location" name="pick_up_location" class="form-control">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pick-up-location" class="col-sm-4 control-label">Discount</label>
-											<div class="col-md-8">
-												<input id="discount" name="discount" class="form-control" type="number">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pick-up-location" class="col-sm-4 control-label">Reserved Until</label>
-											<div class="col-md-8">
-												<input id="reserved" name="reserved" class="form-control">
-											</div>
-										</div>
-										<div class="form-group col-xs-12">
-											<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?"></textarea>
-										</div>
-									</div>
-									<div class="panel-footer">
-										<div class="row">
-											<div class="col-xs-12">
-												<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Next</button>
-												<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
-											</div>
-										</div>
-									</div>
-								</fieldset>
-							</form>
+				<div class="col-sm-5">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h2 class="panel-title">Addons Summary (Total: <span id="addons-summary-total">0.00</span>)</h2>
 						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<a href="javascript:void(0);" class="btn btn-primary extra-finish pull-right">Next</a>
-					</div>
-				</div>
-			</div>
+						<div class="panel-body">
+							<ul class="list-group" id="selected-addons">
 
-			<div role="tabpanel" class="tab-pane fade" id="summary-tab">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="page-header">
-							<h2>Summary <small>The summary will be here.</small></h2>
+							</ul>
 						</div>
+					</div>
+					<script id="selected-addons-template" type="text/x-handlebars-template">
+						{{#each details}}
+							<li class="list-group-item summary-item">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">{{customer.firstname}} {{customer.lastname}}</h4>
+										<p class="list-group-item-text"><strong>Ticket:</strong> {{ticket.name}}</p>
+										<p class="list-group-item-text"><strong>Trip:</strong> {{session.trip.name}}</p>
+										<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
+									</div>
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">Addons</h4>
+										{{#each addons}}
+											<p class="list-group-item-text">Name: {{name}}</p>
+											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{decimal_price}}</span></p>
+											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{pivot.quantity}}</span></p>
+											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>
+										{{/each}}
+									</div>
+								</div>
+							</li>
+						{{/each}}
+					</script>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary addon-finish pull-right">Next</a>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="tab-pane fade" id="extra-tab">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="page-header">
+						<h2>Extra Details <small>Is there anything else we should know?</small></h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 col-xs-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2 class="panel-title">Extra Information (Optional)</h2>
+						</div>
+						<form id="extra-form" class="form-horizontal">
+							<fieldset>
+								<div class="panel-body">
+									<div class="form-group">
+										<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Time</label>
+										<div class="col-md-4">
+											<input id="pick-up-time" name="pick_up_time" class="form-control" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pick-up-location" class="col-sm-4 control-label">Pick Up Location</label>
+										<div class="col-md-8">
+											<input id="pick-up-location" name="pick_up_location" class="form-control">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pick-up-location" class="col-sm-4 control-label">Discount</label>
+										<div class="col-md-8">
+											<input id="discount" name="discount" class="form-control" type="number">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pick-up-location" class="col-sm-4 control-label">Reserved Until</label>
+										<div class="col-md-8">
+											<input id="reserved" name="reserved" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?"></textarea>
+									</div>
+								</div>
+								<div class="panel-footer">
+									<div class="row">
+										<div class="col-xs-12">
+											<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Next</button>
+											<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<a href="javascript:void(0);" class="btn btn-primary extra-finish pull-right">Next</a>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="tab-pane fade" id="summary-tab">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="page-header">
+						<h2>Summary <small>The summary will be here.</small></h2>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
 
 
@@ -741,6 +857,10 @@
 	<!--Bootstrap-->
 	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
+
+	<!--Datepicker-->
+	<link rel="stylesheet" href="/common/datepicker/css/bootstrap-datetimepicker.min.css" type="text/css" />
+	<script type="text/javascript" src="/common/datepicker/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!--Select 2-->
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
@@ -759,5 +879,6 @@
 	<script src="/dashboard/js/Controllers/Trip.js"></script>
 	<script src="/dashboard/js/Controllers/Customer.js"></script>
 	<script src="/dashboard/js/Controllers/Addon.js"></script>
+	<script src="/dashboard/js/Controllers/Accommodation.js"></script>
 	<!--My scripts-->
 	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>

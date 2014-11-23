@@ -64,33 +64,34 @@ Handlebars.registerHelper("priceRange", function(prices) {
 $(function(){
 
 	var agentTemplate = Handlebars.compile($("#agents-list-template").html());
-
 	Agent.getAllAgents(function(data){
-		$("#agents").append(agentTemplate({agents:data}));
+		$("#agents-list").append(agentTemplate({agents:data}));
 	});
 
 	var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
-
 	Ticket.getAllTickets(function(data){
 		window.tickets = _.indexBy(data, 'id');
 		$("#tickets-list").append(ticketTemplate({tickets:data}));
 	});
 
 	var tripTemplate = Handlebars.compile($("#trips-list-template").html());
-
 	Trip.getAllTrips(function(data){
 		$("#trips").append(tripTemplate({trips:data}));
 	});
 
-	var addonsTemplate = Handlebars.compile($("#addons-template").html());
-
+	var addonsTemplate = Handlebars.compile($("#addons-list-template").html());
 	Addon.getAllAddons(function(data){
 		window.addons = _.indexBy(data, 'id');
-		$("#addons").append(addonsTemplate({addons:data}));
+		$("#addons-list").append(addonsTemplate({addons:data}));
+	});
+
+	var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
+	Accommodation.getAll(function(data){
+		window.accommodations = _.indexBy(data, 'id');
+		$("#accommodations-list").append(accommodationsTemplate({accommodations:data}));
 	});
 
 	var customersTemplate = Handlebars.compile($("#customers-list-template").html());
-
 	Customer.getAllCustomers(function(data){
 		window.customers = _.indexBy(data, 'id');
 		$("#existing-customers").append(customersTemplate({customers:data}));
@@ -351,11 +352,11 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
-	var ticketId = $('#session-tickets').children('.active').first().data('id');
-	var customerId = $('#session-customers').children('.active').first().data('id');
-	var sessionId = btn.data('id');
+	var ticket_id = $('#session-tickets').children('.active').first().data('id');
+	var customer_id = $('#session-customers').children('.active').first().data('id');
+	var session_id = btn.data('id');
 
-	if(booking.lead == customerId) {
+	if(booking.lead == customer_id) {
 		var isLead = 1;
 	}else{
 		var isLead = 0;
@@ -363,19 +364,29 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 	var params = {};
 	params._token = window.token;
-	params.customer_id = $('#session-customers').children('.active').first().data('id');
-	params.ticket_id = $('#session-tickets').children('.active').first().data('id');
-	params.session_id = btn.data('id');
+	params.customer_id = customer_id;
+	params.ticket_id = ticket_id;
+	params.session_id = session_id;
 	params.is_lead = isLead;
 
-	booking.addDetail(params, function(data) {
-		$('.free-spaces[data-id="'+sessionId+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
+	booking.addDetail(params, function(status, id) {
+		console.log(id);
+		$('.free-spaces[data-id="'+session_id+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
 
 		var params = $("#session-filters").serializeObject();
-		if( $('#session-tickets .active').length != 0 )
+		if( $('#session-tickets .active').length != 0 ) {
 			params.ticket_id = $('#session-tickets .active').first().data('id');
+		}
 
 		compileSessionsList(params);
+
+		//List customer's bookingdetails in selectedCustomers for accommodations tab
+		var detail = _.find(booking.bookingdetails, function (detail) {
+		    return detail.customer.id == customer_id;
+		});
+
+		booking.selectedCustomers[customer_id].bookingdetails = [];
+		booking.selectedCustomers[customer_id].bookingdetails.push(detail);
 
 		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
 
@@ -407,9 +418,16 @@ $('#session-tab').on('click', '.unassign-session', function() {
 });
 
 $('#session-tab').on('click', '.sessions-finish', function() {
-	$('[data-target="#addon-tab"]').tab('show');
-	$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
-	booking.currentStep = 5;
+	if(_.size(window.addons) > 0) {
+		$('[data-target="#addon-tab"]').tab('show');
+		$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
+		booking.currentStep = 5;
+	}else if(_.size(window.accommodations) > 0){
+		$('[data-target="#accommodation-tab"]').tab('show');
+		booking.currentStep = 6;
+	}else{
+
+	}
 });
 
 /*
@@ -456,10 +474,29 @@ $('#addon-tab').on('click', '.remove-addon', function() {
 });
 
 $('#addon-tab').on('click', '.addon-finish', function() {
-	var btn = $(this);
-	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
-
+	if(_.size(window.accommodations) > 0){
+		$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
+		$('[data-target="#accommodation-tab"]').tab('show');
+		booking.currentStep = 6;
+	}else{
+		$('[data-target="#extra-tab"]').tab('show');
+		booking.currentStep = 7;
+	}
 });
+
+/*
+*************************
+***** Accommodation *****
+*************************
+*/
+
+var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
+
+/*
+*************************
+****** Extra Info *******
+*************************
+*/
 
 $(document).on('submit', '#extra-form', function(e) {
 	e.preventDefault();
@@ -482,6 +519,11 @@ $(document).ready(function() {
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	$('#country_id').select2();
+	$('.datetime').datetimepicker();
+
+	$('.tab-content').on('focus', '.datetime', function() {
+		$(this).data("DateTimePicker").show();
+	});
 
 	//Form Wizard
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -503,7 +545,6 @@ $(document).ready(function() {
 
 });
 
-
 function compileSessionsList(params) {
 	if(typeof(params) === 'undefined') params = "";
 
@@ -513,78 +554,6 @@ function compileSessionsList(params) {
 		window.sessions = _.indexBy(data, 'id');
 		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
 	});
-}
-
-
-var handleSummary = [];
-function addToAddonSummary(addon) {
-
-	var selectedSubBooking = $('#addon-sessions').find('.active');
-	addon.sessionId = selectedSubBooking.data('id');
-	addon.customer = selectedSubBooking.find('.customer-name').text();
-	addon.customerId = selectedSubBooking.data('customer-id');
-	addon.ticket = selectedSubBooking.find('.ticket-name').text();
-	addon.trip = selectedSubBooking.find('.trip-name').text();
-	addon.start = selectedSubBooking.find('.start-date').text();
-
-	handleSummary.push({
-		"id":addon.id,
-		"customer_id":addon.customerId,
-		"session_id":addon.sessionId,
-		"customer":addon.customer,
-		"ticket":addon.ticket,
-		"trip":addon.trip,
-		"start":addon.start,
-		"addon":addon.name,
-		"price":addon.basePrice,
-		"qty":addon.inputQty
-	});
-
-	var addonsSummaryTemplate = Handlebars.compile($("#addons-summary-template").html());
-	$("#addons-summary").html('').append(addonsSummaryTemplate({addonsSummary:handleSummary}));
-}
-
-function addToAssignedSessions(bookingDetail) {
-	var addedBookingdetailsTemplate = Handlebars.compile($("#added-bookingdetails-template").html());
-	$("#added-bookingdetails").append(addedBookingdetailsTemplate(bookingDetail));
-}
-
-//Add the session to the addons page
-function generateAddonSessions(sessions) {
-	var addonSessionsTemplate = Handlebars.compile($("#addon-sessions-template").html());
-	var handleData = [];
-	var maxSessions = sessions.length;
-
-	$.each(sessions, function(i, session) {
-		var handleItem = [];
-		//Build "sessions" (or in database terms, booking_details)
-		Customer.getCustomer("id="+session.customer_id, function(data) {
-			handleItem.customer = data.firstname+" "+data.lastname;
-		});
-
-		Ticket.getTicket("id="+session.ticket_id, function(data) {
-			handleItem.ticket = data.name;
-		});
-
-		Session.getSpecificSession("id="+session.id, function(data) {
-			handleItem.start = data.start;
-
-			Trip.getSpecificTrip("id="+data.trip_id, function(data) {
-				handleItem.trip = data.name;
-
-				//We are doing this in here to wait for all ajax to finish
-				handleData.push({"id":session.id, "customer":handleItem.customer, "customer_id":session.customer_id, "ticket":handleItem.ticket, "start":handleItem.start, "trip":handleItem.trip});
-
-				//On the last loop, render the view
-				if(i == (maxSessions-1))
-				{
-					$("#addon-sessions").html('').append(addonSessionsTemplate({sessions:handleData}));
-					$('[data-target="#addon-tab"]').tab('show');
-				}
-			});
-		});
-	});
-
 }
 
 function listGroupRadio(selector, additionalClass) {
