@@ -10,7 +10,7 @@
 				<script type="text/x-handlebars-template" id="package-list-template">
 					<ul id="package-list" class="entity-list">
 						{{#each packages}}
-							<li data-id="{{id}}"{{#if trashed}} class="trashed"{{/if}}><strong>{{{name}}}</strong> | {{count tickets}} tickets</li>
+							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{count tickets}} tickets</li>
 						{{else}}
 							<p>No packages available.</p>
 						{{/each}}
@@ -28,21 +28,9 @@
 						<div class="form-row">
 							<label class="field-label">Package Name</label>
 							<input type="text" name="name" value="{{{name}}}">
-							{{#if trashed}}
-								<strong style="color: #FF7163;">(Deactivated)</strong>
-							{{/if}}
 
 							{{#if update}}
-								{{#if trashed}}
-									<span class="box-tool blueb restore-package" style="color: white;">Restore</span>
-								{{else}}
-									{{#if has_bookings}}
-										<span class="questionmark-tooltip" style="float: right;" title="This package has been booked at least once. That is why it can only be deactivated and not removed.">?</span>
-										<span class="box-tool redb deactivate-package" style="color: white;">Deactivate</span>
-									{{else}}
-										<span class="box-tool redb remove-package" style="color: white;">Remove</span>
-									{{/if}}
-								{{/if}}
+								<span class="box-tool redb {{#if has_bookings}}deactivate-package{{else}}remove-package{{/if}}" style="color: white;">Remove</span>
 							{{/if}}
 						</div>
 

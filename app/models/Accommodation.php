@@ -8,14 +8,17 @@ class Accommodation extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'capacity');
+	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
 
-	protected $appends = array('has_bookings', 'trashed');
+	protected $appends = array('has_bookings');
+
+	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'capacity'    => 'integer|min:1'
+		'capacity'    => 'integer|min:1',
+		'parent_id'   => 'integer|min:1'
 	);
 
 	public function beforeSave()
@@ -32,9 +35,35 @@ class Accommodation extends Ardent {
 		return $this->bookings()->count() > 0;
 	}
 
-	public function getTrashedAttribute()
-	{
-		return $this->trashed();
+	public function calculatePrice($start, $end) {
+		$current_date = new DateTime($start);
+		$end = new DateTime($end);
+
+		$totalPrice = 0;
+		$numberOfDays = 0;
+
+		// Find the price for each night
+		do
+		{
+			$date = $current_date->format('Y-m-d');
+
+			$totalPrice += Price::where(Price::$owner_id_column_name, $this->id)
+				->where(Price::$owner_type_column_name, 'Accommodation')
+				->where('from', '<=', $date)
+				->where(function($query) use ($date)
+				{
+					$query->whereNull('until')
+					      ->orWhere('until', '>=', $date);
+				})
+				->orderBy('id', 'DESC')
+				->first()->decimal_price;
+
+			$current_date->add( new DateInterval('P1D') );
+			$numberOfDays++;
+		}
+		while( $current_date < $end );
+
+		$this->decimal_price = $totalPrice / $numberOfDays;
 	}
 
 	public function company()
@@ -44,7 +73,7 @@ class Accommodation extends Ardent {
 
 	public function customers()
 	{
-		return $this->belongsToMany('Customer', 'accommodation_booking')->withPivot('booking_id')->withTimestamps();
+		return $this->belongsToMany('Customer', 'accommodation_booking')->withPivot('booking_id', 'start', 'end')->withTimestamps();
 	}
 
 	public function basePrices()

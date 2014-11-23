@@ -14,7 +14,34 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->bookings()->with('customers')->findOrFail( Input::get('id') );
+			$booking = Auth::user()->bookings()
+			->with(
+				'lead_customer',
+					'lead_customer.country',
+				'bookingdetails',
+					'bookingdetails.customer',
+						'bookingdetails.customer.country',
+					'bookingdetails.session',
+						'bookingdetails.session.trip',
+					'bookingdetails.ticket',
+					'bookingdetails.packagefacade',
+						'bookingdetails.packagefacade.package',
+					'bookingdetails.addons',
+				'accommodations'
+			)
+			->findOrFail( Input::get('id') );
+
+			$booking->bookingdetails->each(function($detail)
+			{
+				$detail->ticket->calculatePrice( $detail->session->start );
+			});
+
+			$booking->accommodations->each(function($detail)
+			{
+				$detail->calculatePrice( $detail->pivot->start, $detail->pivot->end );
+			});
+
+			return $booking;
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -102,7 +129,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('ticket_id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->findOrFail( Input::get('ticket_id') );
+			$ticket = Auth::user()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -112,7 +139,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail();
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -143,10 +170,12 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 			}
 		}
+		else
+			$package = false;
 
 		// Check if this customer is supposed to be the lead customer
 		$is_lead = Input::get('is_lead');
-		if( !is_bool($is_lead) )
+		if( empty($is_lead) )
 			$is_lead = false;
 
 		// Validate that the customer is not already booked for this session on another booking
@@ -164,22 +193,36 @@ class BookingController extends Controller {
 		// Validate that the ticket/package can be booked for this session
 		try
 		{
-			if( isset($package) )
+			$departure->trip->tickets()->where(function($query) use ($package)
 			{
-				$departure->trip->tickets()->where(function($query) use ($package)
+				if( $package )
 				{
-				
 					$query->whereHas('packages', function($query) use ($package)
 					{
 						$query->where('id', $package->id);
 					});
-					
-				})->findOrFail( $ticket->id );
-			}
+				}
+			})->findOrFail( $ticket->id );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this session\'s trip.')), 403 ); // 403 Forbidden
+		}
+
+		// Check if the session's boat is allowed for the ticket
+		if( $ticket->boats()->count() > 0 )
+		{
+			$boatIDs = $ticket->boats()->lists('id');
+			if( in_array($departure->boat_id, $boatIDs) )
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat.')), 403 ); // 403 Forbidden
+		}
+
+		// Check if the session's boat's boatrooms are allowed for the ticket
+		if( $ticket->boatrooms()->count() > 0)
+		{
+			$boatroomIDs = $ticket->boatrooms()->lists('id');
+			if( count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0 )
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatrooms.')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining capacity on session
@@ -207,7 +250,7 @@ class BookingController extends Controller {
 		}
 
 		// If all checks completed successfully, write into database
-		if( isset($package) && !isset($packagefacade) )
+		if( $package && !isset($packagefacade) )
 		{
 			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
 			$packagefacade->save();
@@ -218,7 +261,7 @@ class BookingController extends Controller {
 				'is_lead'          => $is_lead,
 				'ticket_id'        => $ticket->id,
 				'session_id'       => $departure->id,
-				'packagefacade_id' => isset($package) ? $packagefacade->id : null
+				'packagefacade_id' => $package ? $packagefacade->id : null
 			)
 		);
 

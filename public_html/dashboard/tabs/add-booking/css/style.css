@@ -10,12 +10,6 @@
 .mb5 { margin-bottom: 5px!important; }
 .mb10 { margin-bottom: 10px!important; }
 
-@media (min-width: 1200px) {
-    .container {
-        width: 1120px!important;
-    }
-}
-
 .nav-wizard {
     float: left;
     padding: 0px;

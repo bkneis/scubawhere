@@ -42,6 +42,7 @@ var Addon = {
 		});
 	},
 
+	/*
 	restoreAddon : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
@@ -51,6 +52,7 @@ var Addon = {
 			error: errorFn
 		});
 	},
+	*/
 
 	deleteAddon : function(params, handleData, errorFn){
 		$.ajax({

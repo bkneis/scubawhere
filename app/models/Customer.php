@@ -32,7 +32,7 @@ class Customer extends Ardent {
 		'city'           => '',
 		'county'         => '',
 		'postcode'       => '',
-		'country_id'     => 'integer|exists:countries,id',
+		'country_id'     => 'sometimes|integer|exists:countries,id',
 		'phone'          => '',
 		'last_dive'      => 'date'
 	);
@@ -56,6 +56,9 @@ class Customer extends Ardent {
 
 		if( isset($this->county) )
 			$this->county = Helper::sanitiseString($this->county);
+
+		if( empty($this->country_id) )
+			$this->country_id = null;
 
 		if( isset($this->postcode) )
 			$this->postcode = Helper::sanitiseString($this->postcode);

@@ -179,7 +179,7 @@ $(function(){
 	});
 
 	$('#accommodation-form-container').on('click', '.deactivate-accommodation', function(event){
-		var check = confirm('Do you really want to deactivate this accommodation?');
+		var check = confirm('Do you really want to remove this accommodation?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -193,19 +193,18 @@ $(function(){
 
 				renderAccommodationList();
 
-				window.accommodations[ $('#update-accommodation-form input[name=id]').val() ].trashed = true;
-
-				renderEditForm( $('#update-accommodation-form input[name=id]').val() );
+				renderEditForm();
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
 
-				$('.remove-accommodation').prop('disabled', false);
+				$('.deactivate-accommodation').prop('disabled', false);
 				$('#save-loader').remove();
 			});
 		}
 	});
 
+	/*
 	$('#accommodation-form-container').on('click', '.restore-accommodation', function(event){
 
 		// Show loading indicator
@@ -220,17 +219,18 @@ $(function(){
 
 			renderAccommodationList();
 
-			window.accommodations[ $('#update-accommodation-form input[name=id]').val() ].trashed = false;
+			window.accommodations[ $('#update-accommodation-form input[name=id]').val() ].deleted_at = null;
 
 			renderEditForm( $('#update-accommodation-form input[name=id]').val() );
 		}, function error(xhr){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('.remove-accommodation').prop('disabled', false);
+			$('.restore-accommodation').prop('disabled', false);
 			$('#save-loader').remove();
 		});
 	});
+	*/
 
 	$("#accommodation-list-container").on('click', '#change-to-add-accommodation', function(event){
 
@@ -266,7 +266,7 @@ function renderAccommodationList(callback) {
 
 	$('#accommodation-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Accommodation.getAllWithTrashed(function success(data) {
+	Accommodation.getAll(function success(data) {
 
 		window.accommodations = _.indexBy(data, 'id');
 		$('#accommodation-list').remove();

@@ -33,9 +33,105 @@ class AccommodationController extends Controller {
 		return Auth::user()->accommodations()->withTrashed()->with('basePrices', 'prices')->get();
 	}
 
+	public function getFilter()
+	{
+		/**
+		 * Valid input parameter
+		 * accommodation_id
+		 * after
+		 * before
+		 * with_full
+		 */
+
+		$data = Input::only('after', 'before', 'accommodation_id');
+		$data['with_full'] = Input::get('with_full', false);
+
+		// Transform parameter strings into DateTime objects
+		$data['after']  = new DateTime( $data['after'] ); // Defaults to NOW, when parameter is NULL
+		if( empty( $data['before'] ) )
+		{
+			if( $data['after'] > new DateTime('now') )
+			{
+				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
+				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
+				$data['before']->add( new DateInterval('P1M') ); // Extends the date 1 month into the future
+			}
+			else
+			{
+				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
+				$data['before'] = new DateTime('+1 month');
+			}
+		}
+		else
+		{
+			// If a 'before' date is submitted, simply use it
+			$data['before'] = new DateTime( $data['before'] );
+		}
+
+		if( $data['after'] > $data['before'] )
+		{
+			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
+		}
+
+		// Check the integrity of the supplied parameters
+		$validator = Validator::make( $data, array(
+			'after'            => 'date|required_with:before',
+			'before'           => 'date',
+			'accommodation_id' => 'integer|min:1',
+			'with_full'        => 'boolean'
+		) );
+
+		if( $validator->fails() )
+			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
+
+		if( !empty( $data['accommodation_id'] ) )
+		{
+			try
+			{
+				$accommodation = Auth::user()->accommodations()->findOrFail( $data['accommodation_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$accommodation = false;
+
+		$current_date = clone $data['after'];
+		$result = array();
+
+		$accommodations = Auth::user()->accommodations()->where(function($query) use ($accommodation)
+		{
+			if( $accommodation )
+				$query->where('id', $accommodation->id);
+		})
+		->get();
+
+		do
+		{
+			$key = $current_date->format('Y-m-d');
+
+			$result[$key] = array();
+
+			$accommodations->each(function($el) use ($key, &$result, $current_date)
+			{
+				$result[$key][$el->id] = array(
+					$el->customers()->wherePivot('start', '<=', $current_date)->wherePivot('end', '>', $current_date)->count(),
+					$el->capacity
+				);
+			});
+
+			$current_date->add( new DateInterval('P1D') );
+		}
+		while( $current_date <= $data['before'] );
+
+		return $result;
+	}
+
 	public function postAdd()
 	{
-		$data = Input::only('name',	'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// ####################### Prices #######################
 		$base_prices = Input::get('base_prices');
@@ -164,8 +260,8 @@ class AccommodationController extends Controller {
 
 		// Check if a booking exists for the accommodation and whether a critical value is updated
 		if( $accommodation->bookings()->count() > 0 && (
-			   ($base_prices     && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true))
-			|| ($prices          && $this->checkPricesChanged($accommodation->prices, $prices))
+			   ($base_prices     && Helper::checkPricesChanged($accommodation->base_prices, $base_prices, true))
+			|| ($prices          && Helper::checkPricesChanged($accommodation->prices, $prices))
 		) )
 		{
 			// If yes, create a new accommodation with the input data
@@ -175,6 +271,8 @@ class AccommodationController extends Controller {
 			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
 			if( $prices )
 				$data['prices'] = $prices;
+
+			$data['parent_id'] = $accommodation->id;
 
 			// Replace all unavailable input data with data from the old accommodation object
 			if( empty($data['name']) )        $data['name']        = $accommodation->name;
@@ -197,8 +295,8 @@ class AccommodationController extends Controller {
 		}
 		else
 		{
-			$base_prices_changed = $base_prices && $this->checkPricesChanged($accommodation->base_prices, $base_prices, true);
-			$prices_changed      = $prices && $this->checkPricesChanged($accommodation->prices, $prices);
+			$base_prices_changed = $base_prices && Helper::checkPricesChanged($accommodation->base_prices, $base_prices, true);
+			$prices_changed      = $prices && Helper::checkPricesChanged($accommodation->prices, $prices);
 
 			if($base_prices_changed)
 			{
@@ -259,44 +357,6 @@ class AccommodationController extends Controller {
 		}
 	}
 
-	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
-	{
-		$old_prices = $old_prices->toArray();
-
-		// Compare number of prices
-		if(count($prices) !== count($old_prices)) return true;
-
-		// Keyify $old_prices and reduce them to input fields
-		$array = array();
-		$input_keys = array('decimal_price' => '', 'from' => '');
-		if(!$isBase)
-			$input_keys['until'] = '';
-
-		foreach($old_prices as $old_price)
-		{
-			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
-		}
-		$old_prices = $array; unset($array);
-
-		// Compare price IDs
-		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
-			return true;
-
-		/**
-		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
-		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
-		 * but since they represent the same info, the comparison works and returns the expected result.
-		 */
-		foreach($old_prices as $id => $old_price)
-		{
-			// Compare arrays in both directions
-			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
-				return true;
-		}
-
-		return false;
-	}
-
 	public function postDeactivate()
 	{
 		try
@@ -314,6 +374,7 @@ class AccommodationController extends Controller {
 		return array('status' => 'OK. Accommodation deactivated');
 	}
 
+	/*
 	public function postRestore()
 	{
 		try
@@ -330,6 +391,7 @@ class AccommodationController extends Controller {
 
 		return array('status' => 'OK. Accommodation restored');
 	}
+	*/
 
 	public function postDelete()
 	{

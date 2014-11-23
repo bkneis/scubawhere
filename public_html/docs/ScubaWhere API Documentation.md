@@ -388,7 +388,9 @@ The ideal booking process is throughoutly documented in a [Facebook Document](ht
 
 - **@param** integer id  The ID of the wanted booking
 - &nbsp;
-- **@return** JSON       A `booking` object
+- **@return** JSON       A `booking` object with all relations and details included
+
+*An example of the returned data can be found in [booking-response-example.txt](assets/booking-response-example.txt).*
 
 ### Retrieve all bookings
 

@@ -237,7 +237,7 @@ $(function(){
 	});
 
 	$('#package-form-container').on('click', '.deactivate-package', function(event){
-		var check = confirm('Do you really want to deactivate this package?');
+		var check = confirm('Do you really want to remove this package?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -251,19 +251,18 @@ $(function(){
 
 				renderPackageList();
 
-				window.packages[ $('#update-package-form input[name=id]').val() ].trashed = true;
-
-				renderEditForm( $('#update-package-form input[name=id]').val() );
+				renderEditForm();
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
 
-				$('.remove-package').prop('disabled', false);
+				$('.deactivate-package').prop('disabled', false);
 				$('#save-loader').remove();
 			});
 		}
 	});
 
+	/*
 	$('#package-form-container').on('click', '.restore-package', function(event){
 
 		// Show loading indicator
@@ -278,17 +277,18 @@ $(function(){
 
 			renderPackageList();
 
-			window.packages[ $('#update-package-form input[name=id]').val() ].trashed = false;
+			window.packages[ $('#update-package-form input[name=id]').val() ].deleted_at = false;
 
 			renderEditForm( $('#update-package-form input[name=id]').val() );
 		}, function error(xhr){
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('.remove-package').prop('disabled', false);
+			$('.restore-package').prop('disabled', false);
 			$('#save-loader').remove();
 		});
 	});
+	*/
 
 	$("#package-list-container").on('click', '#change-to-add-package', function(event){
 
@@ -324,7 +324,7 @@ function renderPackageList(callback) {
 
 	$('#package-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
-	Package.getAllWithTrashed(function success(data) {
+	Package.getAllPackages(function success(data) {
 
 		window.packages = _.indexBy(data, 'id');
 		$('#package-list').remove();

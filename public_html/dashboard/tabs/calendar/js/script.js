@@ -1,21 +1,25 @@
+var filterBy = "";
+var filter = "";
+var boatsList;
+var tripsList;
 $(function() {
 
 	window.trips;
 	window.boats;
 	window.token;
 	window.sessions;
+
+	boatsList = Handlebars.compile($("#boats-list-template").html());
+	tripsList = Handlebars.compile($("#trips-list-template").html());
 	
 	// 1. Get trips
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
+		$("#trips-select").append( tripsList({trips : data}) );
 	});
 
 	Boat.getAll(function(data) {
 		window.boats = _.indexBy(data, 'id');
-	});
-
-	$.get("/token", null, function(data) {
-		window.token = data;
 	});
 
 	/* Initialize the calendar
@@ -27,6 +31,7 @@ $(function() {
 		},
 		defaultView : 'basicWeek',
 		timezone: false,
+		height : 450,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
 			getTripEvents(start, end, timezone, callback);
@@ -47,6 +52,33 @@ $(function() {
 	$('.collapsible').collapsible({
         defaultOpen: 'filters'
     });
+
+    $('#filter-options').on('change', function(event) {
+    	event.preventDefault();
+    	if($("#filter-options").val() == 'boat') {
+    		$("#filter").empty();
+    		$("#filter").append( boatsList({boats : window.boats}) );
+    		filterBy = "boat_id";
+    	} 
+    	else if($("#filter-options").val() == 'trip') {
+    		$("#filter").empty();
+    		$("#filter").append( tripsList({trips : window.trips}) );
+    		filterBy = "trip_id";
+    	}
+    	else {
+    		$("#filter").empty();
+    		filterBy = "all";
+    		$('#calendar').fullCalendar( 'refetchEvents' );
+    	}
+    });
+
+    $("#filter").on('change', '.filter', function(event){
+    	event.preventDefault();
+    	filter = this.options[this.selectedIndex].value;
+    	if(filter == "all") filterBy = "all";
+    	else filterBy = this.id;
+    	$('#calendar').fullCalendar( 'refetchEvents' );
+    })
 
 });
 
@@ -110,20 +142,6 @@ function showModalWindow(eventObject) {
 			$('#modal-' + this.eventObject.id).remove();
 		},
 	});
-
-	// Set timetable form _token
-	if(window._token)
-		$('#modalWindows [name="_token"]').val(_token);
-
-	$.ajax({
-		url: "/token",
-		type: "GET",
-		dataType: "html",
-		success: function(_token) {
-			$('#modalWindows [name="_token"]').val(_token);
-			window._token = _token;
-		}
-	});
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -181,11 +199,15 @@ function getTripEvents(start, end, timezone, callback) {
 	// Start loading indicator
 	$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
 	//console.log(start.format(), end.format());
-	Session.filter({
+	var sessionFilters = {
 		'after': start.format(),
 		'before': end.format(),
 		'with_full': 1
-	}, function success(data) {
+	};
+	if(filterBy == "trips") sessionFilters.trip_id = filter;
+	var filterBoats = false;
+	if(filterBy == "boats") filterBoats = true;
+	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
 		sessions = _.indexBy(data, 'id');
 
@@ -195,30 +217,64 @@ function getTripEvents(start, end, timezone, callback) {
 
 		// Create eventObjects
 		_.each(sessions, function(value) {
-			var booked = value.capacity[0];
-			var capacity = value.capacity[1];
-			var ticketsLeft = capacity - booked;
-			var sameDay = true;
-			if(window.trips[value.trip_id].duration > 24) sameDay = false;
-			var eventObject = {
-				title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity), // use the element's text as the event title
-				allDay: false,
-				trip: window.trips[ value.trip_id ],
-				session: value,
-				isNew: false,
-				editable: false, // This uses a 'falsy' check on purpose
-				durationEditable: false,
-				//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
-				ticketsLeft : ticketsLeft,
-				capacity : capacity,
-				sameDay : sameDay
-			};
+			if(filterBoats) {
+				var boatID = $("#"+filterBy).val()
+				if(boatID == value.boat_id) {
 
-			if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL"
+					var booked = value.capacity[0];
+					var capacity = value.capacity[1];
+					var ticketsLeft = capacity - booked;
+					var sameDay = true;
+					if(window.trips[value.trip_id].duration > 24) sameDay = false;
+					var eventObject = {
+						title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity), // use the element's text as the event title
+						allDay: false,
+						trip: window.trips[ value.trip_id ],
+						session: value,
+						isNew: false,
+						editable: false, // This uses a 'falsy' check on purpose
+						durationEditable: false,
+						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
+						ticketsLeft : ticketsLeft,
+						capacity : capacity,
+						sameDay : sameDay
+					};
 
-			eventObject.session.start = $.fullCalendar.moment(value.start);
+					if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL"
 
-			events.push( createCalendarEntry(eventObject) );
+					eventObject.session.start = $.fullCalendar.moment(value.start);
+
+					events.push( createCalendarEntry(eventObject) );
+				}
+			}
+			else {
+
+				var booked = value.capacity[0];
+				var capacity = value.capacity[1];
+				var ticketsLeft = capacity - booked;
+				var sameDay = true;
+				if(window.trips[value.trip_id].duration > 24) sameDay = false;
+				var eventObject = {
+					title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity), // use the element's text as the event title
+					allDay: false,
+					trip: window.trips[ value.trip_id ],
+					session: value,
+					isNew: false,
+					editable: false, // This uses a 'falsy' check on purpose
+					durationEditable: false,
+					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
+					ticketsLeft : ticketsLeft,
+					capacity : capacity,
+					sameDay : sameDay
+				};
+
+				if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL"
+
+				eventObject.session.start = $.fullCalendar.moment(value.start);
+
+				events.push( createCalendarEntry(eventObject) );
+
+			}
 		});
 
 		callback(events);
@@ -231,3 +287,4 @@ function getTripEvents(start, end, timezone, callback) {
 	});
 
 }
+

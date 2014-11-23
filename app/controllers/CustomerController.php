@@ -52,6 +52,10 @@ class CustomerController extends Controller {
 			return Response::json( array('errors' => $customer->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
+		// Validate that the customer does not already exist within the logged-in company
+		if( Auth::user()->customers()->where('email', Input::get('email'))->count() > 0 )
+			return Response::json( array('errors' => 'Cannot create new customer! The email already exists.'), 409 ); // 409 Conflict
+
 		$customer = Auth::user()->customers()->save($customer);
 
 		$certificates = Input::get('certificates');
