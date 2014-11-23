@@ -420,9 +420,11 @@
 								</div>
 							</div>
 							<script id="session-customers-template" type="text/x-handlebars-template">
-								<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-									{{firstname}} {{lastname}}
-								</a>
+								{{#each customers}}
+									<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
+										{{firstname}} {{lastname}}
+									</a>
+								{{/each}}
 							</script>
 						</div>
 						<div class="col-sm-6">
@@ -436,9 +438,11 @@
 								</div>
 							</div>
 							<script id="session-tickets-template" type="text/x-handlebars-template">
-								<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio unused-ticket">
-									{{name}}
-								</a>
+								{{#each tickets}}
+									<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
+										{{name}}
+									</a>
+								{{/each}}
 							</script>
 						</div>
 					</div>
@@ -509,7 +513,7 @@
 												<td class="session-start">{{friendlyDate start}}</td>
 												<td class="session-end">{{tripFinish start trip.duration}}</td>
 												<td class="session-trip">{{trip.name}}</td>
-												<td><span id="free-spaces{{id}}">{{freeSpaces capacity}}</span></td>
+												<td><span class="free-spaces" data-id="{{id}}">{{freeSpaces capacity}}</span></td>
 												<td>{{boat.name}}</td>
 												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
 											</tr>

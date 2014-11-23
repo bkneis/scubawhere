@@ -122,11 +122,3 @@
     color: #95b75d;
     font-size: 10px;
 }
-
-#session-tickets .list-group-item {
-    display: none;
-}
-
-#session-tickets .list-group-item.unused-ticket {
-    display: block;
-}
