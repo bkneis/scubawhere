@@ -492,6 +492,18 @@ $('#addon-tab').on('click', '.addon-finish', function() {
 
 var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
 
+$('#accommodation-tab').on('click', '.accommodation-customer', function() {
+	var start = $(this).find('.session-start').data('date');
+
+	//Get day before and convert into nice format.
+	var d = new Date(Date.parse(start));
+	d.setDate(d.getDate()-1);
+	var friendlyDate = d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear());
+
+	//Update all accommodation start fields.
+	$('.accommodation-start').val(friendlyDate);
+});
+
 /*
 *************************
 ****** Extra Info *******
@@ -519,11 +531,6 @@ $(document).ready(function() {
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	$('#country_id').select2();
-	$('.datetime').datetimepicker();
-
-	$('.tab-content').on('focus', '.datetime', function() {
-		$(this).data("DateTimePicker").show();
-	});
 
 	//Form Wizard
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -531,6 +538,7 @@ $(document).ready(function() {
 			$(e.relatedTarget).toggleClass('selected done');
 			$(e.target).addClass('selected').tab('show');
 		}
+		$('.datepicker').datepicker();
 	});
 
 	$('a[data-toggle="tab"]').on('click', function (e) {
@@ -563,11 +571,11 @@ function listGroupRadio(selector, additionalClass) {
 }
 
 function friendlyDate(date) {
-	var d = new Date(date);
-
-	//Adds 0 to single digits for date/times.
-	function addZ(n){return n<10? '0'+n:''+n;}
+	var d = new Date(Date.parse(date));
 
 	//Why doesn't javascript have a nice Date like PHP?!
 	return d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear())+" "+(addZ(d.getHours()))+":"+(addZ(d.getMinutes()));
 }
+
+//Adds 0 to single digits for date/times.
+function addZ(n){return n<10? '0'+n:''+n;}

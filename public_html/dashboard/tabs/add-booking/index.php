@@ -464,13 +464,13 @@
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="after">After:</label>
-													<input type="text" class="form-control datetime" name="after" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datepicker" data-date-format="dd/mm/yy" name="after" placeholder="dd/mm/yyyy">
 												</div>
 											</div>
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="before">Before:</label>
-													<input type="text" class="form-control datetime" name="before" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datepicker" data-date-format="dd/mm/yy" name="before" placeholder="dd/mm/yyyy">
 												</div>
 											</div>
 											<div class="col-sm-4">
@@ -684,11 +684,11 @@
 						</div>
 						<script id="accommodation-customers-template" type="text/x-handlebars-template">
 							{{#each customers}}
-								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
-									<h4 class="list-group-item-heading"><span class="customer-name">{{firstname}} {{lastname}}</span></h4>
+								<a href="javascript:void(0);" class="list-group-item list-group-radio accommodation-customer" data-id="{{id}}">
+									<h4 class="list-group-item-heading">{{firstname}} {{lastname}}</h4>
 									{{#each bookingdetails}}
-										<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
-										<p class="list-group-item-text"><strong>Session Date:</strong> <span class="ticket-name">{{friendlyDate session.start}}</span></p>
+										<p class="list-group-item-text"><strong>Ticket:</strong>{{ticket.name}}</p>
+										<p class="list-group-item-text session-start" data-date="{{session.start}}"><strong>Session Date:</strong>{{friendlyDate session.start}}</p>
 									{{/each}}
 								</a>
 							{{/each}}
@@ -715,11 +715,11 @@
 										<div class="form-group">
 											<label for="" class="col-sm-1 control-label">From:</label>
 											<div class="col-sm-4">
-												<input type="date" value="2014-11-11" id="accommodation-start" name="accommodation-start" data-id="{{id}}" class="form-control input-sm">
+												<input type="text" name="accommodation-start" data-id="{{id}}" class="form-control input-sm datepicker accommodation-start" data-date-format="dd/mm/yy">
 											</div>
 											<label class="col-sm-1 control-label">From:</label>
 											<div class="col-sm-4">
-												<input type="date" id="accommodation-end" name="accommodation-end" data-id="{{id}}" class="form-control input-sm">
+												<input type="text" name="accommodation-end" data-id="{{id}}" class="form-control input-sm datepicker accommodation-end" data-date-format="dd/mm/yy">
 											</div>
 											<button class="btn btn-primary btn-sm add-accommodation">Add</button>
 										</div>
@@ -859,8 +859,8 @@
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<!--Datepicker-->
-	<link rel="stylesheet" href="/common/datepicker/css/bootstrap-datetimepicker.min.css" type="text/css" />
-	<script type="text/javascript" src="/common/datepicker/js/bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" href="/common/datepicker/css/bootstrap-datepicker.css" type="text/css" />
+	<script type="text/javascript" src="/common/datepicker/js/bootstrap-datepicker.js"></script>
 
 	<!--Select 2-->
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
