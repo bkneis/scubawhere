@@ -504,6 +504,26 @@ $('#accommodation-tab').on('click', '.accommodation-customer', function() {
 	$('.accommodation-start').val(friendlyDate);
 });
 
+$('#accommodation-tab').on('click', '.add-accommodation', function() {
+
+	var start = $(this).parent().find('[name="start"]').val().split("/");
+	var formattedStart = start[2]+"-"+start[1]+"-"+start[0];
+
+	var end = $(this).parent().find('[name="end"]').val().split("/");
+	var formattedEnd = end[2]+"-"+end[1]+"-"+end[0];
+	
+	var params = {};
+	params._token = window.token;
+	params.accommodation_id = $(this).data('id');
+	params.customer_id = $('#accommodation-customers').children('.active').first().data('id');
+	params.start = formattedStart;
+	params.end = formattedEnd;
+
+	booking.addAccommodation(params, function() {
+
+	});
+});
+
 /*
 *************************
 ****** Extra Info *******

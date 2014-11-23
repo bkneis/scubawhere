@@ -676,7 +676,7 @@
 				<div class="col-sm-3">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2 class="panel-title">Step 1: Select the customer</h2>
+							<h2 class="panel-title">Step 1: Select Customer</h2>
 						</div>
 						<div class="panel-body">
 							<div class="list-group" id="accommodation-customers">
@@ -687,8 +687,8 @@
 								<a href="javascript:void(0);" class="list-group-item list-group-radio accommodation-customer" data-id="{{id}}">
 									<h4 class="list-group-item-heading">{{firstname}} {{lastname}}</h4>
 									{{#each bookingdetails}}
-										<p class="list-group-item-text"><strong>Ticket:</strong>{{ticket.name}}</p>
-										<p class="list-group-item-text session-start" data-date="{{session.start}}"><strong>Session Date:</strong>{{friendlyDate session.start}}</p>
+										<p class="list-group-item-text"><strong>Ticket: </strong>{{ticket.name}}</p>
+										<p class="list-group-item-text session-start" data-date="{{session.start}}"><strong>Session Date: </strong>{{friendlyDate session.start}}</p>
 									{{/each}}
 								</a>
 							{{/each}}
@@ -711,18 +711,16 @@
 								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
 								<p>{{description}}</p>
 								<div class="row">
-									<form id="accommodation-form">					
-										<div class="form-group">
-											<label for="" class="col-sm-1 control-label">From:</label>
-											<div class="col-sm-4">
-												<input type="text" name="accommodation-start" data-id="{{id}}" class="form-control input-sm datepicker accommodation-start" data-date-format="dd/mm/yy">
-											</div>
-											<label class="col-sm-1 control-label">From:</label>
-											<div class="col-sm-4">
-												<input type="text" name="accommodation-end" data-id="{{id}}" class="form-control input-sm datepicker accommodation-end" data-date-format="dd/mm/yy">
-											</div>
-											<button class="btn btn-primary btn-sm add-accommodation">Add</button>
+									<div class="form-group">
+										<label for="" class="col-sm-2 control-label">From: </label>
+										<div class="col-sm-3">
+											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="dd/mm/yyyy">
 										</div>
+										<label class="col-sm-2 control-label">To: </label>
+										<div class="col-sm-3">
+											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="dd/mm/yyyy">
+										</div>
+										<button class="btn btn-primary btn-sm add-accommodation" data-id="{{id}}">Add</button>
 									</div>
 								</div>
 							</li>
@@ -732,7 +730,7 @@
 				<div class="col-sm-5">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
-							<h2 class="panel-title">Addons Summary (Total: <span id="addons-summary-total">0.00</span>)</h2>
+							<h2 class="panel-title">Assigned Accommodation</h2>
 						</div>
 						<div class="panel-body">
 							<ul class="list-group" id="selected-addons">
@@ -741,7 +739,7 @@
 						</div>
 					</div>
 					<script id="selected-addons-template" type="text/x-handlebars-template">
-						{{#each details}}
+						{{#each accommodations}}
 							<li class="list-group-item summary-item">
 								<div class="row">
 									<div class="col-md-6">
