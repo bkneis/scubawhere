@@ -572,7 +572,7 @@
 						</div>
 						<script id="addon-booking-details-template" type="text/x-handlebars-template">
 							{{#each details}}
-								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}"  data-customer-id="{{customer_id}}">
+								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
 									<h4 class="list-group-item-heading"><span class="customer-name">{{customer.firstname}} {{customer.lastname}}</span></h4>
 									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
 									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{session.trip.name}}</span></p>
@@ -603,9 +603,9 @@
 								</div>
 								<div class="col-sm-5 pull-right">
 									<div class="input-group">
-										<input type="number" min="1" max="50" value="1" name="qty" class="form-control input-sm">
+										<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
 										<span class="input-group-btn">
-											<button data-id="{{id}}" class="btn btn-primary btn-sm assign-addon" type="button">Add</button>
+											<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
 										</span>
 									</div>
 								</div>
@@ -626,28 +626,26 @@
 						</div>
 					</div>
 					<script id="selected-addons-template" type="text/x-handlebars-template">
-						{{#each addonsSummary}}
-						<li class="list-group-item summary-item" data-addon-id="{{id}}" data-session-id="{{session_id}}"  data-customer-id="{{customer_id}}">
-							<div class="row">
-								<div class="col-md-6">
-									<h4 class="list-group-item-heading">{{customer}}</h4>
-									<p class="list-group-item-text"><strong>Ticket:</strong> {{ticket}}</p>
-									<p class="list-group-item-text"><strong>Trip:</strong> {{trip}}</p>
-									<p class="list-group-item-text"><strong>Date:</strong> {{start}}</p>
+						{{#each details}}
+							<li class="list-group-item summary-item">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">{{customer.firstname}} {{customer.lastname}}</h4>
+										<p class="list-group-item-text"><strong>Ticket:</strong> {{ticket.name}}</p>
+										<p class="list-group-item-text"><strong>Trip:</strong> {{session.trip.name}}</p>
+										<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
+									</div>
+									<div class="col-md-6">
+										<h4 class="list-group-item-heading">Addons</h4>
+										{{#each addons}}
+											<p class="list-group-item-text">Name: {{name}}</p>
+											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
+											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{quantity}}</span></p>
+											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);"  data-id="{{id}}">Remove</a>
+										{{/each}}
+									</div>
 								</div>
-								<div class="col-md-6">
-									<h4 class="list-group-item-heading">Addon</h4>
-									<p class="list-group-item-text">Name: {{addon}}</p>
-									<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
-									<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{qty}}</span></p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group">
-									<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);"  data-id="{{id}}">Remove</a>
-								</div>
-							</div>
-						</li>
+							</li>
 						{{/each}}
 						</script>
 					</div>

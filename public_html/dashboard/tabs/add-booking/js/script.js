@@ -385,33 +385,25 @@ $('#session-tab').on('click', '.sessions-finish', function() {
 */
 
 var addonBookingDetailsTemplate = Handlebars.compile($("#addon-booking-details-template").html());
+var selectedAddonsTemplate = Handlebars.compile($("#selected-addons-template").html());
 
 var addonTotal = 0;
-$('#addon-tab').on('click', '.assign-addon', function() {
-	var addon = [];
-	addon.id = $(this).data('id');
-	addon.basePrice = parseFloat($(this).parents('li').find('.price').text());
-	addon.name = $(this).parents('li').find('.addon-name').text();
-	addon.inputQty = parseInt($(this).parents('li').find('input[name="qty"]').val(), 10);
+$('#addon-tab').on('click', '.add-addon', function() {
+	var btn = $(this);
+	var qty = $('.addon-qty[data-id="'+$(this).data('id')+'"]');
 
-	var summaryItem = $('#addons-summary').find('[data-addon-id="'+addon.id+'"]');
+	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
 
-	if(summaryItem.length) {
-		addon.qty = parseInt(summaryItem.find('.qty').text(), 10);
-		addon.price = parseFloat(summaryItem.find('.price').text(), 10);
+	var params = {};
+	params._token = window.token;
+	params.bookingdetail_id = $('#addon-booking-details').children('.active').first().data('id');
+	params.addon_id = $(this).data('id');
+	params.quantity = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
-		summaryItem.find('.qty').text(addon.qty+addon.inputQty);
-		summaryItem.find('.price').text((addon.basePrice*addon.inputQty)+addon.price);
-		
-		addonTotal += (addon.basePrice * addon.inputQty);
-		$('#addons-summary-total').html(addonTotal);
-	}else{
-		addToAddonSummary(addon);
-	}
-
-	addonTotal += (addon.basePrice * addon.inputQty);
-	$('#addons-summary-total').html(addonTotal);
-	
+	booking.addAddon(params, function() {
+		btn.html('Add');
+		$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
+	});
 });
 
 $('#addon-tab').on('click', '.remove-addon', function() {
