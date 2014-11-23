@@ -116,7 +116,7 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<div class="form-group" id="tickets-list">
-						
+
 					</div>
 					<script id="tickets-list-template" type="text/x-handlebars-template">
 						{{#each tickets}}
@@ -137,14 +137,14 @@
 							<p class="list-group-item-text">Total tickets: <span id="basket-total">0</span></p>
 						</li>
 						<li class="list-group-item" id="selected-tickets">
-							
+
 						</li>
 					</ul>
 					<script id="selected-tickets-template" type="text/x-handlebars-template">
 					{{#each tickets}}
 						<p class="list-group-item-text">
-							<i class="fa fa-ticket"></i> 
-							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{name}}</a> 
+							<i class="fa fa-ticket"></i>
+							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{name}}</a>
 							<span class="badge qty">{{qty}}</span>
 						</p>
 					{{/each}}
@@ -502,7 +502,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													
+
 												</tbody>
 											</table>
 										</div>
@@ -639,8 +639,8 @@
 										<h4 class="list-group-item-heading">Addons</h4>
 										{{#each addons}}
 											<p class="list-group-item-text">Name: {{name}}</p>
-											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{price}}</span></p>
-											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{quantity}}</span></p>
+											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{decimal_price}}</span></p>
+											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{pivot.quantity}}</span></p>
 											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>
 										{{/each}}
 									</div>
@@ -746,6 +746,9 @@
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
 	<link rel="stylesheet" href="common/css/select2-bootstrap.css" type="text/css" />
 	<script type="text/javascript" src="common/js/select2.min.js"></script>
+
+	<!--jQuery plugins-->
+	<script src="/common/js/jquery.serialize-object.min.js"></script>
 
 	<!--Controllers-->
 	<script src="/dashboard/js/Controllers/Agent.js"></script>

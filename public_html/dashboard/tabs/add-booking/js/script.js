@@ -39,7 +39,7 @@ Handlebars.registerHelper("priceRange", function(prices) {
 		}else{
 			return min;
 		}
-  		
+
 	}else if(prices.length == 1){
 		return prices[0].decimal_price;
 	}else{
@@ -73,6 +73,7 @@ $(function(){
 	var addonsTemplate = Handlebars.compile($("#addons-template").html());
 
 	Addon.getAllAddons(function(data){
+		window.addons = _.indexBy(data, 'id');
 		$("#addons").append(addonsTemplate({addons:data}));
 	});
 
@@ -83,9 +84,16 @@ $(function(){
 		$("#existing-customers").append(customersTemplate({customers:data}));
 	});
 
+	/**
+	 * Having the list pre-populated is of no great use, because the list needs to be filtered by
+	 * at least the ticket_id that is to be assigned. But we only know the ticket_id that should
+	 * be assigned, when we arrive at the assignemnt screen (Sessions screen).
+	 */
+	/*
 	Session.filter('', function(data){
 		window.sessions = _.indexBy(data, 'id');
 	});
+	*/
 
 	var countriesTemplate = Handlebars.compile($("#countries-template").html());
 
@@ -149,7 +157,7 @@ booking.selectedTickets = {};
 var ticketsBasketTemplate = Handlebars.compile($("#selected-tickets-template").html());
 
 $('#ticket-tab').on('click', '.add-ticket', function() {
-	
+
 	var id = $(this).data('id');
 
 	//Add ticket to selectedTickets if new, otherwise increase qty
@@ -179,7 +187,7 @@ $('#ticket-tab').on('click', '.remove-ticket', function() {
 
 $('#ticket-tab').on('click', '.tickets-finish', function() {
 	booking.currentStep = 3;
-	$('[data-target="#customer-tab"]').tab('show');	
+	$('[data-target="#customer-tab"]').tab('show');
 });
 
 /*
@@ -221,14 +229,11 @@ $('#customer-tab').on('click', '.remove-customer', function() {
 $('#customer-tab').on('submit', '#edit-customer-form', function(e) {
 	e.preventDefault();
 
-	var id = $("#edit-customer-details").find('input[name="id"]').val();
-	var params = $(this).serializeArray();
 	var btn = $(this).find('button[type="submit"]');
-
 	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
 
-	params.push({name: "_token", value: window.token});
-	params.push({name: "id", value: id});
+	var params = $(this).serializeObject();
+	params._token = window.token;
 
 	Customer.updateCustomer(params, function() {
 		Customer.getCustomer("id="+id, function(data) {
@@ -248,16 +253,16 @@ $('#customer-tab').on('submit', '#edit-customer-form', function(e) {
 $('#customer-tab').on('submit', '#new-customer', function(e) {
 	e.preventDefault();
 	var form = $(this);
-	var params = form.serializeArray();
-	var btn = $(this).find('button[type="submit"]');
 
+	var btn = $(this).find('button[type="submit"]');
 	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
 
-	params.push({name: "_token", value: window.token});
+	var params = form.serializeObject();
+	params._token = window.token;
 
 	Customer.createCustomer(params, function success(data){
 		Customer.getCustomer("id="+data.id, function(data) {
-		
+
 			window.customers[data.id] = data;
 			booking.selectedCustomers[data.id] = data;
 
@@ -303,7 +308,7 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 			$('[data-target="#session-tab"]').tab('show');
 			$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
 			$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-			compileSessionsList();
+			// compileSessionsList();
 			booking.currentStep = 4;
 		}
 	}
@@ -321,7 +326,11 @@ var bookingDetailsTemplate = Handlebars.compile($("#booking-details-template").h
 
 $('#session-tab').on('submit', '#session-filters', function(e) {
 	e.preventDefault();
-	compileSessionsList($(this).serialize());
+	var params = $(this).serializeObject();
+	if( $('#session-tickets .active').length != 0 )
+		params.ticket_id = $('#session-tickets .active').first().data('id');
+
+	compileSessionsList(params);
 });
 
 $('#session-tab').on('click', '.assign-session', function() {
@@ -331,7 +340,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var ticketId = $('#session-tickets').children('.active').first().data('id');
 	var customerId = $('#session-customers').children('.active').first().data('id');
 	var sessionId = btn.data('id');
-	
+
 	if(booking.lead == customerId) {
 		var isLead = 1;
 	}else{
@@ -347,9 +356,15 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 	booking.addDetail(params, function(data) {
 		$('.free-spaces[data-id="'+sessionId+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
-		compileSessionsList($("#session-filters").serialize());
+
+		var params = $("#session-filters").serializeObject();
+		if( $('#session-tickets .active').length != 0 )
+			params.ticket_id = $('#session-tickets .active').first().data('id');
+
+		compileSessionsList(params);
+
 		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
-			
+
 	}, function() {
 		btn.html('Assign');
 	});
@@ -364,12 +379,17 @@ $('#session-tab').on('click', '.unassign-session', function() {
 	params.bookingdetail_id = $(this).data('id');
 
 	booking.removeDetail(params, function() {
-		compileSessionsList($("#session-filters").serialize());
+		var params = $("#session-filters").serializeObject();
+		if( $('#session-tickets .active').length != 0 )
+			params.ticket_id = $('#session-tickets .active').first().data('id');
+
+		compileSessionsList(params);
+
 		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
 	}, function() {
 		btn.html('Unassign');
 	});
-	
+
 });
 
 $('#session-tab').on('click', '.sessions-finish', function() {
@@ -433,10 +453,9 @@ $(document).on('submit', '#extra-form', function(e) {
 	var btn = $(this).find('[type="submit"]');
 	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
 
-	var params = $(this).serializeArray();
-	params.push({name: "_token", value: window.token});
-	params.push({name: "booking_id", value: booking.id});
-	
+	var params = $(this).serializeObject();
+	params._token = window.token;
+
 	Booking.editInfo(params, function(data) {
 		btn.html('Next');
 		$('[data-target="#summary-tab"]').tab('show');
@@ -473,10 +492,11 @@ $(document).ready(function() {
 
 function compileSessionsList(params) {
 	if(typeof(params) === 'undefined') params = "";
-	
+
 	var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
 
 	Session.filter(params, function(data){
+		window.sessions = _.indexBy(data, 'id');
 		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
 	});
 }
