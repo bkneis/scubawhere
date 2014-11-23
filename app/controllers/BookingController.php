@@ -479,7 +479,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
-			Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -504,7 +504,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
 
-		$booking->accommodations()->attach( $accommodation->id, array('start' => $start, 'end' => $end) );
+		$booking->accommodations()->attach( $accommodation->id, array('customer_id' => $customer->id, 'start' => $start, 'end' => $end) );
 
 		// Update booking price
 		$booking->updatePrice();
