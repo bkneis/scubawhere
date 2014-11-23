@@ -29,7 +29,12 @@ class Departure extends Ardent {
 	{
 		// TODO Also calculate utilisation by boatrooms
 
-		return array( $this->bookingdetails()->count(), $this->boat()->withTrashed()->first()->capacity );
+		return array(
+			$this->bookingdetails()->whereHas('booking', function($query)
+			{
+				$query->where('confirmed', 1)->orWhereNotNull('reserved');
+			})->count(),
+			$this->boat()->withTrashed()->first()->capacity );
 	}
 
 	public function addons()

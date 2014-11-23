@@ -32,7 +32,7 @@ class Accommodation extends Ardent {
 
 	public function getHasBookingsAttribute()
 	{
-		return $this->bookings()->count() > 0;
+		return $this->bookings()->where('confirmed', 1)->orWhereNotNull('reserved')->count() > 0;
 	}
 
 	public function calculatePrice($start, $end) {

@@ -32,20 +32,16 @@ class Package extends Ardent {
 
 	public function getHasBookingsAttribute()
 	{
-		return $this->bookingdetails()->count() > 0;
+		return $this->bookingdetails()->whereHas('booking', function($query)
+		{
+			$query->where('confirmed', 1)->orWhereNotNull('reserved');
+		})->count() > 0;
 	}
 
 	public function company()
 	{
 		return $this->belongsTo('Company');
 	}
-
-	/* public function bookings()
-	{
-		return $this->belongsToMany('Booking', 'booking_details')
-			->withPivot('ticket_id', 'customer_id', 'is_lead', 'session_id')
-			->withTimestamps();
-	}*/
 
 	public function packagefacades()
 	{

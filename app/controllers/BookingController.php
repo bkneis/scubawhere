@@ -231,7 +231,7 @@ class BookingController extends Controller {
 		if( $capacity[0] >= $capacity[1] )
 		{
 			// Session/Boat already full/overbooked
-			return Response::json( array('errors' => array('The session is already fully booked!'), 'capacity' => $capacity), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining package capacity on session
@@ -503,6 +503,23 @@ class BookingController extends Controller {
 		{
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
+
+		// Check if accommodation is available for the selected days
+		$current_date = new DateTime($start);
+		$end = new DateTime($end);
+		do
+		{
+			if( $accommodation->bookings()
+				->wherePivot('start', '<=', $current_date)
+				->wherePivot('end', '>', $current_date)
+				->where('confirmed', 1)
+				->orWhereNotNull('reserved')
+				->count() >= $accommodation->capacity )
+				return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!'), 403 ); // 403 Forbidden
+
+			$current_date->add( new DateInterval('P1D') );
+		}
+		while( $current_date < $end );
 
 		$booking->accommodations()->attach( $accommodation->id, array('customer_id' => $customer->id, 'start' => $start, 'end' => $end) );
 
