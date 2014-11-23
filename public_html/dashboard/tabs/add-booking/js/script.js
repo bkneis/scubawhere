@@ -204,11 +204,11 @@ $(document).on('click', '.edit-customer', function() {
 	$('#edit-customer-modal').modal('show');
 
 	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
-	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
+	$("#edit-customer-details").html(editCustomerTemplate(booking.selectedCustomers[id]));
 
 	//Set the country dropdown to the customers country (if they have one)
-	$('#country_id').val(window.customers[id].country_id);
-	$('#country_id option[value="'+window.customers[id].country_id+'"]').attr('selected', 'selected');
+	$('#country_id').val(booking.selectedCustomers[id].country_id);
+	$('#country_id option[value="'+booking.selectedCustomers[id].country_id+'"]').attr('selected', 'selected');
 });
 
 $(document).on('click', '.remove-customer', function() {
@@ -240,6 +240,8 @@ $(document).on('submit', '#edit-customer-form', function(e) {
 
 			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 		});
+	}, function() {
+		btn.html('Save');
 	});
 });
 
@@ -254,10 +256,18 @@ $(document).on('submit', '#new-customer', function(e) {
 	params.push({name: "_token", value: window.token});
 
 	Customer.createCustomer(params, function success(data){
+		Customer.getCustomer("id="+data.id, function(data) {
+		
+			window.customers[data.id] = data;
+			booking.selectedCustomers[data.id] = data;
+
+			btn.html('Add');
+			form[0].reset();
+
+			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		});
+	}, function() {
 		btn.html('Add');
-		form[0].reset();
-		booking.selectedCustomers[data.id] = window.customers[data.id];
-		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 	});
 });
 
