@@ -6,16 +6,18 @@
 			<div id="filters" class="padder">
 				<div class="container">
     				<div class="content">
-	    				<div class="form-row">
+	    				<div id="filter-displays" class="form-row">
 							<label class="form-label">Display : </label>
-								<a class="filter filter-active" onclick="">Trips</a> | 
-								<a onclick="filter">Accomodations</a>
+								<a id="filter-trips" class="filterd">Trips</a> | 
+								<a id="filter-accommodations" class="filterd">Accomodations</a>
 						</div>
-						<div class="form-row">
-							<label class="form-label">Go to week : </label>
-							<select id="weeks-select">
-								<option value=""></option>
-							</select>
+						<div id="jump-to-date" class="form-row">
+							<label class="form-label">Jump to : </label>
+							<input id="jump-date" type="text" placeholder="Date" style="width:60px">- 
+							<input id="jump-month" type="text" placeholder="Month" style="width:60px">-
+							<input id="jump-year" type="text" placeholder="Year" style="width:60px">
+							<button id="jump-to" class="bttn greenb">Go</button>
+							<button id="remove-jump" class="bttn redb">Clear</button>
 						</div>
 						<div id="filter-settings" class="form-row">
 							<label class="form-label">Add filter : </label>
@@ -102,6 +104,16 @@
 							{{/unless}}
 						</td>
 					</tr>
+				</table>
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+		<script id="accommodation-template" type="text/x-handlebars-template">
+			<div id="modal-{{id}}" class="reveal-modal">
+		
+				<h2>{{{title}}}</h2>
+				<table style="margin-top: 2em;">
+				
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
