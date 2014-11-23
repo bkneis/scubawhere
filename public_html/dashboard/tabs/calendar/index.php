@@ -6,13 +6,15 @@
 			<div id="filters" class="padder">
 				<div class="container">
     				<div class="content">
-	    				<div id="filter-displays" class="form-row">
-							<label class="form-label">Display : </label>
-								<a id="filter-trips" class="filterd">Trips</a> | 
-								<a id="filter-accommodations" class="filterd">Accomodations</a>
-						</div>
+					    <div class="onoffswitch form-row">
+						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+						    <label class="onoffswitch-label" for="myonoffswitch">
+						    <span class="onoffswitch-inner"></span>
+						    <span class="onoffswitch-switch"></span>
+						    </label>
+						</div> 
 						<div id="jump-to-date" class="form-row">
-							<label class="form-label">Jump to : </label>
+							<!--<label class="form-label">Jump to : </label>-->
 							<input id="jump-date" type="text" placeholder="Date" style="width:60px">- 
 							<input id="jump-month" type="text" placeholder="Month" style="width:60px">-
 							<input id="jump-year" type="text" placeholder="Year" style="width:60px">
@@ -20,9 +22,9 @@
 							<button id="remove-jump" class="bttn redb">Clear</button>
 						</div>
 						<div id="filter-settings" class="form-row">
-							<label class="form-label">Add filter : </label>
+							<!--<label class="form-label">Add filter : </label>-->
 							<select id="filter-options">
-								<option value=""></option>
+								<option value="all">Add filter</option>
 								<option value="boat">Boats</option>
 								<option value="trip">Trips</option>
 							</select>

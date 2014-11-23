@@ -117,12 +117,6 @@ $(function() {
 		$('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
-	$("#filter-displays").on('click', '.filterd', function(event){
-		event.preventDefault();
-		display = this.id.slice(7);
-		$('#calendar').fullCalendar( 'refetchEvents' );
-	});
-
 	$("#jump-to-date").on('click', '#jump-to', function(event){
 		event.preventDefault();
 		var date = $("#jump-date").val();
@@ -136,13 +130,19 @@ $(function() {
 		event.preventDefault();
 		var date = new Date();
     	var d = date.getDate();
-    	var m = date.getMonth();
+    	var m = date.getMonth() + 1; // jan starts at 0
     	var y = date.getFullYear();
     	$("#jump-date").val('');
     	$("#jump-month").val('');
     	$("#jump-year").val('');
 		var jumpDate = $.fullCalendar.moment(y+'-'+m+'-'+d);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+	});
+
+	$("#myonoffswitch").click(function(event) {
+		if($(this).is(':checked')) display = "trips";
+		else display = "accommodations";
+		$('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
 });
