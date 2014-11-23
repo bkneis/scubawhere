@@ -214,7 +214,7 @@ class BookingController extends Controller {
 		if( $ticket->boats()->count() > 0 )
 		{
 			$boatIDs = $ticket->boats()->lists('id');
-			if( in_array($departure->boat_id, $boatIDs) )
+			if( !in_array($departure->boat_id, $boatIDs) )
 				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat.')), 403 ); // 403 Forbidden
 		}
 
@@ -222,7 +222,7 @@ class BookingController extends Controller {
 		if( $ticket->boatrooms()->count() > 0)
 		{
 			$boatroomIDs = $ticket->boatrooms()->lists('id');
-			if( count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0 )
+			if( count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) == 0 )
 				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatrooms.')), 403 ); // 403 Forbidden
 		}
 
