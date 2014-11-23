@@ -20,6 +20,12 @@ Handlebars.registerHelper("friendlyDate", function(d) {
 	return friendlyDate(d);
 });
 
+Handlebars.registerHelper("isLead", function (id) {
+	if(booking.lead == id) {
+		return new Handlebars.SafeString('<small><span class="label label-warning">LEAD</span></small>');
+	}
+});
+
 Handlebars.registerHelper("priceRange", function(prices) {
 	if(prices.length > 1) {
 		var min=null, max=null;
@@ -110,7 +116,7 @@ $(document).on('click', '.booking-source a', function() {
 	}
 
 });
-var countriesTemplate = Handlebars.compile($("#countries-template").html());
+
 $(document).on('click', '.source-finish', function() {
 
 	//Get that cog spinning!
@@ -128,6 +134,7 @@ $(document).on('click', '.source-finish', function() {
 	}
 
 	booking.initiate(params, function(data) {
+		booking.currentStep = 1;
 		$('[data-target="#ticket-tab"]').tab('show');
 	});
 });
@@ -138,58 +145,57 @@ $(document).on('click', '.source-finish', function() {
 *************************
 */
 
-booking.selectedTickets = [];
-var ticketsBasketTemplate = Handlebars.compile($("#tickets-basket-template").html());
+booking.selectedTickets = {};
+var ticketsBasketTemplate = Handlebars.compile($("#selected-tickets-template").html());
 
-$(document).on('click', '.btn-ticket', function() {
+$(document).on('click', '.add-ticket', function() {
 	
-	//Get ticket id
 	var id = $(this).data('id');
 
-	//Check if ticket is already selected
+	//Add ticket to selectedTickets if new, otherwise increase qty
 	if(typeof booking.selectedTickets[id] != "undefined") {
-
-		//Increase quantity by 1
 		booking.selectedTickets[id].qty += 1;
 	}else{
-
-		//Add ticket to selectedTickets, index and increase qty.
 		booking.selectedTickets[id] = window.tickets[id];
 		booking.selectedTickets[id].qty = 1;
 	}
 
-	$("#tickets-basket").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+	//Draw the basket
+	$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
 });
 
 $(document).on('click', '.remove-ticket', function() {
 	var id = $(this).data('id');
-	var ticket = $('#ticket-'+id);
-	var qty = parseInt(ticket.find('.qty').text(), 10);
 
-	if(qty > 1) {
-		ticket.find('.qty').text(qty-1);
+	//Lower quantity, if last ticket, remove from selected tickets.
+	if(booking.selectedTickets[id].qty > 1) {
+		booking.selectedTickets[id].qty -= 1;
 	}else{
-		ticket.remove();
+		delete booking.selectedTickets[id];
 	}
 
-	removeBookingTicket(id);
+	$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
 });
 
 $(document).on('click', '.tickets-finish', function() {
+	booking.currentStep = 2;
 	$('[data-target="#customer-tab"]').tab('show');	
 });
 
-//Customers
+/*
+*************************
+******* Customers *******
+*************************
+*/
+
+booking.selectedCustomers = {};
+var selectedCustomersTemplate = Handlebars.compile($("#selected-customers-template").html());
 
 $(document).on('click', '.add-customer', function() {
 	var id = $('#existing-customers').val();
-	var btn = $(this);
+	booking.selectedCustomers[id] = window.customers[id];
 
-	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
-
-	addBookingCustomer(id, function() {
-		btn.html('Add to booking');
-	});
+	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 });
 
 $(document).on('click', '.edit-customer', function() {
@@ -198,15 +204,17 @@ $(document).on('click', '.edit-customer', function() {
 	$('#edit-customer-modal').modal('show');
 
 	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
-	Customer.getCustomer("id="+id, function(data) {
-		$("#edit-customer-details").html('').append(editCustomerTemplate(data));
+	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
 
-		if(data.country_id) {
-			$('#country_id').val(data.country_id);
-		}else{
-			$('#country_id').val("");
-		}
-	});
+	//Set the country dropdown to the customers country (if they have one)
+	$('#country_id').val(window.customers[id].country_id);
+});
+
+$(document).on('click', '.remove-customer', function() {
+	var id = $(this).data('id');
+	delete booking.selectedCustomers[id];
+
+	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 });
 
 $(document).on('submit', '#edit-customer-form', function(e) {
@@ -222,17 +230,10 @@ $(document).on('submit', '#edit-customer-form', function(e) {
 	params.push({name: "id", value: id});
 
 	Customer.updateCustomer(params, function() {
-		addBookingCustomer(id, function() {
-			btn.html('Save');
-			$('#edit-customer-modal').modal('hide');
-		});
+		btn.html('Save');
+		$('#edit-customer-modal').modal('hide');
+		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 	});
-});
-
-$(document).on('click', '.remove-customer', function() {
-	var id = $(this).data('id');
-	$(this).parents('.list-group-item').remove();
-	removeBookingCustomer(id);
 });
 
 $(document).on('submit', '#new-customer', function(e) {
@@ -246,10 +247,10 @@ $(document).on('submit', '#new-customer', function(e) {
 	params.push({name: "_token", value: window.token});
 
 	Customer.createCustomer(params, function success(data){
-		addBookingCustomer(data.id, function() {
-			btn.html('Add Customer');
-			form[0].reset();
-		});
+		btn.html('Add');
+		form[0].reset();
+		booking.selectedCustomers[data.id] = window.customers[data.id];
+		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 	});
 });
 
@@ -258,21 +259,17 @@ $(document).on('click', '.clear-form', function() {
 });
 
 $(document).on('click', '.lead-customer', function() {
-	var id = $(this).data('id');
-	$("#session-customers").find('[data-id="'+id+'"]').attr('data-lead', 1).siblings('li').attr('data-lead', 0);
-
-	$("#added-customers").find('[data-id="'+id+'"]').siblings('li').attr('data-lead', 0).find('.is-lead').html('');
-	$("#added-customers").find('[data-id="'+id+'"]').attr('data-lead', 1).find('.is-lead').html('Lead');
+	booking.lead = $(this).data('id');
+	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 });
 
 $(document).on('click', '.customers-finish', function() {
-	var leadCustomer = $('#added-customers').children('li[data-lead="1"]');
 
-	var emailCheck = leadCustomer.find('.customer-email').text().length;
-	var phoneCheck = leadCustomer.find('.customer-phone').text().length;
-	var countryCheck = leadCustomer.data('country-id');
+	var emailCheck = window.customers[booking.lead].email.length;
+	var phoneCheck = window.customers[booking.lead].phone.length;
+	var countryCheck = window.customers[booking.lead].country_id;
 
-	if(!leadCustomer.length) {
+	if(!booking.lead) {
 		alert("Please designate a lead customer.");
 		return false;
 	}else if(!emailCheck) {
@@ -285,9 +282,7 @@ $(document).on('click', '.customers-finish', function() {
 		alert("Lead customer requires a country!");
 		return false;
 	}else{
-		booking.lead_id = leadCustomer.data('id')
 		$('[data-target="#session-tab"]').tab('show');
-		compileSessionsList();
 	}
 });
 
@@ -499,27 +494,6 @@ $(document).ready(function() {
 	});
 
 });
-
-function addBookingCustomer(id, done) {
-
-	var param = "id=" + id;
-
-	var addedCustomersTemplate = Handlebars.compile($("#added-customers-template").html());
-	var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
-
-	Customer.getCustomer(param, function success(data){
-		$("#added-customers").find('li[data-id="'+id+'"]').remove();
-		$("#session-customers").find('a[data-id="'+id+'"]').remove();
-
-		$("#added-customers").append(addedCustomersTemplate(data));
-		$("#session-customers").append(sessionCustomersTemplate(data));
-		done();
-	});
-}
-
-function removeBookingCustomer(id) {
-	$('#session-customers').find('[data-id="'+id+'"]').remove();
-}
 
 function addBookingTicket(id) {
 	var param = "id=" + id;

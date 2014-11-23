@@ -121,7 +121,7 @@
 					<script id="tickets-list-template" type="text/x-handlebars-template">
 						{{#each tickets}}
 						<div class="col-sm-3">
-							<a role="button" class="btn btn-default btn-lg btn-ticket" data-id="{{id}}">
+							<a role="button" class="btn btn-default btn-lg add-ticket" data-id="{{id}}">
 								<p class="ticket-icon"><i class="fa fa-ticket fa-2x"></i></p>
 								<p class="text-center ticket-name">{{name}}</p>
 								<p class="text-center ticket-price">{{priceRange base_prices}}</p>
@@ -136,11 +136,11 @@
 							<h4 class="list-group-item-heading">Basket</h4>
 							<p class="list-group-item-text">Total tickets: <span id="basket-total">0</span></p>
 						</li>
-						<li class="list-group-item" id="tickets-basket">
+						<li class="list-group-item" id="selected-tickets">
 							
 						</li>
 					</ul>
-					<script id="tickets-basket-template" type="text/x-handlebars-template">
+					<script id="selected-tickets-template" type="text/x-handlebars-template">
 					{{#each tickets}}
 						<p class="list-group-item-text">
 							<i class="fa fa-ticket"></i> 
@@ -181,7 +181,7 @@
 									</select>
 									<script id="customers-list-template" type="text/x-handlebars-template">
 										{{#each customers}}
-										<option value="{{id}}">{{firstname}} {{lastname}} - {{email}}</option>
+											<option value="{{id}}">{{firstname}} {{lastname}} - {{email}}</option>
 										{{/each}}
 									</script>
 								</div>
@@ -259,7 +259,7 @@
 											</div>
 											<script id="countries-template" type="text/x-handlebars-template">
 												{{#each countries}}
-												<option value="{{id}}">{{name}}</option>
+													<option value="{{id}}">{{name}}</option>
 												{{/each}}
 											</script>
 										</div>
@@ -280,22 +280,24 @@
 				<div class="col-md-4">
 					<ul class="list-group">
 						<li href="#" class="list-group-item active">
-							<h4 class="list-group-item-heading">Added Customers</h4>
+							<h4 class="list-group-item-heading">Selected Customers</h4>
 						</li>
-						<div id="added-customers"></div>
-						<script id="added-customers-template" type="text/x-handlebars-template">
-							<li href="#" class="list-group-item" data-id="{{id}}" data-lead="0" data-country-id="{{country_id}}">
-								<h4 class="list-group-item-heading">{{firstname}} {{lastname}} <small><span class="label label-warning is-lead"></span></small></h4>
-								<p class="list-group-item-text">
-									<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
-									{{address_1}}<br>
-									{{city}}, {{county}}, {{postcode}}<br>
-									<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
-								</p>
-								<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer" data-id="{{id}}">Remove</a>
-								<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
-							</li>
+						<div id="selected-customers"></div>
+						<script id="selected-customers-template" type="text/x-handlebars-template">
+							{{#each customers}}
+								<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
+									<h4 class="list-group-item-heading">{{firstname}} {{lastname}} {{isLead id}}</h4>
+									<p class="list-group-item-text">
+										<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
+										{{address_1}}<br>
+										{{city}}, {{county}}, {{postcode}}<br>
+										<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
+									</p>
+									<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
+									<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer" data-id="{{id}}">Remove</a>
+									<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
+								</li>
+							{{/each}}
 						</script>
 					</ul>
 					<div class="row">
@@ -323,7 +325,7 @@
 										</select>
 										<script id="countries-template" type="text/x-handlebars-template">
 											{{#each countries}}
-											<option value="{{id}}">{{name}}</option>
+												<option value="{{id}}">{{name}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -732,8 +734,8 @@
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
 	<!--Bootstrap-->
-	<link rel="stylesheet" href="common/css/bootstrap.css" type="text/css" />
-	<script type="text/javascript" src="common/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
+	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<!--Select 2-->
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
