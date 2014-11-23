@@ -230,9 +230,15 @@ $(document).on('submit', '#edit-customer-form', function(e) {
 	params.push({name: "id", value: id});
 
 	Customer.updateCustomer(params, function() {
-		btn.html('Save');
-		$('#edit-customer-modal').modal('hide');
-		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		Customer.getCustomer("id="+id, function(data) {
+			//Updated selectedCustomers data
+			booking.selectedCustomers[id] = data;
+
+			btn.html('Save');
+			$('#edit-customer-modal').modal('hide');
+			
+			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		});
 	});
 });
 
