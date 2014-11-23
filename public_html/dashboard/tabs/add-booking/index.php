@@ -98,7 +98,7 @@
 					<script id="agents-list-template" type="text/x-handlebars-template">
 						{{#each agents}}
 						<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-							{{name}} <span class="badge">{{branch_name}}</span>
+							{{{name}}} <span class="badge">{{{branch_name}}}</span>
 						</a>
 						{{/each}}
 					</script>
@@ -129,7 +129,7 @@
 						<div class="col-sm-3">
 							<a role="button" class="btn btn-default btn-lg add-ticket" data-id="{{id}}">
 								<p class="ticket-icon"><i class="fa fa-ticket fa-2x"></i></p>
-								<p class="text-center ticket-name">{{name}}</p>
+								<p class="text-center ticket-name">{{{name}}}</p>
 								<p class="text-center ticket-price">{{priceRange base_prices}}</p>
 							</a>
 						</div>
@@ -150,7 +150,7 @@
 					{{#each tickets}}
 						<p class="list-group-item-text">
 							<i class="fa fa-ticket"></i>
-							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{name}}</a>
+							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{{name}}}</a>
 							<span class="badge qty">{{qty}}</span>
 						</p>
 					{{/each}}
@@ -187,7 +187,7 @@
 									</select>
 									<script id="customers-list-template" type="text/x-handlebars-template">
 										{{#each customers}}
-											<option value="{{id}}">{{firstname}} {{lastname}} - {{email}}</option>
+											<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
 										{{/each}}
 									</script>
 								</div>
@@ -265,7 +265,7 @@
 											</div>
 											<script id="countries-template" type="text/x-handlebars-template">
 												{{#each countries}}
-													<option value="{{id}}">{{name}}</option>
+													<option value="{{id}}">{{{name}}}</option>
 												{{/each}}
 											</script>
 										</div>
@@ -292,11 +292,11 @@
 						<script id="selected-customers-template" type="text/x-handlebars-template">
 							{{#each customers}}
 								<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
-									<h4 class="list-group-item-heading">{{firstname}} {{lastname}} {{isLead id}}</h4>
+									<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}} {{isLead id}}</h4>
 									<p class="list-group-item-text">
 										<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
-										{{address_1}}<br>
-										{{city}}, {{county}}, {{postcode}}<br>
+										{{{address_1}}}<br>
+										{{{city}}}, {{{county}}}, {{postcode}}<br>
 										<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
 									</p>
 									<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
@@ -331,7 +331,7 @@
 										</select>
 										<script id="countries-template" type="text/x-handlebars-template">
 											{{#each countries}}
-												<option value="{{id}}">{{name}}</option>
+												<option value="{{id}}">{{{name}}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -356,37 +356,37 @@
 				<div class="form-group">
 					<label for="firstname" class="col-sm-4 control-label">First Name</label>
 					<div class="col-sm-8">
-						<input type="text" name="firstname" class="form-control" placeholder="First Name" value="{{firstname}}">
+						<input type="text" name="firstname" class="form-control" placeholder="First Name" value="{{{firstname}}}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="lastname" class="col-sm-4 control-label">Last Name</label>
 					<div class="col-sm-8">
-						<input type="text" name="lastname" class="form-control" placeholder="Last Name" value="{{lastname}}">
+						<input type="text" name="lastname" class="form-control" placeholder="Last Name" value="{{{lastname}}}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="address_1" class="col-sm-4 control-label">Address 1</label>
 					<div class="col-sm-8">
-						<input type="text" name="address_1" class="form-control" placeholder="Address 1" value="{{address_1}}">
+						<input type="text" name="address_1" class="form-control" placeholder="Address 1" value="{{{address_1}}}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="address_2" class="col-sm-4 control-label">Address 2</label>
 					<div class="col-sm-8">
-						<input type="text" name="address_2" class="form-control" placeholder="Address 2" value="{{address_2}}">
+						<input type="text" name="address_2" class="form-control" placeholder="Address 2" value="{{{address_2}}}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="city" class="col-sm-4 control-label">City</label>
 					<div class="col-sm-8">
-						<input type="text" name="city" class="form-control" placeholder="City" value="{{city}}">
+						<input type="text" name="city" class="form-control" placeholder="City" value="{{{city}}}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="county" class="col-sm-4 control-label">County</label>
 					<div class="col-sm-8">
-						<input type="text" name="county" class="form-control" placeholder="County" value="{{county}}">
+						<input type="text" name="county" class="form-control" placeholder="County" value="{{{county}}}">
 					</div>
 				</div>
 				<div class="form-group">
@@ -428,7 +428,7 @@
 							<script id="session-customers-template" type="text/x-handlebars-template">
 								{{#each customers}}
 									<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-										{{firstname}} {{lastname}}
+										{{{firstname}}} {{{lastname}}}
 									</a>
 								{{/each}}
 							</script>
@@ -446,7 +446,7 @@
 							<script id="session-tickets-template" type="text/x-handlebars-template">
 								{{#each tickets}}
 									<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-										{{name}}
+										{{{name}}}
 									</a>
 								{{/each}}
 							</script>
@@ -481,7 +481,7 @@
 													</select>
 													<script id="trips-list-template" type="text/x-handlebars-template">
 														{{#each trips}}
-														<option value="{{id}}">{{name}}</option>
+														<option value="{{id}}">{{{name}}}</option>
 														{{/each}}
 													</script>
 												</div>
@@ -518,9 +518,9 @@
 											<tr>
 												<td class="session-start">{{friendlyDate start}}</td>
 												<td class="session-end">{{tripFinish start trip.duration}}</td>
-												<td class="session-trip">{{trip.name}}</td>
+												<td class="session-trip">{{{trip.name}}}</td>
 												<td>{{freeSpaces capacity}}</td>
-												<td>{{boat.name}}</td>
+												<td>{{{boat.name}}}</td>
 												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
 											</tr>
 											{{/unless}}
@@ -541,9 +541,9 @@
 						<script id="booking-details-template" type="text/x-handlebars-template">
 							{{#each details}}
 								<li class="list-group-item">
-									<h4 class="list-group-item-heading"><span class="customer-name">{{customer.firstname}} {{customer.lastname}}</span></h4>
-									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
-									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{session.trip.name}}</span></p>
+									<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{{ticket.name}}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
 									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 									<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-id="{{id}}">Unassign</a>
 								</li>
@@ -580,9 +580,9 @@
 						<script id="addon-booking-details-template" type="text/x-handlebars-template">
 							{{#each details}}
 								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
-									<h4 class="list-group-item-heading"><span class="customer-name">{{customer.firstname}} {{customer.lastname}}</span></h4>
-									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
-									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{session.trip.name}}</span></p>
+									<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{{ticket.name}}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
 									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 								</a>
 							{{/each}}
@@ -602,11 +602,11 @@
 					<script id="addons-list-template" type="text/x-handlebars-template">
 						{{#each addons}}
 							<li data-id="{{id}}" class="list-group-item">
-								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
-								<p>{{description}}</p>
+								<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
+								<p>{{{description}}}</p>
 								<div class="row">
 									<div class="col-sm-4">
-										<p class="lead mb5">£<span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
+										<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
 									</div>
 									<div class="col-sm-5 pull-right">
 										<div class="input-group">
@@ -637,15 +637,15 @@
 							<li class="list-group-item summary-item">
 								<div class="row">
 									<div class="col-md-6">
-										<h4 class="list-group-item-heading">{{customer.firstname}} {{customer.lastname}}</h4>
-										<p class="list-group-item-text"><strong>Ticket:</strong> {{ticket.name}}</p>
-										<p class="list-group-item-text"><strong>Trip:</strong> {{session.trip.name}}</p>
+										<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
+										<p class="list-group-item-text"><strong>Ticket:</strong> {{{ticket.name}}}</p>
+										<p class="list-group-item-text"><strong>Trip:</strong> {{{session.trip.name}}}</p>
 										<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
 									</div>
 									<div class="col-md-6">
 										<h4 class="list-group-item-heading">Addons</h4>
 										{{#each addons}}
-											<p class="list-group-item-text">Name: {{name}}</p>
+											<p class="list-group-item-text">Name: {{{name}}}</p>
 											<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{decimal_price}}</span></p>
 											<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{pivot.quantity}}</span></p>
 											<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>
@@ -685,10 +685,10 @@
 						<script id="accommodation-customers-template" type="text/x-handlebars-template">
 							{{#each customers}}
 								<a href="javascript:void(0);" class="list-group-item list-group-radio accommodation-customer" data-id="{{id}}">
-									<h4 class="list-group-item-heading">{{firstname}} {{lastname}}</h4>
+									<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h4>
 									{{#each bookingdetails}}
-										<p class="list-group-item-text"><strong>Ticket: </strong>{{ticket.name}}</p>
-										<p class="list-group-item-text"><strong>Trip: </strong>{{session.trip.name}}</p>
+										<p class="list-group-item-text"><strong>Ticket: </strong>{{{ticket.name}}}</p>
+										<p class="list-group-item-text"><strong>Trip: </strong>{{{session.trip.name}}}</p>
 										<p class="list-group-item-text session-start" data-date="{{session.start}}"><strong>Date: </strong>{{friendlyDate session.start}}</p>
 									{{/each}}
 								</a>
@@ -709,8 +709,8 @@
 					<script id="accommodations-list-template" type="text/x-handlebars-template">
 						{{#each accommodations}}
 							<li data-id="{{id}}" class="list-group-item">
-								<h4 class="list-group-item-heading addon-name">{{name}}</h4>
-								<p>{{description}}</p>
+								<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
+								<p>{{{description}}}</p>
 								<div class="row">
 									<div class="form-group">
 										<label for="" class="col-sm-1 control-label">From: </label>
@@ -742,8 +742,8 @@
 					<script id="assigned-accommodations-template" type="text/x-handlebars-template">
 						{{#each accommodations}}
 							<li class="list-group-item summary-item">
-								<h4 class="list-group-item-heading">{{customer.firstname}} {{customer.lastname}}</h4>
-								<p class="list-group-item-text"><strong>Accommodation: </strong> {{name}}</p>
+								<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
+								<p class="list-group-item-text"><strong>Accommodation: </strong> {{{name}}}</p>
 								<p class="list-group-item-text"><strong>Start:</strong> {{friendlyDate pivot.start}}</p>
 								<p class="list-group-item-text"><strong>End:</strong> {{friendlyDate pivot.end}}</p>
 								<a class="btn btn-danger btn-xs remove-accommodation" href="javascript:void(0);" data-id="{{id}}" data-customer-id="{{customer.id}}">Remove</a>
