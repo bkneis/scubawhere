@@ -202,6 +202,8 @@ var selectedCustomersTemplate = Handlebars.compile($("#selected-customers-templa
 $('#customer-tab').on('click', '.add-customer', function() {
 	var id = $('#existing-customers').val();
 	booking.selectedCustomers[id] = window.customers[id];
+	if( !booking.lead )
+		booking.lead = id;
 
 	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
 });
