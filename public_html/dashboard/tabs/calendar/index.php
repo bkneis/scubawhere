@@ -1,8 +1,8 @@
 <div id="wrapper">
 	<div class="row">
 		<div class="box100">
-			<!--<label class="purpleb">Filters</label>-->
-			<div class="collapsible" id="section1">Filters<span></span></div>
+			<label class="purpleb">Filters</label>
+			<!--<div class="collapsible" id="section1">Filters<span></span></div>-->
 			<div id="filters" class="padder">
 				<div class="container">
     				<div class="content">
@@ -12,7 +12,13 @@
 								<a onclick="filter">Accomodations</a>
 						</div>
 						<div class="form-row">
-							<label class="form-label">Filter by : </label>
+							<label class="form-label">Go to week : </label>
+							<select id="weeks-select">
+								<option value=""></option>
+							</select>
+						</div>
+						<div id="filter-settings" class="form-row">
+							<label class="form-label">Add filter : </label>
 							<select id="filter-options">
 								<option value=""></option>
 								<option value="boat">Boats</option>
@@ -21,22 +27,27 @@
 						</div>
 						<div id="filter"></div>
 						<script type="text/x-handlebars-template" id="boats-list-template">
-							<label class="form-label">Boats : </label>
-							<select class="filter" id="boats">
-								<option value="all"></option>
-								{{#each boats}}
-									<option value="{{id}}">{{name}}</option>
-								{{/each}}
-							</select>
+							<p>
+								<label class="form-label">Filter Boats : </label>
+								<select class="filter" id="boats">
+									<option value="all"></option>
+									{{#each boats}}
+										<option value="{{id}}">{{name}}</option>
+									{{/each}}
+								</select>
+								<button id="remove-boats-filter" class="bttn redb">&nbsp;&#215;&nbsp;</button>
+							</p>
 						</script>
 						<script type="text/x-handlebars-template" id="trips-list-template">
-							<label class="form-label">Trips : </label>
+							<p><label class="form-label">Filter Trips : </label>
 							<select class="filter" id="trips">
 								<option value="all"></option>
 								{{#each trips}}
 									<option value="{{id}}">{{name}}</option>
 								{{/each}}
 							</select>
+							<button id="remove-trips-filter" class="bttn redb">&nbsp;&#215;&nbsp;</button>
+							</p>
 						</script>
 					</div>
 				</div>
@@ -110,5 +121,7 @@
 <script src="js/Controllers/Boat.js"></script>
 <script src="js/Controllers/Session.js"></script>
 <script src="js/Controllers/Timetable.js"></script>
+<script src="js/Controllers/Accommodation.js"></script>
 
 <script src="tabs/calendar/js/script.js" type="text/javascript"></script>
+
