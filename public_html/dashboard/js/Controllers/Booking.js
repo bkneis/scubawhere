@@ -322,6 +322,7 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 /**
  * Edits additional information about the booking
  * @param  {object} params    Can contain:
+ * - _token
  * - pick_up_location {string}
  * - pick_up_time     {string} Must be formatted as 'YYYY-MM-DD HH:mm:ss'
  * - discount         {float}  The discount value gets substracted from the final booking price
@@ -355,8 +356,66 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 };
 
 /**
- * Validate that all required lead customer fields are provided
+ * Reserves the booking until a specified date & time
+ * ! Reserved bookings count towards sessions' utilisation !
  *
+ * @param  {object} params    Must contain:
+ * - _token
+ * - reserved {string} The datetime until the booking should be reserved, in 'YYYY-MM-DD HH:MM:SS' format
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.reserve = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/reserve",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.reserved = params.reserved;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Saves the booking so it won't be automatically deleted and can be finished later
+ * Saved bookings DO NOT count towards sessions' utilisation
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.save = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/save",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.saved = 1;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Validate that all required lead customer fields are provided
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
  */
