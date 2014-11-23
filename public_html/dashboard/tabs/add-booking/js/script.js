@@ -5,7 +5,19 @@ $.get("/token", null, function(data) {
 
 Handlebars.registerHelper("freeSpaces", function(capacity) {
 	var freeSpaces = capacity[1] - capacity[0];
-	return freeSpaces;
+	var percentage = (capacity[0] / capacity[1]) * 100;
+
+	var color = '#5cb85c'; bgClass = 'bg-success';
+	if(percentage >= 75) { color = '#f0ad4e'; bgClass = 'bg-warning'; }
+	if(percentage == 1) { color = '#d9534f'; bgClass = 'bg-danger'; }
+
+	var html = '';
+	html += '<div data-id="' + this.id + '" class="util-bar-container ' + bgClass + '">';
+	html += '	<div class="util-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
+	html += '	<span class="util-spaces">' + freeSpaces + '</span>';
+	html += '</div>';
+
+	return new Handlebars.SafeString(html);
 });
 
 Handlebars.registerHelper("tripFinish", function(start, duration) {

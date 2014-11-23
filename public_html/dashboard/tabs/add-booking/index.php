@@ -513,7 +513,7 @@
 												<td class="session-start">{{friendlyDate start}}</td>
 												<td class="session-end">{{tripFinish start trip.duration}}</td>
 												<td class="session-trip">{{trip.name}}</td>
-												<td><span class="free-spaces" data-id="{{id}}">{{freeSpaces capacity}}</span></td>
+												<td>{{freeSpaces capacity}}</td>
 												<td>{{boat.name}}</td>
 												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
 											</tr>
