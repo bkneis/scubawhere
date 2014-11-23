@@ -270,8 +270,11 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			var accommodation = window.accommodations[params.accommodation_id];
 			accommodation.pivot = {
 				start: params.start,
-				end: params.end
+				end: params.end,
+				customer_id: params.customer_id
 			};
+
+			accommodation.customer = window.customers[params.customer_id];
 
 			this.accommodations.push( accommodation );
 
