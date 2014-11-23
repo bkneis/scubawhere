@@ -26,7 +26,7 @@ class Booking extends Ardent {
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
 		'confirmed'        => 'boolean',
-		'reserved'         => 'date|after:'.Helper::localTime()->format('Y-m-d H:i:s'),
+		'reserved'         => 'date|after_local_now',
 		'saved'            => 'boolean',
 		'pick_up_location' => '',
 		'pick_up_time'     => 'date|after:now',
