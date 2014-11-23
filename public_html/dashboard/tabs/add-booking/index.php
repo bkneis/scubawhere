@@ -527,18 +527,21 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<ul class="list-group" id="added-bookingdetails">
+					<ul class="list-group">
 						<li href="#" class="list-group-item active">
 							<h4 class="list-group-item-heading">Assigned Sessions</h4>
 						</li>
-						<script id="added-bookingdetails-template" type="text/x-handlebars-template">
-							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><span class="customer-name">{{customerName}}</span></h4>
-								<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticketName}}</span></p>
-								<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{sessionTrip}}</span></p>
-								<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{sessionStart}}</span></p>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-customer-id="{{customerId}}" data-session-id="{{sessionId}}" data-ticket-id="{{ticketId}}">Unassign</a>
-							</li>
+						<div id="booking-details"></div>
+						<script id="booking-details-template" type="text/x-handlebars-template">
+							{{#each details}}
+								<li class="list-group-item">
+									<h4 class="list-group-item-heading"><span class="customer-name">{{customer.firstname}} {{customer.lastname}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{session.trip.name}}</span></p>
+									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
+									<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-id="{{id}}">Unassign</a>
+								</li>
+							{{/each}}
 						</script>
 					</ul>
 				</div>
@@ -564,16 +567,16 @@
 							<h2 class="panel-title">Step 1: Select the sub-booking</h2>
 						</div>
 						<div class="panel-body">
-							<div class="list-group" id="addon-sessions">
+							<div class="list-group" id="addon-booking-details">
 							</div>
 						</div>
-						<script id="addon-sessions-template" type="text/x-handlebars-template">
-							{{#each sessions}}
+						<script id="addon-booking-details-template" type="text/x-handlebars-template">
+							{{#each details}}
 								<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}"  data-customer-id="{{customer_id}}">
-									<h4 class="list-group-item-heading"><span class="customer-name">{{customer}}</span></h4>
-									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket}}</span></p>
-									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{trip}}</span></p>
-									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate start}}</span></p>
+									<h4 class="list-group-item-heading"><span class="customer-name">{{customer.firstname}} {{customer.lastname}}</span></h4>
+									<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{ticket.name}}</span></p>
+									<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{session.trip.name}}</span></p>
+									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 								</a>
 							{{/each}}
 						</script>
@@ -617,12 +620,12 @@
 							<h2 class="panel-title">Addons Summary (Total: <span id="addons-summary-total">0.00</span>)</h2>
 						</div>
 						<div class="panel-body">
-							<ul class="list-group" id="addons-summary">
+							<ul class="list-group" id="selected-addons">
 
 							</ul>
 						</div>
 					</div>
-					<script id="addons-summary-template" type="text/x-handlebars-template">
+					<script id="selected-addons-template" type="text/x-handlebars-template">
 						{{#each addonsSummary}}
 						<li class="list-group-item summary-item" data-addon-id="{{id}}" data-session-id="{{session_id}}"  data-customer-id="{{customer_id}}">
 							<div class="row">

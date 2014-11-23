@@ -134,7 +134,7 @@ $('#source-tab').on('click', '.source-finish', function() {
 	}
 
 	booking.initiate(params, function(data) {
-		booking.currentStep = 1;
+		booking.currentStep = 2;
 		$('[data-target="#ticket-tab"]').tab('show');
 	});
 });
@@ -178,7 +178,7 @@ $('#ticket-tab').on('click', '.remove-ticket', function() {
 });
 
 $('#ticket-tab').on('click', '.tickets-finish', function() {
-	booking.currentStep = 2;
+	booking.currentStep = 3;
 	$('[data-target="#customer-tab"]').tab('show');	
 });
 
@@ -286,9 +286,9 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 		alert("Please designate a lead customer.");
 		return false;
 	}else{
-		var emailCheck = window.customers[booking.lead].email.length;
-		var phoneCheck = window.customers[booking.lead].phone.length;
-		var countryCheck = window.customers[booking.lead].country_id;
+		var emailCheck = booking.selectedCustomers[booking.lead].email;
+		var phoneCheck = booking.selectedCustomers[booking.lead].phone;
+		var countryCheck = booking.selectedCustomers[booking.lead].country_id;
 
 		if(!emailCheck) {
 			alert("Lead customer requires an email!");
@@ -301,14 +301,10 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 			return false;
 		}else{
 			$('[data-target="#session-tab"]').tab('show');
-
-			var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
 			$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
-
-			var sessionTicketsTemplate = Handlebars.compile($("#session-tickets-template").html());
 			$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-
 			compileSessionsList();
+			booking.currentStep = 4;
 		}
 	}
 });
@@ -318,6 +314,10 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 ******* Sessions *******
 *************************
 */
+
+var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
+var sessionTicketsTemplate = Handlebars.compile($("#session-tickets-template").html());
+var bookingDetailsTemplate = Handlebars.compile($("#booking-details-template").html());
 
 $('#session-tab').on('submit', '#session-filters', function(e) {
 	e.preventDefault();
@@ -347,8 +347,8 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 	booking.addDetail(params, function(data) {
 		$('.free-spaces[data-id="'+sessionId+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
-
 		compileSessionsList($("#session-filters").serialize());
+		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
 			
 	}, function() {
 		btn.html('Assign');
@@ -356,46 +356,38 @@ $('#session-tab').on('click', '.assign-session', function() {
 });
 
 $('#session-tab').on('click', '.unassign-session', function() {
-	var item = $(this).parents('li');
-	var customerId = $(this).data('customer-id');
-	var sessionId = $(this).data('session-id');
-	var ticketId = $(this).data('ticket-id');
+	var btn = $(this);
+	btn.html('<i class="fa fa-cog fa-spin"></i> Unassigning...');
 
-	$(this).html('<i class="fa fa-cog fa-spin"></i>');
+	var params = {};
+	params._token = window.token;
+	params.bookingdetail_id = $(this).data('id');
 
-	var params = [
-		{name: "_token", value: window.token},
-		{name: "booking_id", value: booking.id},
-		{name: "customer_id", value: customerId},
-		{name: "session_id", value: sessionId}
-	];
-
-	//Remove the session-customer-ticket at end of loop otherwise loop will carry on through deleted
-	var maxLoops = sessions.length;
-	$.each(sessions, function(i,v) {
-		if(v.id == sessionId) {
-			var r = i;
-		}
-
-		if(i == (maxLoops - 1)) {
-			sessions.splice(r,1);
-		}
-	});
-
-	Booking.removeDetails(params, function() {
-		item.remove();
-		$('#session-tickets').find('[data-id="'+ticketId+'"]').addClass('unused-ticket');
+	booking.removeDetail(params, function() {
+		compileSessionsList($("#session-filters").serialize());
+		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
+	}, function() {
+		btn.html('Unassign');
 	});
 	
 });
 
 $('#session-tab').on('click', '.sessions-finish', function() {
-	$(this).html('<i class="fa fa-cog fa-spin"></i> Loading...');
-	generateAddonSessions(sessions);
+	$('[data-target="#addon-tab"]').tab('show');
+	$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
+	booking.currentStep = 5;
 });
 
+/*
+*************************
+******* Addons *******
+*************************
+*/
+
+var addonBookingDetailsTemplate = Handlebars.compile($("#addon-booking-details-template").html());
+
 var addonTotal = 0;
-$(document).on('click', '.assign-addon', function() {
+$('#addon-tab').on('click', '.assign-addon', function() {
 	var addon = [];
 	addon.id = $(this).data('id');
 	addon.basePrice = parseFloat($(this).parents('li').find('.price').text());
@@ -422,7 +414,7 @@ $(document).on('click', '.assign-addon', function() {
 	
 });
 
-$(document).on('click', '.remove-addon', function() {
+$('#addon-tab').on('click', '.remove-addon', function() {
 	var id = $(this).data('id');
 	var addon = $('#addons-summary').find('[data-id="'+id+'"]');
 	var price = addon.find('.price').text();
@@ -440,7 +432,7 @@ $(document).on('click', '.remove-addon', function() {
 	$('#addons-summary-total').html('£'+addonTotal);
 });
 
-$(document).on('click', '.addon-finish', function() {
+$('#addon-tab').on('click', '.addon-finish', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
 
