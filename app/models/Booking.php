@@ -2,6 +2,7 @@
 
 use LaravelBook\Ardent\Ardent;
 use PhilipBrown\Money\Currency;
+use ScubaWhere\Helper;
 
 class Booking extends Ardent {
 	protected $fillable = array(
@@ -11,6 +12,7 @@ class Booking extends Ardent {
 		'discount',
 		// 'confirmed',
 		'reserved',
+		'saved',
 		'pick_up_location',
 		'pick_up_time',
 		'comment'
@@ -23,8 +25,9 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'confirmed'        => 'integer|in:0,1',
-		'reserved'         => 'date|after:now',
+		'confirmed'        => 'boolean',
+		'reserved'         => 'date|after:'.Helper::localTime()->format('Y-m-d H:i:s'),
+		'saved'            => 'boolean',
 		'pick_up_location' => '',
 		'pick_up_time'     => 'date|after:now',
 		'comment'          => ''

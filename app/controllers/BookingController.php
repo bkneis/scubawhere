@@ -589,7 +589,48 @@ class BookingController extends Controller {
 		}
 
 		return array('status' => 'OK. Booking information updated.', 'decimal_price' => $booking->decimal_price);
+	}
 
+	public function postReserve()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$data = Input::only('reserved');
+
+		if( !$booking->update($data) )
+		{
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return array('status' => 'OK. Booking reserved');
+	}
+
+	public function postSave()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if( !$booking->update({'saved' => true}) )
+		{
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return array('status' => 'OK. Booking saved');
 	}
 
 	public function getValidate()
@@ -631,11 +672,6 @@ class BookingController extends Controller {
 
 	public function getPayments()
 	{
-		/**
-		 * Valid input parameters
-		 * booking_id
-		 */
-
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
