@@ -625,7 +625,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( !$booking->update({'saved' => true}) )
+		if( !$booking->update( array('saved' => true) ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
