@@ -53,7 +53,8 @@ $(function() {
 		editable: false,
 		droppable: false, // This allows things to be dropped onto the calendar
 		eventClick: function(eventObject) {
-			showModalWindow(eventObject);
+			if(display == "trips") showModalWindow(eventObject);
+			if(display == "accommodations") showModalWindowA(eventObject);
 			//console.log(eventObject);
 		},
 	});
@@ -116,6 +117,34 @@ $(function() {
 		$('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
+	$("#filter-displays").on('click', '.filterd', function(event){
+		event.preventDefault();
+		display = this.id.slice(7);
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
+
+	$("#jump-to-date").on('click', '#jump-to', function(event){
+		event.preventDefault();
+		var date = $("#jump-date").val();
+		var month = $("#jump-month").val();
+		var year = $("#jump-year").val();
+		var jumpDate = $.fullCalendar.moment(year+'-'+month+'-'+date);
+		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+	});
+
+	$("#jump-to-date").on('click', '#remove-jump', function(event){
+		event.preventDefault();
+		var date = new Date();
+    	var d = date.getDate();
+    	var m = date.getMonth();
+    	var y = date.getFullYear();
+    	$("#jump-date").val('');
+    	$("#jump-month").val('');
+    	$("#jump-year").val('');
+		var jumpDate = $.fullCalendar.moment(y+'-'+m+'-'+d);
+		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+	});
+
 });
 
 function createCalendarEntry(eventObject) {
@@ -174,6 +203,28 @@ function showModalWindow(eventObject) {
 			// Clean up the randomStrings array
 			// window.randomStrings.indexOf( this.eventObject.id );
 		},
+		onFinishModal: function() {
+			$('#modal-' + this.eventObject.id).remove();
+		},
+	});
+}
+
+function showModalWindowA(eventObject) {
+	// Create the modal window from session-template
+	if(!window.sw.sessionTemplateD) window.sw.sessionTemplateD = Handlebars.compile( $("#accommodation-template").html() );
+
+	// console.log(eventObject);
+
+	$('#modalWindows')
+	.append( window.sw.sessionTemplateD(eventObject) )        // Create the modal
+	.children('#modal-' + eventObject.id)          // Directly find it and use it
+	.data('eventObject', eventObject)              // Assign the eventObject to the modal DOM element
+	.reveal({                                      // Open modal window | Options:
+		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+		animationSpeed: 300,                       // how fast animtions are
+		closeOnBackgroundClick: false,             // if you click background will modal close?
+		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
+		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
 		onFinishModal: function() {
 			$('#modal-' + this.eventObject.id).remove();
 		},
@@ -340,7 +391,7 @@ function getAccomEvents(start, end, timezone, callback) {
 		        var eventObject = {
 		            start: start,
 		            title: window.accommodations[ id ].name,
-		            color : "#4B0082"
+		            color : "#229930"
 		            //utilisation: util // This is the [0, 20] array
 		        };
 		        events.push( eventObject );
