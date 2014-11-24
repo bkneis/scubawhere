@@ -40,7 +40,9 @@
 				<table>
 					<thead>
 						<tr>
-							<th width="10"></th>
+							<th width="10"></th> <!-- source icon -->
+							<th width="10"></th> <!-- saved/reserved/confirmed icon -->
+							<th width="10"></th> <!-- payments -->
 							<th>Reference</th>
 							<th>Customer Name</th>
 							<th>Email</th>
@@ -60,7 +62,9 @@
 	<script type="text/x-handlebars-template" id="booking-list-item-template">
 		{{#each bookings}}
 			<tr>
-				<td><i class="fa fa-{{icon source}}"></td>
+				<td><i class="fa fa-{{sourceIcon}}" title="{{sourceTooltip}}"></td>
+				<td><i class="fa fa-{{statusIcon}}" title="{{statusTooltip}}"></td>
+				<td><i class="fa fa-circle" style="color: {{paymentIcon}};" title="{{paymentTooltip}}"></td>
 				<td><a>{{reference}}</a></td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{lead_customer.email}}</td>

@@ -53,9 +53,14 @@ class BookingController extends Controller {
 		}
 	}
 
-	public function getAll()
+	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country', 'payments')->get();
+		return Auth::user()->bookings()
+			->with('lead_customer', 'lead_customer.country', 'payments')
+			->orderBy('updated_at', 'DESC')
+			->skip($from)
+			->take($take)
+			->get();
 	}
 
 	public function postInit()
