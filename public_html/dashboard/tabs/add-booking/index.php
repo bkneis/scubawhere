@@ -120,40 +120,39 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-8">
-					<div class="form-group" id="tickets-list">
-
-					</div>
-					<script id="tickets-list-template" type="text/x-handlebars-template">
-						{{#each tickets}}
-						<div class="col-sm-3">
-							<a role="button" class="btn btn-default btn-lg add-ticket" data-id="{{id}}">
-								<p class="ticket-icon"><i class="fa fa-ticket fa-2x"></i></p>
-								<p class="text-center ticket-name">{{{name}}}</p>
-								<p class="text-center ticket-price">{{priceRange base_prices}}</p>
-							</a>
-						</div>
-						{{/each}}
-					</script>
-				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-4 col-sm-push-8">
 					<ul class="list-group">
 						<li class="list-group-item active">
-							<h4 class="list-group-item-heading">Basket</h4>
-							<p class="list-group-item-text">Total tickets: <span id="basket-total">0</span></p>
+							<h4 class="list-group-item-heading">Selected Tickets</h4>
 						</li>
-						<li class="list-group-item" id="selected-tickets">
-
-						</li>
+						<div id="selected-tickets"></div>
 					</ul>
 					<script id="selected-tickets-template" type="text/x-handlebars-template">
 					{{#each tickets}}
-						<p class="list-group-item-text">
-							<i class="fa fa-ticket"></i>
-							<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{{name}}}</a>
-							<span class="badge qty">{{qty}}</span>
-						</p>
+						<li class="list-group-item">
+							<p class="list-group-item-text">
+								<i class="fa fa-ticket"></i>
+								<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{{name}}}</a>
+								<span class="badge qty">{{qty}}</span>
+							</p>
+						</li>
 					{{/each}}
+					</script>
+				</div>
+				<div class="col-sm-8 col-sm-pull-4" id="tickets-list">
+					<script id="tickets-list-template" type="text/x-handlebars-template">
+						{{#each tickets}}
+							<div class="col-sm-6 col-md-4 col-lg-3">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<p class="text-center ticket-icon"><i class="fa fa-ticket fa-4x"></i></p>
+										<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
+										<p class="text-center ticket-price">{{priceRange base_prices}}</p>
+										<a role="button" class="btn btn-primary btn-block btn-sm add-ticket" data-id="{{id}}">Add</a>
+									</div>
+								</div>
+							</div>
+						{{/each}}
 					</script>
 				</div>
 			</div>
@@ -713,16 +712,18 @@
 								<p>{{{description}}}</p>
 								<div class="row">
 									<div class="form-group">
-										<label for="" class="col-sm-1 control-label">From: </label>
-										<div class="col-sm-3">
+										<label for="" class="col-lg-1 control-label">From: </label>
+										<div class="col-lg-4">
 											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="YYYY-MM-DD">
 										</div>
-										<label class="col-sm-1 control-label">To: </label>
-										<div class="col-sm-3">
+										<label class="col-lg-1 control-label">To: </label>
+										<div class="col-lg-4">
 											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="YYYY-MM-DD">
 										</div>
-										<button class="btn btn-primary btn-sm add-accommodation" data-id="{{id}}">Add</button>
-									</div>
+										<div class="col-lg-2">
+											<button class="btn btn-primary btn-sm add-accommodation pull-right" data-id="{{id}}">Add</button>
+										</div>
+									</div>								
 								</div>
 							</li>
 						{{/each}}

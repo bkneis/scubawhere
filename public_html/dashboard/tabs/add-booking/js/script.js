@@ -583,21 +583,12 @@ $('#accommodation-tab').on('click', '.accommodation-customer', function() {
 
 $('#accommodation-tab').on('click', '.add-accommodation', function() {
 
-	var accommodation_id = $(this).data('id');
-	var customer_id = $('#accommodation-customers').children('.active').first().data('id');
-
-	var start = $(this).parent().find('[name="start"]').val().split("/");
-	var formattedStart = start[2]+"-"+start[1]+"-"+start[0];
-
-	var end = $(this).parent().find('[name="end"]').val().split("/");
-	var formattedEnd = end[2]+"-"+end[1]+"-"+end[0];
-
 	var params = {};
 	params._token = window.token;
-	params.accommodation_id = accommodation_id;
-	params.customer_id = customer_id;
-	params.start = formattedStart;
-	params.end = formattedEnd;
+	params.accommodation_id = $(this).data('id');
+	params.customer_id = $('#accommodation-customers').children('.active').first().data('id');
+	params.start = $(this).parent().find('[name="start"]').val();
+	params.end = $(this).parent().find('[name="end"]').val();
 
 	booking.addAccommodation(params, function() {
 		$("#assigned-accommodations").html(assignedAccommodationsTemplate({accommodations:booking.accommodations}));
