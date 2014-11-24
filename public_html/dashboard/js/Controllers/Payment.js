@@ -7,8 +7,16 @@ var Payment = {
 		$.get("/api/payment", params, handleData);
 	},
 
-	getAll : function(handleData) {
-		$.get("/api/payment/all", handleData);
+	getAll : function(handleData, from, take) {
+		if(from === undefined)
+			from = '';
+
+		if(take === undefined)
+			take = '';
+		else
+			take = '/' + take;
+
+		$.get("/api/payment/all" + from + take, handleData);
 	},
 
 	getAllPaymentgateways : function(handleData) {

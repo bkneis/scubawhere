@@ -23,9 +23,9 @@ class PaymentController extends Controller {
 		}
 	}
 
-	public function getAll()
+	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->payments()->with('currency', 'paymentgateway')->orderBy('created_at', 'DESC')->get();
+		return Auth::user()->payments()->with('currency', 'paymentgateway')->orderBy('created_at', 'DESC')->skip($from)->take($take)->get();
 	}
 
 	public function getPaymentgateways()
