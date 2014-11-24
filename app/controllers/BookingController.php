@@ -38,6 +38,8 @@ class BookingController extends Controller {
 			$booking->accommodations->each(function($accommodation)
 			{
 				$accommodation->calculatePrice( $accommodation->pivot->start, $accommodation->pivot->end );
+
+				$accommodation->customer = Customer::where('id', $accommodation->pivot->customer_id)->first();
 			});
 
 			return $booking;
@@ -62,6 +64,7 @@ class BookingController extends Controller {
 			// Check if the agent belongs to the signed-in company
 			try
 			{
+				if( empty($data['agent_id']) ) throw new ModelNotFoundException();
 				Auth::user()->agents()->findOrFail( $data['agent_id'] );
 			}
 			catch(ModelNotFoundException $e)
@@ -85,6 +88,9 @@ class BookingController extends Controller {
 			$booking->reference = Helper::booking_reference_number();
 		}
 		while( Booking::where('reference', $booking->reference)->count() >= 1 );
+
+		if( !$booking->validate() )
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 
 		$booking = Auth::user()->bookings()->save($booking);
 
@@ -264,13 +270,15 @@ class BookingController extends Controller {
 			$booking->update( array('lead_customer_id' => $customer->id) );
 
 		// Update booking price
+		$ticket->calculatePrice($departure->start);
+
 		$booking->updatePrice();
 
 		return array(
 			'status'               => 'OK. Booking details added.',
 			'id'                   => $bookingdetail->id,
 			'decimal_price'        => $booking->decimal_price,
-			'ticket_decimal_price' => $ticket->calculatePrice($departure->start),
+			'ticket_decimal_price' => $ticket->decimal_price,
 			'packagefacade_id'     => $package ? $packagefacade->id : false
 		); // 200 OK
 	}
@@ -534,7 +542,7 @@ class BookingController extends Controller {
 
 		// Check if accommodation is available for the selected days
 		$current_date = new DateTime($start);
-		$end = new DateTime($end);
+		$end_date = new DateTime($end);
 		do
 		{
 			if( $accommodation->bookings()
@@ -547,14 +555,20 @@ class BookingController extends Controller {
 
 			$current_date->add( new DateInterval('P1D') );
 		}
-		while( $current_date < $end );
+		while( $current_date < $end_date );
 
 		$booking->accommodations()->attach( $accommodation->id, array('customer_id' => $customer->id, 'start' => $start, 'end' => $end) );
 
 		// Update booking price
+		$accommodation->calculatePrice($start, $end);
+
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Accommodation added.', 'decimal_price' => $booking->decimal_price);
+		return array(
+			'status'                      => 'OK. Accommodation added.',
+			'decimal_price'               => $booking->decimal_price,
+			'accommodation_decimal_price' => $accommodation->decimal_price
+		);
 	}
 
 	public function postRemoveAccommodation()

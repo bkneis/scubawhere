@@ -4,8 +4,8 @@ var Booking = function(data) {
 		$.extend(this, data);
 	}
 	else {
-	this.bookingdetails = [];
-	this.accommodations = [];
+		this.bookingdetails = [];
+		this.accommodations = [];
 		this.lead_customer  = false;
 	}
 
@@ -313,6 +313,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
+			accommodation.decimal_price = data.accommodation_decimal_price;
 
 			this.accommodations.push( accommodation );
 

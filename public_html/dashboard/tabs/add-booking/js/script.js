@@ -148,10 +148,10 @@ $('#source-tab').on('click', '.source-finish', function() {
 
 	//If agent type selected, find the selected agent and prepare the ajax params
 	if(type == "agent") {
-		var agentId = $('#agents').children('.active').data('id');
-		var params = [{name: "_token", value: window.token}, {name: "agent_id", value: agentId}];
+		var agentId = $('#agents-list').children('.active').data('id');
+		var params = {_token: window.token, agent_id: agentId};
 	}else{
-		var params = [{name: "_token", value: window.token}, {name: "source", value: type}];
+		var params = {_token: window.token, source: type};
 	}
 
 	booking.initiate(params, function(data) {
@@ -243,9 +243,66 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 
 $('#customer-tab').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
+
+	var details = _.filter(booking.bookingdetails, function(detail) {
+		return detail.customer.id == id;
+	});
+	if( details.length > 0 ) {
+		question = confirm('This customer has already tickets assigned.\n\n Do you want to remove the customer anyway?');
+		if(!question)
+			return false;
+	}
+	// Delete all bookingdetails of this customer on the server
+	_.each(details, function(detail) {
+		var params = {
+			_token: window.token,
+			bookingdetail_id: detail.id
+		};
+
+		booking.removeDetail(params, function success(status) {
+			// All good
+		},
+		function error(xhr) {
+			// TODO Show error message
+		});
+	});
+
 	delete booking.selectedCustomers[id];
 
 	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+
+	// Check if we just removed the lead customer
+	if(booking.lead_customer.id == id) {
+		booking.lead_customer = false;
+		if(_.size(booking.selectedCustomers) > 0) {
+			booking.setLead(
+				{
+					_token: window.token,
+					customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
+				},
+				function success(status) {
+					$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				},
+				function error(xhr) {
+					//
+				}
+			);
+		}
+		else {
+			booking.setLead(
+				{
+					_token: window.token,
+					customer_id: null // unset lead_customer_id on the server
+				},
+				function success(status) {
+					// All good
+				},
+				function error(xhr) {
+					// TODO Show error message
+				}
+			);
+		}
+	}
 });
 
 $('#customer-tab').on('submit', '#edit-customer-form', function(e) {
@@ -258,9 +315,10 @@ $('#customer-tab').on('submit', '#edit-customer-form', function(e) {
 	params._token = window.token;
 
 	Customer.updateCustomer(params, function() {
-		Customer.getCustomer("id="+id, function(data) {
+		Customer.getCustomer("id="+params.id, function(data) {
 			//Updated selectedCustomers data
-			booking.selectedCustomers[id] = data;
+			window.customers[params.id] = data;
+			booking.selectedCustomers[params.id] = window.customers[params.id];
 			booking.lead_customer = booking.selectedCustomers[params.id];
 
 			btn.html('Save');
@@ -313,8 +371,12 @@ $('#customer-tab').on('click', '.clear-form', function() {
 });
 
 $('#customer-tab').on('click', '.lead-customer', function() {
-	booking.lead = $(this).data('id');
-	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
+		$("#selected-customers").html( selectedCustomersTemplate({customers:booking.selectedCustomers}) );
+	},
+	function error(xhr) {
+		//
+	});
 });
 
 $('#customer-tab').on('click', '.customers-finish', function() {
@@ -324,23 +386,23 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 		return false;
 	}
 	if(!booking.lead_customer.email) {
-			alert("Lead customer requires an email!");
-			return false;
+		alert("Lead customer requires an email!");
+		return false;
 	}
 	if(!booking.lead_customer.phone) {
-			alert("Lead customer requires a phone number!");
-			return false;
+		alert("Lead customer requires a phone number!");
+		return false;
 	}
 	if(!booking.lead_customer.country_id) {
-			alert("Lead customer requires a country!");
-			return false;
+		alert("Lead customer requires a country!");
+		return false;
 	}
 
-			$('[data-target="#session-tab"]').tab('show');
-			$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
-			$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-			// compileSessionsList();
-			booking.currentStep = 4;
+	$('[data-target="#session-tab"]').tab('show');
+	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
+	$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
+	// compileSessionsList();
+	booking.currentStep = 4;
 });
 
 /*
@@ -353,8 +415,17 @@ var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template
 var sessionTicketsTemplate = Handlebars.compile($("#session-tickets-template").html());
 var bookingDetailsTemplate = Handlebars.compile($("#booking-details-template").html());
 
+$('#session-tab').on('click', '#session-tickets > a', function(e) {
+	setTimeout(function() {
+		$('#session-filters').submit();
+	}, 100); // Need to give the browser time to set the .active class on the new list-item first
+});
+
 $('#session-tab').on('submit', '#session-filters', function(e) {
 	e.preventDefault();
+
+	$('#session-filters [type=submit]').html('Filter <i class="fa fa-cog fa-spin"></i>');
+
 	var params = $(this).serializeObject();
 	if( $('#session-tickets .active').length != 0 )
 		params.ticket_id = $('#session-tickets .active').first().data('id');
@@ -520,7 +591,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 
 	var end = $(this).parent().find('[name="end"]').val().split("/");
 	var formattedEnd = end[2]+"-"+end[1]+"-"+end[0];
-	
+
 	var params = {};
 	params._token = window.token;
 	params.accommodation_id = accommodation_id;
@@ -537,7 +608,7 @@ $('#accommodation-tab').on('click', '.remove-accommodation', function() {
 
 	var accommodation_id = $(this).data('id');
 	var customer_id = $(this).data('customer-id');
-	
+
 	var params = {};
 	params._token = window.token;
 	params.accommodation_id = accommodation_id;
@@ -587,7 +658,10 @@ $(document).ready(function() {
 			$(e.relatedTarget).toggleClass('selected done');
 			$(e.target).addClass('selected').tab('show');
 		}
-		$('.datepicker').datepicker();
+		$('.datepicker').datepicker({
+			pickTime: false,
+			minDate: moment().format('YYYY-MM-DD')
+		});
 	});
 
 	$('a[data-toggle="tab"]').on('click', function (e) {
@@ -610,6 +684,7 @@ function compileSessionsList(params) {
 	Session.filter(params, function(data){
 		window.sessions = _.indexBy(data, 'id');
 		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
+		$('#session-filters [type=submit]').html('Filter');
 	});
 }
 

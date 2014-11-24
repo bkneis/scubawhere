@@ -52,7 +52,7 @@ class CustomerController extends Controller {
 		}
 
 		// Validate that the customer does not already exist within the logged-in company
-		if( Auth::user()->customers()->where('email', Input::get('email'))->count() > 0 )
+		if( !empty($data['email']) && Auth::user()->customers()->where('email', $data['email'])->count() > 0 )
 			return Response::json( array('errors' => 'Cannot create new customer! The email already exists.'), 409 ); // 409 Conflict
 
 		$customer = Auth::user()->customers()->save($customer);

@@ -464,13 +464,13 @@
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="after">After:</label>
-													<input type="text" class="form-control datepicker" data-date-format="dd/mm/yy" name="after" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datepicker" data-date-format="yyyy-mm-dd" name="after" placeholder="YYYY-MM-DD">
 												</div>
 											</div>
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="before">Before:</label>
-													<input type="text" class="form-control datepicker" data-date-format="dd/mm/yy" name="before" placeholder="dd/mm/yyyy">
+													<input type="text" class="form-control datepicker" data-date-format="yyyy-mm-dd" name="before" placeholder="YYYY-MM-DD">
 												</div>
 											</div>
 											<div class="col-sm-4">
@@ -715,11 +715,11 @@
 									<div class="form-group">
 										<label for="" class="col-sm-1 control-label">From: </label>
 										<div class="col-sm-3">
-											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="dd/mm/yyyy">
+											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="yyyy-mm-dd">
 										</div>
 										<label class="col-sm-1 control-label">To: </label>
 										<div class="col-sm-3">
-											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="dd/mm/yyyy">
+											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="yyyy-mm-dd">
 										</div>
 										<button class="btn btn-primary btn-sm add-accommodation" data-id="{{id}}">Add</button>
 									</div>

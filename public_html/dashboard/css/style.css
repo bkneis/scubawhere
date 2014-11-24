@@ -786,3 +786,7 @@ span.box-tool{
 #company-form-container input[type='text'] {
 	width:100%;
 }
+
+.fa {
+	width: 1em;
+}
