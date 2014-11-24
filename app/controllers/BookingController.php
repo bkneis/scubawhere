@@ -35,9 +35,9 @@ class BookingController extends Controller {
 				$detail->ticket->calculatePrice( $detail->session->start );
 			});
 
-			$booking->accommodations->each(function($detail)
+			$booking->accommodations->each(function($accommodation)
 			{
-				$detail->calculatePrice( $detail->pivot->start, $detail->pivot->end );
+				$accommodation->calculatePrice( $accommodation->pivot->start, $accommodation->pivot->end );
 			});
 
 			return $booking;
@@ -50,7 +50,7 @@ class BookingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country', 'customers')->get();
+		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country')->get();
 	}
 
 	public function postInit()
@@ -304,15 +304,6 @@ class BookingController extends Controller {
 		{
 			return Response::json( array('errors' => array('The bookingdetail has not been found.')), 404 ); // 404 Not Found
 		}
-
-		$quantity = Input::get('quantity', 1); // Default: 1
-
-		$validator = Validator::make(
-			array('quantity' => $quantity),
-			array('quantity' => 'required|integer|min:1')
-		);
-		if( $validator->fails() )
-			return Response::json( array('errors' => $validator->errors()->all()), 406 ); // 406 Not Acceptable
 
 		// Execute delete
 		$bookingdetail->delete();
@@ -615,7 +606,6 @@ class BookingController extends Controller {
 		 * pick_up_location
 		 * pick_up_time
 		 * discount
-		 * reserved
 		 * comment
 		 */
 
@@ -633,7 +623,6 @@ class BookingController extends Controller {
 			'pick_up_location', // Just text
 			'pick_up_time',     // Must be datetime
 			'discount',         // Should be decimal
-			// 'reserved',      // Must be datetime
 			'comment'           // Text
 		);
 
@@ -700,7 +689,6 @@ class BookingController extends Controller {
 		}
 
 		$values = array(
-			"gender"     => $booking->lead_customer()->first()->gender,
 			"email"      => $booking->lead_customer->email,
 			"phone"      => $booking->lead_customer->phone,
 			"country_id" => $booking->lead_customer->country_id
@@ -709,7 +697,6 @@ class BookingController extends Controller {
 		$rules = array(
 			"email"      => 'required',
 			"phone"      => 'required',
-			"gender"     => 'required',
 			"country_id" => 'required'
 		);
 		$messages = array(

@@ -39,7 +39,6 @@ class CustomerController extends Controller {
 			'city',
 			'county',
 			'postcode',
-			// 'region_id',
 			'country_id',
 			'phone',
 			'last_dive'

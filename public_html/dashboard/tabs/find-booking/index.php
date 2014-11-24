@@ -62,7 +62,7 @@
 			<tr>
 				<td><i class="fa fa-{{icon source}}"></td>
 				<td><a>{{reference}}</a></td>
-				<td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
+				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{lead_customer.email}}</td>
 				<td>{{lead_customer.phone}}</td>
 				<td>{{lead_customer.country.abbreviation}}</td>

@@ -1,10 +1,16 @@
 var Booking = function(data) {
-	if(data !== undefined)
-		$.extend(this, data);
 
+	if(data !== undefined) {
+		$.extend(this, data);
+	}
+	else {
 	this.bookingdetails = [];
 	this.accommodations = [];
 		this.lead_customer  = false;
+	}
+
+	this.selectedCustomers = {};
+	this.selectedTickets   = {};
 };
 
 
@@ -35,7 +41,7 @@ Booking.getAll = function(success) {
 
 /*
  ********************************
- ******* OBJECT FUNCTIONS *******
+ ******* PUBLIC FUNCTIONS *******
  ********************************
  */
 
@@ -468,3 +474,13 @@ Booking.prototype.validate = function(successFn, errorFn){
 		error: errorFn
 	});
 };
+
+
+
+/*
+ ********************************
+ ******* PRIVATE FUNCTIONS ******
+ ********************************
+ */
+
+
