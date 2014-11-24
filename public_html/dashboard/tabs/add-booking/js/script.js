@@ -658,11 +658,27 @@ $(document).ready(function() {
 			$(e.relatedTarget).toggleClass('selected done');
 			$(e.target).addClass('selected').tab('show');
 		}
-		$('.datepicker').datepicker({
+
+		$('input.datetimepicker').datetimepicker({
+			pickDate: true,
+			pickTime: true,
+			minDate: moment().format('YYYY-MM-DD')
+		});
+
+		$('input.datepicker').datetimepicker({
+			pickDate: true,
 			pickTime: false,
 			minDate: moment().format('YYYY-MM-DD')
 		});
-	});
+
+		$('input.timepicker').datetimepicker({
+			pickDate: false,
+			pickTime: true
+		});
+
+		$(document).on('focus', '.datepicker', function(){
+			$(this).data("DateTimePicker").show();
+		});
 
 	$('a[data-toggle="tab"]').on('click', function (e) {
 		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
