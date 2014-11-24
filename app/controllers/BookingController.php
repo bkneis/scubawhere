@@ -17,7 +17,6 @@ class BookingController extends Controller {
 			$booking = Auth::user()->bookings()
 			->with(
 				'lead_customer',
-					'lead_customer.country',
 				'bookingdetails',
 					'bookingdetails.customer',
 						'bookingdetails.customer.country',
@@ -103,7 +102,6 @@ class BookingController extends Controller {
 		 *
 		 * package_id (optional)
 		 * packagefacade_id (optional)
-		 * is_lead (optional)
 		 */
 
 		// Check if all IDs exist and belong to the signed-in company
@@ -173,11 +171,6 @@ class BookingController extends Controller {
 		}
 		else
 			$package = false;
-
-		// Check if this customer is supposed to be the lead customer
-		$is_lead = Input::get('is_lead');
-		if( empty($is_lead) )
-			$is_lead = false;
 
 		// Validate that the customer is not already booked for this session on another booking
 		$check = Auth::user()->bookings()
@@ -260,12 +253,15 @@ class BookingController extends Controller {
 		// If all checks completed successfully, write into database
 		$bookingdetail = new Bookingdetail( array(
 			'customer_id'      => $customer->id,
-			'is_lead'          => $is_lead,
 			'ticket_id'        => $ticket->id,
 			'session_id'       => $departure->id,
 			'packagefacade_id' => $package ? $packagefacade->id : null
 		) );
 		$bookingdetail = $booking->bookingdetails()->save($bookingdetail);
+
+		// If this is the booking's first added details, set lead_customer_id
+		if($booking->bookingdetails()->count() === 1)
+			$booking->update( array('lead_customer_id' => $customer->id) );
 
 		// Update booking price
 		$booking->updatePrice();
@@ -325,6 +321,47 @@ class BookingController extends Controller {
 		$booking->updatePrice();
 
 		return array('status' => 'OK. Bookingdetail removed.', 'decimal_price' => $booking->decimal_price); // 200 OK
+	}
+
+	public function postSetLead()
+	{
+		/**
+		 * Valid input parameters
+		 * booking_id
+		 * customer_id
+		 */
+
+		// Check if booking belongs to logged-in company
+		try
+		{
+			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$customer_id = Input::get('customer_id', null);
+		if( empty($customer_id) )
+			$customer_id = null;
+
+		if( $customer_id !== null)
+			try
+			{
+				if( !Input::has('customer_id') ) throw new ModelNotFoundException();
+				$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+				$customer_id = $customer->id;
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+			}
+
+		if( !$booking->update( array('lead_customer_id' => $customer_id) ) )
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+
+		return array('status' => 'OK. Lead customer set'); // 200 OK
 	}
 
 	public function postAddAddon()
@@ -663,10 +700,10 @@ class BookingController extends Controller {
 		}
 
 		$values = array(
-			"email"      => $booking->lead_customer()->first()->email,
-			"phone"      => $booking->lead_customer()->first()->phone,
 			"gender"     => $booking->lead_customer()->first()->gender,
-			"country_id" => $booking->lead_customer()->first()->country_id
+			"email"      => $booking->lead_customer->email,
+			"phone"      => $booking->lead_customer->phone,
+			"country_id" => $booking->lead_customer->country_id
 		);
 
 		$rules = array(

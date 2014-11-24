@@ -4,6 +4,7 @@ var Booking = function(data) {
 
 	this.bookingdetails = [];
 	this.accommodations = [];
+		this.lead_customer  = false;
 };
 
 
@@ -77,7 +78,6 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
  * - ticket_id
  * - session_id
  * - package_id (optional)
- * - is_lead (optional)
  *
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
@@ -112,7 +112,6 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			var detail = {
 				id: data.id,
 				customer: window.customers[params.customer_id],
-				is_lead: params.is_lead || false,
 				session: window.sessions[params.session_id],
 				ticket: $.extend(true, {}, window.tickets[params.ticket_id]), // Need to clone the ticket object, because we are going to write its decimal_price for the session's date in it
 				addons: [] // Prepare the addons array to be able to just push to it later
@@ -128,6 +127,11 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			}
 
 			this.bookingdetails.push(detail);
+
+			// If this is the first detail to be added and there is no lead customer yet, make this customer the lead customer
+			if(!this.lead_customer && this.bookingdetails.count === 1) {
+				this.lead_customer = window.customers[params.customer_id];
+			}
 
 			this.decimal_price = data.decimal_price;
 
@@ -161,6 +165,34 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Sets the lead_customer_id for this booking
+ * @param {object} params      Must contain
+ * - _token
+ * - customer_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.setLead = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/set-lead",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.lead_customer = window.customers[ params.customer_id ];
 
 			successFn(data.status);
 		},

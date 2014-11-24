@@ -33,7 +33,7 @@ Handlebars.registerHelper("friendlyDate", function(d) {
 });
 
 Handlebars.registerHelper("isLead", function (id) {
-	if(booking.lead == id) {
+	if(booking.lead_customer && booking.lead_customer.id == id) {
 		return new Handlebars.SafeString('<small><span class="label label-warning">LEAD</span></small>');
 	}
 });
@@ -215,10 +215,16 @@ var selectedCustomersTemplate = Handlebars.compile($("#selected-customers-templa
 $('#customer-tab').on('click', '.add-customer', function() {
 	var id = $('#existing-customers').val();
 	booking.selectedCustomers[id] = window.customers[id];
-	if( !booking.lead )
-		booking.lead = id;
 
 	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+
+	if( _.size(booking.selectedCustomers) === 1 )
+		booking.setLead({_token: window.token, customer_id: id}, function success(status) {
+			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		},
+		function error(xhr) {
+			//
+		});
 });
 
 $('#customer-tab').on('click', '.edit-customer', function() {
@@ -254,6 +260,7 @@ $('#customer-tab').on('submit', '#edit-customer-form', function(e) {
 		Customer.getCustomer("id="+id, function(data) {
 			//Updated selectedCustomers data
 			booking.selectedCustomers[id] = data;
+			booking.lead_customer = booking.selectedCustomers[params.id];
 
 			btn.html('Save');
 			$('#edit-customer-modal').modal('hide');
@@ -285,6 +292,14 @@ $('#customer-tab').on('submit', '#new-customer', function(e) {
 			form[0].reset();
 
 			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+
+			if( _.size(booking.selectedCustomers) === 1 )
+				booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
+					$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				},
+				function error(xhr) {
+					//
+				});
 		});
 	}, function() {
 		btn.html('Add');
@@ -302,7 +317,7 @@ $('#customer-tab').on('click', '.lead-customer', function() {
 
 $('#customer-tab').on('click', '.customers-finish', function() {
 
-	if(!booking.lead) {
+	if(!booking.lead_customer) {
 		alert("Please designate a lead customer.");
 		return false;
 	}else{
@@ -356,21 +371,13 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var customer_id = $('#session-customers').children('.active').first().data('id');
 	var session_id = btn.data('id');
 
-	if(booking.lead == customer_id) {
-		var isLead = 1;
-	}else{
-		var isLead = 0;
-	}
-
 	var params = {};
 	params._token = window.token;
 	params.customer_id = customer_id;
 	params.ticket_id = ticket_id;
 	params.session_id = session_id;
-	params.is_lead = isLead;
 
 	booking.addDetail(params, function(status, id) {
-		console.log(id);
 		$('.free-spaces[data-id="'+session_id+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
 
 		var params = $("#session-filters").serializeObject();

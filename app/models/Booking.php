@@ -6,6 +6,7 @@ use ScubaWhere\Helper;
 
 class Booking extends Ardent {
 	protected $fillable = array(
+		'lead_customer_id',
 		'agent_id',
 		'source',
 		// 'price',
@@ -21,7 +22,8 @@ class Booking extends Ardent {
 	protected $appends = array('decimal_price');
 
 	public static $rules = array(
-		'agent_id'         => 'integer|exists:agents,id|required_without:source',
+		'lead_customer_id' => 'integer|min:1',
+		'agent_id'         => 'integer|required_without:source',
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
@@ -89,12 +91,12 @@ class Booking extends Ardent {
 
 	public function customers()
 	{
-		return $this->belongsToMany('Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'packagefacade_id', 'is_lead')->withTimestamps();
+		return $this->belongsToMany('Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'packagefacade_id')->withTimestamps();
 	}
 
 	public function lead_customer()
 	{
-		return $this->belongsToMany('Customer', 'booking_details')->wherePivot('is_lead', 1)->withTimestamps();
+		return $this->belongsTo('Customer', 'lead_customer_id');
 	}
 
 	/*public function addons()
@@ -119,7 +121,7 @@ class Booking extends Ardent {
 
 	/*public function packages()
 	{
-		return $this->belongsToMany('Package', 'booking_details')->withPivot('customer_id', 'is_lead', 'ticket_id', 'session_id');
+		return $this->belongsToMany('Package', 'booking_details')->withPivot('customer_id', 'ticket_id', 'session_id');
 	}*/
 
 	public function packagefacades()
