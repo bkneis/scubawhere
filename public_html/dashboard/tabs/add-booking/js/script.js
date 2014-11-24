@@ -382,19 +382,19 @@ $('#customer-tab').on('click', '.lead-customer', function() {
 $('#customer-tab').on('click', '.customers-finish', function() {
 
 	if(!booking.lead_customer) {
-		alert("Please designate a lead customer.");
+		showAlert("danger", "Please designate a lead customer.");
 		return false;
 	}
 	if(!booking.lead_customer.email) {
-		alert("Lead customer requires an email!");
+		showAlert("danger", "Lead customer requires an email!");
 		return false;
 	}
 	if(!booking.lead_customer.phone) {
-		alert("Lead customer requires a phone number!");
+		showAlert("danger", "Lead customer requires a phone number!");
 		return false;
 	}
 	if(!booking.lead_customer.country_id) {
-		alert("Lead customer requires a country!");
+		showAlert("danger", "Lead customer requires a country!");
 		return false;
 	}
 
@@ -654,6 +654,8 @@ $(document).ready(function() {
 
 	//This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		booking.currentTab = $(e.target).data('target');
+
 		if(!$(e.target).hasClass('done') && !$(e.target).hasClass('selected')) {
 			$(e.relatedTarget).toggleClass('selected done');
 			$(e.target).addClass('selected').tab('show');
@@ -693,6 +695,8 @@ $(document).ready(function() {
 		listGroupRadio($(this));
 	});
 
+	$('.alert-container').remove();
+
 });
 
 function compileSessionsList(params) {
@@ -718,6 +722,12 @@ function friendlyDate(date) {
 
 	//Why doesn't javascript have a nice Date like PHP?!
 	return d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear())+" "+(addZ(d.getHours()))+":"+(addZ(d.getMinutes()));
+}
+
+function showAlert(type, error) {
+	$('.alert-container').remove();
+	$(booking.currentTab).find('.row-header').append('<div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4 alert-container"><div class="alert alert-'+type+'" role="alert">'+error+'</div></div>');
+	$('.alert-container').hide().fadeIn();
 }
 
 //Adds 0 to single digits for date/times.

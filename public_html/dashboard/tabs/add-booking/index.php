@@ -3,49 +3,49 @@
 		<li role="presentation" class="active">
 			<a href="javascript:void(0)" class="selected" role="tab" data-toggle="tab" data-target="#source-tab">
 				<span class="step-number">1</span>
-				<span class="step-description">1. Sources<br><small>Choose a source</small></span>
+				<span class="step-description">1. Sources</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">
 				<span class="step-number">2</span>
-				<span class="step-description">2. Tickets<br><small>Choose tickets</small></span>
+				<span class="step-description">2. Tickets</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">
 				<span class="step-number">3</span>
-				<span class="step-description">3. Customers<br><small>Choose customers</small></span>
+				<span class="step-description">3. Customers</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
 				<span class="step-number">4</span>
-				<span class="step-description">4. Sessions<br><small>Assign to session</small></span>
+				<span class="step-description">4. Sessions</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">
 				<span class="step-number">5</span>
-				<span class="step-description">5. Addons<br><small>Choose addons</small></span>
+				<span class="step-description">5. Addons</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
 				<span class="step-number">7</span>
-				<span class="step-description">7. Accommodation<br><small>Choose accommodation</small></span>
+				<span class="step-description">7. Accommodation</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
 				<span class="step-number">7</span>
-				<span class="step-description">7. Extra Details<br><small>Extra information</small></span>
+				<span class="step-description">7. Extra Details</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
 				<span class="step-number">8</span>
-				<span class="step-description">8. Summary<br><small>Booking summary</small></span>
+				<span class="step-description">8. Summary</span>
 			</a>
 		</li>
 	</ul>
@@ -53,7 +53,7 @@
 	<div class="tab-content">
 
 		<div role="tabpanel" class="tab-pane fade in active" id="source-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Booking Source <small>Where is your booking coming from?</small></h2>
@@ -112,7 +112,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="ticket-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Tickets <small>Which tickets would you like to book?</small></h2>
@@ -165,7 +165,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="customer-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Customers <small>Select the customers this booking is for.</small></h2>
@@ -405,7 +405,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="session-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Sessions <small>When would you like to go diving?</small></h2>
@@ -464,13 +464,13 @@
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="after">After:</label>
-													<input type="text" class="form-control datepicker" data-date-format="yyyy-mm-dd" name="after" placeholder="YYYY-MM-DD">
+													<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
 												</div>
 											</div>
 											<div class="col-sm-3">
 												<div class="form-group">
 													<label for="before">Before:</label>
-													<input type="text" class="form-control datepicker" data-date-format="yyyy-mm-dd" name="before" placeholder="YYYY-MM-DD">
+													<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="before" placeholder="YYYY-MM-DD">
 												</div>
 											</div>
 											<div class="col-sm-4">
@@ -560,7 +560,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="addon-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Addon Selection <small>Do you require any addons?</small></h2>
@@ -665,7 +665,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="accommodation-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Accommodation Selection <small>Do you require any accommodation?</small></h2>
@@ -715,11 +715,11 @@
 									<div class="form-group">
 										<label for="" class="col-sm-1 control-label">From: </label>
 										<div class="col-sm-3">
-											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="yyyy-mm-dd">
+											<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="YYYY-MM-DD">
 										</div>
 										<label class="col-sm-1 control-label">To: </label>
 										<div class="col-sm-3">
-											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="yyyy-mm-dd">
+											<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="YYYY-MM-DD">
 										</div>
 										<button class="btn btn-primary btn-sm add-accommodation" data-id="{{id}}">Add</button>
 									</div>
@@ -760,7 +760,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="extra-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Extra Details <small>Is there anything else we should know?</small></h2>
@@ -825,7 +825,7 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="summary-tab">
-			<div class="row">
+			<div class="row row-header">
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Summary <small>Booking summary</small></h2>
