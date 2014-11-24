@@ -41,6 +41,7 @@ return array(
     'AllowNullForAccommodationIdInBoatTicketTable' => $baseDir . '/app/database/migrations/2014_10_24_012849_allow_null_for_accommodation_id_in_boat_ticket_table.php',
     'AlterBookingsTable' => $baseDir . '/app/database/migrations/2014_07_26_162601_alter_bookings_table.php',
     'AlterLastDiveOnCustomersToDate' => $baseDir . '/app/database/migrations/2014_05_24_204451_alter_last_dive_on_customers_to_date.php',
+    'AuthenticationController' => $baseDir . '/app/controllers/AuthenticationController.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boat' => $baseDir . '/app/models/Boat.php',
     'BoatController' => $baseDir . '/app/controllers/BoatController.php',
