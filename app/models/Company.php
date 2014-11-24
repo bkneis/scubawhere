@@ -159,6 +159,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Customer');
 	}
 
+	public function departures()
+	{
+		return $this->hasManyThrough('Departure', 'Trip'/*, 'company_id', 'trip_id'*/);
+	}
+
 	public function locations()
 	{
 		return $this->belongsToMany('Location')->withTimestamps();
@@ -169,9 +174,9 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Package');
 	}
 
-	public function departures()
+	public function payments()
 	{
-		return $this->hasManyThrough('Departure', 'Trip'/*, 'company_id', 'trip_id'*/);
+		return $this->hasManyThrough('Payment', 'Booking');
 	}
 
 	public function tickets()
@@ -199,12 +204,12 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function booked_sessions()
 	{
-		return $this->hasManyTrough('Session', 'Booking');
+		return $this->hasManyThrough('Session', 'Booking');
 	}
 
 	public function booked_tickets()
 	{
-		return $this->hasManyTrough('Ticket', 'Booking');
+		return $this->hasManyThrough('Ticket', 'Booking');
 	}
 
 	/* END Relations */

@@ -26,7 +26,10 @@ class BookingController extends Controller {
 					'bookingdetails.packagefacade',
 						'bookingdetails.packagefacade.package',
 					'bookingdetails.addons',
-				'accommodations'
+				'accommodations',
+				'payments',
+					'payment.currency',
+					'payments.paymentgateway'
 			)
 			->findOrFail( Input::get('id') );
 
@@ -52,7 +55,7 @@ class BookingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country')->get();
+		return Auth::user()->bookings()->with('lead_customer', 'lead_customer.country', 'payments')->get();
 	}
 
 	public function postInit()

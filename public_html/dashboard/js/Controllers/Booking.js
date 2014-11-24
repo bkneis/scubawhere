@@ -6,6 +6,7 @@ var Booking = function(data) {
 	else {
 		this.bookingdetails = [];
 		this.accommodations = [];
+		this.payments       = [];
 		this.lead_customer  = false;
 	}
 
@@ -446,6 +447,42 @@ Booking.prototype.save = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			this.saved = 1;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Adds a payment to the booking
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ * - amount
+ * - paymentgateway_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.addPayment = function(params, succesFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/payment/add",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			var payment = {
+				amount: params.amount,
+				paymentgateway: window.paymentgateways[params.paymentgateway_id],
+				currency: window.company.currency
+			};
+
+			this.payments.push(payment);
 
 			successFn(data.status);
 		},

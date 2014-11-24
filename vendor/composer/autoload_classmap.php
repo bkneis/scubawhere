@@ -1449,6 +1449,7 @@ return array(
     'Patchwork\\Utf8' => $vendorDir . '/patchwork/utf8/class/Patchwork/Utf8.php',
     'Patchwork\\Utf8\\Bootup' => $vendorDir . '/patchwork/utf8/class/Patchwork/Utf8/Bootup.php',
     'Payment' => $baseDir . '/app/models/Payment.php',
+    'PaymentController' => $baseDir . '/app/controllers/PaymentController.php',
     'PaymentModelTest' => $baseDir . '/app/tests/unit/models/PaymentModelTest.php',
     'Paymentgateway' => $baseDir . '/app/models/Paymentgateway.php',
     'PaymentgatewayModelTest' => $baseDir . '/app/tests/unit/models/PaymentgatewayModelTest.php',

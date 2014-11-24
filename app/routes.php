@@ -95,8 +95,6 @@ Route::group(array('before' => 'auth.basic'), function()
 
 	Route::controller('api/addon', 'AddonController');
 
-	//Route::controller('api/agency', 'AgencyController');
-
 	Route::controller('api/agent', 'AgentController');
 
 	Route::controller('api/boat', 'BoatController');
@@ -111,6 +109,8 @@ Route::group(array('before' => 'auth.basic'), function()
 
 	Route::controller('api/package', 'PackageController');
 
+	Route::controller('api/payment', 'PaymentController');
+
 	Route::controller('api/session', 'DepartureController');
 
 	Route::controller('api/ticket', 'TicketController');
@@ -120,7 +120,12 @@ Route::group(array('before' => 'auth.basic'), function()
 	Route::controller('api/trip', 'TripController');
 });
 
+###########################################
+########## S T A T U S   P A G E ##########
+###########################################
+
 // TODO Move this in a dedicated controller
+
 Route::get('status', function()
 {
 	return View::make('status.security');
