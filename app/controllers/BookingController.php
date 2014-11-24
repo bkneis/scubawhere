@@ -515,7 +515,7 @@ class BookingController extends Controller {
 				->where('confirmed', 1)
 				->orWhereNotNull('reserved')
 				->count() >= $accommodation->capacity )
-				return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!'), 403 ); // 403 Forbidden
+				return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!')), 403 ); // 403 Forbidden
 
 			$current_date->add( new DateInterval('P1D') );
 		}
