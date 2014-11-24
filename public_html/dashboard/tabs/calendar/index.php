@@ -6,13 +6,22 @@
 			<div id="filters" class="padder">
 				<div class="container">
     				<div class="content">
-					    <div class="onoffswitch form-row">
+    				<div class="form-row">
+	    				<div class="onofflabel">
+	    					<p><strong>Accommodations</strong></p>
+	    				</div>
+					    <div class="onoffswitch">
 						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
 						    <label class="onoffswitch-label" for="myonoffswitch">
 						    <span class="onoffswitch-inner"></span>
 						    <span class="onoffswitch-switch"></span>
 						    </label>
-						</div> 
+						</div>
+						<div class="onofflabelright">
+	    					<p><strong>Trips</strong></p>
+	    				</div>
+					</div> 
+					<div style="clear:both"></div>
 						<div id="jump-to-date" class="form-row">
 							<!--<label class="form-label">Jump to : </label>-->
 							<input id="jump-date" type="text" placeholder="Date" style="width:60px">- 
@@ -115,7 +124,18 @@
 		
 				<h2>{{{title}}}</h2>
 				<table style="margin-top: 2em;">
-				
+					<tr>
+						<td><strong>Date</strong></td>
+						<td>{{start}}</td>
+					</tr>
+					<tr>
+						<td><strong>Rooms available</strong></td>
+						<td>{{available}}</td>
+					</tr>
+					<tr>
+						<td><strong>Rooms booked</strong></td>
+						<td>{{booked}}</td>
+					</tr>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>

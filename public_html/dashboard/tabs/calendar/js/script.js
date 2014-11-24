@@ -55,6 +55,7 @@ $(function() {
 		eventClick: function(eventObject) {
 			if(display == "trips") showModalWindow(eventObject);
 			if(display == "accommodations") showModalWindowA(eventObject);
+			//console.log(display);
 			//console.log(eventObject);
 		},
 	});
@@ -160,7 +161,7 @@ function createCalendarEntry(eventObject) {
 			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
 
-	if(eventObject.ticketsLeft == 0) eventObject.color = "#4B0082";
+	if(eventObject.ticketsLeft == 0) eventObject.color = "#f00";
 
 	return eventObject;
 
@@ -171,7 +172,7 @@ function createCalendarEntry(eventObject) {
 
 function showModalWindow(eventObject) {
 	// Create the modal window from session-template
-	if(!window.sw.sessionTemplateD) window.sw.sessionTemplateD = Handlebars.compile( $("#session-template").html() );
+	window.sw.sessionTemplateD = Handlebars.compile( $("#session-template").html() );
 
 	eventObject.boats = $.extend(true, {}, window.boats);
 	// console.log(eventObject.session);
@@ -211,12 +212,12 @@ function showModalWindow(eventObject) {
 
 function showModalWindowA(eventObject) {
 	// Create the modal window from session-template
-	if(!window.sw.sessionTemplateD) window.sw.sessionTemplateD = Handlebars.compile( $("#accommodation-template").html() );
+	window.sw.accommodationTemplateD = Handlebars.compile( $("#accommodation-template").html() );
 
-	// console.log(eventObject);
+	console.log(eventObject);
 
 	$('#modalWindows')
-	.append( window.sw.sessionTemplateD(eventObject) )        // Create the modal
+	.append( window.sw.accommodationTemplateD(eventObject) )        // Create the modal
 	.children('#modal-' + eventObject.id)          // Directly find it and use it
 	.data('eventObject', eventObject)              // Assign the eventObject to the modal DOM element
 	.reveal({                                      // Open modal window | Options:
@@ -278,7 +279,7 @@ function randomString() {
 
 function calcUtil(booked, capacity) {
 	var util = ((booked / capacity) * 100);
-	return util.toString() + '%';
+	return util.toString();
 }
 
 function getTripEvents(start, end, timezone, callback) {
@@ -310,7 +311,7 @@ function getTripEvents(start, end, timezone, callback) {
 					var sameDay = true;
 					if(window.trips[value.trip_id].duration > 24) sameDay = false;
 					var eventObject = {
-						title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity), // use the element's text as the event title
+						title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
 						allDay: false,
 						trip: window.trips[ value.trip_id ],
 						session: value,
@@ -338,7 +339,7 @@ function getTripEvents(start, end, timezone, callback) {
 				var sameDay = true;
 				if(window.trips[value.trip_id].duration > 24) sameDay = false;
 				var eventObject = {
-					title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity), // use the element's text as the event title
+					title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
 					allDay: false,
 					trip: window.trips[ value.trip_id ],
 					session: value,
@@ -389,11 +390,15 @@ function getAccomEvents(start, end, timezone, callback) {
 
 		    _.each(value, function(util, id) {
 		        var eventObject = {
-		            start: start,
+		            start: start, // change start to readable text instead of moment
+		            end : start,
+				    id : randomString(),
 		            title: window.accommodations[ id ].name,
-		            color : "#229930"
-		            //utilisation: util // This is the [0, 20] array
+		            color : "#229930",
+		            booked : util[0],
+		            available : (util[1] - util[0])
 		        };
+		        if(eventObject.available == 0) eventObject.color = "#f00";
 		        events.push( eventObject );
 		        //$('#calendar').renderEvent(eventObject);
 		    });
