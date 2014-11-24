@@ -105,6 +105,8 @@ class Helper
 
 		$size = strlen($chars);
 
+		$references = Booking::lists('reference');
+
 		do
 		{
 			$string = "";
@@ -112,11 +114,8 @@ class Helper
 			for($i = 0; $i < $length; $i++) {
 				$string .= $chars[ mt_rand(0, $size - 1) ];
 			}
-
-			// Check if the reference already exists
-			$count = Booking::where('reference', $string)->count();
 		}
-		while( $count > 0);
+		while( in_array($string, $references) );
 
 		return $string;
 	}
