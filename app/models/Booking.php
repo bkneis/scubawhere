@@ -86,7 +86,7 @@ class Booking extends Ardent {
 
 	public function accommodations()
 	{
-		return $this->belongsToMany('Accommodation')->withTrashed()->withPivot('customer_id', 'start', 'end')->withTimestamps();
+		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'start', 'end')->withTimestamps();
 	}
 
 	public function customers()
@@ -141,21 +141,55 @@ class Booking extends Ardent {
 
 	public function updatePrice()
 	{
-		// TODO Do this properly with currency check
+		$currency = new Currency( Auth::user()->currency->code );
+
+		$bookingdetails = $this->bookingdetails()->where('packagefacade_id', null)->with('ticket', 'session', 'addons')->get();
+		$sum = 0;
+
+		$bookingdetails->each(function($detail) use (&$sum, $currency)
+		{
+			if($detail->packagefacade_id != null)
+			{
+				// Skip packages for now
+			}
+			else
+			{
+				// Sum up all tickets
+				$detail->ticket->calculatePrice($detail->session->start);
+				$sum += $detail->ticket->decimal_price;
+
+				// Sum all addons
+				$sum += number_format(
+					$detail->addons->sum('price') / $currency->getSubunitToUnit(), // number
+					strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+					/* $currency->getDecimalMark() */ '.', // decimal seperator
+					/* $currency->getThousandsSeperator() */ ''
+				);
+			}
+		});
+
+		// Sum all accommodations
+		$accommodations = $this->accommodations;
+
+		$accommodations->each(function($accommodation) use (&$sum)
+		{
+			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end);
+			$sum += $accommodation->decimal_price;
+		});
+
 		/*
+		// TODO Do this properly with currency check
 		$packagesSum = 0;
 		$this->packagefacades()->distinct()->with('package')->get()->each(function($packagefacade) use ($packagesSum)
 		{
 			$packagesSum += $packagefacade->package()->first()->price;
 		});
-
-		$ticketsSum  = $this->tickets()->wherePivot('packagefacade_id', null)->sum('price');
-
-		// $addonSum    = $this->addons()->sum('price');
-
-		$this->price = $packagesSum + $ticketsSum /*+ $addonSum*/;
-		/*
-		$this->save();
 		*/
+
+		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
+
+		$this->save();
+
+		$this->decimal_price = $sum;
 	}
 }
