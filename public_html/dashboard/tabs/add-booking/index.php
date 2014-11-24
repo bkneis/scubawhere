@@ -707,8 +707,8 @@
 					</div>
 					<script id="accommodations-list-template" type="text/x-handlebars-template">
 						{{#each accommodations}}
-							<li data-id="{{id}}" class="list-group-item">
-								<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
+							<li data-id="{{id}}" class="list-group-item accommodation-item">
+								<h4 class="list-group-item-heading">{{{name}}}</h4>
 								<p>{{{description}}}</p>
 								<div class="row">
 									<div class="form-group">
@@ -780,7 +780,7 @@
 									<div class="form-group">
 										<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Time</label>
 										<div class="col-md-4">
-											<input id="pick-up-time" name="pick_up_time" class="form-control datepicker" type="text">
+											<input type="text" id="pick-up-time" name="pick_up_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
 										</div>
 									</div>
 									<div class="form-group">
@@ -790,15 +790,9 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pick-up-location" class="col-sm-4 control-label">Discount</label>
+										<label for="discount" class="col-sm-4 control-label">Discount</label>
 										<div class="col-md-8">
 											<input id="discount" name="discount" class="form-control" type="number">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="pick-up-location" class="col-sm-4 control-label">Reserved Until</label>
-										<div class="col-md-8">
-											<input id="reserved" name="reserved" class="form-control datepicker">
 										</div>
 									</div>
 									<div class="form-group col-xs-12">
@@ -808,7 +802,7 @@
 								<div class="panel-footer">
 									<div class="row">
 										<div class="col-xs-12">
-											<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Next</button>
+											<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save</button>
 											<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 										</div>
 									</div>
@@ -818,11 +812,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<a href="javascript:void(0);" class="btn btn-primary extra-finish pull-right">Next</a>
-				</div>
-			</div>
 		</div>
 
 		<div role="tabpanel" class="tab-pane fade" id="summary-tab">
@@ -830,6 +819,136 @@
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h2>Summary <small>Booking summary</small></h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-7">
+									<ul class="list-group">
+										<li class="list-group-item active">
+											<h4 class="list-group-item-heading">Sessions &amp; Addon</h4>						
+										</li>
+										<div id="summary-booking-details"></div>
+										<script id="summary-booking-details-template" type="text/x-handlebars-template">
+											{{#each bookingdetails}}
+												<li class="list-group-item">
+													<div class="row">
+														<div class="col-md-6">
+															<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
+															<p class="list-group-item-text"><strong>Ticket:</strong> {{{ticket.name}}} ({{{ticket.decimal_price}}})</p>
+															<p class="list-group-item-text"><strong>Trip:</strong> {{{session.trip.name}}}</p>
+															<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
+														</div>
+														<div class="col-md-6">
+															<ul class="list-group">
+																{{#each addons}}
+																	<li class="list-group-item">
+																		<p class="list-group-item-text"><strong>Addon Name:</strong> {{{name}}}</p>
+																		<p class="list-group-item-text"><strong>Quantity:</strong> {{{pivot.quantity}}}</p>
+																		<p class="list-group-item-text"><strong>Price:</strong> {{{decimal_price}}}</p>
+																	</li>
+																{{/each}}
+															</ul>
+														</div>
+													</div>
+												</li>
+											{{/each}}
+										</script>
+									</ul>
+								</div>
+								<div class="col-md-5">
+									<ul class="list-group">
+										<li class="list-group-item active">
+											<h4 class="list-group-item-heading">Accommodation</h4>
+										</li>
+										<div id="summary-accommodations"></div>
+										<script id="summary-accommodations-template" type="text/x-handlebars-template">
+											{{#each accommodations}}
+												<li class="list-group-item">
+													<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
+													<p class="list-group-item-text"><strong>Name:</strong> {{{name}}}</p>
+													<p class="list-group-item-text"><strong>Price:</strong> {{{decimal_price}}}</p>
+													<p class="list-group-item-text"><strong>From:</strong> {{friendlyDate pivot.start}}</p>
+													<p class="list-group-item-text"><strong>To:</strong> {{friendlyDate pivot.end}}</p>
+												</li>
+											{{/each}}
+										</script>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="panel panel-primary">
+										<div class="panel-heading">
+											<h4 class="panel-title">Lead Customer</h4>
+										</div>
+										<div class="panel-body" id="summary-lead"></li>
+										<script id="summary-lead-template" type="text/x-handlebars-template">
+											<p class="lead"><strong>{{{firstname}}} {{{lastname}}}</strong></p>
+											<p><strong>Email:</strong> {{{email}}}</p>
+											<p><strong>Phone Number:</strong> {{{phone}}}</p>
+											<p><strong>Country:</strong> {{{countryName country_id}}}</p>
+										</script>
+									</div>
+								</div>							
+								<div class="col-md-4 col-md-offset-4 text-right">
+									<p class="lead">Sub-total: £800</p>
+									<p class="lead">VAT: £200</p>
+									<p class="lead text-success">Total: £1,000</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-2 col-xs-4">
+									<a href="javascript:void(0);" class="btn btn-success btn-block save-booking"><i class="fa fa-save"></i> Save</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="col-sm-6">
+						<div class="col-md-8 col-md-offset-2">
+							<a href="javascript:void(0);" class="btn btn-primary btn-block"><i class="fa fa-credit-card"></i> Add Payment</a>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="col-md-8 col-md-offset-2">
+							<div class="form-group">
+								<div class="radio">
+									<label>
+										<input type="radio" name="email" id="email-yes" value="1" checked>
+										Send confirmation email to customer
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="email" id="email-no" value="0">
+										Do not send email
+									</label>
+								</div>
+							</div>
+
+							<h4 class="text-center">--- AND ---</h4>
+
+							<div class="form-group">
+								<a href="javascript:void(0);" class="btn btn-warning btn-block save-booking"><i class="fa fa-save"></i> Reserve</a>
+							</div>
+							<div class="form-group">
+								<label for="reserve-until" class="col-sm-3 control-label">Until</label>
+								<div class="col-md-9 input-group">
+									<input id="reserve-until" name="reserve-until" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
+									<span class="input-group-addon">
+										<span class="fa fa-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

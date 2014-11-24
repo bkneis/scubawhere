@@ -57,8 +57,12 @@ Handlebars.registerHelper("priceRange", function(prices) {
 	}else{
 		return "hmmm";
 	}
-
 });
+
+Handlebars.registerHelper("countryName", function(id) {
+	return window.countries[id].name;
+});
+
 
 // Load all of the agents, tickets and packages for dive center to select
 $(function(){
@@ -111,6 +115,7 @@ $(function(){
 	var countriesTemplate = Handlebars.compile($("#countries-template").html());
 
 	$.get("/api/country/all", function(data) {
+		window.countries = _.indexBy(data, 'id');
 		$("#add-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
 		$("#edit-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
 	});
@@ -572,10 +577,10 @@ var assignedAccommodationsTemplate = Handlebars.compile($("#assigned-accommodati
 $('#accommodation-tab').on('click', '.accommodation-customer', function() {
 	var start = $(this).find('.session-start').data('date');
 
-	//Get day before and convert into nice format.
+	//Get day before and remove time.
 	var d = new Date(Date.parse(start));
 	d.setDate(d.getDate()-1);
-	var friendlyDate = d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear());
+	var friendlyDate = (d.getFullYear())+"-"+(addZ(d.getMonth()+1))+"-"+d.getDate();
 
 	//Update all accommodation start fields.
 	$('.accommodation-start').val(friendlyDate);
@@ -587,8 +592,8 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	params._token = window.token;
 	params.accommodation_id = $(this).data('id');
 	params.customer_id = $('#accommodation-customers').children('.active').first().data('id');
-	params.start = $(this).parent().find('[name="start"]').val();
-	params.end = $(this).parent().find('[name="end"]').val();
+	params.start = $(this).parents('.accommodation-item').find('[name="start"]').val();
+	params.end = $(this).parents('.accommodation-item').find('[name="end"]').val();
 
 	booking.addAccommodation(params, function() {
 		$("#assigned-accommodations").html(assignedAccommodationsTemplate({accommodations:booking.accommodations}));
@@ -630,11 +635,54 @@ $(document).on('submit', '#extra-form', function(e) {
 	var params = $(this).serializeObject();
 	params._token = window.token;
 
-	Booking.editInfo(params, function(data) {
+	booking.editInfo(params, function(data) {
 		btn.html('Next');
 		$('[data-target="#summary-tab"]').tab('show');
+		booking.currentStep = 8;
 	});
 });
+
+/*
+*************************
+***** Accommodation *****
+*************************
+*/
+
+
+
+$('[data-target="#summary-tab"]').on('show.bs.tab', function (e) {
+	var summaryBookingDetailsTemplate = Handlebars.compile($("#summary-booking-details-template").html());
+	var summaryAccommodationsTemplate = Handlebars.compile($("#summary-accommodations-template").html());
+	var summaryLeadTemplate = Handlebars.compile($("#summary-lead-template").html());
+
+	$("#summary-booking-details").html(summaryBookingDetailsTemplate({bookingdetails:booking.bookingdetails}));
+	$("#summary-accommodations").html(summaryAccommodationsTemplate({accommodations:booking.accommodations}));
+	$("#summary-lead").html(summaryLeadTemplate(booking.lead_customer));
+})
+
+/*
+*************************
+***** Accommodation *****
+*************************
+*/
+
+$('#summary-tab').on('click', '.save-booking', function() {
+
+	var params = {};
+	params._token = window.token;
+
+	booking.save(params, function success(status) { 
+		alert(status); 
+	}, function error(xhr) { 
+		alert('FAIL!'); 
+	});
+});
+
+/*
+***************************
+**** Functions & Other ****
+***************************
+*/
 
 $(document).ready(function() {
 
