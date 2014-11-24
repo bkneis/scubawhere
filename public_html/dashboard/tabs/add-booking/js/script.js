@@ -652,7 +652,7 @@ $(document).ready(function() {
 	$('#trips').select2();
 	$('#country_id').select2();
 
-	//Form Wizard
+	//This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		if(!$(e.target).hasClass('done') && !$(e.target).hasClass('selected')) {
 			$(e.relatedTarget).toggleClass('selected done');
@@ -661,14 +661,12 @@ $(document).ready(function() {
 
 		$('input.datetimepicker').datetimepicker({
 			pickDate: true,
-			pickTime: true,
-			minDate: moment().format('YYYY-MM-DD')
+			pickTime: true
 		});
 
 		$('input.datepicker').datetimepicker({
 			pickDate: true,
-			pickTime: false,
-			minDate: moment().format('YYYY-MM-DD')
+			pickTime: false
 		});
 
 		$('input.timepicker').datetimepicker({
@@ -679,6 +677,11 @@ $(document).ready(function() {
 		$(document).on('focus', '.datepicker', function(){
 			$(this).data("DateTimePicker").show();
 		});
+
+		if(booking.currentStep > 1) {
+			$('[data-target="#source-tab"]').removeAttr("data-toggle");
+		}
+	});
 
 	$('a[data-toggle="tab"]').on('click', function (e) {
 		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {

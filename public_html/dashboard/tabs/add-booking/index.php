@@ -846,8 +846,8 @@
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<!--Datetimepicker-->
-	<link rel="stylesheet" href="/common/datepicker/css/bootstrap-datetimepicker.css" type="text/css" />
-	<script type="text/javascript" src="/common/datepicker/js/bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" href="/common/datetimepicker/css/bootstrap-datetimepicker.css" type="text/css" />
+	<script type="text/javascript" src="/common/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!--Select 2-->
 	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
