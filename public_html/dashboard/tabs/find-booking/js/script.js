@@ -35,7 +35,7 @@ Handlebars.registerHelper('statusTooltip', function() {
 });
 
 Handlebars.registerHelper('paymentIcon', function() {
-	if(!this.confirmed == 1) return 'transparent';
+	if(this.confirmed === "0" || this.confirmed === 0) return 'transparent';
 
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
@@ -47,7 +47,7 @@ Handlebars.registerHelper('paymentIcon', function() {
 	else return '#f0ad4e';
 });
 Handlebars.registerHelper('paymentTooltip', function() {
-	if(!this.confirmed == 1) return '';
+	if(this.confirmed === "0" || this.confirmed === 0) return '';
 
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
