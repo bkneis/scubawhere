@@ -6,7 +6,7 @@
 				<!--<div class="yellow-helper">
 					Select an agent to change its details.
 				</div>-->
-				<button id="change-to-add-agent" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Agent</button>
+				<button id="change-to-add-agent" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Agent</button>
 				<script type="text/x-handlebars-template" id="agent-list-template">
 					<ul id="agent-list" class="entity-list">
 						{{#each agents}}

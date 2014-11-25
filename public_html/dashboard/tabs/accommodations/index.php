@@ -6,7 +6,7 @@
 				<!--<div class="yellow-helper">
 					Select an accommodation to change its details.
 				</div>-->
-				<button id="change-to-add-accommodation" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Accommodation</button>
+				<button id="change-to-add-accommodation" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Accommodation</button>
 				<script type="text/x-handlebars-template" id="accommodation-list-template">
 					<ul id="accommodation-list" class="entity-list">
 						{{#each accommodations}}

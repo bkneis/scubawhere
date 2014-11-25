@@ -6,7 +6,7 @@
 				<!--<div class="yellow-helper">
 					Select an ticket to change its details.
 				</div>-->
-				<button id="change-to-add-ticket" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Ticket</button>
+				<button id="change-to-add-ticket" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Ticket</button>
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}

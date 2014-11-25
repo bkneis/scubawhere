@@ -3,7 +3,7 @@
 		<div class="box30">
 			<label class="dgreyb">Current Boats</label>
 			<div class="padder" id="boats-list-container">
-				<button id="change-to-add-boat" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Boat</button>
+				<button id="change-to-add-boat" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Boat</button>
 				<script type="text/x-handlebars-template" id="boats-list-template">
 					<ul id="boats-list" class="entity-list">
 						{{#each boats}}
@@ -16,7 +16,7 @@
 			</div>
 			<label class="dgreyb">Current Room Types</label>
 			<div class="padder" id="boatrooms-list-container">
-				<button id="change-to-add-boatroom" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Room Type</button>
+				<button id="change-to-add-boatroom" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Room Type</button>
 				<script type="text/x-handlebars-template" id="boatrooms-list-template">
 					<ul id="boatrooms-list" class="entity-list">
 						{{#each boatrooms}}

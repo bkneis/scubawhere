@@ -3,10 +3,10 @@
 		<div class="box30">
 			<label class="dgreyb">Available addons</label>
 			<div class="padder" id="addon-list-container">
-				<div class="yellow-helper">
+				<!-- <div class="yellow-helper">
 					Select an addon to change its details.
-				</div>
-				<button id="change-to-add-addon" style="padding: 0.5em 1em; margin: 0.4em;" class="bttn greenb">&plus; Add Addon</button>
+				</div> -->
+				<button id="change-to-add-addon" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Addon</button>
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list" class="entity-list">
 						{{#each addons}}

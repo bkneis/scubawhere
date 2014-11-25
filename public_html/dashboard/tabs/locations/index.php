@@ -17,11 +17,11 @@
 	<div class="row">
 		<div class="box50">
 			<label class="dgreyb">
-				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1.5em; display: none;" id="legend-your-locations-icon" /><span class="loader" id="legend-your-locations-loader" style="margin-top: -1em;"></span>
+				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 0.5em; display: none;" id="legend-your-locations-icon" /><span class="loader" id="legend-your-locations-loader" style="margin-top: -1em;"></span>
 				Your locations
-				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em; display: none;" id="legend-available-locations-icon" /><span class="loader" id="legend-available-locations-loader" style="margin-top: -1em;"></span>
+				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1em; display: none;" id="legend-available-locations-icon" /><span class="loader" id="legend-available-locations-loader" style="margin-top: -1em;"></span>
 				Available locations
-				<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 2em;" />
+				<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin-bottom: -0.4em; margin-left: 1em;" />
 				New location
 			</label>
 		</div>
@@ -29,10 +29,10 @@
 		<div class="box50">
 			<!-- <div class="yellow-helper" style="margin-bottom: 0;">Click the map or an existing marker.</div> -->
 			<div class="dgreyf" style="font-size: 17px; padding-top: 2px; text-align: right;">
-				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 150px" />
-				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 150px" />
-				<button class="bttn dgreyb" style="margin-right: 5px;" id="showLocation">Show</button>
-				<button class="bttn blueb" style="margin-right: 10px;" id="createLocation">Create</button>
+				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 115px" />
+				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 115px" />
+				<button class="bttn dgreyb" style="margin-right: 5px; padding: 0 0.5em;" id="showLocation">Show</button>
+				<button class="bttn blueb" style="margin-right: 10px; padding: 0 0.5em;" id="createLocation">Create</button>
 			</div>
 			<!-- <div class="padder">
 				<form id="save-location">
