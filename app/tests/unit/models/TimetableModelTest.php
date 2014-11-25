@@ -1,14 +1,14 @@
 <?php
 
 class TimetableModelTest extends ModelTestCase {
-		
+
 	public function setUp()
-	{		
-		parent::setUp();		
+	{
+		parent::setUp();
 	}
-	
+
 	public function testCRUD(){
-		
+
 		//Create/Read
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
@@ -16,51 +16,51 @@ class TimetableModelTest extends ModelTestCase {
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$timetable_id = ModelTestHelper::createTimetable($company_id);
 		$timetable = Timetable::find($timetable_id);
-		
+
 		$this->assertNotEquals(0, $timetable->id, "Unexpected id value");
 		$this->assertEquals($company_id, $timetable->company_id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $timetable->weeks, "Unexpected weeks value");
-		$this->assertEquals(ModelTestHelper::TEST_JSON, $timetable->schedule, "Unexpected schedule value");		
+		$this->assertEquals(ModelTestHelper::TEST_TINY_INTEGER, $timetable->weeks, "Unexpected weeks value");
+		$this->assertEquals(ModelTestHelper::TEST_JSON, $timetable->schedule, "Unexpected schedule value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $timetable->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $timetable->updated_at);
-				
-		//Update		
-		$timetable->weeks = ModelTestHelper::TEST_INTEGER_UPDATED;
-		$timetable->schedule = ModelTestHelper::TEST_JSON_UPDATED;		
-		$timetable->save();		
+
+		//Update
+		$timetable->weeks = ModelTestHelper::TEST_TINY_INTEGER_UPDATED;
+		$timetable->schedule = ModelTestHelper::TEST_JSON_UPDATED;
+		$timetable->save();
 		$timetable = Timetable::find($timetable_id);
-		
-		$this->assertNotEquals(0, $timetable->id, "Unexpected id value");		
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $timetable->weeks, "Unexpected weeks value");
-		$this->assertEquals(ModelTestHelper::TEST_JSON_UPDATED, $timetable->schedule, "Unexpected schedule value");		
-				
+
+		$this->assertNotEquals(0, $timetable->id, "Unexpected id value");
+		$this->assertEquals(ModelTestHelper::TEST_TINY_INTEGER_UPDATED, $timetable->weeks, "Unexpected weeks value");
+		$this->assertEquals(ModelTestHelper::TEST_JSON_UPDATED, $timetable->schedule, "Unexpected schedule value");
+
 		//Delete
 		$timetable->delete();
-		$timetable = Timetable::find($timetable_id);		
-		$this->assertNull($timetable, "Timetable not deleted");		
+		$timetable = Timetable::find($timetable_id);
+		$this->assertNull($timetable, "Timetable not deleted");
 	}
-	
+
 	public function testValidation(){
 		$this->markTestIncomplete('This test needs to be completed!');
 	}
-	
-	public function testRelationships(){	
+
+	public function testRelationships(){
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$timetable_id = ModelTestHelper::createTimetable($company_id);
 		$timetable = Timetable::find($timetable_id);
-	
+
 		$this->assertNotNull($timetable->company, "Unexpected company relationship value");
 	}
-	
+
 	public function testFunctions(){
 		$this->assertTrue(true);
 	}
-	
+
 	public function testEdges(){
 		$this->assertTrue(true);
-	}	
-	
+	}
+
 }

@@ -38,17 +38,14 @@ class BookingdetailModelTest extends ModelTestCase {
 		$this->assertEquals($ticket_id, $bookingdetail->ticket_id, "Unexpected id value");
 		$this->assertEquals($session_id, $bookingdetail->session_id, "Unexpected id value");
 		$this->assertEquals($packagefacade_id, $bookingdetail->packagefacade_id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_BOOL, $bookingdetail->is_lead, "Unexpected is_lead value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $bookingdetail->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $bookingdetail->updated_at);
 
 		//Update
-		$bookingdetail->is_lead = ModelTestHelper::TEST_BOOL_UPDATED;
 		$bookingdetail->save();
 		$bookingdetail = Bookingdetail::find($bookingdetail_id);
 
 		$this->assertNotEquals(0, $bookingdetail->id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_BOOL_UPDATED, $bookingdetail->is_lead, "Unexpected is_lead value");
 
 		//Delete
 		$bookingdetail->delete();

@@ -27,7 +27,7 @@ class PaymentModelTest extends ModelTestCase {
 		$this->assertEquals($booking_id, $payment->booking_id, "Unexpected id value");
 		$this->assertEquals($currency_id, $payment->currency_id, "Unexpected id value");
 		$this->assertEquals($paymentgateway_id, $payment->paymentgateway_id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER * 100, $payment->amount, "Unexpected amount value");
+		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $payment->amount, "Unexpected amount value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $payment->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $payment->updated_at);
 
@@ -37,7 +37,7 @@ class PaymentModelTest extends ModelTestCase {
 		$payment = Payment::find($payment_id);
 
 		$this->assertNotEquals(0, $payment->id, "Unexpected id value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED * 100, $payment->amount, "Unexpected amount value");
+		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $payment->amount, "Unexpected amount value");
 
 		//Delete
 		$payment->delete();

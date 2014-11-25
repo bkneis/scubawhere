@@ -9,8 +9,12 @@ class ModelTestHelper{
 
 	const TEST_STRING = "Test string";
 	const TEST_STRING_UPDATED = "New test string";
-	const TEST_INTEGER = 10;
-	const TEST_INTEGER_UPDATED = 20;
+	const TEST_TINY_INTEGER = 2;
+	const TEST_TINY_INTEGER_UPDATED = 4;
+	const TEST_INTEGER = 100;
+	const TEST_INTEGER_UPDATED = 200;
+	const TEST_PRICE = self::TEST_INTEGER * 100;
+	const TEST_PRICE_UPDATED = self::TEST_INTEGER_UPDATED * 100;
 	const TEST_DECIMAL = 1.1;
 	const TEST_DECIMAL_UPDATED = 2.2;
 	const TEST_ABBR = "TST";
@@ -54,17 +58,17 @@ class ModelTestHelper{
 
 	public static function createAccommodation($company_id, $append = ""){
 		$entry = new Accommodation();
-	
+
 		$entry->company_id = $company_id;
-	
+
 		$entry->name = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
 		$entry->capacity = self::TEST_INTEGER;
-	
+
 		$entry->save();
 		return $entry->id;
 	}
-	
+
 	public static function createAddon($company_id, $append = ""){
 		$entry = new Addon();
 
@@ -144,7 +148,7 @@ class ModelTestHelper{
 
 		$entry->reference = self::TEST_REFERENCE;
 		$entry->source = self::TEST_SOURCE;
-		$entry->price = self::TEST_INTEGER;
+		$entry->price = self::TEST_PRICE;
 		$entry->discount = self::TEST_INTEGER;
 		$entry->confirmed = self::TEST_BOOL;
 		$entry->reserved = self::TEST_DATE;
@@ -164,8 +168,6 @@ class ModelTestHelper{
 		$entry->ticket_id = $ticket_id;
 		$entry->session_id = $session_id;
 		$entry->packagefacade_id = $packagefacade_id;
-
-		$entry->is_lead = self::TEST_BOOL;
 
 		$entry->save();
 		return $entry->id;
@@ -358,7 +360,6 @@ class ModelTestHelper{
 
 		$entry->owner_type = self::TEST_STRING;
 		$entry->new_decimal_price = self::TEST_INTEGER;
-		$entry->price = self::TEST_INTEGER;
 		$entry->from = self::TEST_DAY;
 		$entry->until = self::TEST_DAY;
 
@@ -383,7 +384,7 @@ class ModelTestHelper{
 
 		$entry->company_id = $company_id;
 
-		$entry->weeks = self::TEST_INTEGER;
+		$entry->weeks = self::TEST_TINY_INTEGER;
 		$entry->schedule = self::TEST_JSON;
 
 		$entry->save();

@@ -26,7 +26,7 @@ class BookingModelTest extends ModelTestCase {
 		$this->assertEquals($agent_id, $booking->agent_id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_REFERENCE, $booking->reference, "Unexpected reference value");
 		$this->assertEquals(ModelTestHelper::TEST_SOURCE, $booking->source, "Unexpected source value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $booking->price, "Unexpected price value");
+		$this->assertEquals(ModelTestHelper::TEST_PRICE, $booking->price, "Unexpected price value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $booking->discount, "Unexpected discount value");
 		$this->assertEquals(ModelTestHelper::TEST_BOOL, $booking->confirmed, "Unexpected confirmed value");
 		$this->assertEquals(ModelTestHelper::TEST_DATE, $booking->reserved, "Unexpected reserved value");
@@ -39,7 +39,7 @@ class BookingModelTest extends ModelTestCase {
 		//Update
 		$booking->reference = ModelTestHelper::TEST_REFERENCE_UPDATED;
 		$booking->source = ModelTestHelper::TEST_SOURCE_UPDATED;
-		$booking->price = ModelTestHelper::TEST_INTEGER_UPDATED;
+		$booking->price = ModelTestHelper::TEST_PRICE_UPDATED;
 		$booking->discount = ModelTestHelper::TEST_INTEGER_UPDATED;
 		$booking->confirmed = ModelTestHelper::TEST_BOOL_UPDATED;
 		$booking->reserved = ModelTestHelper::TEST_DATE_UPDATED;
@@ -50,7 +50,7 @@ class BookingModelTest extends ModelTestCase {
 		$this->assertNotEquals(0, $booking->id, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_REFERENCE_UPDATED, $booking->reference, "Unexpected reference value");
 		$this->assertEquals(ModelTestHelper::TEST_SOURCE_UPDATED, $booking->source, "Unexpected source value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $booking->price, "Unexpected price value");
+		$this->assertEquals(ModelTestHelper::TEST_PRICE_UPDATED, $booking->price, "Unexpected price value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $booking->discount, "Unexpected discount value");
 		$this->assertEquals(ModelTestHelper::TEST_BOOL_UPDATED, $booking->confirmed, "Unexpected confirmed value");
 		$this->assertEquals(ModelTestHelper::TEST_DATE_UPDATED, $booking->reserved, "Unexpected reserved value");
@@ -88,7 +88,7 @@ class BookingModelTest extends ModelTestCase {
 	public function testFunctions(){
 		//We must have an authenticated Company to grab its currency value
 		$this->be(TestHelper::createAuthenticationCompany());
-		
+
 		$continent_id = ModelTestHelper::createContinent();
 		$currency_id = ModelTestHelper::createCurrency();
 		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
@@ -96,7 +96,7 @@ class BookingModelTest extends ModelTestCase {
 		$agent_id = ModelTestHelper::createAgent($company_id);
 		$booking_id = ModelTestHelper::createBooking($company_id, $agent_id);
 		$booking = Booking::find($booking_id);
-		
+
 		$this->assertEquals("0.00", $booking->decimal_price, "Unexpected decimal_price value");//0.00 due to discount
 	}
 

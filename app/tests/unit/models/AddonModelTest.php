@@ -90,7 +90,7 @@ class AddonModelTest extends ModelTestCase {
 		$addon_id = ModelTestHelper::createAddon($company_id);
 		$addon = Addon::find($addon_id);
 
-		$this->assertEquals("10.00", $addon->decimal_price, "Unexpected decimal_price value");
+		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $addon->decimal_price, "Unexpected decimal_price value");
 		$this->assertEquals(ModelTestHelper::TEST_CURRENCY, $addon->currency->code, "Unexpected currency value");
 		$this->assertFalse($addon->has_bookings, "Unexpected has_bookings value");
 	}
