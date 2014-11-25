@@ -50,8 +50,14 @@
     position: relative;
 }
 
-.nav-wizard>li>a .step-number {
+.nav-wizard>li>a .step-description {
     display: none;
+}
+
+@media (min-width: 992px) {
+    .nav-wizard>li>a .step-description {
+        display: block;
+    }
 }
 
 .nav-wizard>li>a:before {

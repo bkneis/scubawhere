@@ -3,49 +3,49 @@
 		<li role="presentation" class="active">
 			<a href="javascript:void(0)" class="selected" role="tab" data-toggle="tab" data-target="#source-tab">
 				<span class="step-number">1</span>
-				<span class="step-description">1. Sources</span>
+				<span class="step-description">Sources</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#ticket-tab">
 				<span class="step-number">2</span>
-				<span class="step-description">2. Tickets</span>
+				<span class="step-description">Tickets</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">
 				<span class="step-number">3</span>
-				<span class="step-description">3. Customers</span>
+				<span class="step-description">Customers</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
 				<span class="step-number">4</span>
-				<span class="step-description">4. Sessions</span>
+				<span class="step-description">Sessions</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">
 				<span class="step-number">5</span>
-				<span class="step-description">5. Addons</span>
+				<span class="step-description">Addons</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
 				<span class="step-number">7</span>
-				<span class="step-description">7. Accommodation</span>
+				<span class="step-description">Accommodation</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
 				<span class="step-number">7</span>
-				<span class="step-description">7. Extra Details</span>
+				<span class="step-description">Extra Info</span>
 			</a>
 		</li>
 		<li role="presentation">
 			<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
 				<span class="step-number">8</span>
-				<span class="step-description">8. Summary</span>
+				<span class="step-description">Summary</span>
 			</a>
 		</li>
 	</ul>
@@ -624,10 +624,10 @@
 								<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
 								<p>{{{description}}}</p>
 								<div class="row">
-									<div class="col-sm-4">
+									<div class="col-md-4">
 										<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
 									</div>
-									<div class="col-sm-5 pull-right">
+									<div class="col-md-5 pull-right">
 										<div class="input-group">
 											<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
 											<span class="input-group-btn">
