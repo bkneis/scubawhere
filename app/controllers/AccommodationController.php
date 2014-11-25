@@ -117,14 +117,19 @@ class AccommodationController extends Controller {
 			$accommodations->each(function($el) use ($key, &$result, $current_date)
 			{
 				$result[$key][$el->id] = array(
-					$el->customers()->wherePivot('start', '<=', $current_date)->wherePivot('end', '>', $current_date)->count(),
+					$el->bookings()
+						->wherePivot('start', '<=', $current_date)
+						->wherePivot('end', '>', $current_date)
+						->where('confirmed', 1)
+						->orWhereNotNull('reserved')
+						->count(),
 					$el->capacity
 				);
 			});
 
 			$current_date->add( new DateInterval('P1D') );
 		}
-		while( $current_date <= $data['before'] );
+		while( $current_date < $data['before'] );
 
 		return $result;
 	}
@@ -259,7 +264,7 @@ class AccommodationController extends Controller {
 		// ##################### End Prices #####################
 
 		// Check if a booking exists for the accommodation and whether a critical value is updated
-		if( $accommodation->bookings()->count() > 0 && (
+		if( $accommodation->has_bookings && (
 			   ($base_prices     && Helper::checkPricesChanged($accommodation->base_prices, $base_prices, true))
 			|| ($prices          && Helper::checkPricesChanged($accommodation->prices, $prices))
 		) )

@@ -2,25 +2,34 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
-//use PhilipBrown\Money\Currency;
+// use PhilipBrown\Money\Currency;
 
 class Payment extends Ardent {
 	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id');
 
 	public static $rules = array(
-		'amount'            => 'required|numeric|min:0',
-		'currency_id'       => 'required|integer|exists:currencies,id',
-		'paymentgateway_id' => 'required|integer|exists:paymentgateways,id'
+		'amount'            => 'required|numeric|min:1',
+		'currency_id'       => 'required|integer',
+		'paymentgateway_id' => 'required|integer'
 	);
 
-	public function beforeSave()
+	public function setAmountAttribute($value)
 	{
-		if( isset($this->amount) )
-		{
-			$db_currency = Currency::find($this->currency_id);
-			$currency = new PhilipBrown\Money\Currency($db_currency->code);
-			$this->amount = (int) round( $this->amount * $currency->getSubunitToUnit() );
-		}
+		$currency = Currency::find( $this->currency_id );
+		$currency = new PhilipBrown\Money\Currency( $currency->code );
+		$this->attributes['amount'] = (int) round( $value * $currency->getSubunitToUnit() );
+	}
+
+	public function getAmountAttribute($value)
+	{
+		$currency = new PhilipBrown\Money\Currency( $this->currency->code );
+
+		return number_format(
+			$value / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
 	}
 
 	public function booking()
@@ -32,7 +41,7 @@ class Payment extends Ardent {
 	{
 		return $this->belongsTo('Paymentgateway');
 	}
-	
+
 	public function currency()
 	{
 		return $this->belongsTo('Currency');

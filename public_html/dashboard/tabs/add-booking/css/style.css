@@ -12,8 +12,8 @@
 
 .nav-wizard {
     float: left;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     list-style: none;
     display: block;
     position: relative;
@@ -46,17 +46,12 @@
     text-decoration: none;
     display: block;
     line-height: 18px;
-    padding: 10px 20px 15px 0px;
+    padding: 10px 20px 20px 6px!important;
     position: relative;
 }
 
 .nav-wizard>li>a .step-number {
     display: none;
-}
-
-.nav-wizard>li>a .step-description small {
-    color: #999;
-    font-weight: 300;
 }
 
 .nav-wizard>li>a:before {
@@ -123,10 +118,16 @@
     font-size: 10px;
 }
 
-#session-tickets .list-group-item {
-    display: none;
+.util-bar-container {
+    position: relative;
+    background: white;
+    overflow: auto;
+    border-radius: 3px;
 }
-
-#session-tickets .list-group-item.unused-ticket {
-    display: block;
-}
+    .util-bar-container .util-bar {
+        float: left;
+    }
+    .util-bar-container .util-spaces {
+        position: absolute;
+        right: 3px;
+    }

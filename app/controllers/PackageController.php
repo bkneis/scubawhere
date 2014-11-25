@@ -189,7 +189,7 @@ class PackageController extends Controller {
 			$data['capacity'] = null;
 
 		// Check if a booking exists for the package and whether a critical value is updated
-		if( $package->bookingdetails()->count() > 0 && (
+		if( $package->has_bookings && (
 			   (!empty($tickets) && $this->checkTicketsChanged($package->tickets, $tickets))
 			|| ($base_prices     && Helper::checkPricesChanged($package->base_prices, $base_prices, true))
 			|| ($prices          && Helper::checkPricesChanged($package->prices, $prices))

@@ -405,7 +405,7 @@ span.box-tool{
 		color: #313131;
 	}
 
-.box-mssg:before{
+.box-mssg::before{
 	content: "!";
 	background-color: #ce584e;
 	display: inline-block;
@@ -458,7 +458,7 @@ span.box-tool{
 	display: none;
 }
 
-.tooltip:after {
+.tooltip::after {
 	content: '';
 	position: absolute;
 	border-style: solid;
@@ -787,6 +787,10 @@ span.box-tool{
 	width:100%;
 }
 
+.fa {
+	width: 1em;
+}
+
 .onoffswitch {
 position: relative; width: 75px;
 -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -805,17 +809,17 @@ display: block; width: 200%; margin-left: -100%;
 -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
 -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
 }
-.onoffswitch-inner:before, .onoffswitch-inner:after {
+.onoffswitch-inner::before, .onoffswitch-inner::after {
 display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
 font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
 -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
-.onoffswitch-inner:before {
+.onoffswitch-inner::before {
 content: "";
 padding-left: 11px;
 background-color: #34A7C1; color: #FFFFFF;
 }
-.onoffswitch-inner:after {
+.onoffswitch-inner::after {
 content: "";
 padding-right: 11px;
 background-color: #EEEEEE; color: #999999;

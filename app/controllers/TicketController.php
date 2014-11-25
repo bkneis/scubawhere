@@ -195,7 +195,7 @@ class TicketController extends Controller {
 			return Response::json( array( 'errors' => array('The "trips" value must be an array!')), 400 ); // 400 Bad Request
 
 		// Check if a booking exists for the ticket and whether a critical value is updated
-		if( $ticket->bookingdetails()->count() > 0 && (
+		if( $ticket->has_bookings && (
 			   (!empty($trips) && $this->checkRemovedTripBookings($ticket->id, $ticket->trips()->lists('id'), $trips))
 			|| ($base_prices   && Helper::checkPricesChanged($ticket->base_prices, $base_prices, true))
 			|| ($prices        && Helper::checkPricesChanged($ticket->prices, $prices))
