@@ -22,20 +22,20 @@ Handlebars.registerHelper('sourceTooltip', function() {
 });
 
 Handlebars.registerHelper('statusIcon', function() {
-	if(this.confirmed) return 'check';
-	if(this.reserved)  return 'clock-o';
-	if(this.saved)     return 'floppy-o';
-	else               return '';
+	if(this.confirmed == 1)    return 'check';
+	if(this.reserved != null)  return 'clock-o';
+	if(this.saved == 1)        return 'floppy-o';
+	else                       return '';
 });
 Handlebars.registerHelper('statusTooltip', function() {
-	if(this.confirmed) return 'Confirmed';
-	if(this.reserved)  return 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
-	if(this.saved)     return 'Saved';
-	else               return '';
+	if(this.confirmed == 1)    return 'Confirmed';
+	if(this.reserved != null)  return 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
+	if(this.saved == 1)        return 'Saved';
+	else                       return '';
 });
 
 Handlebars.registerHelper('paymentIcon', function() {
-	if(!this.confirmed) return 'transparent';
+	if(!this.confirmed == 1) return 'transparent';
 
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
@@ -47,7 +47,7 @@ Handlebars.registerHelper('paymentIcon', function() {
 	else return '#f0ad4e';
 });
 Handlebars.registerHelper('paymentTooltip', function() {
-	if(!this.confirmed) return '';
+	if(!this.confirmed == 1) return '';
 
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
