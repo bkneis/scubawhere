@@ -136,6 +136,12 @@
 								<span class="badge qty">{{qty}}</span>
 							</p>
 						</li>
+					{{else}}
+						<li class="list-group-item">
+							<p class="list-group-item-text text-muted">
+								No tickets selected yet...
+							</p>
+						</li>
 					{{/each}}
 					</script>
 				</div>
@@ -210,22 +216,22 @@
 								<div class="panel-body form-horizontal">
 									<div class="form-group">
 										<div class="col-md-6">
-											<label for="firstname" class="control-label">First Name</label>
+											<label for="firstname" class="control-label">First Name <span class="text-danger">**</span></label>
 											<input id="customer-firstname" name="firstname" class="form-control">
 										</div>
 										<div class="col-md-6">
-											<label for="lastname" class="control-label">Last Name</label>
+											<label for="lastname" class="control-label">Last Name <span class="text-danger">**</span></label>
 											<input id="customer-lastname" name="lastname" class="form-control">
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-md-6">
-											<label for="email" class="control-label">Email</label>
-											<input id="customer-email" name="email" class="form-control">
+											<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
+											<input id="customer-email" name="email" class="form-control" placeholder="@">
 										</div>
 										<div class="col-sm-6">
-											<label for="phone" class="control-label">Phone</label>
-											<input type="text" name="phone" class="form-control" placeholder="Phone">
+											<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
+											<input type="text" name="phone" class="form-control" placeholder="+1234567890">
 										</div>
 									</div>
 									<div class="form-group">
@@ -246,7 +252,7 @@
 											<input type="text" name="city" class="form-control" placeholder="City">
 										</div>
 										<div class="col-md-4">
-											<label for="county" class="control-label">County</label>
+											<label for="county" class="control-label">County / State</label>
 											<input type="text" name="county" class="form-control" placeholder="County">
 										</div>
 										<div class="col-md-4">
@@ -257,7 +263,7 @@
 									<fieldset id="add-customer-countries">
 										<div class="form-group">
 											<div class="col-md-8">
-												<label for="country_id" class="control-label">Country</label>
+												<label for="country_id" class="control-label">Country <span class="text-danger">*</span></label>
 												<select id="country_id" name="country_id" class="form-control select2">
 													<option value="">Choose Country...</option>
 												</select>
@@ -273,6 +279,8 @@
 								<div class="panel-footer">
 									<div class="row">
 										<div class="col-xs-12">
+											<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
+											<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
 											<button type="submit" class="btn btn-primary new-customer pull-right" style="margin-left:5px;">Create</button>
 											<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 										</div>
@@ -301,6 +309,12 @@
 									<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
 									<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer" data-id="{{id}}">Remove</a>
 									<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
+								</li>
+							{{else}}
+								<li class="list-group-item">
+									<p class="list-group-item-text text-muted">
+										No customers selected yet...
+									</p>
 								</li>
 							{{/each}}
 						</script>
@@ -546,6 +560,12 @@
 									<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 									<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-id="{{id}}">Unassign</a>
 								</li>
+							{{else}}
+								<li class="list-group-item">
+									<p class="list-group-item-text text-muted">
+										No tickets assigned yet...
+									</p>
+								</li>
 							{{/each}}
 						</script>
 					</ul>
@@ -570,7 +590,7 @@
 				<div class="col-sm-3">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2 class="panel-title">Step 1: Select the sub-booking</h2>
+							<h2 class="panel-title">Step 1: Select the booking detail</h2>
 						</div>
 						<div class="panel-body">
 							<div class="list-group" id="addon-booking-details">
@@ -723,7 +743,7 @@
 										<div class="col-lg-2">
 											<button class="btn btn-primary btn-sm add-accommodation pull-right" data-id="{{id}}">Add</button>
 										</div>
-									</div>								
+									</div>
 								</div>
 							</li>
 						{{/each}}
@@ -802,7 +822,7 @@
 								<div class="panel-footer">
 									<div class="row">
 										<div class="col-xs-12">
-											<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save</button>
+											<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save & Next</button>
 											<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 										</div>
 									</div>
@@ -830,7 +850,7 @@
 								<div class="col-md-7">
 									<ul class="list-group">
 										<li class="list-group-item active">
-											<h4 class="list-group-item-heading">Sessions &amp; Addon</h4>						
+											<h4 class="list-group-item-heading">Sessions &amp; Addon</h4>
 										</li>
 										<div id="summary-booking-details"></div>
 										<script id="summary-booking-details-template" type="text/x-handlebars-template">
@@ -894,11 +914,13 @@
 											<p><strong>Country:</strong> {{{countryName country_id}}}</p>
 										</script>
 									</div>
-								</div>							
-								<div class="col-md-4 col-md-offset-4 text-right">
-									<p class="lead">Sub-total: £800</p>
-									<p class="lead">VAT: £200</p>
-									<p class="lead text-success">Total: £1,000</p>
+								</div>
+								<div class="text-right" id="summary-price">
+									<script id="summary-price-template" type="text/x-handlebars-template">
+										{{!--<p class="lead">Sub-total: £800</p>
+										<p class="lead">VAT: £200</p>--}}
+										<p class="lead text-success">Total: {{currency}} {{decimal_price}}</p>
+									</script>
 								</div>
 							</div>
 							<div class="row">

@@ -159,12 +159,15 @@ class Booking extends Ardent {
 				$sum += $detail->ticket->decimal_price;
 
 				// Sum all addons
-				$sum += number_format(
-					$detail->addons->sum('price') / $currency->getSubunitToUnit(), // number
-					strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-					/* $currency->getDecimalMark() */ '.', // decimal seperator
-					/* $currency->getThousandsSeperator() */ ''
-				);
+				$detail->addons->each(function($addon) use (&$sum, $currency)
+				{
+					$sum += number_format(
+						$addon->price * $addon->pivot->quantity / $currency->getSubunitToUnit(), // number
+						strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+						/* $currency->getDecimalMark() */ '.', // decimal seperator
+						/* $currency->getThousandsSeperator() */ ''
+					);
+				});
 			}
 		});
 

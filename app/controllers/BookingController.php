@@ -648,6 +648,10 @@ class BookingController extends Controller {
 			'comment'           // Text
 		);
 
+		if( empty($data['pick_up_location']) ) $data['pick_up_location'] = null;
+		if( empty($data['pick_up_time']) ) $data['pick_up_time'] = null;
+		if( empty($data['discount']) ) $data['discount'] = null;
+
 		if( !$booking->update($data) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable

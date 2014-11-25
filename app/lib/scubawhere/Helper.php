@@ -105,7 +105,7 @@ class Helper
 
 		$size = strlen($chars);
 
-		$references = Booking::lists('reference');
+		$references = \Booking::lists('reference');
 
 		do
 		{
