@@ -105,11 +105,17 @@ class Helper
 
 		$size = strlen($chars);
 
-		$string = "";
+		$references = \Booking::lists('reference');
 
-		for($i = 0; $i < $length; $i++) {
-			$string .= $chars[ mt_rand(0, $size - 1) ];
+		do
+		{
+			$string = "";
+
+			for($i = 0; $i < $length; $i++) {
+				$string .= $chars[ mt_rand(0, $size - 1) ];
+			}
 		}
+		while( in_array($string, $references) );
 
 		return $string;
 	}

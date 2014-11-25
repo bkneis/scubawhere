@@ -142,6 +142,14 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 	return true;
 });
 
+Validator::extend('after_local_now', function($attribute, $value, $parameters)
+{
+	$local = Helper::localTime();
+	$test  = new DateTime('now');
+
+	return $local < $test;
+}, 'The :attribute datetime must be later than <i>now</i>');
+
 // From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
 if (Config::get('database.log', false))
 {

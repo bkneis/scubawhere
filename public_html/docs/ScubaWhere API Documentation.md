@@ -414,7 +414,7 @@ The ideal booking process is throughoutly documented in a [Facebook Document](ht
 
 ### Add ticket to booking
 
-`POST /api/booking/add-details`
+`POST /api/booking/add-detail`
 
 Add a combination of an existing **customer** and **ticket** and **session** to a booking. (To create a customer, see [#Create a customer](#Create_a_customer).)
 
@@ -430,7 +430,7 @@ Add a combination of an existing **customer** and **ticket** and **session** to 
 
 ### Remove ticket from booking
 
-`POST /api/booking/remove-details`
+`POST /api/booking/remove-detail`
 
 Remove a ticket from a booking. This method doesn't need the ticketID, because the combination of customer and session IDs should be a unique idendifier. (To add a ticket, see [#Add ticket to booking](#Add_ticket_to_booking).)
 
@@ -476,8 +476,8 @@ Adds an accommodation to a booking.
 - **@param** integer booking_id       The ID of the `booking` that the accommodation should be added to
 - **@param** integer accommodation_id The ID of the `accommodation` to add
 - **@param** integer customer_id      The ID of the `customer` the accommodation is for
-- **@param** string  date             Date of the first evening
-- **@param** integer nights           The number of nights the accommodation should be booked for
+- **@param** string  start            Date of the first evening (`YYYY-MM-DD`)
+- **@param** string  end              Date of when the customer leaves the accommodation (`YYYY-MM-DD`)
 - &nbsp;
 - **@return** JSON                    Contains `status` and the new total booking price on success, `errors` on failure
 

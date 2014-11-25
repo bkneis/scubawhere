@@ -4,11 +4,9 @@ use LaravelBook\Ardent\Ardent;
 
 class Bookingdetail extends Ardent {
 
-	protected $fillable = array();
+	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'packagefacade_id');
 
 	protected $table = 'booking_details';
-
-	protected $hidden = array('id');
 
 	public static $rules = array();
 
