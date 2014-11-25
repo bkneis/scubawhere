@@ -52,7 +52,7 @@ class Booking extends Ardent {
 		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
-			($this->price) / $currency->getSubunitToUnit() - $this->discount, // number
+			$this->price / $currency->getSubunitToUnit() - $this->discount, // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''

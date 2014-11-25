@@ -144,8 +144,8 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 
 Validator::extend('after_local_now', function($attribute, $value, $parameters)
 {
-	$local = Helper::localTime();
-	$test  = new DateTime('now');
+	$local = ScubaWhere\Helper::localTime();
+	$test  = new DateTime($value);
 
 	return $local < $test;
 }, 'The :attribute datetime must be later than <i>now</i>');
