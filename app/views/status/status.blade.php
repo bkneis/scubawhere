@@ -12,7 +12,7 @@
 
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">Slowest routes [ms]</h3>
+			<h3 class="panel-title">Slowest routes in last 24h [ms]</h3>
 		</div>
 		<div class="panel-body">
 			<ul class="list-group" id="slowest-routes"></ul>
@@ -43,7 +43,9 @@
 			return subScript[day % 10];
 		};
 
-		// Daily average response times
+		/**
+		 * Daily average response times
+		 */
 		// Group by day
 		var days = _.groupBy(data, 'date');
 		// Calulate average duration per group
@@ -82,9 +84,62 @@
 		};
 		var myLineChart = new Chart(ctx).Line(chartData, {pointHitDetectionRadius : 6, bezierCurve: false});
 
+		/*
 		// Total slowest routes
 		// Group by route
 		var routes = _.groupBy(data, 'route');
+		// Calulate average duration per group
+		routes = _.each(routes, function(routeGroup, route) {
+			routes[route] = {
+				route: route,
+				duration: Math.round( _.reduce(routeGroup, function(memo, el) {
+					return memo + el.duration * 1;
+				}, 0) / routeGroup.length )
+			}
+		});
+		// Sort by average duration
+		routes = _.sortBy(routes, function(el) {
+			return -el.duration;
+		});
+		// Take only the top 5
+		// routes = routes.slice(0, 5);
+		// Render list HTML
+		html = '';
+		var warningClass;
+		_.each(routes, function(el) {
+			warningClass = '';
+			if(el.duration < 100) warningClass = 'list-group-item-success';
+			if(el.duration > 250) warningClass = 'list-group-item-warning';
+			if(el.duration > 500) warningClass = 'list-group-item-danger';
+
+			html += '<li class="list-group-item ' + warningClass + '">';
+			html += '<span class="badge">' + el.duration + '</span>';
+			html += el.route;
+			html += '</li>';
+		});
+		document.getElementById('slowest-routes').innerHTML = html;
+		*/
+
+		/**
+		 * Slowest routes in the last 24h
+		 */
+		var date24HoursAgo = new Date();
+		date24HoursAgo = date24HoursAgo.getTime() - 24 * 60 * 60 * 1000; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+
+		var last24h = [];
+		var testDate;
+		for(var i = data.length - 1; i >= 0; i--) {
+			testDate = new Date(data[i].date + 'T' + data[i].time);
+
+			if( testDate.getTime() < date24HoursAgo ) {
+				console.info('Last datetime included in 24h average: ' + testDate.toString());
+				break;
+			}
+
+			last24h.push(data[i]);
+		}
+		// Group by route
+		var routes = _.groupBy(last24h, 'route');
 		// Calulate average duration per group
 		routes = _.each(routes, function(routeGroup, route) {
 			routes[route] = {
