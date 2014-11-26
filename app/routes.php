@@ -37,7 +37,7 @@ Route::controller('api/currency', 'CurrencyController');
 
 Route::controller('api/agency', 'AgencyController');
 
-Route::group(array('before' => 'auth.basic'), function()
+Route::group(array('before' => 'auth|auth.basic'), function()
 {
 	Route::get('token', function()
 	{
