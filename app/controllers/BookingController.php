@@ -28,7 +28,7 @@ class BookingController extends Controller {
 					'bookingdetails.addons',
 				'accommodations',
 				'payments',
-					'payment.currency',
+					'payments.currency',
 					'payments.paymentgateway'
 			)
 			->findOrFail( Input::get('id') );
