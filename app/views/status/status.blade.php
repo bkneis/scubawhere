@@ -82,7 +82,12 @@
 				data: _.pluck(days, 'duration')
 			}]
 		};
-		var myLineChart = new Chart(ctx).Line(chartData, {pointHitDetectionRadius : 6, bezierCurve: false});
+		var myLineChartOptions = {
+			pointHitDetectionRadius : 6,
+			bezierCurve: false,
+			scaleBeginAtZero: true
+		};
+		var myLineChart = new Chart(ctx).Line(chartData, myLineChartOptions);
 
 		/*
 		// Total slowest routes
