@@ -2468,17 +2468,17 @@
     },
     {
         "name": "laravelbook/ardent",
-        "version": "v2.4.2",
-        "version_normalized": "2.4.2.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/laravelbook/ardent.git",
-            "reference": "0a0238b8040abc1c71401ce27a8edf2619fa5bed"
+            "reference": "8af3cf8cd3ea514c68439fdae0271af71ef1449e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/laravelbook/ardent/zipball/0a0238b8040abc1c71401ce27a8edf2619fa5bed",
-            "reference": "0a0238b8040abc1c71401ce27a8edf2619fa5bed",
+            "url": "https://api.github.com/repos/laravelbook/ardent/zipball/8af3cf8cd3ea514c68439fdae0271af71ef1449e",
+            "reference": "8af3cf8cd3ea514c68439fdae0271af71ef1449e",
             "shasum": ""
         },
         "require": {
@@ -2487,7 +2487,7 @@
             "illuminate/validation": "~4.1",
             "php": ">=5.3.0"
         },
-        "time": "2014-02-25 20:39:04",
+        "time": "2014-07-10 04:06:41",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

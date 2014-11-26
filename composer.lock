@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7974fd13d9b09c4aa068453dc847a04d",
+    "hash": "d0488ee3ffafbde4e6bc65be1a8aa316",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -2453,6 +2453,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "laravelbook/ardent": 20,
         "mews/purifier": 20
     },
     "prefer-stable": false,
