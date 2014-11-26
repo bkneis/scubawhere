@@ -17,18 +17,14 @@
  * <http://www.doctrine-project.org>.
  */
 
-
 namespace Doctrine\DBAL;
-
-use Doctrine\DBAL\Connection;
 
 /**
  * Utility class that parses sql statements with regard to types and parameters.
  *
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.com
- * @since       2.0
- * @author      Benjamin Eberlei <kontakt@beberlei.de>
+ * @link   www.doctrine-project.org
+ * @since  2.0
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
 class SQLParserUtils
 {
@@ -36,18 +32,19 @@ class SQLParserUtils
     const NAMED_TOKEN      = '(?<!:):[a-zA-Z_][a-zA-Z0-9_]*';
 
     // Quote characters within string literals can be preceded by a backslash.
-    const ESCAPED_SINGLE_QUOTED_TEXT = "'(?:[^'\\\\]|\\\\'|\\\\\\\\)*'";
-    const ESCAPED_DOUBLE_QUOTED_TEXT = '"(?:[^"\\\\]|\\\\"|\\\\\\\\)*"';
-    const ESCAPED_BACKTICK_QUOTED_TEXT = '`(?:[^`\\\\]|\\\\`|\\\\\\\\)*`';
+    const ESCAPED_SINGLE_QUOTED_TEXT = "'(?:[^'\\\\]|\\\\'?)*'";
+    const ESCAPED_DOUBLE_QUOTED_TEXT = '"(?:[^"\\\\]|\\\\"?)*"';
+    const ESCAPED_BACKTICK_QUOTED_TEXT = '`(?:[^`\\\\]|\\\\`?)*`';
 
     /**
-     * Get an array of the placeholders in an sql statements as keys and their positions in the query string.
+     * Gets an array of the placeholders in an sql statements as keys and their positions in the query string.
      *
      * Returns an integer => integer pair (indexed from zero) for a positional statement
      * and a string => int[] pair for a named statement.
      *
-     * @param string $statement
-     * @param bool $isPositional
+     * @param string  $statement
+     * @param boolean $isPositional
+     *
      * @return array
      */
     static public function getPlaceholderPositions($statement, $isPositional = true)
@@ -78,12 +75,13 @@ class SQLParserUtils
     /**
      * For a positional query this method can rewrite the sql statement with regard to array parameters.
      *
-     * @param string    $query  The SQL query to execute.
-     * @param array     $params The parameters to bind to the query.
-     * @param array     $types  The types the previous parameters are in.
+     * @param string $query  The SQL query to execute.
+     * @param array  $params The parameters to bind to the query.
+     * @param array  $types  The types the previous parameters are in.
+     *
+     * @return array
      *
      * @throws SQLParserUtilsException
-     * @return array
      */
     static public function expandListParameters($query, $params, $types)
     {
@@ -138,7 +136,7 @@ class SQLParserUtils
                     array_slice($types, $needle + 1)
                 );
 
-                $expandStr  = implode(", ", array_fill(0, $count, "?"));
+                $expandStr  = $count ? implode(", ", array_fill(0, $count, "?")) : 'NULL';
                 $query      = substr($query, 0, $needlePos) . $expandStr . substr($query, $needlePos + 1);
 
                 $paramOffset += ($count - 1); // Grows larger by number of parameters minus the replaced needle.
@@ -147,7 +145,6 @@ class SQLParserUtils
 
             return array($query, $params, $types);
         }
-
 
         $queryOffset = 0;
         $typesOrd    = array();
@@ -168,7 +165,7 @@ class SQLParserUtils
             }
 
             $count      = count($value);
-            $expandStr  = $count > 0 ? implode(', ', array_fill(0, $count, '?')) : '?';
+            $expandStr  = $count > 0 ? implode(', ', array_fill(0, $count, '?')) : 'NULL';
 
             foreach ($value as $val) {
                 $paramsOrd[] = $val;

@@ -5,11 +5,10 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"doctrine/dbal": "2.3.5",
 		"laravelbook/ardent": "dev-master",
+		"doctrine/dbal": "2.*",
 		"mews/purifier": "dev-master",
 		"philipbrown/money": "1.*",
-		"psecio/versionscan": "dev-master",
 		"itsgoingd/clockwork": "1.*",
 		"guzzlehttp/guzzle": "~4.0"
 	},
