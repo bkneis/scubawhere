@@ -996,7 +996,7 @@
 	<link rel="stylesheet" href="common/css/select2-bootstrap.css" type="text/css" />
 	<script type="text/javascript" src="common/js/select2.min.js"></script>
 
-	<script type="text/javascript" src="/common/js/date.js"></script>
+	<!-- <script type="text/javascript" src="/common/js/date.js"></script> -->
 
 	<!--jQuery plugins-->
 	<script src="/common/js/jquery.serialize-object.min.js"></script>

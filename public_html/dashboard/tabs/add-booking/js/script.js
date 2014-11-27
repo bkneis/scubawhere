@@ -25,15 +25,11 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 });
 
 Handlebars.registerHelper("tripFinish", function(start, duration) {
-	var d = new Date(Date.parse(start));
-	d.setHours(d.getHours()+duration);
-	var f = d.toISOString().slice(0, 19).replace('T', ' ');
-
-	return friendlyDate(f);
+	return friendlyDate( moment(start).add(duration, 'hours') );
 });
 
-Handlebars.registerHelper("friendlyDate", function(d) {
-	return friendlyDate(d);
+Handlebars.registerHelper("friendlyDate", function(date) {
+	return friendlyDate(date);
 });
 
 Handlebars.registerHelper("isLead", function (id) {
@@ -596,12 +592,10 @@ $('#accommodation-tab').on('click', '.accommodation-customer', function() {
 	var start = $(this).find('.session-start').data('date');
 
 	//Get day before and remove time.
-	var d = new Date(Date.parse(start));
-	d.setDate(d.getDate()-1);
-	var friendlyDate = (d.getFullYear())+"-"+(addZ(d.getMonth()+1))+"-"+d.getDate();
+	var date = moment(start).subtract(1, 'days').format('YYYY-MM-DD');
 
 	//Update all accommodation start fields.
-	$('.accommodation-start').val(friendlyDate);
+	$('.accommodation-start').val(date);
 });
 
 $('#accommodation-tab').on('click', '.add-accommodation', function() {
@@ -722,7 +716,8 @@ $(document).ready(function() {
 
 		$('input.datetimepicker').datetimepicker({
 			pickDate: true,
-			pickTime: true
+			pickTime: true,
+			minuteStepping: 5
 		});
 
 		$('input.datepicker').datetimepicker({
@@ -732,7 +727,8 @@ $(document).ready(function() {
 
 		$('input.timepicker').datetimepicker({
 			pickDate: false,
-			pickTime: true
+			pickTime: true,
+			minuteStepping: 5
 		});
 
 		$(document).on('focus', '.datepicker', function(){
@@ -777,10 +773,7 @@ function listGroupRadio(selector, additionalClass) {
 }
 
 function friendlyDate(date) {
-	var d = new Date(Date.parse(date));
-
-	//Why doesn't javascript have a nice Date like PHP?!
-	return d.getDate()+"/"+(addZ(d.getMonth()+1))+"/"+(d.getFullYear())+" "+(addZ(d.getHours()))+":"+(addZ(d.getMinutes()));
+	return moment(date).format('DD/MM/YYYY HH:mm');
 }
 
 function showAlert(type, error) {
