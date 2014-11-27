@@ -39,6 +39,10 @@ Booking.getAll = function(success) {
 	$.get("/api/booking/all", success);
 };
 
+Booking.pickUpLocations = function(params, success) {
+	$.get("/api/booking/pick-up-locations", params, success);
+};
+
 
 /*
  ********************************

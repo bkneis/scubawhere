@@ -705,6 +705,31 @@ $(document).ready(function() {
 	$('#trips').select2();
 	$('#country_id').select2();
 
+	$('#pick-up-location').typeahead({
+		items: 'all',
+		minLength: 3,
+		delay: 250,
+		autoSelect: false,
+		source: function(query, process) {
+			$('#pick-up-location').siblings().filter('.input-group-addon').html('<i class="fa fa-cog fa-spin"></i>');
+			Booking.pickUpLocations({ query: query }, function success(data) {
+				window.pick_up_locations = data;
+				var items = Object.keys(data);
+				items = _.map(items, function(item) {
+					return window.pick_up_locations[item].substr(0, 5) + ' ' + item;
+				});
+				process( items );
+				$('#pick-up-location').siblings().filter('.input-group-addon').html('<i class="fa fa-search"></i>');
+			});
+		},
+		updater: function(item) {
+			return item.substr(6);
+		},
+		afterSelect: function() {
+			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location').val() ] );
+		}
+	});
+
 	//This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		booking.currentTab = $(e.target).data('target');

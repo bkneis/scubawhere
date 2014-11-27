@@ -798,15 +798,20 @@
 							<fieldset>
 								<div class="panel-body">
 									<div class="form-group">
-										<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Time</label>
-										<div class="col-md-4">
-											<input type="text" id="pick-up-time" name="pick_up_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
+										<label for="pick-up-location" class="col-sm-4 control-label">Pick Up Location</label>
+										<div class="col-md-8">
+											<div class="input-group">
+												<input type="text" class="form-control" id="pick-up-location" name="pick_up_location" />
+												<span class="input-group-addon"><i class="fa fa-search"></i></span>
+											</div>
+											</select>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pick-up-location" class="col-sm-4 control-label">Pick Up Location</label>
-										<div class="col-md-8">
-											<input id="pick-up-location" name="pick_up_location" class="form-control">
+										<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Date & Time</label>
+										<div class="col-md-4">
+											<input type="text" id="pick-up-date" name="pick_up_date" class="form-control pull-left datepicker" data-date-format="YYYY-MM-DD">
+											<input type="text" id="pick-up-time" name="pick_up_time" class="form-control timepicker" data-date-format="HH:mm">
 										</div>
 									</div>
 									<div class="form-group">
@@ -996,7 +1001,8 @@
 	<link rel="stylesheet" href="common/css/select2-bootstrap.css" type="text/css" />
 	<script type="text/javascript" src="common/js/select2.min.js"></script>
 
-	<!-- <script type="text/javascript" src="/common/js/date.js"></script> -->
+	<!--Typeahead-->
+	<script type="text/javascript" src="/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<!--jQuery plugins-->
 	<script src="/common/js/jquery.serialize-object.min.js"></script>
