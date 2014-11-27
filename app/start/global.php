@@ -177,3 +177,47 @@ if (Config::get('database.log', false))
 		Log::info($query, $data);
 	});
 }
+
+Validator::extend('time', function($attribute, $value, $parameters)
+{
+	// Check that $value is 8 characters long ('HH:MM:SS')
+	if( !strlen($value) === 8 )
+		return false;
+
+	// Split $value into parts
+	$parts = explode(':', $value);
+
+	// Check that the time consists of 3 parts
+	if( count($parts) > 3 ) return false;
+
+	foreach($parts as $part)
+	{
+		// Check that each part is 2 characters long
+		if( strlen($part) !== 2)
+			return false;
+
+		// Check that each part is a number
+		if( !is_numeric($part) )
+			return false;
+
+		// Check that the integer value of the part equals the part
+		$intval = intval($part);
+
+		if( $intval < 10 )
+			$intval = '0'.$intval;
+
+		if( strval($intval) !== $part )
+			return false;
+
+		// Check that each part is not bigger than 59
+		if( $part > 59 )
+			return false;
+	}
+
+	// Check that the hour part is not bigger than 23
+	if( $parts[0] > 23 )
+		return false;
+
+	return true;
+
+}, ':attribute must be a time of format HH:MM[:SS]');

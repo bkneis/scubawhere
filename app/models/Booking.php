@@ -15,6 +15,7 @@ class Booking extends Ardent {
 		'reserved',
 		'saved',
 		'pick_up_location',
+		'pick_up_date',
 		'pick_up_time',
 		'comment'
 	);
@@ -30,8 +31,9 @@ class Booking extends Ardent {
 		'confirmed'        => 'boolean',
 		'reserved'         => 'date|after_local_now',
 		'saved'            => 'boolean',
-		'pick_up_location' => '',
-		'pick_up_time'     => 'date|after:now',
+		'pick_up_location' => 'required_with:pick_up_time',
+		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
+		'pick_up_time'     => 'time|required_with:pick_up_date',
 		'comment'          => ''
 	);
 

@@ -619,6 +619,21 @@ class BookingController extends Controller {
 		return array('status' => 'OK. Accommodation removed.', 'decimal_price' => $booking->decimal_price);
 	}
 
+	public function getPickUpLocations() {
+		$query = Input::get('query');
+
+		if( strlen($query) < 3 )
+			return Response::json( array('errors' => 'Query string must be at least 3 characters long.'), 406 ); // 406 Not Acceptable
+
+		return Auth::user()->bookings()
+			->where('pick_up_location', 'LIKE', '%'.$query.'%')
+			->whereNotNull('pick_up_location')
+			->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime('-30 days')))
+			->groupBy('pick_up_location', 'pick_up_time')
+			->orderBy('pick_up_time', 'ASC')
+			->lists('pick_up_time', 'pick_up_location');
+	}
+
 	public function postEditInfo()
 	{
 		/**
@@ -626,6 +641,7 @@ class BookingController extends Controller {
 		 *
 		 * booking_id
 		 * pick_up_location
+		 * pick_up_date
 		 * pick_up_time
 		 * discount
 		 * comment
@@ -643,12 +659,21 @@ class BookingController extends Controller {
 
 		$data = Input::only(
 			'pick_up_location', // Just text
-			'pick_up_time',     // Must be datetime
+			'pick_up_date',     // Must be date
+			'pick_up_time',     // Must be time
 			'discount',         // Should be decimal
 			'comment'           // Text
 		);
 
+		if( !( empty($data['pick_up_date']) || empty($data['pick_up_time']) ) )
+		{
+			$datetime = new DateTime($data['pick_up_date'].' '.$data['pick_up_time']);
+			$data['pick_up_date'] = $datetime->format('Y-m-d');
+			$data['pick_up_time'] = $datetime->format('H:i:s');
+		}
+
 		if( empty($data['pick_up_location']) ) $data['pick_up_location'] = null;
+		if( empty($data['pick_up_date']) ) $data['pick_up_date'] = null;
 		if( empty($data['pick_up_time']) ) $data['pick_up_time'] = null;
 		if( empty($data['discount']) ) $data['discount'] = null;
 
