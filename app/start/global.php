@@ -126,7 +126,7 @@ App::finish(function() use ($app_start_time) {
 Validator::extend('valid_json', function($attribute, $value, $parameters)
 {
 	return json_decode($value) != null;
-});
+}, ':attribute must be valid JSON');
 
 Validator::extend('valid_currency', function($attribute, $value, $parameters)
 {
@@ -140,7 +140,7 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 	}
 
 	return true;
-});
+}, ':attribute must be a valid currency code');
 
 Validator::extend('after_local_now', function($attribute, $value, $parameters)
 {
@@ -148,7 +148,7 @@ Validator::extend('after_local_now', function($attribute, $value, $parameters)
 	$test  = new DateTime($value);
 
 	return $local < $test;
-}, 'The :attribute datetime must be later than <i>now</i>');
+}, ':attribute datetime must lie in the future');
 
 // From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
 if (Config::get('database.log', false))
