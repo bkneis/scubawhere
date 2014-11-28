@@ -25,7 +25,7 @@
 	<div id='calendar'></div>
 	<div style='clear:both'></div>
 
-	<div id="modalWindows" style="height: 0; visibility: hidden;">
+	<div id="modalWindows" style="height: 0;">
 		<script id="session-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 				<p style="text-transform: uppercase; float: right; line-height: 2.8em;">

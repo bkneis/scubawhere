@@ -585,9 +585,9 @@ function showModalWindow(eventObject) {
 	.reveal({                                      // Open modal window | Options:
 		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 		animationSpeed: 300,                       // how fast animtions are
-		closeOnBackgroundClick: false,             // if you click background will modal close?
-		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
-		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
+		closeOnBackgroundClick: true,              // if you click background will modal close?
+		dismissModalClass: 'close-modal',          // the class of a button or element that will close an open modal
+		'eventObject': eventObject,                // Submit by reference to later get it as this.eventObject
 		onCloseModal: function() {
 			// Aborted action
 			// debugger;
