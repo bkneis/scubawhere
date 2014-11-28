@@ -1,28 +1,23 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 #nav{
-	height: 45px;
+	height: 50px;
 	background-color: #373737;
-	padding-top: 3px;
-	box-shadow: 0px 0px 9px black;
+	box-shadow: 0px 0px 10px black;
 	position: fixed;
 	width: 100%;
-	border-bottom: 2px solid rgba(0,0,0,1.5);
 	z-index: 9997;
 }
 
 #nav-wrapper{
 	margin: 0px auto;
 	z-index: 9997;
-	padding: 0px 20px;
+	padding: 8px 10px;
 }
 
 #logo{
 	float: left;
-	line-height: 1;
-	margin-top: 3px;
-	font-weight: 200;
-	margin-right: 40px
+	margin: 0;
 }
 
 #logo a:link{
@@ -45,10 +40,8 @@
 
 #nav-wrapper img{
 	float: left;
-	margin-right: 10px;
-	margin-top: -3px;
-	padding: 5px 10px;
-	width: 75%
+	width: 200px;
+	margin-top: 2px;
 }
 
 .nav-opt{
@@ -56,7 +49,7 @@
 	padding-left: 30px;
 	padding-right: 30px;
 	color: #ffffff;
-	margin-top: 13px;
+	margin-top: 9px;
 }
 
 .nav-opt a:link{
@@ -77,7 +70,6 @@
 
 #logout{
 	color: #ffffff;
-	margin-top: 4px;
 	background-color: #4a9cff;
 	padding: 5px 20px;
 	border-radius: 1px;

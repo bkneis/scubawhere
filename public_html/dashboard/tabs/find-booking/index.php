@@ -52,7 +52,7 @@
 						</tr>
 					</thead>
 					<tbody id="booking-list">
-						<tr><td colspan="7" style="text-align: center;"><span id="save-loader" class="loader"></span></td></tr>
+						<tr><td colspan="9" style="text-align: center;"><span id="save-loader" class="loader"></span></td></tr>
 					</tbody>
 				</table>
 			</div>
