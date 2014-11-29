@@ -74,7 +74,7 @@
 			</tr>
 			<tr class="accordion-body accordion-{{id}}">
 				<td colspan="9">
-					<button><i class="fa fa-pencil"></i> Edit</button>
+					<button onclick="editBooking({{id}}, this);"><i class="fa fa-pencil"></i> Edit</button>
 					<button><i class="fa fa-credit-card"></i> Payments</button>
 				</td>
 			</tr>

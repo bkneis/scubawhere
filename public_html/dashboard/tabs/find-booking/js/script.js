@@ -75,3 +75,16 @@ $(function() {
 		$('.accordion-' + this.getAttribute('data-id')).toggle();
 	});
 });
+
+function editBooking(booking_id, self) {
+	// Set loading indicator
+	$(self).after('<span id="save-loader" class="loader"></span>');
+
+	// Load booking data and redirect to add-booking tab
+	Booking.get(booking_id, function success(object) {
+		window.booking = object;
+		window.clickedEdit = true;
+
+		window.location.hash = 'add-booking';
+	});
+}
