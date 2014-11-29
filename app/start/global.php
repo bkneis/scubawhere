@@ -150,34 +150,6 @@ Validator::extend('after_local_now', function($attribute, $value, $parameters)
 	return $local < $test;
 }, ':attribute datetime must lie in the future');
 
-// From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
-if (Config::get('database.log', false))
-{
-	Event::listen('illuminate.query', function($query, $bindings, $time, $name)
-	{
-		$data = compact('bindings', 'time', 'name');
-
-		// Format binding data for sql insertion
-		foreach ($bindings as $i => $binding)
-		{
-			if ($binding instanceof \DateTime)
-			{
-				$bindings[$i] = $binding->format('\'Y-m-d H:i:s\'');
-			}
-			else if (is_string($binding))
-			{
-				$bindings[$i] = "'$binding'";
-			}
-		}
-
-		// Insert bindings into query
-		$query = str_replace(array('%', '?'), array('%%', '%s'), $query);
-		$query = vsprintf($query, $bindings);
-
-		Log::info($query, $data);
-	});
-}
-
 Validator::extend('time', function($attribute, $value, $parameters)
 {
 	// Check that $value is 8 characters long ('HH:MM:SS')
@@ -220,4 +192,32 @@ Validator::extend('time', function($attribute, $value, $parameters)
 
 	return true;
 
-}, ':attribute must be a time of format HH:MM[:SS]');
+}, ':attribute must be a time of format HH:MM:SS');
+
+// From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
+if (Config::get('database.log', false))
+{
+	Event::listen('illuminate.query', function($query, $bindings, $time, $name)
+	{
+		$data = compact('bindings', 'time', 'name');
+
+		// Format binding data for sql insertion
+		foreach ($bindings as $i => $binding)
+		{
+			if ($binding instanceof \DateTime)
+			{
+				$bindings[$i] = $binding->format('\'Y-m-d H:i:s\'');
+			}
+			else if (is_string($binding))
+			{
+				$bindings[$i] = "'$binding'";
+			}
+		}
+
+		// Insert bindings into query
+		$query = str_replace(array('%', '?'), array('%%', '%s'), $query);
+		$query = vsprintf($query, $bindings);
+
+		Log::info($query, $data);
+	});
+}
