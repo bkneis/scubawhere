@@ -260,13 +260,21 @@ table thead th{
 	text-align: left;
 }
 
-table td{padding: 10px;}
-tr:nth-child(odd)	{ background-color:#e7eef8; }
+table td{
+	padding: 10px;
+}
+table.striped tr:nth-child(odd) {
+	background-color:#e7eef8;
+}
 .fc-view-container tr:nth-child(odd) {
 	background-color: transparent;
 }
-tr:nth-child(even)	{ background-color:#fff; }
-tfoot > tr			{ border-top: 1px solid #c8c8c8 }
+table.striped tr:nth-child(even) {
+	background-color:#fff;
+}
+tfoot > tr {
+	border-top: 1px solid #c8c8c8;
+}
 
 .col10{width: 10%}
 .col20{width: 20%}

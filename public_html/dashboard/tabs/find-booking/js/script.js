@@ -65,4 +65,13 @@ $(function() {
 	Booking.getAll(function(data) {
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 	});
+
+	// Prevent click on mailto-link from triggering the accordion
+	$('#booking-list').on('click', '.mailto', function(event) {
+		event.stopPropagation();
+	});
+
+	$('#booking-list').on('click', '.accordion-header', function(event) {
+		$('.accordion-' + this.getAttribute('data-id')).toggle();
+	});
 });

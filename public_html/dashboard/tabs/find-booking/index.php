@@ -43,11 +43,11 @@
 							<th width="10"></th> <!-- source icon -->
 							<th width="10"></th> <!-- saved/reserved/confirmed icon -->
 							<th width="10"></th> <!-- payments -->
-							<th>Reference</th>
-							<th>Customer Name</th>
+							<th>Ref</th>
+							<th>Customer</th>
 							<th>Email</th>
 							<th>Phone</th>
-							<th>Country</th>
+							<th></th>
 							<th>Price</th>
 						</tr>
 					</thead>
@@ -61,17 +61,24 @@
 
 	<script type="text/x-handlebars-template" id="booking-list-item-template">
 		{{#each bookings}}
-			<tr>
+			<tr class="accordion-header" data-id={{id}}>
 				<td><i class="fa fa-{{sourceIcon}}" title="{{sourceTooltip}}"></td>
 				<td><i class="fa fa-{{statusIcon}}" title="{{statusTooltip}}"></td>
 				<td><i class="fa fa-circle" style="color: {{paymentIcon}};" title="{{paymentTooltip}}"></td>
-				<td><a>{{reference}}</a></td>
+				<td>{{reference}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{lead_customer.email}}</td>
+				<td><a href="mailto:{{lead_customer.email}}" class="mailto">{{lead_customer.email}}</a></td>
 				<td>{{lead_customer.phone}}</td>
 				<td>{{lead_customer.country.abbreviation}}</td>
 				<td>{{currency}} {{decimal_price}}</td>
 			</tr>
+			<tr class="accordion-body accordion-{{id}}">
+				<td colspan="9">
+					<button><i class="fa fa-pencil"></i> Edit</button>
+					<button><i class="fa fa-credit-card"></i> Payments</button>
+				</td>
+			</tr>
+			<tr class="accordion-spacer accordion-{{id}}"></tr>
 		{{else}}
 			<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
 		{{/each}}

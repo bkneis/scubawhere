@@ -24,11 +24,12 @@ var Booking = function(data) {
 /**
  * Takes the required booking's ID and calls the success callback with a Booking object as its only parameter
  *
- * @param  {integer} id The ID of te required session
+ * @param {integer} id The ID of te required session
+ * @param {function} successFn Recieves new Booking object as first and only parameter
  */
-Booking.get = function(id, success) {
+Booking.get = function(id, successFn) {
 	$.get("/api/booking", {id: id}, function(data) {
-		success( new Booking(data) );
+		successFn( new Booking(data) );
 	});
 };
 
