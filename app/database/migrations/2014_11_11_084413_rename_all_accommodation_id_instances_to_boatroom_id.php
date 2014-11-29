@@ -44,7 +44,7 @@ class RenameAllAccommodationIdInstancesToBoatroomId extends Migration {
 
 		Schema::table('accommodation_boat', function($table)
 		{
-			$table->dropForeign('boat_ticket_boatroom_id_foreign');
+			$table->dropForeign('boat_boatroom_boatroom_id_foreign');
 
 			$table->renameColumn('boatroom_id', 'accommodation_id');
 

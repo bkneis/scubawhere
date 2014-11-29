@@ -50,21 +50,32 @@ class ChangeAllPriceFieldsToInteger extends Migration {
 		Schema::table('bookings', function($table)
 		{
 			$table->dropColumn('price');
+		});
 
+		Schema::table('bookings', function($table)
+		{
 			$table->decimal('price', 10, 2)->after('source');
 		});
+
 
 		Schema::table('packages', function($table)
 		{
 			$table->dropColumn('price');
+		});
 
+		Schema::table('packages', function($table)
+		{
 			$table->decimal('price', 10, 2)->after('description');
 		});
+
 
 		Schema::table('tickets', function($table)
 		{
 			$table->dropColumn('price');
+		});
 
+		Schema::table('tickets', function($table)
+		{
 			$table->decimal('price', 10, 2)->after('description');
 		});
 	}

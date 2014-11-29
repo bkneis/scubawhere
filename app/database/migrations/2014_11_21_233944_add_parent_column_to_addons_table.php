@@ -29,6 +29,8 @@ class AddParentColumnToAddonsTable extends Migration {
 	{
 		Schema::table('addons', function($table)
 		{
+			$table->dropForeign('addons_parent_id_foreign');
+
 			$table->dropColumn('parent_id');
 		});
 	}

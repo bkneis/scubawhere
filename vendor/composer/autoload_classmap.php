@@ -126,7 +126,7 @@ return array(
     'CreateAccommodationBoatTable' => $baseDir . '/app/database/migrations/2014_02_17_020518_create_accommodation_boat_table.php',
     'CreateAccommodationBookingTable' => $baseDir . '/app/database/migrations/2014_11_11_191720_create_accommodation_booking_table.php',
     'CreateAccommodationsTable' => $baseDir . '/app/database/migrations/2014_02_17_020436_create_accommodations_table.php',
-    'CreateAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_13_142042_create_addon_booking_detail_pivot_table.php',
+    'CreateAddonBookingDetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_13_142042_create_addon_booking_detail_pivot_table.php',
     'CreateAddonsTable' => $baseDir . '/app/database/migrations/2014_08_12_121905_create_addons_table.php',
     'CreateAgenciesTable' => $baseDir . '/app/database/migrations/2014_02_17_021059_create_agencies_table.php',
     'CreateAgencyCompanyPivotTable' => $baseDir . '/app/database/migrations/2014_11_03_231722_create_agency_company_pivot_table.php',

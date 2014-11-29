@@ -48,11 +48,10 @@ class ExtentBookingsTable extends Migration {
 	public function down()
 	{
 		Schema::table('bookings', function($table) {
-
 			$table->dropColumn( array('reference', 'currency', 'agent_id', 'source', 'paid_cash', 'paid_creditcard', 'paid_cheque', 'paid_banktransfer', 'pay_online', 'pay_later', 'reserved', 'pick_up', 'drop_off', 'comments') );
+		});
 
-			$table->integer('company_id')->unsigned();
-			$table->integer('customer_id')->unsigned();
+		Schema::table('bookings', function($table) {
 			$table->boolean('manual')->default(true);
 			$table->boolean('paid')->default(false);
 

@@ -39,7 +39,7 @@ class RemoveUnneededIdColumns extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('trip_type', function($table) {
+		Schema::table('trip_triptype', function($table) {
 			$table->increments('id');
 		});
 		Schema::table('location_trip', function($table) {
@@ -54,7 +54,7 @@ class RemoveUnneededIdColumns extends Migration {
 		Schema::table('boat_ticket', function($table) {
 			$table->increments('id');
 		});
-		Schema::table('accomodation_boat', function($table) {
+		Schema::table('accommodation_boat', function($table) {
 			$table->increments('id');
 		});
 	}

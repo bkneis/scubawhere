@@ -35,7 +35,7 @@ class ChangeNightsColumnToEndDateOnAccommodationBooking extends Migration {
 
 			$table->dropColumn('end');
 
-			$table->integer('nights')->after('date');
+			$table->integer('nights')->after('start');
 		});
 	}
 

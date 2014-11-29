@@ -24,11 +24,6 @@ class AddIdColumnToBookingDetailsTable extends Migration {
 	{
 		Schema::table('booking_details', function($table)
 		{
-			$table->dropPrimary('booking_details_id_primary');
-		});
-
-		Schema::table('booking_details', function($table)
-		{
 			$table->dropColumn('id');
 		});
 	}

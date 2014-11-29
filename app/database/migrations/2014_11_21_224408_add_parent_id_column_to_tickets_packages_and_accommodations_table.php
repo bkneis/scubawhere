@@ -43,16 +43,22 @@ class AddParentIdColumnToTicketsPackagesAndAccommodationsTable extends Migration
 	{
 		Schema::table('accommodations', function($table)
 		{
+			$table->dropForeign('accommodations_parent_id_foreign');
+
 			$table->dropColumn('parent_id');
 		});
 
 		Schema::table('tickets', function($table)
 		{
+			$table->dropForeign('tickets_parent_id_foreign');
+
 			$table->dropColumn('parent_id');
 		});
 
 		Schema::table('packages', function($table)
 		{
+			$table->dropForeign('packages_parent_id_foreign');
+
 			$table->dropColumn('parent_id');
 		});
 	}

@@ -64,6 +64,8 @@ class RemoveCurrencyFieldsFromAllTablesExceptCompanies extends Migration {
 	{
 		Schema::table('companies', function($table)
 		{
+			$table->dropForeign('companies_currency_id_foreign');
+
 			$table->dropColumn('currency_id');
 
 			$table->string('currency', 3)->after('country_id');
@@ -72,6 +74,8 @@ class RemoveCurrencyFieldsFromAllTablesExceptCompanies extends Migration {
 
 		Schema::table('payments', function($table)
 		{
+			$table->dropForeign('payments_currency_id_foreign');
+
 			$table->dropColumn('currency_id');
 
 			$table->string('currency', 3)->after('amount');

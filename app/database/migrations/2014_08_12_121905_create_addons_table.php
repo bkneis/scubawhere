@@ -33,7 +33,7 @@ class CreateAddonsTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('addons');
 	}
 
 }
