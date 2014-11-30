@@ -51,14 +51,11 @@ body{ background-color: #34495e; }
 }
 
 #pageMssg{
-	background-color: #fff7cb;
 	display: none;
-	padding: 20px;
-	width: 400px;
+	width: 40%;
 	position: fixed;
-	top: 50px;
-	left: 50%;
-	margin-left: -200px;
+	top: 25px;
+	left: 30%;
 	text-align: center;
 	z-index: 9998
 }

@@ -112,10 +112,10 @@ $.fn.errorMssg = function(mssg){
 
 function pageMssg(mssg, bool){
 
-	if(bool==true){
-		$('#pageMssg').html("<span class='greenf'>" + mssg + "</span>");
+	if(bool == true){
+		$('#pageMssg').html('<div class="alert alert-success border-success" role="alert">' + mssg + '</div>');
 	}else{
-		$('#pageMssg').html("<span class='redf'>" + mssg + "</span>");
+		$('#pageMssg').html('<div class="alert alert-danger border-danger" role="alert">' + mssg + '</div>');
 	}
 
 	$('#pageMssg').fadeIn("slow").delay(2500).fadeOut("slow");
