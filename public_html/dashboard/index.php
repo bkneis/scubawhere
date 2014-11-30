@@ -92,7 +92,7 @@
 		<!-- tabbed navigation and sidebar LEFT -->
 		<div id="sidebar">
 			<div id="tab-title">
-				Admin Panel
+				<b>scuba</b>whereRMS
 			</div>
 			<!-- <div id="dc-info">
 				<div id="dc-name"></div>
