@@ -6,7 +6,7 @@
 	<script src="/common/js/jquery/jquery.min.js"></script>
 	<script src="/common/js/jquery/jquery.steps.min.js"></script>
 
-	<script src="register.js"></script>
+	<script src="js/register.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.steps.css">
