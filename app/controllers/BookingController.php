@@ -56,7 +56,7 @@ class BookingController extends Controller {
 	public function getAll($from = 0, $take = 10)
 	{
 		return Auth::user()->bookings()
-			->with('lead_customer', 'lead_customer.country', 'payments')
+			->with('lead_customer', 'lead_customer.country', 'payments', 'payments.paymentgateway')
 			->orderBy('updated_at', 'DESC')
 			->skip($from)
 			->take($take)

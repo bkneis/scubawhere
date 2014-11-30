@@ -30,6 +30,13 @@ html, body{
 	font-size: 13px;
 }
 
+.text-center {
+	text-align: center;
+}
+.text-muted {
+	color: lightgray;
+}
+
 label {
 	cursor: pointer;
 }
@@ -259,8 +266,11 @@ table thead th{
 	font-weight: bold;
 	text-align: left;
 }
-
-table td{
+table th {
+	padding: 5px 10px;
+	text-align: left;
+}
+table td {
 	padding: 10px;
 }
 table.striped tr:nth-child(odd) {
@@ -272,8 +282,45 @@ table.striped tr:nth-child(odd) {
 table.striped tr:nth-child(even) {
 	background-color:#fff;
 }
+table.lined tr {
+	border-bottom: 1px solid #e7eef8;
+}
+table.lined tr:last-child {
+	border-bottom: 0;
+}
 tfoot > tr {
 	border-top: 1px solid #c8c8c8;
+}
+.table-sum {
+	border-top: 3px double;
+	font-weight: bold;
+}
+
+.percentage-bar-container {
+    position: relative;
+    background-color: white;
+    overflow: auto;
+    border-radius: 3px;
+}
+    .percentage-bar-container .percentage-bar {
+        float: left;
+    }
+    .percentage-bar-container .percentage-left {
+        position: absolute;
+        right: 3px;
+    }
+
+.bg-success {
+	background-color: #dff0d8;
+	border: 1px solid #5cb85c;
+}
+.bg-warning {
+	background-color: #fcf8e3;
+	border: 1px solid #f0ad4e;
+}
+.bg-danger {
+	background-color: #f2dede;
+	border: 1px solid #d9534f;
 }
 
 .col10{width: 10%}

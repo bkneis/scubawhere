@@ -138,7 +138,7 @@ class Booking extends Ardent {
 
 	public function payments()
 	{
-		return $this->hasMany('Payment');
+		return $this->hasMany('Payment')/*->orderBy('created_at', 'DESC')*/;
 	}
 
 	public function updatePrice()

@@ -73,9 +73,36 @@
 				<td>{{currency}} {{decimal_price}}</td>
 			</tr>
 			<tr class="accordion-body accordion-{{id}}">
-				<td colspan="9">
-					<button onclick="editBooking({{id}}, this);"><i class="fa fa-pencil"></i> Edit</button>
-					<button><i class="fa fa-credit-card"></i> Payments</button>
+				<td colspan="9" style="overflow: auto;">
+					<div style="float: left; width: 350px; padding-right:10px; border-right: 1px solid #C3D9F4;">
+						{{#if payments}}
+							<h3 class="text-center">Recieved Transactions</h3>
+							<table style="width: 350px;" class="lined">
+								<tr>
+									<th>Date</th>
+									<th>Amount</th>
+									<th>Via</th>
+								</tr>
+								{{#each payments}}
+									<tr>
+										<td>{{created_at}}</td>
+										<td>{{currency}} {{amount}}</td>
+										<td>{{paymentgateway.name}}</td>
+									</tr>
+								{{/each}}
+								<tr>
+									<td></td>
+									<td class="table-sum">{{currency}} {{sumPayed}}</td>
+									<td>{{remainingPay}}</td>
+							</table>
+						{{else}}
+							<h3 class="text-center text-muted">No transactions yet</h3>
+						{{/if}}
+					</div>
+					<div style="float: left; width: 250px; padding-left: 10px;">
+						<button onclick="addTransaction({{id}}, this);"><i class="fa fa-credit-card"></i> Add Transaction</button>
+						<button onclick="editBooking({{id}}, this);"><i class="fa fa-pencil"></i> Edit</button>
+					</div>
 				</td>
 			</tr>
 			<tr class="accordion-spacer accordion-{{id}}"></tr>

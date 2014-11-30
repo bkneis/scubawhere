@@ -123,17 +123,3 @@
     color: #95b75d;
     font-size: 10px;
 }
-
-.util-bar-container {
-    position: relative;
-    background: white;
-    overflow: auto;
-    border-radius: 3px;
-}
-    .util-bar-container .util-bar {
-        float: left;
-    }
-    .util-bar-container .util-spaces {
-        position: absolute;
-        right: 3px;
-    }

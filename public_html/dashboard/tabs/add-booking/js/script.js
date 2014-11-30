@@ -16,9 +16,9 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 	if(percentage == 1) { color = '#d9534f'; bgClass = 'bg-danger'; }
 
 	var html = '';
-	html += '<div data-id="' + this.id + '" class="util-bar-container ' + bgClass + '">';
-	html += '	<div class="util-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
-	html += '	<span class="util-spaces">' + freeSpaces + '</span>';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClass + '">';
+	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
+	html += '	<span class="percentage-spaces">' + freeSpaces + '</span>';
 	html += '</div>';
 
 	return new Handlebars.SafeString(html);
