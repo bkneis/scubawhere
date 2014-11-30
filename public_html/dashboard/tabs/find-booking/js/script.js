@@ -45,7 +45,7 @@ Handlebars.registerHelper('paymentIcon', function() {
 
 	if(percentage === 1) return '#5cb85c';
 	if(percentage === 0) return '#d9534f';
-	else return '#f0ad4e';
+	return '#f0ad4e';
 });
 Handlebars.registerHelper('paymentTooltip', function() {
 	if(this.confirmed === "0" || this.confirmed === 0) return '';
@@ -78,9 +78,9 @@ Handlebars.registerHelper("remainingPay", function() {
 	if(remainingPay === 0) remainingPay = '';
 	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
 
+	var color = '#f0ad4e'; var bgClass = 'bg-warning';
 	if(percentage === 0) { color = '#d9534f'; bgClass = 'bg-danger'; }
 	if(percentage === 1) { color = '#5cb85c'; bgClass = 'bg-success'; }
-	var color = '#f0ad4e'; bgClass = 'bg-warning';
 
 	var html = '';
 	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClass + '">';
@@ -89,6 +89,19 @@ Handlebars.registerHelper("remainingPay", function() {
 	html += '</div>';
 
 	return new Handlebars.SafeString(html);
+});
+
+Handlebars.registerHelper('addTransactionButton', function() {
+	if(this.decimal_price === '0.00')
+		return '';
+
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);"><i class="fa fa-credit-card"></i> Add Transaction</button>');
+});
+Handlebars.registerHelper('editButton', function() {
+	if(this.confirmed === "1" || this.confirmed === 1)
+		return '';
+
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);"><i class="fa fa-pencil"></i> Edit</button>');
 });
 
 $(function() {
@@ -123,5 +136,14 @@ function editBooking(booking_id, self) {
 }
 
 function addTransaction(booking_id, self) {
-	pageMssg('Patience, my little padawan...', true);
+	// Set loading indicator
+	$(self).after('<span id="save-loader" class="loader"></span>');
+
+	// Load booking data and redirect to add-transaction tab
+	Booking.get(booking_id, function success(object) {
+		window.booking     = object;
+		window.clickedEdit = true;
+
+		window.location.hash = 'add-transaction';
+	});
 }

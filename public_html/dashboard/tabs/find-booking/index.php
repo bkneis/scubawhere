@@ -48,7 +48,7 @@
 							<th>Email</th>
 							<th>Phone</th>
 							<th></th>
-							<th>Price</th>
+							<th>Total</th>
 						</tr>
 					</thead>
 					<tbody id="booking-list">
@@ -100,8 +100,8 @@
 						{{/if}}
 					</div>
 					<div style="float: left; width: 250px; padding-left: 10px;">
-						<button onclick="addTransaction({{id}}, this);"><i class="fa fa-credit-card"></i> Add Transaction</button>
-						<button onclick="editBooking({{id}}, this);"><i class="fa fa-pencil"></i> Edit</button>
+						{{addTransactionButton}}
+						{{editButton}}
 					</div>
 				</td>
 			</tr>
