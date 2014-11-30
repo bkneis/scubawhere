@@ -107,6 +107,12 @@ class Helper
 
 		$references = \Booking::lists('reference');
 
+		// Taken from http://www.noswearing.com/fourletterwords.php
+		// TODO Implement https://packagist.org/packages/jcrowe/bad-word-filter
+		$forbidden  = array('ANUS', 'ARSE', 'CLIT', 'COCK', 'COON', 'CUNT', 'DAGO', 'DAMN', 'DICK', 'DIKE', 'DYKE', 'FUCK', 'GOOK', 'HEEB', 'HELL', 'HOMO', 'JIZZ', 'KIKE', 'KUNT', 'KYKE', 'MICK', 'MUFF', 'PAKI', 'PISS', 'POON', 'POOP', 'PUTO', 'SHIT', 'SHIZ', 'SLUT', 'SMEG', 'SPIC', 'TARD', 'TITS', 'TWAT', 'WANK');
+
+		$unallowed = array_merge($references, $forbidden);
+
 		do
 		{
 			$string = "";
@@ -115,7 +121,7 @@ class Helper
 				$string .= $chars[ mt_rand(0, $size - 1) ];
 			}
 		}
-		while( in_array($string, $references) );
+		while( in_array($string, $unallowed));
 
 		return $string;
 	}
