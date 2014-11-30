@@ -39,7 +39,7 @@
 				</p>
 				<h2{{#if session.deleted_at}} style="text-decoration: line-through;"{{/if}}>{{{trip.name}}}</h2>
 				{{#if session.deleted_at}} <h3 style="color: red;">Deactivated</h3>{{/if}}
-				<table style="margin-top: 2em;">
+				<table style="margin-top: 2em;" class="striped">
 					<tr>
 						<td><strong>Date</strong></td>
 						<td>{{date start}}</td>
@@ -83,7 +83,7 @@
 					{{#unless session.timetable_id}}
 						<label><input type="checkbox" onchange="toggleTimetableForm();"> <h3 style="display: inline-block;">Define a repeating timetable</h3></label>
 						<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
-							<table>
+							<table class="striped">
 								<tr style="text-align: left;">
 									<th>Week #</th>
 									<th>Mon</th>
