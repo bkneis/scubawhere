@@ -470,7 +470,7 @@ Booking.prototype.save = function(params, successFn, errorFn) {
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
  */
-Booking.prototype.addPayment = function(params, succesFn, errorFn) {
+Booking.prototype.addPayment = function(params, successFn, errorFn) {
 
 	params.booking_id = this.id;
 
@@ -494,6 +494,27 @@ Booking.prototype.addPayment = function(params, succesFn, errorFn) {
 		error: errorFn
 	});
 };
+
+Booking.prototype.payments = function(successFn, errorFn) {
+
+	var params = {
+		booking_id: this.id
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/payments",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.payments = data;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+}
 
 /**
  * Validate that all required lead customer fields are provided

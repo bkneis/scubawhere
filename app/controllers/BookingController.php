@@ -774,6 +774,6 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		return $booking->payments();
+		return $booking->payments()->with('paymentgateway')->get();
 	}
 }

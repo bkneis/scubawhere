@@ -62,6 +62,22 @@ class PaymentController extends Controller {
 		$data['amount'] = Input::get('amount');
 		$data['paymentgateway_id'] = Input::get('paymentgateway_id');
 
+		// Check if amount is higher than what needs to be paid
+		$sum       = $booking->payments()->sum('amount');
+		$remaining = $booking->price - $sum;
+
+		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
+		$remaining = number_format(
+			$remaining / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
+
+		if( $data['amount'] > $remaining )
+			return Response::json( array('errors' => array('The entered amount is more than the remaining cost of the booking.')), 406 ); // 406 Not Acceptable
+
 		$payment = new Payment($data);
 
 		if( !$payment->validate() )

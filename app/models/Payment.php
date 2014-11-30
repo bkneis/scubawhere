@@ -8,7 +8,7 @@ class Payment extends Ardent {
 	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id');
 
 	public static $rules = array(
-		'amount'            => 'required|numeric|min:1',
+		'amount'            => 'required|numeric|min:0.01',
 		'currency_id'       => 'required|integer',
 		'paymentgateway_id' => 'required|integer'
 	);

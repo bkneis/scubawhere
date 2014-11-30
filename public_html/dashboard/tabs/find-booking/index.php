@@ -37,7 +37,7 @@
 		<div class="box70">
 			<label class="dgreyb">Bookings</label>
 			<div class="padder">
-				<table>
+				<table class="bluethead">
 					<thead>
 						<tr>
 							<th width="10"></th> <!-- source icon -->
@@ -67,17 +67,17 @@
 				<td><i class="fa fa-circle" style="color: {{paymentIcon}};" title="{{paymentTooltip}}"></td>
 				<td>{{reference}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td><a href="mailto:{{lead_customer.email}}" class="mailto">{{lead_customer.email}}</a></td>
+				<td>{{lead_customer.email}}</td>
 				<td>{{lead_customer.phone}}</td>
 				<td>{{lead_customer.country.abbreviation}}</td>
 				<td>{{currency}} {{decimal_price}}</td>
 			</tr>
 			<tr class="accordion-body accordion-{{id}}">
 				<td colspan="9" style="overflow: auto;">
-					<div style="float: left; width: 350px; padding-right:10px; border-right: 1px solid #C3D9F4;">
+					<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4;">
 						{{#if payments}}
 							<h4 class="text-center">Recieved Transactions</h4>
-							<table style="width: 350px;" class="lined">
+							<table style="width: 350px;" class="table">
 								<tr>
 									<th>Date</th>
 									<th>Amount</th>
@@ -94,15 +94,16 @@
 									<td></td>
 									<td class="table-sum">{{currency}} {{sumPayed}}</td>
 									<td>{{remainingPay}}</td>
+								</tr>
 							</table>
 						{{else}}
-							<h4 class="text-center text-muted">No transactions yet</h4>
+							<h5 class="text-center text-muted">No transactions yet</h5>
 						{{/if}}
 					</div>
-					<div style="float: left; width: 250px; padding-left: 10px;">
-						{{addTransactionButton}}
-						{{editButton}}
-					</div>
+					{{addTransactionButton}}
+					{{editButton}}
+
+					<a href="mailto:{{lead_customer.email}}" class="mailto"><button class="btn btn-default pull-right"><i class="fa fa-envelope"></i> &nbsp;Contact customer</button></a>
 				</td>
 			</tr>
 			<tr class="accordion-spacer accordion-{{id}}"></tr>
