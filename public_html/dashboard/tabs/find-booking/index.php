@@ -6,22 +6,22 @@
 				<form id="find-booking-form">
 					<div class="form-row">
 						<label class="field-label">Reference</label>
-						<input type="text" name="booking_reference" disabled>
+						<input type="text" name="booking_reference" class="form-control" disabled>
 					</div>
 
 					<div class="form-row">
 						<label class="field-label">Date</label>
-						<input type="text" class="datepicker" name="date" disabled>
+						<input type="text" name="date" class="datepicker form-control" disabled>
 					</div>
 
 					<div class="form-row">
 						<label class="field-label">Customer's Last Name</label>
-						<input type="text" name="last_name" disabled>
+						<input type="text" name="last_name" class="form-control" disabled>
 					</div>
 
 					<div class="form-row">
 						<p><label class="">Type of Product</label></p>
-						<select id="type-product" disabled>
+						<select id="type-product" class="form-control" disabled>
 							<option>Please select..</option>
 							<option>PADI course</option>
 							<option>Fun dive</option>

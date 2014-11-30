@@ -6,7 +6,7 @@
 				<!--<div class="yellow-helper">
 					Select an accommodation to change its details.
 				</div>-->
-				<button id="change-to-add-accommodation" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Accommodation</button>
+				<button id="change-to-add-accommodation" class="btn btn-success text-uppercase">&plus; Add Accommodation</button>
 				<script type="text/x-handlebars-template" id="accommodation-list-template">
 					<ul id="accommodation-list" class="entity-list">
 						{{#each accommodations}}
@@ -44,7 +44,7 @@
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
-							<button class="bttn greenb add-base-price"> &plus; Add base price</button>
+							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
 						<div class="form-row">
@@ -61,7 +61,7 @@
 										{{> price_input}}
 									{{/with}}
 								{{/each}}
-								<button class="bttn greenb add-price"> &plus; Add seasonal price</button>
+								<button class="btn btn-success text-uppercase add-price"> &plus; Add seasonal price</button>
 							</div>
 						</div>
 
@@ -75,7 +75,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-accommodation" value="{{task}} Accommodation">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-accommodation" value="{{task}} Accommodation">
 
 					</form>
 				</div>
@@ -100,7 +100,7 @@
 				{{/unless}}
 
 				{{#unless isAlways}}
-					<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
+					<button class="btn btn-danger remove-price">&#215;</button>
 				{{/unless}}
 			</p>
 		</script>

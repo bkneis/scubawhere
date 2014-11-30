@@ -9,26 +9,26 @@
 
 						<div class="form-row">
 							<label class="field-label">Username : </label>
-							<input type="text" name="username" value="{{username}}"></input>
+							<input type="text" name="username" value="{{username}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Change Password : </label>
-							<button id="send-password" class="bttn blueb">Send password reminder email</button>
+							<button id="send-password" class="btn btn-default btn-sm">Send password reminder email</button>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Main person of contact : </label>
-							<input type="text" name="contact" value="{{contact}}"></input>
+							<input type="text" name="contact" value="{{contact}}" class="form-control"></input>
 						</div>
 						<div class="form-row">
 							<label class="field-label">Contact phone number : </label>
-							<input type="text" name="phone" value="{{phone}}"></input>
+							<input type="text" name="phone" value="{{phone}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Contact email address : </label>
-							<input type="text" name="email" value="{{email}}"></input>
+							<input type="text" name="email" value="{{email}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row" style="overflow:auto;">
@@ -52,12 +52,12 @@
 
 						<div class="form-row">
 							<label class="field-label">Dive operator name : </label>
-							<input type="text" name="name" value="{{name}}"></input>
+							<input type="text" name="name" value="{{name}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Dive operator website : </label>
-							<input type="text" name="website" placeholder="http://" value="{{website}}"></input>
+							<input type="text" name="website" placeholder="http://" value="{{website}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
@@ -73,51 +73,51 @@
 
 						<div class="form-row">
 							<label class="field-label">Business Address 1 : </label>
-							<input type="text" name="address_1" value="{{address_1}}"></input>
+							<input type="text" name="address_1" value="{{address_1}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Business Address 2 : </label>
-							<input type="text" name="address_2" value="{{address_2}}"></input>
+							<input type="text" name="address_2" value="{{address_2}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">City : </label>
-							<input type="text" name="city" value="{{city}}"></input>
+							<input type="text" name="city" value="{{city}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">County / State : </label>
-							<input type="text" name="county" value="{{county}}"></input>
+							<input type="text" name="county" value="{{county}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Post code / zip code : </label>
-							<input type="text" name="postcode" value="{{postcode}}"></input>
+							<input type="text" name="postcode" value="{{postcode}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Business phone : </label>
-							<input type="text" name="business_phone" value="{{business_phone}}"></input>
+							<input type="text" name="business_phone" value="{{business_phone}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Business email : </label>
-							<input type="text" name="business_email" value="{{business_email}}"></input>
+							<input type="text" name="business_email" value="{{business_email}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Registration number : </label>
-							<input type="text" name="registration_number" value="{{registration_number}}"></input>
+							<input type="text" name="registration_number" value="{{registration_number}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">VAT number : </label>
-							<input type="text" name="vat_number" value="{{vat_number}}"></input>
+							<input type="text" name="vat_number" value="{{vat_number}}" class="form-control"></input>
 						</div>
 
 						<div class="form-row">
-							<input type="submit" class="submit register-bttn bttn blueb" value="Update Account">
+							<input type="submit" class="submit register-bttn btn btn-primary" value="Update Account">
 						</div>
 
 						<input type="hidden" name="_token">
