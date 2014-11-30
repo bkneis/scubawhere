@@ -11,12 +11,12 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 	var freeSpaces = capacity[1] - capacity[0];
 	var percentage = (capacity[0] / capacity[1]) * 100;
 
-	var color = '#5cb85c'; bgClass = 'bg-success';
-	if(percentage >= 75) { color = '#f0ad4e'; bgClass = 'bg-warning'; }
-	if(percentage == 1) { color = '#d9534f'; bgClass = 'bg-danger'; }
+	var color = '#5cb85c'; bgClasses = 'bg-success border-success';
+	if(percentage >= 75) { color = '#f0ad4e'; bgClasses = 'bg-warning border-warning'; }
+	if(percentage == 1) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
 
 	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClass + '">';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
 	html += '	<span class="percentage-spaces">' + freeSpaces + '</span>';
 	html += '</div>';

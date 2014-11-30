@@ -29,9 +29,6 @@ h1, h2, h3, h4, h5 {
 	font-weight: bold;
 }
 
-.text-center {
-	text-align: center;
-}
 .text-muted {
 	color: lightgray;
 }
@@ -297,7 +294,6 @@ tfoot > tr {
 
 .percentage-bar-container {
     position: relative;
-    background-color: white;
     overflow: auto;
     border-radius: 3px;
 }
@@ -309,16 +305,13 @@ tfoot > tr {
         right: 3px;
     }
 
-.bg-success {
-	background-color: #dff0d8;
+.border-success {
 	border: 1px solid #5cb85c;
 }
-.bg-warning {
-	background-color: #fcf8e3;
+.border-warning {
 	border: 1px solid #f0ad4e;
 }
-.bg-danger {
-	background-color: #f2dede;
+.border-danger {
 	border: 1px solid #d9534f;
 }
 

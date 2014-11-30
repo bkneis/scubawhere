@@ -78,12 +78,12 @@ Handlebars.registerHelper("remainingPay", function() {
 	if(remainingPay === 0) remainingPay = '';
 	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
 
-	var color = '#f0ad4e'; var bgClass = 'bg-warning';
-	if(percentage === 0) { color = '#d9534f'; bgClass = 'bg-danger'; }
-	if(percentage === 1) { color = '#5cb85c'; bgClass = 'bg-success'; }
+	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
+	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
+	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
 
 	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClass + '">';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
 	html += '	<span class="percentage-left">' + remainingPay + '</span>';
 	html += '</div>';
