@@ -28,7 +28,7 @@
 
 @section('scripts')
 	<script src="/common/js/underscore-min.js"></script>
-	<script src="/common/chart/Chart.min.js"></script>
+	<script src="/common/js/Chart.min.js"></script>
 	<script>
 		"use strict";
 

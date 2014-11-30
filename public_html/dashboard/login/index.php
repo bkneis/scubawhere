@@ -4,21 +4,22 @@
 	<title>Scuba Where | Dive Centre Login</title>
 
 
-	<script src="/common/js/jquery.min.js"></script>
-	<script src="/common/js/ui.min/jquery-ui.min.js"></script>
+	<script src="/common/js/jquery/jquery.min.js"></script>
+	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
 
-	<script src="/dashboard/login/js/login.js"></script>
+	<script src="js/login.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
 
-	<link rel="icon" type="image/ico" href="../../common/favicon.ico" />
+	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 </head>
 <body>
 
 	<div id="login-wrapper">
 	<div id="login-form">
 		<form action="#" id="loginForm" method="post" accept-charset="utf-8">
-			<img src="/dashboard/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Dive Centre Dashboard Login</h1>
 
 			<span class="form-error"></span>

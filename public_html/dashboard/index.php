@@ -36,19 +36,29 @@
 	<title>Scuba Where | Dashboard</title>
 
 	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
-	<link rel='stylesheet' href='css/fullcalendar.css' />
+	<link rel='stylesheet' href='/common/css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
-	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome.min.css">
+
+	<!--Bootstrap CSS-->
+	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
+		
+	<link rel="stylesheet" type="text/css" href="common/footer/footer.css">
+	<link rel="stylesheet" type="text/css" href="common/header/header.css">	
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 
 	<!-- favicon -->
-	<link rel="icon" type="image/ico" href="../common/favicon.ico" />
+	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 
 	<!-- dash config js -->
 
 	<!-- Third Party Libraries -->
-	<script src="/common/js/jquery.min.js"></script>
+	<script src="/common/js/jquery/jquery.min.js"></script>
+
+	<!--Bootstrap js-->
+	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<script src="/common/js/hashchange.min.js"></script>
 

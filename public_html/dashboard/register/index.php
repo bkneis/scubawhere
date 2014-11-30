@@ -3,19 +3,22 @@
 <head>
 	<title>Scuba Where | Dive Operator Register</title>
 
-	<script src="/common/js/jquery.min.js"></script>
-	<script src="js/jquery.steps.min.js"></script>
-	<script src="js/register.js"></script>
+	<script src="/common/js/jquery/jquery.min.js"></script>
+	<script src="/common/js/jquery/jquery.steps.min.js"></script>
 
+	<script src="register.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery.steps.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/jquery.steps.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
+
+	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 </head>
 <body>
 
 	<div id="register-wrapper">
 		<div class="container">
-			<img src="/dashboard/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Dive Operator Registration</h1>
 			<form id="register-form" method="post" accept-charset="utf-8">
 				<div id="steps">

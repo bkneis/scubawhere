@@ -988,24 +988,21 @@
 	<!--Styling (Temporary)-->
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
-	<!--Bootstrap-->
-	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
-	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
-
 	<!--Datetimepicker-->
-	<link rel="stylesheet" href="/common/datetimepicker/css/bootstrap-datetimepicker.css" type="text/css" />
-	<script type="text/javascript" src="/common/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
+	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!--Select 2-->
-	<link rel="stylesheet" href="common/css/select2.css" type="text/css" />
-	<link rel="stylesheet" href="common/css/select2-bootstrap.css" type="text/css" />
-	<script type="text/javascript" src="common/js/select2.min.js"></script>
+	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
+	<link rel="stylesheet" href="/common/css/select2-bootstrap.css" type="text/css" />
+
+	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
 	<!--Typeahead-->
 	<script type="text/javascript" src="/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<!--jQuery plugins-->
-	<script src="/common/js/jquery.serialize-object.min.js"></script>
+	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 
 	<!--Controllers-->
 	<script src="/dashboard/js/Controllers/Agent.js"></script>

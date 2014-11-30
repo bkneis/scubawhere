@@ -175,7 +175,7 @@
 <script type="text/javascript" src="tabs/dashboard/js/maps.js"></script> -->
 <script type="text/javascript" src="tabs/dashboard/js/script.js"></script>
 
-<!--<script type="text/javascript" src="../common/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<!--<script type="text/javascript" src="../common/js/jquery/jquery.mCustomScrollbar.concat.min.js"></script>
 <link rel="stylesheet" href="../common/css/jquery.mCustomScrollbar.css" />-->
 
 <!-- <link rel="stylesheet" href="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.min.css" />
