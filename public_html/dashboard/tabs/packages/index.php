@@ -48,7 +48,7 @@
 						</div>
 
 						<div class="form-row">
-							<strong>Set base prices for this package:</strong>
+							<p><strong>Set base prices for this package:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}

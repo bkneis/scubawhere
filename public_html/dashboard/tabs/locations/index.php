@@ -59,8 +59,10 @@
 		</div>
 	</div>
 
-	<div class="box100" id="map-container">
-		<div id="map" style="height: 100%;"></div>
+	<div class="row">
+		<div class="box100" id="map-container">
+			<div id="map" style="height: 100%;"></div>
+		</div>
 	</div>
 
 	<!-- <div class="yellow-helper">

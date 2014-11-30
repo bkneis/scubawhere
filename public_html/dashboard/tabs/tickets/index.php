@@ -42,7 +42,7 @@
 						</div>
 
 						<div class="form-row">
-							<strong>Set base prices for this ticket:</strong>
+							<p><strong>Set base prices for this ticket:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
@@ -55,7 +55,7 @@
 								Add seasonal price changes?
 							</label>
 							<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
-								<h3>Seasonal price changes</h3>
+								<h4>Seasonal price changes</h4>
 								{{#each prices}}
 									{{> price_input}}
 								{{else}}
@@ -68,7 +68,7 @@
 						</div>
 
 						<div class="form-row">
-							<h3>Please select the trips that this ticket should be eligable for:</h3>
+							<h4>Please select the trips that this ticket should be eligable for:</h4>
 							{{#each available_trips}}
 								<p style="margin-left: 4em;">
 									<label>

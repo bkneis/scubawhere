@@ -25,6 +25,10 @@ html, body{
 	font-size: 13px;
 }
 
+h1, h2, h3, h4, h5 {
+	font-weight: bold;
+}
+
 .text-center {
 	text-align: center;
 }
@@ -668,3 +672,11 @@ code {
 	font-weight:bold;
 }
 
+.fc-toolbar h2 {
+	font-size: 22px;
+}
+
+/* Bootstrap Overrides */
+label {
+	font-weight: normal;
+}

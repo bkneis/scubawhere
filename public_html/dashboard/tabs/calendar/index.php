@@ -75,7 +75,7 @@
 		<script id="session-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 		
-				<h2>{{{trip.name}}}</h2>
+				<h3>{{{trip.name}}}</h3>
 				<table style="margin-top: 2em;">
 				{{#if sameDay}}
 					<tr>
@@ -122,7 +122,7 @@
 		<script id="accommodation-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 		
-				<h2>{{{title}}}</h2>
+				<h3>{{{title}}}</h3>
 				<table style="margin-top: 2em;">
 					<tr>
 						<td><strong>Date</strong></td>

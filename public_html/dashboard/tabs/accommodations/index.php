@@ -40,7 +40,7 @@
 						</div>
 
 						<div class="form-row">
-							<strong>Set base prices for this accommodation:</strong>
+							<p><strong>Set base prices for this accommodation:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}

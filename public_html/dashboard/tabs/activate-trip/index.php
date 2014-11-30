@@ -37,9 +37,9 @@
 						{{/unless}}
 					{{/if}}
 				</p>
-				<h2{{#if session.deleted_at}} style="text-decoration: line-through;"{{/if}}>{{{trip.name}}}</h2>
-				{{#if session.deleted_at}} <h3 style="color: red;">Deactivated</h3>{{/if}}
-				<table style="margin-top: 2em;" class="striped">
+				<h4>{{#if session.deleted_at}}<s>{{/if}}{{{trip.name}}}{{#if session.deleted_at}}</s>{{/if}}</h4>
+				{{#if session.deleted_at}} <p class="text-danger"><strong>Deactivated</strong></p>{{/if}}
+				<table style="margin: 2em 0;">
 					<tr>
 						<td><strong>Date</strong></td>
 						<td>{{date start}}</td>
@@ -48,8 +48,8 @@
 						<td><strong>Departure time</strong></td>
 						<td>
 							<small><span style="display: inline-block; width: 49px">hour</span><span>minutes</span></small><br>
-							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 25px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}>:
-							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 25px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}> h
+							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 38px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}>:
+							<input type="text" placeholder="mm" value="{{minutes start}}" class="startminutes" style="width: 38px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}> h
 						</td>
 					</tr>
 					<tr>
@@ -62,7 +62,7 @@
 					</tr>
 				</table>
 
-				<p>
+				<div class="form-group">
 					Boat for this session:&nbsp;
 					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
 						{{#each boats}}
@@ -75,7 +75,7 @@
 							{{/if}}
 						{{/each}}
 					</select>
-				</p>
+				</div>
 
 				{{#unless isPast}}
 					{{#unless session.deleted_at}}
