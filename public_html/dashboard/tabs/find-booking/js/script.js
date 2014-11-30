@@ -95,13 +95,13 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	if(this.decimal_price === '0.00')
 		return '';
 
-	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);"><i class="fa fa-credit-card"></i> Add Transaction</button>');
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {
 	if(this.confirmed === "1" || this.confirmed === 1)
 		return '';
 
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);"><i class="fa fa-pencil"></i> Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil"></i> &nbsp;Edit</button>');
 });
 
 $(function() {

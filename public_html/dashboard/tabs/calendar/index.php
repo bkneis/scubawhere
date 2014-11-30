@@ -20,15 +20,15 @@
 						<div class="onofflabelright">
 	    					<p><strong>Trips</strong></p>
 	    				</div>
-					</div> 
+					</div>
 					<div style="clear:both"></div>
 						<div id="jump-to-date" class="form-row">
 							<!--<label class="form-label">Jump to : </label>-->
-							<input id="jump-date" type="text" placeholder="Date" style="width:60px">- 
+							<input id="jump-date" type="text" placeholder="Date" style="width:60px">-
 							<input id="jump-month" type="text" placeholder="Month" style="width:60px">-
 							<input id="jump-year" type="text" placeholder="Year" style="width:60px">
-							<button id="jump-to" class="bttn greenb">Go</button>
-							<button id="remove-jump" class="bttn redb">Clear</button>
+							<button id="jump-to" class="btn btn-success">Go</button>
+							<button id="remove-jump" class="btn btn-danger">Clear</button>
 						</div>
 						<div id="filter-settings" class="form-row">
 							<!--<label class="form-label">Add filter : </label>-->
@@ -74,9 +74,9 @@
 	<div id="modalWindows" style="height: 0; visibility: hidden;">
 		<script id="session-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
-		
+
 				<h3>{{{trip.name}}}</h3>
-				<table style="margin-top: 2em;">
+				<table style="margin-top: 2em;" class="striped">
 				{{#if sameDay}}
 					<tr>
 						<td><strong>Date</strong></td>
@@ -121,7 +121,7 @@
 		</script>
 		<script id="accommodation-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
-		
+
 				<h3>{{{title}}}</h3>
 				<table style="margin-top: 2em;">
 					<tr>

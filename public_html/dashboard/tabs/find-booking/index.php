@@ -29,7 +29,7 @@
 						</select>
 					</div>
 
-					<input type="submit" class="bttn blueb" id="find-booking" value="Find Booking" disabled>
+					<input type="submit" class="btn btn-primary" id="find-booking" value="Find Booking" disabled>
 				</form>
 			</div>
 		</div>
@@ -76,7 +76,7 @@
 				<td colspan="9" style="overflow: auto;">
 					<div style="float: left; width: 350px; padding-right:10px; border-right: 1px solid #C3D9F4;">
 						{{#if payments}}
-							<h3 class="text-center">Recieved Transactions</h3>
+							<h4 class="text-center">Recieved Transactions</h4>
 							<table style="width: 350px;" class="lined">
 								<tr>
 									<th>Date</th>
@@ -96,7 +96,7 @@
 									<td>{{remainingPay}}</td>
 							</table>
 						{{else}}
-							<h3 class="text-center text-muted">No transactions yet</h3>
+							<h4 class="text-center text-muted">No transactions yet</h4>
 						{{/if}}
 					</div>
 					<div style="float: left; width: 250px; padding-left: 10px;">
