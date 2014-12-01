@@ -16,7 +16,6 @@ class TripController extends Controller {
 			if( !Input::get('id') ) throw new ModelNotFoundException();
 			return Auth::user()->trips()->withTrashed()->with(
 				array(
-					'location',
 					'locations',
 					'triptypes',
 					'tickets',
@@ -33,7 +32,6 @@ class TripController extends Controller {
 	{
 		return Auth::user()->trips()->with(
 			array(
-				'location',
 				'locations',
 				'triptypes',
 			)
@@ -44,7 +42,6 @@ class TripController extends Controller {
 	{
 		return Auth::user()->trips()->withTrashed()->with(
 			array(
-				'location',
 				'locations',
 				'triptypes',
 			)
@@ -53,7 +50,7 @@ class TripController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'duration', 'location_id');
+		$data = Input::only('name', 'description', 'duration');
 
 		// Check optional fields
 		if( Input::get('photo') )
@@ -115,7 +112,7 @@ class TripController extends Controller {
 
 	public function postEdit()
 	{
-		$data = Input::only('name', 'description', 'duration', 'location_id', 'photo', 'video');
+		$data = Input::only('name', 'description', 'duration', 'photo', 'video');
 
 		try
 		{

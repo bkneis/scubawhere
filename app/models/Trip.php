@@ -8,7 +8,7 @@ class Trip extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $guarded = array('id', 'company_id', 'views', 'created_at', 'updated_at');
+	protected $fillable = array('name', 'description', 'duration', 'photo', 'video');
 
 	protected $appends = array('deletable');
 
@@ -16,7 +16,6 @@ class Trip extends Ardent {
 		'name'        => 'required',
 		'description' => 'required',
 		'duration'    => 'required|integer',
-		'location_id' => 'integer|exists:locations,id',
 		'photo'       => '',
 		'video'       => ''
 	);
@@ -44,11 +43,6 @@ class Trip extends Ardent {
 	public function company()
 	{
 		return $this->belongsTo('Company');
-	}
-
-	public function location()
-	{
-		return $this->belongsTo('Location');
 	}
 
 	public function locations()

@@ -404,11 +404,10 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createTrip($company_id, $location_id, $append = ""){
+	public static function createTrip($company_id, $append = ""){
 		$entry = new Trip();
 
 		$entry->company_id  = $company_id;
-		$entry->location_id = $location_id;
 
 		$entry->name        = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;

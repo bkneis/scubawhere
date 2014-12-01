@@ -1750,6 +1750,7 @@ return array(
     'RegisterController' => $baseDir . '/app/controllers/RegisterController.php',
     'RemoveActiveColumnFromTicketsTable' => $baseDir . '/app/database/migrations/2014_10_24_015813_remove_active_column_from_tickets_table.php',
     'RemoveCurrencyFieldsFromAllTablesExceptCompanies' => $baseDir . '/app/database/migrations/2014_11_08_162602_remove_currency_fields_from_all_tables_except_companies.php',
+    'RemoveLocationIdFromTripTable' => $baseDir . '/app/database/migrations/2014_12_01_201547_remove_location_id_from_trip_table.php',
     'RemovePaymentFieldsFromBookingsTable' => $baseDir . '/app/database/migrations/2014_06_11_114251_remove_payment_fields_from_bookings_table.php',
     'RemoveRegionsTable' => $baseDir . '/app/database/migrations/2014_06_04_103901_remove_regions_table.php',
     'RemoveUniqueIndexFromEmailInCustomerTable' => $baseDir . '/app/database/migrations/2014_07_16_152245_remove_unique_index_from_email_in_customer_table.php',
