@@ -10,23 +10,24 @@ class PaymentModelTest extends ModelTestCase {
 	public function testCRUD(){
 
 		//Create/Read
-		$continent_id = ModelTestHelper::createContinent();
-		$currency_id = ModelTestHelper::createCurrency();
-		$country_id = ModelTestHelper::createCountry($continent_id, $currency_id);
-		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
+		$continent_id      = ModelTestHelper::createContinent();
+		$currency_id       = ModelTestHelper::createCurrency();
+		$country_id        = ModelTestHelper::createCountry($continent_id, $currency_id);
+		$company_id        = ModelTestHelper::createCompany($country_id, $currency_id);
 		//We must have an authenticated Company
-		$company = Company::find($company_id);
+		$company           = Company::find($company_id);
 		$this->be($company);
-		$agent_id = ModelTestHelper::createAgent($company_id);
-		$booking_id = ModelTestHelper::createBooking($company_id, $agent_id);
+		$agent_id          = ModelTestHelper::createAgent($company_id);
+		$booking_id        = ModelTestHelper::createBooking($company_id, $agent_id);
 		$paymentgateway_id = ModelTestHelper::createPaymentgateway();
-		$payment_id = ModelTestHelper::createPayment($booking_id, $currency_id, $paymentgateway_id);
-		$payment = Payment::find($payment_id);
+		$payment_id        = ModelTestHelper::createPayment($booking_id, $currency_id, $paymentgateway_id);
+		$payment           = Payment::find($payment_id);
 
 		$this->assertNotEquals(0, $payment->id, "Unexpected id value");
 		$this->assertEquals($booking_id, $payment->booking_id, "Unexpected id value");
 		$this->assertEquals($currency_id, $payment->currency_id, "Unexpected id value");
 		$this->assertEquals($paymentgateway_id, $payment->paymentgateway_id, "Unexpected id value");
+		$this->assertEquals(ModelTestHelper::TEST_DATE, $payment->received_at, "Unexpected id value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $payment->amount, "Unexpected amount value");
 		$this->assertNotEquals("0000-00-00 00:00:00", $payment->created_at);
 		$this->assertNotEquals("0000-00-00 00:00:00", $payment->updated_at);

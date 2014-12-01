@@ -343,6 +343,7 @@ class ModelTestHelper{
 		$entry->currency_id       = $currency_id;
 		$entry->paymentgateway_id = $paymentgateway_id;
 
+		$entry->received_at       = self::TEST_DATE;
 		$entry->amount            = self::TEST_INTEGER;
 
 		$entry->save();
