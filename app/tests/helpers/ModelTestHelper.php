@@ -31,6 +31,12 @@ class ModelTestHelper{
 	const TEST_INTEGER_UPDATED      = 200;
 	const TEST_JSON                 = '[{"this":"is", "some":"json"}]';
 	const TEST_JSON_UPDATED         = '[{"this":"is", "updated":"json"}]';
+	const TEST_LATITUDE             = 51.482536;
+	const TEST_LATITUDE_UPDATED     = 52.274750;
+	const TEST_LONGITUDE            = -2.528342;
+	const TEST_LONGITUDE_UPDATED    =  7.919868;
+	const TEST_TIMEZONE             = 'Europe/London';
+	const TEST_TIMEZONE_UPDATED     = 'Europe/Berlin';
 	const TEST_PASSWORD             = "testpassword";
 	const TEST_PASSWORD_UPDATED     = "newtestpassword";
 	const TEST_PHONE                = "07123 456 789";
@@ -212,8 +218,9 @@ class ModelTestHelper{
 		$entry->business_phone      = self::TEST_PHONE;
 		$entry->vat_number          = self::TEST_STRING;
 		$entry->registration_number = self::TEST_STRING;
-		$entry->latitude            = self::TEST_DECIMAL;
-		$entry->longitude           = self::TEST_DECIMAL;
+		$entry->latitude            = self::TEST_LATITUDE;
+		$entry->longitude           = self::TEST_LONGITUDE;
+		$entry->timezone            = self::TEST_TIMEZONE;
 		$entry->phone               = self::TEST_PHONE;
 		$entry->contact             = self::TEST_STRING;
 		$entry->website             = self::TEST_URL;

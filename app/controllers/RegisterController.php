@@ -25,21 +25,30 @@ class RegisterController extends Controller {
 			$data['county'],
 			$country->name,
 		) ) );
-		$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key=AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk' );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		$result = curl_exec( $ch );
-		curl_close( $ch );
-		$result = json_decode( $result );
 
-		if($result->status === "OK")
+		$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
+
+		$latLng = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$googleAPIKey;
+		$latLng = simplexml_load_file($latLng);
+
+		if($latLng->status === "OK")
 		{
-			$data['latitude']  = $result->results[0]->geometry->location->lat;
-			$data['longitude'] = $result->results[0]->geometry->location->lng;
+			$data['latitude']  = $latLng->results[0]->geometry->location->lat;
+			$data['longitude'] = $latLng->results[0]->geometry->location->lng;
+
+			$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
+			$timezone = simplexml_load_file($timezone);
+
+			if($timezone->status === "OK")
+				$data['timezone'] = $timezone->time_zone_id;
+			else
+				$data['timezone'] = '';
 		}
 		else
 		{
 			$data['latitude']  = 0;
 			$data['longitude'] = 0;
+			$data['timezone'] = '';
 		}
 
 		$company = new Company($data);

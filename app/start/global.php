@@ -148,7 +148,7 @@ Validator::extend('after_local_now', function($attribute, $value, $parameters)
 	$test  = new DateTime($value);
 
 	return $local < $test;
-}, ':attribute datetime must lie in the future');
+}, ':attribute datetime must be in the future');
 
 Validator::extend('time', function($attribute, $value, $parameters)
 {
@@ -192,7 +192,7 @@ Validator::extend('time', function($attribute, $value, $parameters)
 
 	return true;
 
-}, ':attribute must be a time of format HH:MM:SS');
+}, ':attribute must be a time of 24h format HH:MM:SS');
 
 // From http://stackoverflow.com/questions/19131731/laravel-4-logging-sql-queries
 if (Config::get('database.log', false))
