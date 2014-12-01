@@ -60,7 +60,7 @@ Handlebars.registerHelper('paymentTooltip', function() {
 	else                 return window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
 });
 
-Handlebars.registerHelper('sumPayed', function() {
+Handlebars.registerHelper('sumPaid', function() {
 	return _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
 	}, 0).toFixed(2);

@@ -92,7 +92,7 @@
 								{{/each}}
 								<tr>
 									<td></td>
-									<td class="table-sum">{{currency}} {{sumPayed}}</td>
+									<td class="table-sum">{{currency}} {{sumPaid}}</td>
 									<td>{{remainingPay}}</td>
 								</tr>
 							</table>
