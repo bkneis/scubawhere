@@ -95,6 +95,12 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	if(this.decimal_price === '0.00')
 		return '';
 
+	var sum = _.reduce(this.payments, function(memo, payment) {
+		return memo + payment.amount * 1;
+	}, 0);
+	if(sum == this.decimal_price)
+		return '';
+
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {

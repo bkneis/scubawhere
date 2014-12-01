@@ -72,6 +72,8 @@ $(function() {
 		$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 	});
 
+	$('#recieved-at-input').val( moment().format('YYYY-MM-DD') );
+
 	$('#wrapper').on('submit', '#add-transaction-form', function(event) {
 		event.preventDefault();
 
@@ -87,8 +89,8 @@ $(function() {
 			$('.loader').remove();
 			$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 		}, function error(xhr) {
-			errors = JSON.parse(xhr.responseText);
-			_.each(errors, function(error) {
+			data = JSON.parse(xhr.responseText);
+			_.each(data.errors, function(error) {
 				$('#add-transaction-panel').prepend('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><i class="fa fa-exclamation-circle"></i> ' + error + '</div>');
 			});
 

@@ -481,7 +481,10 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.payments.push(data.payment);
+			var payment = data.payment;
+			payment.paymentgateway = window.paymentgateways[ payment.paymentgateway_id ];
+
+			this.payments.push(payment);
 
 			this.confirmed = 1;
 
@@ -535,6 +538,15 @@ Booking.prototype.validate = function(successFn, errorFn){
 	});
 };
 
+Booking.prototype.amountPaid = function() {
+	return _.reduce(this.payments, function(memo, payment) {
+		return memo + payment.amount * 1;
+	}, 0);
+};
+
+Booking.prototype.isPaid = function() {
+	return this.amountPaid() == this.decimal_price;
+};
 
 
 /*

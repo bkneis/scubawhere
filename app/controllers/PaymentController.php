@@ -56,11 +56,12 @@ class PaymentController extends Controller {
 		}
 
 		// For now, just use the company's currency
-		$data['currency_id'] = Auth::user()->currency->id;
+		$data['currency_id']       = Auth::user()->currency->id;
 
 		// This needs to be defined AFTER $data['currency_id']!
-		$data['amount'] = Input::get('amount');
+		$data['amount']            = Input::get('amount');
 		$data['paymentgateway_id'] = Input::get('paymentgateway_id');
+		$data['received_at']       = Input::get('received_at');
 
 		// Check if amount is higher than what needs to be paid
 		$sum       = $booking->payments()->sum('amount');
@@ -78,8 +79,6 @@ class PaymentController extends Controller {
 		if( $data['amount'] > $remaining )
 			return Response::json( array('errors' => array('The entered amount is more than the remaining cost of the booking.')), 406 ); // 406 Not Acceptable
 
-		$data['confirmed'] = true;
-
 		$payment = new Payment($data);
 
 		if( !$payment->validate() )
@@ -89,6 +88,12 @@ class PaymentController extends Controller {
 
 		$payment = $booking->payments()->save($payment);
 
-		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment, 201 ); // 201 Created
+		if( $booking->confirmed === "0" || $booking->confirmed === 0 ) {
+			$booking->confirmed = 1;
+			if( !$booking->save() )
+				return Response::json( array('errors' => $booking->errors()->all()), 500 ); // 500 Internal Server Error
+		}
+
+		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment), 201 ); // 201 Created
 	}
 }

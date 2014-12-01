@@ -37,26 +37,40 @@
 			</div>
 			<div class="panel-body" id="add-transaction-panel">
 				<form role="form" id="add-transaction-form" class="form-horizontal">
+
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Amount</label>
-						<div class="col-sm-9">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Amount</label>
+						<div class="col-sm-6">
 							<div class="input-group">
 								<div class="input-group-addon">{{currency}}</div>
 								<input name="amount" type="number" min="0.01" max="{{remainingPay}}" step="0.01" placeholder="0.00" class="form-control">
 							</div>
 						</div>
 					</div>
+
 					<div class="form-group" id="paymentgateways-select-container">
 						<div id="save-loader" class="loader"></div>
 					</div>
-					<button class="btn btn-primary pull-right" id="add-transaction-submit">Add Transaction</button>
+
+					<div class="form-group">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Received at</label>
+						<div class="col-sm-6">
+							<input name="received_at" type="text" class="form-control" id="recieved-at-input">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-4">
+							<button class="btn btn-primary" id="add-transaction-submit">Add Transaction</button>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Recieved transactions</h3>
+				<h3 class="panel-title">Received transactions</h3>
 			</div>
 			<div class="panel-body">
 				{{#if payments}}
@@ -71,7 +85,7 @@
 						<tbody>
 							{{#each payments}}
 								<tr>
-									<td>{{created_at}}</td>
+									<td>{{received_at}}</td>
 									<td>{{currency}} {{amount}}</td>
 									<td>{{paymentgateway.name}}</td>
 								</tr>
@@ -86,8 +100,8 @@
 	</script>
 
 	<script type="text/x-handlebars-template" id="paymentgateways-select-template">
-		<label class="col-sm-3 control-label">Payment Gateway</label>
-		<div class="col-sm-9">
+		<label class="col-sm-3 col-sm-offset-1 control-label">Payment Gateway</label>
+		<div class="col-sm-6">
 			<select name="paymentgateway_id" class="form-control">
 				{{#each paymentgateways}}
 					<option value="{{id}}">{{name}}</option>

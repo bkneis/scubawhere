@@ -5,12 +5,13 @@ use ScubaWhere\Helper;
 // use PhilipBrown\Money\Currency;
 
 class Payment extends Ardent {
-	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id');
+	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at');
 
 	public static $rules = array(
 		'amount'            => 'required|numeric|min:0.01',
 		'currency_id'       => 'required|integer',
-		'paymentgateway_id' => 'required|integer'
+		'paymentgateway_id' => 'required|integer',
+		'received_at'       => 'required|date',
 	);
 
 	public function setAmountAttribute($value)

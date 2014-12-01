@@ -1,0 +1,11 @@
+diff a/app/controllers/PaymentController.php b/app/controllers/PaymentController.php	(rejected hunks)
+@@ -89,9 +89,6 @@
+ 
+ 		$payment = $booking->payments()->save($payment);
+ 
+-		if( !$booking->confirmed )
+-			$booking->update( array('confirmed' => true) );
+-
+ 		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment, 201 ); // 201 Created
+ 	}
+ }

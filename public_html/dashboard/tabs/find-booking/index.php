@@ -85,7 +85,7 @@
 								</tr>
 								{{#each payments}}
 									<tr>
-										<td>{{created_at}}</td>
+										<td>{{received_at}}</td>
 										<td>{{currency}} {{amount}}</td>
 										<td>{{paymentgateway.name}}</td>
 									</tr>
