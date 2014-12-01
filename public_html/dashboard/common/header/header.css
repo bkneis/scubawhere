@@ -43,7 +43,6 @@
 }
 
 .nav-opt{
-	float: right;
 	padding-left: 30px;
 	padding-right: 30px;
 	color: #ffffff;
@@ -67,14 +66,11 @@
 }
 
 #logout{
-	color: #ffffff;
-	background-color: #4a9cff;
-	padding: 5px 20px;
-	border-radius: 1px;
-	cursor: pointer;
-	border: none;
-	font-size: 18px;
-	float: right
+	color: white;
+	background-color: transparent;
+}
+#logout:hover {
+	background-color: rgba(255, 255, 255, 0.1);
 }
 #search-form{
 	float: right;

@@ -39,13 +39,13 @@
 				</p>
 				<h4>{{#if session.deleted_at}}<s>{{/if}}{{{trip.name}}}{{#if session.deleted_at}}</s>{{/if}}</h4>
 				{{#if session.deleted_at}} <p class="text-danger"><strong>Deactivated</strong></p>{{/if}}
-				<table style="margin: 2em 0;">
+				<table style="margin: 2em 0;" class="table">
 					<tr>
 						<td><strong>Date</strong></td>
 						<td>{{date start}}</td>
 					</tr>
 					<tr>
-						<td><strong>Departure time</strong></td>
+						<td style="vertical-align: middle;"><strong>Departure time</strong></td>
 						<td>
 							<small><span style="display: inline-block; width: 49px">hour</span><span>minutes</span></small><br>
 							<input type="text" placeholder="hh" value="{{hours start}}"   class="starthours"   style="width: 38px;"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}>:
@@ -81,19 +81,21 @@
 					{{#unless session.deleted_at}}
 					{{#unless isNew}}
 					{{#unless session.timetable_id}}
-						<label><input type="checkbox" onchange="toggleTimetableForm();"> <h3 style="display: inline-block;">Define a repeating timetable</h3></label>
+						<label><input type="checkbox" onchange="toggleTimetableForm();"> <h4 style="display: inline-block;">Define a repeating timetable</h4 	></label>
 						<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
-							<table class="striped">
-								<tr style="text-align: left;">
-									<th>Week #</th>
-									<th>Mon</th>
-									<th>Tue</th>
-									<th>Wed</th>
-									<th>Thu</th>
-									<th>Fri</th>
-									<th>Sat</th>
-									<th>Sun</th>
-								</tr>
+							<table class="table table-striped">
+								<thead>
+									<tr style="text-align: left;">
+										<th>Week #</th>
+										<th>Mon</th>
+										<th>Tue</th>
+										<th>Wed</th>
+										<th>Thu</th>
+										<th>Fri</th>
+										<th>Sat</th>
+										<th>Sun</th>
+									</tr>
+								</thead>
 								<tr>
 									<td>1</td>
 									<td><input type="checkbox" name="schedule[1][]" value="mon" {{isWeekday 1}}></td>
@@ -109,7 +111,7 @@
 							<input type="hidden" name="_token">
 							<input type="hidden" name="session_id" value="{{session.id}}">
 
-							<button class="bttn big-bttn blueb create-timetable-button" style="float: right;">Create timetable</button>
+							<button class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
 
 							Until: <input type="date" name="until" placeholder="YYYY-MM-DD"><br>
 							<small>Default: for 1.5 years</small>
@@ -136,16 +138,16 @@
 					<div style="margin-top: 1em; text-align: right">
 						{{#if isNew}}
 							<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-							<button class="submit-session bttn big-bttn blueb">Activate</button>
+							<button class="submit-session btn btn-primary btn-lg">Activate</button>
 						{{else}}
 							{{#unless isPast}}
 								{{#unless session.deleted_at}}
-									<button class="delete-session bttn redb" style="float: left; line-height: 2em; margin-top: 0.7em;">Delete</button>
+									<button class="delete-session btn btn-danger pull-left">Delete</button>
 									<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-									<button class="update-session bttn big-bttn blueb">Update</button>
+									<button class="update-session btn btn-primary btn-lg">Update</button>
 								{{else}}
-									<button class="delete-session bttn redb" style="float: left; line-height: 2em; margin-top: 0.7em;">Delete</button>
-									<button class="restore-session bttn blueb" style="float: left; line-height: 2em; margin-top: 0.7em; margin-left: 1em;">Restore</button>
+									<button class="delete-session btn btn-danger pull-left">Delete</button>
+									<button class="restore-session btn btn-primary pull-left">Restore</button>
 									<input type="radio" name="handle_timetable" value="only_this" checked style="visibility: hidden;">
 								{{/unless}}
 							{{/unless}}

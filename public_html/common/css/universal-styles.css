@@ -253,17 +253,13 @@ right: -9999px;
 table{ width: 100%; }
 
 /* default */
-table thead th{
+table.bluethead thead th{
 	background-color: #4a9cff;
 	color: #fff;
 	padding: 10px;
 	font-size: 14px;
 	font-weight: 400;
 	font-weight: bold;
-	text-align: left;
-}
-table th {
-	padding: 5px 10px;
 	text-align: left;
 }
 table td {
