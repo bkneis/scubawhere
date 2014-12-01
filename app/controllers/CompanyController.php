@@ -36,27 +36,28 @@ class CompanyController extends Controller {
 				$data['county'],
 				$country->name,
 			) ) );
+
 			$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
 
-			$latLng = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$googleAPIKey;
+			$latLng = 'https://maps.googleapis.com/maps/api/geocode/xml?address='.$address.'&key='.$googleAPIKey;
 			$latLng = simplexml_load_file($latLng);
 
-			if($latLng->status === "OK")
+			if((string) $latLng->status === "OK")
 			{
-				$data['latitude']  = $latLng->results[0]->geometry->location->lat;
-				$data['longitude'] = $latLng->results[0]->geometry->location->lng;
+				$data['latitude']  = $latLng->result->geometry->location->lat;
+				$data['longitude'] = $latLng->result->geometry->location->lng;
 
 				$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
 				$timezone = simplexml_load_file($timezone);
 
-				if($timezone->status === "OK")
+				if((string) $timezone->status === "OK")
 					$data['timezone'] = $timezone->time_zone_id;
 				else
-					return Response::json( array('errors' => arary('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
+					return Response::json( array('errors' => array('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
 			}
 			else
 			{
-				return Response::json( array('errors' => arary('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
+				return Response::json( array('errors' => array('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
 			}
 		}
 
