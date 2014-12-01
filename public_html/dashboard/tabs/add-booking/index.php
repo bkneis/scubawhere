@@ -941,7 +941,7 @@
 				<div class="col-lg-8 col-lg-offset-2">
 					<div class="col-sm-6">
 						<div class="col-md-8 col-md-offset-2">
-							<a href="javascript:void(0);" class="btn btn-primary btn-block"><i class="fa fa-credit-card"></i> Add Payment</a>
+							<button onclick="addTransaction();" class="btn btn-primary btn-block"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>
 						</div>
 					</div>
 					<div class="col-sm-6">

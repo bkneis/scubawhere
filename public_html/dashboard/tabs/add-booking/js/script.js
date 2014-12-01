@@ -18,7 +18,7 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 	var html = '';
 	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
-	html += '	<span class="percentage-spaces">' + freeSpaces + '</span>';
+	html += '	<span class="percentage-left">' + freeSpaces + '</span>';
 	html += '</div>';
 
 	return new Handlebars.SafeString(html);
@@ -807,5 +807,7 @@ function showAlert(type, error) {
 	$('.alert-container').hide().fadeIn();
 }
 
-//Adds 0 to single digits for date/times.
-function addZ(n){return n<10? '0'+n:''+n;}
+function addTransaction() {
+	window.clickedEdit = true;
+	window.location.hash = 'add-transaction';
+}

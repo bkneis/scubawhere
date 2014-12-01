@@ -78,6 +78,8 @@ class PaymentController extends Controller {
 		if( $data['amount'] > $remaining )
 			return Response::json( array('errors' => array('The entered amount is more than the remaining cost of the booking.')), 406 ); // 406 Not Acceptable
 
+		$data['confirmed'] = true;
+
 		$payment = new Payment($data);
 
 		if( !$payment->validate() )
@@ -87,9 +89,6 @@ class PaymentController extends Controller {
 
 		$payment = $booking->payments()->save($payment);
 
-		if( !$booking->confirmed )
-			$booking->update( array('confirmed' => true) );
-
-		return Response::json( array('status' => 'OK. Payment added'), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment, 201 ); // 201 Created
 	}
 }

@@ -481,13 +481,9 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			var payment = {
-				amount: params.amount,
-				paymentgateway: window.paymentgateways[params.paymentgateway_id],
-				currency: window.company.currency
-			};
+			this.payments.push(data.payment);
 
-			this.payments.push(payment);
+			this.confirmed = 1;
 
 			successFn(data.status);
 		},
