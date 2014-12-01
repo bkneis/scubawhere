@@ -52,7 +52,7 @@
 						</div>
 
 						<div class="form-row" id="locationsList">
-							<h3>Select the locations that this trip will go to:</h3>
+							<h4>Select the locations that this trip will go to:</h4>
 							{{#each available_locations}}
 								<label class="location{{inArray id ../locations}}">
 									<input type="checkbox" name="locations[]" value="{{id}}"{{inArray id ../locations}} onchange="changeParent(this)">
@@ -63,7 +63,7 @@
 						</div>
 
 						<div class="form-row" id="triptypesList">
-							<h3>Select the triptypes of this trip:</h3>
+							<h4>Select the triptypes of this trip:</h4>
 							{{#each available_triptypes}}
 								<label class="triptype{{inArray id ../triptypes}}">
 									<input type="checkbox" name="triptypes[]" value="{{id}}"{{inArray id ../triptypes}} onchange="changeParent(this)">

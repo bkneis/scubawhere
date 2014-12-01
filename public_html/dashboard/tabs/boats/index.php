@@ -52,7 +52,7 @@
 						</div>
 						<div class="form-row">
 							<div id="room-types">
-							<h3>Boat rooms</h3>
+							<h4>Boat rooms</h4>
 								{{#each boatrooms}}
 									{{> boatroom_show}}
 								{{/each}}
