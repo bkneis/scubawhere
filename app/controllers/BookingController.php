@@ -86,6 +86,9 @@ class BookingController extends Controller {
 
 		$data['price'] = 0;
 
+		// Reserve booking for 15 min by default
+		$data['reserved'] = Helper::localTime()->add( new DateInterval('PT15M') )->format('Y-m-d H:i:s');
+
 		$booking = new Booking($data);
 
 		// Generate a reference number and check whether it is unique
