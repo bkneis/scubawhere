@@ -42,13 +42,11 @@ class RegisterController extends Controller {
 			if($timezone->status === "OK")
 				$data['timezone'] = $timezone->time_zone_id;
 			else
-				$data['timezone'] = '';
+				return Response::json( array('errors' => arary('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
 		}
 		else
 		{
-			$data['latitude']  = 0;
-			$data['longitude'] = 0;
-			$data['timezone'] = '';
+			return Response::json( array('errors' => arary('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
 		}
 
 		$company = new Company($data);

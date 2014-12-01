@@ -36,21 +36,27 @@ class CompanyController extends Controller {
 				$data['county'],
 				$country->name,
 			) ) );
-			$ch = curl_init( 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			$result = curl_exec( $ch );
-			curl_close( $ch );
-			$result = json_decode( $result );
+			$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
 
-			if($result->status === "OK")
+			$latLng = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$googleAPIKey;
+			$latLng = simplexml_load_file($latLng);
+
+			if($latLng->status === "OK")
 			{
-				$data['latitude']  = $result->results[0]->geometry->location->lat;
-				$data['longitude'] = $result->results[0]->geometry->location->lng;
+				$data['latitude']  = $latLng->results[0]->geometry->location->lat;
+				$data['longitude'] = $latLng->results[0]->geometry->location->lng;
+
+				$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
+				$timezone = simplexml_load_file($timezone);
+
+				if($timezone->status === "OK")
+					$data['timezone'] = $timezone->time_zone_id;
+				else
+					return Response::json( array('errors' => arary('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
 			}
 			else
 			{
-				$data['latitude']  = 0;
-				$data['longitude'] = 0;
+				return Response::json( array('errors' => arary('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
 			}
 		}
 
