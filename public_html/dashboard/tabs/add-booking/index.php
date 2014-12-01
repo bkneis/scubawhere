@@ -911,7 +911,7 @@
 										<div class="panel-heading">
 											<h4 class="panel-title">Lead Customer</h4>
 										</div>
-										<div class="panel-body" id="summary-lead"></li>
+										<div class="panel-body" id="summary-lead"></div>
 										<script id="summary-lead-template" type="text/x-handlebars-template">
 											<p class="lead"><strong>{{{firstname}}} {{{lastname}}}</strong></p>
 											<p><strong>Email:</strong> {{{email}}}</p>
@@ -920,59 +920,58 @@
 										</script>
 									</div>
 								</div>
-								<div class="text-right" id="summary-price">
-									<script id="summary-price-template" type="text/x-handlebars-template">
-										{{!--<p class="lead">Sub-total: £800</p>
-										<p class="lead">VAT: £200</p>--}}
-										<p class="lead text-success">Total: {{currency}} {{decimal_price}}</p>
-									</script>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-2 col-xs-4">
-									<a href="javascript:void(0);" class="btn btn-success btn-block save-booking"><i class="fa fa-save"></i> Save</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
-					<div class="col-sm-6">
-						<div class="col-md-8 col-md-offset-2">
-							<button onclick="addTransaction();" class="btn btn-primary btn-block"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="col-md-8 col-md-offset-2">
-							<div class="form-group">
-								<div class="radio">
-									<label>
-										<input type="radio" name="email" id="email-yes" value="1" checked>
-										Send confirmation email to customer
-									</label>
-								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="email" id="email-no" value="0">
-										Do not send email
-									</label>
-								</div>
-							</div>
-
-							<h4 class="text-center">--- AND ---</h4>
-
-							<div class="form-group">
-								<a href="javascript:void(0);" class="btn btn-warning btn-block save-booking"><i class="fa fa-save"></i> Reserve</a>
-							</div>
-							<div class="form-group">
-								<label for="reserve-until" class="col-sm-3 control-label">Until</label>
-								<div class="col-md-9 input-group">
-									<input id="reserve-until" name="reserve-until" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
-									<span class="input-group-addon">
-										<span class="fa fa-calendar"></span>
-									</span>
+								<div class="col-md-3 col-md-offset-5 summary-totals">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="text-right">
+												<!--<p>Sub-total:</p>-->
+												<!--<p>VAT:</p>-->
+												<h4 class="text-success">Total:</h4>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="text-right" id="summary-price">
+												<script id="summary-price-template" type="text/x-handlebars-template">
+													{{!--<p>£800.00</p>
+													<p>£200.00</p>--}}
+													<h4 class="text-success">{{currency}} {{decimal_price}}</h4>
+												</script>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<button class="btn btn-success btn-block save-booking mb10"><i class="fa fa-save"></i> Save For Later</button>
+											<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>
+											<h4 class="text-center">Reserve Booking</h4>
+											<div class="form-group">
+												<div class="radio">
+													<label>
+														<input type="radio" name="email" id="email-yes" value="1" checked>
+														Send confirmation email to customer
+													</label>
+												</div>
+												<div class="radio">
+													<label>
+														<input type="radio" name="email" id="email-no" value="0">
+														Do not send email
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<a href="javascript:void(0);" class="btn btn-warning btn-block reserve-booking"><i class="fa fa-clock-o"></i> Reserve</a>
+											</div>
+											<div class="form-group">
+												<label for="reserve-until" class="col-sm-3 control-label">Until</label>
+												<div class="col-md-9 input-group">
+													<input id="reserve-until" name="reserve-until" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
+													<span class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
