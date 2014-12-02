@@ -116,6 +116,7 @@ class BookingController extends Controller {
 		 * customer_id
 		 * ticket_id
 		 * session_id
+		 * boatroom_id (only sometimes required)
 		 *
 		 * package_id (optional)
 		 * packagefacade_id (optional)
@@ -189,6 +190,20 @@ class BookingController extends Controller {
 		else
 			$package = false;
 
+		/* Probably not needed because the boatroom_id is only checked against existing and user-owned IDs anyway
+		if( Input::has('boatroom_id') )
+		{
+			try
+			{
+				Auth::user()->boatrooms()->findOrFail( Input::get('boatroom_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		*/
+
 		// Validate that the customer is not already booked for this session on another booking
 		$check = Auth::user()->bookings()
 			->whereNotIn('id', array($booking->id))
@@ -217,7 +232,7 @@ class BookingController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('This ticket/package can not be booked for this session\'s trip.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
 		}
 
 		// Check if the session's boat is allowed for the ticket
@@ -228,12 +243,62 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat.')), 403 ); // 403 Forbidden
 		}
 
+		$boatroom_id = false;
+		$departureBoatBoatrooms = $departure->boat->boatrooms()->lists('id');
+		$ticketBoatrooms = $ticket->boatrooms()->lists('id');
+
 		// Check if the session's boat's boatrooms are allowed for the ticket
-		if( $ticket->boatrooms()->count() > 0)
+		if( count($ticketBoatrooms) > 0 )
 		{
-			$boatroomIDs = $ticket->boatrooms()->lists('id');
-			if( count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) == 0 )
-				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatrooms.')), 403 ); // 403 Forbidden
+			$intersect = array_intersect($departureBoatBoatrooms, $ticketBoatrooms);
+			if( count($intersect) === 0 )
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatroom(s).')), 403 ); // 403 Forbidden
+
+			if( count($intersect) === 1 )
+				$boatroom_id = $intersect[0];
+		}
+
+		// Determine if we need a boatroom_id (only when the trip is overnight)
+		$trip  = $departure->trip;
+		$start = new DateTime($trip->start);
+		$end   = clone $start;
+		$end->add( new DateInterval('PT'.$trip->duration.'H') );
+		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
+		{
+			// The trip is overnight and we do need a boatroom_id
+
+			// Just in case, check if the boat has boatrooms assigned
+			if( count($departureBoatBoatrooms) === 0 )
+				return Response::json( array('errors' => array('Could not assign the customer, the boat has no boatrooms.')), 412 ); // 412 Precondition Failed
+
+			// Check if the boat only has one boatroom assigned
+			if( count($departureBoatBoatrooms) === 1 )
+				$boatroom_id = $departureBoatBoatrooms[0];
+
+			// Check if the boatroom is still not determined
+			if($boatroom_id === false)
+			{
+				// Check if a boatroom_id got submitted
+				if( !Input::has('boatroom_id') )
+					return Response::json( array('errors' => array('Please select in which boatroom the customer will sleep.')), 406 ); // 406 Not Acceptable
+
+				// Check if the submitted boatroom_id is allowed
+				$boatroom_id = Input::get('boatroom_id');
+				if( !in_array($boatroom_id, $departureBoatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
+					return Response::json( array('errors' => array('The selected boatroom cannot be booked for this session.')), 403 ); // 403 Forbidden
+			}
+			else
+			{
+				// The above checks already determined that there is only one possible boatroom to take
+				// If a boatroom_id got submitted anyway, check if it is the same that we determined
+				if( Input::has('boatroom_id') && Input::get('boatroom_id') != $boatroom_id )
+					return Response::json( array('errors' => array('The selected boatroom cannot be booked for this session.')), 403 ); // 403 Forbidden
+			}
+		}
+		else
+		{
+			// The trip ends on the same day it starts and thus customers are not assigned to boatrooms
+			$boatroom_id = null;
 		}
 
 		// Validate remaining capacity on session
@@ -242,6 +307,13 @@ class BookingController extends Controller {
 		{
 			// Session/Boat already full/overbooked
 			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
+		}
+
+		// If a boatroom is needed, validate remaining capacity of boatroom
+		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
+		{
+			// The selected/required boatroom is already full/overbooked
+			return Response::json( array('errors' => array('The selected boatroom is already fully booked!')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining package capacity on session
@@ -260,6 +332,10 @@ class BookingController extends Controller {
 			}
 		}
 
+		/*******************
+		 * CHECKS COMPLETE *
+		 *******************/
+
 		// If there is a package, but no packagefacade yet, create a new packagefacade
 		if( $package && !isset($packagefacade) )
 		{
@@ -272,6 +348,7 @@ class BookingController extends Controller {
 			'customer_id'      => $customer->id,
 			'ticket_id'        => $ticket->id,
 			'session_id'       => $departure->id,
+			'boatroom_id'      => $boatroom_id,
 			'packagefacade_id' => $package ? $packagefacade->id : null
 		) );
 		$bookingdetail = $booking->bookingdetails()->save($bookingdetail);
