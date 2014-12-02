@@ -78,11 +78,6 @@ class CompanyController extends Controller {
 		}
 	}
 
-	public function getTriptypes()
-	{
-		return Triptype::orderBy('name')->get();
-	}
-
 	public function getLocations()
 	{
 		$area = Input::get('area'); // Structure: [north, west, south, east]

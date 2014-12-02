@@ -17,7 +17,7 @@ class TripController extends Controller {
 			return Auth::user()->trips()->withTrashed()->with(
 				array(
 					'locations',
-					'triptypes',
+					'tags',
 					'tickets',
 				)
 			)->findOrFail( Input::get('id') );
@@ -33,7 +33,7 @@ class TripController extends Controller {
 		return Auth::user()->trips()->with(
 			array(
 				'locations',
-				'triptypes',
+				'tags',
 			)
 		)->get();
 	}
@@ -43,9 +43,14 @@ class TripController extends Controller {
 		return Auth::user()->trips()->withTrashed()->with(
 			array(
 				'locations',
-				'triptypes',
+				'tags',
 			)
 		)->get();
+	}
+
+	public function getTags()
+	{
+		return Tag::where('for_type', 'Trip')->orderBy('name')->get();
 	}
 
 	public function postAdd()
@@ -62,16 +67,16 @@ class TripController extends Controller {
 			$data['video'] = Input::get('video');
 		}
 
-		// Validate that locations and triptypes are provided
+		// Validate that locations and tags are provided
 		$locations = Input::get('locations');
-		$triptypes = Input::get('triptypes');
+		$tags      = Input::get('tags');
 		if( !$locations || empty($locations) || !is_numeric( $locations[0] ) )
 		{
 			return Response::json( array('errors' => array('At least one location is required.')), 406 ); // 406 Not Acceptable
 		}
-		if( !$triptypes || empty($triptypes) || !is_numeric( $triptypes[0] ) )
+		if( !$tags || empty($tags) || !is_numeric( $tags[0] ) )
 		{
-			return Response::json( array('errors' => array('At least one triptype is required.')), 406 ); // 406 Not Acceptable
+			return Response::json( array('errors' => array('At least one tag is required.')), 406 ); // 406 Not Acceptable
 		}
 
 		$trip = new Trip($data);
@@ -96,14 +101,14 @@ class TripController extends Controller {
 			return Response::json( array('errors' => array('Could not assign locations to trip, \'locations\' array is propably erroneous.')), 400 ); // 400 Bad Request
 		}
 
-		// Connect triptypes
+		// Connect tags
 		try
 		{
-			$trip->triptypes()->sync($triptypes);
+			$trip->tags()->sync($tags);
 		}
 		catch(Exeption $e)
 		{
-			return Response::json( array('errors' => array('Could not assign triptypes to trip, \'triptypes\' array is propably erroneous.')), 400 ); // 400 Bad Request
+			return Response::json( array('errors' => array('Could not assign tags to trip, \'tags\' array is propably erroneous.')), 400 ); // 400 Bad Request
 		}
 
 		// When no problems occur, we return a success response
@@ -124,16 +129,16 @@ class TripController extends Controller {
 			return Response::json( array('errors' => array('Can\'t find the trip with the submitted ID!')), 404 ); // 404 Not Found
 		}
 
-		// Validate that locations and triptypes are provided
+		// Validate that locations and tags are provided
 		$locations = Input::get('locations');
-		$triptypes = Input::get('triptypes');
+		$tags      = Input::get('tags');
 		if( !$locations || empty($locations) || !is_numeric( $locations[0] ) )
 		{
 			return Response::json( array('errors' => array('At least one location is required.')), 406 ); // 406 Not Acceptable
 		}
-		if( !$triptypes || empty($triptypes) || !is_numeric( $triptypes[0] ) )
+		if( !$tags || empty($tags) || !is_numeric( $tags[0] ) )
 		{
-			return Response::json( array('errors' => array('At least one triptype is required.')), 406 ); // 406 Not Acceptable
+			return Response::json( array('errors' => array('At least one tag is required.')), 406 ); // 406 Not Acceptable
 		}
 
 		if( !$trip->update($data) )
@@ -150,10 +155,10 @@ class TripController extends Controller {
 			return Response::json( array('errors' => array('Could not assign locations to trip, \'locations\' array is propably erroneous.')), 400 ); // 400 Bad Request
 		}
 
-		// Connect triptypes
-		if( !$trip->triptypes()->sync( $triptypes ) )
+		// Connect tags
+		if( !$trip->tags()->sync( $tags ) )
 		{
-			return Response::json( array('errors' => array('Could not assign triptypes to trip, \'triptypes\' array is propably erroneous.')), 400 ); // 400 Bad Request
+			return Response::json( array('errors' => array('Could not assign tags to trip, \'tags\' array is propably erroneous.')), 400 ); // 400 Bad Request
 		}
 
 		// When no problems occur, we return a success response

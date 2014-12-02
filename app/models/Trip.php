@@ -50,9 +50,9 @@ class Trip extends Ardent {
 		return $this->belongsToMany('Location')->withTimestamps();
 	}
 
-	public function triptypes()
+	public function tags()
 	{
-		return $this->belongsToMany('Triptype')->withTimestamps();
+		return $this->morphToMany('Tag', 'taggable')->withTimestamps();
 	}
 
 	public function tickets()

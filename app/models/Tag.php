@@ -3,7 +3,7 @@
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Triptype extends Ardent {
+class Tag extends Ardent {
 	protected $guarded = array('*');
 	protected $fillable = array();
 	protected $hidden = array('created_at', 'updated_at');
@@ -21,6 +21,6 @@ class Triptype extends Ardent {
 
 	public function trips()
 	{
-		return $this->belongsToMany('Trip');
+		return $this->morphedByMany('Trip', 'taggable')->withTimestamps();
 	}
 }

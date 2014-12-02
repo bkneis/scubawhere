@@ -746,11 +746,11 @@ span.box-tool{
 }
 
 #locationsList,
-#triptypesList {
+#tagsList {
 	overflow: auto;
 }
 .location,
-.triptype {
+.tag {
 	display: block;
 	border: 1px solid #c8c8c8;
 	float: left;
@@ -762,7 +762,7 @@ span.box-tool{
 	margin: 0;
 }
 .location.checked,
-.triptype.checked {
+.tag.checked {
 	border-color: #27ae60;
 	background-color: #2ecc71;
 }

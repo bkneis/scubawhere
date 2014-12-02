@@ -16,10 +16,8 @@ var Trip = {
 		});
 	},
 
-	getAllTripTypes : function(handleData){
-		$.get("/company/triptypes").done(function(data){
-			handleData(data);
-		});
+	tags : function(handleData) {
+		$.get("/api/trip/tags", handleData);
 	},
 
 	create : function(params, handleData, errorFn) {

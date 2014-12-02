@@ -62,11 +62,11 @@
 							{{/each}}
 						</div>
 
-						<div class="form-row" id="triptypesList">
-							<h4>Select the triptypes of this trip:</h4>
-							{{#each available_triptypes}}
-								<label class="triptype{{inArray id ../triptypes}}">
-									<input type="checkbox" name="triptypes[]" value="{{id}}"{{inArray id ../triptypes}} onchange="changeParent(this)">
+						<div class="form-row" id="tagsList">
+							<h4>Select the tags of this trip:</h4>
+							{{#each available_tags}}
+								<label class="tag{{inArray id ../tags}}">
+									<input type="checkbox" name="tags[]" value="{{id}}"{{inArray id ../tags}} onchange="changeParent(this)">
 									<strong>{{name}}</strong><br>
 								</label>
 							{{/each}}

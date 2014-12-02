@@ -23,14 +23,14 @@ $(function(){
 	tripList = Handlebars.compile( $("#trip-list-template").html() );
 	renderTripList();
 
-	// Load locations & triptypes, then show default create trip form
+	// Load locations & tags, then show default create trip form
 	// Promises are not supported in IE.. :( (http://caniuse.com/#feat=promises)
 	Place.attached(function(data) {
 		// window.places = _.indexBy(data, 'id');
 		window.places = data;
 
-		Trip.getAllTripTypes(function(data) {
-			window.triptypes = _.indexBy(data, 'id');
+		Trip.tags(function(data) {
+			window.tags = _.indexBy(data, 'id');
 
 			tripForm = Handlebars.compile( $("#trip-form-template").html() );
 			renderEditForm();
@@ -239,10 +239,10 @@ function renderEditForm(id) {
 	}
 
 	trip.locations = _.indexBy(trip.locations, 'id');
-	trip.triptypes = _.indexBy(trip.triptypes, 'id');
+	trip.tags      = _.indexBy(trip.tags, 'id');
 
 	trip.available_locations = window.places;
-	trip.available_triptypes = window.triptypes;
+	trip.available_tags      = window.tags;
 
 	$('#trip-form-container').empty().append( tripForm(trip) );
 
