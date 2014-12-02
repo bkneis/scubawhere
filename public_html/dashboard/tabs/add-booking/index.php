@@ -527,16 +527,23 @@
 										</div>
 										<script id="sessions-table-template" type="text/x-handlebars-template">
 											{{#each sessions}}
-											{{#unless deleted_at}}
-											<tr>
-												<td class="session-start">{{friendlyDate start}}</td>
-												<td class="session-end">{{tripFinish start trip.duration}}</td>
-												<td class="session-trip">{{{trip.name}}}</td>
-												<td>{{freeSpaces capacity}}</td>
-												<td>{{{boat.name}}}</td>
-												<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
-											</tr>
-											{{/unless}}
+												{{#unless deleted_at}}
+													<tr>
+														<td class="session-start">{{friendlyDate start}}</td>
+														<td class="session-end">{{tripFinish start trip.duration}}</td>
+														<td class="session-trip">{{{trip.name}}}</td>
+														<td>{{freeSpaces capacity}}</td>
+														<td>{{{boat.name}}}</td>
+														<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
+													</tr>
+												{{/unless}}
+											{{else}}
+												<tr>
+													<td colspan="6">
+														<h3 class="text-center text-muted"><i class="fa fa-exclamation-triangle"></i></h3>
+														<h5 class="text-center text-muted">Your search did not match any sessions.</h5>
+													</td>
+												</tr>
 											{{/each}}
 										</script>
 									</div>
