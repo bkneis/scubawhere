@@ -19,6 +19,7 @@ return array(
     'AddCurrencyToCountries' => $baseDir . '/app/database/migrations/2014_10_25_180907_add_currency_to_countries.php',
     'AddDeletedAtColumnsToAddonsAndTripsTables' => $baseDir . '/app/database/migrations/2014_10_14_012603_add_deleted_at_columns_to_addons_and_trips_tables.php',
     'AddDeletedAtColumnsToTicketsAndPackagesTable' => $baseDir . '/app/database/migrations/2014_10_10_002732_add_deleted_at_columns_to_tickets_and_packages_table.php',
+    'AddDeletedAtFieldToBoatroomsTable' => $baseDir . '/app/database/migrations/2014_12_02_174659_add_deleted_at_field_to_boatrooms_table.php',
     'AddForeignCompanyIdToAgentsTable' => $baseDir . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
     'AddForeignKeysToBookingCustomerTable' => $baseDir . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
     'AddIdColumnToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_10_13_141916_add_id_column_to_booking_details_table.php',

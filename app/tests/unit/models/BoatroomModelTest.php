@@ -35,11 +35,23 @@ class BoatroomModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $boatroom->name, "Unexpected name value");
 		$this->assertEquals(ModelTestHelper::TEST_STRING_UPDATED, $boatroom->description, "Unexpected description value");
 
-		//Delete
+		//Delete - soft, restore, force
 		$boatroom->delete();
 		$boatroom = Boatroom::find($boatroom_id);
+		$this->assertNull($boatroom, "Boatroom not soft deleted");
 
-		$this->assertNull($boatroom, "Boatroom not deleted");
+		$boatroom = Boatroom::onlyTrashed()->where('id', '=', $boatroom_id)->first();
+		$this->assertNotNull($boatroom, "Boatroom soft deleted but cannot be found");
+		$this->assertNotNull($boatroom->deleted_at);
+
+		Boatroom::onlyTrashed()->where('id', '=', $boatroom_id)->restore();
+		$boatroom = Boatroom::find($boatroom_id);
+		$this->assertNotNull($boatroom, "Boatroom not restored");
+		$this->assertNull($boatroom->deleted_at);
+
+		Boatroom::withTrashed()->where('id', '=', $boatroom_id)->forceDelete();
+		$boatroom = Boatroom::withTrashed()->where('id', '=', $boatroom_id)->first();
+		$this->assertNull($boatroom, "Boatroom not forceDeleted");
 	}
 
 	public function testValidation(){
