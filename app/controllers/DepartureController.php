@@ -192,7 +192,7 @@ class DepartureController extends Controller {
 		if( $ticket && $ticket->boats()->count() > 0 )
 		{
 			$boatIDs = $ticket->boats()->lists('id');
-			$departures->filter(function($departure) use ($boatIDs)
+			$departures = $departures->filter(function($departure) use ($boatIDs)
 			{
 				return in_array($departure->boat_id, $boatIDs);
 			});
@@ -202,7 +202,7 @@ class DepartureController extends Controller {
 		if( $ticket && $ticket->boatrooms()->count() > 0)
 		{
 			$boatroomIDs = $ticket->boatrooms()->lists('id');
-			$departures->filter(function($departure) use ($boatroomIDs)
+			$departures = $departures->filter(function($departure) use ($boatroomIDs)
 			{
 				return count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
 			});
