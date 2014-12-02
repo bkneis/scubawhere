@@ -171,13 +171,14 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createBookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $packagefacade_id){
+	public static function createBookingdetail($booking_id, $customer_id, $ticket_id, $session_id, $boatroom_id, $packagefacade_id){
 		$entry = new Bookingdetail();
 
-		$entry->booking_id = $booking_id;
-		$entry->customer_id = $customer_id;
-		$entry->ticket_id = $ticket_id;
-		$entry->session_id = $session_id;
+		$entry->booking_id       = $booking_id;
+		$entry->customer_id      = $customer_id;
+		$entry->ticket_id        = $ticket_id;
+		$entry->session_id       = $session_id;
+		$entry->boatroom_id      = $boatroom_id;
 		$entry->packagefacade_id = $packagefacade_id;
 
 		$entry->save();
@@ -190,8 +191,8 @@ class ModelTestHelper{
 		$entry->agency_id = $agency_id;
 
 		$entry->abbreviation = self::TEST_ABBR;
-		$entry->name = self::TEST_STRING.$append;
-		$entry->description = self::TEST_STRING.$append;
+		$entry->name         = self::TEST_STRING.$append;
+		$entry->description  = self::TEST_STRING.$append;
 
 		$entry->save();
 		return $entry->id;

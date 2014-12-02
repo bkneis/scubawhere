@@ -41,7 +41,7 @@ class ModelRelationshipsTest extends TestCase {
 		$this->timetable_id      = ModelTestHelper::createTimetable($this->company_id);
 		$this->session_id        = ModelTestHelper::createDeparture($this->trip_id, $this->boat_id, $this->timetable_id);
 		$this->booking_id        = ModelTestHelper::createBooking($this->company_id, $this->agent_id);
-		$this->bookingdetail_id  = ModelTestHelper::createBookingdetail($this->booking_id, $this->customer_id, $this->ticket_id, $this->session_id, $this->packagefacade_id);
+		$this->bookingdetail_id  = ModelTestHelper::createBookingdetail($this->booking_id, $this->customer_id, $this->ticket_id, $this->session_id, $this->boatroom_id, $this->packagefacade_id);
 		$this->payment_id        = ModelTestHelper::createPayment($this->booking_id, $this->currency_id, $this->paymentgateway_id);
 	}
 

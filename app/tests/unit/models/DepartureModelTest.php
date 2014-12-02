@@ -92,8 +92,8 @@ class DepartureModelTest extends ModelTestCase {
 		$departure    = Departure::find($departure_id);
 
 		$this->assertNotNull($departure->capacity, "Unexpected capacity value");
-		$this->assertEquals(0, $departure->capacity[0], "Unexpected capacity (bookings) value");
-		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $departure->capacity[1], "Unexpected capacity (boat) value");
+		$this->assertEquals(0, $departure->capacity[0], "Unexpected capacity, (bookings) value");
+		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $departure->capacity[1], "Unexpected capacity, (boat) value");
 		$this->assertFalse($departure->trashed, "Unexpected trashed value");
 	}
 
