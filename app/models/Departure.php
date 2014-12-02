@@ -27,16 +27,40 @@ class Departure extends Ardent {
 
 	public function getCapacityAttribute()
 	{
-		// TODO Also calculate utilisation by boatrooms
+		$boat = $this->boat()->with('boatrooms')->withTrashed()->first();
 
-		return array(
-			$this->bookingdetails()->whereHas('booking', function($query)
+		// First, calculate the overall utilisation
+		$result = array();
+
+		$result[0] = $this->bookingdetails()
+			->whereHas('booking', function($query)
 			{
 				$query->where('confirmed', 1)->orWhereNotNull('reserved');
-			})->count(),
-			$this->boat()->withTrashed()->first()->capacity );
+			})->count();
+
+		$result[1] = $boat->capacity;
+
+		// Second, calculate the utilisation per boatroom
+		$result[2] = array();
+
+		$boat->boatrooms->each(function($boatroom) use (&$result)
+		{
+			$result[2][$boatroom->id] = array();
+
+			$result[2][$boatroom->id][0] = $this->bookingdetails()
+				->whereHas('booking', function($query)
+				{
+					$query->where('confirmed', 1)->orWhereNotNull('reserved');
+				})
+				->where('boatroom_id', $boatroom->id)
+				->count();
+
+			$result[2][$boatroom->id][1] = $boatroom->pivot->capacity;
+		});
+
+		return $result;
 	}
-	
+
 	public function getTrashedAttribute()
 	{
 		return $this->trashed();
