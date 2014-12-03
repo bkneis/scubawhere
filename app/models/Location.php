@@ -7,11 +7,10 @@ class Location extends Ardent {
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
 	public static $rules = array(
-		'name' => 'required',
+		'name'        => 'required',
 		'description' => '',
-		'latitude' => 'required|numeric|between:-90,90',
-		'longitude' => 'required|numeric|between:-180,180',
-		'tags' => ''
+		'latitude'    => 'required|numeric|between:-90,90',
+		'longitude'   => 'required|numeric|between:-180,180',
 	);
 
 	public function beforeSave()
@@ -21,13 +20,15 @@ class Location extends Ardent {
 
 		if( isset($this->name) )
 			$this->name = Helper::sanitiseString($this->name);
-
-		if( isset($this->tags) )
-			$this->tags = Helper::sanitiseString($this->tags);
 	}
 
 	public function companies()
 	{
 		return $this->belongsToMany('Company')->withTimestamps();
+	}
+
+	public function tags()
+	{
+		return $this->morphToMany('Tag', 'taggable')->withTimestamps();
 	}
 }

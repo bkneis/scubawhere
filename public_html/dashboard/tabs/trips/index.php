@@ -67,7 +67,7 @@
 							{{#each available_tags}}
 								<label class="tag{{inArray id ../tags}}">
 									<input type="checkbox" name="tags[]" value="{{id}}"{{inArray id ../tags}} onchange="changeParent(this)">
-									<strong>{{name}}</strong><br>
+									<strong>{{name}}</strong>
 								</label>
 							{{/each}}
 						</div>

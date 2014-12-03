@@ -10,7 +10,12 @@ class LocationController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->locations()->get();
+		return Auth::user()->locations()->with('tags')->get();
+	}
+
+	public function getTags()
+	{
+		return Tag::where('for_type', 'Location')->orderBy('name')->get();
 	}
 
 	public function postAttach()

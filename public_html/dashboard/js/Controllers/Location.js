@@ -27,6 +27,10 @@ var Place = {
 		});
 	},
 
+	tags : function(handleData) {
+		$.get("/api/location/tags", handleData);
+	},
+
 	//Params:
 	// @param string name        A name for the location
 	// @param string description A description for the location (optional)
@@ -35,9 +39,13 @@ var Place = {
 	// @param string tags        Tags for the location (optional)
 
 	//Note: all created locations are available to all companies
-	create: function(params, handleData){
-		$.post("/company/add-location", params).done(function(data){
-			handleData(data);
+	create: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/company/add-location",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 

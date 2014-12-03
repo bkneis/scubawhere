@@ -4,11 +4,6 @@ var gmap = {},
 window.sw.latitudeInput  = $('#newMarkerLatitude');
 window.sw.longitudeInput = $('#newMarkerLongitude');
 
-Handlebars.registerHelper('renderTags', function(tags) {
-	// Do something
-	return '-';
-});
-
 getToken();
 
 $(function() {
@@ -59,6 +54,10 @@ function initialise() {
 				google.maps.event.addListener(marker, 'click', existingMarkerClick);
 			});
 		});
+	});
+
+	Place.tags(function(data) {
+		window.tags = _.indexBy(data, 'id');
 	});
 
 
@@ -218,9 +217,14 @@ function initialise() {
 			$(event.target).find('[type=submit]').attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#add-location-loader').remove();
 
-			var location = params;
+			var location = $.extend(true, {}, params);
 			location.id = data.id;
 			delete location._token;
+
+			location.tags = [];
+			_.each(params.tags, function(tag_id) {
+				location.tags.push( window.tags[tag_id] );
+			});
 
 			// Create marker
 			var markerOptions = {
@@ -249,6 +253,19 @@ function initialise() {
 			$('#modalWindows .close-reveal-modal').click();
 
 			pageMssg(data.status, true);
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			var html = '';
+
+			_.each(data.errors, function(error) {
+				html += '<div class="alert alert-danger">' + error + '</div>';
+			});
+
+			$('#create-location-form').find('.alert').remove();
+			$('#create-location-form').prepend(html);
+
+			$(event.target).find('[type=submit]').prop('disabled', false);
+			$(event.target).find('.loader').remove();
 		});
 	});
 }
@@ -349,7 +366,7 @@ function renderLocations() {
 	_.each(markerArray, function(marker) {
 		setTimeout(function() {
 			marker.setMap(gmap);
-		}, i * 200);
+		}, i * 150);
 		i++;
 	});
 
@@ -375,7 +392,7 @@ function renderAttachedLocations() {
 	_.each(markerArray, function(marker) {
 		setTimeout(function() {
 			marker.setMap(gmap);
-		}, i * 200);
+		}, i * 150); // Must possibly be reduced to 100, depending on how many locations an operator actually uses
 		i++;
 	});
 
@@ -460,11 +477,12 @@ function showModalWindow(markerObject) {
 		});
 	}
 	else {
-		// Create the modal window from location-template
+		// Create the modal window from create-location-template
 		if(!window.sw.newLocationTemplate) window.sw.newLocationTemplate = Handlebars.compile( $("#new-location-template").html() );
 
-		markerObject.latitude = Math.round(markerObject.latitude * 1000000) / 1000000;
-		markerObject.longitude = Math.round(markerObject.longitude * 1000000) / 1000000;
+		markerObject.latitude       = Math.round(markerObject.latitude * 1000000) / 1000000;
+		markerObject.longitude      = Math.round(markerObject.longitude * 1000000) / 1000000;
+		markerObject.available_tags = window.tags;
 
 		$('#modalWindows')
 		.append( window.sw.newLocationTemplate(markerObject) ) // Create the modal
@@ -484,4 +502,8 @@ function showModalWindow(markerObject) {
 
 		CKEDITOR.replace( 'description' );
 	}
+}
+
+function changeParent(self) {
+	$(self).parent().toggleClass('checked');
 }

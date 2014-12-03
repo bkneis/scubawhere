@@ -23,4 +23,9 @@ class Tag extends Ardent {
 	{
 		return $this->morphedByMany('Trip', 'taggable')->withTimestamps();
 	}
+
+	public function locations()
+	{
+		return $this->morphedByMany('Location', 'taggable')->withTimestamps();
+	}
 }

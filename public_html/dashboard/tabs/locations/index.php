@@ -115,7 +115,16 @@
 				<h4>Description</h4>
 				<p>{{{description}}}</p>
 				<h4>Tags</h4>
-				<p>{{renderTags tags}}</p>
+				{{#each tags}}
+					<div style="overflow: auto;">
+						<div class="tag"><strong>{{name}}</strong></div>
+					</div>
+				{{else}}
+					<h5 class="text-center text-muted" style="margin-bottom: 2em;">
+						<img src="/common/img/lightsaber.png" style="margin-top: -1em; margin-left: -2em;">
+						These aren't the tags you are looking for&#8230; <!-- &#8230; is an ellipsis (...) -->
+					</h5>
+				{{/each}}
 
 				<form>
 					{{#if attached}}
@@ -138,17 +147,23 @@
 						<input type="text" name="name" id="new-location-name" />
 					</div>
 					<div class="form-row">
-						Lat <input type="number" name="latitude" step="0.000001" min="-90" max="90" style="width: 150px" value="{{latitude}}" />
-						Long <input type="number" name="longitude" step="0.000001" min="-180" max="180" style="width: 150px" value="{{longitude}}" />
-					</div>
-					<div class="form-row">
 						<label class="field-label">Description</label>
 						<textarea name="description" id="description"></textarea>
 					</div>
 					<div class="form-row">
-						<label class="field-label">Tags &nbsp; <small>(comma-separated)</small></label>
-						<input type="text" name="tags" />
+						<div class="field-label">Tags</div>
+						<div style="overflow: auto;">
+							{{#each available_tags}}
+								<label class="tag">
+									<input type="checkbox" name="tags[]" value="{{id}}" onchange="changeParent(this)">
+									<strong>{{name}}</strong>
+								</label>
+							{{/each}}
+						</div>
 					</div>
+
+					<input type="hidden" name="latitude" value="{{latitude}}" />
+					<input type="hidden" name="longitude" value="{{longitude}}" />
 
 					<div style="margin-top: 1em; text-align: right">
 						<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>

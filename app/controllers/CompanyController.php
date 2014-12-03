@@ -97,6 +97,7 @@ class CompanyController extends Controller {
 
 			$locations = Location::whereBetween('latitude',  array($north, $south))
 			                     ->whereBetween('longitude', array($west, $east))
+			                     ->with('tags')
 			                     ->get();
 		}
 		else
@@ -119,6 +120,7 @@ class CompanyController extends Controller {
 			$timer = microtime(true);
 			$locations = DB::table('locations')
 			                 ->select(DB::raw('*, ((ACOS(SIN('.$lat.' * PI() / 180) * SIN(latitude * PI() / 180) + COS('.$lat.' * PI() / 180) * COS(latitude * PI() / 180) * COS(('.$lon.' - longitude) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance'))
+			                 ->with('tags')
 			                 ->orderBy('distance', 'asc')
 			                 ->take($limit)
 			                 ->get();
@@ -133,13 +135,30 @@ class CompanyController extends Controller {
 
 	public function postAddLocation()
 	{
-		$data = Input::only('name', 'description', 'latitude', 'longitude', 'tags');
+		$data = Input::only('name', 'description', 'latitude', 'longitude');
+
+		$tags = Input::get('tags', false);
+		if( !$tags || empty($tags) )
+			$tags = false;
 
 		$location = new Location($data);
 
 		if( !$location->save() )
 		{
 			return Response::json( array('errors' => $location->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		// Sync tags
+		if($tags)
+		{
+			try
+			{
+				$location->tags()->sync($tags);
+			}
+			catch(Exeption $e)
+			{
+				return Response::json( array('errors' => array('Could not assign tags to location, \'tags\' array is propably erroneous.')), 400 ); // 400 Bad Request
+			}
 		}
 
 		// Automatically attach location to the company
