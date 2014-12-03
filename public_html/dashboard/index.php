@@ -42,9 +42,7 @@
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
-		
-	<link rel="stylesheet" type="text/css" href="common/footer/footer.css">
-	<link rel="stylesheet" type="text/css" href="common/header/header.css">	
+
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
@@ -93,13 +91,22 @@
 
 </head>
 <body>
-	<?php
-	   //INCLUDE HEADER
-	   include_once("common/header/header.php");
-    ?>
+	<div id="nav">
+		<div id="nav-wrapper">
+			<h1 id="logo"><a href="/dashboard"><img src="/common/img/Scubawhere_logo.png"></a></h1>
+			<button class="btn btn-default pull-right" id="logout">Logout</button>
+			<div class="nav-opt pull-right"><a href="#settings" class="username"></a></div>
+		</div>
+	</div>
+
+	<!-- PAGE MESSAGE FOR ERRORS AND SUCCESS MASAGES -->
+	<div id="pageMssg">Page Message</div>
+
+	<div class="sidebar-background"></div><!-- This is needed for pages that are shorter than the window height -->
 
 	<div id="page">
 		<!-- tabbed navigation and sidebar LEFT -->
+		<div class="sidebar-background"></div><!-- This is needed for pages that are longer than the window height -->
 		<div id="sidebar">
 			<div id="tab-title">
 				<b>scuba</b>whereRMS
@@ -203,10 +210,5 @@
 			</div>
 		</div>
 	</div>
-
-	<?php
-	   //INCLUDE FOOTER
-	   include_once("common/footer/footer.php");
-    ?>
 </body>
 </html>

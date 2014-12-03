@@ -18,7 +18,115 @@ Stylesheet for all dive
 ******************************
 */
 
-body{ background-color: #34495e; }
+body{
+	background-color: #eeeeee;
+}
+
+/*
+*******************************
+						 HEADER
+*******************************
+*/
+
+#nav{
+	height: 50px;
+	background-color: #373737;
+	box-shadow: 0px 0px 10px black;
+	position: fixed;
+	width: 100%;
+	z-index: 9997;
+}
+
+#nav-wrapper{
+	margin: 0px auto;
+	z-index: 9997;
+	padding: 8px 30px 8px 10px; /* The additional padding on the right side is needed for IE, where the scrollbar is *inside* the window */
+}
+
+#logo{
+	float: left;
+	margin: 0;
+}
+
+#logo a:link{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:active{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:visited{
+	color: #fff;
+	text-decoration: none;
+}
+#logo a:hover{
+	color: #fff;
+	text-decoration: none;
+}
+
+
+#nav-wrapper img{
+	float: left;
+	width: 200px;
+	margin-top: 2px;
+}
+
+.nav-opt{
+	padding-left: 30px;
+	padding-right: 30px;
+	color: #ffffff;
+	margin-top: 9px;
+}
+
+.nav-opt a:link{
+	color: #fff;
+}
+
+.nav-opt a:hover{
+	color: #4a9cff;
+}
+
+.nav-opt a:visited{
+	color: #fff;
+}
+
+.nav-opt a:active{
+	color: #fff;
+}
+
+#logout{
+	color: white;
+	background-color: transparent;
+}
+#logout:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+#search-form{
+	float: right;
+}
+
+#search-box{
+	font-size: 20px;
+	padding: 4px;
+	border: none;
+	border-radius: 5px;
+	width: 210px;
+}
+
+.submit{
+	color: #ffffff;
+	margin-top: 7px;
+	background-color: #4a9cff;
+	padding: 7px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: none;
+	font-size: 18px;
+}
+.submit:hover{
+	box-shadow: inset 0px 0px 6px rgba(0,0,0,0.38);
+}
 
 /*
 *******************************
@@ -29,10 +137,9 @@ body{ background-color: #34495e; }
 	/* width: 80%;
 	display: inline-block; */
 	overflow: auto;
-	background-color: #ffffff;
+	background-color: #eeeeee;
 	position: relative;
 	min-height: 478px;
-	background: #eeeeee;
 }
 
 #content-title{
@@ -57,12 +164,13 @@ body{ background-color: #34495e; }
 	top: 25px;
 	left: 30%;
 	text-align: center;
-	z-index: 9998
+	z-index: 9998;
 }
 
 /*				GENERIC STYLES
 *******************************/
 #page{
+	position: relative;
 	padding-top: 50px;
 	overflow: auto;
 }
@@ -186,9 +294,17 @@ body{ background-color: #34495e; }
 						SIDEBAR
 *******************************
 */
+.sidebar-background {
+	background-color: #34495e;
+	position: absolute;
+	top: 0; left: 0;
+	height: 100%;
+	width: 175px;
+	z-index: -100;
+}
+
 #sidebar{
 	width: 175px;
-	min-height: 478px;
 	height: 100%;
 	float: left;
 	/* display: inline-block; */
