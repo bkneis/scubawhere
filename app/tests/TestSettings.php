@@ -43,7 +43,7 @@ class TestSettings {
 			'Country'        => 'countries',
 			'Currency'       => 'currencies',
 			'Paymentgateway' => 'paymentgateways',
-			'Triptype'       => 'triptypes',
+			'Tag'            => 'tags',
 	);
 
 
@@ -62,7 +62,7 @@ class TestSettings {
 			'location_trip',
 			'package_ticket',
 			'ticket_trip',
-			'trip_triptype',
+			'taggables',
 	);
 
 }

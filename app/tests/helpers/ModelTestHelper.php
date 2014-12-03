@@ -421,11 +421,12 @@ class ModelTestHelper{
 		return $entry->id;
 	}
 
-	public static function createTriptype($append = ""){
-		$entry = new Triptype();
+	public static function createTag($append = ""){
+		$entry = new Tag();
 
 		$entry->name        = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
+		$entry->for_type    = '';
 
 		$entry->save();
 		return $entry->id;

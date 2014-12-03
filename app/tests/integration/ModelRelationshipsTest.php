@@ -24,7 +24,7 @@ class ModelRelationshipsTest extends TestCase {
 		$this->currency_id       = ModelTestHelper::createCurrency();
 		$this->location_id       = ModelTestHelper::createLocation();
 		$this->paymentgateway_id = ModelTestHelper::createPaymentgateway();
-		$this->triptype_id       = ModelTestHelper::createTriptype();
+		$this->tag_id            = ModelTestHelper::createTag();
 		$this->certificate_id    = ModelTestHelper::createCertificate($this->agency_id);
 		$this->country_id        = ModelTestHelper::createCountry($this->continent_id, $this->currency_id);
 		$this->company_id        = ModelTestHelper::createCompany($this->country_id, $this->currency_id);
