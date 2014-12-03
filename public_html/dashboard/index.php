@@ -30,7 +30,6 @@
 
 	<title>Scuba Where | Dashboard</title>
 
-	<link rel="stylesheet" href="/common/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel='stylesheet' href='/common/css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome.min.css">
