@@ -115,16 +115,16 @@
 				<h4>Description</h4>
 				<p>{{{description}}}</p>
 				<h4>Tags</h4>
-				{{#each tags}}
-					<div style="overflow: auto;">
+				<div style="overflow: auto;">
+					{{#each tags}}
 						<div class="tag"><strong>{{name}}</strong></div>
-					</div>
-				{{else}}
-					<h5 class="text-center text-muted" style="margin-bottom: 2em;">
-						<img src="/common/img/lightsaber.png" style="margin-top: -1em; margin-left: -2em;">
-						These aren't the tags you are looking for&#8230; <!-- &#8230; is an ellipsis (...) -->
-					</h5>
-				{{/each}}
+					{{else}}
+						<h5 class="text-center text-muted" style="margin-bottom: 2em;">
+							<img src="/common/img/lightsaber.png" style="margin-top: -1em; margin-left: -2em;">
+							These aren't the tags you are looking for&#8230; <!-- &#8230; is an ellipsis (...) -->
+						</h5>
+					{{/each}}
+				</div>
 
 				<form>
 					{{#if attached}}

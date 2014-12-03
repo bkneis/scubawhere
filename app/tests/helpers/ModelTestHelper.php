@@ -314,9 +314,8 @@ class ModelTestHelper{
 
 		$entry->name        = self::TEST_STRING.$append;
 		$entry->description = self::TEST_STRING.$append;
-		$entry->latitude    = self::TEST_DECIMAL;
-		$entry->longitude   = self::TEST_DECIMAL;
-		$entry->tags        = self::TEST_STRING;
+		$entry->latitude    = self::TEST_LATITUDE;
+		$entry->longitude   = self::TEST_LONGITUDE;
 
 		$entry->save();
 		return $entry->id;
