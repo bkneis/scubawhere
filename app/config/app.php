@@ -130,7 +130,6 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
 		'Mews\Purifier\PurifierServiceProvider',
-		'Clockwork\Support\Laravel\ClockworkServiceProvider',
 
 	),
 
