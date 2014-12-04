@@ -63,6 +63,10 @@
 
 	<script src="/common/js/underscore-min.js"></script>
 
+	<!--Datetimepicker-->
+	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
+	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
+
 	<script src="js/Controllers/Company.js"></script>
 	<script>
 		// Load company info

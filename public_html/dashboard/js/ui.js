@@ -47,6 +47,31 @@ $(function(){
     	/* $(".tooltip").remove(); */
 	});
 
+	/*
+	* Datepicker
+	*/
+
+	$('input.datetimepicker').datetimepicker({
+		pickDate: true,
+		pickTime: true,
+		minuteStepping: 5
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false
+	});
+
+	$('input.timepicker').datetimepicker({
+		pickDate: false,
+		pickTime: true,
+		minuteStepping: 5
+	});
+
+	$(document).on('focus', '.datepicker', function(){
+		$(this).data("DateTimePicker").show();
+	});
+
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 														//BOX FUNCTIONS
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

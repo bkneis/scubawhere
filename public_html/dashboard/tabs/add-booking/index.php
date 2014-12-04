@@ -994,10 +994,6 @@
 	<!--Styling (Temporary)-->
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
-	<!--Datetimepicker-->
-	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
-	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
-
 	<!--Select 2-->
 	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
 	<link rel="stylesheet" href="/common/css/select2-bootstrap.css" type="text/css" />

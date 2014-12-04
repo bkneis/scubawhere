@@ -63,42 +63,41 @@ Handlebars.registerHelper("countryName", function(id) {
 	return window.countries[id].name;
 });
 
-// Load all of the agents, tickets and packages for dive center to select
-$(function(){
+// Load all initial handlebars templates
 
-	var agentTemplate = Handlebars.compile($("#agents-list-template").html());
+var agentTemplate = Handlebars.compile($("#agents-list-template").html());
+var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
+var tripTemplate = Handlebars.compile($("#trips-list-template").html());
+var addonsTemplate = Handlebars.compile($("#addons-list-template").html());
+var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
+var customersTemplate = Handlebars.compile($("#customers-list-template").html());
+var countriesTemplate = Handlebars.compile($("#countries-template").html());
+
+$.when(
+
 	Agent.getAllAgents(function(data){
-		$("#agents-list").append(agentTemplate({agents:data}));
-	});
+		window.agents = _.indexBy(data, 'id');
+	}),
 
-	var ticketTemplate = Handlebars.compile($("#tickets-list-template").html());
 	Ticket.getAllTickets(function(data){
 		window.tickets = _.indexBy(data, 'id');
-		$("#tickets-list").append(ticketTemplate({tickets:data}));
-	});
+	}),
 
-	var tripTemplate = Handlebars.compile($("#trips-list-template").html());
 	Trip.getAllTrips(function(data){
-		$("#trips").append(tripTemplate({trips:data}));
-	});
+		window.trips = _.indexBy(data, 'id');
+	}),
 
-	var addonsTemplate = Handlebars.compile($("#addons-list-template").html());
 	Addon.getAllAddons(function(data){
 		window.addons = _.indexBy(data, 'id');
-		$("#addons-list").append(addonsTemplate({addons:data}));
-	});
+	}),
 
-	var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
 	Accommodation.getAll(function(data){
 		window.accommodations = _.indexBy(data, 'id');
-		$("#accommodations-list").append(accommodationsTemplate({accommodations:data}));
-	});
+	}),
 
-	var customersTemplate = Handlebars.compile($("#customers-list-template").html());
 	Customer.getAllCustomers(function(data){
 		window.customers = _.indexBy(data, 'id');
-		$("#existing-customers").append(customersTemplate({customers:data}));
-	});
+	}),
 
 	/**
 	 * Having the list pre-populated is of no great use, because the list needs to be filtered by
@@ -111,14 +110,22 @@ $(function(){
 	});
 	*/
 
-	var countriesTemplate = Handlebars.compile($("#countries-template").html());
 
 	$.get("/api/country/all", function(data) {
 		window.countries = _.indexBy(data, 'id');
-		$("#add-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
-		$("#edit-customer-countries").find('#country_id').append(countriesTemplate({countries:data}));
-	});
+	})
 
+).then(function() {
+
+	$("#agents-list").append(agentTemplate({agents:window.agents}));
+	$("#tickets-list").append(ticketTemplate({tickets:window.tickets}));
+	$("#existing-customers").append(customersTemplate({customers:window.customers}));
+	$("#accommodations-list").append(accommodationsTemplate({accommodations:window.accommodations}));
+	$("#trips").append(tripTemplate({trips:window.trips}));
+	$("#addons-list").append(addonsTemplate({addons:window.addons}));
+	$("#add-customer-countries").find('#country_id').append(countriesTemplate({countries:window.countries}));
+	$("#edit-customer-countries").find('#country_id').append(countriesTemplate({countries:window.countries}));
+	
 });
 
 /*
@@ -716,6 +723,8 @@ $('#summary-tab').on('click', '.reserve-booking', function() {
 	var params = {};
 	params._token = window.token;
 
+	//Frontend will reserve for 1, 2, 3 hours etc
+
 	booking.save(params, function success(status) {
 		showAlert("success", "Booking saved successfully!");
 	}, function error(xhr) {
@@ -770,27 +779,6 @@ $(document).ready(function() {
 			$(e.target).parent().prevAll().children().removeClass('selected').addClass('done');
 			$(e.target).addClass('selected').tab('show');
 		}
-
-		$('input.datetimepicker').datetimepicker({
-			pickDate: true,
-			pickTime: true,
-			minuteStepping: 5
-		});
-
-		$('input.datepicker').datetimepicker({
-			pickDate: true,
-			pickTime: false
-		});
-
-		$('input.timepicker').datetimepicker({
-			pickDate: false,
-			pickTime: true,
-			minuteStepping: 5
-		});
-
-		$(document).on('focus', '.datepicker', function(){
-			$(this).data("DateTimePicker").show();
-		});
 
 		if(booking.currentStep > 1) {
 			$('[data-target="#source-tab"]').removeAttr("data-toggle");
