@@ -6,11 +6,11 @@ return array(
 
 	'url' => 'http://www.scubawhere.app',
 
-	'providers' => array(
+	'providers' => append_config(array(
 
 		'Clockwork\Support\Laravel\ClockworkServiceProvider',
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 
-	),
+	)),
 
 );

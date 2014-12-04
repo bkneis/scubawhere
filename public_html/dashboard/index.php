@@ -6,11 +6,7 @@
 		exit();
 	}
 
-	// Conditional curl because of Soren's dev env
-	if($_SERVER['HTTP_HOST'] === 'scubawhere.app:8000')
-		$ch = curl_init( 'localhost/company' );
-	else
-		$ch = curl_init( $_SERVER['HTTP_HOST'].'/company' );
+	$ch = curl_init( $_SERVER['HTTP_HOST'].'/company' );
 
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 
@@ -18,7 +14,6 @@
 	curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
 
 	$result = curl_exec( $ch );
-
 	curl_close( $ch );
 
 	$result = json_decode( $result );
