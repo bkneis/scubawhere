@@ -117,10 +117,10 @@ App::finish(function() {
 		return true;
 
 	// Set performance log file location
-	Log::useFiles(storage_path().'/logs/performance.log');
+	// Log::useFiles(storage_path().'/logs/performance.log');
 
 	// Log app execution duration with HTTP method and requested route
-	Log::info( round( (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 3 ) . ' ' . Request::method() . ' ' . Request::path() );
+	// Log::info( round( (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 3 ) . ' ' . Request::method() . ' ' . Request::path() );
 
 	// Restore original log file location - not necessary, because this runs after the response has been sent and the application finished
 	// Log::useFiles(storage_path().'/logs/laravel.log');

@@ -29,7 +29,9 @@ $env = $app->detectEnvironment(array(
 	'local_soren'    => array('packer-virtualbox-iso'),
 	'local_bryan'    => array('laptop1'),
 	'local_jon'      => array('JonWindows'),
-	'local_jonathan' => array('Jonnerz-LAPTOP', 'Jonnerz-PC')
+	'local_jonathan' => array('Jonnerz-LAPTOP', 'Jonnerz-PC'),
+
+	'production'     => array('poseidon.krystal.co.uk'),
 
 ));
 

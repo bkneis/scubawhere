@@ -13,4 +13,10 @@ return array(
 
 	)),
 
+	'aliases' => append_config(array(
+
+		'Clockwork' => 'Clockwork\Support\Laravel\Facade',
+
+	)),
+
 );

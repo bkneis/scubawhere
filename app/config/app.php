@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://scubawhere.com',
+	'url' => 'http://www.scubawhere.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -198,7 +198,6 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 
         'Purifier'        => 'Mews\Purifier\Facades\Purifier',
-        'Clockwork'       => 'Clockwork\Support\Laravel\Facade',
 
 	),
 
