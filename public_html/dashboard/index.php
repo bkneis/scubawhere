@@ -106,36 +106,26 @@
 		<!-- tabbed navigation and sidebar LEFT -->
 		<div class="sidebar-background"></div><!-- This is needed for pages that are longer than the window height -->
 		<div id="sidebar">
-			<div id="tab-title">
-				<b>scuba</b>whereRMS
-			</div>
-			<!-- <div id="dc-info">
-				<div id="dc-name"></div>
-				<div id="dc-uname"></div>
-				<div id="dc-veri"></div>
-			</div> -->
-
 			<!-- Navigation including accordion drop down menus -->
-
 			<ul id="sidenav">
-				<li data-load="dashboard">
+				<li data-load="dashboard" style="line-height: 44px;">
 					<div>
-						<i class="fa fa-tachometer"></i>
+						<i class="fa fa-tachometer fa-lg fa-fw"></i>
 						<span>Dashboard</span>
 					</div>
 				</li>
 
 				<li data-load="add-booking">
 					<div>
-						<i class="fa fa-plus"></i>
+						<i class="fa fa-plus fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-plus-square-o"></i> -->
 						<span>Add Booking</span>
 					</div>
 				</li>
 
-				<li data-load="find-booking">
+				<li data-load="manage-bookings">
 					<div>
-						<i class="fa fa-pencil"></i>
+						<i class="fa fa-pencil fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
 					</div>
@@ -143,14 +133,14 @@
 
 				<li data-load="calendar">
 					<div>
-						<i class="fa fa-calendar"></i>
+						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Calendar</span>
 					</div>
 				</li>
 
 				<li data-load="reviews">
 					<div>
-						<i class="fa fa-comments"></i>
+						<i class="fa fa-comments fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Reviews</span>
 					</div>
@@ -159,7 +149,7 @@
 				<li data-load="reports">
 					<div>
 						<!-- <i class="fa fa-university"></i> -->
-						<i class="fa fa-line-chart"></i>
+						<i class="fa fa-line-chart fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-usd"></i> -->
 						<!-- <i class="fa fa-file-text-o"></i> -->
 						<span>Financial Reports</span>
@@ -171,7 +161,7 @@
 						<!-- <i class="fa fa-briefcase"></i> -->
 						<!-- <i class="fa fa-bullhorn"></i> -->
 						<!-- <i class="fa fa-paper-plane"></i> -->
-						<i class="fa fa-sitemap"></i>
+						<i class="fa fa-sitemap fa-lg fa-fw"></i>
 						<span>Management</span>
 						<span class="caret"></span>
 					</div>
@@ -190,7 +180,7 @@
 
 				<li data-load="settings">
 					<div>
-						<i class="fa fa-cog"></i>
+						<i class="fa fa-cog fa-lg fa-fw"></i>
 						<span>Settings</span>
 					</div>
 				</li>
@@ -199,12 +189,10 @@
 
 		<!-- main page content to be loaded by AJAX -->
 		<div id="guts">
-			<div id="content-title"></div>
+			<div id="breadcrumbs"></div>
 
 			<div id="content">
-				<div id="wrapper">
-
-				</div>
+				<div id="wrapper"></div>
 			</div>
 		</div>
 	</div>

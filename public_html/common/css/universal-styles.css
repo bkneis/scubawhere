@@ -254,7 +254,6 @@ table{ width: 100%; }
 
 /* default */
 table.bluethead thead th{
-	background-color: #4a9cff;
 	color: #fff;
 	padding: 10px;
 	font-size: 14px;

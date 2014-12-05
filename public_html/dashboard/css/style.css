@@ -31,6 +31,7 @@ body{
 #nav{
 	height: 50px;
 	background-color: #373737;
+	background-color: #192735;
 	box-shadow: 0px 0px 10px black;
 	position: fixed;
 	width: 100%;
@@ -48,28 +49,17 @@ body{
 	margin: 0;
 }
 
-#logo a:link{
+#logo a:link,
+#logo a:active,
+#logo a:visited,
+#logo a:hover {
 	color: #fff;
 	text-decoration: none;
 }
-#logo a:active{
-	color: #fff;
-	text-decoration: none;
-}
-#logo a:visited{
-	color: #fff;
-	text-decoration: none;
-}
-#logo a:hover{
-	color: #fff;
-	text-decoration: none;
-}
-
-
-#nav-wrapper img{
+#logo img{
 	float: left;
-	width: 200px;
-	margin-top: 2px;
+	width: 155px;
+	margin-top: 5px;
 }
 
 .nav-opt{
@@ -142,14 +132,23 @@ body{
 	min-height: 478px;
 }
 
-#content-title{
-	background-color: #fff;
-	padding: 12px 20px;
-	font-size: 22px;
-	position: relative;
-	z-index: 2;
-	box-shadow: 1px 1px 1px rgba(0,0,0,0.20);
+#breadcrumbs{
+	font-size: 18px;
+	padding: 20px;
+	padding-bottom: 0;
 }
+	#breadcrumbs a {
+		color: inherit;
+	}
+	#breadcrumbs .breadcrumbs-home {
+		opacity: 0.8;
+	}
+	#breadcrumbs a:hover {
+		text-decoration: none;
+	}
+	#breadcrumbs a:not(.breadcrumbs-home):hover {
+		border-bottom: 1px solid;
+	}
 
 #wrapper{ margin: 20px 35px; }
 
@@ -301,7 +300,7 @@ body{
 	z-index: -100;
 }
 
-#sidebar{
+#sidebar {
 	width: 175px;
 	height: 100%;
 	float: left;
@@ -309,7 +308,7 @@ body{
 	background-color: #34495e;
 }
 
-#tab-title{
+#tab-title {
 	background-color: #4a9cff;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
 	padding: 15px;
@@ -317,7 +316,7 @@ body{
 	color: #fff;
 }
 
-#dc-info{
+#dc-info {
 	font-size: 13px;
 	padding: 10px;
 	border-bottom: 1px solid #d4d4d4;
@@ -326,17 +325,17 @@ body{
 	margin-bottom: 5px;
 	margin-top: 5px;
 	margin-left: 0px;
-	margin-right: 10px
+	margin-right: 10px;
 }
 
 #sidebar a:link,
 #sidebar a:hover,
 #sidebar a:active,
-#sidebar a:visited{
+#sidebar a:visited {
 	text-decoration: none;
 }
 
-ul#sidenav{
+ul#sidenav {
 	list-style: none;
 	display: block;
 	padding: 0px;
@@ -345,45 +344,55 @@ ul#sidenav{
 }
 
 /* main menu items */
-ul#sidenav > li{
+ul#sidenav > li {
 	padding: 0px;
-	/* border-bottom: 2px groove rgba(120,120,120,0.5); */
 	cursor: pointer;
 }
 
-ul#sidenav > li > div:hover{ background-color: rgba(255,255,255,0.05); }
+ul#sidenav > li:after {
+	content: '';
+	display: block;
+	border-top: 1px solid rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-ul#sidenav div{ padding: 10px; }
+ul#sidenav > li > div:hover {
+	background-color: rgba(255,255,255,0.05);
+}
+ul#sidenav > li.tab-active > div:hover {
+	background-color: transparent;
+}
 
-ul#sidenav div span{
+ul#sidenav div {
+	padding: 10px;
+}
+
+ul#sidenav div span {
 	line-height: 20px;
 	margin-left: 10px;
 }
 
-ul#sidenav i{
-	font-size: 20px;
-	line-height: 20px;
-	width: 25px;
-	text-align: center;
-	position: relative;
-	top: 2px;
+ul#sidenav > li > ul {
+	display: none;
+	padding: 0px;
 }
 
-ul#sidenav > li > ul{ display: none; padding: 0px; }
-
 /* item in submenu */
-ul#sidenav > li > ul > li{
-	/* border-top: 2px groove rgba(120,120,120,0.5); */
+ul#sidenav > li > ul > li {
 	border-bottom: none;
 	background-color: rgba(0,0,0,0.15);
 	padding: 10px 20px;
 }
 
-ul#sidenav > li > ul > li:hover{ background-color: rgba(0,0,0,0.05); }
+ul#sidenav > li > ul > li:hover {
+	background-color: rgba(0,0,0,0.05);
+}
 
-.tab-active{
+.tab-active {
+	background-color: rgba(0,0,0,0.25) !important;
+	color: #FF7163;
+	/* Needs fixing. Border-right overlaps the :after element. */
 	border-right: 3px solid #FF7163;
-	background-color: rgba(0,0,0,0.05) !important;
 }
 
 /*
@@ -889,11 +898,6 @@ span.box-tool{
 	width:100%;
 }
 
-.fa {
-	min-width: 1em;
-	text-align: center;
-}
-
 .onoffswitch {
 	position: relative; width: 75px;
 	-webkit-user-select:none;
@@ -1020,12 +1024,6 @@ span.box-tool{
 }
 .border-info {
 	border-color: #31708F;
-}
-
-.alert .fa {
-	font-size: 1.5em;
-	position: relative;
-	top: 1px;
 }
 
 .caret {

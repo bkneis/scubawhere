@@ -10,7 +10,7 @@ $(function(){
 	// Error handling
 	$(document).ajaxComplete(function(event, xhr, options) {
 		if(xhr.status >= 400) {
-			pageMssg('<b>' + xhr.status + ' ' + xhr.statusText + '</b> No separate error message? Contact the developer!', 'info');
+			pageMssg('<b>' + xhr.status + ' ' + xhr.statusText + '</b> - No separate error message? Contact the developer!', 'info');
 		}
 	});
 

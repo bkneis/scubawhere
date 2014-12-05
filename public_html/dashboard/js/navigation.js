@@ -22,8 +22,10 @@ $(function() {
         if(newHash === '') newHash = 'dashboard';
 
         // Get the page title from the menu item
-        var newTitle = $('[data-load="'+newHash+'"]').html();
-        $("#content-title").html(newTitle);
+        var newTitle = $('[data-load="'+newHash+'"]').text();
+        if(newHash === 'add-transaction')
+            newTitle = '<a href="#manage-bookings">Manage Bookings</a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> Add Transaction';
+        $("#breadcrumbs").html('<a href="#dashboard" class="breadcrumbs-home"><i class="fa fa-home fa-lg fa-fw"></i></a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> ' + newTitle);
 
         // set live tab
         $('[data-load]').removeClass('tab-active');

@@ -155,10 +155,10 @@ function pageMssg(message, type, dismissable) {
 		el += '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
 
 	switch(type) {
-		case 'success': el += '<i class="fa fa-check"></i> '; break;
-		case 'info':    el += '<i class="fa fa-info"></i> ';  break;
-		case 'warning': el += '<i class="fa fa-exclamation-triangle"></i> '; break;
-		case 'danger':  el +=  '<i class="fa fa-times"></i> '; break;
+		case 'success': el += '<i class="fa fa-check fa-lg fa-fw"></i> '; break;
+		case 'info':    el += '<i class="fa fa-info fa-lg fa-fw"></i> ';  break;
+		case 'warning': el += '<i class="fa fa-exclamation fa-lg fa-fw"></i> '; break;
+		case 'danger':  el +=  '<i class="fa fa-times fa-lg fa-fw"></i> '; break;
 	}
 
 	el += message;
