@@ -113,7 +113,12 @@ Handlebars.registerHelper('editButton', function() {
 $(function() {
 	var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 
+	/*
+	if(typeof window.bookings === 'object')
+		$('#booking-list').html( bookingListItem({bookings: window.bookings}) );
+	*/
 	Booking.getAll(function(data) {
+		window.bookings = data;
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 	});
 

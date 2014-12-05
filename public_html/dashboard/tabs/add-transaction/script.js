@@ -55,7 +55,7 @@ Handlebars.registerHelper("remainingPay", function() {
 
 $(function() {
 	if(typeof window.booking === 'undefined' || window.clickedEdit === undefined || window.clickedEdit === false) {
-		window.location.hash = 'find-booking';
+		window.location.hash = 'manage-bookings';
 		return;
 	}
 
