@@ -9,23 +9,8 @@ $(function(){
 
 	// Error handling
 	$(document).ajaxComplete(function(event, xhr, options) {
-		/*
-		console.log(event);
-		console.log(xhr);
-		console.log(options);
-		*/
-		if(xhr.status == 404) {
-
-    		if(xhr.responseText.length > 100) // Filter out HTML responses
-    			xhr.responseText = '';
-    		else
-    			xhr.responseText += '\n';
-
-			console.log(xhr.status + " " + xhr.statusText + ": " + xhr.responseText + " - " + options.url);
-			alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText + options.url);
-		}
-		else if(xhr.status >= 400) {
-			alert(xhr.status + " " + xhr.statusText + ":\n\n" + xhr.responseText);
+		if(xhr.status >= 400) {
+			pageMssg('<b>' + xhr.status + ' ' + xhr.statusText + '</b> No separate error message? Contact the developer!', 'info');
 		}
 	});
 

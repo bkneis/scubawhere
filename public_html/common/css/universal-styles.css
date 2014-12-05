@@ -301,16 +301,6 @@ tfoot > tr {
         right: 3px;
     }
 
-.border-success {
-	border: 1px solid #5cb85c;
-}
-.border-warning {
-	border: 1px solid #f0ad4e;
-}
-.border-danger {
-	border: 1px solid #d9534f;
-}
-
 .col10{width: 10%}
 .col20{width: 20%}
 .col30{width: 30%}

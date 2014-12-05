@@ -98,7 +98,7 @@
 	</div>
 
 	<!-- PAGE MESSAGE FOR ERRORS AND SUCCESS MASAGES -->
-	<div id="pageMssg">Page Message</div>
+	<div id="pageMssg"></div>
 
 	<div class="sidebar-background"></div><!-- This is needed for pages that are shorter than the window height -->
 

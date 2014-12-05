@@ -139,14 +139,42 @@ $.fn.errorMssg = function(mssg){
     $(this).after("<div class='errorMssg'>" + mssg + "</div>");
 }
 
-function pageMssg(mssg, bool){
+function pageMssg(message, type, dismissable) {
 
-	if(bool == true){
-		$('#pageMssg').html('<div class="alert alert-success border-success" role="alert">' + mssg + '</div>');
-	}else{
-		$('#pageMssg').html('<div class="alert alert-danger border-danger" role="alert">' + mssg + '</div>');
+	if(typeof type === 'undefined')
+		type = 'warning';
+	if(typeof type === 'boolean')
+		type = 'success';
+
+	if(typeof dismissable === 'undefined')
+		dismissable = false;
+
+	var el = '<div class="findMe alert alert-' + type + ' border-' + type + (dismissable ? ' alert-dismissable' : '') + '" role="alert">';
+
+	if(dismissable)
+		el += '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
+
+	switch(type) {
+		case 'success': el += '<i class="fa fa-check"></i> '; break;
+		case 'info':    el += '<i class="fa fa-info"></i> ';  break;
+		case 'warning': el += '<i class="fa fa-exclamation-triangle"></i> '; break;
+		case 'danger':  el +=  '<i class="fa fa-times"></i> '; break;
 	}
 
-	$('#pageMssg').fadeIn("slow").delay(2500).fadeOut("slow");
+	el += message;
 
+	el += '</div>';
+
+	$('#pageMssg').append(el).find('.findMe').removeClass('findMe').fadeIn(400, function() {
+		if($(this).hasClass('alert-dismissable'))
+			return;
+
+		var self = this;
+
+		setTimeout(function() {
+			$(self).fadeOut(400, function() {
+				$(this).remove();
+			});
+		},3000);
+	});
 }

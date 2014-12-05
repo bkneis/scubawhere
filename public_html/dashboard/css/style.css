@@ -158,12 +158,10 @@ body{
 }
 
 #pageMssg{
-	display: none;
 	width: 40%;
 	position: fixed;
 	top: 25px;
 	left: 30%;
-	text-align: center;
 	z-index: 9998;
 }
 
@@ -893,6 +891,7 @@ span.box-tool{
 
 .fa {
 	min-width: 1em;
+	text-align: center;
 }
 
 .onoffswitch {
@@ -1008,6 +1007,25 @@ span.box-tool{
 .accordion-spacer {
 	display: none;
 	height: 1em;
+}
+
+.border-success {
+	border-color: #3C763D;
+}
+.border-warning {
+	border-color: #8A6D3B;
+}
+.border-danger {
+	border-color: #A94442;
+}
+.border-info {
+	border-color: #31708F;
+}
+
+.alert .fa {
+	font-size: 1.5em;
+	position: relative;
+	top: 1px;
 }
 
 .caret {
