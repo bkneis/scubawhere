@@ -39,7 +39,7 @@
 			<div class="padder">
 				<table class="bluethead">
 					<thead>
-						<tr>
+						<tr class="bg-primary">
 							<th width="10"></th> <!-- source icon -->
 							<th width="10"></th> <!-- saved/reserved/confirmed icon -->
 							<th width="10"></th> <!-- payments -->
@@ -113,6 +113,6 @@
 	</script>
 
 	<script src="js/Controllers/Booking.js"></script>
-	<script src="tabs/find-booking/js/script.js"></script>
+	<script src="tabs/manage-bookings/js/script.js"></script>
 </div>
 
