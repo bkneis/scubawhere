@@ -362,13 +362,6 @@ ul#sidenav div span{
 	margin-left: 10px;
 }
 
-ul#sidenav .arrow{
-	font-size: 8px;
-	float: right;
-	margin-top: 3px;
-	margin-right: 5px;
-}
-
 ul#sidenav i{
 	font-size: 20px;
 	line-height: 20px;
@@ -1015,4 +1008,10 @@ span.box-tool{
 .accordion-spacer {
 	display: none;
 	height: 1em;
+}
+
+.caret {
+	transition: transform 0.2s linear;
+	transform: rotate(-90deg);
+	margin-left: 20px !important;
 }

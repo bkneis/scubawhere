@@ -55,21 +55,18 @@ $(function() {
 
 /* ACCORDION NAVIGATION */
 $(function(){
-	//set the down arrows by default
-	$( '.arrow' ).html( '&#x25BC;' );
-
 	//function fires if any of the nav-items tags are clicked
 	$( "#sidenav > li > div" ).click(function(){
 		//show child list if not already shown
 		if ($(this).parent().children().is( ":hidden" ) ) {
   			$( $( this ).parent().children( "ul" ) ).slideDown( "fast" );
   			//set arrow to up
-  			$( $(this).children( ".arrow" ) ).html( '&#x25B2;' );
+  			$( $(this).children( ".caret" ) ).css('transform', 'rotate(0deg)');
   		} else {
   			//list already on show so slide it back up
 	    	$( $( this ).parent().children( "ul" ) ).slideUp( "fast" );
 	    	//set arrow to down
-	    	$( $( this ).children( ".arrow" ) ).html( '&#x25BC;' );
+	    	$( $( this ).children( ".caret" ) ).css('transform', 'rotate(-90deg)');
 		}
 	});
 });

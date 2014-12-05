@@ -173,7 +173,7 @@
 						<!-- <i class="fa fa-paper-plane"></i> -->
 						<i class="fa fa-sitemap"></i>
 						<span>Management</span>
-						<span class="arrow"></span>
+						<span class="caret"></span>
 					</div>
 					<ul>
 						<li data-load="accommodations">Accommodations</li>
