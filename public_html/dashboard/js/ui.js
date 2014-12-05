@@ -94,6 +94,7 @@ $(function(){
 });
 
 function checkDefaultSwitches(){
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 001 found"');
 	//if there is a switch on the page set its default content
 	//do when the new content is loaded
 	if($(".option-active").length > 0){
@@ -110,6 +111,7 @@ function checkDefaultSwitches(){
 }
 
 $.fn.isSure = function(){
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 002 found"');
     var sure = true;
 
 	if($(this).attr("data-sure")){
@@ -120,6 +122,7 @@ $.fn.isSure = function(){
 }
 
 $.fn.smoothRemove = function(callback){
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 003 found"');
     $(this).animate({height: 0, opacity: 0}, 'slow', function() {
         $(this).remove();
 
@@ -132,6 +135,7 @@ $.fn.smoothRemove = function(callback){
 
 //display error message for use when validating form
 $.fn.errorMssg = function(mssg){
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 004 found"');
     $(this).after("<div class='errorMssg'>" + mssg + "</div>");
 }
 

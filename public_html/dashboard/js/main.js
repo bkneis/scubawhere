@@ -42,7 +42,7 @@ $(function(){
 	});
 
 	//token
-	if(!window._token)
+	if(!window._token && !window.token)
 		getToken();
 });
 
@@ -61,9 +61,10 @@ function getToken() {
 		success: function(data){
 			window._token = data;
 			window.token  = data;
-			return data;
 		}
 	});
+
+	return false;
 }
 
 function reproColor(id) { // Stands for: reproducible color

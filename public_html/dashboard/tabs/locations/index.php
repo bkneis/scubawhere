@@ -115,7 +115,7 @@
 				<h4>Description</h4>
 				<p>{{{description}}}</p>
 				<h4>Tags</h4>
-				<div style="overflow: auto;">
+				<div class="clearfix">
 					{{#each tags}}
 						<div class="tag"><strong>{{name}}</strong></div>
 					{{else}}
@@ -152,7 +152,7 @@
 					</div>
 					<div class="form-row">
 						<div class="field-label">Tags</div>
-						<div style="overflow: auto;">
+						<div class="clearfix">
 							{{#each available_tags}}
 								<label class="tag">
 									<input type="checkbox" name="tags[]" value="{{id}}" onchange="changeParent(this)">
