@@ -247,11 +247,11 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Sessions cannot be created in the past.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Sessions cannot be created in the past.')), 403 ); // 403 Forbidden
 
 		try
 		{
-			if( !Input::get('trip_id') ) throw new ModelNotFoundException();
+			if( !Input::has('trip_id') ) throw new ModelNotFoundException();
 			$trip = Auth::user()->trips()->findOrFail( Input::get('trip_id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -262,13 +262,20 @@ class DepartureController extends Controller {
 		// Check if the boat_id exists and belongs to the logged in company
 		try
 		{
-			if( !Input::get('boat_id') ) throw new ModelNotFoundException();
-			Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+			if( !Input::has('boat_id') ) throw new ModelNotFoundException();
+			$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
 		}
+
+		// Check if trip is overnight and if so, check if boat has boatrooms
+		$start = new DateTime($trip->start);
+		$end   = clone $start;
+		$end->add( new DateInterval('PT'.$trip->duration.'H') );
+		if($start->format('Y-m-d') !== $end->format('Y-m-d') && $boat->boatrooms()->count() === 0)
+			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have boatrooms, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		$departure = new Departure($data);
 

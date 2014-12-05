@@ -29,9 +29,9 @@ class Helper
 		if( !($local_time instanceof \DateTime) )
 			return $local_time;
 
-		$departure_start = new \DateTime($datestring);
+		$test_date = new \DateTime($datestring);
 
-		if($departure_start < $local_time )
+		if($test_date < $local_time )
 			return true;
 
 		return false;

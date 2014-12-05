@@ -1,3 +1,26 @@
+
+Handlebars.registerHelper('date', function(datetime) {
+	return datetime.format('DD-MM-YYYY');
+});
+Handlebars.registerHelper('hours', function(datetime) {
+	return datetime.format('HH');
+});
+Handlebars.registerHelper('minutes', function(datetime) {
+	return datetime.format('mm');
+});
+Handlebars.registerHelper('readableDuration', function(duration) {
+	if(duration >= 24)
+		return Math.floor(duration/24) + ' days, ' + (duration%24) + ' hours';
+	else
+		return duration + ' hours';
+});
+Handlebars.registerHelper('isWeekday', function(day) {
+	if(this.start.format('d') == day)
+		return new Handlebars.SafeString('checked onchange="this.checked=!this.checked;"');
+	else
+		return '';
+});
+
 $(function() {
 
 	// Render a list of trips
@@ -27,9 +50,7 @@ $(function() {
 		window.boats = _.indexBy(data, 'id');
 	});
 
-	$.get("/token", null, function(data) {
-		window.token = data;
-	});
+	getToken();
 
 
 	/* Initialize the external events
@@ -124,7 +145,7 @@ $(function() {
 
 			// Check if the dropped-on date is in the past
 			if( moment().startOf('day').diff(date) > 0 ) {
-				pageMssg('You cannot create sessions in the past.');
+				pageMssg('Sessions cannot be created in the past.', 'info');
 				return false;
 			}
 
@@ -217,15 +238,19 @@ $(function() {
 		// Create new independend moment object
 		var newStart = $.fullCalendar.moment( eventObject.session.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss' ).hours( starthours ).minutes( startminutes );
 
+		eventObject.newStart = newStart;
+
 		// console.log(eventObject.session.start.format('HH:mm on DD-MM-YYYY'));
 
 		// Update displayed end datetime
-		var tempEnd = $.fullCalendar.moment(newStart).add(eventObject.trip.duration, 'hours');
+		var newEnd = $.fullCalendar.moment(newStart).add(eventObject.trip.duration, 'hours');
+		eventObject.newEnd = newEnd;
 		$(event.target)
 			.closest('.reveal-modal')
 			.find('.enddatetime')
-			.text( tempEnd.format('HH:mm on DD-MM-YYYY') );
-		delete tempEnd;
+			.text( newEnd.format('HH:mm on DD-MM-YYYY') );
+		delete newStart;
+		delete newEnd;
 	});
 
 	// Finally, the ACTIVATE button
@@ -236,9 +261,6 @@ $(function() {
 
 		var modal = $(event.target).closest('.reveal-modal');
 		var eventObject = modal.data('eventObject');
-
-		// Whenever the session is saved, it is not new anymore
-		eventObject.isNew = false;
 
 		// Get time from input boxes
 		var starthours   = modal.find('.starthours').val();
@@ -254,11 +276,12 @@ $(function() {
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
-		// console.log(eventObject.isNew);
-
 		Session.createSession(eventObject.session, function success(data) {
 
-			// Communitcate success to user
+			// Whenever the session is saved, it is not new anymore
+			eventObject.isNew = false;
+
+			// Communicate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 			$('#save-loader').remove();
 
@@ -500,7 +523,7 @@ $(function() {
 				pageMssg(data.status, true);
 
 				// Remove original session
-				eventObject = $form.closest('.reveal-modal').data('eventObject');
+				var eventObject = $form.closest('.reveal-modal').data('eventObject');
 				$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
 				// Close modal window
@@ -512,6 +535,26 @@ $(function() {
 				console.log(xhr);
 			}
 		);
+	});
+
+	$('#modalWindows').on('change', '.boatSelect, .starthours, .startminutes', function(event) {
+		$select = $('.boatSelect');
+		$button = $('.submit-session, .update-session');
+		$select.siblings('.boatroomWarning').remove();
+		$button.prop('disabled', false);
+
+		var eventObject = $select.closest('.reveal-modal').data('eventObject');
+		var start = eventObject.newStart || eventObject.start;
+		var end   = eventObject.newEnd   || eventObject.end;
+		if(start.format('YYYY-MM-DD') !== end.format('YYYY-MM-DD'))
+		{
+			var boat_id = $select.val();
+			var boatroomCount = window.boats[boat_id].boatrooms.length;
+			if(boatroomCount === 0)
+				// Display warning
+				$select.after(' <span class="boatroomWarning text-danger"><i class="fa fa-exclamation-triangle fa-lg"></i><br>Without boatrooms, this boat cannot be selected for an overnight trip.</span>');
+				$button.prop('disabled', true);
+		}
 	});
 });
 
@@ -572,8 +615,12 @@ function showModalWindow(eventObject) {
 	}
 
 	// Check if session lies in the past
-	if( typeof eventObject.isPast === 'undefined' )
-		if( moment().diff(eventObject.start) > 0 )
+		if(typeof eventObject.isPast === 'undefined' &&
+			(
+				(eventObject.isNew && moment().startOf('day').diff(eventObject.start) > 0) ||
+				(!eventObject.isNew && moment().diff(eventObject.start) > 0)
+			)
+		)
 			eventObject.isPast = true;
 		else
 			eventObject.isPast = false;
@@ -588,20 +635,20 @@ function showModalWindow(eventObject) {
 		closeOnBackgroundClick: true,              // if you click background will modal close?
 		dismissModalClass: 'close-modal',          // the class of a button or element that will close an open modal
 		'eventObject': eventObject,                // Submit by reference to later get it as this.eventObject
-		onCloseModal: function() {
-			// Aborted action
-			// debugger;
+		onFinishModal: function() {
 			if(this.eventObject.isNew) {
 				$('#calendar').fullCalendar('removeEvents', this.eventObject.id);
 			}
 
-			// Clean up the randomStrings array
-			// window.randomStrings.indexOf( this.eventObject.id );
-		},
-		onFinishModal: function() {
+			delete this.eventObject.newStart;
+			delete this.eventObject.newEnd;
+
 			$('#modal-' + this.eventObject.id).remove();
 		},
 	});
+
+	// Trigger boatroomWarning
+	$('#modalWindows .boatSelect').change();
 
 	// Set timetable form token
 	if(window.token)
@@ -641,28 +688,6 @@ function toggleWeek(self) {
 function toggleTimetableForm() {
 	$('.create-timetable').toggle();
 }
-
-Handlebars.registerHelper('date', function(datetime) {
-	return datetime.format('DD-MM-YYYY');
-});
-Handlebars.registerHelper('hours', function(datetime) {
-	return datetime.format('HH');
-});
-Handlebars.registerHelper('minutes', function(datetime) {
-	return datetime.format('mm');
-});
-Handlebars.registerHelper('readableDuration', function(duration) {
-	if(duration >= 24)
-		return Math.floor(duration/24) + ' days, ' + (duration%24) + ' hours';
-	else
-		return duration + ' hours';
-});
-Handlebars.registerHelper('isWeekday', function(day) {
-	if(this.start.format('d') == day)
-		return new Handlebars.SafeString('checked onchange="this.checked=!this.checked;"');
-	else
-		return '';
-});
 
 function checkOverlap(event) {
 

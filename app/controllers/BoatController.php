@@ -61,7 +61,7 @@ class BoatController extends Controller {
 			$boat->boatrooms()->sync( $boatrooms );
 		}
 
-		return Response::json( array('status' => 'OK. Boat created', 'id' => $boat->id), 201 ); // 201 Created
+		return Response::json( array('status' => '<b>OK</b> Boat created', 'id' => $boat->id), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -101,7 +101,7 @@ class BoatController extends Controller {
 			return Response::json( array('errors' => $boat->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return Response::json( array('status' => 'OK. Boat updated.'), 200 ); // 200 OK
+		return Response::json( array('status' => '<b>OK</b> Boat updated'), 200 ); // 200 OK
 	}
 
 	/*
