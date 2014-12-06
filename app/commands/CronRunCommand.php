@@ -55,7 +55,32 @@ class CronRunCommand extends Command {
 	{
 		$this->everyFiveMinutes(function()
 		{
-			$this->info('I am running every 5 minutes!');
+			/**
+			 * Unreserve all reserved bookings where reserved datetime is 15 minutes overdue
+			 */
+			$bookings = Booking::whereNotNull('reserved')->with('company')->get();
+			$counter = 0;
+			foreach($bookings as $booking)
+			{
+				$before = new DateTime('15 minutes ago', new DateTimeZone($booking->company->timezone));
+				if(new DateTime($booking->reserved) < $before)
+				{
+					DB::update("UPDATE bookings SET `reserved` = NULL WHERE `id` = ?;", array($booking->id));
+					$counter++;
+				}
+			}
+			$this->messages[] = $counter . ' bookings unreserved';
+
+			/**
+			 * Delete all unsaved bookings older than 1h
+			 */
+			$before = date('Y-m-d H:i:s', time() - 60 * 60);
+			$affectedRows = Booking::where('confirmed', false)
+			                       ->whereNull('reserved')
+			                       ->where('saved', false)
+			                       ->where('updated_at', '<', $before)
+			                       ->delete();
+			$this->messages[] = $affectedRows . ' bookings deleted';
 		});
 
 		$this->finish();
