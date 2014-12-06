@@ -142,7 +142,7 @@ $.fn.errorMssg = function(mssg){
 function pageMssg(message, type, dismissable) {
 
 	if(typeof type === 'undefined')
-		type = 'warning';
+		type = 'danger';
 	if(typeof type === 'boolean')
 		type = 'success';
 
