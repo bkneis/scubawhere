@@ -18,7 +18,7 @@ class CronRunCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Run the scheduler.';
+	protected $description = 'Run the scheduler';
 
 	/**
 	 * Current timestamp when command is called.
@@ -26,6 +26,13 @@ class CronRunCommand extends Command {
 	 * @var integer
 	 */
 	protected $time;
+
+	/**
+	 * Hold messages that get logged
+	 *
+	 * @var array
+	 */
+	protected $messages = array();
 
 	/**
 	 * Create a new command instance.
@@ -56,7 +63,8 @@ class CronRunCommand extends Command {
 
 	protected function finish()
 	{
-		$this->info('Cron: ' . date('Y-m-d H:i:s') . ' | Execution time: ' . round(((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000), 3));
+		$executionTime = round(((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000), 3);
+		Log::info('Cron: execution time: ' . $executionTime . ' | ' . implode(', ', $this->messages));
 	}
 
 	protected function everyFiveMinutes(callable $callback)
