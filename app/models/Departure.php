@@ -66,6 +66,19 @@ class Departure extends Ardent {
 		return $this->trashed();
 	}
 
+	public function isOvernight($trip)
+	{
+		if(empty($trip))
+			$trip = $this->trip;
+
+		$start = new DateTime($this->start);
+		$end   = clone $start;
+
+		$end->add( new DateInterval('PT' . $trip->duration . 'H') );
+
+		return $start->format('Y-m-d') !== $end->format('Y-m-d');
+	}
+
 	public function addons()
 	{
 		return $this->hasManyThrough('Addon', 'Bookingdetail');

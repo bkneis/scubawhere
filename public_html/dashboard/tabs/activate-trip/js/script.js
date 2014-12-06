@@ -308,6 +308,9 @@ $(function() {
 			// Communicate error to user
 			$(event.target).prop('disabled', false);
 			$('#save-loader').remove();
+
+			// Trigger boatroomWarning
+			$('#modalWindows .boatSelect').change();
 		});
 	});
 
@@ -372,15 +375,25 @@ $(function() {
 			pageMssg(data.status, true);
 		},
 		function error(xhr) {
+			// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
+			delete eventObject.session.handle_timetable;
+
+			// Remake the moment-object
+			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
 			data = JSON.parse(xhr.responseText);
 			console.log(data);
 
-			pageMssg(data.errors[0]);
+			_.each(data.errors, function(error) {
+				pageMssg(error);
+			});
 
 			// Communicate error to user
 			$(event.target).prop('disabled', false);
 			$('#save-loader').remove();
+
+			// Trigger boatroomWarning
+			$('#modalWindows .boatSelect').change();
 		});
 	});
 
