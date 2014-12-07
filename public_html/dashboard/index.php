@@ -35,7 +35,7 @@
 	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome.min.css">
 
 	<!--Bootstrap CSS-->
-	<link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 

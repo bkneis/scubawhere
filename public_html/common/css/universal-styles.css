@@ -658,3 +658,7 @@ code {
 label {
 	font-weight: normal;
 }
+
+.panel-title {
+	text-transform: capitalize;
+}

@@ -210,7 +210,7 @@
 
 <link href="tabs/dashboard/css/style.css" rel="stylesheet" />
 <link href="tabs/dashboard/css/style-default.css" rel="stylesheet" id="style_color" />
-<link href="tabs/dashboard/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="tabs/dashboard/assets/bootstrap/css/bootstrap-scubawhere.css" rel="stylesheet" />
 <link href="tabs/dashboard/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 
    <!--<script src="tabs/dashboard/js/jquery-1.8.3.min.js"></script>-->
