@@ -855,7 +855,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
+				<div class="col-lg-10 col-lg-offset-1">
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="row">
@@ -951,32 +951,33 @@
 											<button class="btn btn-success btn-block save-booking mb10"><i class="fa fa-save"></i> Save For Later</button>
 											<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>
 											<h4 class="text-center">Reserve Booking</h4>
-											<div class="form-group">
-												<div class="radio">
-													<label>
-														<input type="radio" name="email" id="email-yes" value="1" checked>
-														Send confirmation email to customer
-													</label>
+											<form id="reserve-booking" class="form-horizontal">
+												<div class="form-group">
+													<div class="radio col-md-12">
+														<label>
+															<input type="radio" name="email" id="email-yes" value="1" checked>
+															Send confirmation email to customer
+														</label>
+													</div>
+													<div class="radio col-md-12">
+														<label>
+															<input type="radio" name="email" id="email-no" value="0">
+															Do not send email
+														</label>
+													</div>
 												</div>
-												<div class="radio">
-													<label>
-														<input type="radio" name="email" id="email-no" value="0">
-														Do not send email
-													</label>
+												<div class="form-group">
+													<div class="col-md-12">
+														<a href="javascript:void(0);" class="btn btn-warning btn-block"><i class="fa fa-clock-o"></i> Reserve</a>
+													</div>
 												</div>
-											</div>
-											<div class="form-group">
-												<a href="javascript:void(0);" class="btn btn-warning btn-block reserve-booking"><i class="fa fa-clock-o"></i> Reserve</a>
-											</div>
-											<div class="form-group">
-												<label for="reserve-until" class="col-sm-3 control-label">Until</label>
-												<div class="col-md-9 input-group">
-													<input id="reserve-until" name="reserve-until" class="form-control datetimepicker" data-date-format="YYYY-MM-DD hh:mm">
-													<span class="input-group-addon">
-														<span class="fa fa-calendar"></span>
-													</span>
+												<div class="form-group">
+													<label for="reserve-until" class="col-sm-6 control-label">For (hours)</label>
+													<div class="col-md-6">
+														<input id="reserve-until" name="reserved" class="form-control timepicker" placeholder="hh:mm" data-date-format="hh:mm">
+													</div>
 												</div>
-											</div>
+											</form>
 										</div>
 									</div>
 								</div>

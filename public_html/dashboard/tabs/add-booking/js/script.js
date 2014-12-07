@@ -399,19 +399,19 @@ $('#customer-tab').on('click', '.lead-customer', function() {
 $('#customer-tab').on('click', '.customers-finish', function() {
 
 	if(!booking.lead_customer) {
-		showAlert("danger", "Please designate a lead customer.");
+		pageMssg("Please designate a lead customer.", "danger");
 		return false;
 	}
 	if(!booking.lead_customer.email) {
-		showAlert("danger", "Lead customer requires an email!");
+		pageMssg("Lead customer requires an email!", "danger");
 		return false;
 	}
 	if(!booking.lead_customer.phone) {
-		showAlert("danger", "Lead customer requires a phone number!");
+		pageMssg("Lead customer requires a phone number!", "danger");
 		return false;
 	}
 	if(!booking.lead_customer.country_id) {
-		showAlert("danger", "Lead customer requires a country!");
+		pageMssg("Lead customer requires a country!", "danger");
 		return false;
 	}
 
@@ -709,24 +709,26 @@ $('#summary-tab').on('click', '.save-booking', function() {
 	params._token = window.token;
 
 	booking.save(params, function success(status) {
-		showAlert("success", "Booking saved successfully!");
+		pageMssg("Booking saved successfully!", "success");
 	}, function error(xhr) {
-		showAlert("danger", "There was an error saving this booking.");
+		pageMssg("There was an error saving this booking.", "danger");
 	});
 
 });
 
-$('#summary-tab').on('click', '.reserve-booking', function() {
+$('#summary-tab').on('submit', '#reserve-booking', function(event) {
+	event.preventDefault();
 
-	var params = {};
+	var params = $(this).serializeObject();
+	var reserved = params.reserved;
+
+	params.reserved = moment().add(reserved.substr(0, 2), 'hours').add(reserved.substr(3, 2), 'minutes').format('DD/MM/YYYY HH:mm');
 	params._token = window.token;
 
-	//Frontend will reserve for 1, 2, 3 hours etc
-
-	booking.save(params, function success(status) {
-		showAlert("success", "Booking saved successfully!");
+	booking.reserve(params, function success(status) {
+		pageMssg("Booking reserved successfully!", "success");
 	}, function error(xhr) {
-		showAlert("danger", "There was an error saving this booking.");
+		pageMssg("There was an error reserving this booking.", "danger");
 	});
 
 });
@@ -817,12 +819,6 @@ function listGroupRadio(selector, additionalClass) {
 
 function friendlyDate(date) {
 	return moment(date).format('DD/MM/YYYY HH:mm');
-}
-
-function showAlert(type, error) {
-	$('.alert-container').remove();
-	$(booking.currentTab).find('.row-header').append('<div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4 alert-container"><div class="alert alert-'+type+'" role="alert">'+error+'</div></div>');
-	$('.alert-container').hide().fadeIn();
 }
 
 function addTransaction() {
