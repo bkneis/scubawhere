@@ -113,3 +113,6 @@ www
 /public_html/dashboard/thanks/css/user.png
 /public_html/dashboard/thanks/index.php
 /to
+
+#Install node modules with "npm install" (Required for grunt)
+/public_html/node_modules
