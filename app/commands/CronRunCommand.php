@@ -1,5 +1,31 @@
 <?php
 
+# Small cron job command for Laravel 4.2
+# Inspired by Laravel 5's new upcoming scheduler (https://laravel-news.com/2014/11/laravel-5-scheduler)
+#
+# Author: Soren Schwert (GitHub: sisou)
+#
+# Requirements:
+# =============
+# PHP 5.4
+# Laravel 4.2 ? (not tested with 4.1 or below)
+# A desire to put all application logic into version control
+#
+# Installation:
+# =============
+# 1. Put this file into your app/commands/ directory and name it 'CronRunCommand.php'.
+# 2. In your artisan.php file (found in app/start/), put this line: 'Artisan::add(new CronRunCommand);'.
+# 3. On the server's command line, run 'php artisan cron:run'. If you see a message telling you the execution time, it works!
+# 4. On your server, configure a cron job to call 'php-cli artisan cron:run >/dev/null 2>&1' and to run every five minutes (*/5 * * * *)
+# 5. Observe your laravel.log file (found in app/storage/logs/) for messages starting with 'Cron'.
+#
+# Usage:
+# ======
+# 1. Have a look at the example provided in the fire() function.
+# 2. Have a look at the available schedules below (starting at line 127).
+# 4. Code your schedule inside the fire() function.
+# 3. Done. Now go push your cron logic into version control!
+
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,7 +51,7 @@ class CronRunCommand extends Command {
 	 *
 	 * @var integer
 	 */
-	protected $time;
+	protected $timestamp;
 
 	/**
 	 * Hold messages that get logged
@@ -33,6 +59,13 @@ class CronRunCommand extends Command {
 	 * @var array
 	 */
 	protected $messages = array();
+
+	/**
+	 * Specify the time of day that daily tasks get run
+	 *
+	 * @var string [HH:MM]
+	 */
+	protected $runAt = '03:00';
 
 	/**
 	 * Create a new command instance.
@@ -43,7 +76,7 @@ class CronRunCommand extends Command {
 	{
 		parent::__construct();
 
-		$this->time = time();
+		$this->timestamp = time();
 	}
 
 	/**
@@ -88,28 +121,33 @@ class CronRunCommand extends Command {
 
 	protected function finish()
 	{
+		// Write execution time and messages to the log
 		$executionTime = round(((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000), 3);
 		Log::info('Cron: execution time: ' . $executionTime . ' | ' . implode(', ', $this->messages));
 	}
 
+	/**
+	 * AVAILABLE SCHEDULES
+	 */
+
 	protected function everyFiveMinutes(callable $callback)
 	{
-		if((int) date('i', $this->time) % 5 === 0) call_user_func($callback);
+		if((int) date('i', $this->timestamp) % 5 === 0) call_user_func($callback);
 	}
 
 	protected function everyTenMinutes(callable $callback)
 	{
-		if((int) date('i', $this->time) % 10 === 0) call_user_func($callback);
+		if((int) date('i', $this->timestamp) % 10 === 0) call_user_func($callback);
 	}
 
 	protected function everyFifteenMinutes(callable $callback)
 	{
-		if((int) date('i', $this->time) % 15 === 0) call_user_func($callback);
+		if((int) date('i', $this->timestamp) % 15 === 0) call_user_func($callback);
 	}
 
 	protected function everyThirtyMinutes(callable $callback)
 	{
-		if((int) date('i', $this->time) % 30 === 0) call_user_func($callback);
+		if((int) date('i', $this->timestamp) % 30 === 0) call_user_func($callback);
 	}
 
 	/**
@@ -117,15 +155,7 @@ class CronRunCommand extends Command {
 	 */
 	protected function hourly(callable $callback)
 	{
-		if(date('i', $this->time) === '00') call_user_func($callback);
-	}
-
-	/**
-	 * Called every day at midnight
-	 */
-	protected function daily(callable $callback)
-	{
-		if(date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('i', $this->timestamp) === '00') call_user_func($callback);
 	}
 
 	/**
@@ -135,7 +165,15 @@ class CronRunCommand extends Command {
 	 */
 	protected function hourlyAt(int $minute, callable $callback)
 	{
-		if((int) date('i', $this->time) === $minute) call_user_func($callback);
+		if((int) date('i', $this->timestamp) === $minute) call_user_func($callback);
+	}
+
+	/**
+	 * Called every day
+	 */
+	protected function daily(callable $callback)
+	{
+		if(date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	/**
@@ -145,7 +183,7 @@ class CronRunCommand extends Command {
 	 */
 	protected function dailyAt(string $time, callable $callback)
 	{
-		if(date('H:i', $this->time) === $time) call_user_func($callback);
+		if(date('H:i', $this->timestamp) === $time) call_user_func($callback);
 	}
 
 	/**
@@ -153,56 +191,59 @@ class CronRunCommand extends Command {
 	 */
 	protected function twiceDaily(callable $callback)
 	{
-		if(date('h:i', $this->time) === '12:00') call_user_func($callback);
+		if(date('h:i', $this->timestamp) === '12:00') call_user_func($callback);
 	}
 
 	/**
-	 * Called every weekday at midnight
+	 * Called every weekday
 	 */
 	protected function weekdays(callable $callback)
 	{
 		$days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-		if(in_array(date('D', $this->time), $days) && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(in_array(date('D', $this->timestamp), $days) && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function mondays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Mon' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Mon' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function tuesdays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Tue' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Tue' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function wednesdays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Wed' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Wed' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function thursdays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Thu' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Thu' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function fridays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Fri' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Fri' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function saturdays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Sat' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Sat' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	protected function sundays(callable $callback)
 	{
-		if(date('D', $this->time) === 'Sun' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Sun' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
+	/**
+	 * Called once every week (basically the same as using sundays() above...)
+	 */
 	protected function weekly(callable $callback)
 	{
-		if(date('D', $this->time) === 'Mon' && date('H:i', $this->time) === '00:00') call_user_func($callback);
+		if(date('D', $this->timestamp) === 'Sun' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 	/**
@@ -213,17 +254,23 @@ class CronRunCommand extends Command {
 	 */
 	protected function weeklyOn(string $day, string $time, callable $callback)
 	{
-		if(date('D', $this->time) === $day && date('H:i', $this->time) === $time) call_user_func($callback);
+		if(date('D', $this->timestamp) === $day && date('H:i', $this->timestamp) === $time) call_user_func($callback);
 	}
 
+	/**
+	 * Called each month on the 1st
+	 */
 	protected function monthly(callable $callback)
 	{
-
+		if(date('d', $this->timestamp) === '01' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
+	/**
+	 * Called each year on the 1st of January
+	 */
 	protected function yearly(callable $callback)
 	{
-
+		if(date('m', $this->timestamp) === '01' && date('d', $this->timestamp) === '01' && date('H:i', $this->timestamp) === $this->runAt) call_user_func($callback);
 	}
 
 }
