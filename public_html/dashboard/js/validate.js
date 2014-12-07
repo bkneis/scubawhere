@@ -52,7 +52,7 @@ $.fn.validateField = function(min, max){
 
 
 	return bool;
-}
+};
 
 $.fn.validateNumericField = function(min, max){
 	var bool = true;
@@ -79,14 +79,14 @@ $.fn.validateNumericField = function(min, max){
 	$(this).validationAction(bool);
 
 	return bool;
-}
+};
 
 //displays error mssg if bool == false
 $.fn.validationAction = function(bool){
-	if(bool == true){
+	if(bool === true){
 		$(this).css("border-color", "");
 	}else{
 		$(this).css("border-color", "red");
 	}
 
-}
+};

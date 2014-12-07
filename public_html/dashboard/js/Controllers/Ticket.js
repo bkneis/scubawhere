@@ -5,20 +5,20 @@ var Ticket = {
 	// Param - id of ticket wanted
 	getTicket : function(params, handleData){
 		$.get("/api/ticket", params, function(data){
-			handleData(data)
+			handleData(data);
 		});
 	},
 
 	// No params needed
 	getAllTickets : function(handleData){
 		$.get("/api/ticket/all", function(data){
-			handleData(data)
+			handleData(data);
 		});
 	},
 
 	getAllWithTrashed : function(handleData){
 		$.get("/api/ticket/all-with-trashed", function(data){
-			handleData(data)
+			handleData(data);
 		});
 	},
 

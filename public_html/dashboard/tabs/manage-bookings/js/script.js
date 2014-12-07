@@ -127,7 +127,7 @@ $(function() {
 		event.stopPropagation();
 	});
 
-	$('#booking-list').on('click', '.accordion-header', function(event) {
+	$('#booking-list').on('click', '.accordion-header', function() {
 		$(this).toggleClass('expanded');
 		$('.accordion-' + this.getAttribute('data-id')).toggle();
 	});

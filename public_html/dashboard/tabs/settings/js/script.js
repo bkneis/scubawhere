@@ -1,5 +1,4 @@
 var companyForm;
-var errorsHTML;
 
 $(function() {
 	$.get("/api/agency/all", function(data) {
@@ -35,10 +34,10 @@ $(function() {
 				$('.loader').remove();
 			},
 			error: function(xhr) {
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				pageMssg('Oops, something wasn\'t quite right');
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
@@ -61,7 +60,7 @@ $(function() {
 				pageMssg(data.status, true);
 			},
 			error: function(xhr) {
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				if(xhr.status == 500)
 					pageMssg('Server error: ' + data.errors[0]);
 				else
@@ -86,7 +85,7 @@ function renderEditForm() {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

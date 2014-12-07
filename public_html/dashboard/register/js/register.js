@@ -44,7 +44,7 @@ function validate(sectionNum){
 function validateAccount(){
 	var password = $('[name="passwd"]').val();
 	var repassword = $('[name="repasswd"]').val();
-	if(password == repassword) {
+	if(password === repassword) {
 		return true;
 	} return false;
 }
@@ -98,7 +98,7 @@ $(function(){
 			},
 			error: function(xhr) {
 
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				console.log(data);
 
 				// TODO Show validation errors
@@ -127,7 +127,7 @@ $(function(){
 					return true;
 				}
 
-				if(currentIndex == 0) { // This is the criteria for the first step
+				if(currentIndex === 0) { // This is the criteria for the first step
 					if(validate(1)) {
 						return true;
 					}

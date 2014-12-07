@@ -38,17 +38,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-addon-form').prepend(errorsHTML)
+				$('#add-addon-form').prepend(errorsHTML);
 				$('#add-addon').before(errorsHTML);
 			}
 			else {
@@ -85,17 +85,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-addon-form').prepend(errorsHTML)
+				$('#update-addon-form').prepend(errorsHTML);
 				$('#update-addon').before(errorsHTML);
 			}
 			else {
@@ -109,14 +109,15 @@ $(function(){
 		});
 	});
 
-	$("#addon-list-container").on('click', '#change-to-add-addon', function(event){
+	$("#addon-list-container").on('click', '#change-to-add-addon', function(event) {
 
 		event.preventDefault();
 
 		renderEditForm();
 	});
 
-	$('#addon-form-container').on('click', '.remove-addon', function(event){
+	$('#addon-form-container').on('click', '.remove-addon', function(event) {
+    event.preventDefault();
 		var check = confirm('Do you really want to remove this addon?');
 		if(check){
 			// Show loading indicator
@@ -142,7 +143,8 @@ $(function(){
 		}
 	});
 
-	$('#addon-form-container').on('click', '.deactivate-addon', function(event){
+	$('#addon-form-container').on('click', '.deactivate-addon', function(event) {
+    event.preventDefault();
 		var check = confirm('Do you really want to remove this addon?');
 		if(check){
 			// Show loading indicator
@@ -169,7 +171,7 @@ $(function(){
 	});
 
 	/*
-	$('#addon-form-container').on('click', '.restore-addon', function(event){
+	$('#addon-form-container').on('click', '.restore-addon', function(event) {
 
 		// Show loading indicator
 		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -269,7 +271,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

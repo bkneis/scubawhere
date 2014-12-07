@@ -27,7 +27,7 @@ $(function(){
 			}
 		}
 
-		if(error == true) {
+		if(error === true) {
 			$( "form" ).effect( "shake" );
 			console.log(error);
 		}
@@ -41,11 +41,11 @@ $(function(){
 				type: "POST",
 				dataType: "json",
 				data: $("#loginForm").serialize(),
-				success: function(data){
+				success: function(){
 					window.location.href = "/dashboard/";
 				},
 				error: function(xhr){
-					data = JSON.parse(xhr.responseText);
+					var data = JSON.parse(xhr.responseText);
 
 					$('#loginDC').removeClass('loading');
 

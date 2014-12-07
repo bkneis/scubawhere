@@ -37,7 +37,7 @@ $(function(){
 		});
 	});
 
-	$tripFormContainer = $('#trip-form-container')
+	var $tripFormContainer = $('#trip-form-container');
 	// Assign eventListener for trip clicks
 	$('#trip-list-container').on('click', 'li', function(event) {
 
@@ -66,17 +66,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-trip-form').prepend(errorsHTML)
+				$('#add-trip-form').prepend(errorsHTML);
 				$('#add-trip').before(errorsHTML);
 			}
 			else {
@@ -113,17 +113,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-trip-form').prepend(errorsHTML)
+				$('#update-trip-form').prepend(errorsHTML);
 				$('#update-trip').before(errorsHTML);
 			}
 			else {
@@ -137,12 +137,13 @@ $(function(){
 		});
 	});
 
-	$("#trip-list-container").on('click', '#change-to-add-trip', function(event){
+	$("#trip-list-container").on('click', '#change-to-add-trip', function(event) {
 		event.preventDefault();
 		renderEditForm();
 	});
 
-	$tripFormContainer.on('click', '.remove-trip', function(event){
+	$tripFormContainer.on('click', '.remove-trip', function(event) {
+    event.preventDefault();
 		var check = confirm('Do you really want to remove this trip?');
 		if(check){
 			// Show loading indicator
@@ -171,7 +172,7 @@ $(function(){
 	$tripFormContainer.on('click', '.add1d', function(event) {
 		event.preventDefault();
 
-		$field = $('#tripDuration');
+		var $field = $('#tripDuration');
 		var duration = $field.val();
 		$field.val( parseInt(duration) + 24 );
 
@@ -181,14 +182,14 @@ $(function(){
 	$tripFormContainer.on('click', '.sub1d', function(event) {
 		event.preventDefault();
 
-		$field = $('#tripDuration');
+		var $field = $('#tripDuration');
 		var duration = $field.val();
 		$field.val( Math.max( 1, parseInt(duration) - 24 ) );
 
 		$field.trigger('change');
 	});
 
-	$tripFormContainer.on('change', "#tripDuration", function(event) {
+	$tripFormContainer.on('change', "#tripDuration", function() {
 		$('#readableDuration').text(
 			readableDuration(
 				$('#tripDuration').val()
@@ -251,7 +252,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

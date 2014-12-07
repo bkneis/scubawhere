@@ -27,7 +27,7 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
-priceInput = Handlebars.compile( $('#price-input-template').html() )
+priceInput = Handlebars.compile( $('#price-input-template').html() );
 Handlebars.registerPartial('price_input', priceInput);
 
 window.sw.default_first_base_price = {
@@ -75,17 +75,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-accommodation-form').prepend(errorsHTML)
+				$('#add-accommodation-form').prepend(errorsHTML);
 				$('#add-accommodation').before(errorsHTML);
 			}
 			else {
@@ -128,17 +128,17 @@ $(function(){
 			}
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-accommodation-form').prepend(errorsHTML)
+				$('#update-accommodation-form').prepend(errorsHTML);
 				$('#update-accommodation').before(errorsHTML);
 			}
 			else {
@@ -153,7 +153,8 @@ $(function(){
 	});
 
 	$('#accommodation-form-container').on('click', '.remove-accommodation', function(event){
-		var check = confirm('Do you really want to remove this accommodation?');
+		event.preventDefault();
+    var check = confirm('Do you really want to remove this accommodation?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -179,7 +180,8 @@ $(function(){
 	});
 
 	$('#accommodation-form-container').on('click', '.deactivate-accommodation', function(event){
-		var check = confirm('Do you really want to remove this accommodation?');
+		event.preventDefault();
+    var check = confirm('Do you really want to remove this accommodation?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -305,7 +307,7 @@ function renderEditForm(id) {
 		accommodation.task   = 'update';
 		accommodation.update = true;
 
-		_.each(accommodation.base_prices, function(value, key, list) {
+		_.each(accommodation.base_prices, function(value) {
 			value.isBase   = true;
 
 			if(value.from == '0000-00-00')
@@ -333,7 +335,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

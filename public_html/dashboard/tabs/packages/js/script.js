@@ -25,7 +25,7 @@ Handlebars.registerHelper('currency', function() {
 });
 Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
 
-priceInput = Handlebars.compile( $('#price-input-template').html() )
+priceInput = Handlebars.compile( $('#price-input-template').html() );
 Handlebars.registerPartial('price_input', priceInput);
 
 window.sw.default_first_base_price = {
@@ -79,17 +79,17 @@ $(function(){
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-package-form').prepend(errorsHTML)
+				$('#add-package-form').prepend(errorsHTML);
 				$('#add-package').before(errorsHTML);
 			}
 			else {
@@ -132,17 +132,17 @@ $(function(){
 			}
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-package-form').prepend(errorsHTML)
+				$('#update-package-form').prepend(errorsHTML);
 				$('#update-package').before(errorsHTML);
 			}
 			else {
@@ -157,11 +157,11 @@ $(function(){
 	});
 
 	$('#package-form-container').on('change', '.ticket-select', function(event) {
-		$self     = $(event.target);
-		$quantity = $self.siblings('.quantity-input').first();
-		$prices   = $self.siblings('.ticket-prices').first();
+		var $self     = $(event.target);
+		var $quantity = $self.siblings('.quantity-input').first();
+		var $prices   = $self.siblings('.ticket-prices').first();
 
-		var id = $self.val();
+		var id = $self.val(), disabledInputs, numberOfDisabledInputs;
 
 		if(id == "0") {
 			// Reset
@@ -172,8 +172,8 @@ $(function(){
 			$prices.html( $prices.attr('data-default') );
 
 			// Check if more than one empty ticket-selects exist and if so, remove the extra one
-			var disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
-			var numberOfDisabledInputs = disabledInputs.length;
+			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			numberOfDisabledInputs = disabledInputs.length;
 			if( numberOfDisabledInputs > 1) {
 				disabledInputs.last().parent().remove();
 			}
@@ -186,19 +186,19 @@ $(function(){
 			$quantity.trigger('change');
 
 			// Check if empty ticket-select exists and if not, create and append one
-			var disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
-			var numberOfDisabledInputs = disabledInputs.length;
-			if( numberOfDisabledInputs == 0) {
+			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			numberOfDisabledInputs = disabledInputs.length;
+			if( numberOfDisabledInputs === 0) {
 				$('.ticket-list').append( ticketSelect({available_tickets: window.tickets}) );
 			}
 		}
 	});
 
 	$('#package-form-container').on('change', '.quantity-input', function(event) {
-		$quantity = $(event.target);
-		$prices   = $quantity.siblings('.ticket-prices').first();
-		$ticket   = $quantity.siblings('.ticket-select').first();
-		id = $ticket.val();
+		var $quantity = $(event.target);
+		var $prices   = $quantity.siblings('.ticket-prices').first();
+		var $ticket   = $quantity.siblings('.ticket-select').first();
+		var id = $ticket.val();
 
 		/*
 		var html = '';
@@ -210,7 +210,8 @@ $(function(){
 		*/
 	});
 
-	$('#package-form-container').on('click', '.remove-package', function(event){
+	$('#package-form-container').on('click', '.remove-package', function(event) {
+    event.preventDefault();
 		var check = confirm('Do you really want to remove this package?');
 		if(check){
 			// Show loading indicator
@@ -236,7 +237,8 @@ $(function(){
 		}
 	});
 
-	$('#package-form-container').on('click', '.deactivate-package', function(event){
+	$('#package-form-container').on('click', '.deactivate-package', function(event) {
+    event.preventDefault();
 		var check = confirm('Do you really want to remove this package?');
 		if(check){
 			// Show loading indicator
@@ -363,12 +365,12 @@ function renderEditForm(id) {
 		package.task   = 'update';
 		package.update = true;
 
-		_.each(package.tickets, function(value, key, list) {
+		_.each(package.tickets, function(value) {
 			value.existing = true;
 			value.available_tickets = window.tickets;
 		});
 
-		_.each(package.base_prices, function(value, key, list) {
+		_.each(package.base_prices, function(value) {
 			value.isBase   = true;
 
 			if(value.from == '0000-00-00')
@@ -397,7 +399,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

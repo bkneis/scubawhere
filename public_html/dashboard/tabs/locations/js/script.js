@@ -19,7 +19,7 @@ function initialise() {
 	console.log('Initialising started');
 	var mapOptions = {
 		zoom:   8,
-		center: new google.maps.LatLng(company.latitude, company.longitude)
+		center: new google.maps.LatLng(window.company.latitude, window.company.longitude)
 		// center: new google.maps.LatLng(50.582847, 5.96848) // Somewhere around Aachen in Germany
 	};
 
@@ -67,8 +67,8 @@ function initialise() {
 	});
 
 	// Define inputs behaviour
-	$('#showLocation').on('click', function(event) {
-		if( window.sw.latitudeInput.val() == '' || window.sw.longitudeInput.val() == '')
+	$('#showLocation').on('click', function() {
+		if( window.sw.latitudeInput.val() === '' || window.sw.longitudeInput.val() === '')
 			return false;
 
 		var location = new google.maps.LatLng( window.sw.latitudeInput.val(), window.sw.longitudeInput.val() );
@@ -104,8 +104,8 @@ function initialise() {
 		// placeNewMarker(location);
 	});
 
-	$('#createLocation').on('click', function(event) {
-		if( window.sw.latitudeInput.val() == '' || window.sw.longitudeInput.val() == '')
+	$('#createLocation').on('click', function() {
+		if( window.sw.latitudeInput.val() === '' || window.sw.longitudeInput.val() === '')
 			return false;
 
 		var markerObject = {
@@ -296,7 +296,7 @@ function easeOutAnimation(start, end, percentage) {
 	return -c * t*(t-2) + b;
 }
 
-function loadLocationsInView(promise) {
+function loadLocationsInView() {
 	var bounds = window.gmap.getBounds();
 	var north  = bounds.getNorthEast().lat(),
 	    west   = bounds.getSouthWest().lng(),
@@ -319,7 +319,7 @@ function loadLocationsInView(promise) {
 		promises.loadedLocations.resolve();
 	});
 }
-function loadAttachedLocations(promise) {
+function loadAttachedLocations() {
 
 	Place.attached(function success(data) {
 		window.sw.attachedLocations = _.indexBy(data, 'id');
@@ -339,7 +339,7 @@ function removeAttachedFromLocations() {
 
 function renderHomeLocation() {
 	var markerOptions = {
-		position:  new google.maps.LatLng( company.latitude, company.longitude ),
+		position:  new google.maps.LatLng(window.company.latitude, window.company.longitude),
 		map:       gmap,
 		title:     'Home',
 		icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=1'
@@ -414,7 +414,7 @@ function placeNewMarker(location) {
 		draggable: true,
 		map:       gmap,
 		icon:      'http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
-	}
+	};
 	window.sw.newMarker = new google.maps.Marker(markerOptions);
 
 	google.maps.event.addListener(window.sw.newMarker, 'drag', function(event) {
@@ -434,14 +434,14 @@ function placeNewMarker(location) {
 
 function updateLatLngInputs(location) { // Sync changes of the marker's location to the input fields
 
-	latitude = Math.round(location.lat() * 1000000) / 1000000;
-	longitude = Math.round(location.lng() * 1000000) / 1000000;
+	var latitude = Math.round(location.lat() * 1000000) / 1000000;
+	var longitude = Math.round(location.lng() * 1000000) / 1000000;
 
 	window.sw.latitudeInput.val( latitude );
 	window.sw.longitudeInput.val( longitude );
 }
 
-function existingMarkerClick(event) {
+function existingMarkerClick() {
 	var markerObject = this;
 
 	// Show modal window
@@ -453,11 +453,11 @@ function showModalWindow(markerObject) {
 	if(markerObject.id) {
 		// Create the modal window from location-template
 		if(!window.sw.locationTemplate) window.sw.locationTemplate = Handlebars.compile( $("#location-template").html() );
-
+		var location;
 		if(markerObject.attached)
-			var location = window.sw.attachedLocations[markerObject.id];
+			location = window.sw.attachedLocations[markerObject.id];
 		else
-			var location = window.sw.locations[markerObject.id];
+			location = window.sw.locations[markerObject.id];
 
 		location.attached = markerObject.attached;
 

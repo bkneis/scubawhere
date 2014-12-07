@@ -3,6 +3,7 @@ $(function() {
         $mainContent = $("#content"),
         $pageWrap    = $("#page-wrap"),
         baseHeight   = 0,
+        contentHasLoaded = false,
         $el;
 
     $pageWrap.height($pageWrap.height());
@@ -31,10 +32,10 @@ $(function() {
         $('[data-load]').removeClass('tab-active');
         $('[data-load="'+newHash+'"]').addClass('tab-active');
 
-        newContent = "tabs/" + newHash + "/index.php";
+        var newContent = "tabs/" + newHash + "/index.php";
 
         // Blend out old content and load new content
-        window.contentHasLoaded = false;
+        contentHasLoaded = false;
         $mainContent.find('#wrapper').fadeOut(200, function() {
             if(!contentHasLoaded)
                 $mainContent.html(LOADER);
@@ -57,18 +58,18 @@ $(function() {
 
 /* ACCORDION NAVIGATION */
 $(function(){
-	//function fires if any of the nav-items tags are clicked
-	$( "#sidenav > li > div" ).click(function(){
-		//show child list if not already shown
-		if ($(this).parent().children().is( ":hidden" ) ) {
-  			$( $( this ).parent().children( "ul" ) ).slideDown( "fast" );
-  			//set arrow to up
-  			$( $(this).children( ".caret" ) ).css('transform', 'rotate(0deg)');
-  		} else {
-  			//list already on show so slide it back up
-	    	$( $( this ).parent().children( "ul" ) ).slideUp( "fast" );
-	    	//set arrow to down
-	    	$( $( this ).children( ".caret" ) ).css('transform', 'rotate(-90deg)');
-		}
-	});
+    //function fires if any of the nav-items tags are clicked
+    $( "#sidenav > li > div" ).click(function(){
+        //show child list if not already shown
+        if ($(this).parent().children().is( ":hidden" ) ) {
+            $( $( this ).parent().children( "ul" ) ).slideDown( "fast" );
+            //set arrow to up
+            $( $(this).children( ".caret" ) ).css('transform', 'rotate(0deg)');
+        } else {
+            //list already on show so slide it back up
+            $( $( this ).parent().children( "ul" ) ).slideUp( "fast" );
+            //set arrow to down
+            $( $( this ).children( ".caret" ) ).css('transform', 'rotate(-90deg)');
+        }
+    });
 });

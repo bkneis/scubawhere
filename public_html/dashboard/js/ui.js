@@ -112,14 +112,14 @@ function checkDefaultSwitches(){
 
 $.fn.isSure = function(){
 	alert('If you see this alert, please contact Soren with the following message: "Tombstone 002 found"');
-    var sure = true;
+	var sure = true;
 
 	if($(this).attr("data-sure")){
-		var sure = confirm($(this).attr("data-sure"));
+		sure = confirm($(this).attr("data-sure"));
 	}
 
 	return sure;
-}
+};
 
 $.fn.smoothRemove = function(callback){
 	alert('If you see this alert, please contact Soren with the following message: "Tombstone 003 found"');
@@ -131,13 +131,13 @@ $.fn.smoothRemove = function(callback){
         	callback();
         }
     });
-}
+};
 
 //display error message for use when validating form
 $.fn.errorMssg = function(mssg){
 	alert('If you see this alert, please contact Soren with the following message: "Tombstone 004 found"');
     $(this).after("<div class='errorMssg'>" + mssg + "</div>");
-}
+};
 
 function pageMssg(message, type, dismissable) {
 

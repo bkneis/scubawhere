@@ -173,7 +173,7 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 			this.bookingdetails = _.reject(this.bookingdetails, function(detail) {
-				return detail.id == params.bookingdetail_id
+				return detail.id == params.bookingdetail_id;
 			});
 
 			this.decimal_price = data.decimal_price;
@@ -513,7 +513,7 @@ Booking.prototype.payments = function(successFn, errorFn) {
 		},
 		error: errorFn
 	});
-}
+};
 
 /**
  * Validate that all required lead customer fields are provided
@@ -554,5 +554,4 @@ Booking.prototype.isPaid = function() {
  ******* PRIVATE FUNCTIONS ******
  ********************************
  */
-
 

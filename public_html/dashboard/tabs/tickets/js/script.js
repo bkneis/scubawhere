@@ -1,7 +1,8 @@
 var ticketForm,
     ticketList,
-    priceInput,
-    promises = {};
+    priceInput;
+
+window.promises = {};
 
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(id) {
@@ -126,17 +127,17 @@ $(function () {
 
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-ticket-form').prepend(errorsHTML)
+				$('#add-ticket-form').prepend(errorsHTML);
 				$('#add-ticket').before(errorsHTML);
 			}
 			else {
@@ -179,17 +180,17 @@ $(function () {
 			}
 		}, function error(xhr) {
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			if(data.errors.length > 0) {
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-ticket-form').prepend(errorsHTML)
+				$('#update-ticket-form').prepend(errorsHTML);
 				$('#update-ticket').before(errorsHTML);
 			}
 			else {
@@ -272,7 +273,7 @@ function renderEditForm(id) {
 		ticket.hasBoats     = Object.keys(ticket.boats).length > 0;
 		ticket.hasBoatrooms = Object.keys(ticket.boatrooms).length > 0;
 
-		_.each(ticket.base_prices, function(value, key, list) {
+		_.each(ticket.base_prices, function(value) {
 			value.isBase = true;
 			if(value.from == '0000-00-00')
 				value.isAlways = true;
@@ -303,7 +304,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }

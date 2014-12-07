@@ -7,15 +7,14 @@ var tripsList;
 var display = "trips";
 $(function() {
 
-	window.trips;
-	window.boats;
-	window.token;
-	window.sessions;
-	window.accommodations;
+  window.trips = {};
+	window.boats = {};
+	window.sessions = {};
+	window.accommodations = {};
 
 	boatsList = Handlebars.compile($("#boats-list-template").html());
 	tripsList = Handlebars.compile($("#trips-list-template").html());
-	
+
 	// 1. Get trips
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
@@ -70,7 +69,7 @@ $(function() {
     		$("div#filter-settings option[value=boat]").attr('disabled', true);
     		$("#filter-options").val('all');
     		$("#filter").append( boatsList({boats : window.boats}) );
-    	} 
+    	}
     	else if($("#filter-options").val() == 'trip') {
     		$("div#filter-settings option[value=trip]").attr('disabled', true);
     		$("#filter-options").val('all');
@@ -140,7 +139,7 @@ $(function() {
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
 	});
 
-	$("#myonoffswitch").click(function(event) {
+	$("#myonoffswitch").click(function() {
 		if($(this).is(':checked')) display = "trips";
 		else display = "accommodations";
 		$('#calendar').fullCalendar( 'refetchEvents' );
@@ -295,14 +294,14 @@ function getTripEvents(start, end, timezone, callback) {
 	if(filterByTrip) sessionFilters.trip_id = tripFilter;
 	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
-		sessions = _.indexBy(data, 'id');
+		window.sessions = _.indexBy(data, 'id');
 
-		console.log(sessions);
+		console.log(window.sessions);
 
-		events = [];
+		var events = [];
 
 		// Create eventObjects
-		_.each(sessions, function(value) {
+		_.each(window.sessions, function(value) {
 			if(filterByBoat) {
 				if(boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
@@ -324,7 +323,7 @@ function getTripEvents(start, end, timezone, callback) {
 						sameDay : sameDay
 					};
 
-					if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL"
+					if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);
 
@@ -332,7 +331,6 @@ function getTripEvents(start, end, timezone, callback) {
 				}
 			}
 			else {
-
 				var booked = value.capacity[0];
 				var capacity = value.capacity[1];
 				var ticketsLeft = capacity - booked;
@@ -352,7 +350,7 @@ function getTripEvents(start, end, timezone, callback) {
 					sameDay : sameDay
 				};
 
-				if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL"
+				if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
 
 				eventObject.session.start = $.fullCalendar.moment(value.start);
 
@@ -383,7 +381,7 @@ function getAccomEvents(start, end, timezone, callback) {
 	Accommodation.filter(sessionFilters, function success(data) {
 
 		console.log(data);
-		events = [];
+		var events = [];
 
 		_.each(data, function(value, key) {
 		    var start = new moment(key);

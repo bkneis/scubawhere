@@ -6,10 +6,10 @@ Handlebars.registerHelper('currency', function() {
 });
 
 Handlebars.registerHelper('status', function() {
-	if(this.confirmed == 1)    return new Handlebars.SafeString('<i class="fa fa-check"></i> Confirmed');
-	if(this.reserved != null)  return new Handlebars.SafeString('<i class="fa fa-clock-o"></i> Reserved');
-	if(this.saved == 1)        return new Handlebars.SafeString('<i class="fa fa-floppy-o"></i> Saved');
-	else                       return new Handlebars.SafeString('<i class="fa fa-exclamation-triangle"></i> N/A');
+	if(this.confirmed == 1)     return new Handlebars.SafeString('<i class="fa fa-check"></i> Confirmed');
+	if(this.reserved !== null)  return new Handlebars.SafeString('<i class="fa fa-clock-o"></i> Reserved');
+	if(this.saved == 1)         return new Handlebars.SafeString('<i class="fa fa-floppy-o"></i> Saved');
+	else                        return new Handlebars.SafeString('<i class="fa fa-exclamation-triangle"></i> N/A');
 });
 
 Handlebars.registerHelper('sumPayed', function() {
@@ -89,7 +89,7 @@ $(function() {
 			$('.loader').remove();
 			$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 		}, function error(xhr) {
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			_.each(data.errors, function(error) {
 				$('#add-transaction-panel').prepend('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><i class="fa fa-exclamation-circle"></i> ' + error + '</div>');
 			});

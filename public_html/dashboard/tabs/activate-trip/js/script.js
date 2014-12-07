@@ -21,23 +21,25 @@ Handlebars.registerHelper('isWeekday', function(day) {
 		return '';
 });
 
+var timetableWeek;
+
 $(function() {
 
 	// Render a list of trips
 	var tripsTemplate = $("#trip-list").html();
 	tripsTemplate     = Handlebars.compile(tripsTemplate);
 
-	window.timetableWeek = $('#timetable-week-template').html();
-	window.timetableWeek = Handlebars.compile(timetableWeek);
+	timetableWeek = $('#timetable-week-template').html();
+	timetableWeek = Handlebars.compile(timetableWeek);
 
 	Handlebars.registerHelper('timetableWeek', function(week) {
 		return new Handlebars.SafeString( timetableWeek( {'week': week} ) );
 	});
 
-	window.trips;
-	window.boats;
-	window.token;
-	window.sessions;
+  window.trips    = {};
+	window.boats    = {};
+	window.token    = '';
+	window.sessions = {};
 
 	// 1. Get trips
 	Trip.getAllTrips(function(data) { // async
@@ -106,12 +108,12 @@ $(function() {
 				'before': end.format(),
 				'with_full': 1
 			}, function success(data) {
-				sessions = _.indexBy(data, 'id');
+				window.sessions = _.indexBy(data, 'id');
 
-				events = [];
+				var events = [];
 
 				// Create eventObjects
-				_.each(sessions, function(value) {
+				_.each(window.sessions, function(value) {
 					var eventObject = {
 						title: window.trips[ value.trip_id ].name, // use the element's text as the event title
 						allDay: false,
@@ -299,8 +301,7 @@ $(function() {
 			pageMssg(data.status, true);
 		},
 		function error(xhr) {
-
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			pageMssg(data.errors[0]);
@@ -381,7 +382,7 @@ $(function() {
 			// Remake the moment-object
 			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			console.log(data);
 
 			_.each(data.errors, function(error) {
@@ -424,7 +425,7 @@ $(function() {
 
 			pageMssg(data.status, true);
 		}, function error(xhr) {
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			pageMssg(data.errors[0]);
 			$(event.target).prop('disabled', false);
 			$('#save-loader').remove();
@@ -517,7 +518,7 @@ $(function() {
 				}
 			}
 			else {
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0]);
 				$(event.target).prop('disabled', false);
 				$('#save-loader').remove();
@@ -528,7 +529,7 @@ $(function() {
 	// The CREATE TIMETABLE button
 	$('#modalWindows').on('click', '.create-timetable-button', function(event) {
 		event.preventDefault();
-		$form = $(event.target).closest('form');
+		var $form = $(event.target).closest('form');
 
 		Timetable.createTimetable(
 			$form.serialize(),
@@ -550,9 +551,9 @@ $(function() {
 		);
 	});
 
-	$('#modalWindows').on('change', '.boatSelect, .starthours, .startminutes', function(event) {
-		$select = $('.boatSelect');
-		$button = $('.submit-session, .update-session');
+	$('#modalWindows').on('change', '.boatSelect, .starthours, .startminutes', function() {
+		var $select = $('.boatSelect');
+		var $button = $('.submit-session, .update-session');
 		$select.siblings('.boatroomWarning').remove();
 		$button.prop('disabled', false);
 

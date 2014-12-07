@@ -1,9 +1,9 @@
-var boatsList;
-var boatsForm;
-var boatroomsList;
-var boatroomsForm;
-var roomTypes;
-var addRoom;
+var boatsList,
+	boatsForm,
+	boatroomsList,
+	boatroomsForm,
+	roomTypes,
+	addRoom;
 
 Handlebars.registerHelper('firstID', function(obj){
 	return obj[0].id;
@@ -73,10 +73,10 @@ $(function (){
 				renderEditForm();
 			},
 			function error(xhr){
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				//console.log(data);
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
@@ -105,15 +105,15 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 				renderRoomEditForm();
 			},
 			function error(xhr){
-				data = JSON.parse(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
 				//console.log(data);
 
-				errorsHTML = Handlebars.compile( $("#errors-template").html() );
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-boatrooms-form').prepend(errorsHTML)
+				$('#update-boatrooms-form').prepend(errorsHTML);
 				$('.remove-boatroom').prop('disabled', false);
 				$('.loader').remove();
 			});
@@ -129,19 +129,19 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 			$('form').data('hasChanged', false);
 
-			renderBoatList(function() {renderEditForm(data.id);	})
+			renderBoatList(function() {renderEditForm(data.id);	});
 
 		},
 		function error(xhr){
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			//console.log(data);
 
-			errorsHTML = Handlebars.compile( $("#errors-template").html() );
+			var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 			errorsHTML = errorsHTML(data);
 
 			// Render error messages
 			$('.errors').remove();
-			$('#add-boats-form').prepend(errorsHTML)
+			$('#add-boats-form').prepend(errorsHTML);
 			$('#add-boat').prop('disabled', false);
 			$('.loader').remove();
 		});
@@ -161,15 +161,15 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 			});
 		},
 		function error(xhr){
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			//console.log(data);
 
-			errorsHTML = Handlebars.compile( $("#errors-template").html() );
+			var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 			errorsHTML = errorsHTML(data);
 
 			// Render error messages
 			$('.errors').remove();
-			$('#add-boatrooms-form').prepend(errorsHTML)
+			$('#add-boatrooms-form').prepend(errorsHTML);
 			$('#add-boatroom').prop('disabled', false);
 			$('.loader').remove();
 		});
@@ -192,15 +192,15 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 			$('.loader').remove();
 		},
 		function error(xhr){
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			//console.log(data);
 
-			errorsHTML = Handlebars.compile( $("#errors-template").html() );
+			var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 			errorsHTML = errorsHTML(data);
 
 			// Render error messages
 			$('.errors').remove();
-			$('#update-boats-form').prepend(errorsHTML)
+			$('#update-boats-form').prepend(errorsHTML);
 			$('#update-boat').prop('disabled', false);
 			$('.loader').remove();
 		});
@@ -223,15 +223,15 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 			$('#update-boatroom').prop('disabled', false);
 		},
 		function error(xhr){
-			data = JSON.parse(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
 			//console.log(data);
 
-			errorsHTML = Handlebars.compile( $("#errors-template").html() );
+			var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 			errorsHTML = errorsHTML(data);
 
 			// Render error messages
 			$('.errors').remove();
-			$('#update-boatrooms-form').prepend(errorsHTML)
+			$('#update-boatrooms-form').prepend(errorsHTML);
 			$('#update-boatroom').prop('disabled', false);
 			$('.loader').remove();
 		});
@@ -292,7 +292,7 @@ function renderEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }
@@ -327,7 +327,7 @@ function renderRoomEditForm(id) {
 	setToken('[name=_token]');
 
 	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function(event) {
+	$('form').on('change', 'input, select, textarea', function() {
 		$('form').data('hasChanged', true);
 	});
 }
