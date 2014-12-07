@@ -116,6 +116,11 @@ class CronRunCommand extends Command {
 			$this->messages[] = $affectedRows . ' bookings deleted';
 		});
 
+		$this->hourly(function()
+		{
+			Artisan::call('auth:clear-reminders');
+		});
+
 		$this->finish();
 	}
 
