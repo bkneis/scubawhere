@@ -149,9 +149,7 @@ function pageMssg(message, type, dismissable) {
 	if(typeof dismissable === 'undefined')
 		dismissable = false;
 
-	var id = Math.round(Math.random()*100000);
-
-	var el = '<div id="alert-'+id+'" class="alert alert-' + type + ' border-' + type + (dismissable ? ' alert-dismissable' : '') + '" role="alert">';
+	var el = '<div class="findMe alert alert-' + type + ' border-' + type + (dismissable ? ' alert-dismissable' : '') + '" role="alert">';
 
 	if(dismissable)
 		el += '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
