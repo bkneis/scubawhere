@@ -13,13 +13,10 @@
 
 App::before(function($request)
 {
-	/*
-	DB::listen(function($sql, $bindings, $time)
+	/*DB::listen(function($sql, $bindings, $time)
 	{
-		Log::info("SQL: ".$sql);
-		Log::info("Bindings: ".implode(', ', $bindings));
-	});
-	*/
+		Log::info(Request::path()." SQL: ".$sql." Bindings: ".implode(', ', $bindings));
+	});*/
 });
 
 
