@@ -1,11 +1,13 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Current Boats</label>
-			<div class="padder" id="boats-list-container">
-				<button id="change-to-add-boat" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Boat</button>
-				<script type="text/x-handlebars-template" id="boats-list-template">
-					<ul id="boats-list" class="entity-list">
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Boats</h4>
+			</div>
+			<div class="panel-body" id="boat-list-container">
+				<button id="change-to-add-boat" class="btn btn-success text-uppercase">&plus; Add Boat</button>
+				<script type="text/x-handlebars-template" id="boat-list-template">
+					<ul id="boat-list" class="entity-list">
 						{{#each boats}}
 							<li data-id="{{id}}"><strong>{{name}}</strong> | Capacity: {{capacity}}</li>
 						{{else}}
@@ -14,29 +16,37 @@
 					</ul>
 				</script>
 			</div>
-			<label class="dgreyb">Current Room Types</label>
-			<div class="padder" id="boatrooms-list-container">
-				<button id="change-to-add-boatroom" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Room Type</button>
-				<script type="text/x-handlebars-template" id="boatrooms-list-template">
-					<ul id="boatrooms-list" class="entity-list">
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Boatrooms</h4>
+			</div>
+			<div class="panel-body" id="boatroom-list-container">
+				<button id="change-to-add-boatroom" class="btn btn-success text-uppercase">&plus; Add boatroom</button>
+				<script type="text/x-handlebars-template" id="boatroom-list-template">
+					<ul id="boatroom-list" class="entity-list">
 						{{#each boatrooms}}
 							<li data-id="{{id}}"><strong>{{name}}</strong></li>
 						{{else}}
-							<p>No room types available.</p>
+							<p>No boatrooms available.</p>
 						{{/each}}
 					</ul>
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="boats-form-container"></div>
-
-		<script type="text/x-handlebars-template" id="boats-form-template">
-				<label class="dgreyb">{{task}} boat</label>
-				<div class="padder">
-					<form id="{{task}}-boats-form" accept-charset="utf-8">
+	<div class="col-md-8">
+		<div class="panel panel-default" id="boat-form-container">
+			<script type="text/x-handlebars-template" id="boat-form-template">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} boat</h4>
+				</div>
+				<div class="panel-body">
+					<form id="{{task}}-boat-form" accept-charset="utf-8">
 					{{#if update}}
-						<span class="box-tool redb remove-boat" style="color: white;">Remove</span>
+						<span class="btn btn-danger pull-right remove-boat">Remove</span>
 					{{/if}}
 						<div class="form-row">
 							<label class="field-label">Boat Name</label>
@@ -57,28 +67,29 @@
 									{{> boatroom_show}}
 								{{/each}}
 							</div>
-							<button id="add-room" class="bttn greenb"> &plus; Add room</button>
+							<button id="add-room" class="btn btn-success text-uppercase"> &plus; Add room</button>
 						</div>
 						{{#if update}}
-						<input type="hidden" name="id" value="{{id}}">
+							<input type="hidden" name="id" value="{{id}}">
 						{{/if}}
 						<input type="hidden" name="_token">
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-boat" value="{{task}} Boat">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-boat" value="{{task}} Boat">
 					</form>
 				</div>
-		</script>
+			</script>
+		</div>
 
 		<script type="text/x-handlebars-template" id="add-room-template">
 			<p>
 				<select class="room-type-select"
 				onchange="$(this).siblings('input').attr('name', 'boatrooms['+ $(this).val() +'][capacity]');">
-				{{#each boatrooms}}
-					<option value="{{id}}">{{name}}</option>
-				{{/each}}
+					{{#each boatrooms}}
+						<option value="{{id}}">{{name}}</option>
+					{{/each}}
 				</select>
 				Number of Beds:
 				<input type="number" name="boatrooms[{{firstID boatrooms}}][capacity]" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
-				<button class="bttn redb remove-room">&nbsp;&#215;&nbsp;</button>
+				<button class="btn btn-danger remove-room">&#215;</button>
 			</p>
 		</script>
 
@@ -87,49 +98,51 @@
 				<span class="boatroom-name">{{name}}</span>
 				Number of Beds:
 				<input type="number" name="boatrooms[{{id}}][capacity]" value="{{pivot.capacity}}" placeholder="0" style="width: 100px;" min="0">
-				<button class="bttn redb remove-room">&nbsp;&#215;&nbsp;</button>
+				<button class="btn btn-danger remove-room">&#215;</button>
 			</p>
 		</script>
 
-		<div style="display:none" class="box70" id="boatrooms-form-container">
-			<script type="text/x-handlebars-template" id="boatrooms-form-template">
-				<label class="dgreyb">{{task}} room</label>
-				<div class="padder">
-				<form id="{{task}}-boatrooms-form" accept-charset="utf-8">
-					{{#if update}}
-						<span class="box-tool redb remove-boatroom" style="color: white;">Remove</span>
-					{{/if}}
-					<div class="form-row">
-						<label class="field-label">Room type</label>
-						<input type="text" name="name" value="{{{name}}}">
-					</div>
-					<div class="form-row">
-						<label class="field-label">Room Description</label>
-						<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
-					</div>
-					{{#if update}}
-					<input type="hidden" name="id" value="{{id}}">
-					{{/if}}
-					<input type="hidden" name="_token">
-					<input type="submit" class="bttn blueb big-bttn" id="{{task}}-boatroom" value="{{task}} Room type">
-				</form>
+		<div class="panel panel-default" style="display: none;" id="boatroom-form-container">
+			<script type="text/x-handlebars-template" id="boatroom-form-template">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} boatroom</h4>
+				</div>
+				<div class="panel-body">
+					<form id="{{task}}-boatroom-form" accept-charset="utf-8">
+						{{#if update}}
+							<span class="btn btn-danger pull-right remove-boatroom">Remove</span>
+						{{/if}}
+						<div class="form-row">
+							<label class="field-label">Boatroom name</label>
+							<input type="text" name="name" value="{{{name}}}">
+						</div>
+						<div class="form-row">
+							<label class="field-label">Boatroom Description</label>
+							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
+						</div>
+						{{#if update}}
+							<input type="hidden" name="id" value="{{id}}">
+						{{/if}}
+						<input type="hidden" name="_token">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-boatroom" value="{{task}} boatroom">
+					</form>
 				</div>
 			</script>
-
-			<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 		</div>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Boat.js"></script>
-<script src="/dashboard/js/Controllers/Boatroom.js"></script>
-<script src="tabs/boats/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Boat.js"></script>
+	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
+	<script src="tabs/boats/js/script.js"></script>
+</div>

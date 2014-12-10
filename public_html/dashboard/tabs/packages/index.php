@@ -1,12 +1,11 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Available packages</label>
-			<div class="padder" id="package-list-container">
-				<!--<div class="yellow-helper">
-					Select an package to change its details.
-				</div>-->
-				<button id="change-to-add-package" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Package</button>
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Packages</h4>
+			</div>
+			<div class="panel-body" id="package-list-container">
+				<button id="change-to-add-package" class="btn btn-success text-uppercase">&plus; Add Package</button>
 				<script type="text/x-handlebars-template" id="package-list-template">
 					<ul id="package-list" class="entity-list">
 						{{#each packages}}
@@ -18,19 +17,22 @@
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="package-form-container">
-
+	<div class="col-md-8">
+		<div class="panel panel-default" id="package-form-container">
 			<script type="text/x-handlebars-template" id="package-form-template">
-				<label class="dgreyb">{{task}} package</label>
-				<div class="padder">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} Package</h4>
+				</div>
+				<div class="panel-body">
 					<form id="{{task}}-package-form">
 						<div class="form-row">
 							<label class="field-label">Package Name</label>
 							<input type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
-								<span class="box-tool redb {{#if has_bookings}}deactivate-package{{else}}remove-package{{/if}}" style="color: white;">Remove</span>
+								<span class="btn btn-danger pull-right {{#if has_bookings}}deactivate-package{{else}}remove-package{{/if}}">Remove</span>
 							{{/if}}
 						</div>
 
@@ -52,7 +54,7 @@
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
-							<button class="bttn greenb add-base-price"> &plus; Add base price</button>
+							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
 						<div class="form-row">
@@ -69,7 +71,7 @@
 										{{> price_input}}
 									{{/with}}
 								{{/each}}
-								<button class="bttn greenb add-price"> &plus; Add seasonal price</button>
+								<button class="btn btn-success text-uppercase add-price"> &plus; Add seasonal price</button>
 							</div>
 						</div>
 
@@ -84,77 +86,76 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-package" value="{{task}} Package">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-package" value="{{task}} Package">
 
 					</form>
 				</div>
 			</script>
-
 		</div>
-
-		<script type="text/x-handlebars-template" id="ticket-select-template">
-			<p>
-				<select class="ticket-select">
-					<option value="0">Select a ticket</option>
-					{{#each available_tickets}}
-						<option value="{{id}}"
-							{{#if ../existing}}
-								{{selected ../../id}}
-							{{/if}}
-						>{{{name}}}</option>
-					{{/each}}
-				</select>
-
-				Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
-				{{!--
-				<span class="ticket-prices" data-default="-">
-					{{#if existing}}
-						{{#each prices}}
-							<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">{{from}} - {{until}}: {{currency}} {{multiply ../pivot.quantity decimal_price}}</span>
-						{{/each}}
-					{{else}}
-					-
-					{{/if}}
-				</span>
-				--}}
-			</p>
-		</script>
-
-		<script type="text/x-handlebars-template" id="price-input-template">
-			<p>
-				<span class="currency">{{currency}}</span>
-				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
-
-				{{#unless isAlways}}
-					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
-				{{else}}
-					from <strong>the beginning of time</strong>
-					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
-				{{/unless}}
-
-				{{#unless isBase}}
-					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
-				{{/unless}}
-
-				{{#unless isAlways}}
-					<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
-				{{/unless}}
-			</p>
-		</script>
-
-		<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Ticket.js"></script>
-<script src="/dashboard/js/Controllers/Package.js"></script>
-<script src="tabs/packages/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="ticket-select-template">
+		<p>
+			<select class="ticket-select">
+				<option value="0">Select a ticket</option>
+				{{#each available_tickets}}
+					<option value="{{id}}"
+						{{#if ../existing}}
+							{{selected ../../id}}
+						{{/if}}
+					>{{{name}}}</option>
+				{{/each}}
+			</select>
+
+			Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
+			{{!--
+			<span class="ticket-prices" data-default="-">
+				{{#if existing}}
+					{{#each prices}}
+						<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">{{from}} - {{until}}: {{currency}} {{multiply ../pivot.quantity decimal_price}}</span>
+					{{/each}}
+				{{else}}
+				-
+				{{/if}}
+			</span>
+			--}}
+		</p>
+	</script>
+
+	<script type="text/x-handlebars-template" id="price-input-template">
+		<p>
+			<span class="currency">{{currency}}</span>
+			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+
+			{{#unless isAlways}}
+				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
+			{{else}}
+				from <strong>the beginning of time</strong>
+				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+			{{/unless}}
+
+			{{#unless isBase}}
+				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
+			{{/unless}}
+
+			{{#unless isAlways}}
+				<button class="btn btn-danger remove-price">&#215;</button>
+			{{/unless}}
+		</p>
+	</script>
+
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Ticket.js"></script>
+	<script src="/dashboard/js/Controllers/Package.js"></script>
+	<script src="tabs/packages/js/script.js"></script>
+</div>

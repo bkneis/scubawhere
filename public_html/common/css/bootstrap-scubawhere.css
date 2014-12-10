@@ -5048,6 +5048,7 @@ a.list-group-item-danger.active:focus {
   margin-top: 0;
   margin-bottom: 0;
   font-size: 16px;
+  font-weight: 400;
   color: inherit;
 }
 .panel-title > a {
@@ -5256,14 +5257,14 @@ a.list-group-item-danger.active:focus {
 }
 .panel-default > .panel-heading {
   color: #ffffff;
-  background-color: #4f4f4f;
+  background-color: #34495E;
   border-color: transparent;
 }
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: transparent;
 }
 .panel-default > .panel-heading .badge {
-  color: #4f4f4f;
+  color: #34495E;
   background-color: #ffffff;
 }
 .panel-default > .panel-footer + .panel-collapse > .panel-body {

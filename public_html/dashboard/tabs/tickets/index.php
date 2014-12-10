@@ -1,12 +1,11 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Current tickets</label>
-			<div class="padder" id="ticket-list-container">
-				<!--<div class="yellow-helper">
-					Select an ticket to change its details.
-				</div>-->
-				<button id="change-to-add-ticket" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Ticket</button>
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Tickets</h4>
+			</div>
+			<div class="panel-body" id="ticket-list-container">
+				<button id="change-to-add-ticket" class="btn btn-success text-uppercase">&plus; Add Ticket</button>
 				<script type="text/x-handlebars-template" id="ticket-list-template">
 					<ul id="ticket-list" class="entity-list">
 						{{#each tickets}}
@@ -18,12 +17,15 @@
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="ticket-form-container">
-
+	<div class="col-md-8">
+		<div class="panel panel-default" id="ticket-form-container">
 			<script type="text/x-handlebars-template" id="ticket-form-template">
-				<label class="dgreyb">{{task}} ticket</label>
-				<div class="padder">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} Ticket</h4>
+				</div>
+				<div class="panel-body">
 					<form id="{{task}}-ticket-form">
 						<div class="form-row">
 							<label class="field-label">Ticket Name</label>
@@ -31,7 +33,7 @@
 
 							{{!-- TODO Enable deletion and deactivation of ticktes, including all necessary checks
 							{{#if update}}
-								<span class="box-tool redb {{#if has_bookings}}deactivate-ticket{{else}}remove-ticket{{/if}}" style="color: white;">Remove</span>
+								<span class="btn btn-danger pull-right {{#if has_bookings}}deactivate-ticket{{else}}remove-ticket{{/if}}">Remove</span>
 							{{/if}}
 							--}}
 						</div>
@@ -46,7 +48,7 @@
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
-							<button class="bttn greenb add-base-price"> &plus; Add base price</button>
+							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
 						<div class="form-row">
@@ -63,7 +65,7 @@
 										{{> price_input}}
 									{{/with}}
 								{{/each}}
-								<button class="bttn greenb add-price"> &plus; Add seasonal price</button>
+								<button class="btn btn-success text-uppercase add-price"> &plus; Add seasonal price</button>
 							</div>
 						</div>
 
@@ -118,51 +120,50 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-ticket" value="{{task}} Ticket">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-ticket" value="{{task}} Ticket">
 
 					</form>
 				</div>
 			</script>
-
 		</div>
-
-		<script type="text/x-handlebars-template" id="price-input-template">
-			<p>
-				<span class="currency">{{currency}}</span>
-				<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
-
-				{{#unless isAlways}}
-					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
-				{{else}}
-					from <strong>the beginning of time</strong>
-					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
-				{{/unless}}
-
-				{{#unless isBase}}
-					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
-				{{/unless}}
-
-				{{#unless isAlways}}
-					<button class="bttn redb remove-price">&nbsp;&#215;&nbsp;</button>
-				{{/unless}}
-			</p>
-		</script>
-
-		<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Boat.js"></script>
-<script src="/dashboard/js/Controllers/Boatroom.js"></script>
-<script src="/dashboard/js/Controllers/Trip.js"></script>
-<script src="/dashboard/js/Controllers/Ticket.js"></script>
-<script src="tabs/tickets/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="price-input-template">
+		<p>
+			<span class="currency">{{currency}}</span>
+			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+
+			{{#unless isAlways}}
+				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
+			{{else}}
+				from <strong>the beginning of time</strong>
+				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+			{{/unless}}
+
+			{{#unless isBase}}
+				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
+			{{/unless}}
+
+			{{#unless isAlways}}
+				<button class="btn btn-danger remove-price">&#215;</button>
+			{{/unless}}
+		</p>
+	</script>
+
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Boat.js"></script>
+	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
+	<script src="/dashboard/js/Controllers/Trip.js"></script>
+	<script src="/dashboard/js/Controllers/Ticket.js"></script>
+	<script src="tabs/tickets/js/script.js"></script>
+</div>

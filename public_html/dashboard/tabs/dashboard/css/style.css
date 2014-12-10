@@ -1211,12 +1211,12 @@ ul.item-list .pull-right span {
 }
 
 .portlets-col {
-    width: 49%;
+    width: 50%;
     padding-right:20px;
     float: left;
 }
 .portlets-col2 {
-    width: 49%;
+    width: 50%;
     float: left;
 }
 #capacities {

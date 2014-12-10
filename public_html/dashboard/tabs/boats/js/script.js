@@ -14,49 +14,49 @@ Handlebars.registerPartial('boatroom_show', $('#show-room-template').html());
 $(function (){
 
 	// Handlebars Prep
-	boatsList = Handlebars.compile($("#boats-list-template").html());
-	boatroomsList = Handlebars.compile($("#boatrooms-list-template").html());
+	boatsList = Handlebars.compile($("#boat-list-template").html());
+	boatroomsList = Handlebars.compile($("#boatroom-list-template").html());
 	renderBoatList();
 
-	boatsForm = Handlebars.compile( $("#boats-form-template").html() );
+	boatsForm = Handlebars.compile( $("#boat-form-template").html() );
 	renderEditForm();
 
-	boatroomsForm = Handlebars.compile( $("#boatrooms-form-template").html() );
+	boatroomsForm = Handlebars.compile( $("#boatroom-form-template").html() );
 	addRoom = Handlebars.compile( $('#add-room-template').html() );
 
-	$('#boats-list-container').on('click', 'li', function(event) {
+	$('#boat-list-container').on('click', 'li', function(event) {
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;
 		renderEditForm( event.target.getAttribute('data-id') );
 	});
 
-	$('#boatrooms-list-container').on('click', 'li', function(event) {
+	$('#boatroom-list-container').on('click', 'li', function(event) {
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;
 		renderRoomEditForm(event.target.getAttribute('data-id'));
 	});
 
-	$("#boats-list-container").on('click', '#change-to-add-boat', function(event){
+	$("#boat-list-container").on('click', '#change-to-add-boat', function(event){
 		event.preventDefault();
 		renderEditForm();
 	});
 
-	$("#boatrooms-list-container").on('click', '#change-to-add-boatroom', function(event){
+	$("#boatroom-list-container").on('click', '#change-to-add-boatroom', function(event){
 		event.preventDefault();
 		renderRoomEditForm();
 	});
 
-	$("#boats-form-container").on('click', '#add-room', function(event){
+	$("#boat-form-container").on('click', '#add-room', function(event){
 		event.preventDefault();
 		$('form').data('hasChanged', true);
 		$('#room-types').append( addRoom({boatrooms : roomTypes}) );
 	});
 
-	$("#boats-form-container").on('click', '.remove-room', function(event){
+	$("#boat-form-container").on('click', '.remove-room', function(event){
 		event.preventDefault();
 		$('form').data('hasChanged', true);
 		$(event.target).parent().remove();
 	});
 
-	$("#boats-form-container").on('click', '.remove-boat', function(event){
+	$("#boat-form-container").on('click', '.remove-boat', function(event){
 		event.preventDefault();
 		var check = confirm('Do you really want to remove this boat?');
 		if(check){
@@ -64,7 +64,7 @@ $(function (){
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Boat.delete({
-				'id'    : $('#update-boats-form input[name=id]').val(),
+				'id'    : $('#update-boat-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			},
 			function success(data){
@@ -81,14 +81,14 @@ $(function (){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-boats-form').prepend(errorsHTML);
+				$('#update-boat-form').prepend(errorsHTML);
 				$('.remove-boat').prop('disabled', false);
 				$('.loader').remove();
 			});
 		}
 	});
 
-$("#boats-form-container").on('click', '.remove-boatroom', function(event){
+$("#boat-form-container").on('click', '.remove-boatroom', function(event){
 		event.preventDefault();
 		var check = confirm('Do you really want to remove this room type?');
 		if(check){
@@ -96,7 +96,7 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Boatroom.delete({
-				'id'    : $('#update-boatrooms-form input[name=id]').val(),
+				'id'    : $('#update-boatroom-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			},
 			function success(data){
@@ -113,17 +113,17 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 				// Render error messages
 				$('.errors').remove();
-				$('#update-boatrooms-form').prepend(errorsHTML);
+				$('#update-boatroom-form').prepend(errorsHTML);
 				$('.remove-boatroom').prop('disabled', false);
 				$('.loader').remove();
 			});
 		}
 	});
 
-	$("#boats-form-container").on('submit', '#add-boats-form', function(event){
+	$("#boat-form-container").on('submit', '#add-boat-form', function(event){
 		event.preventDefault();
 		$('#add-boat').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		Boat.create($('#add-boats-form').serialize(), function success(data){
+		Boat.create($('#add-boat-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
@@ -141,16 +141,16 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 			// Render error messages
 			$('.errors').remove();
-			$('#add-boats-form').prepend(errorsHTML);
+			$('#add-boat-form').prepend(errorsHTML);
 			$('#add-boat').prop('disabled', false);
 			$('.loader').remove();
 		});
 	});
 
-	$("#boats-form-container").on('submit', '#add-boatrooms-form', function(event){
+	$("#boat-form-container").on('submit', '#add-boatroom-form', function(event){
 		event.preventDefault();
 		$('#add-boatroom').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		Boatroom.create($('#add-boatrooms-form').serialize(), function success(data){
+		Boatroom.create($('#add-boatroom-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
@@ -169,23 +169,23 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 			// Render error messages
 			$('.errors').remove();
-			$('#add-boatrooms-form').prepend(errorsHTML);
+			$('#add-boatroom-form').prepend(errorsHTML);
 			$('#add-boatroom').prop('disabled', false);
 			$('.loader').remove();
 		});
 	});
 
-	$("#boats-form-container").on('submit', '#update-boats-form', function(event){
+	$("#boat-form-container").on('submit', '#update-boat-form', function(event){
 		event.preventDefault();
 		$('#update-boat').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		Boat.update($('#update-boats-form').serialize(), function success(data){
+		Boat.update($('#update-boat-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
 			$('form').data('hasChanged', false);
 
 			/*renderBoatList(function() {
-				renderEditForm($('#update-boats-form input[name=id]').val())
+				renderEditForm($('#update-boat-form input[name=id]').val())
 			});*/
 			renderBoatList();
 			$('#update-boat').prop('disabled', false);
@@ -200,23 +200,23 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 			// Render error messages
 			$('.errors').remove();
-			$('#update-boats-form').prepend(errorsHTML);
+			$('#update-boat-form').prepend(errorsHTML);
 			$('#update-boat').prop('disabled', false);
 			$('.loader').remove();
 		});
 	});
 
-	$("#boats-form-container").on('submit', '#update-boatrooms-form', function(event){
+	$("#boat-form-container").on('submit', '#update-boatroom-form', function(event){
 		event.preventDefault();
 		$('#update-boatroom').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-		Boatroom.update($('#update-boatrooms-form').serialize(), function success(data){
+		Boatroom.update($('#update-boatroom-form').serialize(), function success(data){
 			pageMssg(data.status, true);
 			//console.log(data);
 
 			$('form').data('hasChanged', false);
 
 			/*renderBoatList(function() {
-				renderRoomEditForm($('#update-boatrooms-form input[name=id]').val());
+				renderRoomEditForm($('#update-boatroom-form input[name=id]').val());
 			});*/
 			renderBoatList();
 			$('.loader').remove();
@@ -231,7 +231,7 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 			// Render error messages
 			$('.errors').remove();
-			$('#update-boatrooms-form').prepend(errorsHTML);
+			$('#update-boatroom-form').prepend(errorsHTML);
 			$('#update-boatroom').prop('disabled', false);
 			$('.loader').remove();
 		});
@@ -241,24 +241,24 @@ $("#boats-form-container").on('click', '.remove-boatroom', function(event){
 
 function renderBoatList(callback) {
 
-	$('#boats-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
-	$('#boatrooms-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+	$('#boat-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+	$('#boatroom-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
 	Boat.getAll(function success(data) {
 		window.boats = _.indexBy(data, 'id');
 		//console.log(data);
-		$('#boats-list').remove();
-		$('#boats-list-container .loader').remove();
-		$("#boats-list-container").append( boatsList({boats : data}) );
+		$('#boat-list').remove();
+		$('#boat-list-container .loader').remove();
+		$("#boat-list-container").append( boatsList({boats : data}) );
 		if(typeof callback === 'function') callback();
 	});
 
 	Boatroom.getAll(function success(data) {
 		window.boatrooms = _.indexBy(data, 'id');
 		roomTypes = data;
-		$('#boatrooms-list').remove();
-		$('#boatrooms-list-container .loader').remove();
-		$("#boatrooms-list-container").append( boatroomsList({boatrooms : data}));
+		$('#boatroom-list').remove();
+		$('#boatroom-list-container .loader').remove();
+		$("#boatroom-list-container").append( boatroomsList({boatrooms : data}));
 	});
 }
 
@@ -283,7 +283,7 @@ function renderEditForm(id) {
 		};
 	}
 
-	$('#boats-form-container').empty().append( boatsForm(boat) );
+	$('#boat-form-container').empty().append( boatsForm(boat) );
 
 	if(!id) $('input[name=name]').focus();
 
@@ -318,7 +318,7 @@ function renderRoomEditForm(id) {
 		};
 	}
 
-	$('#boats-form-container').empty().append( boatroomsForm(boatRoom) );
+	$('#boat-form-container').empty().append( boatroomsForm(boatRoom) );
 
 	if(!id) $('input[name=name]').focus();
 

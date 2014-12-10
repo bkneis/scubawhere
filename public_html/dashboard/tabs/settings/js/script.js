@@ -15,7 +15,7 @@ $(function() {
 
 		var form = $(this);
 
-		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		$('.update-settings').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serialize();
 		$.ajax({
@@ -30,7 +30,7 @@ $(function() {
 
 				$('form').data('hasChanged', false);
 
-				$('.submit').prop('disabled', false);
+				$('.update-settings').prop('disabled', false);
 				$('.loader').remove();
 			},
 			error: function(xhr) {
@@ -43,7 +43,7 @@ $(function() {
 				// Render error messages
 				$('.errors').remove();
 				$('#company-form-container').prepend(errorsHTML);
-				$('.submit').prop('disabled', false);
+				$('.update-settings').prop('disabled', false);
 				$('.loader').remove();
 			}
 		});

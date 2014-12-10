@@ -9,7 +9,7 @@ getToken();
 $(function() {
 	console.log('Setting container height');
 	// Set up height of map container to fill whole screen whithout showing scrollbars
-	$('#map-container').css('height', window.innerHeight - 232);
+	$('#map-container').css('height', window.innerHeight - 200);
 
 	loadGoogleMaps();
 

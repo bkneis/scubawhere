@@ -1,12 +1,11 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Available trips</label>
-			<div class="padder" id="trip-list-container">
-				<!-- <div class="yellow-helper">
-					Select a trip to change its details.
-				</div> -->
-				<button id="change-to-add-trip" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Trip</button>
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Trips</h4>
+			</div>
+			<div class="panel-body" id="trip-list-container">
+				<button id="change-to-add-trip" class="btn btn-success text-uppercase">&plus; Add Trip</button>
 				<script type="text/x-handlebars-template" id="trip-list-template">
 					<ul id="trip-list" class="entity-list">
 						{{#each trips}}
@@ -18,12 +17,15 @@
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="trip-form-container">
-
+	<div class="col-md-8">
+		<div class="panel panel-default" id="trip-form-container">
 			<script type="text/x-handlebars-template" id="trip-form-template">
-				<label class="dgreyb">{{task}} trip</label>
-				<div class="padder">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} Trip</h4>
+				</div>
+				<div class="panel-body">
 					<form id="{{task}}-trip-form">
 						<div class="form-row">
 							<label class="field-label">Trip Name</label>
@@ -31,9 +33,9 @@
 
 							{{#if update}}
 								{{#if deletable}}
-									<span class="box-tool redb remove-trip" style="color: white;">Remove</span>
+									<span class="btn btn-danger pull-right remove-trip" style="color: white;">Remove</span>
 								{{else}}
-									<span class="questionmark-tooltip" title="This trip has tickets or sessions associated with it. It can not be removed." style="float: right;">?</span><span class="box-tool redb disabled" style="color: white;">Remove</span>
+									<span class="questionmark-tooltip pull-right" title="This trip has tickets or sessions associated with it. It can not be removed.">?</span><span class="btn btn-danger pull-right disabled" style="color: white;">Remove</span>
 								{{/if}}
 							{{/if}}
 						</div>
@@ -42,8 +44,8 @@
 							<label class="field-label">Trip Duration</label>
 							<input type="number" min="1" step="1" name="duration" id="tripDuration" rows="3" cols="10" value="{{duration}}" style="width: 50px;"> hours
 							<strong><span id="readableDuration" style="margin-left: 2em;">{{readable duration}}</span></strong>
-							<button class="bttn blueb small-bttn add1d" style="margin-left: 2em;">+1 day</button>
-							<button class="bttn blueb small-bttn sub1d">-1 day</button>
+							<button class="btn btn-primary btn-sm add1d" style="margin-left: 2em;">+1 day</button>
+							<button class="btn btn-primary btn-sm sub1d">-1 day</button>
 						</div>
 
 						<div class="form-row">
@@ -77,27 +79,26 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-trip" value="{{task}} Trip">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-trip" value="{{task}} Trip">
 
 					</form>
 				</div>
 			</script>
-
 		</div>
-
-		<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Trip.js"></script>
-<script src="/dashboard/js/Controllers/Location.js"></script>
-<script src="tabs/trips/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Trip.js"></script>
+	<script src="/dashboard/js/Controllers/Location.js"></script>
+	<script src="tabs/trips/js/script.js"></script>
+</div>

@@ -1,12 +1,11 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Available addons</label>
-			<div class="padder" id="addon-list-container">
-				<!-- <div class="yellow-helper">
-					Select an addon to change its details.
-				</div> -->
-				<button id="change-to-add-addon" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Addon</button>
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Add-ons</h4>
+			</div>
+			<div class="panel-body" id="addon-list-container">
+				<button id="change-to-add-addon" class="btn btn-success text-uppercase">&plus; Add Add-on</button>
 				<script type="text/x-handlebars-template" id="addon-list-template">
 					<ul id="addon-list" class="entity-list">
 						{{#each addons}}
@@ -18,29 +17,32 @@
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="addon-form-container">
-
+	<div class="col-md-8">
+		<div class="panel panel-default" id="addon-form-container">
 			<script type="text/x-handlebars-template" id="addon-form-template">
-				<label class="dgreyb">{{task}} addon</label>
-				<div class="padder">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} add-on</h4>
+				</div>
+				<div class="panel-body">
 					<form id="{{task}}-addon-form">
 						<div class="form-row">
-							<label class="field-label">Addon Name</label>
+							<label class="field-label">Add-on Name</label>
 							<input type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
-								<span class="box-tool redb {{#if has_bookings}}deactivate-addon{{else}}remove-addon{{/if}}" style="color: white;">Remove</span>
+								<span class="btn btn-danger pull-right{{#if has_bookings}} deactivate-addon{{else}} remove-addon{{/if}}">Remove</span>
 							{{/if}}
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Addon Description</label>
+							<label class="field-label">Add-on Description</label>
 							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Addon Price</label>
+							<label class="field-label">Add-on Price</label>
 							<span class="currency">{{currency.symbol}}</span>
 							<input type="number" name="new_decimal_price" placeholder="0.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
 						</div>
@@ -56,26 +58,25 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="bttn blueb big-bttn" id="{{task}}-addon" value="{{task}} Addon">
+						<input type="submit" class="btn btn-lg btn-primary text-uppercase" id="{{task}}-addon" value="{{task}} Add-on">
 
 					</form>
 				</div>
 			</script>
-
 		</div>
-
-		<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Addon.js"></script>
-<script src="tabs/add-ons/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Addon.js"></script>
+	<script src="tabs/add-ons/js/script.js"></script>
+</div>

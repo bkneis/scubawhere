@@ -1,104 +1,39 @@
-<!-- <script type="text/x-handlebars-template" id="edit_marker_template">
-	<h4>Edit Marker</h4>
-	<form class="edit_marker" action="#" method="post" data-marker-index="{{index}}">
-		<p>
-			<label for="marker_lat">Latitude:</label>
-			<input type="text" id="marker_lat" value="{{lat}}" />
-		</p>
-		<p>
-			<label for="marker_lng">Longitude:</label>
-			<input type="text" id="marker_lng" value="{{lng}}" />
-		</p>
-		<input type="submit" value="Update position" />
-	</form>
-</script> -->
-<div id="wrapper">
+<div id="wrapper" class="clearfix">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-your-locations-icon" />
+					<span class="loader" id="legend-your-locations-loader" style="top: 0;"></span>
+					Your locations
 
-	<div class="row">
-		<div class="box50">
-			<label class="dgreyb">
-				<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin-left: 0.5em; display: none;" id="legend-your-locations-icon" /><span class="loader" id="legend-your-locations-loader" style="margin-bottom: 0.3em;"></span>
-				Your locations
-				<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin-left: 1em; display: none;" id="legend-available-locations-icon" /><span class="loader" id="legend-available-locations-loader" style="margin-bottom: 0.3em; margin-left: 2em;"></span>
-				Available locations
-				<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin-left: 1em;" />
-				New location
-			</label>
-		</div>
+					<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-available-locations-icon" />
+					<span class="loader" id="legend-available-locations-loader" style="top: 0; margin-left: 2em;"></span>
+					Available locations
 
-		<div class="box50">
-			<!-- <div class="yellow-helper" style="margin-bottom: 0;">Click the map or an existing marker.</div> -->
-			<div class="dgreyf" style="font-size: 17px; padding-top: 2px; text-align: right;">
-				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" style="width: 115px;" />
-				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" style="width: 115px" />
-				<button class="btn btn-default" style="margin-right: 5px;" id="showLocation">Show</button>
-				<button class="btn btn-primary" style="margin-right: 10px;" id="createLocation">Create</button>
+					<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em;" />
+					New location
+				</h4>
 			</div>
-			<!-- <div class="padder">
-				<form id="save-location">
-					<div>
-						<input type="text" name="name" placeholder="Location Name" />
-					</div>
-					<div>
-						<textarea name="description" placeholder="Description"></textarea>
-					</div>
-					<div>
-						<input type="text" placeholder="Longitude" name="longitude" readonly>
-						<input type="text" placeholder="Latitude" name="latitude" readonly>
-					</div>
-					<div>
-						<input type="text" name="tags" id="tags" placeholder="Tags"></textarea>
-					</div>
-
-					<input type="hidden" name="_token">
-					<div>
-						<input type="submit" class="bttn blueb" value="Save Location" />
-					</div>
-				</form>
-			</div> -->
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="box100" id="map-container">
-			<div id="map" style="height: 100%;"></div>
+	<div class="col-md-6">
+		<div class="panel">
+			<div class="panel-heading text-right" style="padding: 0 1px;">
+				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" class="form-control" style="display: inline-block; width: 115px;" />
+				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" class="form-control" style="display: inline-block; width: 115px;" />
+				<button class="btn btn-default" style="margin-right: 5px;" id="showLocation">Show</button>
+				<button class="btn btn-primary" id="createLocation">Create</button>
+			</div>
 		</div>
 	</div>
 
-	<!-- <div class="yellow-helper">
-		Please select a point on the map to set "Longitude" and "Latitude". Click on the marker to edit the Longitude or Latitude.
-	</div> -->
+	<div class="clearfix"></div>
 
-	<!-- <div class="box100">
-		<label class="dgreyb">Manage Locations</label>
-
-		<table>
-		<caption></caption>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Longitude</th>
-				<th>Latitude</th>
-				<th> </th>
-			</tr>
-		</thead>
-
-		<tbody id="locations">
-			<script id="location-list-template" type="text/x-handlebars-template">
-
-					<tr>
-						<td>{{name}}</td>
-						<td>{{{description}}}</td>
-						<td>{{longitude}}</td>
-						<td>{{latitude}}</td>
-						<td><a onclick="detachLocation({{id}})">Remove</a></td>
-					</tr>
-
-			</script>
-		</tbody>
-	</table>
-	</div>-->
+	<div id="map-container" class="col-md-12">
+		<div id="map" style="height: 100%;"></div>
+	</div>
 
 	<div id="modalWindows" style="height: 0;">
 		<script id="location-template" type="text/x-handlebars-template">

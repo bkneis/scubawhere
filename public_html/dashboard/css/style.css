@@ -150,7 +150,9 @@ body{
 		border-bottom: 1px solid;
 	}
 
-#wrapper{ margin: 20px 35px; }
+#wrapper {
+	margin: 20px 5px;
+}
 
 #wrapper .box100{
 	background-color: #fff;
@@ -400,7 +402,6 @@ ul#sidenav > li > ul > li:hover {
 				BOX LOAYOUTS
 *******************************
 */
-.row{ font-size: 0px; }
 
 .box33{
 	vertical-align: top;
@@ -493,13 +494,6 @@ ul#sidenav > li > ul > li:hover {
 	background-color: #c8c8c8;
 	padding: 10px;
 	color: #fff;
-}
-
-span.box-tool{
-	float: right;
-	cursor: pointer;
-	padding: 5px 10px;
-	margin-top: -5px;
 }
 
 .expand-box-arrow{background-color: rgba(0,0,0,0.15)}

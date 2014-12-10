@@ -1,29 +1,28 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box100">
-			<label class="purpleb">Trips</label>
-			<div id='trips' class="padder dragganle-items">
-				<div class="yellow-helper">
-					Please drag a trip onto an appropriate date to be activated.
-				</div>
-				<ul style="padding-left: 0;">
-					<script id="trip-list" type="text/x-handlebars-template">
-						{{#each trips}}
-							<li class="droppable-event">
-								<div class='trip-event' data-id="{{id}}">
-									{{{name}}}
-								</div>
-								<ul></ul>
-							</li>
-						{{/each}}
-					</script>
-				</ul>
+<div id="wrapper" class="clearfix">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">Trips</h4>
+		</div>
+		<div class="panel-body" id="trips">
+			<div class="yellow-helper">
+				Please drag a trip onto a day on the calendar to activate it.
 			</div>
+			<ul style="padding-left: 0;">
+				<script id="trip-list" type="text/x-handlebars-template">
+					{{#each trips}}
+						<li class="droppable-event">
+							<div class='trip-event' data-id="{{id}}">
+								{{{name}}}
+							</div>
+							<ul></ul>
+						</li>
+					{{/each}}
+				</script>
+			</ul>
 		</div>
 	</div>
 
 	<div id='calendar'></div>
-	<div style='clear:both'></div>
 
 	<div id="modalWindows" style="height: 0;">
 		<script id="session-template" type="text/x-handlebars-template">
@@ -175,16 +174,16 @@
 			</tr>
 		</script>
 	</div>
+
+	<script src="/common/js/fullcalendar.min.js"></script>
+
+	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
+	<script src="/common/js/jquery/jquery.reveal.js"></script>
+
+	<script src="js/Controllers/Trip.js"></script>
+	<script src="js/Controllers/Boat.js"></script>
+	<script src="js/Controllers/Session.js"></script>
+	<script src="js/Controllers/Timetable.js"></script>
+
+	<script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>
 </div>
-
-<script src="/common/js/fullcalendar.min.js"></script>
-
-<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
-<script src="/common/js/jquery/jquery.reveal.js"></script>
-
-<script src="js/Controllers/Trip.js"></script>
-<script src="js/Controllers/Boat.js"></script>
-<script src="js/Controllers/Session.js"></script>
-<script src="js/Controllers/Timetable.js"></script>
-
-<script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>

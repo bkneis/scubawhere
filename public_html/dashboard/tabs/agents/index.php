@@ -1,12 +1,11 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Available agents</label>
-			<div class="padder" id="agent-list-container">
-				<!--<div class="yellow-helper">
-					Select an agent to change its details.
-				</div>-->
-				<button id="change-to-add-agent" style="padding: 0.5em 1em;" class="bttn greenb">&plus; Add Agent</button>
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Available Agents</h4>
+			</div>
+			<div class="panel-body" id="agent-list-container">
+				<button id="change-to-add-agent" class="btn btn-success text-uppercase">&plus; Add Agent</button>
 				<script type="text/x-handlebars-template" id="agent-list-template">
 					<ul id="agent-list" class="entity-list">
 						{{#each agents}}
@@ -18,12 +17,15 @@
 				</script>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70" id="agent-form-container">
-
+	<div class="col-md-8">
+		<div class="panel panel-default" id="agent-form-container">
 			<script type="text/x-handlebars-template" id="agent-form-template">
-				<label class="dgreyb">{{task}} agent</label>
-				<div class="padder">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{task}} agent</h4>
+				</div>
+				<div class="panel-body">
 					<form id="{{task}}-agent-form">
 						<div class="form-row">
 							<label class="field-label">Agent Name</label>
@@ -99,26 +101,24 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="bttn blueb big-bttn" id="{{task}}-agent">{{task}} Agent</button>
-
+						<button class="btn btn-primary btn-lg text-uppercase" id="{{task}}-agent">{{task}} Agent</button>
 					</form>
 				</div>
 			</script>
-
 		</div>
-
-		<script type="text/x-handlebars-template" id="errors-template">
-			<div class="yellow-helper errors" style="color: #E82C0C;">
-				<strong>There are a few problems with the form:</strong>
-				<ul>
-					{{#each errors}}
-						<li>{{this}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</script>
 	</div>
-</div>
 
-<script src="/dashboard/js/Controllers/Agent.js"></script>
-<script src="tabs/agents/js/script.js"></script>
+	<script type="text/x-handlebars-template" id="errors-template">
+		<div class="yellow-helper errors" style="color: #E82C0C;">
+			<strong>There are a few problems with the form:</strong>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	</script>
+
+	<script src="/dashboard/js/Controllers/Agent.js"></script>
+	<script src="tabs/agents/js/script.js"></script>
+</div>

@@ -1,8 +1,10 @@
-<div id="wrapper">
-	<div class="row">
-		<div class="box30">
-			<label class="dgreyb">Search for a booking:</label>
-			<div class="padder">
+<div id="wrapper" class="clearfix">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Search for a booking</h4>
+			</div>
+			<div class="panel-body">
 				<form id="find-booking-form">
 					<div class="form-row">
 						<label class="field-label">Reference</label>
@@ -33,10 +35,14 @@
 				</form>
 			</div>
 		</div>
+	</div>
 
-		<div class="box70">
-			<label class="dgreyb">Bookings</label>
-			<div class="padder">
+	<div class="col-md-8">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Bookings</h4>
+			</div>
+			<div class="panel-body">
 				<table class="bluethead">
 					<thead>
 						<tr class="bg-primary">
@@ -116,4 +122,3 @@
 	<script src="js/Controllers/Booking.js"></script>
 	<script src="tabs/manage-bookings/js/script.js"></script>
 </div>
-

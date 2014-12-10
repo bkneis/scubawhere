@@ -116,7 +116,7 @@ label {
 	font-weight: bold;
 	text-align: center;
 	margin-left: 0.5em;
-	margin-top: -0.2em;
+	margin-top: 0.4em;
 	padding: 0 0.45em;
 	cursor: help;
 }
@@ -317,40 +317,6 @@ tfoot > tr {
 .col70c{width: 70%;text-align: center;}
 .colc  {text-align: center}
 .colr  {text-align: right}
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ buttons */
-
-.bttn {
-	display: inline-block;
-	border: none;
-	margin: 0px;
-	line-height: 2em;
-	color: #fff;
-	cursor: pointer;
-	text-transform: uppercase;
-	/*
-	-webkit-transition: all ease 1s;
-    -moz-transition: 	all ease 1s;
-    -o-transition: 		all ease 1s;
-    transition: 		all ease 1s;
-    */
-}
-
-.bttn.redb:hover	{background-color: #ce584e}
-.bttn.blueb:hover	{background-color: #2e66aa}
-.bttn.purpleb:hover	{background-color: #474565}
-.bttn.greenb:hover  {background-color: #176620}
-.bttn.lgreyb:hover	{background-color: #747474}
-.bttn.dgreyb:hover	{background-color: #282828}
-
-.big-bttn{
-	font-size: 18px;
-	padding: 0 10px;
-}
-
-.small-bttn{
-	font-size: 13px;
-	padding: 7px;
-}
 
 /* use for adding link characteristics to any element */
 .link{cursor: pointer; color: #4a9cff}
