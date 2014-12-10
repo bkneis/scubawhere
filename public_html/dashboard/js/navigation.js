@@ -3,57 +3,64 @@ $(function() {
         $mainContent = $("#content"),
         $pageWrap    = $("#page-wrap"),
         baseHeight   = 0,
-        contentHasLoaded = false,
         $el;
 
     $pageWrap.height($pageWrap.height());
     baseHeight = $pageWrap.height() - $mainContent.height();
 
-    $("#sidenav").delegate("[data-load]", "click", function(e) {
-
+    $("#sidenav").on('click', '[data-load]', function(event) {
+        event.preventDefault();
         window.location.hash = $(this).attr("data-load");
-        e.preventDefault();
     });
 
-    $(window).bind('hashchange', function() {
+    $(window).on('hashchange', function() {
 
         newHash = window.location.hash.substring(1); // Fetch hash without #
 
-        // Default to dashboard when hash is removed
-        if(newHash === '') newHash = 'dashboard';
+        // Default to dashboard when no hash found
+        if(newHash === '') {
+            window.location.hash = 'dashboard';
+            return;
+        }
+
+        // Prepare deferred
+        var tabLoaded = $.Deferred();
+
+        // Fire off AJAX to load new content
+        var newContentUrl = "tabs/" + newHash + "/index.php";
+        $.get(newContentUrl, function(data) {
+            tabLoaded.resolve(data);
+        });
+
+        // Set live tab
+        $('.tab-active').removeClass('tab-active');
+        $('[data-load="'+newHash+'"]').addClass('tab-active');
+
+        // Blend out old content and display new content
+        $mainContent.find('#wrapper').fadeOut(200, function() {
+            $('#wrapper').remove();
+
+            if(tabLoaded.state() === "pending")
+                $mainContent.html(LOADER);
+
+            tabLoaded.done(function(html) {
+                $mainContent.hide();
+                $mainContent.html(html);
+                $mainContent.fadeIn(200);
+            });
+        });
 
         // Get the page title from the menu item
         var newTitle = $('[data-load="'+newHash+'"]').text();
+
+        // Set breadcumb(s)
         if(newHash === 'add-transaction')
             newTitle = '<a href="#manage-bookings">Manage Bookings</a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> Add Transaction';
         $("#breadcrumbs").html('<a href="#dashboard" class="breadcrumbs-home"><i class="fa fa-home fa-lg fa-fw"></i></a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> ' + newTitle);
-
-        // set live tab
-        $('[data-load]').removeClass('tab-active');
-        $('[data-load="'+newHash+'"]').addClass('tab-active');
-
-        var newContent = "tabs/" + newHash + "/index.php";
-
-        // Blend out old content and load new content
-        contentHasLoaded = false;
-        $mainContent.find('#wrapper').fadeOut(200, function() {
-            if(!contentHasLoaded)
-                $mainContent.html(LOADER);
-
-        });
-        $mainContent.load(newContent, function() {
-            window.contentHasLoaded = true;
-            /*$mainContent.fadeIn(200, function() {
-                $pageWrap.animate({
-                    height: baseHeight + $mainContent.height() + "px",
-                });
-            });*/
-        });
     });
 
-    // Trigger content loading on page loading
+    // Trigger content loading on initial dashboard load
     $(window).trigger('hashchange');
-
 });
 
 /* ACCORDION NAVIGATION */
