@@ -516,10 +516,6 @@ a,a:focus, a:hover, a:active {
 }
 
 .icon-btn:hover i {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
     color: #fff;
     opacity: 1;
 }
@@ -577,7 +573,6 @@ ul.item-list .pull-right span {
 
 /* metro dashboard states */
 .metro-nav {
-    font-family: 'MyriadPro-Light';
     position: relative;
     z-index: 101;
 }
@@ -737,10 +732,6 @@ ul.item-list .pull-right span {
 }
 
 .metro-nav .metro-nav-block a:hover i{
-    transform:rotate(83deg);
-    -moz-transform:rotate(83deg);
-    -webkit-transform:rotate(83deg);
-    -o-transform:rotate(83deg);
     font-size: 140px;
     opacity: 0.2;
 }
@@ -753,10 +744,6 @@ ul.item-list .pull-right span {
     height: 96%;
 }
 .metro-nav .metro-nav-block a:hover .info {
-    transform:rotate(360deg);
-    -moz-transform:rotate(360deg);
-    -webkit-transform:rotate(360deg);
-    -o-transform:rotate(360deg);
     font-size: 40px;
     opacity: 0.6;
 }
