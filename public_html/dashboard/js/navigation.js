@@ -44,9 +44,7 @@ $(function() {
                 $mainContent.html(LOADER);
 
             tabLoaded.done(function(html) {
-                $mainContent.hide();
                 $mainContent.html(html);
-                $mainContent.fadeIn(200);
             });
         });
 
