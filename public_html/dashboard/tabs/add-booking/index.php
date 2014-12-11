@@ -1016,6 +1016,7 @@
 	<script src="/dashboard/js/Controllers/Customer.js"></script>
 	<script src="/dashboard/js/Controllers/Addon.js"></script>
 	<script src="/dashboard/js/Controllers/Accommodation.js"></script>
+	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
 	<!--My scripts-->
 	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
 </div>

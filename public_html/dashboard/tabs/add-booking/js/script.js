@@ -5,6 +5,15 @@ Handlebars.registerHelper('currency', function() {
 });
 
 Handlebars.registerHelper("freeSpaces", function(capacity) {
+	return generateFreeSpacesBar(capacity, this.id);
+});
+
+/**
+ * Generate the free spaces percentage bar
+ * @param  {array} capacity  Array of the following form: [used-up places, total places]
+ * @return {string}          Handlebars.SafeString containing the progress bar markup
+ */
+function generateFreeSpacesBar(capacity, id) {
 	var freeSpaces = capacity[1] - capacity[0];
 	var percentage = (capacity[0] / capacity[1]) * 100;
 
@@ -13,13 +22,13 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 	if(percentage == 1) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
 
 	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
+	html += '<div data-id="' + id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
 	html += '	<span class="percentage-left">' + freeSpaces + '</span>';
 	html += '</div>';
 
 	return new Handlebars.SafeString(html);
-});
+}
 
 Handlebars.registerHelper("tripFinish", function(start, duration) {
 	return friendlyDate( moment(start).add(duration, 'hours') );
@@ -71,6 +80,11 @@ var customersTemplate = Handlebars.compile($("#customers-list-template").html())
 var countriesTemplate = Handlebars.compile($("#countries-template").html());
 
 $.when(
+
+	// Required for having names for the utilisation percentage bars
+	Boatroom.getAll(function(data){
+		window.boatrooms = _.indexBy(data, 'id');
+	}),
 
 	Agent.getAllAgents(function(data){
 		window.agents = _.indexBy(data, 'id');
@@ -807,6 +821,26 @@ function compileSessionsList(params) {
 	Session.filter(params, function(data){
 		window.sessions = _.indexBy(data, 'id');
 		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
+
+		// Generate popovers
+		_.each(window.sessions, function(session) {rs = [];
+			var html = '<table>';
+			_.each(session.capacity[2], function(capacity, key) {
+				html += '<tr>';
+				html += 	'<td>' + window.boatrooms[key].name + '</td>';
+				html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>'
+				html += '</tr>';
+			});
+			html += '</table>';
+			$('.percentage-bar-container[data-id=' + session.id + ']').popover({
+				title: 'Free Spaces by Boatroom',
+				content: html,
+				html: true,
+				placement: 'top',
+				trigger: 'hover',
+			});
+		});
+
 		$('#session-filters [type=submit]').html('Filter');
 	});
 }

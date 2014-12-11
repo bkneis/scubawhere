@@ -1025,3 +1025,7 @@ ul#sidenav > li > ul > li:hover {
 	transform: rotate(-90deg);
 	margin-left: 20px !important;
 }
+
+.popover .percentage-bar-container {
+	width: 98px;
+}
