@@ -755,7 +755,8 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	booking.reserve(params, function success(status) {
 		pageMssg("Booking reserved successfully!", "success");
 	}, function error(xhr) {
-		pageMssg("There was an error reserving this booking.", "danger");
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], "danger");
 	});
 
 });

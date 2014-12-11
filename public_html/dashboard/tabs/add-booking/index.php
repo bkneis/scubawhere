@@ -943,14 +943,16 @@
 														{{!--<p>£800.00</p>
 														<p>£200.00</p>--}}
 														<h4 class="text-success">{{currency}} {{decimal_price}}</h4>
+														(Status: {{status}})
 													</script>
 												</div>
 											</div>
 										</div>
+										<hr>
 										<div class="row">
 											<div class="col-md-12">
-												<button class="btn btn-success btn-block save-booking mb10"><i class="fa fa-save"></i> Save For Later</button>
-												<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>
+												<button class="btn btn-success btn-block save-booking mb10"><i class="fa fa-save fa-fw"></i> Save For Later</button>
+												<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
 												<h4 class="text-center">Reserve Booking</h4>
 												<form id="reserve-booking" class="form-horizontal">
 													<div class="form-group">
@@ -969,7 +971,7 @@
 													</div>
 													<div class="form-group">
 														<div class="col-md-12">
-															<a href="javascript:void(0);" class="btn btn-warning btn-block"><i class="fa fa-clock-o"></i> Reserve</a>
+															<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
 														</div>
 													</div>
 													<div class="form-group">
