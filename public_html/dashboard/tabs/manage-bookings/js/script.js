@@ -3,61 +3,51 @@ Handlebars.registerHelper('currency', function() {
 });
 
 Handlebars.registerHelper('sourceIcon', function() {
+	var icon = '',
+	    tooltip = '';
+
 	switch(this.source) {
-		case null:         return 'user';
-		case 'telephone':  return 'phone';
-		case 'email':      return 'envelope';
-		case 'facetoface': return 'eye';
-		default:           return 'question';
+		case null:         icon = 'fa-user';     tooltip = 'Source: Agent';         break;
+		case 'telephone':  icon = 'fa-phone';    tooltip = 'Source: Telephone';     break;
+		case 'email':      icon = 'fa-envelope'; tooltip = 'Source: Email';         break;
+		case 'facetoface': icon = 'fa-eye';      tooltip = 'Source: Face-to-face';  break;
+		default:           icon = 'fa-question'; tooltip = 'Source: Not specified';
 	}
-});
-Handlebars.registerHelper('sourceTooltip', function() {
-	switch(this.source) {
-		case null:         return 'Source: Agent';
-		case 'telephone':  return 'Source: Telephone';
-		case 'email':      return 'Source: Email';
-		case 'facetoface': return 'Source: Face-to-face';
-		default:           return 'Source: Not specified';
-	}
+
+	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
 });
 
 Handlebars.registerHelper('statusIcon', function() {
-	if(this.confirmed == 1)    return 'check';
-	if(this.reserved != null)  return 'clock-o';
-	if(this.saved == 1)        return 'floppy-o';
-	else                       return '';
-});
-Handlebars.registerHelper('statusTooltip', function() {
-	if(this.confirmed == 1)    return 'Confirmed';
-	if(this.reserved != null)  return 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
-	if(this.saved == 1)        return 'Saved';
-	else                       return '';
-});
+	var icon = '',
+	    color = 'inherit',
+	    tooltip = '';
 
-Handlebars.registerHelper('paymentIcon', function() {
-	if(this.confirmed === "0" || this.confirmed === 0) return 'transparent';
+	if(this.confirmed == 1) {
+		icon = 'fa-check';
 
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
+		var sum = _.reduce(this.payments, function(memo, payment) {
+			return memo + payment.amount * 1;
+		}, 0);
 
-	var percentage = sum / this.decimal_price;
+		var percentage = sum / this.decimal_price;
 
-	if(percentage === 1) return '#5cb85c';
-	if(percentage === 0) return '#d9534f';
-	return '#f0ad4e';
-});
-Handlebars.registerHelper('paymentTooltip', function() {
-	if(this.confirmed === "0" || this.confirmed === 0) return '';
+		if(percentage === 1) color = '#5cb85c';
+		else if(percentage === 0) color = '#d9534f';
+		else color = '#f0ad4e';
 
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
+		if(percentage === 1) tooltip = 'Confirmed, completely paid';
+		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
+	}
+	else if(this.reserved != null) {
+		icon = 'fa-clock-o';
+		tooltip = 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
+	}
+	else if(this.saved == 1) {
+		icon = 'fa-floppy-o';
+		tooltip = 'Saved';
+	}
 
-	var percentage = sum / this.decimal_price;
-
-	if(percentage === 1) return 'Completely paid';
-	else                 return window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
+	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
 });
 
 Handlebars.registerHelper('sumPaid', function() {
@@ -120,11 +110,9 @@ $(function() {
 	Booking.getAll(function(data) {
 		window.bookings = data;
 		$('#booking-list').html( bookingListItem({bookings: data}) );
-	});
 
-	// Prevent click on mailto-link from triggering the accordion
-	$('#booking-list').on('click', '.mailto', function(event) {
-		event.stopPropagation();
+		// Initiate tooltips
+		$('#booking-list').find('[data-toggle=tooltip]').tooltip();
 	});
 
 	$('#booking-list').on('click', '.accordion-header', function() {
@@ -139,10 +127,7 @@ function editBooking(booking_id, self) {
 
 	// Load booking data and redirect to add-booking tab
 	Booking.get(booking_id, function success(object) {
-		window.booking             = object;
-		window.booking.currentStep = 8;
-		window.booking.currentTab  = '#summary-tab';
-		window.clickedEdit         = true;
+		window.booking = object;
 
 		window.location.hash = 'add-booking';
 	});

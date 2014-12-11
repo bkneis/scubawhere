@@ -544,38 +544,6 @@ ul#sidenav > li > ul > li:hover {
 	display: inline-block;
 }
 
-/*						TOOLTIP
-*******************************
-*/
-.tooltip {
-	position: absolute;
-	width: 233px;
-	z-index: 9999;
-	padding: 0px;
-	background: #4a9cff;
-	-webkit-border-radius: 0px;
-	-moz-border-radius: 0px;
-	border-radius: 0px;
-	text-align: center;
-	padding: 10px;
-	color: #fff;
-	display: none;
-}
-
-.tooltip::after {
-	content: '';
-	position: absolute;
-	border-style: solid;
-	border-width: 15px 15px 0;
-	border-color: #4a9cff transparent;
-	display: block;
-	width: 0;
-	z-index: 1;
-	bottom: -15px;
-	left: 110px;
-}
-
-
 /*
 *******************************
 					INDV TABS

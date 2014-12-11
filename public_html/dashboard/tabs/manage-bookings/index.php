@@ -46,9 +46,7 @@
 				<table class="bluethead">
 					<thead>
 						<tr class="bg-primary">
-							<th width="10"></th> <!-- source icon -->
-							<th width="10"></th> <!-- saved/reserved/confirmed icon -->
-							<th width="10"></th> <!-- payments -->
+							<th></th> <!-- icons -->
 							<th>Ref</th>
 							<th>Customer</th>
 							<th>Email</th>
@@ -69,9 +67,7 @@
 	<script type="text/x-handlebars-template" id="booking-list-item-template">
 		{{#each bookings}}
 			<tr class="accordion-header" data-id={{id}}>
-				<td><i class="fa fa-{{sourceIcon}}" title="{{sourceTooltip}}"></td>
-				<td><i class="fa fa-{{statusIcon}}" title="{{statusTooltip}}"></td>
-				<td><i class="fa fa-circle" style="color: {{paymentIcon}};" title="{{paymentTooltip}}"></td>
+				<td>{{sourceIcon}} {{statusIcon}}</td>
 				<td>{{reference}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{lead_customer.email}}</td>
