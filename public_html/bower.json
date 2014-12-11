@@ -1,0 +1,17 @@
+{
+  "name": "scubawhere-rms",
+  "version": "0.0.1",
+  "authors": [
+    "Jonathan Lambert <jonathan@scubawhere.com>"
+  ],
+  "description": "Scuba Diving Reservation Management System",
+  "main": "index.php",
+  "license": "Private",
+  "homepage": "http://www.scubawhere.com",
+  "private": true,
+  "devDependencies": {
+    "bootstrap": "~3.3.1",
+    "bootstrap3-typeahead": "~3.0.0",
+    "basil.js": "~0.3.4"
+  }
+}
