@@ -28,7 +28,7 @@ class BookingModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_SOURCE, $booking->source, "Unexpected source value");
 		$this->assertEquals(ModelTestHelper::TEST_PRICE, $booking->price, "Unexpected price value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER, $booking->discount, "Unexpected discount value");
-		$this->assertEquals(ModelTestHelper::TEST_BOOL, $booking->confirmed, "Unexpected confirmed value");
+		$this->assertEquals(ModelTestHelper::TEST_BOOKING_STATUS, $booking->status, "Unexpected status value");
 		$this->assertEquals(ModelTestHelper::TEST_DATETIME, $booking->reserved, "Unexpected reserved value");
 		$this->assertEquals(ModelTestHelper::TEST_ADDRESS, $booking->pick_up_location, "Unexpected pick_up_location value");
 		$this->assertEquals(ModelTestHelper::TEST_DATE, $booking->pick_up_date, "Unexpected pick_up_date value");
@@ -42,7 +42,7 @@ class BookingModelTest extends ModelTestCase {
 		$booking->source           = ModelTestHelper::TEST_SOURCE_UPDATED;
 		$booking->price            = ModelTestHelper::TEST_PRICE_UPDATED;
 		$booking->discount         = ModelTestHelper::TEST_INTEGER_UPDATED;
-		$booking->confirmed        = ModelTestHelper::TEST_BOOL_UPDATED;
+		$booking->status           = ModelTestHelper::TEST_BOOKING_STATUS_UPDATED;
 		$booking->reserved         = ModelTestHelper::TEST_DATE_UPDATED;
 		$booking->pick_up_location = ModelTestHelper::TEST_ADDRESS_UPDATED;
 		$booking->pick_up_date     = ModelTestHelper::TEST_DATE_UPDATED;
@@ -54,7 +54,7 @@ class BookingModelTest extends ModelTestCase {
 		$this->assertEquals(ModelTestHelper::TEST_SOURCE_UPDATED, $booking->source, "Unexpected source value");
 		$this->assertEquals(ModelTestHelper::TEST_PRICE_UPDATED, $booking->price, "Unexpected price value");
 		$this->assertEquals(ModelTestHelper::TEST_INTEGER_UPDATED, $booking->discount, "Unexpected discount value");
-		$this->assertEquals(ModelTestHelper::TEST_BOOL_UPDATED, $booking->confirmed, "Unexpected confirmed value");
+		$this->assertEquals(ModelTestHelper::TEST_BOOKING_STATUS_UPDATED, $booking->status, "Unexpected status value");
 		$this->assertEquals(ModelTestHelper::TEST_DATE_UPDATED, $booking->reserved, "Unexpected reserved value");
 		$this->assertEquals(ModelTestHelper::TEST_ADDRESS_UPDATED, $booking->pick_up_location, "Unexpected pick_up_location value");
 		$this->assertEquals(ModelTestHelper::TEST_DATE_UPDATED, $booking->pick_up_date, "Unexpected pick_up_date value");

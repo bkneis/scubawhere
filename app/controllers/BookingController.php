@@ -88,6 +88,7 @@ class BookingController extends Controller {
 
 		// Reserve booking for 15 min by default
 		$data['reserved'] = Helper::localTime()->add( new DateInterval('PT15M') )->format('Y-m-d H:i:s');
+		// Do not set `status` to 'reserved'
 
 		$booking = new Booking($data);
 
@@ -634,12 +635,14 @@ class BookingController extends Controller {
 		do
 		{
 			if( $accommodation->bookings()
-				->wherePivot('start', '<=', $current_date)
-				->wherePivot('end', '>', $current_date)
-				->where('confirmed', 1)
-				->orWhereNotNull('reserved')
-				->count() >= $accommodation->capacity )
-				return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!')), 403 ); // 403 Forbidden
+			    ->wherePivot('start', '<=', $current_date)
+			    ->wherePivot('end', '>', $current_date)
+			    ->where(function($query)
+			    {
+			    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+			    })
+			    ->count() >= $accommodation->capacity )
+			    return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!')), 403 ); // 403 Forbidden
 
 			$current_date->add( new DateInterval('P1D') );
 		}
@@ -777,7 +780,11 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if( in_array($booking->status, array('confirmed', 'on hold', 'canceled')) )
+			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
+
 		$data = Input::only('reserved');
+		$data['status'] = 'reserved';
 
 		if( !$booking->update($data) )
 		{
@@ -799,7 +806,10 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( !$booking->update( array('saved' => true) ) )
+		if( in_array($booking->status, array('reserved', 'confirmed', 'on hold', 'canceled')) )
+			return Response::json( array('errors' => array('The booking cannot be saved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
+
+		if( !$booking->update( array('status' => 'saved') ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}

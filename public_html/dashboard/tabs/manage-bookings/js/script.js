@@ -22,7 +22,7 @@ Handlebars.registerHelper('statusIcon', function() {
 	    color = 'inherit',
 	    tooltip = '';
 
-	if(this.confirmed == 1) {
+	if(this.status === 'confirmed') {
 		icon = 'fa-check';
 
 		var sum = _.reduce(this.payments, function(memo, payment) {
@@ -42,7 +42,7 @@ Handlebars.registerHelper('statusIcon', function() {
 		icon = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
 	}
-	else if(this.saved == 1) {
+	else if(this.status === 'saved') {
 		icon = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
@@ -94,8 +94,8 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {
-	if(this.confirmed === "1" || this.confirmed === 1)
-		return '';
+	/*if(this.staus === 'confirmed')
+		return '';*/
 
 	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil"></i> &nbsp;Edit</button>');
 });

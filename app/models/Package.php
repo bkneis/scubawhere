@@ -32,10 +32,12 @@ class Package extends Ardent {
 
 	public function getHasBookingsAttribute()
 	{
-		return $this->bookingdetails()->whereHas('booking', function($query)
-		{
-			$query->where('confirmed', 1)->orWhereNotNull('reserved');
-		})->count() > 0;
+		return $this->bookingdetails()
+		    ->whereHas('booking', function($query)
+		    {
+		    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+		    })
+		    ->count() > 0;
 	}
 
 	public function company()

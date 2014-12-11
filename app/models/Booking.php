@@ -11,9 +11,8 @@ class Booking extends Ardent {
 		'source',
 		// 'price',
 		'discount',
-		// 'confirmed',
+		// 'status',
 		'reserved',
-		'saved',
 		'pick_up_location',
 		'pick_up_date',
 		'pick_up_time',
@@ -28,9 +27,8 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'confirmed'        => 'boolean',
+		'status'           => 'in:saved,reserved,confirmed,on hold,canceled',
 		'reserved'         => 'date|after_local_now',
-		'saved'            => 'boolean',
 		'pick_up_location' => 'required_with:pick_up_time',
 		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
 		'pick_up_time'     => 'time|required_with:pick_up_date',
@@ -39,11 +37,8 @@ class Booking extends Ardent {
 
 	public function beforeSave()
 	{
-		if( isset($this->pick_up) )
-			$this->pick_up = Helper::sanitiseString($this->pick_up);
-
-		if( isset($this->drop_off) )
-			$this->drop_off = Helper::sanitiseString($this->drop_off);
+		if( isset($this->pick_up_location) )
+			$this->pick_up_location = Helper::sanitiseString($this->pick_up_location);
 
 		if( isset($this->comments) )
 			$this->comments = Helper::sanitiseString($this->comments);

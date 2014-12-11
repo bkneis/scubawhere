@@ -118,11 +118,13 @@ class AccommodationController extends Controller {
 			{
 				$result[$key][$el->id] = array(
 					$el->bookings()
-						->wherePivot('start', '<=', $current_date)
-						->wherePivot('end', '>', $current_date)
-						->where('confirmed', 1)
-						->orWhereNotNull('reserved')
-						->count(),
+					    ->wherePivot('start', '<=', $current_date)
+					    ->wherePivot('end', '>', $current_date)
+					    ->where(function($query)
+					    {
+					    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+					    })
+					    ->count(),
 					$el->capacity
 				);
 			});

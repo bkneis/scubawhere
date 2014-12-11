@@ -88,8 +88,8 @@ class PaymentController extends Controller {
 
 		$payment = $booking->payments()->save($payment);
 
-		if( $booking->confirmed === "0" || $booking->confirmed === 0 ) {
-			$booking->confirmed = 1;
+		if($booking->status !== "confirmed") {
+			$booking->status = 'confirmed';
 			if( !$booking->save() )
 				return Response::json( array('errors' => $booking->errors()->all()), 500 ); // 500 Internal Server Error
 		}
