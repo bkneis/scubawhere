@@ -3,7 +3,7 @@ var companyForm;
 $(function() {
 	$.get("/api/agency/all", function(data) {
 		window.company.agencies       = _.indexBy(window.company.agencies, 'id');
-		window.company.other_agencies = _.omit ( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
+		window.company.other_agencies = _.omit( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
 
 		companyForm = Handlebars.compile( $("#company-form-template").html());
 		renderEditForm();
@@ -32,6 +32,9 @@ $(function() {
 
 				$('.update-settings').prop('disabled', false);
 				$('.loader').remove();
+
+				//Clear error messages
+				$('.errors').remove();
 			},
 			error: function(xhr) {
 				var data = JSON.parse(xhr.responseText);
