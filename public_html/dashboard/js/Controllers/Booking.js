@@ -10,8 +10,9 @@ var Booking = function(data) {
 		this.lead_customer  = false;
 	}
 
-	this.selectedCustomers = {};
+	this.currentTab        = null;
 	this.selectedTickets   = {};
+	this.selectedCustomers = {};
 };
 
 
@@ -44,12 +45,43 @@ Booking.pickUpLocations = function(params, success) {
 	$.get("/api/booking/pick-up-locations", params, success);
 };
 
+Booking.initiateStorage = function() {
+	window.basil = new window.Basil({
+		namespace: 'bookings',
+		storages: ['local', 'cookie'], // Only use persistent storages
+	});
+};
+
 
 /*
  ********************************
  ******* PUBLIC FUNCTIONS *******
  ********************************
  */
+
+/**
+ * Save UI state to LocalStorage
+ */
+Booking.prototype.store = function() {
+	if(typeof window.basil === 'undefined') Booking.initiateStorage();
+
+	window.basil.set('booking_' + this.id, {
+		currentTab: this.currentTab,
+		selectedCustomers: this.selectedCustomers,
+		selectedTickets: this.selectedTickets,
+	});
+
+	return true;
+};
+
+/**
+ * Load UI state from LocalStorage and extend Booking object with it
+ */
+Booking.prototype.loadStorage = function() {
+	if(typeof window.basil === 'undefined') Booking.initiateStorage();
+
+	$.extend(this, window.basil.get('booking_' + this.id));
+};
 
 /**
  * Initate a booking with either the 'source' of the booking or the 'agent_id'.

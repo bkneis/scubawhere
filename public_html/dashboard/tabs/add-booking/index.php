@@ -1003,6 +1003,9 @@
 	<!--Typeahead-->
 	<script type="text/javascript" src="/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
 
+	<!--Basil LocalStorage Wrapper-->
+	<script type="text/javascript" src="/common/vendor/basil.js/build/basil.min.js"></script>
+
 	<!--jQuery plugins-->
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 
