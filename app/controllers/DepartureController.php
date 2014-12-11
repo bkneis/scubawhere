@@ -28,6 +28,32 @@ class DepartureController extends Controller {
 		return Auth::user()->departures()->withTrashed()->get();
 	}
 
+	public function getToday()
+	{
+		$data = array(
+			'with_full' => true,
+			'after'     => Helper::localTime()->setTime(0, 0)->format('Y-m-d H:i:s'),
+			'before'    => Helper::localTime()->setTime(23, 59)->format('Y-m-d H:i:s'),
+		);
+
+		Request::replace($data);
+
+		return $this->getFilter();
+	}
+
+	public function getTomorrow()
+	{
+		$data = array(
+			'with_full' => true,
+			'after'     => Helper::localTime()->add(new DateInterval('P1D'))->setTime(0, 0)->format('Y-m-d H:i:s'),
+			'before'    => Helper::localTime()->add(new DateInterval('P1D'))->setTime(23, 59)->format('Y-m-d H:i:s'),
+		);
+
+		Request::replace($data);
+
+		return $this->getFilter();
+	}
+
 	public function getFilter()
 	{
 		/**
