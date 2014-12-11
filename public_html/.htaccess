@@ -15,15 +15,15 @@
     RewriteCond %{HTTP_HOST} !^www\.
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
+    # Redirect all requests to /coming-soon/* to /blog/*
+    Redirect 301 /coming-soon /blog
+
     # Do not handle these routes with laravel
     RewriteCond %{REQUEST_URI} !^/phpmyadmin
     RewriteCond %{REQUEST_URI} !^/blog
     RewriteCond %{REQUEST_URI} !^/dashboard
-    RewriteCond %{REQUEST_URI} !^/coming-soon
     RewriteCond %{REQUEST_URI} !^/docs
-
-    # Redirect all requests to /coming-soon/* to /blog/*
-    Redirect 301 /coming-soon /blog
+    RewriteCond %{REQUEST_URI} !^/ocp
 
     # Redirect Trailing Slashes
     RewriteRule ^(.*)/$ /$1 [L,R=301]
