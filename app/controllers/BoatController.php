@@ -84,12 +84,59 @@ class BoatController extends Controller {
 
 		if( Input::has('boatrooms') )
 		{
+			$oldBoatrooms = array();
+			$boat->boatrooms()->get()->each(function($boatroom) use (&$oldBoatrooms)
+			{
+				$oldBoatrooms[$boatroom->id] = array('capacity' => $boatroom->pivot->capacity);
+			});
+
 			// Input must be of type <input name="boatrooms[1][capacity]" value="20">
 			//                                boatroom_id --^   capacity value --^
-			$boatrooms = Input::get('boatrooms');
+			$newBoatrooms = Input::get('boatrooms');
+
+			// Foreach edited boatroom:
+			// 1. If removed, check if the boatroom is booked for future bookings
+			// 2. If capacity got smaller, check if the capacity is still enough for future bookings
+
+			$removedBoatrooms = array_diff_key($oldBoatrooms, $newBoatrooms);
+
+			$keptBoatrooms = array_intersect_key($oldBoatrooms, $newBoatrooms);
+			$editedBoatrooms = array();
+			foreach($keptBoatrooms as $id => $boatroom)
+			{
+				if((int) $oldBoatrooms[$id]['capacity'] > (int) $newBoatrooms[$id]['capacity'])
+					$editedBoatrooms[$id] = $boatroom;
+			}
+
+			// 1. case
+			foreach($removedBoatrooms as $id => $null)
+			{
+				$boatroom = Boatroom::find($id);
+				if( $boatroom->bookingdetails()->whereHas('departure', function($query)
+				{
+					return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
+				})->count() > 0 )
+					return Response::json( array('errors' => array('The boatroom "' . $boatroom->name . '" can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
+			}
+
+			// 2. case
+			foreach($editedBoatrooms as $id => $null)
+			{
+				$boatroom = Boatroom::find($id);
+				$groupedSessions = $boatroom->bookingdetails()->whereHas('departure', function($query)
+				{
+					return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
+				})->orderBy('session_id')->get();
+
+				foreach($groupedSessions as $sessions)
+				{
+					if(count($sessions) > (int) $newBoatrooms[$id]['capacity'] )
+						return Response::json( array('errors' => array('The capacity of "' . $boatroom->name . '" can not be reduced below ' . count($sessions) . '.')), 409); // 409 Conflict
+				}
+			}
 
 			// TODO Validate that boatrooms belong to logged in user
-			$boat->boatrooms()->sync( $boatrooms );
+			$boat->boatrooms()->sync( $newBoatrooms );
 		}
 		else {
 			// Remove all boatrooms from the boat

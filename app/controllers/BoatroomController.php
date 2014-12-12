@@ -127,12 +127,12 @@ class BoatroomController extends Controller {
 			return Response::json( array('errors' => array('The boatroom can not be removed because it is still used in tickets.')), 409); // 409 Conflict
 
 		if( $boatroom->bookingdetails()->whereHas('departure', function($query)
-			{
-				return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-			})->count() > 0 )
+		{
+			return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
+		})->count() > 0 )
 			return Response::json( array('errors' => array('The boatroom can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
 
-		if( $boatroom->bookingdetails->count() > 0 )
+		if( $boatroom->bookingdetails()->count() > 0 )
 			$boatroom->delete(); // softDeletes
 		else
 			$boatroom->forceDelete();

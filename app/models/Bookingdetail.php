@@ -45,9 +45,9 @@ class Bookingdetail extends Ardent {
 		return $this->belongsTo('Ticket')->withTrashed();
 	}
 
-	public function session()
+	public function departure()
 	{
-		return $this->belongsTo('Departure')->withTrashed();
+		return $this->belongsTo('Departure', 'session_id')->withTrashed();
 	}
 
 	public function packagefacade()

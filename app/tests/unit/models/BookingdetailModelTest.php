@@ -88,7 +88,7 @@ class BookingdetailModelTest extends ModelTestCase {
 		$this->assertNotNull($bookingdetail->booking, "Unexpected booking relationship value");
 		$this->assertNotNull($bookingdetail->customer, "Unexpected customer relationship value");
 		$this->assertNotNull($bookingdetail->ticket, "Unexpected ticket relationship value");
-		$this->assertNotNull($bookingdetail->session, "Unexpected session relationship value");
+		$this->assertNotNull($bookingdetail->departure, "Unexpected departure relationship value");
 		$this->assertNotNull($bookingdetail->boatroom, "Unexpected boatroom relationship value");
 		$this->assertNotNull($bookingdetail->packagefacade, "Unexpected packagefacade relationship value");
 	}
