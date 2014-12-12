@@ -102,13 +102,15 @@ class CronRunCommand extends Command {
 					array_push($ids, $booking->id);
 				}
 			}
-			$this->info(implode(',', $ids));
 
+			if(count($ids) > 0)
+			{
 			// Create a string containing as many ?,?... as there are IDs
 			$clause = implode(',', array_fill(0, count($ids), '?'));
 			// This query deliberately does not set the `status` to null or 'saved'.
 			// This way, we still know which bookings where reserved but have expired.
 			DB::update("UPDATE bookings SET `reserved` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids);
+			}
 
 			$this->messages[] = count($ids) . ' expired bookings unreserved';
 
