@@ -236,7 +236,10 @@ Booking.prototype.setLead = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.lead_customer = window.customers[ params.customer_id ];
+			if(params.customer_id === null)
+				this.lead_customer = false;
+			else
+				this.lead_customer = window.customers[ params.customer_id ];
 
 			successFn(data.status);
 		},
