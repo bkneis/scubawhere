@@ -37,8 +37,36 @@ Booking.get = function(id, successFn) {
 /*
  * Calls success callback with unaltered JSON data
  */
-Booking.getAll = function(success) {
-	$.get("/api/booking/all", success);
+Booking.getAll = function(successFn) {
+	$.get("/api/booking/all", successFn);
+};
+
+Booking.today = function(successFn, errorFn) {
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/today",
+		success: successFn,
+		error: errorFn
+	});
+};
+
+Booking.tomorrow = function(successFn, errorFn) {
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/tomorrow",
+		success: successFn,
+		error: errorFn
+	});
+};
+
+Booking.filter = function(params, successFn, errorFn) {
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/filter",
+		data: params,
+		success: successFn,
+		error: errorFn
+	});
 };
 
 Booking.pickUpLocations = function(params, success) {

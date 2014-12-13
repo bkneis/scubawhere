@@ -68,6 +68,91 @@ class BookingController extends Controller {
 			->get();
 	}
 
+	public function getToday()
+	{
+		$data = array(
+			'date' => Helper::localTime()->format('Y-m-d'),
+		);
+
+		Request::replace($data);
+
+		return $this->getFilter();
+	}
+
+	public function getTomorrow()
+	{
+		$data = array(
+			'date' => Helper::localTime()->add(new DateInterval('P1D'))->format('Y-m-d'),
+		);
+
+		Request::replace($data);
+
+		return $this->getFilter();
+	}
+
+	public function getFilter($from = 0, $take = 20)
+	{
+		/**
+		 * Allowed input parameter
+		 * reference
+		 * date
+		 * lastname
+		 */
+
+		$reference = Input::get('reference', null);
+		$date      = Input::get('date', null);
+		$lastname  = Input::get('lastname', null);
+
+		if(empty($reference) && empty($date) && empty($lastname))
+			return array();
+
+		if(!empty($date))
+			$date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
+
+		$bookings = Auth::user()->bookings()->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway'
+			)
+			->where(function($query) use ($reference)
+			{
+				if(!empty($reference))
+					$query->where('reference', 'LIKE', '%'.$reference.'%');
+			})
+			->where(function($query) use ($date)
+			{
+				if(!empty($date))
+					$query->whereHas('sessions', function($query) use ($date)
+					{
+						$start = clone $date;
+						$start->sub(new DateInterval('PT'.$start->format('H').'H'.$start->format('i').'M'));
+						$end = clone $start;
+						$end->add(new DateInterval('P1D'));
+
+						$query->whereBetween('start', array($start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+					})
+					->orWhereHas('accommodations', function($query) use ($date)
+					{
+						$query->where('accommodation_booking.start', $date->format('Y-m-d'));
+					});
+			})
+			->where(function($query) use ($lastname)
+			{
+				if(!empty($lastname))
+					$query->whereHas('lead_customer', function($query) use ($lastname)
+					{
+						$query->where('lastname', 'LIKE', '%'.$lastname.'%');
+					});
+			})
+			->orderBy('updated_at', 'DESC')
+			->skip($from)
+			->take($take)
+			->get();
+
+		return $bookings;
+	}
+
 	public function postInit()
 	{
 		$data = Input::only('agent_id', 'source');
