@@ -42,7 +42,7 @@ class BookingController extends Controller {
 			{
 				$accommodation->calculatePrice( $accommodation->pivot->start, $accommodation->pivot->end );
 
-				$accommodation->customer = Customer::where('id', $accommodation->pivot->customer_id)->first();
+				$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
 			});
 
 			return $booking;
@@ -53,10 +53,15 @@ class BookingController extends Controller {
 		}
 	}
 
-	public function getAll($from = 0, $take = 10)
+	public function getAll($from = 0, $take = 20)
 	{
 		return Auth::user()->bookings()
-			->with('lead_customer', 'lead_customer.country', 'payments', 'payments.paymentgateway')
+			->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway'
+			)
 			->orderBy('updated_at', 'DESC')
 			->skip($from)
 			->take($take)

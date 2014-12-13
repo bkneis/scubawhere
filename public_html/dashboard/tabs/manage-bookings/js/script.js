@@ -38,16 +38,22 @@ Handlebars.registerHelper('statusIcon', function() {
 		if(percentage === 1) tooltip = 'Confirmed, completely paid';
 		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
 	}
-	else if(this.reserved != null) {
+	else if(this.status === 'reserved') {
 		icon = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
+
+		if(this.reserved == null) {
+			icon = 'fa-exclamation';
+			tooltip = 'Expired reservation!';
+			color = '#d9534f';
+		}
 	}
 	else if(this.status === 'saved') {
 		icon = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
 
-	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
+	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
 });
 
 Handlebars.registerHelper('sumPaid', function() {
@@ -82,22 +88,21 @@ Handlebars.registerHelper("remainingPay", function() {
 });
 
 Handlebars.registerHelper('addTransactionButton', function() {
-	if(this.decimal_price === '0.00')
-		return '';
-
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
 	}, 0);
-	if(sum == this.decimal_price)
-		return '';
 
-	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card"></i> &nbsp;Add Transaction</button>');
+	var disabled = '';
+	if(this.decimal_price === '0.00' || sum == this.decimal_price)
+		disabled = 'disabled';
+
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {
-	/*if(this.staus === 'confirmed')
+	/*if(this.status === 'confirmed')
 		return '';*/
 
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil"></i> &nbsp;Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
 });
 
 $(function() {

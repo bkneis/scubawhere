@@ -68,10 +68,6 @@ $(function(){
 		minuteStepping: 5
 	});
 
-	$(document).on('focus', '.datepicker', function(){
-		$(this).data("DateTimePicker").show();
-	});
-
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 														//BOX FUNCTIONS
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
