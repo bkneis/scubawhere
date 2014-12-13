@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">Search for a booking</h4>
@@ -8,36 +8,40 @@
 				<form id="find-booking-form">
 					<div class="form-row">
 						<label class="field-label">Reference</label>
-						<input type="text" name="booking_reference" class="form-control" disabled>
+						<input type="text" name="reference" class="form-control" style="text-transform: uppercase;">
 					</div>
 
 					<div class="form-row">
 						<label class="field-label">Date</label>
-						<input type="text" name="date" class="datepicker form-control" disabled>
+						<input type="text" name="date" class="datepicker form-control" data-date-format="YYYY-MM-DD">
 					</div>
 
 					<div class="form-row">
 						<label class="field-label">Customer's Last Name</label>
-						<input type="text" name="last_name" class="form-control" disabled>
+						<input type="text" name="lastname" class="form-control">
 					</div>
 
-					<div class="form-row">
-						<p><label class="">Type of Product</label></p>
-						<select id="type-product" class="form-control" disabled>
-							<option>Please select..</option>
-							<option>PADI course</option>
-							<option>Fun dive</option>
-							<option>More options will be added</option>
+					<!--<div class="form-row">
+						<label class="">Ticket</label>
+						<select id="type-product" class="form-control">
+							<option>Loading..</option>
 						</select>
-					</div>
+						<script type="text/x-handlebars-template" id="ticket-list-template">
+							<option>Please select...</option>
+							{{#each tickets}}
+								<option value="{{id}}">{{{name}}}</option>
+							{{/each}}
+						</script>
+					</div>-->
 
-					<input type="submit" class="btn btn-primary" id="find-booking" value="Find Booking" disabled>
+					<input type="reset" class="btn btn-danger btn-sm" value="Clear">
+					<button class="btn btn-primary pull-right" id="find-booking">Find Booking</button>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-md-8">
+	<div class="col-md-9">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">Bookings</h4>
@@ -117,6 +121,9 @@
 		{{/each}}
 	</script>
 
+	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
+
 	<script src="js/Controllers/Booking.js"></script>
+	<script src="js/Controllers/Ticket.js"></script>
 	<script src="tabs/manage-bookings/js/script.js"></script>
 </div>

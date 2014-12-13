@@ -139,6 +139,33 @@ $(function() {
 		$(this).toggleClass('expanded');
 		$('.accordion-' + this.getAttribute('data-id')).toggle();
 	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false
+	});
+
+	$('#find-booking-form').on('submit', function(event) {
+		event.preventDefault();
+
+		var btn = $('#find-booking');
+		btn.append(' <i class="fa fa-cog fa-spin"></i>');
+
+		var params = $(this).serializeObject();
+
+		Booking.filter(params, function success(data) {
+			$('#booking-list').html( bookingListItem({bookings: data}) );
+
+			// Initiate tooltips
+			$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+
+			btn.html('Find Booking');
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0]);
+			btn.html('Find Booking');
+		});
+	});
 });
 
 function editBooking(booking_id, self) {
