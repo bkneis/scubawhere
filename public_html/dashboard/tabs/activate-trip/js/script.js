@@ -564,10 +564,11 @@ $(function() {
 		{
 			var boat_id = $select.val();
 			var boatroomCount = window.boats[boat_id].boatrooms.length;
-			if(boatroomCount === 0)
+			if(boatroomCount === 0) {
 				// Display warning
 				$select.after(' <span class="boatroomWarning text-danger"><i class="fa fa-exclamation-triangle fa-lg"></i><br>Without boatrooms, this boat cannot be selected for an overnight trip.</span>');
 				$button.prop('disabled', true);
+			}
 		}
 	});
 });
@@ -629,12 +630,8 @@ function showModalWindow(eventObject) {
 	}
 
 	// Check if session lies in the past
-		if(typeof eventObject.isPast === 'undefined' &&
-			(
-				(eventObject.isNew && moment().startOf('day').diff(eventObject.start) > 0) ||
-				(!eventObject.isNew && moment().diff(eventObject.start) > 0)
-			)
-		)
+	if(typeof eventObject.isPast === 'undefined')
+		if( (eventObject.isNew && moment().startOf('day').diff(eventObject.start) > 0) || (!eventObject.isNew && moment().diff(eventObject.start) > 0) )
 			eventObject.isPast = true;
 		else
 			eventObject.isPast = false;
@@ -666,9 +663,9 @@ function showModalWindow(eventObject) {
 
 	// Set timetable form token
 	getToken(function(token) {
-				$('#modalWindows [name="_token"]').val(token);
-		});
-	}
+		$('#modalWindows [name="_token"]').val(token);
+	});
+}
 
 function toggleWeek(self) {
 	var $self    = $(self);
