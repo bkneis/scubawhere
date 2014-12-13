@@ -9,6 +9,7 @@
 
 	<script src="js/login.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
 
@@ -17,26 +18,26 @@
 <body>
 
 	<div id="login-wrapper">
-	<div id="login-form">
-		<form action="#" id="loginForm" method="post" accept-charset="utf-8">
-			<img src="/common/img/scubawhere_logo.svg">
-			<h1>Dive Centre Dashboard Login</h1>
+		<div id="login-form">
+			<form action="#" id="loginForm" method="post" accept-charset="utf-8">
+				<img src="/common/img/scubawhere_logo.svg">
+				<h1>Dive Centre Dashboard Login</h1>
 
-			<span class="form-error"></span>
+				<span class="form-error"></span>
 
-			<input type="text" name="username" placeholder="Username">
+				<input type="text" name="username" placeholder="Username">
 
-			<input type="password" name="password" placeholder="Password"><br>
+				<input type="password" name="password" placeholder="Password"><br>
 
-			<!-- <label><input type="checkbox" name="remember"> Remember me</label> -->
+				<!-- <label><input type="checkbox" name="remember"> Remember me</label> -->
 
-			<input type="hidden" name="_token" value="" />
-			<button id="loginDC" class="submit-bttn bttn blueb">
-				Log in
-				<div id="save-loader" class="loader"></div>
-			</button>
+				<input type="hidden" name="_token" value="" />
+				<button id="loginDC" class="btn btn-primary">
+					Log in
+					<div id="save-loader" class="loader"></div>
+				</button>
 
-		</form>
+			</form>
 		</div>
 		<span>Forgot your password? <a href="../../password/remind">Click here.</a></span>
 	</div>
