@@ -27,7 +27,7 @@ $(function(){
 	});
 
 	//token
-	if(!window._token && !window.token)
+	if(typeof window.token === 'undefined')
 		getToken();
 });
 
@@ -35,17 +35,18 @@ $(function(){
 // FUNCTIONS
 //************************************
 
-function getToken() {
-	if(window.token || window._token)
-		return window.token || window._token;
+function getToken(callback) {
+	if(typeof window.token === 'string') {
+		if(typeof callback === 'function') callback(window.token);
+		return window.token;
+	}
 
 	$.ajax({
 		url: "/token",
 		type: "GET",
-		async: false,
 		success: function(data){
-			window._token = data;
-			window.token  = data;
+			window.token = data;
+			if(typeof callback === 'function') callback(window.token);
 		}
 	});
 

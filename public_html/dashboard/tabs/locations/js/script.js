@@ -128,7 +128,7 @@ function initialise() {
 
 		var params = {
 			location_id: markerObject.id,
-			_token:      window._token || window.token
+			_token:      window.token
 		};
 
 		Place.attach(params, function success(data) {
@@ -165,7 +165,7 @@ function initialise() {
 
 		var params = {
 			location_id: markerObject.id,
-			_token:      window._token || window.token
+			_token:      window.token
 		};
 
 		Place.detach(params, function success(data) {
@@ -209,7 +209,7 @@ function initialise() {
 		var modal = $(event.target).closest('.reveal-modal');
 
 		var params = modal.find('form').serializeObject();
-		params._token = window._token || window.token;
+		params._token = window.token;
 
 		Place.create(params, function success(data) {
 

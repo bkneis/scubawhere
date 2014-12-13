@@ -665,20 +665,10 @@ function showModalWindow(eventObject) {
 	$('#modalWindows .boatSelect').change();
 
 	// Set timetable form token
-	if(window.token)
-		$('#modalWindows [name="_token"]').val(window.token);
-	else {
-		$.ajax({
-			url: "/token",
-			type: "GET",
-			dataType: "html",
-			success: function(token) {
+	getToken(function(token) {
 				$('#modalWindows [name="_token"]').val(token);
-				window.token = token;
-			}
 		});
 	}
-}
 
 function toggleWeek(self) {
 	var $self    = $(self);
