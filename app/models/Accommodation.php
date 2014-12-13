@@ -36,8 +36,8 @@ class Accommodation extends Ardent {
 	}
 
 	public function calculatePrice($start, $end) {
-		$current_date = new DateTime($start);
-		$end = new DateTime($end);
+		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+		$end = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
 
 		$totalPrice = 0;
 		$numberOfDays = 0;

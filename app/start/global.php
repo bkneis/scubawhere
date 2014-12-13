@@ -118,10 +118,7 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 
 Validator::extend('after_local_now', function($attribute, $value, $parameters)
 {
-	$local = ScubaWhere\Helper::localTime();
-	$test  = new DateTime($value);
-
-	return $local < $test;
+	return !ScubaWhere\Helper::isPast($value);
 }, ':attribute datetime must be in the future');
 
 Validator::extend('time', function($attribute, $value, $parameters)

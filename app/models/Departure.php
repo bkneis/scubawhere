@@ -71,7 +71,7 @@ class Departure extends Ardent {
 		if(empty($trip))
 			$trip = $this->trip;
 
-		$start = new DateTime($this->start);
+		$start = new DateTime($this->start, new DateTimeZone( Auth::user()->timezone ));
 		$end   = clone $start;
 
 		$end->add( new DateInterval('PT' . $trip->duration . 'H') );

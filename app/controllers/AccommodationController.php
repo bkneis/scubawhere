@@ -47,10 +47,10 @@ class AccommodationController extends Controller {
 		$data['with_full'] = Input::get('with_full', false);
 
 		// Transform parameter strings into DateTime objects
-		$data['after']  = new DateTime( $data['after'] ); // Defaults to NOW, when parameter is NULL
+		$data['after']  = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
-			if( $data['after'] > new DateTime('now') )
+			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
 				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
@@ -59,13 +59,13 @@ class AccommodationController extends Controller {
 			else
 			{
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
-				$data['before'] = new DateTime('+1 month');
+				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
 			}
 		}
 		else
 		{
 			// If a 'before' date is submitted, simply use it
-			$data['before'] = new DateTime( $data['before'] );
+			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
 		}
 
 		if( $data['after'] > $data['before'] )

@@ -63,7 +63,7 @@ class TimetableController extends Controller {
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //
 		////////////////////////////////////////////
-		$start = new DateTime( $departure->start );
+		$start = new DateTime( $departure->start, new DateTimeZone( Auth::user()->timezone ) );
 		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for Monday, 7 for Sunday
 		// $startTime = $start->format('H:I');
 		$days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');

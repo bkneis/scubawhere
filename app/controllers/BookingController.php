@@ -261,7 +261,7 @@ class BookingController extends Controller {
 
 		// Determine if we need a boatroom_id (only when the trip is overnight)
 		$trip  = $departure->trip;
-		$start = new DateTime($trip->start);
+		$start = new DateTime($trip->start, new DateTimeZone( Auth::user()->timezone ));
 		$end   = clone $start;
 		$end->add( new DateInterval('PT'.$trip->duration.'H') );
 		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
@@ -630,8 +630,8 @@ class BookingController extends Controller {
 		}
 
 		// Check if accommodation is available for the selected days
-		$current_date = new DateTime($start);
-		$end_date = new DateTime($end);
+		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+		$end_date = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
 		do
 		{
 			if( $accommodation->bookings()
@@ -750,7 +750,7 @@ class BookingController extends Controller {
 
 		if( !( empty($data['pick_up_date']) || empty($data['pick_up_time']) ) )
 		{
-			$datetime = new DateTime($data['pick_up_date'].' '.$data['pick_up_time']);
+			$datetime = new DateTime($data['pick_up_date'].' '.$data['pick_up_time'], new DateTimeZone( Auth::user()->timezone ));
 			$data['pick_up_date'] = $datetime->format('Y-m-d');
 			$data['pick_up_time'] = $datetime->format('H:i:s');
 		}
