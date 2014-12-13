@@ -19,7 +19,7 @@ class Booking extends Ardent {
 		'comment'
 	);
 
-	protected $appends = array('decimal_price');
+	protected $appends = array('decimal_price', 'arrival_date');
 
 	public static $rules = array(
 		'lead_customer_id' => 'integer|min:1',
@@ -54,6 +54,29 @@ class Booking extends Ardent {
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''
 		);
+	}
+
+	public function getArrivalDateAttribute() {
+		$earliestDeparture = $this->sessions()->orderBy('sessions.start', 'ASC')->first();
+		if(!empty($earliestDeparture))
+			$earliestDeparture = new DateTime($earliestDeparture->start, new DateTimeZone( Auth::user()->timezone ));
+
+		$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
+		if(!empty($earliestAccommodation))
+			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start, new DateTimeZone( Auth::user()->timezone ));
+
+		// This is ugly!
+		// TODO Make it more elegant
+		if(empty($earliestDeparture) && empty($earliestAccommodation))
+			return null;
+
+		if(empty($earliestDeparture))
+			return $earliestAccommodation->format('Y-m-d');
+
+		if(empty($earliestAccommodation))
+			return $earliestDeparture->format('Y-m-d');
+
+		return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
 	}
 
 	public function setDiscountAttribute($value)
@@ -104,6 +127,11 @@ class Booking extends Ardent {
 	public function bookingdetails()
 	{
 		return $this->hasMany('Bookingdetail');
+	}
+
+	public function sessions()
+	{
+		return $this->belongsToMany('Departure', 'booking_details', 'booking_id', 'session_id');
 	}
 
 	public function company()

@@ -48,6 +48,7 @@
 						<tr class="bg-primary">
 							<th></th> <!-- icons -->
 							<th>Ref</th>
+							<th>Arrival</th>
 							<th>Customer</th>
 							<th>Email</th>
 							<th>Phone</th>
@@ -69,6 +70,7 @@
 			<tr class="accordion-header" data-id={{id}}>
 				<td>{{sourceIcon}} {{statusIcon}}</td>
 				<td>{{reference}}</td>
+				<td>{{arrivalDate}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{lead_customer.email}}</td>
 				<td>{{lead_customer.phone}}</td>

@@ -50,6 +50,11 @@ class Bookingdetail extends Ardent {
 		return $this->belongsTo('Departure', 'session_id')->withTrashed();
 	}
 
+	public function session()
+	{
+		return $this->belongsTo('Departure', 'session_id')->withTrashed();
+	}
+
 	public function packagefacade()
 	{
 		return $this->belongsTo('Packagefacade');

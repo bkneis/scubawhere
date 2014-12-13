@@ -64,6 +64,13 @@ Handlebars.registerHelper('statusIcon', function() {
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
 });
 
+Handlebars.registerHelper('arrivalDate', function() {
+	if(this.arrival_date === null || this.arrival_date === 'null')
+		return '-';
+
+	return moment(this.arrival_date).format('DD MMM YYYY'); // e.g. '14 Oct 2015'
+});
+
 Handlebars.registerHelper('sumPaid', function() {
 	return _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
