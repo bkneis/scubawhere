@@ -126,7 +126,8 @@ class BookingController extends Controller {
 					$query->whereHas('sessions', function($query) use ($date)
 					{
 						$start = clone $date;
-						$start->sub(new DateInterval('PT'.$start->format('H').'H'.$start->format('i').'M'));
+						$start->setTime(0, 0, 0);
+
 						$end = clone $start;
 						$end->add(new DateInterval('P1D'));
 
