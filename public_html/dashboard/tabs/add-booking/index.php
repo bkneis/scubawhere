@@ -171,7 +171,7 @@
 								<span class="loader"></span>
 								<script id="tickets-list-template" type="text/x-handlebars-template">
 									{{#each tickets}}
-										<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="col-sm-6 col-md-4">
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<p class="text-center ticket-icon"><i class="fa fa-ticket fa-4x"></i></p>
@@ -190,7 +190,7 @@
 								<span class="loader"></span>
 								<script id="package-list-template" type="text/x-handlebars-template">
 									{{#each packages}}
-										<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="col-sm-6 col-md-4">
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<p class="text-center ticket-icon"><i class="fa fa-tags fa-4x"></i></p>
