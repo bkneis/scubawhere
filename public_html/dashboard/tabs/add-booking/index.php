@@ -128,6 +128,7 @@
 								<h4 class="list-group-item-heading">Selected Tickets</h4>
 							</li>
 							<div id="selected-tickets"></div>
+							<div id="selected-packages"></div>
 						</ul>
 						<script id="selected-tickets-template" type="text/x-handlebars-template">
 						{{#each tickets}}
@@ -146,23 +147,71 @@
 							</li>
 						{{/each}}
 						</script>
-					</div>
-					<div class="col-sm-8 col-sm-pull-4" id="tickets-list">
-						<span class="loader"></span>
-						<script id="tickets-list-template" type="text/x-handlebars-template">
-							{{#each tickets}}
-								<div class="col-sm-6 col-md-4 col-lg-3">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<p class="text-center ticket-icon"><i class="fa fa-ticket fa-4x"></i></p>
-											<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
-											<p class="text-center ticket-price">{{priceRange base_prices}}</p>
-											<a role="button" class="btn btn-primary btn-block btn-sm add-ticket" data-id="{{id}}">Add</a>
-										</div>
-									</div>
-								</div>
-							{{/each}}
+						<script id="selected-packages-template" type="text/x-handlebars-template">
+						{{#each packages}}
+							<li class="list-group-item">
+								<p class="list-group-item-text">
+									<i class="fa fa-tags"></i>
+									<a href="javascript:void(0);" title="Click to remove" class="remove-package" data-id="{{id}}">{{{name}}}</a>
+									<span class="badge qty">{{qty}}</span>
+								</p>
+							</li>
+						{{else}}
+							<li class="list-group-item">
+								<p class="list-group-item-text text-muted">
+									No packages selected yet...
+								</p>
+							</li>
+						{{/each}}
 						</script>
+					</div>
+					<div class="col-sm-8 col-sm-pull-4">
+						<div class="row">
+							<div class="col-sm-12" id="tickets-list">
+								<span class="loader"></span>
+								<script id="tickets-list-template" type="text/x-handlebars-template">
+									{{#each tickets}}
+										<div class="col-sm-6 col-md-4 col-lg-3">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<p class="text-center ticket-icon"><i class="fa fa-ticket fa-4x"></i></p>
+													<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
+													<p class="text-center ticket-price">{{priceRange base_prices}}</p>
+													<a role="button" class="btn btn-primary btn-block btn-sm add-ticket" data-id="{{id}}">Add</a>
+												</div>
+											</div>
+										</div>
+									{{/each}}
+								</script>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12" id="package-list">
+								<span class="loader"></span>
+								<script id="package-list-template" type="text/x-handlebars-template">
+									{{#each packages}}
+										<div class="col-sm-6 col-md-4 col-lg-3">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<p class="text-center ticket-icon"><i class="fa fa-tags fa-4x"></i></p>
+													<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
+													<p class="text-center ticket-price">{{priceRange base_prices}}</p>													
+														<ul class="list-group">
+															{{#each tickets}}
+																<li class="list-group-item package-ticket-item">
+																	<span class="badge">{{pivot.quantity}}</span>
+																	<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+																</li>
+															{{/each}}
+														</ul>											
+													<a role="button" class="btn btn-warning btn-block btn-sm add-package" data-id="{{id}}">Add</a>
+												</div>
+											</div>
+										</div>
+									{{/each}}
+								</script>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="row">
@@ -464,9 +513,20 @@
 								</div>
 								<script id="session-tickets-template" type="text/x-handlebars-template">
 									{{#each tickets}}
-										<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
+										<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
+											<span class="label label-default">Ticket</span>
 											{{{name}}}
 										</a>
+									{{/each}}
+								</script>
+								<script id="session-packages-template" type="text/x-handlebars-template">
+									{{#each packages}}
+										{{#each tickets}}
+											<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
+												<span class="label label-warning">{{{../name}}}</span>
+												{{{name}}}
+											</a>
+										{{/each}}
 									{{/each}}
 								</script>
 							</div>
@@ -569,7 +629,15 @@
 								{{#each details}}
 									<li class="list-group-item">
 										<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
-										<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{{ticket.name}}}</span></p>
+										<p class="list-group-item-text">
+											<strong>Ticket:</strong> 
+											{{#if packagefacade}} 
+												<span class="label label-warning">{{{packagefacade.package.name}}}</span>
+											{{else}}
+												<span class="label label-default">Ticket</span>
+											{{/if}}
+											<span class="ticket-name">{{{ticket.name}}}</span>
+										</p>
 										<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
 										<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 										<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-id="{{id}}">Unassign</a>
@@ -577,7 +645,7 @@
 								{{else}}
 									<li class="list-group-item">
 										<p class="list-group-item-text text-muted">
-											No tickets assigned yet...
+											No tickets/packages assigned yet...
 										</p>
 									</li>
 								{{/each}}
@@ -614,7 +682,14 @@
 								{{#each details}}
 									<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
 										<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
-										<p class="list-group-item-text"><strong>Ticket:</strong> <span class="ticket-name">{{{ticket.name}}}</span></p>
+										<p class="list-group-item-text"><strong>Ticket:</strong> 
+											{{#if packagefacade}} 
+												<span class="label label-warning">{{{packagefacade.package.name}}}</span>
+											{{else}}
+												<span class="label label-default">Ticket</span>
+											{{/if}}
+											<span class="ticket-name">{{{ticket.name}}}</span>
+										</p>
 										<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
 										<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
 									</a>
@@ -672,7 +747,14 @@
 									<div class="row">
 										<div class="col-md-6">
 											<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
-											<p class="list-group-item-text"><strong>Ticket:</strong> {{{ticket.name}}}</p>
+											<p class="list-group-item-text"><strong>Ticket:</strong> 
+												{{#if packagefacade}} 
+													<span class="label label-warning">{{{packagefacade.package.name}}}</span>
+												{{else}}
+													<span class="label label-default">Ticket</span>
+												{{/if}}
+												{{{ticket.name}}}
+											</p>
 											<p class="list-group-item-text"><strong>Trip:</strong> {{{session.trip.name}}}</p>
 											<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
 										</div>
@@ -721,7 +803,15 @@
 									<a href="javascript:void(0);" class="list-group-item list-group-radio accommodation-customer" data-id="{{id}}">
 										<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h4>
 										{{#each bookingdetails}}
-											<p class="list-group-item-text"><strong>Ticket: </strong>{{{ticket.name}}}</p>
+											<p class="list-group-item-text">
+												<strong>Ticket:</strong> 
+												{{#if packagefacade}} 
+													<span class="label label-warning">{{{packagefacade.package.name}}}</span>
+												{{else}}
+													<span class="label label-default">Ticket</span>
+												{{/if}}
+												<span class="ticket-name">{{{ticket.name}}}</span>
+											</p>
 											<p class="list-group-item-text"><strong>Trip: </strong>{{{session.trip.name}}}</p>
 											<p class="list-group-item-text session-start" data-date="{{session.start}}"><strong>Date: </strong>{{friendlyDate session.start}}</p>
 										{{/each}}
@@ -880,7 +970,15 @@
 														<div class="row">
 															<div class="col-md-6">
 																<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
-																<p class="list-group-item-text"><strong>Ticket:</strong> {{{ticket.name}}} ({{{ticket.decimal_price}}})</p>
+																<p class="list-group-item-text">
+																	<strong>Ticket:</strong> 
+																	{{#if packagefacade}} 
+																		<span class="label label-warning">{{{packagefacade.package.name}}}</span>
+																	{{else}}
+																		<span class="label label-default">Ticket</span>
+																	{{/if}}
+																	<span class="ticket-name">{{{ticket.name}}}</span>
+																</p>
 																<p class="list-group-item-text"><strong>Trip:</strong> {{{session.trip.name}}}</p>
 																<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
 															</div>

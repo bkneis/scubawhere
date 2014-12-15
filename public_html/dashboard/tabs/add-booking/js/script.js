@@ -88,6 +88,7 @@ Handlebars.registerHelper("countryName", function(id) {
 
 var agentTemplate          = Handlebars.compile($("#agents-list-template").html());
 var ticketTemplate         = Handlebars.compile($("#tickets-list-template").html());
+var packageTemplate         = Handlebars.compile($("#package-list-template").html());
 var tripTemplate           = Handlebars.compile($("#trips-list-template").html());
 var addonsTemplate         = Handlebars.compile($("#addons-list-template").html());
 var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
@@ -110,6 +111,13 @@ Ticket.getAllTickets(function(data){
 	window.tickets = _.indexBy(data, 'id');
 	$("#tickets-list").html(ticketTemplate({tickets:window.tickets}));
 	window.promises.loadedTickets.resolve();
+});
+
+window.promises.loadedPackages = $.Deferred();
+Package.getAllPackages(function(data){
+	window.packages = _.indexBy(data, 'id');
+	$("#package-list").html(packageTemplate({packages:window.packages}));
+	window.promises.loadedPackages.resolve();
 });
 
 window.promises.loadedCustomers = $.Deferred();
@@ -206,15 +214,17 @@ $('#source-tab').on('click', '.source-finish', function() {
 });
 
 /*
-*************************
-******** Tickets ********
-*************************
+****************************
+***** Tickets/Packages *****
+****************************
 */
 
 var ticketsBasketTemplate = Handlebars.compile($("#selected-tickets-template").html());
+var packagesBasketTemplate = Handlebars.compile($("#selected-packages-template").html());
 
 $('[data-target="#ticket-tab"]').on('show.bs.tab', function () {
 	$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+	$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
 });
 
 window.promises.loadedTickets.done(function() {
@@ -229,25 +239,64 @@ window.promises.loadedTickets.done(function() {
 			booking.selectedTickets[id] = window.tickets[id];
 			booking.selectedTickets[id].qty = 1;
 		}
+
 		booking.store();
 
 		//Draw the basket
 		$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
 	});
+
+	$('#ticket-tab').on('click', '.remove-ticket', function() {
+
+		var id = $(this).data('id');
+
+		//Lower quantity, if last ticket, remove from selected tickets.
+		if(booking.selectedTickets[id].qty > 1) {
+			booking.selectedTickets[id].qty--;
+		}else{
+			delete booking.selectedTickets[id];
+		}
+
+		booking.store();
+
+		$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+	});
 });
 
-$('#ticket-tab').on('click', '.remove-ticket', function() {
+window.promises.loadedPackages.done(function() {
+	$('#ticket-tab').on('click', '.add-package', function() {
+
+		var id = $(this).data('id');
+
+		//Add ticket to selectedTickets if new, otherwise increase qty
+		if(typeof booking.selectedPackages[id] != "undefined") {
+			booking.selectedPackages[id].qty++;
+		}else{
+			booking.selectedPackages[id] = window.packages[id];
+			booking.selectedPackages[id].qty = 1;
+		}
+
+		booking.store();
+
+		//Draw the basket
+		$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
+	});
+});
+
+$('#ticket-tab').on('click', '.remove-package', function() {
+
 	var id = $(this).data('id');
 
 	//Lower quantity, if last ticket, remove from selected tickets.
-	if(booking.selectedTickets[id].qty > 1) {
-		booking.selectedTickets[id].qty--;
+	if(booking.selectedPackages[id].qty > 1) {
+		booking.selectedPackages[id].qty--;
 	}else{
-		delete booking.selectedTickets[id];
+		delete booking.selectedPackages[id];
 	}
+
 	booking.store();
 
-	$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+	$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
 });
 
 $('#ticket-tab').on('click', '.tickets-finish', function() {
@@ -471,15 +520,17 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 *************************
 */
 
-var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
-var sessionTicketsTemplate   = Handlebars.compile($("#session-tickets-template").html());
-var bookingDetailsTemplate   = Handlebars.compile($("#booking-details-template").html());
+var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-template").html());
+var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
+var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
+var bookingDetailsTemplate   	= Handlebars.compile($("#booking-details-template").html());
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function () {
 	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#session-customers").children().first().addClass('active');
 
 	$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
+	$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
 	$("#session-tickets").children().first().addClass('active');
 
 	$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
@@ -502,13 +553,14 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 	if( $('#session-tickets .active').length !== 0 )
 		params.ticket_id = $('#session-tickets .active').first().data('id');
 
-	compileSessionsList(params);
+	redrawSessionsList(params);
 });
 
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
+	var package_id = $('#session-tickets').children('.active').first().data('package-id');
 	var ticket_id   = $('#session-tickets').children('.active').first().data('id');
 	var customer_id = $('#session-customers').children('.active').first().data('id');
 	var session_id  = btn.data('id');
@@ -516,6 +568,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var params = {};
 	params._token      = window.token;
 	params.customer_id = customer_id;
+	params.package_id 	= package_id;
 	params.ticket_id   = ticket_id;
 	params.session_id  = session_id;
 
@@ -527,7 +580,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			params.ticket_id = $('#session-tickets .active').first().data('id');
 		}
 
-		compileSessionsList(params);
+		redrawSessionsList(params);
 
 		//List customer's bookingdetails in selectedCustomers for accommodations tab
 		var details = _.filter(booking.bookingdetails, function (detail) {
@@ -559,7 +612,7 @@ $('#session-tab').on('click', '.unassign-session', function() {
 		if( $('#session-tickets .active').length !== 0 )
 			params.ticket_id = $('#session-tickets .active').first().data('id');
 
-		compileSessionsList(params);
+		redrawSessionsList(params);
 
 		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
 	}, function error(xhr) {
@@ -864,7 +917,7 @@ $(document).ready(function() {
 
 });
 
-function compileSessionsList(params) {
+function redrawSessionsList(params) {
 
 	if(typeof(params) === 'undefined') params = "";
 
