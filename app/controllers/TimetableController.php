@@ -33,7 +33,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -184,14 +184,14 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$session = Auth::user()->sessions()->findOrFail( Input::get('id') );
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$session->delete();
+		$departure->delete();
 
 		return Response::json( array('status' => 'OK. Session deactivated'), 200 ); // 200 OK
 	}
@@ -201,14 +201,14 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$session = Auth::user()->sessions()->findOrFail( Input::get('id') );
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( !$session->forceDelete() )
+		if( !$departure->forceDelete() )
 		{
 			return Response::json( array('errors' => array('Cannot delete session. It has already been booked!')), 409 ); // 409 Conflict
 		}

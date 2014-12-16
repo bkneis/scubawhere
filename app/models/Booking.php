@@ -57,7 +57,7 @@ class Booking extends Ardent {
 	}
 
 	public function getArrivalDateAttribute() {
-		$earliestDeparture = $this->sessions()->orderBy('sessions.start', 'ASC')->first();
+		$earliestDeparture = $this->departures()->orderBy('sessions.start', 'ASC')->first(array('sessions.*'));
 		if(!empty($earliestDeparture))
 			$earliestDeparture = new DateTime($earliestDeparture->start, new DateTimeZone( Auth::user()->timezone ));
 
@@ -131,7 +131,12 @@ class Booking extends Ardent {
 
 	public function sessions()
 	{
-		return $this->belongsToMany('Departure', 'booking_details', 'booking_id', 'session_id');
+		return $this->belongsToMany('Departure', 'booking_details', 'booking_id', 'session_id')->withTimestamps();
+	}
+
+	public function departures()
+	{
+		return $this->belongsToMany('Departure', 'booking_details', 'booking_id', 'session_id')->withTimestamps();
 	}
 
 	public function company()

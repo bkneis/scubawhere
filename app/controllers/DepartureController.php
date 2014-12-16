@@ -15,7 +15,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail();
+			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -317,7 +317,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -417,7 +417,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -441,7 +441,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail();
+			$departure = Auth::user()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -464,7 +464,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->firstOrFail();
+			$departure = Auth::user()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
