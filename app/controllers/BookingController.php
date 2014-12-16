@@ -248,7 +248,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail();
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -259,14 +259,14 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$packagefacade = $booking->packagefacades()->findOrFail( Input::get('packagefacade_id') );
+				$packagefacade = $booking->packagefacades()->where('packagefacades.id', Input::get('packagefacade_id'))->firstOrFail(array('packagefacades.*'));
 			}
 			catch(ModelNotFoundException $e)
 			{
 				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
 			}
 
-			$package = $packagefacade->package();
+			$package = $packagefacade->package;
 		}
 		elseif( Input::has('package_id') )
 		{
