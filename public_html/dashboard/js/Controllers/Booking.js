@@ -160,21 +160,23 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 	params.booking_id = this.id;
 
 	// Determine whether we need to inject a packagefacade_id into the request
-	var existingDetail = !params.package_id || _.find(this.bookingdetails, function(detail) {
-		// First, test the customer_id
-		if( detail.customer.id != params.customer_id )
-			return false;
+	if(typeof params.packagefacade_id === 'undefined' && typeof params.package_id !== 'undefined') {
+		var existingDetail = _.find(this.bookingdetails, function(detail) {
+			// First, test the customer_id
+			if( detail.customer.id != params.customer_id )
+				return false;
 
-		// Next, check if packagefacade exist
-		if( detail.packagefacade === undefined )
-			return false;
+			// Next, check if a packagefacade exists
+			if( typeof detail.packagefacade === 'undefined' )
+				return false;
 
-		// Next, check if the packagefacade includes the requested package
-		if( detail.packagefacade.package.id == params.package_id)
-			return true;
-	});
-	if( params.package_id && existingDetail !== undefined )
-		params.packagefacade_id = existingDetail.packagefacade.id;
+			// Next, check if the packagefacade includes the requested package
+			if( detail.packagefacade.package.id == params.package_id)
+				return true;
+		});
+		if(typeof existingDetail !== 'undefined') // _.find() returns `undefined` if no match is found
+			params.packagefacade_id = existingDetail.packagefacade.id;
+	}
 
 	$.ajax({
 		type: "POST",
