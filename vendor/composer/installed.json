@@ -857,123 +857,6 @@
         ]
     },
     {
-        "name": "laravel/framework",
-        "version": "v4.2.11",
-        "version_normalized": "4.2.11.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel/framework.git",
-            "reference": "e29253c7f29e3b1ca716de7fe309b272e3ddf47d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel/framework/zipball/e29253c7f29e3b1ca716de7fe309b272e3ddf47d",
-            "reference": "e29253c7f29e3b1ca716de7fe309b272e3ddf47d",
-            "shasum": ""
-        },
-        "require": {
-            "classpreloader/classpreloader": "~1.0.2",
-            "d11wtq/boris": "~1.0",
-            "filp/whoops": "1.1.*",
-            "ircmaxell/password-compat": "~1.0",
-            "jeremeamia/superclosure": "~1.0.1",
-            "monolog/monolog": "~1.6",
-            "nesbot/carbon": "~1.0",
-            "patchwork/utf8": "1.1.*",
-            "php": ">=5.4.0",
-            "phpseclib/phpseclib": "0.3.*",
-            "predis/predis": "0.8.*",
-            "stack/builder": "~1.0",
-            "swiftmailer/swiftmailer": "~5.1",
-            "symfony/browser-kit": "2.5.*",
-            "symfony/console": "2.5.*",
-            "symfony/css-selector": "2.5.*",
-            "symfony/debug": "2.5.*",
-            "symfony/dom-crawler": "2.5.*",
-            "symfony/finder": "2.5.*",
-            "symfony/http-foundation": "2.5.*",
-            "symfony/http-kernel": "2.5.*",
-            "symfony/process": "2.5.*",
-            "symfony/routing": "2.5.*",
-            "symfony/security-core": "2.5.*",
-            "symfony/translation": "2.5.*"
-        },
-        "replace": {
-            "illuminate/auth": "self.version",
-            "illuminate/cache": "self.version",
-            "illuminate/config": "self.version",
-            "illuminate/console": "self.version",
-            "illuminate/container": "self.version",
-            "illuminate/cookie": "self.version",
-            "illuminate/database": "self.version",
-            "illuminate/encryption": "self.version",
-            "illuminate/events": "self.version",
-            "illuminate/exception": "self.version",
-            "illuminate/filesystem": "self.version",
-            "illuminate/foundation": "self.version",
-            "illuminate/hashing": "self.version",
-            "illuminate/html": "self.version",
-            "illuminate/http": "self.version",
-            "illuminate/log": "self.version",
-            "illuminate/mail": "self.version",
-            "illuminate/pagination": "self.version",
-            "illuminate/queue": "self.version",
-            "illuminate/redis": "self.version",
-            "illuminate/remote": "self.version",
-            "illuminate/routing": "self.version",
-            "illuminate/session": "self.version",
-            "illuminate/support": "self.version",
-            "illuminate/translation": "self.version",
-            "illuminate/validation": "self.version",
-            "illuminate/view": "self.version",
-            "illuminate/workbench": "self.version"
-        },
-        "require-dev": {
-            "aws/aws-sdk-php": "~2.6",
-            "iron-io/iron_mq": "~1.5",
-            "mockery/mockery": "~0.9",
-            "pda/pheanstalk": "~2.1",
-            "phpunit/phpunit": "~4.0"
-        },
-        "suggest": {
-            "doctrine/dbal": "Allow renaming columns and dropping SQLite columns."
-        },
-        "time": "2014-10-04 18:48:27",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/Illuminate/Queue/IlluminateQueueClosure.php"
-            ],
-            "files": [
-                "src/Illuminate/Support/helpers.php"
-            ],
-            "psr-0": {
-                "Illuminate": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylorotwell@gmail.com"
-            }
-        ],
-        "description": "The Laravel Framework.",
-        "keywords": [
-            "framework",
-            "laravel"
-        ]
-    },
-    {
         "name": "doctrine/annotations",
         "version": "v1.2.1",
         "version_normalized": "1.2.1.0",
@@ -2525,6 +2408,123 @@
             "orm",
             "sql",
             "validation"
+        ]
+    },
+    {
+        "name": "laravel/framework",
+        "version": "v4.2.12",
+        "version_normalized": "4.2.12.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/framework.git",
+            "reference": "70a60f2ff9b96b3fcd88a68ef5382557733fe671"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/framework/zipball/70a60f2ff9b96b3fcd88a68ef5382557733fe671",
+            "reference": "70a60f2ff9b96b3fcd88a68ef5382557733fe671",
+            "shasum": ""
+        },
+        "require": {
+            "classpreloader/classpreloader": "~1.0.2",
+            "d11wtq/boris": "~1.0",
+            "filp/whoops": "1.1.*",
+            "ircmaxell/password-compat": "~1.0",
+            "jeremeamia/superclosure": "~1.0.1",
+            "monolog/monolog": "~1.6",
+            "nesbot/carbon": "~1.0",
+            "patchwork/utf8": "1.1.*",
+            "php": ">=5.4.0",
+            "phpseclib/phpseclib": "0.3.*",
+            "predis/predis": "0.8.*",
+            "stack/builder": "~1.0",
+            "swiftmailer/swiftmailer": "~5.1",
+            "symfony/browser-kit": "2.5.*",
+            "symfony/console": "2.5.*",
+            "symfony/css-selector": "2.5.*",
+            "symfony/debug": "2.5.*",
+            "symfony/dom-crawler": "2.5.*",
+            "symfony/finder": "2.5.*",
+            "symfony/http-foundation": "2.5.*",
+            "symfony/http-kernel": "2.5.*",
+            "symfony/process": "2.5.*",
+            "symfony/routing": "2.5.*",
+            "symfony/security-core": "2.5.*",
+            "symfony/translation": "2.5.*"
+        },
+        "replace": {
+            "illuminate/auth": "self.version",
+            "illuminate/cache": "self.version",
+            "illuminate/config": "self.version",
+            "illuminate/console": "self.version",
+            "illuminate/container": "self.version",
+            "illuminate/cookie": "self.version",
+            "illuminate/database": "self.version",
+            "illuminate/encryption": "self.version",
+            "illuminate/events": "self.version",
+            "illuminate/exception": "self.version",
+            "illuminate/filesystem": "self.version",
+            "illuminate/foundation": "self.version",
+            "illuminate/hashing": "self.version",
+            "illuminate/html": "self.version",
+            "illuminate/http": "self.version",
+            "illuminate/log": "self.version",
+            "illuminate/mail": "self.version",
+            "illuminate/pagination": "self.version",
+            "illuminate/queue": "self.version",
+            "illuminate/redis": "self.version",
+            "illuminate/remote": "self.version",
+            "illuminate/routing": "self.version",
+            "illuminate/session": "self.version",
+            "illuminate/support": "self.version",
+            "illuminate/translation": "self.version",
+            "illuminate/validation": "self.version",
+            "illuminate/view": "self.version",
+            "illuminate/workbench": "self.version"
+        },
+        "require-dev": {
+            "aws/aws-sdk-php": "~2.6",
+            "iron-io/iron_mq": "~1.5",
+            "mockery/mockery": "~0.9",
+            "pda/pheanstalk": "~2.1",
+            "phpunit/phpunit": "~4.0"
+        },
+        "suggest": {
+            "doctrine/dbal": "Allow renaming columns and dropping SQLite columns."
+        },
+        "time": "2014-12-11 17:14:36",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/Illuminate/Queue/IlluminateQueueClosure.php"
+            ],
+            "files": [
+                "src/Illuminate/Support/helpers.php"
+            ],
+            "psr-0": {
+                "Illuminate": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            }
+        ],
+        "description": "The Laravel Framework.",
+        "keywords": [
+            "framework",
+            "laravel"
         ]
     }
 ]
