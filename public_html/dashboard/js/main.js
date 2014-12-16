@@ -36,7 +36,7 @@ $(function(){
 //************************************
 
 function getToken(callback) {
-	if(typeof window.token === 'string') {
+	if(typeof window.token === 'string' && window.token.length > 0) {
 		if(typeof callback === 'function') callback(window.token);
 		return window.token;
 	}
