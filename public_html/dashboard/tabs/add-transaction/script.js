@@ -74,7 +74,12 @@ $(function() {
 		$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 	});
 
-	$('#recieved-at-input').val( moment().format('YYYY-MM-DD') );
+	$('#received-at-input').val( moment().format('YYYY-MM-DD') );
+	$('#received-at-input').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		maxDate: moment(),
+	});
 
 	$('#wrapper').on('submit', '#add-transaction-form', function(event) {
 		event.preventDefault();
@@ -90,6 +95,12 @@ $(function() {
 			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
 			$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
+			$('#received-at-input').val( moment().format('YYYY-MM-DD') );
+			$('#received-at-input').datetimepicker({
+				pickDate: true,
+				pickTime: false,
+				maxDate: moment(),
+			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
 			_.each(data.errors, function(error) {

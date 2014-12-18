@@ -55,7 +55,7 @@
 					<div class="form-group">
 						<label class="col-sm-3 col-sm-offset-1 control-label">Received at</label>
 						<div class="col-sm-6">
-							<input name="received_at" type="text" class="form-control" id="recieved-at-input">
+							<input name="received_at" type="text" class="form-control" id="received-at-input" data-date-format="YYYY-MM-DD">
 						</div>
 					</div>
 
