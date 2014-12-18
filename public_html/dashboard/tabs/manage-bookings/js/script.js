@@ -138,7 +138,13 @@ $(function() {
 
 	$('input.datepicker').datetimepicker({
 		pickDate: true,
-		pickTime: false
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	$('#find-booking-form').on('submit', function(event) {

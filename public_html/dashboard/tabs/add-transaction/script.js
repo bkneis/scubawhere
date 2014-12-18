@@ -79,6 +79,12 @@ $(function() {
 		pickDate: true,
 		pickTime: false,
 		maxDate: moment(),
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	$('#wrapper').on('submit', '#add-transaction-form', function(event) {
@@ -100,6 +106,12 @@ $(function() {
 				pickDate: true,
 				pickTime: false,
 				maxDate: moment(),
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up:   'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				},
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);

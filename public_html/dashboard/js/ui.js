@@ -54,18 +54,36 @@ $(function(){
 	$('input.datetimepicker').datetimepicker({
 		pickDate: true,
 		pickTime: true,
-		minuteStepping: 5
+		minuteStepping: 5,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	$('input.datepicker').datetimepicker({
 		pickDate: true,
-		pickTime: false
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	$('input.timepicker').datetimepicker({
 		pickDate: false,
 		pickTime: true,
-		minuteStepping: 5
+		minuteStepping: 5,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
