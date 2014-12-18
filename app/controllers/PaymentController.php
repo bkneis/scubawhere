@@ -63,6 +63,10 @@ class PaymentController extends Controller {
 		$data['paymentgateway_id'] = Input::get('paymentgateway_id');
 		$data['received_at']       = Input::get('received_at');
 
+		// Check that received_at date lies in the past
+		if(!Helper::isPast($data['received_at']))
+			return Response::json( array('errors' => array('The received_at date must lie in the past.')), 406 ); // 406 Not Acceptable
+
 		// Check if amount is higher than what needs to be paid
 		$sum       = $booking->payments()->sum('amount');
 		$remaining = $booking->price - $sum;
