@@ -381,8 +381,9 @@ $('#customer-tab').on('click', '.remove-customer', function() {
 	// Check if we just removed the lead customer
 	if(booking.lead_customer.id == id) {
 		booking.lead_customer = false;
+		var params = {};
 		if(_.size(booking.selectedCustomers) > 0) {
-			var params = {
+			params = {
 				_token: window.token,
 				customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
 			};
@@ -394,7 +395,7 @@ $('#customer-tab').on('click', '.remove-customer', function() {
 			});
 		}
 		else {
-			var params = {
+			params = {
 				_token: window.token,
 				customer_id: null // unset lead_customer_id on the server
 			};
@@ -568,7 +569,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var params = {};
 	params._token      = window.token;
 	params.customer_id = customer_id;
-	params.package_id 	= package_id;
+	if(package_id) params.package_id = package_id;
 	params.ticket_id   = ticket_id;
 	params.session_id  = session_id;
 
@@ -929,12 +930,12 @@ function redrawSessionsList(params) {
 
 		window.promises.loadedBoatrooms.done(function() {
 			// Generate popovers
-			_.each(window.sessions, function(session) {rs = [];
+			_.each(window.sessions, function(session) {
 				var html = '<table>';
 				_.each(session.capacity[2], function(capacity, key) {
 					html += '<tr>';
 					html += 	'<td>' + window.boatrooms[key].name + '</td>';
-					html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>'
+					html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>';
 					html += '</tr>';
 				});
 				html += '</table>';

@@ -336,13 +336,13 @@ class BookingController extends Controller {
 		}
 
 		$boatroom_id = false;
-		$departureBoatBoatrooms = $departure->boat->boatrooms()->lists('id');
+		$boatBoatrooms   = $departure->boat->boatrooms()->lists('id');
 		$ticketBoatrooms = $ticket->boatrooms()->lists('id');
 
 		// Check if the session's boat's boatrooms are allowed for the ticket
 		if( count($ticketBoatrooms) > 0 )
 		{
-			$intersect = array_intersect($departureBoatBoatrooms, $ticketBoatrooms);
+			$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
 			if( count($intersect) === 0 )
 				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatroom(s).')), 403 ); // 403 Forbidden
 
@@ -360,12 +360,12 @@ class BookingController extends Controller {
 			// The trip is overnight and we do need a boatroom_id
 
 			// Just in case, check if the boat has boatrooms assigned
-			if( count($departureBoatBoatrooms) === 0 )
+			if( count($boatBoatrooms) === 0 )
 				return Response::json( array('errors' => array('Could not assign the customer, the boat has no boatrooms.')), 412 ); // 412 Precondition Failed
 
 			// Check if the boat only has one boatroom assigned
-			if( count($departureBoatBoatrooms) === 1 )
-				$boatroom_id = $departureBoatBoatrooms[0];
+			if( count($boatBoatrooms) === 1 )
+				$boatroom_id = $boatBoatrooms[0];
 
 			// Check if the boatroom is still not determined
 			if($boatroom_id === false)
@@ -376,7 +376,7 @@ class BookingController extends Controller {
 
 				// Check if the submitted boatroom_id is allowed
 				$boatroom_id = Input::get('boatroom_id');
-				if( !in_array($boatroom_id, $departureBoatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
+				if( !in_array($boatroom_id, $boatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
 					return Response::json( array('errors' => array('The selected boatroom cannot be booked for this session.')), 403 ); // 403 Forbidden
 			}
 			else
