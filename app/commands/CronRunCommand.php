@@ -89,7 +89,7 @@ class CronRunCommand extends Command {
 		$this->everyFiveMinutes(function()
 		{
 			/**
-			 * Unreserve all reserved bookings where reserved datetime is 15 minutes overdue
+			 * Unreserve all reserved bookings where reserved datetime is overdue
 			 */
 			$bookings = Booking::whereNotNull('reserved')->with('company')->get();
 			$ids = array();
@@ -105,18 +105,18 @@ class CronRunCommand extends Command {
 
 			if(count($ids) > 0)
 			{
-			// Create a string containing as many ?,?... as there are IDs
-			$clause = implode(',', array_fill(0, count($ids), '?'));
-			// This query deliberately does not set the `status` to null or 'saved'.
-			// This way, we still know which bookings where reserved but have expired.
-			DB::update("UPDATE bookings SET `reserved` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids);
+				// Create a string containing as many ?,?... as there are IDs
+				$clause = implode(',', array_fill(0, count($ids), '?'));
+				// This query deliberately does not set the `status` to null or 'saved'.
+				// This way, we still know which bookings where reserved but have expired.
+				DB::update("UPDATE bookings SET `reserved` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids);
 			}
 
 			$this->messages[] = count($ids) . ' expired bookings unreserved';
 
 			/**
 			 * Delete all unsaved bookings older than 1h
-			 * (This includes abandoned bookings, which are reserved for 15 min but then set back to status = null)
+			 * (This includes abandoned bookings, which are deleted 1h after their `reserved` date is set to NULL)
 			 */
 			$before = date('Y-m-d H:i:s', time() - 1 * 60 * 60);
 			$affectedRows = Booking::where('status', null)
@@ -127,12 +127,14 @@ class CronRunCommand extends Command {
 			/**
 			 * Delete all expired reserved bookings older than 24h
 			 */
+			/*
 			$before = date('Y-m-d H:i:s', time() - 24 * 60 * 60);
 			$affectedRows = Booking::where('status', 'reserved')
 			                        ->whereNull('reserved')
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
 			$this->messages[] = $affectedRows . ' day-old expired bookings deleted';
+			*/
 		});
 
 		$this->hourly(function()
