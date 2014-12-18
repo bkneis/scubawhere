@@ -97,7 +97,7 @@ Booking.prototype.store = function() {
 	window.basil.set('booking_' + this.id, {
 		currentTab: this.currentTab,
 		selectedCustomers: this.selectedCustomers,
-		selectedTickets: this.selectedTickets,
+		selectedTickets:   this.selectedTickets,
 		selectedPackages:  this.selectedPackages,
 	});
 
@@ -211,7 +211,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
-			successFn(data.status);
+			successFn(data.status, params.customer_id);
 		},
 		error: errorFn
 	});

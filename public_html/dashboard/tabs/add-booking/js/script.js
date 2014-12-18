@@ -94,6 +94,7 @@ var addonsTemplate         = Handlebars.compile($("#addons-list-template").html(
 var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
 var customersTemplate      = Handlebars.compile($("#customers-list-template").html());
 var countriesTemplate      = Handlebars.compile($("#countries-template").html());
+var boatroomModalTemplate  = Handlebars.compile($("#boatroom-select-modal-template").html());
 
 /**
  * Load all data in order of requirement
@@ -560,8 +561,9 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
+	btn.addClass('waiting');
 
-	var package_id = $('#session-tickets').children('.active').first().data('package-id');
+	var package_id  = $('#session-tickets').children('.active').first().data('package-id');
 	var ticket_id   = $('#session-tickets').children('.active').first().data('id');
 	var customer_id = $('#session-customers').children('.active').first().data('id');
 	var session_id  = btn.data('id');
@@ -573,8 +575,83 @@ $('#session-tab').on('click', '.assign-session', function() {
 	params.ticket_id   = ticket_id;
 	params.session_id  = session_id;
 
-	booking.addDetail(params, function success(status) {
-		$('.free-spaces[data-id="'+session_id+'"]').html('<i class="fa fa-refresh fa-spin"></i>');
+	// Determine if we need to submit a boatroom_id
+	var session = window.sessions[session_id];
+	var trip    = window.trips[session.trip_id];
+
+	var start = moment(session.start);
+	var end   = moment(start).add(trip.duration, 'hours');
+
+	if(start.format('YYYY-MM-DD') !== end.format('YYYY-MM-DD')) {
+		// The trip is overnight
+
+		var ticket  = window.tickets[ticket_id];
+
+		var boatroomDetermined = false;
+		var boatBoatrooms   = _.pluck(session.boat.boatrooms, 'id');
+		var ticketBoatrooms = _.pluck(ticket.boatrooms, 'id');
+		var intersectingBoatrooms = [];
+
+		if(boatBoatrooms.length === 1)
+			boatroomDetermined = true;
+		else if(ticketBoatrooms.length > 0) {
+			intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
+			if(intersectingBoatrooms.length === 1)
+				boatroomDetermined = true;
+		}
+
+		if(boatroomDetermined === false) {
+			// If the boatroom could not be determined, we need to ask the user:
+			var boatrooms = {};
+			if(intersectingBoatrooms.length > 0) {
+				boatrooms = _.map(intersectingBoatrooms, function(value) {
+					return window.boatrooms[value];
+				});
+			} else {
+				boatrooms = session.boat.boatrooms;
+			}
+
+			$('#modalWindows')
+			.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
+			.children('#modal-boatroom-select')             // Directly find it and use it
+			.data('params', params)                         // Assign the eventObject to the modal DOM element
+			.reveal({                                       // Open modal window | Options:
+				animation: 'fadeAndPop',                    // fade, fadeAndPop, none
+				animationSpeed: 300,                        // how fast animtions are
+				closeOnBackgroundClick: true,               // if you click background will modal close?
+				dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
+				btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
+				onFinishModal: function() {
+					// Aborted action
+					if(!window.sw.modalClosedBySelection)
+						this.btn.html('Assign');            // Reset the button
+					else
+						delete window.sw.modalClosedBySelection;
+
+					$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
+				}
+			});
+		}
+	} else {
+		submitAddDetail(params);
+	}
+});
+
+$('#modalWindows').on('click', '.boatroom-select-option ', function(event) {
+	var modal = $(event.target).closest('.reveal-modal');
+	var params = modal.data('params');
+	params.boatroom_id = $(event.target).data('id');
+
+	submitAddDetail(params);
+
+	// Close modal window
+	window.sw.modalClosedBySelection = true;
+	$('#modal-boatroom-select .close-reveal-modal').click();
+});
+
+function submitAddDetail(params) {
+	booking.addDetail(params, function success(status, customer_id) {
+		// $('.free-spaces[data-id="' + params.session_id + '"]').html('<i class="fa fa-refresh fa-spin"></i>');
 
 		var params = $("#session-filters").serializeObject();
 		if( $('#session-tickets .active').length !== 0 ) {
@@ -596,9 +673,11 @@ $('#session-tab').on('click', '.assign-session', function() {
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
+		var btn = $('#sessions-table .waiting');
 		btn.html('Assign');
+		btn.removeClass('waiting');
 	});
-});
+}
 
 $('#session-tab').on('click', '.unassign-session', function() {
 	var btn = $(this);

@@ -195,7 +195,7 @@
 												<div class="panel-body">
 													<p class="text-center ticket-icon"><i class="fa fa-tags fa-4x"></i></p>
 													<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
-													<p class="text-center ticket-price">{{priceRange base_prices}}</p>													
+													<p class="text-center ticket-price">{{priceRange base_prices}}</p>
 														<ul class="list-group">
 															{{#each tickets}}
 																<li class="list-group-item package-ticket-item">
@@ -203,7 +203,7 @@
 																	<i class="fa fa-ticket fa-fw"></i> {{{name}}}
 																</li>
 															{{/each}}
-														</ul>											
+														</ul>
 													<a role="button" class="btn btn-warning btn-block btn-sm add-package" data-id="{{id}}">Add</a>
 												</div>
 											</div>
@@ -630,8 +630,8 @@
 									<li class="list-group-item">
 										<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
 										<p class="list-group-item-text">
-											<strong>Ticket:</strong> 
-											{{#if packagefacade}} 
+											<strong>Ticket:</strong>
+											{{#if packagefacade}}
 												<span class="label label-warning">{{{packagefacade.package.name}}}</span>
 											{{else}}
 												<span class="label label-default">Ticket</span>
@@ -682,8 +682,8 @@
 								{{#each details}}
 									<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
 										<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
-										<p class="list-group-item-text"><strong>Ticket:</strong> 
-											{{#if packagefacade}} 
+										<p class="list-group-item-text"><strong>Ticket:</strong>
+											{{#if packagefacade}}
 												<span class="label label-warning">{{{packagefacade.package.name}}}</span>
 											{{else}}
 												<span class="label label-default">Ticket</span>
@@ -747,8 +747,8 @@
 									<div class="row">
 										<div class="col-md-6">
 											<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
-											<p class="list-group-item-text"><strong>Ticket:</strong> 
-												{{#if packagefacade}} 
+											<p class="list-group-item-text"><strong>Ticket:</strong>
+												{{#if packagefacade}}
 													<span class="label label-warning">{{{packagefacade.package.name}}}</span>
 												{{else}}
 													<span class="label label-default">Ticket</span>
@@ -804,8 +804,8 @@
 										<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h4>
 										{{#each bookingdetails}}
 											<p class="list-group-item-text">
-												<strong>Ticket:</strong> 
-												{{#if packagefacade}} 
+												<strong>Ticket:</strong>
+												{{#if packagefacade}}
 													<span class="label label-warning">{{{packagefacade.package.name}}}</span>
 												{{else}}
 													<span class="label label-default">Ticket</span>
@@ -971,8 +971,8 @@
 															<div class="col-md-6">
 																<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
 																<p class="list-group-item-text">
-																	<strong>Ticket:</strong> 
-																	{{#if packagefacade}} 
+																	<strong>Ticket:</strong>
+																	{{#if packagefacade}}
 																		<span class="label label-warning">{{{packagefacade.package.name}}}</span>
 																	{{else}}
 																		<span class="label label-default">Ticket</span>
@@ -1099,6 +1099,23 @@
 		</div>
 	</div>
 
+	<div id="modalWindows" style="height: 0;">
+		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
+			<div id="modal-boatroom-select" class="reveal-modal">
+				<h4>Please select a boatroom</h4>
+				<p>The session you are assigning is overnight and there are multiple boatrooms available:</p>
+
+				<div class="list-group">
+					{{#each boatrooms}}
+						<a href="javascript:void(0);" data-id="{{id}}" class="boatroom-select-option list-group-item list-group-radio">{{{name}}}</a>
+					{{/each}}
+				</div>
+
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+	</div>
+
 	<!--Styling (Temporary)-->
 	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
 
@@ -1116,6 +1133,7 @@
 
 	<!--jQuery plugins-->
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<!--Controllers-->
 	<script src="/dashboard/js/Controllers/Agent.js"></script>
