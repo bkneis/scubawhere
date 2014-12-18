@@ -6,10 +6,12 @@ Handlebars.registerHelper('currency', function() {
 });
 
 Handlebars.registerHelper('status', function() {
-	if(this.confirmed == 1)     return new Handlebars.SafeString('<i class="fa fa-check"></i> Confirmed');
-	if(this.reserved !== null)  return new Handlebars.SafeString('<i class="fa fa-clock-o"></i> Reserved');
-	if(this.saved == 1)         return new Handlebars.SafeString('<i class="fa fa-floppy-o"></i> Saved');
-	else                        return new Handlebars.SafeString('<i class="fa fa-exclamation-triangle"></i> N/A');
+	switch(this.status) {
+		case 'confirmed': return new Handlebars.SafeString('<i class="fa fa-check"></i> Confirmed');
+		case 'reserved':  return new Handlebars.SafeString('<i class="fa fa-clock-o"></i> Reserved');
+		case 'saved':     return new Handlebars.SafeString('<i class="fa fa-floppy-o"></i> Saved');
+		default:          return new Handlebars.SafeString('<i class="fa fa-exclamation-triangle"></i> N/A');
+	}
 });
 
 Handlebars.registerHelper('sumPayed', function() {
@@ -85,7 +87,7 @@ $(function() {
 
 		booking.addPayment(params, function success(status) {
 			pageMssg(status, true);
-			$('#booking-details-container').empty().html( bookingDetailsTemplate(booking) );
+			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
 			$('#paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 		}, function error(xhr) {

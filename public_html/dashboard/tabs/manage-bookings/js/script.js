@@ -26,10 +26,6 @@ Handlebars.registerHelper('statusIcon', function() {
 		icon = 'fa-ban';
 		tooltip = 'Canceled';
 	}
-	else if(this.status === 'on hold') {
-		icon = 'fa-pause';
-		tooltip = 'On hold';
-	}
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
 
