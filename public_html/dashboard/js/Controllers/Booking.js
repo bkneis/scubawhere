@@ -98,6 +98,7 @@ Booking.prototype.store = function() {
 		currentTab: this.currentTab,
 		selectedCustomers: this.selectedCustomers,
 		selectedTickets: this.selectedTickets,
+		selectedPackages:  this.selectedPackages,
 	});
 
 	return true;
