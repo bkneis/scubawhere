@@ -88,7 +88,7 @@ Handlebars.registerHelper("countryName", function(id) {
 
 var agentTemplate          = Handlebars.compile($("#agents-list-template").html());
 var ticketTemplate         = Handlebars.compile($("#tickets-list-template").html());
-var packageTemplate         = Handlebars.compile($("#package-list-template").html());
+var packageTemplate        = Handlebars.compile($("#package-list-template").html());
 var tripTemplate           = Handlebars.compile($("#trips-list-template").html());
 var addonsTemplate         = Handlebars.compile($("#addons-list-template").html());
 var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
@@ -166,6 +166,47 @@ Accommodation.getAll(function(data){
 	$("#accommodations-list").html(accommodationsTemplate({accommodations:window.accommodations}));
 	window.promises.loadedAccommodations.resolve();
 });
+
+window.promises.loadedAccommodations.done(function() {
+	/*
+	* Datepicker
+	*/
+
+	$('input.datetimepicker').datetimepicker({
+		pickDate: true,
+		pickTime: true,
+		minuteStepping: 5,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+
+	$('input.timepicker').datetimepicker({
+		pickDate: false,
+		pickTime: true,
+		minuteStepping: 5,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+})
 
 /*
 *************************
