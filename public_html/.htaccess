@@ -1,3 +1,9 @@
+# Disallow known spambots
+SetEnvIfNoCase Referer econom.co spambot=yes
+Order allow,deny
+Allow from all
+Deny from env=spambot
+
 # To be removed for production
 <IfModule pagespeed_module>
     ModPagespeed off
@@ -19,11 +25,11 @@
     Redirect 301 /coming-soon /blog
 
     # Do not handle these routes with laravel
-    RewriteCond %{REQUEST_URI} !^/phpmyadmin
-    RewriteCond %{REQUEST_URI} !^/blog
-    RewriteCond %{REQUEST_URI} !^/dashboard
-    RewriteCond %{REQUEST_URI} !^/docs
-    RewriteCond %{REQUEST_URI} !^/ocp
+    RewriteRule ^(phpmyadmin) - [L]
+    RewriteRule ^(dashboard) - [L]
+    RewriteRule ^(docs) - [L]
+    RewriteRule ^(blog) - [L]
+    RewriteRule ^(ocp) - [L]
 
     # Redirect Trailing Slashes
     RewriteRule ^(.*)/$ /$1 [L,R=301]
