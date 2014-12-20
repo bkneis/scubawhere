@@ -41,6 +41,15 @@ var Session = {
 		});
 	},
 
+	getToday: function(handleData, errorFn) {
+		$.ajax({
+			type: "GET",
+			url: "/api/session/today",
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	//Params:
 	// @param integer trip_id      The ID of the trip that the session belongs to
 	// @param string  start        The start datetime of the session. Must be interpretable by the strtotime PHP function
@@ -87,4 +96,5 @@ var Session = {
 			handleData(data);
 		});
 	}
+
 };

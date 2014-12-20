@@ -1,47 +1,61 @@
+window.todaySessions;
+window.todayBookings;
+var todaySession;
+var customerDetails;
 
-function getDate(amount){
-	var date = new Date();
-    var y = date.getFullYear(),
-        m = date.getMonth() + 1,
-        d = date.getDate();
+Handlebars.registerHelper('getTime', function(obj){
+	return obj.substring(obj.length, 10);
+});
 
-    d += amount;
+Handlebars.registerHelper('getPer', function(capacity){
+	var booked = capacity[0];
+	var max = capacity[1];
+	return parseInt((booked / max) * 100) + '%';
+});
 
-    if(m < 10) m = "0" + m;
-    if(d < 10) d = "0" + d;
+$(function () {
 
-    var date2 = new Date(y, m, d);
 
-    var y2 = date2.getFullYear();
-    var m2 = date2.getMonth() + 1;
-    var d2 = date2.getDate();
-
-    var date3 = y + "-" + m + "-" + d + " 00:00:00";
-
-    return date3;
-}
-
-function displayTodaysSessions() {
-
-	var yesterday = getDate(-1);
-	var tommorow = getDate(1);
-
-	var params =
-	{
-		before : tommorow,
-		after : yesterday
-	};
-
-	Session.filter(params, function success(data){
+	todaySession = Handlebars.compile($('#today-session-template').html());
+	Session.getToday(function success(data){
+		window.todaySessions = _.indexBy(data, 'id');
 		console.log(data);
+		$('#accordion').append( todaySession( {sessions : data} ) );
+		getAllLocations(data);
+	},
+	function error(xhr){
+		console.log('could not retrieve sessions');
 	});
 
+	/*customerDetails = Handlebars.compile($('#customer-details-template').html());
+	Booking.getToday(function success(data){
+		window.todayBookings = _.indexBy(data, 'id');
+		console.log(data);
+		for(var i = 0; i < data.length; i++){
+			$('#customer-table-'+data[i].id).append( customerDetails( {customers : data} ) );
+		}
+	});*/
+
+	//$('#accordion').on('shown.bs.collapse', toggleChevron);
+	//$('#accordion').on('hidden.bs.collapse', toggleChevron);
+
+});
+
+function getLocations(params, i, sessions){
+	Trip.getSpecificTrip(params, function sucess(data){
+		var spots = "";
+		for(var j=0; j < data.locations.length; j++){
+			if(! j == (data.locations.length - 1)) spots += (data.locations[j].name + ' , ');
+			else spots += (data.locations[j].name);
+		}
+		$('#locations-'+sessions[i].id).append(spots);
+	});
 }
 
-function slideDown(object) {
-    $( "#"+object ).slideToggle( "slow", function() {
-        // Animation complete.
-    });
+function getAllLocations(sessions){
+
+	for(var i=0; i < sessions.length; i++){
+		var params = 'id=' + sessions[i].trip.id;
+		getLocations(params, i, sessions);
+	}
 }
-
-

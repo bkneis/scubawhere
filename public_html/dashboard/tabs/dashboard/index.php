@@ -1,172 +1,159 @@
 <div id="wrapper" class="clearfix">
-    <div class="col-md-12">
 
-    	<div id="stats-row">
-    		<div class="metro-nav">
-                <div class="metro-nav-block nav-block-orange">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-user"></i>
-                        <div class="info">321</div>
-                        <div class="status">Agents</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-olive">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-tags"></i>
-                        <div class="info">+970</div>
-                        <div class="status">Bookings</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-block-yellow">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-user"></i>
-                        <div class="info">49</div>
-                        <div class="status">Customers</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-block-green double">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-globe"></i>
-                        <div class="info">+897</div>
-                        <div class="status">Dives booked</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-block-red">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-bar-chart"></i>
-                        <div class="info">+288</div>
-                        <div class="status">Trips</div>
-                    </a>
-                </div>
-            </div>
-            <div class="metro-nav">
-                <div class="metro-nav-block nav-light-purple">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-tags"></i>
-                        <div class="info">29</div>
-                        <div class="status">Tickets</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-light-blue double">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-tasks"></i>
-                        <div class="info">$37624</div>
-                        <div class="status">Packages</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-light-green">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-flag"></i>
-                        <div class="info">123</div>
-                        <div class="status">Locations</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-light-brown">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-remove"></i>
-                        <div class="info">34</div>
-                        <div class="status">Cancelled</div>
-                    </a>
-                </div>
-                <div class="metro-nav-block nav-block-grey ">
-                    <a data-original-title="" href="#">
-                        <i class="fa fa-external-link"></i>
-                        <div class="info">$53412</div>
-                        <div class="status">Total revenue</div>
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-7">
 
-        <div id="portlets-row">
-            <div class="portlets-col">
-            <!-- BEGIN Portlet PORTLET-->
-                <div class="widget red">
-                    <div class="widget-title">
-                        <h4><i class="fa fa-edit"></i> Boat Capacity Report</h4>
-                        <span class="tools">
-                            <a class="fa fa-chevron-down" onclick="slideDown('boat-capacity')"></a>
-                        </span>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <script type="text/x-handlebars-template" id="today-session-template">
+                {{#each sessions}}
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading-{{id}}">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" 
+                            href="#session-{{id}}" aria-expanded="true" aria-controls="session-{{id}}">
+                              {{trip.name}} 
+                            </a><i class="pull-right">{{getTime start}}</i>
+                        </h4>
                     </div>
-                    <div id="boat-capacity" class="widget-body">
-                        <div class="scroller">
-                             <ul id="capacities">
-                                <li>
-                                    Boat 1 <strong class="label"> 48%</strong>
-                                    <div class="space10"></div>
-                                    <div class="progress">
-                                        <div style="width: 48%;" class="bar"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    Boat 2 <strong class="label"> 85%</strong>
-                                    <div class="space10"></div>
-                                    <div class="progress progress-success">
-                                        <div style="width: 85%;" class="bar"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    Boat 3 <strong class="label"> 65%</strong>
-                                    <div class="space10"></div>
-                                    <div class="progress progress-danger">
-                                        <div style="width: 65%;" class="bar"></div>
-                                    </div>
-                                </li>
-                            </ul>
+                    <div id="session-{{id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{id}}">
+                      <div class="panel-body">
+                        <div style="width:200px; float:right">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="60" 
+                          aria-valuemin="0" aria-valuemax="100" style="width: {{getPer capacity}};"> {{getPer capacity}}</div>
+                        </div>
+                        </div>
+                        <p><strong>Boat :</strong> {{boat.name}} | Capacity : {{capacity}}</p>
+                        <p id="locations-{{id}}"><strong>Location : </strong></p>
+                        <div class="input-group"> <span class="input-group-addon">Filter</span>
+                            <input id="filter" type="text" class="form-control" placeholder="Customer name or Booking code...">
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Lead Name</th>
+                                    <th>Lead Phone Number</th>
+                                    <th></th>
+                                    <th>Lead Email</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-table-{{id}}" class="searchable">
+                                <tr>
+                                    <td>Code</td>
+                                    <td>Bryan Kneis</td>
+                                    <td>0769957463</td>
+                                    <td>UK</td>
+                                    <td>bryan@scuba.com</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="portlets-col2">
-
-                <!-- BEGIN Portlet PORTLET-->
-                <div class="widget purple">
-                    <div class="widget-title">
-                        <h4><i class="fa fa-edit"></i> Todays Trips</h4>
-                        <span class="tools">
-                            <a class="fa fa-chevron-down" onclick="slideDown('todays-trips')"></a>
-                        </span>
-                    </div>
-                    <div id="todays-trips" class="widget-body">
-                        <div class="scroller" style="height:300px;">
-                            <h1>dasd</h1>
-                            <h1>dasd</h1>
-                            <h1>dasd</h1>
-                            <h1>dasd</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {{else}}
+                    <p>No trips running today</p>
+                {{/each}}
+            </script>
         </div>
+
+        <script type="text/x-handlebars-template" id="customer-details-template">
+          <tr>
+              <td>{{reference}}</td>
+              <td>{{lead_customer.name}}</td>
+              <td>{{lead_customer.phone}}</td>
+              <td>{{lead_customer.email}}</td>
+          </tr>
+          /*<div style="display:none">
+            <p>More info on customers</p>
+          </div>*/
+        </script>
 
     </div>
+
+    <div class="col-md-5">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Recent Bookings</h4>
+      </div>
+      <div class="panel-body">
+        <table class="bluethead">
+          <thead>
+            <tr class="bg-primary">
+              <!--<th width="10"></th> <!-- source icon -->
+              <!--<th width="10"></th> <!-- saved/reserved/confirmed icon -->
+              <!--<th width="10"></th> <!-- payments -->
+              <th>Ref</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th></th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="booking-list">
+            <tr><td colspan="9" style="text-align: center;"> </td></tr>
+            <tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/x-handlebars-template" id="booking-list-item-template">
+    {{#each bookings}}
+      <tr class="accordion-header" data-id={{id}}>
+        
+        <td>{{reference}}</td>
+        <td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+        <td>{{lead_customer.phone}}</td>
+        <td>{{lead_customer.country.abbreviation}}</td>
+        <td>{{currency}} {{decimal_price}}</td>
+      </tr>
+      <tr class="accordion-body accordion-{{id}}">
+        <td colspan="5" style="overflow: auto;">
+          <div style="float: left; width: 180px; margin-right: 10px; border-right: 1px solid #C3D9F4;">
+            {{#if payments}}
+              <h4 class="text-center">Recieved Transactions</h4>
+              <table style="width: 160px;" class="table">
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Via</th>
+                </tr>
+                {{#each payments}}
+                  <tr>
+                    <td>{{received_at}}</td>
+                    <td>{{currency}} {{amount}}</td>
+                    <td>{{paymentgateway.name}}</td>
+                  </tr>
+                {{/each}}
+                <tr>
+                  <td></td>
+                  <td class="table-sum">{{currency}} {{sumPaid}}</td>
+                  <td>{{remainingPay}}</td>
+                </tr>
+              </table>
+            {{else}}
+              <h5 class="text-center text-muted">No transactions yet</h5>
+            {{/if}}
+          </div>
+          {{addTransactionButton}}
+
+          <a href="mailto:{{lead_customer.email}}" class="mailto"><button class="btn btn-default pull-right"><i class="fa fa-envelope"></i> &nbsp;Contact customer</button></a>
+        </td>
+      </tr>
+      <tr class="accordion-spacer accordion-{{id}}"></tr>
+    {{else}}
+      <tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
+    {{/each}}
+  </script>
+
 </div>
 
-<link href="tabs/dashboard/css/style.css" rel="stylesheet" />
-<!-- <script type="text/javascript" src="tabs/locations/js/gmaps.js"></script>
-<script type="text/javascript" src="tabs/dashboard/js/maps.js"></script> -->
-<script type="text/javascript" src="tabs/dashboard/js/script.js"></script>
-
-<!--<script type="text/javascript" src="../common/js/jquery/jquery.mCustomScrollbar.concat.min.js"></script>
-<link rel="stylesheet" href="../common/css/jquery.mCustomScrollbar.css" />-->
-
-<!-- <link rel="stylesheet" href="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.min.css" />
-<script src="http://malihu.github.io/custom-scrollbar/3.0.0/jquery.mCustomScrollbar.concat.min.js"></script>
-
-<script>
-    (function($){
-        $(window).load(function(){
-            $(".scroller").mCustomScrollbar({
-                axis:"y",
-                theme:"dark-3"
-            });
-        });
-    })(jQuery);
-</script> -->
-
-<!-- <script src="/ashboard/js/Controllers/Session.js"></script> -->
-
+<script src="/dashboard/js/Controllers/Session.js"></script>
+<script src="/dashboard/js/Controllers/Trip.js"></script>
+<script src="tabs/dashboard/js/script.js"></script>
+<script src="js/Controllers/Booking.js"></script>
+<script src="tabs/manage-bookings/js/script.js"></script>
 
 
 
