@@ -68,6 +68,20 @@ class BookingController extends Controller {
 			->get();
 	}
 
+	public function getRecent()
+	{
+		return Auth::user()->bookings()
+			->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway'
+			)
+			->orderBy('updated_at', 'DESC')
+			->take(5)
+			->get();
+	}
+
 	public function getToday()
 	{
 		$data = array(

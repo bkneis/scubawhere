@@ -42,6 +42,15 @@ Booking.getAll = function(successFn) {
 	$.get("/api/booking/all", successFn);
 };
 
+Booking.getRecent = function(successFn, errorFn) {
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/recent",
+		success: successFn,
+		error: errorFn
+	});
+};
+
 Booking.today = function(successFn, errorFn) {
 	$.ajax({
 		type: "GET",

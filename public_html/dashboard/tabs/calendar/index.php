@@ -22,13 +22,11 @@
 				</div>
 				<div style="clear:both"></div>
 				<div id="jump-to-date" class="form-row">
-					<!--<label class="form-label">Jump to : </label>-->
-					<input id="jump-date" type="text" placeholder="Date" style="width:60px">-
-					<input id="jump-month" type="text" placeholder="Month" style="width:60px">-
-					<input id="jump-year" type="text" placeholder="Year" style="width:60px">
-					<button id="jump-to" class="btn btn-success">Go</button>
-					<button id="remove-jump" class="btn btn-danger">Clear</button>
+					<label style="float:left; padding-right:10px;" class="form-label">Jump to : </label>
+					<input style="width:200px; float:left;" id="jump-date" type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="jumpto" placeholder="YYYY-MM-DD">
+					<button id="remove-jump" style="display:none;" class="btn btn-danger">Clear</button>
 				</div>
+				<div style="clear:both"></div>
 				<div id="filter-settings" class="form-row">
 					<!--<label class="form-label">Add filter : </label>-->
 					<select id="filter-options">

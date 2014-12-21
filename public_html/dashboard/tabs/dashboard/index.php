@@ -137,8 +137,7 @@
             {{/if}}
           </div>
           {{addTransactionButton}}
-
-          <a href="mailto:{{lead_customer.email}}" class="mailto"><button class="btn btn-default pull-right"><i class="fa fa-envelope"></i> &nbsp;Contact customer</button></a>
+          {{editButton}}
         </td>
       </tr>
       <tr class="accordion-spacer accordion-{{id}}"></tr>

@@ -33,7 +33,7 @@ $(function() {
 	--------------------------*/
 	$('#calendar').fullCalendar({
 		header: {
-			left: '',
+			left: 'basicDay basicWeek month',
 			center: 'title',
 		},
 		defaultView : 'basicWeek',
@@ -117,13 +117,12 @@ $(function() {
 		$('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
-	$("#jump-to-date").on('click', '#jump-to', function(event){
+	$("#jump-to-date").on('change', '#jump-date', function(event){
 		event.preventDefault();
 		var date = $("#jump-date").val();
-		var month = $("#jump-month").val();
-		var year = $("#jump-year").val();
-		var jumpDate = $.fullCalendar.moment(year+'-'+month+'-'+date);
+		var jumpDate = $.fullCalendar.moment(date);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+		$("#remove-jump").css('display', 'inline');
 	});
 
 	$("#jump-to-date").on('click', '#remove-jump', function(event){
@@ -133,16 +132,26 @@ $(function() {
     	var m = date.getMonth() + 1; // jan starts at 0
     	var y = date.getFullYear();
     	$("#jump-date").val('');
-    	$("#jump-month").val('');
-    	$("#jump-year").val('');
 		var jumpDate = $.fullCalendar.moment(y+'-'+m+'-'+d);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+		$("#remove-jump").css('display', 'none');
 	});
 
 	$("#myonoffswitch").click(function() {
 		if($(this).is(':checked')) display = "trips";
 		else display = "accommodations";
 		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 });
