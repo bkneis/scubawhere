@@ -18,6 +18,7 @@ SetEnvIfNoCase Referer net.hts.ru spam=yes
 SetEnvIfNoCase Referer 78.110.60.230 spam=yes
 SetEnvIfNoCase Referer darodar.com spam=yes
 SetEnvIfNoCase Referer priceg.com spam=yes
+SetEnvIfNoCase Referer годом.рф spam=yes
 Order allow,deny
 Allow from all
 Deny from env=spam
