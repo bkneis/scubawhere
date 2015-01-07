@@ -35,11 +35,11 @@ Deny from env=spam
 
     RewriteEngine On
 
+    RewriteRule ^$ blog/ [R=301,L]
+
     # Rewrite non-www to www
     RewriteCond %{HTTP_HOST} !^www\.
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
-
-    Redirect 301 / /blog/
 
     # Redirect all requests to /coming-soon/* to /blog/*
     Redirect 301 /coming-soon /blog/
