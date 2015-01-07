@@ -28,11 +28,10 @@ Deny from env=spam
     ModPagespeed off
 </IfModule>
 
-<IfModule mod_negotiation.c>
-    Options -MultiViews
-</IfModule>
-
 <IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
 
     RewriteEngine On
 
@@ -40,8 +39,10 @@ Deny from env=spam
     RewriteCond %{HTTP_HOST} !^www\.
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
+    Redirect 301 / /blog/
+
     # Redirect all requests to /coming-soon/* to /blog/*
-    Redirect 301 /coming-soon /blog
+    Redirect 301 /coming-soon /blog/
 
     # Do not handle these routes with laravel
     RewriteRule ^(phpmyadmin) - [L]
@@ -58,4 +59,3 @@ Deny from env=spam
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
