@@ -35,7 +35,7 @@ Deny from env=spam
 
     RewriteEngine On
 
-    RewriteRule ^$ blog/ [R=301,L]
+    RewriteRule ^$ /blog/ [R=301,L]
 
     # Rewrite non-www to www
     RewriteCond %{HTTP_HOST} !^www\.
