@@ -38,8 +38,10 @@ Deny from env=spam
     RewriteRule ^$ /blog/ [R=301,L]
 
     # Rewrite non-www to www
-    RewriteCond %{HTTP_HOST} !^www\.
-    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+    # This is only necessary when we add a separate subdomain for assets, such as static.scubawhere.com
+    # Until then, it only causes problems with e.g. rms.scubawhere.com
+    # RewriteCond %{HTTP_HOST} !^www\.
+    # RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
     # Redirect all requests to /coming-soon/* to /blog/*
     Redirect 301 /coming-soon /blog/
