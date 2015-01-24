@@ -80,6 +80,7 @@ return array(
     'ChangeAllPriceFieldsToInteger' => $baseDir . '/app/database/migrations/2014_06_11_131500_change_all_price_fields_to_integer.php',
     'ChangeBookingDetailsToIncludeCustomerIdAndLeadStatus' => $baseDir . '/app/database/migrations/2014_06_04_105146_change_booking_details_to_include_customer_id_and_lead_status.php',
     'ChangeDayAndMonthFieldsOnPricesTableIntoDateFields' => $baseDir . '/app/database/migrations/2014_11_03_131716_change_day_and_month_fields_on_prices_table_into_date_fields.php',
+    'ChangeDurationToDecimal' => $baseDir . '/app/database/migrations/2015_01_24_172633_change_duration_to_decimal.php',
     'ChangeNightsColumnToEndDateOnAccommodationBooking' => $baseDir . '/app/database/migrations/2014_11_21_194518_change_nights_column_to_end_date_on_accommodation_booking.php',
     'ChangeTriptypesToTags' => $baseDir . '/app/database/migrations/2014_12_02_194157_change_triptypes_to_tags.php',
     'ClassPreloader\\Application' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Application.php',
