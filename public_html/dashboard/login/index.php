@@ -21,7 +21,7 @@
 		<div id="login-form">
 			<form action="#" id="loginForm" method="post" accept-charset="utf-8">
 				<img src="/common/img/scubawhere_logo.svg">
-				<h1>Dive Centre Dashboard Login</h1>
+				<h1>RMS Operator Login</h1>
 
 				<span class="form-error"></span>
 
@@ -38,8 +38,9 @@
 				</button>
 
 			</form>
+
+				<a href="../../password/remind">Forgot your password?</a>
 		</div>
-		<span>Forgot your password? <a href="../../password/remind">Click here.</a></span>
 	</div>
 
     <footer><a href="../register/" class="bttn" id="register">Register Your Dive Centre</a></footer>

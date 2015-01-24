@@ -3,15 +3,17 @@
 <head>
 	<title>New Password | Scuba Where</title>
 
-	<link rel="stylesheet" type="text/css" href="../dashboard/login/css/styles.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
 </head>
 <body>
 
 	<div id="login-wrapper">
 
-		<form action="{{ action('PasswordController@postReset') }}" method="POST">
+		<form action="{{ action('PasswordController@postReset') }}" method="POST" id="login-form">
 
-			<img src="../dashboard/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/ScubaWhere_logo.svg">
 			<h1>Enter a new password for</h1>
 			<pre>{{ $email }}</pre>
 
@@ -30,14 +32,13 @@
 				<input type="hidden" name="token" value="{{ $token }}">
 				<input type="hidden" name="email" value="{{ $email }}">
 
-				<label>New password</label>
-				<input type="password" name="password" required="required" placeholder="6 characters min">
+				<small>New password</small>
+				<input type="password" name="password" required="required" placeholder="6 characters min"><br>
 
-				<label>Confirm new password</label>
+				<small>Confirm new password</small>
 				<input type="password" name="password_confirmation" required="required">
-				<br>
-				<br>
-				<input type="submit" value="Set Password" class="bttn big-bttn blueb">
+
+				<input type="submit" value="Set Password" class="btn btn-primary">
 			<?php
 				}
 			?>

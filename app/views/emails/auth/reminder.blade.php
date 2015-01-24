@@ -2,7 +2,7 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8">
-    <title>ScubaWhere Passwort Reminder</title>
+    <title>ScubaWhere</title>
   </head>
 <body>
 
@@ -12,21 +12,21 @@
 
   <h2>Welcome to ScubawhereRMS</h2>
   <p>
-    Thank you for singing up!
+    Thank you for signing up!
   </p>
   <p>
-    To activate your account and create a password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is only valid for 15 minutes.)
+    To activate your account and create a password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is valid for 12 hours.)
   </p>
 
 <?php } else { // Generate Password Reminder Email ?>
 
   <h2>Password Reminder</h2>
   <p>
-    To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is only valid for 15 minutes.)
+    To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is valid for 12 hours.)
   </p>
   <p>
     If you did not initate a password reset, just ignore this email. Your current password is still valid.<br>
-    (It doesn't hurt to change the password every now and then, though.)
+    (It doesn't hurt to change your password every now and again, though.)
   </p>
 
 <?php } ?>
