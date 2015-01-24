@@ -58,11 +58,11 @@ class TripController extends Controller {
 		$data = Input::only('name', 'description', 'duration');
 
 		// Check optional fields
-		if( Input::get('photo') )
+		if( Input::has('photo') )
 		{
 			$data['photo'] = Input::get('photo');
 		}
-		if( Input::get('video') )
+		if( Input::has('video') )
 		{
 			$data['video'] = Input::get('video');
 		}
@@ -117,7 +117,17 @@ class TripController extends Controller {
 
 	public function postEdit()
 	{
-		$data = Input::only('name', 'description', 'duration', 'photo', 'video');
+		$data = Input::only('name', 'description', 'duration');
+
+		// Check optional fields
+		if( Input::has('photo') )
+		{
+			$data['photo'] = Input::get('photo');
+		}
+		if( Input::has('video') )
+		{
+			$data['video'] = Input::get('video');
+		}
 
 		try
 		{
