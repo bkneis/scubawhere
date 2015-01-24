@@ -710,23 +710,25 @@
 						</div>
 						<script id="addons-list-template" type="text/x-handlebars-template">
 							{{#each addons}}
-								<li data-id="{{id}}" class="list-group-item">
-									<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
-									<p>{{{description}}}</p>
-									<div class="row">
-										<div class="col-md-4">
-											<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
-										</div>
-										<div class="col-md-5 pull-right">
-											<div class="input-group">
-												<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
-												<span class="input-group-btn">
-													<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
-												</span>
+								{{#unless compulsory}}
+									<li data-id="{{id}}" class="list-group-item">
+										<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
+										<p>{{{description}}}</p>
+										<div class="row">
+											<div class="col-md-4">
+												<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
+											</div>
+											<div class="col-md-5 pull-right">
+												<div class="input-group">
+													<input type="number" min="1" max="50" value="1" name="addon-qty" data-id="{{id}}" class="form-control input-sm addon-qty">
+													<span class="input-group-btn">
+														<button data-id="{{id}}" class="btn btn-primary btn-sm add-addon" type="button">Add</button>
+													</span>
+												</div>
 											</div>
 										</div>
-									</div>
-								</li>
+									</li>
+								{{/unless}}
 							{{/each}}
 						</script>
 					</div>
@@ -761,10 +763,10 @@
 										<div class="col-md-6">
 											<h4 class="list-group-item-heading">Addons</h4>
 											{{#each addons}}
-												<p class="list-group-item-text">Name: {{{name}}}</p>
+												<p class="list-group-item-text"><strong>Name:</strong> {{{name}}}</p>
 												<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{decimal_price}}</span></p>
 												<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{pivot.quantity}}</span></p>
-												<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>
+												{{#unless compulsory}}<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>{{else}} <small>(compulsory)</small>{{/unless}}
 											{{/each}}
 										</div>
 									</div>

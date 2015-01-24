@@ -770,6 +770,7 @@ var selectedAddonsTemplate = Handlebars.compile($("#selected-addons-template").h
 $('[data-target="#addon-tab"]').on('show.bs.tab', function () {
 	$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
 	$("#addon-booking-details").children().first().addClass('active');
+	$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
 });
 
 var addonTotal = 0;

@@ -211,6 +211,15 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				};
 			}
 
+			// Add compulsory addons
+			_.each(data.addons, function(id) {
+				var addon = $.extend(true, {}, window.addons[id]);
+				addon.pivot = {
+					quantity: 1
+				};
+				detail.addons.push(addon);
+			});
+
 			this.bookingdetails.push(detail);
 
 			// If this is the first detail to be added and there is no lead customer yet, make this customer the lead customer
@@ -310,7 +319,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 		context: this,
 		success: function(data) {
 
-			var addon = window.addons[params.addon_id];
+			var addon = $.extend(true, {}, window.addons[params.addon_id]);
 			addon.pivot = {
 				quantity: params.quantity
 			};

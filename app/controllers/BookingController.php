@@ -463,6 +463,15 @@ class BookingController extends Controller {
 		if($booking->bookingdetails()->count() === 1)
 			$booking->update( array('lead_customer_id' => $customer->id) );
 
+		// Add compulsory addons
+		$addons = Auth::user()->addons()->where('compulsory', true)->get();
+		if($addons->count() > 0) {
+			$addons->each(function($addon) use ($bookingdetail)
+			{
+				$bookingdetail->addons()->attach( $addon->id, array('quantity' => 1) );
+			});
+		}
+
 		// Update booking price
 		$ticket->calculatePrice($departure->start);
 
@@ -471,6 +480,7 @@ class BookingController extends Controller {
 		return array(
 			'status'               => 'OK. Booking details added.',
 			'id'                   => $bookingdetail->id,
+			'addons'               => $addons->lists('id'),
 			'decimal_price'        => $booking->decimal_price,
 			'ticket_decimal_price' => $ticket->decimal_price,
 			'packagefacade_id'     => $package ? $packagefacade->id : false
@@ -580,6 +590,9 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($addon->compulsory === 1 || $addon->compulsory === "1")
+			return Response::json( array('errors' => array('The addon is compulsory and cannot be added manually.')), 403 ); // 403 Forbidden
+
 		// Check if the booking belongs to the company
 		try
 		{
@@ -639,6 +652,9 @@ class BookingController extends Controller {
 		{
 			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
+
+		if($addon->compulsory === 1 || $addon->compulsory === "1")
+			return Response::json( array('errors' => array('The addon is compulsory and cannot be removed.')), 403 ); // 403 Forbidden
 
 		// Check if the booking belongs to the company
 		try
