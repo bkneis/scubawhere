@@ -15,7 +15,7 @@ class Trip extends Ardent {
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => 'required',
-		'duration'    => 'required|integer',
+		'duration'    => 'required|numeric',
 		'photo'       => '',
 		'video'       => ''
 	);
@@ -33,6 +33,8 @@ class Trip extends Ardent {
 
 		if( isset($this->video) )
 			$this->video = Helper::sanitiseString($this->video);
+
+		$this->duration = round($this->duration, 1);
 	}
 
 	public function getDeletableAttribute()
