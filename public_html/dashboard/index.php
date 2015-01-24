@@ -108,7 +108,7 @@
 		<div id="sidebar">
 			<!-- Navigation including accordion drop down menus -->
 			<ul id="sidenav">
-				<li data-load="dashboard" style="line-height: 44px;">
+				<li data-load="dashboard">
 					<div>
 						<i class="fa fa-tachometer fa-lg fa-fw"></i>
 						<span>Dashboard</span>
