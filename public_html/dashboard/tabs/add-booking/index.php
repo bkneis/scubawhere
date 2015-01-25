@@ -22,7 +22,7 @@
 			<li role="presentation">
 				<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
 					<span class="step-number">4</span>
-					<span class="step-description">Sessions</span>
+					<span class="step-description">Trips</span>
 				</a>
 			</li>
 			<li role="presentation">
@@ -476,7 +476,7 @@
 				<div class="row row-header">
 					<div class="col-xs-12">
 						<div class="page-header">
-							<h2>Sessions <small>When would you like to go diving?</small></h2>
+							<h2>Trips <small>When would you like to go diving?</small></h2>
 						</div>
 					</div>
 				</div>
@@ -608,7 +608,7 @@
 													<tr>
 														<td colspan="6">
 															<h3 class="text-center text-muted"><i class="fa fa-exclamation-triangle"></i></h3>
-															<h5 class="text-center text-muted">Your search did not match any sessions.</h5>
+															<h5 class="text-center text-muted">Your search did not match any trips.</h5>
 														</td>
 													</tr>
 												{{/each}}
@@ -622,7 +622,7 @@
 					<div class="col-md-4">
 						<ul class="list-group">
 							<li href="#" class="list-group-item active">
-								<h4 class="list-group-item-heading">Assigned Sessions</h4>
+								<h4 class="list-group-item-heading">Assigned Trips</h4>
 							</li>
 							<div id="booking-details"></div>
 							<script id="booking-details-template" type="text/x-handlebars-template">
@@ -963,7 +963,7 @@
 									<div class="col-md-7">
 										<ul class="list-group">
 											<li class="list-group-item active">
-												<h4 class="list-group-item-heading">Sessions &amp; Addon</h4>
+												<h4 class="list-group-item-heading">Trips &amp; Addon</h4>
 											</li>
 											<div id="summary-booking-details"></div>
 											<script id="summary-booking-details-template" type="text/x-handlebars-template">
