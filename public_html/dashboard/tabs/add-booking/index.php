@@ -239,9 +239,7 @@
 								<div class="form-group">
 									<label for="existing-customers" class="col-sm-3 control-label">Name</label>
 									<div class="col-sm-9">
-										<select id="existing-customers" name="existing-customers" class="form-control select2">
-											<option selected="selected" value="">Loading...</option>
-										</select>
+										<select id="existing-customers" name="existing-customers" class="form-control select2"></select>
 										<script id="customers-list-template" type="text/x-handlebars-template">
 											<option selected="selected" value="">Search for a customer...</option>
 											{{#each customers}}
