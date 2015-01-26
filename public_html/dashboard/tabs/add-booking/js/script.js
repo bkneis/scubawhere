@@ -495,6 +495,7 @@ window.promises.loadedCustomers.done(function() {
 
 		var params = form.serializeObject();
 		params._token = window.token;
+		params.phone = (params.dialling_code).replace(/[^a-zA-Z 0-9]+/g, '') + params.phone;
 
 		Customer.createCustomer(params, function success(data){
 			Customer.getCustomer("id="+data.id, function(data) {

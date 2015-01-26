@@ -280,9 +280,13 @@
 												<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
 												<input id="customer-email" name="email" class="form-control" placeholder="@">
 											</div>
-											<div class="col-sm-6">
+											<div class="col-sm-2">
+												<label for="phone" class="control-label">Dialling Code <span class="text-danger">*</span></label>
+												<input type="text" name="dialling_code" class="form-control" placeholder="+44">
+											</div>
+											<div class="col-sm-4">
 												<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
-												<input type="text" name="phone" class="form-control" placeholder="+1234567890">
+												<input type="text" name="phone" class="form-control" placeholder="02071234567">
 											</div>
 										</div>
 										<div class="form-group">
