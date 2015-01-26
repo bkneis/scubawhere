@@ -236,7 +236,8 @@ $('#source-tab').on('click', '.source-finish', function() {
 	var type = $('.booking-source').children('.active').first().data("type");
 
 	//If agent type selected, find the selected agent and prepare the ajax params
-  var params = {};
+  	var params = {};
+
 	if(type == "agent") {
 		var agentId = $('#agents-list').children('.active').data('id');
 		params = {_token: window.token, agent_id: agentId};
@@ -244,15 +245,24 @@ $('#source-tab').on('click', '.source-finish', function() {
 		params = {_token: window.token, source: type};
 	}
 
-	// Instantiate new Booking
-	window.booking = new Booking();
-	booking.initiate(params, function(status) {
-		$('[data-target="#ticket-tab"]').tab('show');
-	}, function error(xhr) {
-		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.error[0], 'danger');
+	if(type == "agent" && typeof(agentId) === 'undefined') {
+
+		pageMssg('You have not selected an agent.', 'warning');
 		$('.source-finish').html('Next');
-	});
+
+	}else{
+
+		// Instantiate new Booking
+		window.booking = new Booking();
+		booking.initiate(params, function(status) {
+			$('[data-target="#ticket-tab"]').tab('show');
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.error[0], 'danger');
+			$('.source-finish').html('Next');
+		});
+
+	}
 });
 
 /*
