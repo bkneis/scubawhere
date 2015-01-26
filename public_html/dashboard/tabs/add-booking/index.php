@@ -239,9 +239,10 @@
 								<div class="form-group">
 									<label for="existing-customers" class="col-sm-3 control-label">Name</label>
 									<div class="col-sm-9">
-										<select id="existing-customers" name="existing-customers" class="form-control select2"></select>
-										<script id="customers-list-template" type="text/x-handlebars-template">
+										<select id="existing-customers" name="existing-customers" class="form-control select2">
 											<option selected="selected" value="">Search for a customer...</option>
+										</select>
+										<script id="customers-list-template" type="text/x-handlebars-template">											
 											{{#each customers}}
 												<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
 											{{/each}}
@@ -319,9 +320,7 @@
 											<div class="form-group">
 												<div class="col-md-8">
 													<label for="country_id" class="control-label">Country <span class="text-danger">*</span></label>
-													<select id="country_id" name="country_id" class="form-control select2">
-														<option value="">Loading...</option>
-													</select>
+													<select id="country_id" name="country_id" class="form-control select2"></select>
 												</div>
 												<script id="countries-template" type="text/x-handlebars-template">
 													<option value="">Choose country...</option>
@@ -396,10 +395,9 @@
 										<div class="form-group">
 											<label for="country_id">Country</label>
 											<select id="country_id" name="country_id" class="form-control select2">
-												<option value="">Loading...</option>
+												<option value="">Choose Country...</option>
 											</select>
 											<script id="countries-template" type="text/x-handlebars-template">
-												<option value="">Choose Country...</option>
 												{{#each countries}}
 													<option value="{{id}}">{{{name}}}</option>
 												{{/each}}
@@ -558,10 +556,9 @@
 													<div class="form-group">
 														<label for="trips">Trip:</label>
 														<select id="trips" name="trip_id" class="form-control select2">
-															<option selected="selected" value="">Loading...</option>
+															<option selected="selected" value="">Choose trip...</option>
 														</select>
 														<script id="trips-list-template" type="text/x-handlebars-template">
-															<option selected="selected" value="">Choose trip...</option>
 															{{#each trips}}
 																<option value="{{id}}">{{{name}}}</option>
 															{{/each}}
