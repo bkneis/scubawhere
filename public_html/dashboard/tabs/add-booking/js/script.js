@@ -247,7 +247,7 @@ $('#source-tab').on('click', '.source-finish', function() {
 
 	if(type == "agent" && typeof(agentId) === 'undefined') {
 
-		pageMssg('You have not selected an agent.', 'warning');
+		pageMssg('Please select an agent from the list to continue.', 'warning');
 		$('.source-finish').html('Next');
 
 	}else{
