@@ -100,10 +100,10 @@
 
 						<div class="form-row">
 							<label style="display: block;">
-								<input type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain boatrooms?</strong>
+								<input type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain cabins?</strong>
 							</label>
 							<div class="dashed-border" id="boatroom-select"{{#unless hasBoatrooms}} style="display:none;"{{/unless}}>
-								<p>Please select the boatrooms that you want this ticket to be eligible for:</p>
+								<p>Please select the cabins that you want this ticket to be eligible for:</p>
 								{{#each available_boatrooms}}
 									<p>
 										<label>

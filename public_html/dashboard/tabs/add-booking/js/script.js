@@ -1076,7 +1076,7 @@ function redrawSessionsList(params) {
 				});
 				html += '</table>';
 				$('.percentage-bar-container[data-id=' + session.id + ']').popover({
-					title: 'Free Spaces by Boatroom',
+					title: 'Free spaces by cabin',
 					content: html,
 					html: true,
 					placement: 'top',

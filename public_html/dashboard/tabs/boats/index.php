@@ -20,16 +20,16 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title">Available Boatrooms</h4>
+				<h4 class="panel-title">Available Cabins</h4>
 			</div>
 			<div class="panel-body" id="boatroom-list-container">
-				<button id="change-to-add-boatroom" class="btn btn-success text-uppercase">&plus; Add boatroom</button>
+				<button id="change-to-add-boatroom" class="btn btn-success text-uppercase">&plus; Add Cabin</button>
 				<script type="text/x-handlebars-template" id="boatroom-list-template">
 					<ul id="boatroom-list" class="entity-list">
 						{{#each boatrooms}}
 							<li data-id="{{id}}"><strong>{{name}}</strong></li>
 						{{else}}
-							<p>No boatrooms available.</p>
+							<p>No cabins available.</p>
 						{{/each}}
 					</ul>
 				</script>
@@ -49,20 +49,20 @@
 						<span class="btn btn-danger pull-right remove-boat">Remove</span>
 					{{/if}}
 						<div class="form-row">
-							<label class="field-label">Boat Name</label>
+							<label class="field-label">Boat name</label>
 							<input type="text" name="name" value="{{{name}}}">
 						</div>
 						<div class="form-row">
-							<label class="field-label">Boat Description</label>
+							<label class="field-label">Boat description</label>
 							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 						<div class="form-row">
-							<label class="field-label">Boat Capacity</label>
+							<label class="field-label">Boat capacity</label>
 							<input type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 						</div>
 						<div class="form-row">
 							<div id="room-types">
-							<h4>Boat rooms</h4>
+							<h4>Cabins on this boat</h4>
 								{{#each boatrooms}}
 									{{> boatroom_show}}
 								{{/each}}
@@ -87,7 +87,7 @@
 						<option value="{{id}}">{{name}}</option>
 					{{/each}}
 				</select>
-				Number of Beds:
+				Number of beds:
 				<input type="number" name="boatrooms[{{firstID boatrooms}}][capacity]" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 				<button class="btn btn-danger remove-room">&#215;</button>
 			</p>
@@ -105,7 +105,7 @@
 		<div class="panel panel-default" style="display: none;" id="boatroom-form-container">
 			<script type="text/x-handlebars-template" id="boatroom-form-template">
 				<div class="panel-heading">
-					<h4 class="panel-title">{{task}} boatroom</h4>
+					<h4 class="panel-title">{{task}} cabin</h4>
 				</div>
 				<div class="panel-body">
 					<form id="{{task}}-boatroom-form" accept-charset="utf-8">
@@ -113,11 +113,11 @@
 							<span class="btn btn-danger pull-right remove-boatroom">Remove</span>
 						{{/if}}
 						<div class="form-row">
-							<label class="field-label">Boatroom name</label>
+							<label class="field-label">Cabin name</label>
 							<input type="text" name="name" value="{{{name}}}">
 						</div>
 						<div class="form-row">
-							<label class="field-label">Boatroom Description</label>
+							<label class="field-label">Cabin description</label>
 							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 						{{#if update}}

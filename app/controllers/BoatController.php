@@ -116,7 +116,7 @@ class BoatController extends Controller {
 				{
 					return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
 				})->count() > 0 )
-					return Response::json( array('errors' => array('The boatroom "' . $boatroom->name . '" can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
+					return Response::json( array('errors' => array('The cabin "' . $boatroom->name . '" can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
 			}
 
 			// 2. case

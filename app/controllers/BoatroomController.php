@@ -18,7 +18,7 @@ class BoatroomController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 	}
 
@@ -43,7 +43,7 @@ class BoatroomController extends Controller {
 
 		$boatroom = Auth::user()->boatrooms()->save($boatroom);
 
-		return Response::json( array('status' => 'OK. Boatroom created', 'id' => $boatroom->id), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Cabin created', 'id' => $boatroom->id), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -55,7 +55,7 @@ class BoatroomController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$data = Input::only(
@@ -68,7 +68,7 @@ class BoatroomController extends Controller {
 			return Response::json( array('errors' => $boatroom->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return Response::json( array('status' => 'OK. Boatroom updated.'), 200 ); // 200 OK
+		return Response::json( array('status' => 'OK. Cabin updated'), 200 ); // 200 OK
 	}
 
 	/*
@@ -82,12 +82,12 @@ class BoatroomController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$boatroom->delete();
 
-		return array('status' => 'OK. Boatroom deactivated');
+		return array('status' => 'OK. Cabin deactivated');
 	}
 
 	public function postRestore()
@@ -99,12 +99,12 @@ class BoatroomController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$boatroom->restore();
 
-		return array('status' => 'OK. Boatroom restored');
+		return array('status' => 'OK. Cabin restored');
 	}
 	*/
 
@@ -117,26 +117,26 @@ class BoatroomController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
 		if( $boatroom->boats->count() > 0 )
-			return Response::json( array('errors' => array('The boatroom can not be removed because it is still used in boats.')), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in boats.')), 409); // 409 Conflict
 
 		if( $boatroom->tickets->count() > 0 )
-			return Response::json( array('errors' => array('The boatroom can not be removed because it is still used in tickets.')), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in tickets.')), 409); // 409 Conflict
 
 		if( $boatroom->bookingdetails()->whereHas('departure', function($query)
 		{
 			return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
 		})->count() > 0 )
-			return Response::json( array('errors' => array('The boatroom can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The cabin can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
 
 		if( $boatroom->bookingdetails()->count() > 0 )
 			$boatroom->delete(); // softDeletes
 		else
 			$boatroom->forceDelete();
 
-		return array('status' => 'Ok. Boatroom deleted');
+		return array('status' => 'Ok. Cabin deleted');
 	}
 }

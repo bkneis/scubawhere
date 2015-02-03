@@ -305,7 +305,7 @@ class BookingController extends Controller {
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The boatroom could not be found.')), 404 ); // 404 Not Found
+				return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 			}
 		}
 		*/
@@ -358,7 +358,7 @@ class BookingController extends Controller {
 		{
 			$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
 			if( count($intersect) === 0 )
-				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s boatroom(s).')), 403 ); // 403 Forbidden
+				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s cabin(s).')), 403 ); // 403 Forbidden
 
 			if( count($intersect) === 1 )
 				$boatroom_id = $intersect[0];
@@ -375,7 +375,7 @@ class BookingController extends Controller {
 
 			// Just in case, check if the boat has boatrooms assigned
 			if( count($boatBoatrooms) === 0 )
-				return Response::json( array('errors' => array('Could not assign the customer, the boat has no boatrooms.')), 412 ); // 412 Precondition Failed
+				return Response::json( array('errors' => array('Could not assign the customer, the boat has no cabins.')), 412 ); // 412 Precondition Failed
 
 			// Check if the boat only has one boatroom assigned
 			if( count($boatBoatrooms) === 1 )
@@ -386,19 +386,19 @@ class BookingController extends Controller {
 			{
 				// Check if a boatroom_id got submitted
 				if( !Input::has('boatroom_id') )
-					return Response::json( array('errors' => array('Please select in which boatroom the customer will sleep.')), 406 ); // 406 Not Acceptable
+					return Response::json( array('errors' => array('Please select in which cabin the customer will sleep.')), 406 ); // 406 Not Acceptable
 
 				// Check if the submitted boatroom_id is allowed
 				$boatroom_id = Input::get('boatroom_id');
 				if( !in_array($boatroom_id, $boatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
-					return Response::json( array('errors' => array('The selected boatroom cannot be booked for this session.')), 403 ); // 403 Forbidden
+					return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
 			}
 			else
 			{
 				// The above checks already determined that there is only one possible boatroom to take
 				// If a boatroom_id got submitted anyway, check if it is the same that we determined
 				if( Input::has('boatroom_id') && Input::get('boatroom_id') != $boatroom_id )
-					return Response::json( array('errors' => array('The selected boatroom cannot be booked for this session.')), 403 ); // 403 Forbidden
+					return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
 			}
 		}
 		else
@@ -419,7 +419,7 @@ class BookingController extends Controller {
 		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
 		{
 			// The selected/required boatroom is already full/overbooked
-			return Response::json( array('errors' => array('The selected boatroom is already fully booked!')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining package capacity on session

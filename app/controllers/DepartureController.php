@@ -300,7 +300,7 @@ class DepartureController extends Controller {
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
 		if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have boatrooms, which are required for overnight trips.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->validate() )
 		{
@@ -402,7 +402,7 @@ class DepartureController extends Controller {
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
 		if($departure->isOvernight($departure->trip) && $departure->boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have boatrooms, which are required for overnight trips.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->save() )
 		{

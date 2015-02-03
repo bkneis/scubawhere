@@ -242,7 +242,7 @@
 										<select id="existing-customers" name="existing-customers" class="form-control select2">
 											<option selected="selected" value="">Search for a customer...</option>
 										</select>
-										<script id="customers-list-template" type="text/x-handlebars-template">											
+										<script id="customers-list-template" type="text/x-handlebars-template">
 											{{#each customers}}
 												<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
 											{{/each}}
@@ -1103,8 +1103,8 @@
 	<div id="modalWindows" style="height: 0;">
 		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
 			<div id="modal-boatroom-select" class="reveal-modal">
-				<h4>Please select a boatroom</h4>
-				<p>The session you are assigning is overnight and there are multiple boatrooms available:</p>
+				<h4>Please select a cabin</h4>
+				<p>The session you are assigning is overnight and there are multiple cabins available:</p>
 
 				<div class="list-group">
 					{{#each boatrooms}}
