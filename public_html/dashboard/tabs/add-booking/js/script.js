@@ -371,21 +371,22 @@ window.promises.loadedCustomers.done(function() {
 	$('#customer-tab').on('click', '.add-customer', function() {
 		var id = $('#existing-customers').val();
 
-		if(id > 0) {
-			booking.selectedCustomers[id] = window.customers[id];
-			booking.store();
+		// Prevents adding of "empty" customer
+		if(id <= 0) break;
 
-			$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		booking.selectedCustomers[id] = window.customers[id];
+		booking.store();
 
-			if( _.size(booking.selectedCustomers) === 1 ) {
-				booking.setLead({_token: window.token, customer_id: id}, function success(status) {
-					$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
-				}, function error(xhr) {
-					var data = JSON.parse(xhr.responseText);
-					pageMssg(data.errors[0], 'danger');
-				});
-			}
-		}	
+		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+
+		if( _.size(booking.selectedCustomers) === 1 ) {
+			booking.setLead({_token: window.token, customer_id: id}, function success(status) {
+				$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'danger');
+			});
+		}
 	});
 });
 
