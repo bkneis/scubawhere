@@ -128,14 +128,14 @@
 			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
 
 			{{#unless isAlways}}
-				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}" style="width: 125px;">
+				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
 			{{else}}
 				from <strong>the beginning of time</strong>
-				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}">
 			{{/unless}}
 
 			{{#unless isBase}}
-				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" value="{{until}}" style="width: 125px;">
+				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
 			{{/unless}}
 
 			{{#unless isAlways}}

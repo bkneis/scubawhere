@@ -247,6 +247,8 @@ $(function(){
 		window.sw.default_base_price.id = randomString();
 
 		$(event.target).before( priceInput(window.sw.default_base_price) );
+
+		initPriceDatepickers();
 	});
 
 	$('#accommodation-form-container').on('click', '.add-price', function(event) {
@@ -255,6 +257,8 @@ $(function(){
 		window.sw.default_price.id = randomString();
 
 		$(event.target).before( priceInput(window.sw.default_price) );
+
+		initPriceDatepickers();
 	});
 
 	$('#accommodation-form-container').on('click', '.remove-price', function(event) {
@@ -331,6 +335,8 @@ function renderEditForm(id) {
 		$('input[name=name]').focus();
 
 	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
 
 	setToken('[name=_token]');
 

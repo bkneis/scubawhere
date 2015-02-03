@@ -107,6 +107,19 @@ $(function(){
 	});
 });
 
+function initPriceDatepickers() {
+	$('input.datepicker').not('.datepicker-initiated').addClass('datepicker-initiated').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+}
+
 function checkDefaultSwitches(){
 	alert('If you see this alert, please contact Soren with the following message: "Tombstone 001 found"');
 	//if there is a switch on the page set its default content
