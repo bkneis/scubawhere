@@ -372,7 +372,7 @@ window.promises.loadedCustomers.done(function() {
 		var id = $('#existing-customers').val();
 
 		// Prevents adding of "empty" customer
-		if(id <= 0) break;
+		if(id <= 0) return false;
 
 		booking.selectedCustomers[id] = window.customers[id];
 		booking.store();
