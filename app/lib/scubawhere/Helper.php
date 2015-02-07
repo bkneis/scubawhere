@@ -22,7 +22,11 @@ class Helper
 		return new \DateTime( 'now', new \DateTimeZone( \Auth::user()->timezone ) );
 	}
 
-	// Check if date lies in the past (local time)
+	/**
+	 * Check if date lies in the past (local time)
+	 * @param  string  $datestring  The datestring to test
+	 * @return boolean
+	 */
 	public static function isPast($datestring) {
 		$local_time = self::localTime();
 

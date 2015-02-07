@@ -622,13 +622,20 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
-			$bookingdetail = $booking->bookingdetails()->findOrFail( Input::get('bookingdetail_id') );
+			$bookingdetail = $booking->bookingdetails()->with('departure')->findOrFail( Input::get('bookingdetail_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Check if trip departed more than 5 days ago
+		$local_time = Helper::localTime();
+		$test_date = new DateTime($bookingdetail->departure->start, new DateTimeZone( Auth::user()->timezone ));
+		if($local_time->diff($test_date)->format('%R%a') < -5)
+		{
+			return Response::json( array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
+		}
 
 		$quantity = Input::get('quantity', 1);
 		$validator = Validator::make(
@@ -685,11 +692,19 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
-			$bookingdetail = $booking->bookingdetails()->findOrFail( Input::get('bookingdetail_id') );
+			$bookingdetail = $booking->bookingdetails()->with('departure')->findOrFail( Input::get('bookingdetail_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Check if trip departed more than 5 days ago
+		$local_time = Helper::localTime();
+		$test_date = new DateTime($bookingdetail->departure->start, new DateTimeZone( Auth::user()->timezone ));
+		if($local_time->diff($test_date)->format('%R%a') < -5)
+		{
+			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
 
 		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
