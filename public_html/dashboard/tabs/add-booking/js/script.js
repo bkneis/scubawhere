@@ -966,7 +966,7 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	var params = $(this).serializeObject();
 	var reserved = params.reserved;
 
-	params.reserved = moment().add(reserved.substr(0, 2), 'hours').add(reserved.substr(3, 2), 'minutes').format('DD/MM/YYYY HH:mm');
+	params.reserved = moment().add(reserved.substr(0, 2), 'hours').add(reserved.substr(3, 2), 'minutes').format('YYYY-MM-DD HH:mm:ss'); // MUST be SQL date format
 	params._token   = window.token;
 
 	booking.reserve(params, function success(status) {

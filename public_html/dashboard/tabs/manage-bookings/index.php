@@ -82,8 +82,8 @@
 				<td>{{currency}} {{decimal_price}}</td>
 			</tr>
 			<tr class="accordion-body accordion-{{id}}">
-				<td colspan="9" style="overflow: auto;">
-					<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4;">
+				<td colspan="9" class="clearfix">
+					<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
 						{{#if payments}}
 							<h4 class="text-center">Recieved Transactions</h4>
 							<table style="width: 350px;" class="table">
@@ -109,10 +109,16 @@
 							<h5 class="text-center text-muted">No transactions yet</h5>
 						{{/if}}
 					</div>
-					{{addTransactionButton}}
-					{{editButton}}
 
-					<a href="mailto:{{lead_customer.email}}" class="mailto"><button class="btn btn-default pull-right"><i class="fa fa-envelope"></i> &nbsp;Contact customer</button></a>
+					<div style="margin-bottom: 1em;">
+						{{addTransactionButton}}
+						{{editButton}}
+
+						<a href="mailto:{{lead_customer.email}}"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Contact customer</button></a>
+					</div>
+					<div>
+						{{cancelButton}}
+					</div>
 				</td>
 			</tr>
 			<tr class="accordion-spacer accordion-{{id}}"></tr>

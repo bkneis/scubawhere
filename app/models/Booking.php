@@ -11,7 +11,7 @@ class Booking extends Ardent {
 		'source',
 		// 'price',
 		'discount',
-		// 'status',
+		'status',
 		'reserved',
 		'pick_up_location',
 		'pick_up_date',

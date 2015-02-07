@@ -90,6 +90,31 @@ Booking.initiateStorage = function() {
 	});
 };
 
+/**
+ * Cancels a booking.
+ * Cancelled bookings DO NOT count towards sessions' utilisation
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ * - booking_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.cancel = function(params, successFn, errorFn) {
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/cancel",
+		data: params,
+		context: this,
+		success: function(data) {
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
 
 /*
  ********************************
@@ -539,6 +564,36 @@ Booking.prototype.save = function(params, successFn, errorFn) {
 
 			this.saved = 1;
 			this.status = 'saved';
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Cancels the booking.
+ * Cancelled bookings DO NOT count towards sessions' utilisation
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.cancel = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/cancel",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.cancelled = 1;
+			this.status = 'cancelled';
 
 			successFn(data.status);
 		},

@@ -967,6 +967,29 @@ class BookingController extends Controller {
 		return array('status' => 'OK. Booking saved');
 	}
 
+	public function postCancel()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if($booking->status === 'cancelled')
+			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
+
+		if( !$booking->update( array('status' => 'cancelled') ) )
+		{
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return array('status' => 'OK. Booking cancelled. ' . $booking->status);
+	}
+
 	public function getValidate()
 	{
 		try

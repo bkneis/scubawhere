@@ -44,7 +44,7 @@ Handlebars.registerHelper('statusIcon', function() {
 	}
 	else if(this.status === 'reserved') {
 		icon = 'fa-clock-o';
-		tooltip = 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
+		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
 
 		if(this.reserved == null) {
 			icon = 'fa-exclamation';
@@ -110,10 +110,19 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {
-	/*if(this.status === 'confirmed')
+	// The edit button should always be available, because it also works as an info button, to see the booking details
+	/*if(this.status === 'cancelled')
 		return '';*/
 
 	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
+});
+Handlebars.registerHelper('cancelButton', function() {
+	var disabled = '';
+
+	if(this.status === 'cancelled')
+		disabled = ' disabled';
+
+	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> Cancel</button>');
 });
 
 $(function() {
@@ -192,5 +201,39 @@ function addTransaction(booking_id, self) {
 		window.clickedEdit = true;
 
 		window.location.hash = 'add-transaction';
+	});
+}
+
+function cancelBooking(booking_id, self) {
+
+	var reallyCancel = confirm('Do you really want to cancel this booking?');
+	if(!reallyCancel) return false;
+
+	// Set loading indicator
+	var btn = $(self);
+	btn.html('<i class="fa fa-cog fa-spin fa-fw"></i> Cancel');
+
+	var params = {
+		'_token': getToken(),
+		'booking_id': booking_id
+	};
+
+	// Load booking data and redirect to add-booking tab
+	Booking.cancel(params, function success(status) {
+
+		Booking.getAll(function(data) {
+			var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
+			window.bookings = data;
+			$('#booking-list').html( bookingListItem({bookings: data}) );
+
+			// Initiate tooltips
+			$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+		});
+
+		pageMssg(status, 'success');
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0]);
+		btn.html('<i class="fa fa-times fa-fw"></i> Cancel');
 	});
 }
