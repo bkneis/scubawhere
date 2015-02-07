@@ -1,3 +1,5 @@
+trap 'exit 1' ERR
+
 # Manually start ssh-agent and add deployment key to it
 ssh-agent /bin/bash
 ssh-add ~/.ssh/id_bitbucket_krystal
