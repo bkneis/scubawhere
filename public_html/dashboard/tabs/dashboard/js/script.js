@@ -15,17 +15,73 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
-
 	todaySession = Handlebars.compile($('#today-session-template').html());
 	Session.getToday(function success(data){
 		window.todaySessions = _.indexBy(data, 'id');
 		console.log(data);
-		$('#accordion').append( todaySession( {sessions : data} ) );
-		getAllLocations(data);
+		$('#sessions-list').append( todaySession( {sessions : data} ) );
+		//getAllLocations(data);
 	},
 	function error(xhr){
 		console.log('could not retrieve sessions');
 	});
+
+	$("#start-tour").on('click', function(event) {
+		var introd = introJs();
+          introd.setOptions({
+            steps: [
+              { 
+                intro: "Welcome to scubawhereRMS. This is the dashboard, where you will find an overview of the most relevant information for the day ahead."
+              },
+              {
+                element: '#todays-sessions',
+                intro: 'Here is a summary of the trips to depart today',
+                position : 'right',
+                step : 1
+              },
+              {
+              	element: '#sessions-list',
+              	intro: 'If you click on a trip, it displays all of the customers on that trip',
+              	position: 'right'
+              },
+              {
+                element: '#todays-stats',
+                intro: 'Content goes here',
+                position : 'left'
+              },
+              {
+                element: '#recent-bookings',
+                intro: 'Here is a brief summary of the last 5 bookings. Click on a booking to view its transactions or edit it.',
+                position : 'right'
+              },
+              {
+                element: '#feedback-form',
+                intro: 'If you experience any bugs within our system, or have any suggestions on improving it, please feel free to tell us!',
+                position : 'left'
+              }
+            ],
+            showStepNumbers : false
+          });
+			introd.onchange(function(targetElement) {
+			    console.log(targetElement.id); 
+			    switch (targetElement.id) 
+			        { 
+			        case "sessions-list": 
+			            //document.getElementById("todays-session-143").click();
+			        break; 
+			        }
+			});
+		introd.start();/*.oncomplete(function() {
+        	window.location.href = '#accommodations?multipage=true';
+        });*/
+	});
+
+	$('#sessions-list').on('click', '.accordion-header', function() {
+		$(this).toggleClass('expanded');
+		$('.accordion-' + this.getAttribute('data-id')).toggle();
+	});
+
+	//$('.cust-tbl').dataTable();
 
 	/*customerDetails = Handlebars.compile($('#customer-details-template').html());
 	Booking.getToday(function success(data){
@@ -34,14 +90,11 @@ $(function () {
 		for(var i = 0; i < data.length; i++){
 			$('#customer-table-'+data[i].id).append( customerDetails( {customers : data} ) );
 		}
-	});*/
-
-	//$('#accordion').on('shown.bs.collapse', toggleChevron);
-	//$('#accordion').on('hidden.bs.collapse', toggleChevron);
+	});*/	 
 
 });
 
-function getLocations(params, i, sessions){
+/*function getLocations(params, i, sessions){
 	Trip.getSpecificTrip(params, function sucess(data){
 		var spots = "";
 		for(var j=0; j < data.locations.length; j++){
@@ -58,4 +111,4 @@ function getAllLocations(sessions){
 		var params = 'id=' + sessions[i].trip.id;
 		getLocations(params, i, sessions);
 	}
-}
+}*/

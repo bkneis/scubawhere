@@ -24,6 +24,12 @@ $(function (){
 	boatroomsForm = Handlebars.compile( $("#boatroom-form-template").html() );
 	addRoom = Handlebars.compile( $('#add-room-template').html() );
 
+	$("#start-tour").on('click', function(event) {
+		introJs().setOption('doneLabel', 'Visit Trips').start().oncomplete(function() {
+        	window.location.href = '#trips?multipage=true';
+        });
+	});
+
 	$('#boat-list-container').on('click', 'li', function(event) {
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;
 		renderEditForm( event.target.getAttribute('data-id') );
@@ -246,7 +252,7 @@ function renderBoatList(callback) {
 
 	Boat.getAll(function success(data) {
 		window.boats = _.indexBy(data, 'id');
-		//console.log(data);
+		console.log(data);
 		$('#boat-list').remove();
 		$('#boat-list-container .loader').remove();
 		$("#boat-list-container").append( boatsList({boats : data}) );

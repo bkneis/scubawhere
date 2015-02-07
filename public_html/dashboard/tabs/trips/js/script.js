@@ -37,6 +37,12 @@ $(function(){
 		});
 	});
 
+	$("#start-tour").on('click', function(event) {
+		introJs().setOption('doneLabel', 'Visit Tickets').start().oncomplete(function() {
+        	window.location.href = '#tickets?multipage=true';
+        });
+	});
+
 	var $tripFormContainer = $('#trip-form-container');
 	// Assign eventListener for trip clicks
 	$('#trip-list-container').on('click', 'li', function(event) {

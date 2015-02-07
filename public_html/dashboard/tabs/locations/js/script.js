@@ -13,6 +13,12 @@ $(function() {
 
 	loadGoogleMaps();
 
+	$("#start-tour").on('click', function(event) {
+		introJs().setOption('doneLabel', 'Visit Boats').start().oncomplete(function() {
+        	window.location.href = '#boats?multipage=true';
+        });
+	});
+
 });
 
 function initialise() {

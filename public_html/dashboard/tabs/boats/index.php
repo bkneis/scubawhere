@@ -1,6 +1,6 @@
-<div id="wrapper" class="clearfix">
+<div id="wrapper" class="clearfix" data-step="1" data-position="right" data-intro="This tab is for boat management which controls the overall capacity of a trip. For Dive Operators that purely operate with shore-based diving, think of the shore as your boat.">
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="2" data-position="right" data-intro="Here displays all of your boats">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Boats</h4>
 			</div>
@@ -18,7 +18,7 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="3" data-position="right" data-intro="Here displays all of your boatrooms, these are assigned to boats and are needed for any boat assigned to a over night trip">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Cabins</h4>
 			</div>
@@ -38,7 +38,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="boat-form-container">
+		<div class="panel panel-default" id="boat-form-container" data-step="4" data-position="left" data-intro="Here you can add all information on your boat or boatroom">
 			<script type="text/x-handlebars-template" id="boat-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} boat</h4>
@@ -60,7 +60,7 @@
 							<label class="field-label">Boat capacity</label>
 							<input type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 						</div>
-						<div class="form-row">
+						<div class="form-row" data-step="5" data-position="top" data-intro="Here you can assign boatrooms to your boats">
 							<div id="room-types">
 							<h4>Cabins on this boat</h4>
 								{{#each boatrooms}}
@@ -73,7 +73,7 @@
 							<input type="hidden" name="id" value="{{id}}">
 						{{/if}}
 						<input type="hidden" name="_token">
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-boat" value="{{task}} Boat">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-boat" value="SAVE">
 					</form>
 				</div>
 			</script>

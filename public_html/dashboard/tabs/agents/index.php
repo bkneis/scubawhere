@@ -1,6 +1,6 @@
-<div id="wrapper" class="clearfix">
+<div id="wrapper" class="clearfix" data-step="1" data-position="right" data-intro="This tab is to manage you agents">
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="2" data-position="right" data-intro="Here shows your current agents. Click on one of them to edit it, or create a new one by clicking add agent.">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Agents</h4>
 			</div>
@@ -20,7 +20,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="agent-form-container">
+		<div class="panel panel-default" id="agent-form-container" data-step="3" data-position="left" data-intro="Set the commission rate in a % Set the business terms. If the Travel Agent usually takes the full amount from the customer on booking and you send them a bill later, select “Full Amount” in the Business Terms drop down. If the Travel Agent is only allowed to take their commission and the customer must pay the remaining amount directly to you, select “Deposit Only”. If the Travel Agent is naughty, hasn’t paid their bills or you simply want to stop receiving bookings from them. Select “Banned”.">
 			<script type="text/x-handlebars-template" id="agent-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} agent</h4>
@@ -86,7 +86,7 @@
 							<input type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}"> %
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" data-step="3" data-position="top" data-intro="By selecting these business terms for each Travel Agent, it will feed into when Adding a Booking, with the final amount required would be effected and invoices to be automatically created on request.">
 							<label class="field-label">Business Terms</label>
 							<select id="terms" name="terms">
 								<option>Please select..</option>
@@ -101,7 +101,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<button class="btn btn-primary btn-lg text-uppercase" id="{{task}}-agent">{{task}} Agent</button>
+						<button class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-agent">SAVE</button>
 					</form>
 				</div>
 			</script>

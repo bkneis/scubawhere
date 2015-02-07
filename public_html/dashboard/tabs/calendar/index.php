@@ -1,6 +1,6 @@
 <div id="wrapper">
 	<div class="col-md-12">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="calendar-filters">
 			<div class="panel-heading">
 				<h4 class="panel-title">Filters</h4>
 			</div>
@@ -9,7 +9,7 @@
 					<div class="onofflabel">
 						<p><strong>Accommodations</strong></p>
 					</div>
-					<div class="onoffswitch">
+					<div class="onoffswitch" id="calendar-switch" >
 						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
 						<label class="onoffswitch-label" for="myonoffswitch">
 							<span class="onoffswitch-inner"></span>
@@ -45,7 +45,7 @@
 								<option value="{{id}}">{{name}}</option>
 							{{/each}}
 						</select>
-						<button id="remove-boats-filter" class="bttn redb">&nbsp;&#215;&nbsp;</button>
+						<button id="remove-boats-filter" class="btn btn-danger remove-room">&#215;</button>
 					</p>
 				</script>
 				<script type="text/x-handlebars-template" id="trips-list-template">
@@ -57,7 +57,7 @@
 								<option value="{{id}}">{{name}}</option>
 							{{/each}}
 						</select>
-						<button id="remove-trips-filter" class="bttn redb">&nbsp;&#215;&nbsp;</button>
+						<button id="remove-trips-filter" class="btn btn-danger remove-room">&#215;</button>
 					</p>
 				</script>
 			</div>

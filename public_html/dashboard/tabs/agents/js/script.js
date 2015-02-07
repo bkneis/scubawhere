@@ -23,6 +23,12 @@ $(function(){
 	agentForm = Handlebars.compile( $("#agent-form-template").html() );
 	renderEditForm();
 
+	$("#start-tour").on('click', function(event) {
+		introJs().setOption('doneLabel', 'Visit Locations').start().oncomplete(function() {
+        	window.location.href = '#locations?multipage=true';
+        });
+	});
+
 	$("#agent-form-container").on('click', '#add-agent', function(event) {
 
 		event.preventDefault();

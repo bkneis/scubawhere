@@ -86,7 +86,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-package" value="{{task}} Package">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-package" value="SAVE">
 
 					</form>
 				</div>

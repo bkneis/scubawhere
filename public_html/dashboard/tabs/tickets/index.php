@@ -120,7 +120,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-ticket" value="{{task}} Ticket">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-ticket" value="SAVE">
 
 					</form>
 				</div>

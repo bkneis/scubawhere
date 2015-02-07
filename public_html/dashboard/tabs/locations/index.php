@@ -1,4 +1,4 @@
-<div id="wrapper" class="clearfix">
+<div id="wrapper" class="clearfix" data-step="1" data-position="right" data-intro="This tab is where you highlight your dive locations. First, you’ll see a small house located over the address of the business you disclosed in the registration. If this is incorrect, you can edit your address accordingly in the Settings tab. (We’ll get to that bit later!). There are a few different methods you can use to highlight where exactly you go scuba diving.">
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -19,7 +19,7 @@
 	</div>
 
 	<div class="col-md-6">
-		<div class="panel">
+		<div class="panel" data-step="2" data-position="bottom" data-intro="To manually enter in co-ordinates, simply enter in the Latitude and Longitude co-ordinates here. Click ‘Show’ to allow you to see exactly where the co-ordinates display on the Map.">
 			<div class="panel-heading text-right" style="padding: 0 1px;">
 				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" class="form-control" style="display: inline-block; width: 115px;" />
 				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" class="form-control" style="display: inline-block; width: 115px;" />
@@ -31,7 +31,7 @@
 
 	<div class="clearfix"></div>
 
-	<div id="map-container" class="col-md-12">
+	<div id="map-container" class="col-md-12" data-step="3" data-position="top" data-intro="Or you can simply click on the map. You’ll see a green marker pop up which you can click on a different location to move the marker.">
 		<div id="map" style="height: 100%;"></div>
 	</div>
 

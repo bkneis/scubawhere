@@ -1149,4 +1149,5 @@
 	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
 	<!--My scripts-->
 	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
+	
 </div>

@@ -132,7 +132,10 @@ $(function() {
     	var m = date.getMonth() + 1; // jan starts at 0
     	var y = date.getFullYear();
     	$("#jump-date").val('');
-		var jumpDate = $.fullCalendar.moment(y+'-'+m+'-'+d);
+    	var sDate = y+'-'+m+'-'+d;
+		var jumpDate = $("#calendar").fullCalendar.moment(sDate);
+		//var moment = $('#calendar').fullCalendar('getDate');
+		console.log(moment);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
 		$("#remove-jump").css('display', 'none');
 	});
@@ -152,6 +155,60 @@ $(function() {
 			up:   'fa fa-chevron-up',
 			down: 'fa fa-chevron-down'
 		},
+	});
+
+	$("#start-tour").on('click', function(event) {
+		var introc = introJs();
+          introc.setOptions({
+            steps: [
+              { 
+                intro: "This is the calendar tab, it shows the overview of your schedueled trips and accommodation bookings."
+              },
+              {
+                element: '.fc-left',
+                intro: 'You can view your trips for the next month, week or day.',
+                position : 'top'
+              },
+              {
+                element: '.fc-right',
+                intro: 'Clicking these arrows will change to the next or previous week',
+                position : 'left'
+              },
+              {
+                element: '.fc-view-container',
+                intro: 'Shown in the calendar are your scheduled trips. Each trip shows its start time, trip name and capacity percentage',
+                position : 'top'
+              },
+              {
+                element: '.fc-view-container',
+                intro: 'Click on a trip to see more information about departure times, duration and which boat its running on.',
+                position : 'top'
+              },
+              {
+                element: '#calendar-filters',
+                intro: 'Here you can filter which trips are shown on the calendar and what to display',
+                position : 'bottom'
+              },
+              {
+                element: '#calendar-switch',
+                intro: 'You can use this to toggle between viewing trips and accommodation bookings',
+                position : 'top'
+              },
+              {
+                element: '#jump-date',
+                intro: 'To view a specific date on the calendar, please select a date',
+                position : 'right'
+              },
+              {
+                element: '#filter-options',
+                intro: 'Additionally, you can filter your results by boats or trips. Select a filter type and filter to update the calendar',
+                position : 'right'
+              }
+            ]
+          });
+		introc.start();/*.oncomplete(function() {
+        	window.location.href = '#accommodations?multipage=true';
+        });*/
 	});
 
 });

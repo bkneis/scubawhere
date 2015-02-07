@@ -58,7 +58,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="btn btn-lg btn-primary text-uppercase" id="{{task}}-addon" value="{{task}} Add-on">
+						<input type="submit" class="btn btn-lg btn-primary text-uppercase pull-right" id="{{task}}-addon" value="SAVE">
 
 					</form>
 				</div>

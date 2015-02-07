@@ -1,6 +1,6 @@
-<div id="wrapper" class="clearfix">
+<div id="wrapper" class="clearfix" data-step="1" data-position="right" data-intro="This tab is where you create your trips. ">
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="2" data-position="right" data-intro="Here are where your trips are. Click on one to edit it or click add trip to create a new trip">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Trips</h4>
 			</div>
@@ -20,7 +20,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="trip-form-container">
+		<div class="panel panel-default" id="trip-form-container" data-step="3" data-position="left" data-intro="Enter in your Trip Description, select the locations the trip visits and select the tags of what is offered onboard, whether that be ‘Starter Courses’, ‘Nitrox’, etc. These tags will be searchable when scubawhere.com is launched.">
 			<script type="text/x-handlebars-template" id="trip-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} Trip</h4>
@@ -79,7 +79,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-trip" value="{{task}} Trip">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-trip" value="SAVE">
 
 					</form>
 				</div>

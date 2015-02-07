@@ -25,7 +25,7 @@
 							</div>
 							<div class="form-row">
 								<label class="field-label">Contact phone number : </label>
-								<input type="text" name="phone" value="{{phone}}" class="form-control"></input>
+								<input class="form-control" type="text" id="phone" name="phone" value="{{phone}}">
 							</div>
 
 							<div class="form-row">
@@ -104,7 +104,7 @@
 
 							<div class="form-row">
 								<label class="field-label">Business phone : </label>
-								<input type="text" name="business_phone" value="{{business_phone}}" class="form-control"></input>
+								<input class="form-control" type="text" id="business_phone" name="business_phone" value="{{business_phone}}">
 							</div>
 
 							<div class="form-row">
@@ -123,6 +123,17 @@
 							</div>
 
 							<input type="hidden" name="_token">
+							<input type="submit" class="update-settings btn btn-primary btn-lg text-uppercase" value="Update Account">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">Terms and conditions</h4>
+						</div>
+						<div class="panel-body">
+							<textarea style="width:100%" rows="10" id="terms" name="terms" value="{{terms}}"></textarea>
 							<input type="submit" class="update-settings btn btn-primary btn-lg text-uppercase" value="Update Account">
 						</div>
 					</div>

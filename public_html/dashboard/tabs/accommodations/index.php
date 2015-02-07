@@ -1,6 +1,6 @@
 <div id="wrapper" class="clearfix">
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="accommodations-list">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Accommodation</h4>
 			</div>
@@ -20,15 +20,15 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="accommodation-form-container">
+		<div class="panel panel-default" id="accommodation-form-container" data-step="3" data-position="left" data-intro="To get started, type the room name or type and description and set a base price. You can add yearly price changes to begin on certain dates in the future and also apply seasonal price changes.">
 			<script type="text/x-handlebars-template" id="accommodation-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} accommodation</h4>
 				</div>
 				<div class="panel-body">
 					<form id="{{task}}-accommodation-form">
-						<div class="form-row">
-							<label class="field-label">Accommodation Name</label>
+						<div class="form-row" id="acom-name">
+							<label class="field-label">Room Name</label>
 							<input type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
@@ -38,7 +38,7 @@
 
 						<div class="form-row">
 							<label class="field-label">Accommodation Description</label>
-							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
+							<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
 						<div class="form-row">
@@ -46,12 +46,12 @@
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
-							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
+							<button id="acom-base" class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
 						<div class="form-row">
 							<label>
-								<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+								<input type="checkbox" id="acom-season" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
 							</label>
 							<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
@@ -67,7 +67,7 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="acom-rooms">
 							<label class="field-label">Number of Rooms/Beds</label>
 							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 						</div>
@@ -77,7 +77,7 @@
 						{{/if}}
 						<input type="hidden" name="_token">
 
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-accommodation" value="{{task}} Accommodation">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-accommodation" value="SAVE">
 
 					</form>
 				</div>
@@ -120,4 +120,5 @@
 
 	<script src="/dashboard/js/Controllers/Accommodation.js"></script>
 	<script src="tabs/accommodations/js/script.js"></script>
+
 </div>
