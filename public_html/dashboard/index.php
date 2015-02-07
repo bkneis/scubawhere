@@ -36,13 +36,18 @@
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />
+	
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 
+	<link rel="stylesheet" href="/common/css/introjs.css">
+
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
+
+
 
 	<!-- dash config js -->
 
@@ -62,6 +67,8 @@
 	<script src="/common/js/moment.min.js"></script>
 
 	<script src="/common/js/underscore-min.js"></script>
+
+	<script src="/common/js/intro.js"></script>
 
 	<!--Datetimepicker-->
 	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
@@ -189,6 +196,7 @@
 
 		<!-- main page content to be loaded by AJAX -->
 		<div id="guts">
+		<a id="start-tour" class="btn btn-large btn-success pull-right" onclick="">Start tour</a>
 			<div id="breadcrumbs"></div>
 
 			<div id="content">
