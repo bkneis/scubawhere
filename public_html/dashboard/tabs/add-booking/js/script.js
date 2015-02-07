@@ -51,6 +51,10 @@ Handlebars.registerHelper("isLead", function (id) {
 	}
 });
 
+Handlebars.registerHelper("notEmptyObj", function (item, options) {
+		return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
+});
+
 Handlebars.registerHelper("priceRange", function(prices) {
 	if(prices.length > 1) {
 		var min=null, max=null;
@@ -95,6 +99,8 @@ var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template
 var customersTemplate      = Handlebars.compile($("#customers-list-template").html());
 var countriesTemplate      = Handlebars.compile($("#countries-template").html());
 var boatroomModalTemplate  = Handlebars.compile($("#boatroom-select-modal-template").html());
+var bookingSummaryTemplate = Handlebars.compile($("#booking-summary-template").html());
+
 
 /**
  * Load all data in order of requirement
@@ -206,7 +212,7 @@ window.promises.loadedAccommodations.done(function() {
 			down: 'fa fa-chevron-down'
 		},
 	});
-})
+});
 
 /*
 *************************
@@ -256,6 +262,7 @@ $('#source-tab').on('click', '.source-finish', function() {
 		window.booking = new Booking();
 		booking.initiate(params, function(status) {
 			$('[data-target="#ticket-tab"]').tab('show');
+			$("#booking-summary").html(bookingSummaryTemplate(booking));
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
 			pageMssg(data.error[0], 'danger');
@@ -270,14 +277,6 @@ $('#source-tab').on('click', '.source-finish', function() {
 ***** Tickets/Packages *****
 ****************************
 */
-
-var ticketsBasketTemplate = Handlebars.compile($("#selected-tickets-template").html());
-var packagesBasketTemplate = Handlebars.compile($("#selected-packages-template").html());
-
-$('[data-target="#ticket-tab"]').on('show.bs.tab', function () {
-	$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
-	$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
-});
 
 window.promises.loadedTickets.done(function() {
 	$('#ticket-tab').on('click', '.add-ticket', function() {
@@ -295,11 +294,10 @@ window.promises.loadedTickets.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	});
 
-	$('#ticket-tab').on('click', '.remove-ticket', function() {
-
+	$('#booking-summary').on('click', '.remove-ticket', function() {
 		var id = $(this).data('id');
 
 		//Lower quantity, if last ticket, remove from selected tickets.
@@ -311,7 +309,7 @@ window.promises.loadedTickets.done(function() {
 
 		booking.store();
 
-		$("#selected-tickets").html(ticketsBasketTemplate({tickets:booking.selectedTickets}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	});
 });
 
@@ -331,11 +329,11 @@ window.promises.loadedPackages.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	});
 });
 
-$('#ticket-tab').on('click', '.remove-package', function() {
+$('#booking-summary').on('click', '.remove-package', function() {
 
 	var id = $(this).data('id');
 
@@ -348,11 +346,7 @@ $('#ticket-tab').on('click', '.remove-package', function() {
 
 	booking.store();
 
-	$("#selected-packages").html(packagesBasketTemplate({packages:booking.selectedPackages}));
-});
-
-$('#ticket-tab').on('click', '.tickets-finish', function() {
-	$('[data-target="#customer-tab"]').tab('show');
+	$("#booking-summary").html(bookingSummaryTemplate(booking));
 });
 
 /*
@@ -361,13 +355,17 @@ $('#ticket-tab').on('click', '.tickets-finish', function() {
 *************************
 */
 
-var selectedCustomersTemplate = Handlebars.compile($("#selected-customers-template").html());
-
-$('[data-target="#customer-tab"]').on('show.bs.tab', function () {
-	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
-});
+var selectedCustomerTemplate = Handlebars.compile($("#selected-customer-template").html());
 
 window.promises.loadedCustomers.done(function() {
+	$('#customer-tab').on('change', '#existing-customers', function() {
+		var id = $('#existing-customers').val();
+
+		if(id <= 0) return false;
+			
+		$("#selected-customer").html(selectedCustomerTemplate(window.customers[id]));	
+	});
+
 	$('#customer-tab').on('click', '.add-customer', function() {
 		var id = $('#existing-customers').val();
 
@@ -377,11 +375,11 @@ window.promises.loadedCustomers.done(function() {
 		booking.selectedCustomers[id] = window.customers[id];
 		booking.store();
 
-		$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 
 		if( _.size(booking.selectedCustomers) === 1 ) {
 			booking.setLead({_token: window.token, customer_id: id}, function success(status) {
-				$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				$("#booking-summary").html(bookingSummaryTemplate(booking));
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0], 'danger');
@@ -403,7 +401,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#country_id option[value="'+booking.selectedCustomers[id].country_id+'"]').attr('selected', 'selected');
 });
 
-$('#customer-tab').on('click', '.remove-customer', function() {
+$('#selected-customers').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
 
 	var details = _.filter(booking.bookingdetails, function(detail) {
@@ -432,7 +430,7 @@ $('#customer-tab').on('click', '.remove-customer', function() {
 	delete booking.selectedCustomers[id];
 	booking.store();
 
-	$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+	$("#booking-summary").html(bookingSummaryTemplate(booking));
 
 	// Check if we just removed the lead customer
 	if(booking.lead_customer.id == id) {
@@ -444,7 +442,7 @@ $('#customer-tab').on('click', '.remove-customer', function() {
 				customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
 			};
 			booking.setLead(params, function success(status) {
-				$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				$("#booking-summary").html(bookingSummaryTemplate(booking));
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.error[0], 'danger');
@@ -486,7 +484,7 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Save');
 				$('#edit-customer-modal').modal('hide');
 
-				$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				$("#booking-summary").html(bookingSummaryTemplate(booking));
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
@@ -518,11 +516,11 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Add');
 				form[0].reset();
 
-				$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+				$("#booking-summary").html(bookingSummaryTemplate(booking));
 
 				if( _.size(booking.selectedCustomers) === 1 ) {
 					booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
-						$("#selected-customers").html(selectedCustomersTemplate({customers:booking.selectedCustomers}));
+						$("#booking-summary").html(bookingSummaryTemplate(booking));
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
 						pageMssg(data.errors[0], 'danger');
@@ -543,16 +541,15 @@ $('#customer-tab').on('click', '.clear-form', function() {
 
 $('#customer-tab').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
-		$("#selected-customers").html( selectedCustomersTemplate({customers:booking.selectedCustomers}) );
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
 	});
 });
 
-$('#customer-tab').on('click', '.customers-finish', function() {
-
-	if(!booking.lead_customer) {
+$('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
+  if(!booking.lead_customer) {
 		pageMssg("Please designate a lead customer.", "danger");
 		return false;
 	}
@@ -568,8 +565,6 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 		pageMssg("Lead customer requires a country!", "danger");
 		return false;
 	}
-
-	$('[data-target="#session-tab"]').tab('show');
 });
 
 /*
@@ -581,7 +576,6 @@ $('#customer-tab').on('click', '.customers-finish', function() {
 var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-template").html());
 var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
 var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
-var bookingDetailsTemplate   	= Handlebars.compile($("#booking-details-template").html());
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function () {
 	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
@@ -590,8 +584,6 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function () {
 	$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
 	$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
 	$("#session-tickets").children().first().addClass('active');
-
-	$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
 
 	$('#session-filters').submit();
 });
@@ -721,10 +713,10 @@ function submitAddDetail(params) {
 		    return detail.customer.id == customer_id;
 		});
 
-		booking.selectedCustomers[customer_id].bookingdetails = details;
-		booking.store();
+		//booking.selectedCustomers[customer_id].bookingdetails = details;
+		//booking.store();
 
-		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -735,7 +727,7 @@ function submitAddDetail(params) {
 	});
 }
 
-$('#session-tab').on('click', '.unassign-session', function() {
+$('#booking-summary').on('click', '.unassign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Unassigning...');
 
@@ -750,7 +742,7 @@ $('#session-tab').on('click', '.unassign-session', function() {
 
 		redrawSessionsList(params);
 
-		$("#booking-details").html(bookingDetailsTemplate({details:booking.bookingdetails}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -759,6 +751,7 @@ $('#session-tab').on('click', '.unassign-session', function() {
 
 });
 
+//TODO: Work out how to take below into account with new tab navigation
 window.promises.loadedAddons.done(function() {
 	window.promises.loadedAccommodations.done(function() {
 		$('#session-tab').on('click', '.sessions-finish', function() {
@@ -780,12 +773,10 @@ window.promises.loadedAddons.done(function() {
 */
 
 var addonBookingDetailsTemplate = Handlebars.compile($("#addon-booking-details-template").html());
-var selectedAddonsTemplate = Handlebars.compile($("#selected-addons-template").html());
 
 $('[data-target="#addon-tab"]').on('show.bs.tab', function () {
 	$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
 	$("#addon-booking-details").children().first().addClass('active');
-	$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
 });
 
 var addonTotal = 0;
@@ -801,7 +792,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
 	booking.addAddon(params, function success() {
-		$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -820,7 +811,7 @@ $('#addon-tab').on('click', '.remove-addon', function() {
 	params.addon_id         = $(this).data('id');
 
 	booking.removeAddon(params, function success() {
-		$("#selected-addons").html(selectedAddonsTemplate({details:booking.bookingdetails}));
+		$("#booking-summary").html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -1038,6 +1029,15 @@ $(document).ready(function() {
 		if(booking.currentTab !== '#source-tab') {
 			$('[data-target="#source-tab"]').removeAttr("data-toggle");
 		}
+
+	});
+
+	$('.btn-prev').on('click', function() {
+	    $('.nav-wizard li').filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+	});
+
+	$('.btn-next').on('click', function() {
+	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
 	});
 
 	$('a[data-toggle="tab"]').on('click', function () {
@@ -1048,6 +1048,18 @@ $(document).ready(function() {
 
 	$(document).on('click', '.list-group-radio', function() {
 		listGroupRadio($(this));
+	});
+
+	$('#booking-summary').on('click', '.list-expand', function() {
+		if($(this).hasClass('fa-plus-square-o')) {
+			$(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideDown();
+		}else{
+			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideUp();
+		}
+		
+
 	});
 
 	$('.alert-container').remove();

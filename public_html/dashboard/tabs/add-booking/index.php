@@ -51,6 +51,8 @@
 			</li>
 		</ul>
 
+		<div class="col-md-9">
+
 		<div class="tab-content">
 
 			<div role="tabpanel" class="tab-pane fade in active" id="source-tab">
@@ -122,50 +124,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-4 col-sm-push-8">
-						<ul class="list-group">
-							<li class="list-group-item active">
-								<h4 class="list-group-item-heading">Selected Tickets</h4>
-							</li>
-							<div id="selected-tickets"></div>
-							<div id="selected-packages"></div>
-						</ul>
-						<script id="selected-tickets-template" type="text/x-handlebars-template">
-						{{#each tickets}}
-							<li class="list-group-item">
-								<p class="list-group-item-text">
-									<i class="fa fa-ticket"></i>
-									<a href="javascript:void(0);" title="Click to remove" class="remove-ticket" data-id="{{id}}">{{{name}}}</a>
-									<span class="badge qty">{{qty}}</span>
-								</p>
-							</li>
-						{{else}}
-							<li class="list-group-item">
-								<p class="list-group-item-text text-muted">
-									No tickets selected yet...
-								</p>
-							</li>
-						{{/each}}
-						</script>
-						<script id="selected-packages-template" type="text/x-handlebars-template">
-						{{#each packages}}
-							<li class="list-group-item">
-								<p class="list-group-item-text">
-									<i class="fa fa-tags"></i>
-									<a href="javascript:void(0);" title="Click to remove" class="remove-package" data-id="{{id}}">{{{name}}}</a>
-									<span class="badge qty">{{qty}}</span>
-								</p>
-							</li>
-						{{else}}
-							<li class="list-group-item">
-								<p class="list-group-item-text text-muted">
-									No packages selected yet...
-								</p>
-							</li>
-						{{/each}}
-						</script>
-					</div>
-					<div class="col-sm-8 col-sm-pull-4">
+					<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-12" id="tickets-list">
 								<span class="loader"></span>
@@ -211,12 +170,7 @@
 									{{/each}}
 								</script>
 							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<a href="javascript:void(0);" class="btn btn-primary tickets-finish pull-right">Next</a>
+						</div>						
 					</div>
 				</div>
 			</div>
@@ -230,30 +184,55 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-7">
+					<div class="col-md-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title">Existing Customer</h3>
 							</div>
 							<div class="panel-body">
-								<div class="form-group">
-									<label for="existing-customers" class="col-sm-3 control-label">Name</label>
-									<div class="col-sm-9">
-										<select id="existing-customers" name="existing-customers" class="form-control select2">
-											<option selected="selected" value="">Search for a customer...</option>
-										</select>
-										<script id="customers-list-template" type="text/x-handlebars-template">
-											{{#each customers}}
-												<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
-											{{/each}}
-										</script>
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="form-group">
+											<label for="existing-customers" class="col-sm-3 control-label">Name</label>
+											<div class="col-sm-9">
+												<select id="existing-customers" name="existing-customers" class="form-control select2">
+													<option selected="selected" value="">Search for a customer...</option>
+												</select>
+												<script id="customers-list-template" type="text/x-handlebars-template">
+													<option selected="selected" value="">Search for a customer...</option>									
+													{{#each customers}}
+														<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
+													{{/each}}
+												</script>
+											</div>
+										</div>
 									</div>
 								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<div id="selected-customer">
+											
+										</div>
+									</div>
+								</div>
+								<script id="selected-customer-template" type="text/x-handlebars-template">
+									<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
+										<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h4>
+										<p class="list-group-item-text">
+											<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
+											{{{address_1}}}<br>
+											{{{city}}}, {{{county}}}, {{postcode}}<br>
+											<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
+										</p>
+										<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
+										<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
+									</li>
+								</script>
 							</div>
 							<div class="panel-footer">
 								<div class="row">
 									<div class="col-xs-12">
-										<a href="javascript:void(0);" class="btn btn-primary add-customer pull-right" style="margin-left:5px;">Add to booking</a>
+										<a href="javascript:void(0);" class="btn btn-primary add-customer pull-right" style="margin-left:5px;">Add</a>
 									</div>
 								</div>
 							</div>
@@ -343,41 +322,6 @@
 									</div>
 								</fieldset>
 							</form>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<ul class="list-group">
-							<li href="#" class="list-group-item active">
-								<h4 class="list-group-item-heading">Selected Customers</h4>
-							</li>
-							<div id="selected-customers"></div>
-							<script id="selected-customers-template" type="text/x-handlebars-template">
-								{{#each customers}}
-									<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
-										<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}} {{isLead id}}</h4>
-										<p class="list-group-item-text">
-											<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
-											{{{address_1}}}<br>
-											{{{city}}}, {{{county}}}, {{postcode}}<br>
-											<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
-										</p>
-										<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
-										<a href="javascript:void(0);" class="btn btn-danger btn-xs remove-customer" data-id="{{id}}">Remove</a>
-										<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
-									</li>
-								{{else}}
-									<li class="list-group-item">
-										<p class="list-group-item-text text-muted">
-											No customers selected yet...
-										</p>
-									</li>
-								{{/each}}
-							</script>
-						</ul>
-						<div class="row">
-							<div class="col-xs-12">
-								<a href="javascript:void(0);" class="btn btn-primary customers-finish pull-right">Next</a>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -480,181 +424,139 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-8">
-						<div class="row session-requirements">
-							<div class="col-sm-6">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h2 class="panel-title">Select Customer</h2>
-									</div>
-									<div class="panel-body">
-										<div class="list-group" id="session-customers">
-										</div>
-									</div>
-								</div>
-								<script id="session-customers-template" type="text/x-handlebars-template">
-									{{#each customers}}
-										<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-											{{{firstname}}} {{{lastname}}}
-										</a>
-									{{/each}}
-								</script>
+				<div class="row session-requirements">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title">Select Customer</h2>
 							</div>
-							<div class="col-sm-6">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h2 class="panel-title">Select Ticket</h2>
-									</div>
-									<div class="panel-body">
-										<div class="list-group" id="session-tickets">
-										</div>
-									</div>
-								</div>
-								<script id="session-tickets-template" type="text/x-handlebars-template">
-									{{#each tickets}}
-										<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
-											<span class="label label-default">Ticket</span>
-											{{{name}}}
-										</a>
-									{{/each}}
-								</script>
-								<script id="session-packages-template" type="text/x-handlebars-template">
-									{{#each packages}}
-										{{#each tickets}}
-											<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
-												<span class="label label-warning">{{{../name}}}</span>
-												{{{name}}}
-											</a>
-										{{/each}}
-									{{/each}}
-								</script>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h3 class="panel-title">Assign to Session</h3>
-									</div>
-									<div class="panel-body">
-										<div class="row ">
-											<form role="form" id="session-filters">
-												<div class="col-sm-3">
-													<div class="form-group">
-														<label for="after">After:</label>
-														<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
-													</div>
-												</div>
-												<div class="col-sm-3">
-													<div class="form-group">
-														<label for="before">Before:</label>
-														<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="before" placeholder="YYYY-MM-DD">
-													</div>
-												</div>
-												<div class="col-sm-4">
-													<div class="form-group">
-														<label for="trips">Trip:</label>
-														<select id="trips" name="trip_id" class="form-control select2">
-															<option selected="selected" value="">Choose trip...</option>
-														</select>
-														<script id="trips-list-template" type="text/x-handlebars-template">
-															{{#each trips}}
-																<option value="{{id}}">{{{name}}}</option>
-															{{/each}}
-														</script>
-													</div>
-												</div>
-												<div class="col-sm-2">
-													<div class="form-group">
-														<label for="">&nbsp;</label>
-														<button type="submit" class="btn btn-primary btn-block">Filter</button>
-													</div>
-												</div>
-											</form>
-										</div>
-										<div class="row">
-											<div class="col-xs-12">
-												<table class="table table-condensed" id="sessions-table">
-													<thead>
-														<tr>
-															<th>Start</th>
-															<th>Finish</th>
-															<th>Trip</th>
-															<th>Free Spaces</th>
-															<th>Boat</th>
-															<th>Actions</th>
-														</tr>
-													</thead>
-													<tbody>
-
-													</tbody>
-												</table>
-											</div>
-											<script id="sessions-table-template" type="text/x-handlebars-template">
-												{{#each sessions}}
-													{{#unless deleted_at}}
-														<tr>
-															<td class="session-start">{{friendlyDate start}}</td>
-															<td class="session-end">{{tripFinish start trip.duration}}</td>
-															<td class="session-trip">{{{trip.name}}}</td>
-															<td>{{freeSpaces capacity}}</td>
-															<td>{{{boat.name}}}</td>
-															<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
-														</tr>
-													{{/unless}}
-												{{else}}
-													<tr>
-														<td colspan="6">
-															<h3 class="text-center text-muted"><i class="fa fa-exclamation-triangle"></i></h3>
-															<h5 class="text-center text-muted">Your search did not match any trips.</h5>
-														</td>
-													</tr>
-												{{/each}}
-											</script>
-										</div>
-									</div>
+							<div class="panel-body">
+								<div class="list-group" id="session-customers">
 								</div>
 							</div>
 						</div>
+						<script id="session-customers-template" type="text/x-handlebars-template">
+							{{#each customers}}
+								<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
+									{{{firstname}}} {{{lastname}}}
+								</a>
+							{{/each}}
+						</script>
 					</div>
-					<div class="col-md-4">
-						<ul class="list-group">
-							<li href="#" class="list-group-item active">
-								<h4 class="list-group-item-heading">Assigned Trips</h4>
-							</li>
-							<div id="booking-details"></div>
-							<script id="booking-details-template" type="text/x-handlebars-template">
-								{{#each details}}
-									<li class="list-group-item">
-										<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
-										<p class="list-group-item-text">
-											<strong>Ticket:</strong>
-											{{#if packagefacade}}
-												<span class="label label-warning">{{{packagefacade.package.name}}}</span>
-											{{else}}
-												<span class="label label-default">Ticket</span>
-											{{/if}}
-											<span class="ticket-name">{{{ticket.name}}}</span>
-										</p>
-										<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
-										<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
-										<a href="javascript:void(0);" class="btn btn-danger btn-xs unassign-session" data-id="{{id}}">Unassign</a>
-									</li>
-								{{else}}
-									<li class="list-group-item">
-										<p class="list-group-item-text text-muted">
-											No tickets/packages assigned yet...
-										</p>
-									</li>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title">Select Ticket</h2>
+							</div>
+							<div class="panel-body">
+								<div class="list-group" id="session-tickets">
+								</div>
+							</div>
+						</div>
+						<script id="session-tickets-template" type="text/x-handlebars-template">
+							{{#each tickets}}
+								<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
+									<span class="label label-default">Ticket</span>
+									{{{name}}}
+								</a>
+							{{/each}}
+						</script>
+						<script id="session-packages-template" type="text/x-handlebars-template">
+							{{#each packages}}
+								{{#each tickets}}
+									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
+										<span class="label label-warning">{{{../name}}}</span>
+										{{{name}}}
+									</a>
 								{{/each}}
-							</script>
-						</ul>
+							{{/each}}
+						</script>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12">
-						<a href="javascript:void(0);" class="btn btn-primary sessions-finish pull-right">Next</a>
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Assign to Session</h3>
+							</div>
+							<div class="panel-body">
+								<div class="row ">
+									<form role="form" id="session-filters">
+										<div class="col-sm-3">
+											<div class="form-group">
+												<label for="after">After:</label>
+												<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div class="form-group">
+												<label for="before">Before:</label>
+												<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="before" placeholder="YYYY-MM-DD">
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="trips">Trip:</label>
+												<select id="trips" name="trip_id" class="form-control select2">
+													<option selected="selected" value="">Choose trip...</option>
+												</select>
+												<script id="trips-list-template" type="text/x-handlebars-template">
+													{{#each trips}}
+														<option value="{{id}}">{{{name}}}</option>
+													{{/each}}
+												</script>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label for="">&nbsp;</label>
+												<button type="submit" class="btn btn-primary btn-block">Filter</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<table class="table table-condensed" id="sessions-table">
+											<thead>
+												<tr>
+													<th>Start</th>
+													<th>Finish</th>
+													<th>Trip</th>
+													<th>Free Spaces</th>
+													<th>Boat</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
+									</div>
+									<script id="sessions-table-template" type="text/x-handlebars-template">
+										{{#each sessions}}
+											{{#unless deleted_at}}
+												<tr>
+													<td class="session-start">{{friendlyDate start}}</td>
+													<td class="session-end">{{tripFinish start trip.duration}}</td>
+													<td class="session-trip">{{{trip.name}}}</td>
+													<td>{{freeSpaces capacity}}</td>
+													<td>{{{boat.name}}}</td>
+													<td><a href="javascript:void(0);" class="btn btn-primary btn-sm assign-session" data-id="{{id}}">Assign</a></td>
+												</tr>
+											{{/unless}}
+										{{else}}
+											<tr>
+												<td colspan="6">
+													<h3 class="text-center text-muted"><i class="fa fa-exclamation-triangle"></i></h3>
+													<h5 class="text-center text-muted">Your search did not match any trips.</h5>
+												</td>
+											</tr>
+										{{/each}}
+									</script>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -668,7 +570,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-3">
+					<div class="col-sm-6">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h2 class="panel-title">Step 1: Select the booking detail</h2>
@@ -696,7 +598,7 @@
 							</script>
 						</div>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h2 class="panel-title">Step 2: Select Addons</h2>
@@ -728,48 +630,6 @@
 										</div>
 									</li>
 								{{/unless}}
-							{{/each}}
-						</script>
-					</div>
-					<div class="col-sm-5">
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<h2 class="panel-title">Addons Summary (Total: <span id="addons-summary-total">0.00</span>)</h2>
-							</div>
-							<div class="panel-body">
-								<ul class="list-group" id="selected-addons">
-
-								</ul>
-							</div>
-						</div>
-						<script id="selected-addons-template" type="text/x-handlebars-template">
-							{{#each details}}
-								<li class="list-group-item summary-item">
-									<div class="row">
-										<div class="col-md-6">
-											<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
-											<p class="list-group-item-text"><strong>Ticket:</strong>
-												{{#if packagefacade}}
-													<span class="label label-warning">{{{packagefacade.package.name}}}</span>
-												{{else}}
-													<span class="label label-default">Ticket</span>
-												{{/if}}
-												{{{ticket.name}}}
-											</p>
-											<p class="list-group-item-text"><strong>Trip:</strong> {{{session.trip.name}}}</p>
-											<p class="list-group-item-text"><strong>Date:</strong> {{friendlyDate session.start}}</p>
-										</div>
-										<div class="col-md-6">
-											<h4 class="list-group-item-heading">Addons</h4>
-											{{#each addons}}
-												<p class="list-group-item-text"><strong>Name:</strong> {{{name}}}</p>
-												<p class="list-group-item-text"><strong>Price:</strong> <span class="price">{{decimal_price}}</span></p>
-												<p class="list-group-item-text"><strong>Quantity:</strong> <span class="qty">{{pivot.quantity}}</span></p>
-												{{#unless compulsory}}<a class="btn btn-danger btn-xs remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">Remove</a>{{else}} <small>(compulsory)</small>{{/unless}}
-											{{/each}}
-										</div>
-									</div>
-								</li>
 							{{/each}}
 						</script>
 					</div>
@@ -921,12 +781,6 @@
 												<input type="text" id="pick-up-time" name="pick_up_time" class="form-control timepicker" data-date-format="HH:mm">
 											</div>
 										</div>
-										<div class="form-group">
-											<label for="discount" class="col-sm-4 control-label">Discount</label>
-											<div class="col-md-8">
-												<input id="discount" name="discount" class="form-control" type="number">
-											</div>
-										</div>
 										<div class="form-group col-xs-12">
 											<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?"></textarea>
 										</div>
@@ -1018,6 +872,12 @@
 												{{/each}}
 											</script>
 										</ul>
+										<div class="form-group">
+											<label for="discount" class="col-sm-4 control-label">Discount</label>
+											<div class="col-md-8">
+												<input id="discount" name="discount" class="form-control" type="number">
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="row">
@@ -1098,13 +958,116 @@
 				</div>
 			</div>
 		</div>
+		</div>
+		<div class="col-md-3">
+			<div class="row tab-nav">
+				<div class="col-xs-6">
+					<a href="javascript:void(0);" class="btn btn-primary btn-prev">Prev</a>
+				</div>
+				<div class="col-xs-6">
+					<a href="javascript:void(0);" class="btn btn-primary btn-next pull-right">Next</a>
+				</div>
+			</div>
+			<ul class="list-group" id="booking-summary">
+				
+			</ul>
+			<script id="booking-summary-template" type="text/x-handlebars-template">
+				<li class="list-group-item active">
+					<h4 class="list-group-item-heading">Summary</h4>
+				</li>
+				<li class="list-group-item">
+					<strong>Booking Source</strong>
+					<p>{{source}}</p>
+				</li>
+				{{#notEmptyObj selectedTickets}}
+					<li class="list-group-item" id="selected-tickets">
+						<strong>Tickets</strong>
+						{{#each selectedTickets}}
+							<p>
+								<i class="fa fa-ticket fa-fw"></i> {{name}} <span class="badge badge-default">{{qty}}</span>
+								<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
+							</p>
+						{{/each}}
+					</li>
+				{{/notEmptyObj}}
+				{{#notEmptyObj selectedPackages}}
+					<li class="list-group-item" id="selected-packages">
+						<strong>Packages</strong>
+						{{#each selectedPackages}}
+							<p>
+								<i class="fa fa-tags fa-fw"></i> {{name}} <span class="badge badge-default">{{qty}}</span>
+								<a href="javascript:void(0);" class="remove-package pull-right" data-id="{{id}}">X</a>
+							</p>
+						{{/each}}
+					</li>
+				{{/notEmptyObj}}
+				{{#notEmptyObj selectedCustomers}}
+					<li class="list-group-item" id="selected-customers">
+						<strong>Customers</strong>
+						{{#each selectedCustomers}}
+							<p>
+								<i class="fa fa-user fa-fw"></i>{{firstname}} {{lastname}} {{isLead id}}
+								<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}">X</a>
+							</p>
+						{{/each}}
+					</li>
+				{{/notEmptyObj}}
+				{{#notEmptyObj bookingdetails}}
+					<li class="list-group-item">
+						<strong>Assigned Trips</strong>
+						<div class="panel-group" id="bookingDetailAccordion" role="tablist" aria-multiselectable="true">
+							{{#each bookingdetails}}
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab">
+										<h4 class="panel-title">
+											<a class="accordian-heading" data-toggle="collapse" data-parent="#bookingDetailAccordion" href="#bookingDetail{{id}}">
+												<i class="fa fa-user fa-fw"></i> {{{customer.firstname}}} {{{customer.lastname}}}
+											</a>
+										</h4>
+									</div>
+									<div id="bookingDetail{{id}}" class="panel-collapse collapse" role="tabpanel">
+										<div class="panel-body">
+											<p> {{{customer.firstname}}} {{{customer.lastname}}}</p>
+											<p>
+												{{#if packagefacade}}
+													<i class="fa fa-tags fa-fw"></i> <span class="label label-warning">{{{packagefacade.package.name}}}</span>
+												{{else}}
+													<i class="fa fa-ticket fa-fw"></i> <span class="label label-default">Ticket</span>
+												{{/if}}
+
+												{{{ticket.name}}}
+											</p>
+											<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
+											<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
+											<a href="javascript:void(0);" class="unassign-session pull-right" data-id="{{id}}">X</a>
+											{{#notEmptyObj addons}}
+												<strong>Addons</strong>
+												{{#each addons}}
+													<p><i class="fa fa-cart-plus fa-fw"></i>{{{name}}} | {{decimal_price}} <span class="badge badge-default">{{pivot.quantity}}</span></p>
+													{{#unless compulsory}}<a class="remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
+												{{/each}}
+											{{/notEmptyObj}}
+										</div>
+									</div>
+								</div>
+							{{/each}}
+						</div>
+					</li>
+				{{/notEmptyObj}}
+			</script>
+		</div>
+
 	</div>
 
 	<div id="modalWindows" style="height: 0;">
 		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
 			<div id="modal-boatroom-select" class="reveal-modal">
 				<h4>Please select a cabin</h4>
+<<<<<<< HEAD
 				<p>The session you are assigning is overnight and there are multiple cabins available:</p>
+=======
+				<p>The session you are assigning is overnight and there are multiple cabin available:</p>
+>>>>>>> Added booking summary to add booking [WIP]
 
 				<div class="list-group">
 					{{#each boatrooms}}
