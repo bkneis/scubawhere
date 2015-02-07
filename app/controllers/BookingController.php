@@ -310,6 +310,12 @@ class BookingController extends Controller {
 		}
 		*/
 
+		// Validate that the session start date has not already passed
+		if(Helper::isPast($departure->start))
+		{
+			return Response::json( array('errors' => array('Cannot add details, because the trip has already departed!')), 403 ); // 403 Forbidden
+		}
+
 		// Validate that the customer is not already booked for this session on another booking
 		$check = Auth::user()->bookings()
 			->whereNotIn('id', array($booking->id))
@@ -515,6 +521,12 @@ class BookingController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The bookingdetail has not been found.')), 404 ); // 404 Not Found
+		}
+
+		// Validate that the session start date has not already passed
+		if(Helper::isPast($departure->start))
+		{
+			return Response::json( array('errors' => array('Cannot remove details, because the trip has already departed!')), 403 ); // 403 Forbidden
 		}
 
 		// Execute delete
