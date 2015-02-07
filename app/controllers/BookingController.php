@@ -374,7 +374,9 @@ class BookingController extends Controller {
 		$trip  = $departure->trip;
 		$start = new DateTime($trip->start, new DateTimeZone( Auth::user()->timezone ));
 		$end   = clone $start;
-		$end->add( new DateInterval('PT'.$trip->duration.'H') );
+		$duration_hours = floor($trip->duration);
+		$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+		$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
 		{
 			// The trip is overnight and we do need a boatroom_id
