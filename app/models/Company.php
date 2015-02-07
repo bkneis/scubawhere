@@ -43,7 +43,8 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'logo'                => '',
 		'photo'               => '',
 		'video'               => '',
-		'views'               => 'integer'
+		'views'               => 'integer',
+		'terms'				  => 'required'
 	);
 
 	public function beforeSave()
@@ -92,6 +93,15 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 		if( isset($this->video) )
 			$this->video = Helper::sanitiseString($this->video);
+
+		if( isset($this->terms) )
+			$this->terms = Helper::sanitiseString($this->terms);
+
+		if( isset($this->phone_ext) )
+			$this->phone_ext = Helper::sanitiseString($this->phone_ext);
+
+		if( isset($this->business_phone_ext) )
+			$this->business_phone_ext = Helper::sanitiseString($this->business_phone_ext);
 	}
 
 	public function getCurrencyAttribute()

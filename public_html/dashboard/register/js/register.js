@@ -1,5 +1,5 @@
 var completed = false;
-var errorChecking = true;
+var errorChecking = false;
 
 function validateEmail(type, email){
 	var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -84,6 +84,9 @@ $(function(){
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serializeArray();
+		params.phone = params.phone_ext + params.phone;
+		params.business_phone = params.business_phone_ext + params.business_phone;
+		console.log(params);
 		$.ajax({
 			url: "/register/company",
 			type: "POST",
@@ -92,7 +95,8 @@ $(function(){
 			success: function(data){
 				console.log(data.status);
 				completed = true;
-				$("#steps").steps("next");
+				//$("#steps").steps("next");
+				pageMssg(data.status, true);
 
 				form.find('#save-loader').remove();
 			},

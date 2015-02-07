@@ -18,8 +18,10 @@
 
 	<div id="register-wrapper">
 		<div class="container">
+			<p>&nbsp;</p>
 			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Dive Operator Registration</h1>
+			
 			<form id="register-form" method="post" accept-charset="utf-8">
 				<div id="steps">
 
@@ -27,16 +29,19 @@
 					<section>
 						<div id="section1">
 							<div class="register-col">
+
 								<label for="contact">Main Person of Contact:</label>
 								<input class="required"  type="text" id="contact" name="contact">
-
+								
 								<label for="phone">Main Contact Phone Number:</label>
-								<input class="required"  type="text" id="phone" name="phone">
-
+								<div>
+									<input style="display:inline-block; width:20%; float:left" class="required"  type="text" id="phone_ext" name="phone_ext">
+									<input style=" width:73%;" class="required"  type="text" id="phone" name="phone">
+								</div>
 								<label for="email">Main Contact Email Address:</label>
 								<input class="required"  type="text" id="email" name="email">
 
-								<label for="agencies">Accepted Diving Instuitions</label>
+								<label for="agencies">Accepted Training Organisation</label>
 								<div id="agencies">
 									<div id="save-loader" class="loader"></div>
 								</div>
@@ -75,7 +80,10 @@
 							</div>
 							<div class="register-col">
 								<label for="business_phone">Business Phone Number:</label>
-								<input class="required"  type="text" id="business_phone" name="business_phone">
+								<div>
+									<input style="display:inline-block; width:20%; float:left" class="required"  type="text" id="business_phone_ext" name="business_phone_ext">
+									<input style=" width:73%;" class="required"  type="text" id="business_phone" name="business_phone">
+								</div>
 
 								<label for="business_email">Business Email:</label>
 								<input class="required"  type="text" id="business_email" name="business_email">
@@ -86,37 +94,37 @@
 								<label for="vat_number">VAT Number (optional):</label>
 								<input type="text" id="vat_number" name="vat_number">
 
-								<label for="country_id">Please select your country:</label>
+								<label for="country_id">Select your country:</label>
 								<select class="required" id="country_id" name="country_id">
 									<option value="">Please select</option>
 								</select>
 
-								<label for="currency_id">Please select your currency:</label>
+								<label for="currency_id">Select your currency:</label>
 								<select class="required" id="currency_id" name="currency_id">
 									<option value="">Please select</option>
 								</select>
 							</div>
 						</div>
 					</section>
-					<h3>Username</h3>
+					<h3>Terms and conditions</h3>
 					<section>
 						<div id="section3">
+							<div>
+								<label for="terms">Copy and paste your terms and conditions here:</label>
+								<textarea id="terms" name="terms" rows="20" style="width:80%; text-align:center; margin: 0 auto;"></textarea>
+							</div>
+						</div>
+					</section>
+					<h3>Username</h3>
+					<section>
+						<div id="section4">
 							<div style="margin: 0 auto; text-align: center;">
 								<h3>One more thing...</h3>
 								<label for="username">Please enter your username:</label>
 								<input style="width:280px; text-align:center; margin: 0 auto;" class="required"  type="text" id="username" name="username">
-
-								<input type="submit" class="submit register-bttn bttn blueb" value="Create Account">
+								<div style="margin-top:10px"></div>
+								<input type="submit" style="width:280px; text-align:center; margin: 0 auto;"  class="submit btn btn-primary blueb" value="Create Account">
 							</div>
-						</div>
-					</section>
-					<h3>Done!</h3>
-					<section>
-						<div id="section4">
-							<h2>Thank you for signing up with scubawhere!</h2>
-							<p>
-								Please check your main email to activate your account.
-							</p>
 						</div>
 					</section>
 				</div>
