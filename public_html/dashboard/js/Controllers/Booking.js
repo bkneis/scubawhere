@@ -508,6 +508,7 @@ Booking.prototype.reserve = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			this.reserved = params.reserved;
+			this.status = 'reserved';
 
 			successFn(data.status);
 		},
@@ -537,6 +538,7 @@ Booking.prototype.save = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			this.saved = 1;
+			this.status = 'saved';
 
 			successFn(data.status);
 		},
@@ -572,6 +574,7 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 			this.payments.push(payment);
 
 			this.confirmed = 1;
+			this.status = 'confirmed';
 
 			successFn(data.status);
 		},

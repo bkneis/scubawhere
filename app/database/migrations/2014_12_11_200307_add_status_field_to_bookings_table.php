@@ -16,7 +16,7 @@ class AddStatusFieldToBookingsTable extends Migration {
 		{
 			$table->dropColumn(array('confirmed', 'saved'));
 
-			$table->string('status', 128)->after('discount')->nullable()->default(null); // Either: null, 'saved', 'reserved', 'confirmed', 'on hold', 'canceled'
+			$table->string('status', 128)->after('discount')->nullable()->default(null); // Either: null, 'saved', 'reserved', 'confirmed', 'on hold', 'cancelled'
 		});
 	}
 

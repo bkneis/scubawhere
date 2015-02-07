@@ -930,7 +930,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( in_array($booking->status, array('confirmed', 'on hold', 'canceled')) )
+		if( in_array($booking->status, array('confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
 		$data = Input::only('reserved');
@@ -956,7 +956,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( in_array($booking->status, array('reserved', 'confirmed', 'on hold', 'canceled')) )
+		if( in_array($booking->status, array('reserved', 'confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be saved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
 		if( !$booking->update( array('status' => 'saved') ) )

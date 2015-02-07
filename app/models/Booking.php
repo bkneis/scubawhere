@@ -27,7 +27,7 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'status'           => 'in:saved,reserved,confirmed,on hold,canceled',
+		'status'           => 'in:saved,reserved,confirmed,on hold,cancelled',
 		'reserved'         => 'date|after_local_now',
 		'pick_up_location' => 'required_with:pick_up_time',
 		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',

@@ -22,9 +22,9 @@ Handlebars.registerHelper('statusIcon', function() {
 	    color = 'inherit',
 	    tooltip = '';
 
-	if(this.status === 'canceled') {
+	if(this.status === 'cancelled') {
 		icon = 'fa-ban';
-		tooltip = 'Canceled';
+		tooltip = 'Cancelled';
 	}
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
