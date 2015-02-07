@@ -95,6 +95,16 @@ var Session = {
 		$.post("/api/session/restore", params, function(data){
 			handleData(data);
 		});
+	},
+
+	getAllCustomers: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "GET",
+			url: "/api/session/manifest",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 
 };
