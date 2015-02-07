@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-
+<div class="row">
   <div class="col-md-7">
     <div class="panel panel-default" id="todays-sessions">
       <div class="panel-heading">
@@ -29,23 +29,21 @@
       <td>{{trip.name}}</td>
       <td>{{boat.name}}</td>
       <td>{{getPer capacity}}</td>
-      <td>{{getTime start}}</td>
+      <td>{{getTime start}} - {{getEnd start trip.duration}}</td>
     </tr>
     <tr class="accordion-body accordion-{{id}}">
       <td colspan="9" style="overflow: auto;">
         <table id="customers-{{id}}" class="table table-striped table-bordered cust-tbl" cellspacing="0" width="100%">
           <thead>
             <tr>
-              <th style="color:#313131">Refrence</th>
               <th style="color:#313131">Name</th>
               <th style="color:#313131">Email</th>
-              <th style="color:#313131">Paid</th>
+              <th style="color:#313131">Country</th>
               <th style="color:#313131">Phone Number</th>
             </tr>
           </thead>
           <tbody id="customer-table-{{id}}">
           </tbody>
-
         </table>
       </td>
     </tr>
@@ -55,9 +53,14 @@
   </script> 
 
   <script type="text/x-handlebars-template" id="customer-details-template">
-      {{each customers}}
+      {{#each customers}}
       <tr>
-        <td>customer.
+        <td>{{firstname}} {{lastname}}</td>
+        <td>{{email}}</td>
+        <td>{{country}}</td>
+        <td>{{phone}}</td>
+      </tr>
+      {{/each}}
   </script>
 
   <div class="col-md-5">
@@ -68,8 +71,10 @@
       <div style="min-height:250px;" class="panel-body">
       </div>
     </div>
-  </div>      
+  </div> 
+  </div>     
 
+  <div class="row">
   <div class="col-md-5">
     <div class="panel panel-default" id="recent-bookings">
       <div class="panel-heading">
@@ -172,16 +177,18 @@
       </div>
     </div>
   </div>
-
 </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/common/css/datatables.css">
 
 <script src="/dashboard/js/Controllers/Session.js"></script>
 <script src="/dashboard/js/Controllers/Trip.js"></script>
-<!--<script src="/common/js/jquery/jquery.datatables.js"></script>
-  <script src="/common/bootstrap/js/bootstrap.datatables.min.js"></script>-->
-  <script src="tabs/dashboard/js/script.js"></script>
-  <script src="js/Controllers/Booking.js"></script>
-  <script src="tabs/dashboard/js/bookings.js"></script>
+<script src="/common/js/jquery/jquery.datatables.min.js"></script>
+<script src="tabs/dashboard/js/script.js"></script>
+<script src="js/Controllers/Booking.js"></script>
+<script src="tabs/dashboard/js/bookings.js"></script>
+
 
 
 
