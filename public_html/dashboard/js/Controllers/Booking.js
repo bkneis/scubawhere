@@ -177,7 +177,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				return false;
 
 			// Next, check if a packagefacade exists
-			if( typeof detail.packagefacade === 'undefined' )
+			if( detail.packagefacade === null )
 				return false;
 
 			// Next, check if the packagefacade includes the requested package
