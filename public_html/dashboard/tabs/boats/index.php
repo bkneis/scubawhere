@@ -1,6 +1,6 @@
-<div id="wrapper" class="clearfix" data-step="1" data-position="right" data-intro="This tab is for boat management which controls the overall capacity of a trip. For Dive Operators that purely operate with shore-based diving, think of the shore as your boat.">
+<div id="wrapper" class="clearfix">
 	<div class="col-md-4">
-		<div class="panel panel-default" data-step="2" data-position="right" data-intro="Here displays all of your boats">
+		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Boats</h4>
 			</div>
@@ -18,7 +18,7 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default" data-step="3" data-position="right" data-intro="Here displays all of your boatrooms, these are assigned to boats and are needed for any boat assigned to a over night trip">
+		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Cabins</h4>
 			</div>
@@ -38,7 +38,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="boat-form-container" data-step="4" data-position="left" data-intro="Here you can add all information on your boat or boatroom">
+		<div class="panel panel-default" id="boat-form-container">
 			<script type="text/x-handlebars-template" id="boat-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} boat</h4>

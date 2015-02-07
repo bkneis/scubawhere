@@ -56,50 +56,6 @@ $(function(){
 	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
 	renderEditForm();
 
-	$("#start-tour").on('click', function(event) {
-		var introd = introJs();
-          introd.setOptions({
-            steps: [
-              { 
-                intro: "This is the accommodations tab, if you business includes managing accommodation, you can control you resources here."
-              },
-              {
-                element: '#accommodations-list',
-                intro: 'Here you can view all of your accommodations. Click on an accommodation to edit it.',
-                position : 'right'
-              },
-              {
-                element: '#acom-name',
-                intro: 'Enter the name of the room here.',
-                position : 'left'
-              },
-              {
-                element: '#cke_acom-description',
-                intro: 'Enter a description of the room and accommodation here.',
-                position : 'left'
-              },
-              {
-                element: '#acom-base',
-                intro: 'Base prices allow for annual price changes to be updated at the specified date',
-                position : 'left'
-              },
-              {
-                element: '#acom-season',
-                intro: 'Additonally a seasonal price could be specified by clicking the checkbox. This will change the price of the room depending on the date.',
-                position : 'left'
-              },
-              {
-                element: '#acom-rooms',
-                intro: 'Lastly, if your accommodation is a dorm room. Enter the number of beds available, otherwise, enter the number of rooms available.',
-                position : 'left'
-              }
-            ]
-          });
-		introd.start();/*.oncomplete(function() {
-        	window.location.href = '#accommodations?multipage=true';
-        });*/
-	});
-
 	$("#accommodation-form-container").on('submit', '#add-accommodation-form', function(event) {
 
 		event.preventDefault();
