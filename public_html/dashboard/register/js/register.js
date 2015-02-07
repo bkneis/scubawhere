@@ -84,8 +84,8 @@ $(function(){
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serializeArray();
-		params.phone = params.phone_ext + params.phone;
-		params.business_phone = params.business_phone_ext + params.business_phone;
+		params.phone = params.phone_ext + ' ' + params.phone;
+		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
 		console.log(params);
 		$.ajax({
 			url: "/register/company",

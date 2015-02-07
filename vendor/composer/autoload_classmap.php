@@ -2394,7 +2394,7 @@ return array(
     'TripController' => $baseDir . '/app/controllers/TripController.php',
     'TripModelTest' => $baseDir . '/app/tests/unit/models/TripModelTest.php',
     'TruncateBoatTicketTable' => $baseDir . '/app/database/migrations/2014_11_20_185558_truncate_boat_ticket_table.php',
-    'UpdateAgenciesTable' => $baseDir . '/app/database/migrations/2015_01_17_210728_update_agencies_table.php',
+    'UpdateAgenciesTable' => $baseDir . '/app/database/migrations/2015_02_07_154847_update_agencies_table.php',
     'UpdateCustomersTable' => $baseDir . '/app/database/migrations/2014_02_18_234149_update_customers_table.php',
     'Whoops\\Exception\\ErrorException' => $vendorDir . '/filp/whoops/src/Whoops/Exception/ErrorException.php',
     'Whoops\\Exception\\Formatter' => $vendorDir . '/filp/whoops/src/Whoops/Exception/Formatter.php',

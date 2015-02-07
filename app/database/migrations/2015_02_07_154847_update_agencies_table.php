@@ -12,16 +12,26 @@ class UpdateAgenciesTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::table('agencies')->insert(
-            array(
-                    array('abbreviation' => 'HSA'),
-                    array('abbreviation' => 'RAID'),
-                    array('abbreviation' => 'other'),                                
-            )
-        );
 
-        Schema::table('companies', function($table){
-		    $table->string('terms')->after('photo');
+		try {
+			Schema::table('companies', function($table)
+			{
+				$table->dropColumn('terms');
+			});
+		}
+		catch(Exception $e) {}
+
+		DB::table('agencies')->insert(
+			array(
+					array('abbreviation' => 'HSA'),
+					array('abbreviation' => 'RAID'),
+					array('abbreviation' => 'other'),
+			)
+		);
+
+		Schema::table('companies', function($table)
+		{
+			$table->text('terms')->after('photo');
 		});
 	}
 
@@ -36,8 +46,9 @@ class UpdateAgenciesTable extends Migration {
 		DB::table('agencies')->where('abbreviation', '=', 'RAID')->delete();
 		DB::table('agencies')->where('abbreviation', '=', 'other')->delete();
 
-        Schema::table('companies', function($table){
-		    $table->dropColumn('terms');
+		Schema::table('companies', function($table)
+		{
+			$table->dropColumn('terms');
 		});
 	}
 
