@@ -516,7 +516,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
-			$bookingdetail = $booking->bookingdetails()->findOrFail( Input::get('bookingdetail_id') );
+			$bookingdetail = $booking->bookingdetails()->with('departure')->findOrFail( Input::get('bookingdetail_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -524,7 +524,7 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the session start date has not already passed
-		if(Helper::isPast($departure->start))
+		if(Helper::isPast($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('Cannot remove details, because the trip has already departed!')), 403 ); // 403 Forbidden
 		}
