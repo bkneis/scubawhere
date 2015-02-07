@@ -23,6 +23,24 @@ class DepartureController extends Controller {
 		}
 	}
 
+	/**
+	 * Get the session, trip, boat and customer info for a session to generate the Passenger Manifest
+	 *
+	 * @param integer id The session ID to get the info for
+	 */
+	public function getManifest()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			return Auth::user()->departures()->with('trip', 'boat', 'customers')->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+		}
+	}
+
 	public function getAll()
 	{
 		return Auth::user()->departures()->withTrashed()->get();
