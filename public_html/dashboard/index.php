@@ -32,7 +32,7 @@
 
 	<link rel='stylesheet' href='/common/css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
-	<link rel="stylesheet" type="text/css" href="/common/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css">
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />

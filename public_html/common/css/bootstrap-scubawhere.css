@@ -5257,14 +5257,14 @@ a.list-group-item-danger.active:focus {
 }
 .panel-default > .panel-heading {
   color: #ffffff;
-  background-color: #34495E;
+  background-color: #34495e;
   border-color: transparent;
 }
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: transparent;
 }
 .panel-default > .panel-heading .badge {
-  color: #34495E;
+  color: #34495e;
   background-color: #ffffff;
 }
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
@@ -6285,4 +6285,7 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+.tab-nav {
+  padding: 40px 0 10px;
 }

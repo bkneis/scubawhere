@@ -116,3 +116,4 @@ www
 
 #Install node modules with "npm install" (Required for grunt)
 /public_html/node_modules
+public_html/common/vendor/

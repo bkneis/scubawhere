@@ -22,7 +22,7 @@ module.exports = function (grunt) {
                     paths: ["common/less/"],
                 },
                 files: {
-                    "common/css/bootstrap-scubawhere.css": "common/less/main.less"
+                    "common/css/bootstrap-scubawhere.css": "common/less/base.less"
                 }
             },
         },
