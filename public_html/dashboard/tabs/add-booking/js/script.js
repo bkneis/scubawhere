@@ -43,6 +43,10 @@ Handlebars.registerHelper("friendlyDate", function(date) {
 	return friendlyDate(date);
 });
 
+Handlebars.registerHelper("firstChar", function(s) {
+	return s[0];
+});
+
 Handlebars.registerHelper("isLead", function (id) {
 	if(booking.lead_customer === false) return new Handlebars.SafeString('<small><i class="fa fa-cog fa-spin fa-fw"></i></small>');
 
@@ -407,11 +411,13 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 	var details = _.filter(booking.bookingdetails, function(detail) {
 		return detail.customer.id == id;
 	});
+
 	if( details.length > 0 ) {
 		var question = confirm('This customer already has tickets assigned.\n\n Do you want to remove the customer anyway?');
 		if(!question)
 			return false;
 	}
+
 	// Delete all bookingdetails of this customer on the server
 	_.each(details, function(detail) {
 		var params = {
@@ -1047,6 +1053,14 @@ $(document).ready(function() {
 
 	$(document).on('click', '.list-group-radio', function() {
 		listGroupRadio($(this));
+	});
+
+	$('#booking-summary').on('click', '.accordian-heading', function() {
+		if($(this).find('.expand-icon').hasClass('fa-plus-square-o')) {
+			$(this).find('.expand-icon').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+		}else{
+			$(this).find('.expand-icon').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+		}
 	});
 
 	$('#booking-summary').on('click', '.list-expand', function() {
