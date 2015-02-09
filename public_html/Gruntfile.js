@@ -11,10 +11,10 @@ module.exports = function (grunt) {
                files: ["common/less/*.less", ],
                 tasks: ["less"] 
             },
-            jshint: {
+            /*jshint: {
                files: "<%= jshint.files %>",
                 tasks: ["jshint"] 
-            },
+            },*/
         },
         less: {
             development: {
