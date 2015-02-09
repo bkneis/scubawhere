@@ -51,7 +51,7 @@
 			</li>
 		</ul>
 
-		<div class="col-md-9">
+		<div class="col-md-9" id="booking-area-column">
 
 		<div class="tab-content">
 
@@ -650,7 +650,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-3">
+					<div class="col-sm-4">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h2 class="panel-title">Step 1: Select Customer</h2>
@@ -681,7 +681,7 @@
 							</script>
 						</div>
 					</div>
-					<div class="col-sm-5">
+					<div class="col-sm-8">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h2 class="panel-title">Step 2: Select Accommodation</h2>
@@ -712,29 +712,6 @@
 											</div>
 										</div>
 									</div>
-								</li>
-							{{/each}}
-						</script>
-					</div>
-					<div class="col-sm-4">
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<h2 class="panel-title">Assigned Accommodation</h2>
-							</div>
-							<div class="panel-body">
-								<ul class="list-group" id="assigned-accommodations">
-
-								</ul>
-							</div>
-						</div>
-						<script id="assigned-accommodations-template" type="text/x-handlebars-template">
-							{{#each accommodations}}
-								<li class="list-group-item summary-item">
-									<h4 class="list-group-item-heading">{{{customer.firstname}}} {{{customer.lastname}}}</h4>
-									<p class="list-group-item-text"><strong>Accommodation: </strong> {{{name}}}</p>
-									<p class="list-group-item-text"><strong>Start:</strong> {{friendlyDate pivot.start}}</p>
-									<p class="list-group-item-text"><strong>End:</strong> {{friendlyDate pivot.end}}</p>
-									<a class="btn btn-danger btn-xs remove-accommodation" href="javascript:void(0);" data-id="{{id}}" data-customer-id="{{customer.id}}">Remove</a>
 								</li>
 							{{/each}}
 						</script>
@@ -959,7 +936,7 @@
 			</div>
 		</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" id="booking-summary-column">
 			<div class="row tab-nav">
 				<div class="col-xs-6">
 					<a href="javascript:void(0);" class="btn btn-primary btn-prev">Prev</a>
@@ -1014,25 +991,25 @@
 				{{/notEmptyObj}}
 				{{#notEmptyObj bookingdetails}}
 					<li class="list-group-item">
-						<strong>Assigned Trips</strong>
-						<div class="panel-group" id="bookingDetailAccordion" role="tablist" aria-multiselectable="true">
+						<strong>Trips</strong>
+						<div class="panel-group" id="booking-summary-trips" role="tablist" aria-multiselectable="true">
 							{{#each bookingdetails}}
 								<div class="panel panel-default">
 									<div class="panel-heading" role="tab">
 										<h4 class="panel-title">
-											<a class="accordian-heading" data-toggle="collapse" data-parent="#bookingDetailAccordion" href="#bookingDetail{{id}}">
-												<i class="fa fa-user fa-fw"></i> {{{customer.firstname}}} {{{customer.lastname}}}
+											<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-trips" href="#booking-summary-trips-{{id}}">
+												<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{session.trip.name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 											</a>
 										</h4>
 									</div>
-									<div id="bookingDetail{{id}}" class="panel-collapse collapse" role="tabpanel">
+									<div id="booking-summary-trips-{{id}}" class="panel-collapse collapse" role="tabpanel">
 										<div class="panel-body">
-											<p> {{{customer.firstname}}} {{{customer.lastname}}}</p>
+											<p> <strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong> <a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}">X</a></p>
 											<p>
 												{{#if packagefacade}}
 													<i class="fa fa-tags fa-fw"></i> <span class="label label-warning">{{{packagefacade.package.name}}}</span>
 												{{else}}
-													<i class="fa fa-ticket fa-fw"></i> <span class="label label-default">Ticket</span>
+													<i class="fa fa-ticket fa-fw"></i> <span class="label label-default text-uppercase"><small>Ticket</small></span>
 												{{/if}}
 
 												{{{ticket.name}}}
@@ -1041,12 +1018,49 @@
 											<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
 											<a href="javascript:void(0);" class="unassign-session pull-right" data-id="{{id}}">X</a>
 											{{#notEmptyObj addons}}
-												<strong>Addons</strong>
-												{{#each addons}}
-													<p><i class="fa fa-cart-plus fa-fw"></i>{{{name}}} | {{decimal_price}} <span class="badge badge-default">{{pivot.quantity}}</span></p>
-													{{#unless compulsory}}<a class="remove-addon" href="javascript:void(0);" data-id="{{id}}" data-bookingdetail-id="{{../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
-												{{/each}}
+												<div class="panel panel-default">
+													<div class="panel-heading" role="tab">
+														<h4 class="panel-title">
+															<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-addons-{{../id}}">
+																<i class="fa fa-cubes fa-fw"></i>&nbsp; Addons <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+															</a>
+														</h4>
+													</div>
+													<div id="booking-summary-addons-{{../id}}" class="panel-collapse collapse" role="tabpanel">
+														<div class="panel-body">
+															{{#each addons}}
+																<p>
+																	<i class="fa fa-cart-plus fa-fw"></i> {{{name}}} | {{decimal_price}} <span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
+																	{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
+																</p>
+															{{/each}}
+														</div>
+													</div>
+												</div>
 											{{/notEmptyObj}}
+										</div>
+									</div>
+								</div>
+							{{/each}}
+						</div>
+					</li>
+				{{/notEmptyObj}}
+				{{#notEmptyObj accommodations}}
+					<li class="list-group-item">
+						<strong>Accommodation</strong>
+						<div class="panel-group" id="booking-summary-acommodation" role="tablist" aria-multiselectable="true">
+							{{#each accommodations}}
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab">
+										<h4 class="panel-title">
+											<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-acommodation" href="#booking-summary-acommodation-{{id}}">
+												<i class="fa fa-bed fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+											</a>
+										</h4>
+									</div>
+									<div id="booking-summary-acommodation-{{id}}" class="panel-collapse collapse" role="tabpanel">
+										<div class="panel-body">
+											<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate pivot.start}} - {{friendlyDate pivot.end}}</p>
 										</div>
 									</div>
 								</div>
@@ -1063,11 +1077,8 @@
 		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
 			<div id="modal-boatroom-select" class="reveal-modal">
 				<h4>Please select a cabin</h4>
-<<<<<<< HEAD
+
 				<p>The session you are assigning is overnight and there are multiple cabins available:</p>
-=======
-				<p>The session you are assigning is overnight and there are multiple cabin available:</p>
->>>>>>> Added booking summary to add booking [WIP]
 
 				<div class="list-group">
 					{{#each boatrooms}}

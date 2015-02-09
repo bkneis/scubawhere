@@ -262,7 +262,7 @@ $('#source-tab').on('click', '.source-finish', function() {
 		window.booking = new Booking();
 		booking.initiate(params, function(status) {
 			$('[data-target="#ticket-tab"]').tab('show');
-			$("#booking-summary").html(bookingSummaryTemplate(booking));
+			$('#booking-summary').html(bookingSummaryTemplate(booking));
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
 			pageMssg(data.error[0], 'danger');
@@ -294,7 +294,7 @@ window.promises.loadedTickets.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	});
 
 	$('#booking-summary').on('click', '.remove-ticket', function() {
@@ -309,7 +309,7 @@ window.promises.loadedTickets.done(function() {
 
 		booking.store();
 
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	});
 });
 
@@ -329,7 +329,7 @@ window.promises.loadedPackages.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	});
 });
 
@@ -346,7 +346,7 @@ $('#booking-summary').on('click', '.remove-package', function() {
 
 	booking.store();
 
-	$("#booking-summary").html(bookingSummaryTemplate(booking));
+	$('#booking-summary').html(bookingSummaryTemplate(booking));
 });
 
 /*
@@ -375,11 +375,11 @@ window.promises.loadedCustomers.done(function() {
 		booking.selectedCustomers[id] = window.customers[id];
 		booking.store();
 
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 
 		if( _.size(booking.selectedCustomers) === 1 ) {
 			booking.setLead({_token: window.token, customer_id: id}, function success(status) {
-				$("#booking-summary").html(bookingSummaryTemplate(booking));
+				$('#booking-summary').html(bookingSummaryTemplate(booking));
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0], 'danger');
@@ -401,7 +401,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#country_id option[value="'+booking.selectedCustomers[id].country_id+'"]').attr('selected', 'selected');
 });
 
-$('#selected-customers').on('click', '.remove-customer', function() {
+$('#booking-summary').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
 
 	var details = _.filter(booking.bookingdetails, function(detail) {
@@ -430,7 +430,7 @@ $('#selected-customers').on('click', '.remove-customer', function() {
 	delete booking.selectedCustomers[id];
 	booking.store();
 
-	$("#booking-summary").html(bookingSummaryTemplate(booking));
+	$('#booking-summary').html(bookingSummaryTemplate(booking));
 
 	// Check if we just removed the lead customer
 	if(booking.lead_customer.id == id) {
@@ -442,7 +442,7 @@ $('#selected-customers').on('click', '.remove-customer', function() {
 				customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
 			};
 			booking.setLead(params, function success(status) {
-				$("#booking-summary").html(bookingSummaryTemplate(booking));
+				$('#booking-summary').html(bookingSummaryTemplate(booking));
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.error[0], 'danger');
@@ -484,7 +484,7 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Save');
 				$('#edit-customer-modal').modal('hide');
 
-				$("#booking-summary").html(bookingSummaryTemplate(booking));
+				$('#booking-summary').html(bookingSummaryTemplate(booking));
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
@@ -516,11 +516,11 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Add');
 				form[0].reset();
 
-				$("#booking-summary").html(bookingSummaryTemplate(booking));
+				$('#booking-summary').html(bookingSummaryTemplate(booking));
 
 				if( _.size(booking.selectedCustomers) === 1 ) {
 					booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
-						$("#booking-summary").html(bookingSummaryTemplate(booking));
+						$('#booking-summary').html(bookingSummaryTemplate(booking));
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
 						pageMssg(data.errors[0], 'danger');
@@ -541,7 +541,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 
 $('#customer-tab').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -716,7 +716,7 @@ function submitAddDetail(params) {
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
 
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -742,7 +742,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 
 		redrawSessionsList(params);
 
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -792,7 +792,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
 	booking.addAddon(params, function success() {
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -801,7 +801,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	});
 });
 
-$('#addon-tab').on('click', '.remove-addon', function() {
+$('#booking-summary').on('click', '.remove-addon', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
@@ -811,7 +811,7 @@ $('#addon-tab').on('click', '.remove-addon', function() {
 	params.addon_id         = $(this).data('id');
 
 	booking.removeAddon(params, function success() {
-		$("#booking-summary").html(bookingSummaryTemplate(booking));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -836,7 +836,6 @@ window.promises.loadedAccommodations.done(function() {
 */
 
 var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
-var assignedAccommodationsTemplate = Handlebars.compile($("#assigned-accommodations-template").html());
 
 $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
@@ -865,7 +864,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	params.end              = $(this).parents('.accommodation-item').find('[name="end"]').val();
 
 	booking.addAccommodation(params, function success() {
-		$("#assigned-accommodations").html(assignedAccommodationsTemplate({accommodations:booking.accommodations}));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -873,7 +872,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	});
 });
 
-$('#accommodation-tab').on('click', '.remove-accommodation', function() {
+$('#booking-summary').on('click', '.remove-accommodation', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
@@ -886,16 +885,12 @@ $('#accommodation-tab').on('click', '.remove-accommodation', function() {
 	params.customer_id      = customer_id;
 
 	booking.removeAccommodation(params, function success() {
-		$("#assigned-accommodations").html(assignedAccommodationsTemplate({customers:booking.selectedCustomers}));
+		$('#booking-summary').html(bookingSummaryTemplate(booking));
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
 		btn.html('Remove');
 	});
-});
-
-$('#accommodation-tab').on('click', '.accommodation-finish', function() {
-	$('[data-target="#extra-tab"]').tab('show');
 });
 
 /*
@@ -987,6 +982,8 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 $(document).ready(function() {
 
 	$('#agent-info').hide();
+	$('#booking-summary-column').hide();
+	$('#booking-area-column').removeClass('col-md-9').addClass('col-md-12');
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	$('#country_id').select2();
@@ -1028,6 +1025,8 @@ $(document).ready(function() {
 
 		if(booking.currentTab !== '#source-tab') {
 			$('[data-target="#source-tab"]').removeAttr("data-toggle");
+			$('#booking-area-column').removeClass('col-md-12').addClass('col-md-9');
+			$('#booking-summary-column').show();
 		}
 
 	});
