@@ -6289,3 +6289,13 @@ button.close {
 .tab-nav {
   padding: 40px 0 10px;
 }
+#booking-summary .panel-heading {
+  padding: 6px 10px;
+}
+#booking-summary .accordian-heading {
+  font-size: 12px;
+  color: #fff!important;
+}
+#booking-summary .booking-detail-expand {
+  font-size: 20px;
+}
