@@ -1016,7 +1016,6 @@
 											</p>
 											<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
 											<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
-											<a href="javascript:void(0);" class="unassign-session pull-right" data-id="{{id}}">X</a>
 											{{#notEmptyObj addons}}
 												<div class="panel panel-default">
 													<div class="panel-heading" role="tab">
