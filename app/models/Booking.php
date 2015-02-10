@@ -59,11 +59,11 @@ class Booking extends Ardent {
 	public function getArrivalDateAttribute() {
 		$earliestDeparture = $this->departures()->orderBy('sessions.start', 'ASC')->first(array('sessions.*'));
 		if(!empty($earliestDeparture))
-			$earliestDeparture = new DateTime($earliestDeparture->start, new DateTimeZone( Auth::user()->timezone ));
+			$earliestDeparture = new DateTime($earliestDeparture->start);
 
 		$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
 		if(!empty($earliestAccommodation))
-			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start, new DateTimeZone( Auth::user()->timezone ));
+			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start);
 
 		// This is ugly!
 		// TODO Make it more elegant
@@ -77,6 +77,41 @@ class Booking extends Ardent {
 			return $earliestDeparture->format('Y-m-d');
 
 		return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
+	}
+
+	public function getLastReturnDateAttribute() {
+		$departures = $this->departures()->with('trip')->get();
+		$departures->sortByDesc(function($departure)
+		{
+			$trip             = $departure->trip;
+			$start            = new DateTime($trip->start);
+			$end              = clone $start;
+			$duration_hours   = floor($trip->duration);
+			$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+			$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+
+			$departure->end = $end;
+
+			return $end->format('Y-m-d H:i:s');
+		});
+		$lastReturnDate = $departures->first()->end;
+
+		$lastAccommodationDate = $this->accommodations()->orderBy('accommodation_booking.end', 'DESC')->first();
+		if(!empty($lastAccommodationDate))
+			$lastAccommodationDate = new DateTime($lastAccommodationDate->pivot->start);
+
+		// This is ugly!
+		// TODO Make it more elegant
+		if(empty($lastReturnDate) && empty($lastAccommodationDate))
+			return null;
+
+		if(empty($lastReturnDate))
+			return $lastAccommodationDate->format('Y-m-d');
+
+		if(empty($lastAccommodationDate))
+			return $lastReturnDate->format('Y-m-d');
+
+		return $lastAccommodationDate > $lastReturnDate ? $lastAccommodationDate->format('Y-m-d') : $lastReturnDate->format('Y-m-d');
 	}
 
 	public function setDiscountAttribute($value)

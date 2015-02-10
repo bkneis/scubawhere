@@ -377,10 +377,10 @@ class BookingController extends Controller {
 		}
 
 		// Determine if we need a boatroom_id (only when the trip is overnight)
-		$trip  = $departure->trip;
-		$start = new DateTime($trip->start, new DateTimeZone( Auth::user()->timezone ));
-		$end   = clone $start;
-		$duration_hours = floor($trip->duration);
+		$trip             = $departure->trip;
+		$start            = new DateTime($trip->start);
+		$end              = clone $start;
+		$duration_hours   = floor($trip->duration);
 		$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
 		$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
@@ -1024,6 +1024,11 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if(moreThan5DaysAgo($booking->last_return_date))
+		{
+			return Response::json( array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403 ); // 403 Forbidden
+		}
+
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
 
@@ -1085,13 +1090,13 @@ class BookingController extends Controller {
 		return $booking->payments()->with('paymentgateway')->get();
 	}
 
-	private function moreThan5DaysAgo($start) {
+	private function moreThan5DaysAgo($date) {
 		$local_time = Helper::localTime();
-		$test_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+		$test_date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
 
 		if($local_time->diff($test_date)->format('%R%a') < -5)
-			return true
+			return true;
 
-		return false
+		return false;
 	}
 }
