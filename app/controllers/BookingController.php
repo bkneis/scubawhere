@@ -310,6 +310,12 @@ class BookingController extends Controller {
 		}
 		*/
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add details, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Validate that the session start date has not already passed
 		if(Helper::isPast($departure->start))
 		{
@@ -525,6 +531,12 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The bookingdetail has not been found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot remove details, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Validate that the session start date has not already passed
 		if(Helper::isPast($bookingdetail->departure->start))
 		{
@@ -557,6 +569,12 @@ class BookingController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot change lead customer, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
 
 		$customer_id = Input::get('customer_id', null);
@@ -629,10 +647,14 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Check if trip departed more than 5 days ago
-		$local_time = Helper::localTime();
-		$test_date = new DateTime($bookingdetail->departure->start, new DateTimeZone( Auth::user()->timezone ));
-		if($local_time->diff($test_date)->format('%R%a') < -5)
+		if(moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -699,10 +721,14 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot remove addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Check if trip departed more than 5 days ago
-		$local_time = Helper::localTime();
-		$test_date = new DateTime($bookingdetail->departure->start, new DateTimeZone( Auth::user()->timezone ));
-		if($local_time->diff($test_date)->format('%R%a') < -5)
+		if(moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -761,6 +787,13 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add accommodation, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
+		// Validate that the start and end dates are maximum 1 days ago
 		$start = Input::get('start');
 		$end = Input::get('end');
 		$validator = Validator::make(
@@ -792,7 +825,7 @@ class BookingController extends Controller {
 			    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
 			    })
 			    ->count() >= $accommodation->capacity )
-			    return Response::json( array('errors' => array('The accommodation is not available for the '.$current_date->format('Y-m-d').'!')), 403 ); // 403 Forbidden
+			    return Response::json( array('errors' => array('The accommodation is not available for '.$current_date->format('D, j M Y').'!')), 403 ); // 403 Forbidden
 
 			$current_date->add( new DateInterval('P1D') );
 		}
@@ -840,7 +873,13 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot remove accommodation, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
+		// Don't need to check if accommodation belongs to company because detaching wouldn't throw an error if it's not there in the first place.
 		$booking->accommodations()
 			->where('id', Input::get('accommodation_id') )
 			->wherePivot('customer_id', Input::get('customer_id'))
@@ -888,6 +927,12 @@ class BookingController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot adit info, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
 
 		$data = Input::only(
@@ -1038,5 +1083,15 @@ class BookingController extends Controller {
 		}
 
 		return $booking->payments()->with('paymentgateway')->get();
+	}
+
+	private function moreThan5DaysAgo($start) {
+		$local_time = Helper::localTime();
+		$test_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+
+		if($local_time->diff($test_date)->format('%R%a') < -5)
+			return true
+
+		return false
 	}
 }
