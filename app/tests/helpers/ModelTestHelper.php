@@ -34,9 +34,9 @@ class ModelTestHelper{
 	const TEST_JSON                   = '[{"this":"is", "some":"json"}]';
 	const TEST_JSON_UPDATED           = '[{"this":"is", "updated":"json"}]';
 	const TEST_LATITUDE               = 51.482536;
-	const TEST_LATITUDE_UPDATED       = 52.274750;
-	const TEST_LONGITUDE              = -2.528342;
-	const TEST_LONGITUDE_UPDATED      =  7.919868;
+	const TEST_LATITUDE_UPDATED       = 52.274757;
+	const TEST_LONGITUDE              = -2.528346;
+	const TEST_LONGITUDE_UPDATED      =  167.919868;
 	const TEST_TIMEZONE               = 'Europe/London';
 	const TEST_TIMEZONE_UPDATED       = 'Europe/Berlin';
 	const TEST_PASSWORD               = "testpassword";
@@ -55,6 +55,8 @@ class ModelTestHelper{
 	const TEST_SYMBOL_UPDATED         = "$";
 	const TEST_TERMS                  = "fullamount";
 	const TEST_TERMS_UPDATED          = "banned";
+	const TEST_TC                     = "These are our terms & conditions.";
+	const TEST_TC_UPDATED             = "These are our UPDATED terms & conditions.";
 	const TEST_TIME                   = "10:10:10";
 	const TEST_TIME_UPDATED           = "20:20:20";
 	const TEST_TINY_INTEGER           = 2;
@@ -230,6 +232,7 @@ class ModelTestHelper{
 		$entry->website             = self::TEST_URL;
 		$entry->logo                = self::TEST_STRING.$append;
 		$entry->photo               = self::TEST_STRING.$append;
+		$entry->terms               = self::TEST_TC;
 		$entry->video               = self::TEST_STRING.$append;
 		$entry->views               = self::TEST_INTEGER;
 
