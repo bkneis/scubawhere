@@ -654,7 +654,7 @@ class BookingController extends Controller {
 		}
 
 		// Check if trip departed more than 5 days ago
-		if(moreThan5DaysAgo($bookingdetail->departure->start))
+		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -728,7 +728,7 @@ class BookingController extends Controller {
 		}
 
 		// Check if trip departed more than 5 days ago
-		if(moreThan5DaysAgo($bookingdetail->departure->start))
+		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -1024,7 +1024,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if(moreThan5DaysAgo($booking->last_return_date))
+		if($this->moreThan5DaysAgo($booking->last_return_date))
 		{
 			return Response::json( array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403 ); // 403 Forbidden
 		}

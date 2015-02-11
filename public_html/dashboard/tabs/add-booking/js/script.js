@@ -366,8 +366,8 @@ window.promises.loadedCustomers.done(function() {
 		var id = $('#existing-customers').val();
 
 		if(id <= 0) return false;
-			
-		$("#selected-customer").html(selectedCustomerTemplate(window.customers[id]));	
+
+		$("#selected-customer").html(selectedCustomerTemplate(window.customers[id]));
 	});
 
 	$('#customer-tab').on('click', '.add-customer', function() {
@@ -691,7 +691,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	}
 });
 
-$('#modalWindows').on('click', '.boatroom-select-option ', function(event) {
+$('#modalWindows').on('click', '.boatroom-select-option', function(event) {
 	var modal = $(event.target).closest('.reveal-modal');
 	var params = modal.data('params');
 	params.boatroom_id = $(event.target).data('id');
@@ -1071,7 +1071,7 @@ $(document).ready(function() {
 			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
 			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideUp();
 		}
-		
+
 
 	});
 

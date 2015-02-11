@@ -1,5 +1,4 @@
 <div id="wrapper" class="clearfix">
-<div class="row">
   <div class="col-md-7">
     <div class="panel panel-default" id="todays-sessions">
       <div class="panel-heading">
@@ -50,7 +49,7 @@
     {{else}}
     <tr><td colspan="7" style="text-align: center;">You have no sessions today.</td></tr>
     {{/each}}
-  </script> 
+  </script>
 
   <script type="text/x-handlebars-template" id="customer-details-template">
       {{#each customers}}
@@ -71,10 +70,8 @@
       <div style="min-height:250px;" class="panel-body">
       </div>
     </div>
-  </div> 
-  </div>     
+  </div>
 
-  <div class="row">
   <div class="col-md-5">
     <div class="panel panel-default" id="recent-bookings">
       <div class="panel-heading">
@@ -98,7 +95,7 @@
         </table>
       </div>
     </div>
-  </div>  
+  </div>
 
   <script type="text/x-handlebars-template" id="booking-list-item-template">
     {{#each bookings}}
@@ -177,8 +174,7 @@
       </div>
     </div>
   </div>
-</div>
-</div>
+</div><!-- #wrapper -->
 
 <link rel="stylesheet" type="text/css" href="/common/css/datatables.css">
 
