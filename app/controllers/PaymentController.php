@@ -55,6 +55,12 @@ class PaymentController extends Controller {
 			return Response::json( array('errors' => array('The paymentgateway could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add payment, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// For now, just use the company's currency
 		$data['currency_id']       = Auth::user()->currency->id;
 
@@ -71,7 +77,7 @@ class PaymentController extends Controller {
 		// Check if amount is higher than what needs to be paid
 		$sum       = $booking->payments()->sum('amount');
 		$remaining = $booking->price - $sum;
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency  = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
 		$remaining = number_format(
 			$remaining / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
