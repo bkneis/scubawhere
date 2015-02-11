@@ -67,6 +67,14 @@ Handlebars.registerHelper('arrivalDate', function() {
 	return moment(this.arrival_date).format('DD MMM YYYY'); // e.g. '14 Oct 2015'
 });
 
+Handlebars.registerHelper('price', function() {
+	if(this.status === 'cancelled') {
+		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + this.decimal_price + '</del> ' + (this.cancellation_fee));
+	}
+
+	return window.company.currency.symbol + " " + this.decimal_price;
+});
+
 Handlebars.registerHelper('sumPaid', function() {
 	return _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
@@ -133,7 +141,7 @@ $(function() {
 		$('#booking-list').html( bookingListItem({bookings: window.bookings}) );
 	*/
 	Booking.getAll(function(data) {
-		window.bookings = data;
+		window.bookings = _.indexBy(data, 'id');
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 
 		// Initiate tooltips
@@ -204,10 +212,9 @@ function addTransaction(booking_id, self) {
 	});
 }
 
-function cancelBooking(booking_id, self) {
+var cancellationFeeTemplate  = Handlebars.compile($("#cancellation-fee-template").html());
 
-	var reallyCancel = confirm('Do you really want to cancel this booking?');
-	if(!reallyCancel) return false;
+function cancelBooking(booking_id, self) {
 
 	// Set loading indicator
 	var btn = $(self);
@@ -218,12 +225,57 @@ function cancelBooking(booking_id, self) {
 		'booking_id': booking_id
 	};
 
-	// Load booking data and redirect to add-booking tab
+	$('#modalWindows')
+	.append( cancellationFeeTemplate() )     // Create the modal
+	.children('#modal-cancellation-fee')             // Directly find it and use it
+	.data('params', params)                         // Assign the eventObject to the modal DOM element
+	.reveal({                                       // Open modal window | Options:
+		animation: 'fadeAndPop',                    // fade, fadeAndPop, none
+		animationSpeed: 300,                        // how fast animtions are
+		closeOnBackgroundClick: true,               // if you click background will modal close?
+		dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
+		btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
+		onFinishModal: function() {
+			// Aborted action
+			if(!window.sw.modalClosedBySelection)
+				this.btn.html('<i class="fa fa-times fa-fw"></i> Cancel'); // Reset the button
+			else
+				delete window.sw.modalClosedBySelection;
+
+			$('#modal-cancellation-fee').remove();   // Remove the modal from the DOM
+		}
+	});
+}
+
+$('#modalWindows').on('submit', '.cancellation-form', function(event) {
+	event.preventDefault();
+	var modal  = $(event.target).closest('.reveal-modal');
+	var btn    = modal.find('.cancel-booking').html('<i class="fa fa-cog fa-spin fa-fw"></i> Cancel Booking');
+	var params = modal.data('params');
+
+	// Figure out the cancellation fee
+	var cancellation_fee = 0;
+	var selectedRadio    = modal.find(':checked').val();
+
+	switch(selectedRadio) {
+		case 'fee':
+			cancellation_fee = modal.find('[name=cancellation_fee]').val();
+			break;
+		case 'percentage':
+			var bookingPrice = window.bookings[params.booking_id].decimal_price;
+			var percentage   = modal.find('[name=fee_percentage]').val() / 100;
+			cancellation_fee = bookingPrice * percentage;
+			break;
+	}
+
+	params.cancellation_fee = cancellation_fee;
+
+	// Cancel booking and reload list of bookings
 	Booking.cancel(params, function success(status) {
 
 		Booking.getAll(function(data) {
 			var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
-			window.bookings = data;
+			window.bookings = _.indexBy(data, 'id');
 			$('#booking-list').html( bookingListItem({bookings: data}) );
 
 			// Initiate tooltips
@@ -231,9 +283,14 @@ function cancelBooking(booking_id, self) {
 		});
 
 		pageMssg(status, 'success');
-	}, function error(xhr) {
+
+		// Close modal window
+		window.sw.modalClosedBySelection = true;
+		$('#modal-cancellation-fee .close-reveal-modal').first().click();
+	},
+	function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0]);
-		btn.html('<i class="fa fa-times fa-fw"></i> Cancel');
+		btn.html('Cancel Booking');
 	});
-}
+});

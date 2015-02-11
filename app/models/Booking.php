@@ -13,6 +13,7 @@ class Booking extends Ardent {
 		'discount',
 		'status',
 		'reserved',
+		'cancellation_fee',
 		'pick_up_location',
 		'pick_up_date',
 		'pick_up_time',
@@ -29,6 +30,7 @@ class Booking extends Ardent {
 		'discount'         => 'integer|min:0',
 		'status'           => 'in:saved,reserved,confirmed,on hold,cancelled',
 		'reserved'         => 'date|after_local_now',
+		'cancellation_fee' => 'integer|min:0',
 		'pick_up_location' => 'required_with:pick_up_time',
 		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
 		'pick_up_time'     => 'time|required_with:pick_up_date',
@@ -122,6 +124,25 @@ class Booking extends Ardent {
 	}
 
 	public function getDiscountAttribute($value)
+	{
+		$currency = new Currency( Auth::user()->currency->code );
+
+		return number_format(
+			$value / $currency->getSubunitToUnit(), // number
+			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+			/* $currency->getDecimalMark() */ '.', // decimal seperator
+			/* $currency->getThousandsSeperator() */ ''
+		);
+	}
+
+	public function setCancellationFeeAttribute($value)
+	{
+		$currency = new Currency( Auth::user()->currency->code );
+
+		$this->attributes['cancellation_fee'] = (int) round( $value * $currency->getSubunitToUnit() );
+	}
+
+	public function getCancellationFeeAttribute($value)
 	{
 		$currency = new Currency( Auth::user()->currency->code );
 

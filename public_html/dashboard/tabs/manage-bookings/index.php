@@ -79,7 +79,7 @@
 				<td>{{lead_customer.email}}</td>
 				<td>{{lead_customer.phone}}</td>
 				<td>{{lead_customer.country.abbreviation}}</td>
-				<td>{{currency}} {{decimal_price}}</td>
+				<td>{{price}}</td>
 			</tr>
 			<tr class="accordion-body accordion-{{id}}">
 				<td colspan="9" class="clearfix">
@@ -127,7 +127,51 @@
 		{{/each}}
 	</script>
 
+	<div id="modalWindows" style="height: 0;"></div>
+
+	<script type="text/x-handlebars-template" id="cancellation-fee-template">
+		<div id="modal-cancellation-fee" class="reveal-modal">
+			<h4>Do you incurr a cancellation fee?</h4>
+
+			<form class="form cancellation-form">
+				<div class="form-group">
+					<label>
+						<input type="radio" name="thisorthat" value="fee">
+						Yes:
+						<div class="input-group">
+							<span class="input-group-addon">{{currency}}</span>
+							<input type="text" class="form-control" name="cancellation_fee" placeholder="00.00">
+						</div>
+					</label>
+				</div>
+				<div class="form-group">
+					<label>
+						<input type="radio" name="thisorthat" value="percentage">
+						Yes, a percentage:
+						<div class="input-group">
+							<span class="input-group-addon">%</span>
+							<input type="text" class="form-control" name="fee_percentage" placeholder="00.0">
+						</div>
+					</label>
+				</div>
+				<div class="form-group">
+					<label>
+						<input type="radio" name="thisorthat" value="no" checked>
+						No cancellation fee
+					</label>
+				</div>
+				<div class="form-group">
+					<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
+					<button class="btn btn-primary pull-right cancel-booking">Cancel Booking</button>
+				</div>
+			</form>
+
+			<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+		</div>
+	</script>
+
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<script src="js/Controllers/Booking.js"></script>
 	<script src="js/Controllers/Ticket.js"></script>

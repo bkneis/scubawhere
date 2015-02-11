@@ -12,6 +12,7 @@ return array(
     'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
     'AddBoatroomIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_12_01_234755_add_boatroom_id_to_booking_details_table.php',
+    'AddCancellationFeeToBookingTable' => $baseDir . '/app/database/migrations/2015_02_10_234000_add_cancellation_fee_to_booking_table.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
     'AddCompanyIdToAddonsTable' => $baseDir . '/app/database/migrations/2014_10_09_222929_add_company_id_to_addons_table.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',

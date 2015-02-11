@@ -1032,7 +1032,7 @@ class BookingController extends Controller {
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
 
-		if( !$booking->update( array('status' => 'cancelled') ) )
+		if( !$booking->update( array('status' => 'cancelled', 'cancellation_fee' => Input::get('cancellation_fee')) ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
