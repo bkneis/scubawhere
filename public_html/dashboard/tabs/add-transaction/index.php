@@ -52,12 +52,12 @@
 						<div id="save-loader" class="loader"></div>
 					</div>
 
-					<div class="form-group">
+					{{!--<div class="form-group">
 						<label class="col-sm-3 col-sm-offset-1 control-label">Received at</label>
 						<div class="col-sm-6">
 							<input name="received_at" type="text" class="form-control" id="received-at-input" data-date-format="YYYY-MM-DD">
 						</div>
-					</div>
+					</div>--}}
 
 					<div class="form-group">
 						<div class="col-sm-6 col-sm-offset-4">

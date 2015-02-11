@@ -7,6 +7,7 @@ Handlebars.registerHelper('currency', function() {
 
 Handlebars.registerHelper('status', function() {
 	switch(this.status) {
+		case 'cancelled': return new Handlebars.SafeString('<i class="fa fa-ban"></i> Cancelled');
 		case 'confirmed': return new Handlebars.SafeString('<i class="fa fa-check"></i> Confirmed');
 		case 'reserved':  return new Handlebars.SafeString('<i class="fa fa-clock-o"></i> Reserved');
 		case 'saved':     return new Handlebars.SafeString('<i class="fa fa-floppy-o"></i> Saved');

@@ -61,11 +61,12 @@ class PaymentController extends Controller {
 		// This needs to be defined AFTER $data['currency_id']!
 		$data['amount']            = Input::get('amount');
 		$data['paymentgateway_id'] = Input::get('paymentgateway_id');
-		$data['received_at']       = Input::get('received_at');
+		// $data['received_at']       = Input::get('received_at');
+		$data['received_at']       = Helper::localTime()->format('Y-m-d H:i:s');
 
 		// Check that received_at date lies in the past
-		if(!Helper::isPast($data['received_at']))
-			return Response::json( array('errors' => array('The received_at date must lie in the past.')), 406 ); // 406 Not Acceptable
+		/* if(!Helper::isPast($data['received_at']))
+			return Response::json( array('errors' => array('The received_at date must lie in the past.')), 406 ); // 406 Not Acceptable */
 
 		// Check if amount is higher than what needs to be paid
 		$sum       = $booking->payments()->sum('amount');
