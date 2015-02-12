@@ -8,6 +8,7 @@ class Booking extends Ardent {
 	protected $fillable = array(
 		'lead_customer_id',
 		'agent_id',
+		'agent_reference',
 		'source',
 		// 'price',
 		'discount',
@@ -25,6 +26,7 @@ class Booking extends Ardent {
 	public static $rules = array(
 		'lead_customer_id' => 'integer|min:1',
 		'agent_id'         => 'integer|required_without:source',
+		'agent_reference'  => 'required_with:agent_id',
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
@@ -39,6 +41,9 @@ class Booking extends Ardent {
 
 	public function beforeSave()
 	{
+		if( isset($this->agent_reference) )
+			$this->agent_reference = Helper::sanitiseString($this->agent_reference);
+
 		if( isset($this->pick_up_location) )
 			$this->pick_up_location = Helper::sanitiseString($this->pick_up_location);
 

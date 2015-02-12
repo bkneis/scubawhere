@@ -250,7 +250,12 @@ $('#source-tab').on('click', '.source-finish', function() {
 
 	if(type == "agent") {
 		var agentId = $('#agents-list').children('.active').data('id');
-		params = {_token: window.token, agent_id: agentId};
+		var reference = $('#agent-reference-' + agentId).val();
+		params = {
+			_token: window.token,
+			agent_id: agentId,
+			agent_reference: reference
+		};
 	}else{
 		params = {_token: window.token, source: type};
 	}

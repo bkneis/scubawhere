@@ -170,6 +170,7 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 
 			this.source = params.source || null;
 			this.agent_id = params.agent_id || null;
+			this.agent_reference = params.agent_reference || null;
 
 			successFn(data.status);
 		},

@@ -101,9 +101,12 @@
 						</div>
 						<script id="agents-list-template" type="text/x-handlebars-template">
 							{{#each agents}}
-							<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
-								{{{name}}} <span class="badge">{{{branch_name}}}</span>
-							</a>
+								<a data-toggle="collapse" data-parent="#agents-list" href="#agent-body-{{id}}"  data-id="{{id}}" class="list-group-item list-group-radio">
+									{{{name}}} <span class="badge">{{{branch_name}}}</span>
+								</a>
+								<div id="agent-body-{{id}}" class="panel-body panel-collapse collapse form-inline">
+									Agent reference: <input type="text" class="form-control" id="agent-reference-{{id}}">
+								</div>
 							{{/each}}
 						</script>
 					</div>
@@ -170,7 +173,7 @@
 									{{/each}}
 								</script>
 							</div>
-						</div>						
+						</div>
 					</div>
 				</div>
 			</div>
@@ -199,7 +202,7 @@
 													<option selected="selected" value="">Search for a customer...</option>
 												</select>
 												<script id="customers-list-template" type="text/x-handlebars-template">
-													<option selected="selected" value="">Search for a customer...</option>									
+													<option selected="selected" value="">Search for a customer...</option>
 													{{#each customers}}
 														<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
 													{{/each}}
@@ -211,7 +214,7 @@
 								<div class="row">
 									<div class="col-xs-12">
 										<div id="selected-customer">
-											
+
 										</div>
 									</div>
 								</div>
@@ -946,7 +949,7 @@
 				</div>
 			</div>
 			<ul class="list-group" id="booking-summary">
-				
+
 			</ul>
 			<script id="booking-summary-template" type="text/x-handlebars-template">
 				<li class="list-group-item active">
@@ -1122,5 +1125,5 @@
 	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
 	<!--My scripts-->
 	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
-	
+
 </div>

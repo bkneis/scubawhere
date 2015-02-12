@@ -11,6 +11,7 @@ return array(
     'AccommodationModelTest' => $baseDir . '/app/tests/unit/models/AccommodationModelTest.php',
     'AddActiveFieldToTicketsTable' => $baseDir . '/app/database/migrations/2014_10_08_222419_add_active_field_to_tickets_table.php',
     'AddAgentForeignToBookings' => $baseDir . '/app/database/migrations/2014_05_20_165617_add_agent_foreign_to_bookings.php',
+    'AddAgentReferenceToBookingTable' => $baseDir . '/app/database/migrations/2015_02_12_203807_add_agent_reference_to_booking_table.php',
     'AddBoatroomIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_12_01_234755_add_boatroom_id_to_booking_details_table.php',
     'AddCancellationFeeToBookingTable' => $baseDir . '/app/database/migrations/2015_02_10_234000_add_cancellation_fee_to_booking_table.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',

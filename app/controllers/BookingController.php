@@ -170,7 +170,7 @@ class BookingController extends Controller {
 
 	public function postInit()
 	{
-		$data = Input::only('agent_id', 'source');
+		$data = Input::only('agent_id', 'source', 'agent_reference');
 
 		if( $data['agent_id'] )
 		{
