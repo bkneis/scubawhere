@@ -23,12 +23,6 @@ $(function(){
 	agentForm = Handlebars.compile( $("#agent-form-template").html() );
 	renderEditForm();
 
-	$("#start-tour").on('click', function(event) {
-		introJs().setOption('doneLabel', 'Visit Locations').start().oncomplete(function() {
-        	window.location.href = '#locations?multipage=true';
-        });
-	});
-
 	$("#agent-form-container").on('click', '#add-agent', function(event) {
 
 		event.preventDefault();
@@ -125,6 +119,43 @@ $(function(){
 
 		renderEditForm();
 	});
+
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+			        case "agent-form-container": 
+			            $("#agent-name").val("John doe");
+			        	$("#agent-web").val("http://www.onlinescubaholidays.com");
+			        	$("#branch-name").val("Scuba holidays R us");
+			        	$("#branch-address").val("46 grand avenue tenerife");
+			        	$("#branch-phone").val("+44 7866565047");
+			        	$("#branch-email").val("john.doe@scubaholidays.com");
+			        break;
+
+			        case "commission-div":
+			        	$("#commission-amount").val(20);
+			        	break;
+
+			        case "agent-list-div":
+			        	$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
+			        	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-agent").remove();
+				clearForm();
+			});
+
+		$("#tour-next-step").on("click", function() {
+			window.location.href = "#boats";
+			window.currentStep = "#boats";
+		});
+	}
+
 });
 
 function renderAgentList(callback) {
@@ -227,4 +258,24 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var agent;
+		agent = {
+			task: 'add',
+		};
+		agent.update = false;
+
+	agent.has_billing_details = agent.billing_address || agent.billing_email || agent.billing_phone;
+
+	$('#agent-form-container').empty().append( agentForm(agent) );
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

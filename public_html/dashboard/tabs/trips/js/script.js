@@ -37,12 +37,6 @@ $(function(){
 		});
 	});
 
-	$("#start-tour").on('click', function(event) {
-		introJs().setOption('doneLabel', 'Visit Tickets').start().oncomplete(function() {
-        	window.location.href = '#tickets?multipage=true';
-        });
-	});
-
 	var $tripFormContainer = $('#trip-form-container');
 	// Assign eventListener for trip clicks
 	$('#trip-list-container').on('click', 'li', function(event) {
@@ -202,6 +196,23 @@ $(function(){
 			)
 		);
 	});
+
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start();
+
+		$("#tour-next-step").on("click", function() {
+			if(window.trips.length != 0) {
+				window.location.href = "#tickets";
+				window.currentStep = "#tickets";
+			} else alert("You need to add atleast one trip");
+		});
+	}
+
 });
 
 function renderTripList(callback) {

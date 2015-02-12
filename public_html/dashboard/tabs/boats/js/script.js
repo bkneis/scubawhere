@@ -243,6 +243,52 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 		});
 	});
 
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+
+					case "change-to-add-boatroom":
+				    	$("#boatroom-list").append('<li id="dummy-boatroom"><strong>Single Cabin</strong></li>');
+				    	break;
+
+			        case "boat-form-container":
+			        	$("#boat-name").val("Barry's big boat");
+			        	//CKEDITOR.setData("Add a description of your boat here."); 
+			        	$("#boat-capacity").val(25);
+			        	break;
+
+				    case "boat-cabins":
+			        	$("#room-types").append('<p> \
+						<select class="room-type-select"> \
+						<option value="{{id}}">Single Cabin</option> \
+						</select> Number of rooms: \
+						<input type="number" value="6" placeholder="0" style="width: 100px;" min="0"> \
+						<button class="btn btn-danger remove-room">&#215;</button> \
+						</p>');
+			        	break;
+
+				    case "boats-list-div":
+				    	$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
+				    	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-boat").remove();
+				clearForm();
+			});
+
+		$("#tour-next-step").on("click", function() {
+			if(window.boats.length != 0) {
+				window.location.href = "#locations";
+				window.currentStep = "#locations";
+			} else alert("You need to add atleast one boat");
+		});
+	}
+
 });
 
 function renderBoatList(callback) {
@@ -352,4 +398,27 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var boatRoom;
+
+	boatRoom = {
+		task: 'add',
+		update: false
+	};
+
+	$('#boat-form-container').empty().append( boatroomsForm(boatRoom) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

@@ -1,6 +1,7 @@
 <div id="wrapper" class="clearfix">
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your tickets. A ticket can be valid for many trips and are what your customers will be buying, they are displayed in the add-booking process"></div>	
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="sfdfsdf">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Tickets</h4>
 			</div>
@@ -20,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="ticket-form-container">
+		<div class="panel panel-default" id="ticket-form-container" data-step="2" data-position="left" data-intro="First, give the ticket a name, description and a base price.">
 			<script type="text/x-handlebars-template" id="ticket-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} Ticket</h4>
@@ -51,9 +52,9 @@
 							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="tickets-seasonal" data-step="3" data-position="left" data-intro="You can build seasonal prices depending if the business increases or decreases it’s prices during certain times of the years.">
 							<label>
-								<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+								<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
 							</label>
 							<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
@@ -69,7 +70,7 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="tickets-trips" data-step="4" data-position="top" data-intro="Here you can select which trips a ticket can be used for. The ticket is still valid for only 1 trip, but multile trips can be selected for tickets that use diffrent trips">
 							<h4>Please select the trips that this ticket should be eligable for:</h4>
 							{{#each available_trips}}
 								<p style="margin-left: 4em;">
@@ -81,9 +82,9 @@
 							{{/each}}
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="tickets-boats" data-step="5" data-position="top" data-intro="You can also limit the ticket to be used on specific boats">
 							<label style="display: block;">
-								<input type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
+								<input id="tickets-boats-checkbox" type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
 							</label>
 							<div class="dashed-border" id="boat-select"{{#unless hasBoats}} style="display:none;"{{/unless}}>
 								<p>Please select the boats that you want this ticket to be eligible for:</p>
@@ -98,9 +99,9 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="tickets-boatrooms" data-step="6" data-position="top" data-intro="You can also limit the ticket to be used on specific cabins for overnight trips. Click save to create the ticket">
 							<label style="display: block;">
-								<input type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain cabins?</strong>
+								<input id="tickets-boatroom-checkbox" type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain cabins?</strong>
 							</label>
 							<div class="dashed-border" id="boatroom-select"{{#unless hasBoatrooms}} style="display:none;"{{/unless}}>
 								<p>Please select the cabins that you want this ticket to be eligible for:</p>

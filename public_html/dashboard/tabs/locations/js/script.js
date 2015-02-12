@@ -13,11 +13,23 @@ $(function() {
 
 	loadGoogleMaps();
 
-	$("#start-tour").on('click', function(event) {
-		introJs().setOption('doneLabel', 'Visit Boats').start().oncomplete(function() {
-        	window.location.href = '#boats?multipage=true';
-        });
-	});
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start();
+
+		$("#tour-next-step").on("click", function() {
+			/*if(window.trips.length != 0) {
+				window.location.href = "#trips";
+				window.currentStep = "#trips";
+			} else alert("You need to add atleast one trip");*/
+			window.location.href = "#trips";
+			window.currentStep = "#trips";
+		});
+	}
 
 });
 

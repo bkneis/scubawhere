@@ -1,6 +1,7 @@
 <div id="wrapper" class="clearfix">
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Next are agents, these are used as a source of booking. By adding all your agents details, you can easily manage an agent's commission by selecting which agent got you the booking. (If you do not have any agents that work for you, skip this part and click next step)"></div>
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="agent-list-div" data-step="6" data-position="right" data-intro="Once an agent is created it will appear on your list. Click on a agent if you want to view / edit any information">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Agents</h4>
 			</div>
@@ -20,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="agent-form-container">
+		<div class="panel panel-default" id="agent-form-container" data-setp="2" data-position="left" data-intro="Enter all of the details for the agent in this form, these will be used when invoicing them.">
 			<script type="text/x-handlebars-template" id="agent-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} agent</h4>
@@ -29,32 +30,32 @@
 					<form id="{{task}}-agent-form">
 						<div class="form-row">
 							<label class="field-label">Agent Name</label>
-							<input type="text" name="name" value="{{{name}}}">
+							<input id="agent-name" type="text" name="name" value="{{{name}}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Agent&rsquo;s Website (Optional)</label>
-							<input type="text" name="website" placeholder="http://" value="{{{website}}}">
+							<input id="agent-web" type="text" name="website" placeholder="http://" value="{{{website}}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Branch Name</label>
-							<input type="text" name="branch_name" value="{{{branch_name}}}">
+							<input id="branch-name" type="text" name="branch_name" value="{{{branch_name}}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Branch Address</label>
-							<textarea name="branch_address" rows="3" cols="10">{{{branch_address}}}</textarea>
+							<textarea id="branch-address" name="branch_address" rows="3" cols="10">{{{branch_address}}}</textarea>
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Branch Telephone</label>
-							<input type="text" name="branch_phone" placeholder="+00 000 ..." value="{{{branch_phone}}}">
+							<input id="branch-phone" type="text" name="branch_phone" placeholder="+00 000 ..." value="{{{branch_phone}}}">
 						</div>
 
 						<div class="form-row">
 							<label class="field-label">Branch E-Mail</label>
-							<input type="text" name="branch_email" placeholder="email@agent.com" value="{{{branch_email}}}">
+							<input id="branch-email" type="text" name="branch_email" placeholder="email@agent.com" value="{{{branch_email}}}">
 						</div>
 
 						<div class="form-row">
@@ -81,12 +82,12 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="commission-div" data-step="3" data-position="left" data-intro="Enter the amount of commission the agent recieves for each booking">
 							<label class="field-label">Commission</label>
-							<input type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}"> %
+							<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}"> %
 						</div>
 
-						<div class="form-row" data-step="3" data-position="top" data-intro="By selecting these business terms for each Travel Agent, it will feed into when Adding a Booking, with the final amount required would be effected and invoices to be automatically created on request.">
+						<div class="form-row" data-step="4" data-position="top" data-intro="Additionally you can set the business terms of your arrangement with the agent. Terms can be either commission only, deposit only, full amount or banned. Once selected click save to create the agent">
 							<label class="field-label">Business Terms</label>
 							<select id="terms" name="terms">
 								<option>Please select..</option>

@@ -24,6 +24,7 @@ return array(
     'AddForeignCompanyIdToAgentsTable' => $baseDir . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
     'AddForeignKeysToBookingCustomerTable' => $baseDir . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
     'AddIdColumnToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_10_13_141916_add_id_column_to_booking_details_table.php',
+    'AddInitToCompanyTable' => $baseDir . '/app/database/migrations/2015_02_08_114910_add_init_to_company_table.php',
     'AddInnoDBRelationBetweenCurrenciesAndCountriesTables' => $baseDir . '/app/database/migrations/2014_10_31_163734_add_innoDB_relation_between_currencies_and_countries_tables.php',
     'AddParentColumnToAddonsTable' => $baseDir . '/app/database/migrations/2014_11_21_233944_add_parent_column_to_addons_table.php',
     'AddParentIdColumnToTicketsPackagesAndAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_21_224408_add_parent_id_column_to_tickets_packages_and_accommodations_table.php',

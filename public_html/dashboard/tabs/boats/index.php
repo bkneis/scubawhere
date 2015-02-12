@@ -1,29 +1,30 @@
 <div id="wrapper" class="clearfix">
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now we need to add your boats. Boats are assigned to trips once activated, this allows the trip to show which boat it is running on."></div>
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div id="boats-list-div" class="panel panel-default" data-step="9" data-position="right" data-intro="Finally, once you have saved your boat, you can view it in your boat list. Click on any boat to view / edit their details">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Boats</h4>
 			</div>
 			<div class="panel-body" id="boat-list-container">
-				<button id="change-to-add-boat" class="btn btn-success text-uppercase">&plus; Add Boat</button>
+				<button id="change-to-add-boat" class="btn btn-success text-uppercase" data-step="4" data-position="right" data-intro="Once you have added all of your cabins, you can start creating your boats. To start click this button">&plus; Add Boat</button>
 				<script type="text/x-handlebars-template" id="boat-list-template">
 					<ul id="boat-list" class="entity-list">
 						{{#each boats}}
 							<li data-id="{{id}}"><strong>{{name}}</strong> | Capacity: {{capacity}}</li>
 						{{else}}
-							<p>No boats available.</p>
+							<p id="no-boats">No boats available.</p>
 						{{/each}}
 					</ul>
 				</script>
 			</div>
 		</div>
 
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="2" data-position="right" data-intro="If your dive centre offers any over night trips or liveaboards, you will need to add the diffrent types of cabins (boat rooms) your boats have">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Cabins</h4>
 			</div>
 			<div class="panel-body" id="boatroom-list-container">
-				<button id="change-to-add-boatroom" class="btn btn-success text-uppercase">&plus; Add Cabin</button>
+				<button id="change-to-add-boatroom" class="btn btn-success text-uppercase" data-step="3" data-position="right" data-intro="To add a cabin, click this button. Then give the room a name and description. A cabin can be assigned to many boats">&plus; Add Cabin</button>
 				<script type="text/x-handlebars-template" id="boatroom-list-template">
 					<ul id="boatroom-list" class="entity-list">
 						{{#each boatrooms}}
@@ -38,7 +39,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="boat-form-container">
+		<div class="panel panel-default" id="boat-form-container" data-step="5" data-position="left" data-intro="Start by giving the boat a name, description and capacity. The capacity of the boat will limit how many tickets can be bought for a trip run on that boat">
 			<script type="text/x-handlebars-template" id="boat-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} boat</h4>
@@ -50,17 +51,17 @@
 					{{/if}}
 						<div class="form-row">
 							<label class="field-label">Boat name</label>
-							<input type="text" name="name" value="{{{name}}}">
+							<input id="boat-name" type="text" name="name" value="{{{name}}}">
 						</div>
 						<div class="form-row">
 							<label class="field-label">Boat description</label>
-							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
+							<textarea id="boat-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 						<div class="form-row">
 							<label class="field-label">Boat capacity</label>
-							<input type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
+							<input id="boat-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 						</div>
-						<div class="form-row" data-step="5" data-position="top" data-intro="Here you can assign boatrooms to your boats">
+						<div id="boat-cabins" class="form-row" data-step="6" data-position="left" data-intro="Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin and select the cabin type and number of rooms">
 							<div id="room-types">
 							<h4>Cabins on this boat</h4>
 								{{#each boatrooms}}

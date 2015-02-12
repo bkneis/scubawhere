@@ -266,6 +266,45 @@ $(function(){
 
 		$(event.target).parent().remove();
 	});
+
+	if(window.tourStart) {
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+			        case "accommodation-form-container": 
+			            $("#room-name").val("3* Hotel Single Room");
+			            //$("#acom-description").val("Single bed room in luxury 3* hotel only 10 minutes away from the dive centre. Etc.")
+			        	$("#acom-price").val(50);
+			        break;
+			        case "acom-base": 
+			            $("#add-base-price").click();
+			        	$("#acom-price").val(50);
+			        break;
+			        case "acom-season": 
+			            $("#acom-season-price").click();
+			        	$("#acom-price").val(50);
+			        break;
+			        case "acom-rooms": 
+			        	$("#room-amount").val(6);
+			        break;
+			        case "accommodations-list": 
+			        	$("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
+			        break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-room").remove();
+				clearForm();
+			});
+
+		$("#tour-next-step").on("click", function() {
+			window.location.href = "#agents";
+			window.currentStep = "#agents";
+		});
+	}
+
 });
 
 function renderAccommodationList(callback) {
@@ -374,4 +413,31 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var accommodation = {
+			task: 'add',
+			update: false,
+			base_prices: [ window.sw.default_first_base_price ],
+		};
+
+
+	accommodation.default_price = window.sw.default_price;
+
+	$('#accommodation-form-container').empty().append( accommodationForm(accommodation) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

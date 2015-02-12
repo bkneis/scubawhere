@@ -1,10 +1,17 @@
 window.todaySessions;
 window.todayBookings;
+window.tourStart;
 var todaySession;
 var customerDetails;
+window.currentStep;
 
 Handlebars.registerHelper('getTime', function(obj){
 	return obj.substring(obj.length-3, 10);
+});
+
+Handlebars.registerHelper('tourStarted', function(){
+	if(window.tourStart) return true;
+	else return false;
 });
 
 Handlebars.registerHelper('getEnd', function(obj, duration){
@@ -23,6 +30,54 @@ Handlebars.registerHelper('getPer', function(capacity){
 });
 
 $(function () {
+
+	if(window.company.init != 1) {
+		var initWarning = '<div class="alert alert-danger" role="alert"><strong>RMS is not configured!</strong> Please use the setup wizard below to configure your system</div>';
+		$("#wrapper").prepend(initWarning);
+		var setupWizard = $("#setup-wizard").html();
+		$("#row1").prepend(setupWizard);
+
+		$("#start-wizard").on('click', function(event) {
+			if(window.tourStart) {
+				window.location.href = window.currentStep;
+			}
+			else {
+				window.currentStep = "#dashboard";
+				//$(this).text("Continue tour");
+				var tourDash = introJs();
+				tourDash.setOptions({
+					steps: [
+					{ 
+						intro: "Welcome to Scuba Where RMS! So we can get you all set up with our system, this wizard will take you throw our system and ask that you fill in some information about your dive centre"
+					},
+					{
+						element: '#setup-wizard',
+						intro: 'Here is your start up wizard. It shows you all the tabs that require some information, These are what I will be guiding you through.',
+						position : 'right'
+					},
+					{
+						intro: "So let's get started. Click done to start the configuration"
+					}
+					],
+					showStepNumbers : false,
+					exitOnOverlayClick : false,
+					exitOnEsc : false
+				});
+				tourDash.start().oncomplete(function() {
+					window.location.href = '#accommodations';
+					$("#guts").prepend($("#tour-nav-wizard").html());
+					window.tourStart = true;
+					window.currentStep = "#accommodations";
+				});
+			}
+
+		});
+
+} else {
+
+	var todaysSessionsWidget = $("#todays-sessions-widget").html();
+
+	$("#row1").prepend(todaysSessionsWidget);
 
 	todaySession = Handlebars.compile($('#today-session-template').html());
 	Session.getToday(function success(data){
@@ -43,6 +98,8 @@ $(function () {
 		$('.accordion-' + this.getAttribute('data-id')).toggle();
 	});
 
+}
+
 });
 
 function getCustomers(id) {
@@ -53,14 +110,14 @@ function getCustomers(id) {
 		console.log(data.customers);
 		$('#customer-table-'+id).append( customerDetails( {customers : data.customers} ) );
 		$('#customers-'+id).DataTable({
-        "paging":   false,
-        "ordering": false,
-        "info":     false,
-        "pageLength" : 10,
-        "language": {
-      		"emptyTable": "There are no customers booked for this trip"
-    	}
-    	});
+			"paging":   false,
+			"ordering": false,
+			"info":     false,
+			"pageLength" : 10,
+			"language": {
+				"emptyTable": "There are no customers booked for this trip"
+			}
+		});
 	});
 
 }

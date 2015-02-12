@@ -1,8 +1,12 @@
 <div id="wrapper" class="clearfix">
   <div class="col-md-7">
+<div class="row" id="row1">
+
+  <script type="text/x-handlebars-template" id="todays-sessions-widget">
+      <div class="col-md-7">
     <div class="panel panel-default" id="todays-sessions">
       <div class="panel-heading">
-        <h4 class="panel-title">Today's Trips</h4>
+        <h4 class="panel-title">Todays Trips</h4>
       </div>
       <div style="min-height:250px;" class="panel-body">
         <table class="bluethead">
@@ -21,6 +25,21 @@
       </div>
     </div>
   </div>
+  </script>
+
+  <script type="text/x-handlebars-template" id="setup-wizard">
+      <div class="col-md-7">
+    <div class="panel panel-default" id="setup-wizard">
+      <div class="panel-heading">
+        <h4 class="panel-title">Setup Wizard</h4>
+      </div>
+      <div style="min-height:250px;" class="panel-body">
+        <p>Welcome to scub rms ...</p>
+          <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
+      </div>
+    </div>
+  </div>
+  </script>
 
   <script type="text/x-handlebars-template" id="today-session-template">
     {{#each sessions}}
@@ -96,6 +115,57 @@
       </div>
     </div>
   </div>
+  </div> 
+
+  <script type="text/x-handlebars-template" id="tour-nav-wizard">
+  <div class="col-md-10">
+    <ul class="nav nav-wizard" role="tablist">
+      <li role="presentation" class="active">
+        <a href="javascript:void(0)" id="prog-acom" role="tab" class="selected" data-toggle="tab" data-target="#source-tab">
+          <span class="step-description">Accommodations</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" id="prog-agents" data-toggle="tab" data-target="#ticket-tab">
+          <span class="step-description">Agents</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">
+          <span class="step-description">Locations</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
+          <span class="step-description">Boats</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">
+          <span class="step-description">Trips</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
+          <span class="step-description">Tickets</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
+          <span class="step-description">Packages</span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
+          <span class="step-description">Add ons</span>
+        </a>
+      </li>
+    </ul>
+    </div>
+    <div class="col-md-2" style="min-height:80px" id="tour-button">
+      <button id="tour-next-step" class="btn btn-success text-uppercase">Next Step</button>
+    </div>
+    </script> 
 
   <script type="text/x-handlebars-template" id="booking-list-item-template">
     {{#each bookings}}
@@ -180,6 +250,7 @@
 
 <script src="/dashboard/js/Controllers/Session.js"></script>
 <script src="/dashboard/js/Controllers/Trip.js"></script>
+<!--<script src="/dashboard/js/tour.js"></script>-->
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script src="tabs/dashboard/js/script.js"></script>
 <script src="js/Controllers/Booking.js"></script>

@@ -1,6 +1,7 @@
 <div id="wrapper" class="clearfix">
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Firstly, we need to add any accommodations that your dive centre offers. (If you don't have any then just skip this part and click next step)"></div>
 	<div class="col-md-4">
-		<div class="panel panel-default" id="accommodations-list">
+		<div class="panel panel-default" id="accommodations-list" data-step="6" data-position="right" data-intro="Once an accommodation is saved you can see it in you list. Click on an accommodation to view / edit its details">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Accommodation</h4>
 			</div>
@@ -20,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="accommodation-form-container" data-step="3" data-position="left" data-intro="To get started, type the room name or type and description and set a base price. You can add yearly price changes to begin on certain dates in the future and also apply seasonal price changes.">
+		<div class="panel panel-default" id="accommodation-form-container" data-step="2" data-position="left" data-intro="To get started, type the room name or type and description and set a base price. You can add yearly price changes to begin on certain dates in the future and also apply seasonal price changes.">
 			<script type="text/x-handlebars-template" id="accommodation-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} accommodation</h4>
@@ -29,7 +30,7 @@
 					<form id="{{task}}-accommodation-form">
 						<div class="form-row" id="acom-name">
 							<label class="field-label">Room Name</label>
-							<input type="text" name="name" value="{{{name}}}">
+							<input id="room-name" type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
 								<span class="btn btn-danger pull-right{{#if has_bookings}} deactivate-accommodation{{else}} remove-accommodation{{/if}}">Remove</span>
@@ -41,17 +42,17 @@
 							<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="acom-base" data-step="3" data-position="top" data-intro="If you expect your costs of running a trip are to increase, you can set base prices for your trip that can increase or decrease annually.">
 							<p><strong>Set base prices for this accommodation:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
 							{{/each}}
-							<button id="acom-base" class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
+							<button id="add-base-price" class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="Additionally you can set prices to change seasonly. If you charge accommodation prices on a 4 season year, you can easily manage its price. Just enter the dates of your season and their price.">
 							<label>
-								<input type="checkbox" id="acom-season" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+								<input id="acom-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
 							</label>
 							<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
@@ -67,9 +68,9 @@
 							</div>
 						</div>
 
-						<div class="form-row" id="acom-rooms">
+						<div class="form-row" id="acom-rooms" data-step="5" data-position="top" data-intro="Lastly enter the number of rooms you have available. If you room type is a dorm room, then this should be the number of beds. Lastly click save and your room will be added.">
 							<label class="field-label">Number of Rooms/Beds</label>
-							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
+							<input id="room-amount" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 						</div>
 
 						{{#if update}}
@@ -88,7 +89,7 @@
 	<script type="text/x-handlebars-template" id="price-input-template">
 		<p>
 			<span class="currency">{{currency}}</span>
-			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
 
 			{{#unless isAlways}}
 				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">

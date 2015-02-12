@@ -236,6 +236,39 @@ $(function () {
 
 		$(event.target).parent().remove();
 	});
+
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+			        case "tickets-seasonal":
+			        	$("#seasonal-prices-checkbox").click();
+			        	break;
+			        case "tickets-boats":
+			        	$("#tickets-boats-checkbox").click();
+			        	break;
+			        case "tickets-boatrooms":
+			        	$("#tickets-boatroom-checkbox").click();
+			        	break;
+			        case "tickets-list-div":
+			        	$("#ticket-list").append('<li id="dummy-ticket"><strong>New diving trip</strong> | £50.00 </li>');
+			        	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-ticket").remove();
+				clearForm();
+			});
+
+		$("#tour-next-step").on("click", function() {
+			window.location.href = "#packages";
+			window.currentStep = "#packages";
+		});
+	}
+
 });
 
 function renderTicketList(callback) {
@@ -343,4 +376,37 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var ticket;
+
+	ticket = {
+		task: 'add',
+		update: false,
+		hasBoats: false,
+		hasBoatrooms: false,
+		base_prices: [ window.sw.default_first_base_price ],
+	};
+
+	ticket.available_trips     = window.trips;
+	ticket.available_boats     = window.boats;
+	ticket.available_boatrooms = window.boatrooms;
+	ticket.default_price       = window.sw.default_price;
+
+	$('#ticket-form-container').empty().append( ticketForm(ticket) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

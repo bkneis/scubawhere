@@ -70,6 +70,11 @@
 	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
 	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
 
+	<!--intojs tour-->
+	<link href="/common/css/introjs.css" rel="stylesheet">
+	<script src="/common/js/intro.js"></script>
+	<link href="/dashboard/tabs/add-booking/css/style.css" rel="stylesheet">
+
 	<script src="js/Controllers/Company.js"></script>
 	<script>
 		// Load company info
@@ -82,6 +87,7 @@
 
 		// Set scubawhere namespace
 		window.sw = {};
+
 	</script>
 
 	<!-- ScubaWhere Files -->
@@ -192,6 +198,7 @@
 
 		<!-- main page content to be loaded by AJAX -->
 		<div id="guts">
+		<!--add timeline here for wizard-->
 			<div id="breadcrumbs"></div>
 
 			<div id="content">

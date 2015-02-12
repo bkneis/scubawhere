@@ -324,6 +324,39 @@ $(function(){
 
 		$(event.target).parent().remove();
 	});
+
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+			        case "tickets-seasonal":
+			        	$("#seasonal-prices-checkbox").click();
+			        	break;
+			        case "tickets-boats":
+			        	$("#tickets-boats-checkbox").click();
+			        	break;
+			        case "tickets-boatrooms":
+			        	$("#tickets-boatroom-checkbox").click();
+			        	break;
+			        case "tickets-list-div":
+			        	$("#ticket-list").append('<li id="dummy-ticket"><strong>New diving trip</strong> | £50.00 </li>');
+			        	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-ticket").remove();
+				clearForm();
+			});
+
+		$("#tour-next-step").on("click", function() {
+			window.location.href = "#packages";
+			window.currentStep = "#packages";
+		});
+	}
+	
 });
 
 function renderPackageList(callback) {
