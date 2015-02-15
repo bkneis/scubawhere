@@ -1,5 +1,5 @@
 ﻿/*
-    Common 
+    Common
 */
 
 .wizard,
@@ -7,7 +7,7 @@
 {
     display: block;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .wizard a,
@@ -144,7 +144,7 @@
     display: block;
     margin: 0.5em;
     min-height: 35em;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
     width: 98%;
 
@@ -165,8 +165,6 @@
 {
     float: left;
     position: absolute;
-    width: 95%;
-    height: 95%;
     padding: 2.5%;
 }
 
@@ -358,7 +356,7 @@
     display: inline-block;
     width: 100%;
     height: 35em;
-    overflow: hidden;
+    overflow: auto;
     border-top: 1px solid #bbb;
     padding-top: 20px;
 }
@@ -367,8 +365,6 @@
 {
     float: left;
     position: absolute;
-    width: 95%;
-    height: 95%;
     padding: 2.5%;
 }
 
