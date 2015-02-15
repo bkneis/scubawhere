@@ -1,7 +1,10 @@
 var Company = {
 	getCompany : function(handleData) {
-		$.get("/company").done(function(data){
-			handleData(data);
+		$.ajax({
+			type: "GET",
+			async: false,
+			url: "/company",
+			success: handleData,
 		});
 	}
 };
