@@ -171,7 +171,22 @@ $(function(){
 				renderEditForm();
 			}, function error(xhr){
 
-				pageMssg('Oops, something wasn\'t quite right');
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				if(data.errors.length > 0) {
+
+					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+					errorsHTML = errorsHTML(data);
+
+					// Render error messages
+					$('.errors').remove();
+					$('#update-accommodation-form').prepend(errorsHTML);
+					$('#update-accommodation').before(errorsHTML);
+				}
+				else {
+					alert(xhr.responseText);
+				}
 
 				$('.remove-accommodation').prop('disabled', false);
 				$('#save-loader').remove();
@@ -198,7 +213,22 @@ $(function(){
 				renderEditForm();
 			}, function error(xhr){
 
-				pageMssg('Oops, something wasn\'t quite right');
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				if(data.errors.length > 0) {
+
+					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+					errorsHTML = errorsHTML(data);
+
+					// Render error messages
+					$('.errors').remove();
+					$('#update-accommodation-form').prepend(errorsHTML);
+					$('#update-accommodation').before(errorsHTML);
+				}
+				else {
+					alert(xhr.responseText);
+				}
 
 				$('.deactivate-accommodation').prop('disabled', false);
 				$('#save-loader').remove();
@@ -273,24 +303,24 @@ $(function(){
 			exitOnOverlayClick : false,
             exitOnEsc : false
 			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {  
-			        case "accommodation-form-container": 
+				switch (targetElement.id) {
+			        case "accommodation-form-container":
 			            $("#room-name").val("3* Hotel Single Room");
 			            //$("#acom-description").val("Single bed room in luxury 3* hotel only 10 minutes away from the dive centre. Etc.")
 			        	$("#acom-price").val(50);
 			        break;
-			        case "acom-base": 
+			        case "acom-base":
 			            $("#add-base-price").click();
 			        	$("#acom-price").val(50);
 			        break;
-			        case "acom-season": 
+			        case "acom-season":
 			            $("#acom-season-price").click();
 			        	$("#acom-price").val(50);
 			        break;
-			        case "acom-rooms": 
+			        case "acom-rooms":
 			        	$("#room-amount").val(6);
 			        break;
-			        case "accommodations-list": 
+			        case "accommodations-list":
 			        	$("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
 			        break;
 		        }

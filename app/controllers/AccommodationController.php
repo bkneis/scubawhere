@@ -220,7 +220,7 @@ class AccommodationController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->withTrashed()->findOrFail( Input::get('id') );
+			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -364,42 +364,6 @@ class AccommodationController extends Controller {
 		}
 	}
 
-	public function postDeactivate()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$accommodation->delete();
-
-		return array('status' => 'OK. Accommodation deactivated');
-	}
-
-	/*
-	public function postRestore()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->onlyTrashed()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$accommodation->restore();
-
-		return array('status' => 'OK. Accommodation restored');
-	}
-	*/
-
 	public function postDelete()
 	{
 		try
@@ -415,14 +379,16 @@ class AccommodationController extends Controller {
 		try
 		{
 			$accommodation->forceDelete();
+
+			// If deletion worked, delete associated prices
+			Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The accommodation can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+			// SoftDelete instead
+			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
+			$accommodation->delete();
 		}
-
-		// If deletion worked, delete associated prices
-		Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
 
 		return array('status' => 'Ok. Accommodation deleted');
 	}
