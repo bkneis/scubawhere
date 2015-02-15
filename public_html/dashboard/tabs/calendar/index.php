@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" class="clearfix">
 	<div class="col-md-12">
 		<div class="panel panel-default" id="calendar-filters">
 			<div class="panel-heading">
