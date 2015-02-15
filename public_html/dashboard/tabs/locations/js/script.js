@@ -12,16 +12,9 @@ $(function() {
 	$('#map-container').css('height', window.innerHeight - 200);
 
 	loadGoogleMaps();
+	startTour();
 
-	if(window.tourStart) {
-
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start();
-
-		$("#tour-next-step").on("click", function() {
+	$("#tour-next-step").on("click", function() {
 			/*if(window.trips.length != 0) {
 				window.location.href = "#trips";
 				window.currentStep = "#trips";
@@ -29,9 +22,19 @@ $(function() {
 			window.location.href = "#trips";
 			window.currentStep = "#trips";
 		});
-	}
 
 });
+
+function startTour() {
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start();
+	}
+}
 
 function initialise() {
 	console.log('Initialising started');

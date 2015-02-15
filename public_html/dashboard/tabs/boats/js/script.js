@@ -20,6 +20,7 @@ $(function (){
 
 	boatsForm = Handlebars.compile( $("#boat-form-template").html() );
 	renderEditForm();
+	startTour();
 
 	boatroomsForm = Handlebars.compile( $("#boatroom-form-template").html() );
 	addRoom = Handlebars.compile( $('#add-room-template').html() );
@@ -243,7 +244,18 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 		});
 	});
 
-	if(window.tourStart) {
+	$("#tour-next-step").on("click", function() {
+			if(window.boats.length != 0) {
+				window.location.href = "#locations";
+				window.currentStep = "#locations";
+			} else alert("You need to add atleast one boat");
+		});
+
+});
+
+function startTour() {
+
+if(window.tourStart) {
 
 		introJs().setOptions( {
 			showStepNumbers : false,
@@ -281,15 +293,9 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 				clearForm();
 			});
 
-		$("#tour-next-step").on("click", function() {
-			if(window.boats.length != 0) {
-				window.location.href = "#locations";
-				window.currentStep = "#locations";
-			} else alert("You need to add atleast one boat");
-		});
 	}
-
-});
+	
+}
 
 function renderBoatList(callback) {
 

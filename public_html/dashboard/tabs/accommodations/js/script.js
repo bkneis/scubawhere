@@ -55,6 +55,7 @@ $(function(){
 	// Default view: show create accommodation form
 	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
 	renderEditForm();
+	startTour();
 
 	$("#accommodation-form-container").on('submit', '#add-accommodation-form', function(event) {
 
@@ -297,6 +298,15 @@ $(function(){
 		$(event.target).parent().remove();
 	});
 
+	$("#tour-next-step").on("click", function() {
+			window.location.href = "#agents";
+			window.currentStep = "#agents";
+		});
+
+});
+
+function startTour() {
+
 	if(window.tourStart) {
 		introJs().setOptions( {
 			showStepNumbers : false,
@@ -328,14 +338,9 @@ $(function(){
 				$("#dummy-room").remove();
 				clearForm();
 			});
-
-		$("#tour-next-step").on("click", function() {
-			window.location.href = "#agents";
-			window.currentStep = "#agents";
-		});
 	}
 
-});
+}
 
 function renderAccommodationList(callback) {
 

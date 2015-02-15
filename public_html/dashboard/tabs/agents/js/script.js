@@ -22,6 +22,7 @@ $(function(){
 	// Default view: show create agent form
 	agentForm = Handlebars.compile( $("#agent-form-template").html() );
 	renderEditForm();
+	startTour();
 
 	$("#agent-form-container").on('click', '#add-agent', function(event) {
 
@@ -120,6 +121,15 @@ $(function(){
 		renderEditForm();
 	});
 
+	$("#tour-next-step").on("click", function() {
+			window.location.href = "#boats";
+			window.currentStep = "#boats";
+		});
+
+});
+
+function startTour() {
+
 	if(window.tourStart) {
 
 		introJs().setOptions( {
@@ -130,6 +140,7 @@ $(function(){
 				switch (targetElement.id) {  
 			        case "agent-form-container": 
 			            $("#agent-name").val("John doe");
+			   
 			        	$("#agent-web").val("http://www.onlinescubaholidays.com");
 			        	$("#branch-name").val("Scuba holidays R us");
 			        	$("#branch-address").val("46 grand avenue tenerife");
@@ -149,14 +160,9 @@ $(function(){
 				$("#dummy-agent").remove();
 				clearForm();
 			});
-
-		$("#tour-next-step").on("click", function() {
-			window.location.href = "#boats";
-			window.currentStep = "#boats";
-		});
 	}
-
-});
+	
+}
 
 function renderAgentList(callback) {
 
