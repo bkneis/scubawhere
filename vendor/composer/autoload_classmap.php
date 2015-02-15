@@ -1837,6 +1837,7 @@ return array(
     'RenameAccommodationsTableToBoatrooms' => $baseDir . '/app/database/migrations/2014_11_11_081111_rename_accommodations_table_to_boatrooms.php',
     'RenameAllAccommodationIdInstancesToBoatroomId' => $baseDir . '/app/database/migrations/2014_11_11_084413_rename_all_accommodation_id_instances_to_boatroom_id.php',
     'RenameIndexesOnBoatBoatroomTable' => $baseDir . '/app/database/migrations/2014_11_16_191954_rename_indexes_on_boat_boatroom_table.php',
+    'RenameInitToInitialisedOnCompaniesTable' => $baseDir . '/app/database/migrations/2015_02_15_180954_rename_init_to_initialised_on_companies_table.php',
     'RenameQuantityToCapacityOnAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_11_210332_rename_quantity_to_capacity_on_accommodations_table.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
