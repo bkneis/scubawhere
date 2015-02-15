@@ -158,6 +158,13 @@ a:hover{
 	text-decoration: none;
 }
 
+.panel-heading a:link,
+.panel-heading a:visited,
+.panel-heading a:active,
+.panel-heading a:hover{
+	color: inherit;
+}
+
 a:hover{ text-decoration: underline; }
 
 hr{

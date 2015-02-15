@@ -36,7 +36,7 @@
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />
-	
+
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 
@@ -124,6 +124,14 @@
 					</div>
 				</li>
 
+				<li data-load="help">
+					<div>
+						<i class="fa fa-question-circle fa-lg fa-fw"></i>
+						<!-- <i class="fa fa-users"></i> -->
+						<span>Help & FAQ</span>
+					</div>
+				</li>
+
 				<li data-load="add-booking">
 					<div>
 						<i class="fa fa-plus fa-lg fa-fw"></i>
@@ -147,13 +155,13 @@
 					</div>
 				</li>
 
-				<li data-load="reviews">
+				<?php /* <li data-load="reviews">
 					<div>
 						<i class="fa fa-comments fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Reviews</span>
 					</div>
-				</li>
+				</li> */ ?>
 
 				<li data-load="reports">
 					<div>
