@@ -299,9 +299,12 @@ $(function(){
 	});
 
 	$("#tour-next-step").on("click", function() {
-			window.location.href = "#agents";
-			window.currentStep = "#agents";
-		});
+		window.location.href = "#agents";
+		window.currentStep = {
+			tab : "#agents",
+			position : 2
+		};
+	});
 
 });
 

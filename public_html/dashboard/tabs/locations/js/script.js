@@ -19,20 +19,26 @@ $(function() {
 				window.location.href = "#trips";
 				window.currentStep = "#trips";
 			} else alert("You need to add atleast one trip");*/
-			window.location.href = "#trips";
-			window.currentStep = "#trips";
+			window.location.href = "#boats";
+			window.currentStep = {
+				tab : "#boats",
+				position : 4
+			};
 		});
 
 });
 
 function startTour() {
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 3) {
+			window.location.href = window.currentStep.tab;
+		} else { 
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
             exitOnEsc : false
 			}).start();
+	}
 	}
 }
 

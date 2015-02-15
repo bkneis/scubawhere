@@ -39,7 +39,7 @@ $(function () {
 
 		$("#start-wizard").on('click', function(event) {
 			if(window.tourStart) {
-				window.location.href = window.currentStep;
+				window.location.href = window.currentStep.tab;
 			}
 			else {
 				window.currentStep = "#dashboard";
@@ -67,7 +67,10 @@ $(function () {
 					window.location.href = '#accommodations';
 					$("#guts").prepend($("#tour-nav-wizard").html());
 					window.tourStart = true;
-					window.currentStep = "#accommodations";
+					window.currentStep = {
+						tab : "#accommodations",
+						position : 1
+					};
 				});
 			}
 

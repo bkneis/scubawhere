@@ -198,12 +198,20 @@ $(function(){
 		});
 	});
 	*/
+	$("#tour-finish").on("click", function(event) {
+		//Company.initialise()
+		pageMssg("Thank you for following our wizard. Your system is now fully configured. If you need any help using the system, then pleae visit the FAQ tab")
+	});
 });
 
 function startTour() {
 
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 8) {
+			window.location.href = window.currentStep.tab;
+		} else {
+		$("#tour-button").empty();
+		$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -225,6 +233,7 @@ function startTour() {
 				$("#dummy-addon").remove();
 				clearForm();
 			});
+		}
 	}
 
 }

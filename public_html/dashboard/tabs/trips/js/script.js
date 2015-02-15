@@ -201,7 +201,10 @@ $(function(){
 	$("#tour-next-step").on("click", function() {
 		if(window.trips.length != 0) {
 			window.location.href = "#tickets";
-			window.currentStep = "#tickets";
+			window.currentStep = {
+				tab : "#tickets",
+				position : 6
+			};
 		} else alert("You need to add atleast one trip");
 	});
 
@@ -210,7 +213,9 @@ $(function(){
 function startTour() {
 
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 5) {
+			window.location.href = window.currentStep.tab;
+		} else {
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -235,6 +240,7 @@ function startTour() {
 				$("#dummy-trip").remove();
 				clearForm();
 			});
+		}
 
 	}
 

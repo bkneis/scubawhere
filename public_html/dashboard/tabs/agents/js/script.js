@@ -122,16 +122,21 @@ $(function(){
 	});
 
 	$("#tour-next-step").on("click", function() {
-			window.location.href = "#boats";
-			window.currentStep = "#boats";
-		});
+		window.location.href = "#boats";
+		window.currentStep = {
+			tab : "#boats",
+			position : 3
+		};
+	});
 
 });
 
 function startTour() {
 
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 2) {
+			window.location.href = window.currentStep.tab;
+		} else {
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -160,6 +165,7 @@ function startTour() {
 				$("#dummy-agent").remove();
 				clearForm();
 			});
+		}
 	}
 	
 }

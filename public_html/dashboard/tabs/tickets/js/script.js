@@ -240,7 +240,10 @@ $(function () {
 
 	$("#tour-next-step").on("click", function() {
 		window.location.href = "#packages";
-		window.currentStep = "#packages";
+		window.currentStep = {
+			tab : "#packages",
+			position : 7
+		};
 	});
 
 });
@@ -248,7 +251,9 @@ $(function () {
 function startTour() {
 
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 6) {
+			window.location.href = window.currentStep.tab;
+		} else {
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -276,6 +281,7 @@ function startTour() {
 				$("#dummy-ticket").remove();
 				clearForm();
 			});
+		}
 	}
 
 }

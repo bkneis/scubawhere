@@ -25,12 +25,6 @@ $(function (){
 	boatroomsForm = Handlebars.compile( $("#boatroom-form-template").html() );
 	addRoom = Handlebars.compile( $('#add-room-template').html() );
 
-	$("#start-tour").on('click', function(event) {
-		introJs().setOption('doneLabel', 'Visit Trips').start().oncomplete(function() {
-        	window.location.href = '#trips?multipage=true';
-        });
-	});
-
 	$('#boat-list-container').on('click', 'li', function(event) {
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;
 		renderEditForm( event.target.getAttribute('data-id') );
@@ -247,7 +241,10 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 	$("#tour-next-step").on("click", function() {
 			if(window.boats.length != 0) {
 				window.location.href = "#locations";
-				window.currentStep = "#locations";
+				window.currentStep = {
+					tab : "#trips",
+					position : 5
+				};
 			} else alert("You need to add atleast one boat");
 		});
 
@@ -256,7 +253,10 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 function startTour() {
 
 if(window.tourStart) {
-
+	if(window.currentStep.position < 4) {
+		window.location.href = window.currentStep.tab;
+	} else {
+		
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -292,6 +292,7 @@ if(window.tourStart) {
 				$("#dummy-boat").remove();
 				clearForm();
 			});
+	}
 
 	}
 	

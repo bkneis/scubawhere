@@ -328,7 +328,10 @@ $(function(){
 
 	$("#tour-next-step").on("click", function() {
 		window.location.href = "#add-ons";
-		window.currentStep = "#add-ons";
+		window.currentStep = {
+			tab : "#add-ons",
+			position : 8
+		};
 	});
 	
 });
@@ -336,7 +339,10 @@ $(function(){
 function startTour() {
 
 	if(window.tourStart) {
-
+		if(window.currentStep.position < 7) {
+			window.location.href = window.currentStep.tab;
+			console.log(window.currentStep.tab);
+		} else {
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
@@ -367,6 +373,7 @@ function startTour() {
 				$("#dummy-package").remove();
 				clearForm();
 			});
+		}
 	}
 
 }
