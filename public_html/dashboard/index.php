@@ -182,7 +182,7 @@
 						<span>Management</span>
 						<span class="caret"></span>
 					</div>
-					<ul>
+					<ul id="management-submenu">
 						<li data-load="accommodations">Accommodations</li>
 						<li data-load="activate-trip">Activate Trips</li>
 						<li data-load="add-ons">Add-ons</li>

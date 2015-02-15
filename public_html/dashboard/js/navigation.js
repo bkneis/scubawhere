@@ -5,8 +5,10 @@ $(function() {
         baseHeight   = 0,
         $el;
 
+    /*
     $pageWrap.height($pageWrap.height());
     baseHeight = $pageWrap.height() - $mainContent.height();
+    */
 
     $("#sidenav").on('click', '[data-load]', function(event) {
         event.preventDefault();
@@ -35,6 +37,21 @@ $(function() {
         // Set live tab
         $('.tab-active').removeClass('tab-active');
         $('[data-load="'+newHash+'"]').addClass('tab-active');
+
+        // Open Management submenu if one of its tabs is selected
+        submenu = [
+            'accommodations',
+            'activate-trip',
+            'add-ons',
+            'agents',
+            'boats',
+            'locations',
+            'packages',
+            'tickets',
+            'trips'
+        ];
+        if(submenu.indexOf(newHash) !== -1)
+            $('#management-submenu').css('display', 'block');
 
         // Blend out old content and display new content
         $mainContent.find('#wrapper').fadeOut(200, function() {
