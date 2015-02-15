@@ -21,7 +21,7 @@
 			<p>&nbsp;</p>
 			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Dive Operator Registration</h1>
-			
+
 			<form id="register-form" method="post" accept-charset="utf-8">
 				<div id="steps">
 
@@ -32,12 +32,20 @@
 
 								<label for="contact">Main Person of Contact:</label>
 								<input class="required"  type="text" id="contact" name="contact">
-								
+
 								<label for="phone">Main Contact Phone Number:</label>
-								<div>
-									<input style="display:inline-block; width:20%; float:left" class="required"  type="text" id="phone_ext" name="phone_ext">
-									<input style=" width:73%;" class="required"  type="text" id="phone" name="phone">
-								</div>
+								<table>
+									<tr>
+										<td width="25%" style="padding: 0;">
+											<small>Country code</small>
+											<input style="box-sizing: border-box;" class="required" type="text" id="phone_ext" name="phone_ext" placeholder="+44">
+										</td>
+										<td width="75%" style="padding: 0;">
+											<small>Phone number
+											<input style="box-sizing: border-box;" class="required" type="text" id="phone" name="phone" placeholder="1234567890">
+										</td>
+									</tr>
+								</table>
 								<label for="email">Main Contact Email Address:</label>
 								<input class="required"  type="text" id="email" name="email">
 
