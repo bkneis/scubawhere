@@ -899,6 +899,7 @@
 										<div class="row">
 											<div class="col-md-12">
 												<button class="btn btn-success btn-block save-booking mb10"><i class="fa fa-save fa-fw"></i> Save For Later</button>
+												<button class="btn btn-success btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm</button>
 												<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
 												<h4 class="text-center">Reserve Booking</h4>
 												<form id="reserve-booking" class="form-horizontal">

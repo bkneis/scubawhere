@@ -966,6 +966,20 @@ $('#summary-tab').on('click', '.save-booking', function() {
 
 });
 
+$('#summary-tab').on('click', '.confirm-booking', function() {
+
+	var params = {};
+	params._token = window.token;
+
+	booking.confirm(params, function success(status) {
+		pageMssg(status, "success");
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], 'danger');
+	});
+
+});
+
 $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	event.preventDefault();
 

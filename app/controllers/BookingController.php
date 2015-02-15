@@ -1024,13 +1024,13 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($booking->status === 'cancelled')
+			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
+
 		if($this->moreThan5DaysAgo($booking->last_return_date))
 		{
 			return Response::json( array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
-
-		if($booking->status === 'cancelled')
-			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
 
 		if( !$booking->update( array('status' => 'cancelled', 'cancellation_fee' => Input::get('cancellation_fee')) ) )
 		{
@@ -1038,6 +1038,35 @@ class BookingController extends Controller {
 		}
 
 		return array('status' => 'OK. Booking cancelled. ' . $booking->status);
+	}
+
+	public function postConfirm()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if($booking->agent_id === null)
+			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent.')), 403 ); // 403 Forbidden
+
+		if($booking->status === 'cancelled')
+			return Response::json( array('errors' => array('The booking cannot be confirmed, as it is cancelled.')), 409 ); // 409 Conflict
+
+		if(Helper::isPast($booking->arrival_date))
+			return Response::json( array('errors' => array('Cannot confirm booking because it already started.')), 403 ); // 403 Forbidden
+
+		if( !$booking->update( array('status' => 'confirmed') ) )
+		{
+			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		return array('status' => 'OK. Booking confirmed.');
 	}
 
 	public function getValidate()

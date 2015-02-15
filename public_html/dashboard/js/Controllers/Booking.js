@@ -573,6 +573,35 @@ Booking.prototype.save = function(params, successFn, errorFn) {
 };
 
 /**
+ * Confirms the booking (only possible for bookings by agent)
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.confirm = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/confirm",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.confirmed = 1;
+			this.status = 'confirmed';
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
  * Cancels the booking.
  * Cancelled bookings DO NOT count towards sessions' utilisation
  *
