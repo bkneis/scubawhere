@@ -1,6 +1,7 @@
 <div id="wrapper" class="clearfix">
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your packages. A package consists of many tickets and is great for offering deals that include more than 1 dive, or more than 1 person!"></div>
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="packages-list-div" data-step="7" data-position="right" data-intro="Once you save your package, you can view it here. Click a package to view / edit it's details in the form on the right">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Packages</h4>
 			</div>
@@ -20,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="package-form-container">
+		<div class="panel panel-default" id="package-form-container" data-step="2" data-position="left" data-intro="First, give the package a name and description">
 			<script type="text/x-handlebars-template" id="package-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} Package</h4>
@@ -29,7 +30,7 @@
 					<form id="{{task}}-package-form">
 						<div class="form-row">
 							<label class="field-label">Package Name</label>
-							<input type="text" name="name" value="{{{name}}}">
+							<input id="package-name" type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
 								<span class="btn btn-danger pull-right {{#if has_bookings}}deactivate-package{{else}}remove-package{{/if}}">Remove</span>
@@ -41,7 +42,7 @@
 							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
-						<div class="form-row ticket-list">
+						<div id="package-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now select the tickets that you want to include in the package. Once you select a ticket another combo box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank">
 							<strong>Select tickets to be included in this package:</strong>
 							{{#each tickets}}
 								{{> ticket_select}}
@@ -49,7 +50,7 @@
 							{{> ticket_select}}
 						</div>
 
-						<div class="form-row">
+						<div id="package-base" class="form-row" data-step="4" data-position="left" data-intro="Next, give the package a base price. This is the 'standard' price for the package">
 							<p><strong>Set base prices for this package:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
@@ -57,7 +58,7 @@
 							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div class="form-row">
+						<div id="package-seasonal" class="form-row" data-step="5" data-position="left" data-intro="Additionally, if the cost of your package is expected to increase/decrease through the seasons, you can specify a date range to change its price.">
 							<label>
 								<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
@@ -75,9 +76,9 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div id="package-size" class="form-row" data-step="6" data-position="top" data-intro="Lastly, if you have a maxmim group size, you can specify it here. For example if you only allow groups of up to 4, alternatively you can put 0 not to specify a maximum.">
 							<label class="field-label">Max. group size per boat</label>
-							<input type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
+							<input id="package-capacity" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
 							(Enter 0 or nothing for <i>no limit</i>)
 						</div>
 
@@ -125,7 +126,7 @@
 	<script type="text/x-handlebars-template" id="price-input-template">
 		<p>
 			<span class="currency">{{currency}}</span>
-			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			<input class="base-price" type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
 
 			{{#unless isAlways}}
 				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">

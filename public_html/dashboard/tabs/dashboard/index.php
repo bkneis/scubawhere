@@ -1,24 +1,90 @@
 <div id="wrapper" class="clearfix">
 <div class="row" id="row1">
+  
+  <div class="col-md-5">
+    <div class="panel panel-default" id="todays-stats">
+      <div class="panel-heading">
+        <h4 class="panel-title">Today's Stats</h4>
+      </div>
+      <div style="min-height:250px;" class="panel-body">
+      </div>
+    </div>
+  </div>
 
-  <script type="text/x-handlebars-template" id="todays-sessions-widget">
-    <div class="col-md-7">
-      <div class="panel panel-default" id="todays-sessions">
-        <div class="panel-heading">
-          <h4 class="panel-title">Todays Trips</h4>
-        </div>
-        <div style="min-height:250px;" class="panel-body">
-          <table class="bluethead">
-            <thead>
-              <tr class="bg-primary">
-                <th>Trip</th>
-                <th>Boat</th>
-                <th>Capacity</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody id="sessions-list">
+  <div class="col-md-5">
+    <div class="panel panel-default" id="recent-bookings">
+      <div class="panel-heading">
+        <h4 class="panel-title">Recent Bookings</h4>
+      </div>
+      <div class="panel-body">
+        <table class="bluethead">
+          <thead>
+            <tr class="bg-primary">
+              <th>Ref</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th></th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="booking-list">
+            <tr><td colspan="9" style="text-align: center;"> </td></tr>
+            <tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
+  <div class="col-md-7">
+    <div class="panel panel-default" id="feedback-form">
+      <div class="panel-heading">
+        <h4 class="panel-title">Feedback Form</h4>
+      </div>
+      <div class="panel-body">
+        <form id="feedback-form">
+
+          <div class="form-row">
+            <label class="field-label">Tab * : </label>
+            <input style="width:100%" type="text" name="name">
+          </div>
+
+          <div class="form-row">
+            <label class="field-label">Feature : </label>
+            <input style="width:100%" type="text" name="name">
+          </div>
+
+          <div class="form-row">
+            <label class="field-label">Issue * : </label>
+            <textarea style="width:100%" name="branch_address" rows="3"></textarea>
+          </div>
+
+          <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+</div><!-- #wrapper -->
+
+<script type="text/x-handlebars-template" id="todays-sessions-widget">
+      <div class="col-md-7">
+    <div class="panel panel-default" id="todays-sessions">
+      <div class="panel-heading">
+        <h4 class="panel-title">Todays Trips</h4>
+      </div>
+      <div style="min-height:250px;" class="panel-body">
+        <table class="bluethead">
+          <thead>
+            <tr class="bg-primary">
+              <th>Trip</th>
+              <th>Boat</th>
+              <th>Capacity</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="sessions-list">
             </tbody>
           </table>
         </div>
@@ -79,44 +145,6 @@
       </tr>
     {{/each}}
   </script>
-
-  <div class="col-md-5">
-    <div class="panel panel-default" id="todays-stats">
-      <div class="panel-heading">
-        <h4 class="panel-title">Today's Stats</h4>
-      </div>
-      <div style="min-height:250px;" class="panel-body">
-      </div>
-    </div>
-  </div>
-
-</div><!-- .row -->
-<div class="row" id="row2">
-
-  <div class="col-md-5">
-    <div class="panel panel-default" id="recent-bookings">
-      <div class="panel-heading">
-        <h4 class="panel-title">Recent Bookings</h4>
-      </div>
-      <div class="panel-body">
-        <table class="bluethead">
-          <thead>
-            <tr class="bg-primary">
-              <th>Ref</th>
-              <th>Customer</th>
-              <th>Phone</th>
-              <th></th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="booking-list">
-            <tr><td colspan="9" style="text-align: center;"> </td></tr>
-            <tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
     <div class="col-md-10">
@@ -216,44 +244,10 @@
     {{/each}}
   </script>
 
-  <div class="col-md-7">
-    <div class="panel panel-default" id="feedback-form">
-      <div class="panel-heading">
-        <h4 class="panel-title">Feedback Form</h4>
-      </div>
-      <div class="panel-body">
-        <form id="feedback-form">
-
-          <div class="form-row">
-            <label class="field-label">Tab * : </label>
-            <input style="width:100%" type="text" name="name">
-          </div>
-
-          <div class="form-row">
-            <label class="field-label">Feature : </label>
-            <input style="width:100%" type="text" name="name">
-          </div>
-
-          <div class="form-row">
-            <label class="field-label">Issue * : </label>
-            <textarea style="width:100%" name="branch_address" rows="3"></textarea>
-          </div>
-
-          <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
-
-        </form>
-      </div>
-    </div>
-  </div>
-
-</div><!-- .row -->
-</div><!-- #wrapper -->
-
 <link rel="stylesheet" type="text/css" href="/common/css/datatables.css">
 
 <script src="/dashboard/js/Controllers/Session.js"></script>
 <script src="/dashboard/js/Controllers/Trip.js"></script>
-<!--<script src="/dashboard/js/tour.js"></script>-->
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script src="tabs/dashboard/js/script.js"></script>
 <script src="js/Controllers/Booking.js"></script>

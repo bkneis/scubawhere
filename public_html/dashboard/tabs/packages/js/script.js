@@ -56,6 +56,7 @@ $(function(){
 
 		packageForm = Handlebars.compile( $("#package-form-template").html() );
 		renderEditForm();
+		startTour();
 	});
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
@@ -325,6 +326,15 @@ $(function(){
 		$(event.target).parent().remove();
 	});
 
+	$("#tour-next-step").on("click", function() {
+		window.location.href = "#add-ons";
+		window.currentStep = "#add-ons";
+	});
+	
+});
+
+function startTour() {
+
 	if(window.tourStart) {
 
 		introJs().setOptions( {
@@ -333,31 +343,33 @@ $(function(){
             exitOnEsc : false
 			}).start().onchange(function(targetElement) {
 				switch (targetElement.id) {  
-			        case "tickets-seasonal":
-			        	$("#seasonal-prices-checkbox").click();
+					case "package-form-container":
+			        	$("#package-name").val("Family dive day");
 			        	break;
-			        case "tickets-boats":
-			        	$("#tickets-boats-checkbox").click();
+		        	case "package-tickets":
+			        	$("#package-tickets").find(".ticket-select").filter(":first").val(1);
+			        	$("#package-tickets").find(".quantity-input").filter(":first").val(4);
 			        	break;
-			        case "tickets-boatrooms":
-			        	$("#tickets-boatroom-checkbox").click();
+			        case "package-base":
+			        	$("#package-base").find(".base-price").filter(":first").val(150);
 			        	break;
-			        case "tickets-list-div":
-			        	$("#ticket-list").append('<li id="dummy-ticket"><strong>New diving trip</strong> | £50.00 </li>');
+			        case "package-seasonal":
+			        	$("#package-seasonal").find('input[type=checkbox]').filter(':first').click();
+			        	break;
+			        case "package-size":
+			        	$("#package-capacity").val(4);
+			        	break;
+			        case "packages-list-div":
+			        	$("#package-list").append('<li id="dummy-package"><strong>Family dive day</strong> | £150.00 </li>');
 			        	break;
 		        }
 			}).oncomplete(function() {
-				$("#dummy-ticket").remove();
+				$("#dummy-package").remove();
 				clearForm();
 			});
-
-		$("#tour-next-step").on("click", function() {
-			window.location.href = "#packages";
-			window.currentStep = "#packages";
-		});
 	}
-	
-});
+
+}
 
 function renderPackageList(callback) {
 
@@ -471,4 +483,34 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var package;
+
+	// Set defaults for a new package form
+	package = {
+		task: 'add',
+		update: false,
+		base_prices: [ window.sw.default_first_base_price ],
+	};
+
+	package.available_tickets = window.tickets;
+	package.default_price     = window.sw.default_price;
+
+	$('#package-form-container').empty().append( packageForm(package) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

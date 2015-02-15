@@ -1,7 +1,7 @@
 <div id="wrapper" class="clearfix">
 <div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your tickets. A ticket can be valid for many trips and are what your customers will be buying, they are displayed in the add-booking process"></div>	
 	<div class="col-md-4">
-		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="sfdfsdf">
+		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="Once you save your ticket, you can view it here. Click a ticket to view / edit it's details in the form on the right">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Tickets</h4>
 			</div>
@@ -30,7 +30,7 @@
 					<form id="{{task}}-ticket-form">
 						<div class="form-row">
 							<label class="field-label">Ticket Name</label>
-							<input type="text" name="name" value="{{{name}}}">
+							<input id="ticket-name" type="text" name="name" value="{{{name}}}">
 
 							{{!-- TODO Enable deletion and deactivation of ticktes, including all necessary checks
 							{{#if update}}
@@ -132,7 +132,7 @@
 	<script type="text/x-handlebars-template" id="price-input-template">
 		<p>
 			<span class="currency">{{currency}}</span>
-			<input type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			<input id="ticket-base" type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
 
 			{{#unless isAlways}}
 				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">

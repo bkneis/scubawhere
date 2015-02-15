@@ -1,7 +1,7 @@
 <div id="wrapper" class="clearfix">
 <div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your trips. A trip consists of all the information for a dive, and are used to attach to tickets."></div>
 	<div class="col-md-4">
-		<div class="panel panel-default" id="trips-list-div" data-step="5" data-position="right" data-intro="Once a trip is created it will appear on your list. Click on a agent if you want to view / edit any information">
+		<div class="panel panel-default" id="trips-list-div" data-step="5" data-position="right" data-intro="Once a trip is created it will appear on your list. Click on a trip if you want to view / edit any information">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Trips</h4>
 			</div>
@@ -30,7 +30,7 @@
 					<form id="{{task}}-trip-form">
 						<div class="form-row">
 							<label class="field-label">Trip Name</label>
-							<input type="text" name="name" value="{{{name}}}" style="width: 350px;">
+							<input id="trip-name" type="text" name="name" value="{{{name}}}" style="width: 350px;">
 
 							{{#if update}}
 								{{#if deletable}}
@@ -54,7 +54,7 @@
 							<textarea name="description" id="description" rows="3" cols="10" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
-						<div class="form-row" id="locationsList" data-step="3" data-intro="Next, select the locations (created in the last step) that the trip will be diving at">
+						<div class="form-row" id="locationsList" data-step="3" data-position="top" data-intro="Next, select the locations (created in the last step) that the trip will be diving at">
 							<h4>Select the locations that this trip will go to:</h4>
 							{{#each available_locations}}
 								<label class="location{{inArray id ../locations}}">
@@ -65,7 +65,7 @@
 							{{/each}}
 						</div>
 
-						<div class="form-row" id="tagsList" data-step="4" data-intro="Lastly, select any tags that are applicable to this trip. These tags will be searchable when scubawhere.com is launched. Then click save">
+						<div class="form-row" id="tagsList" data-step="4" data-position="left" data-intro="Lastly, select any tags that are applicable to this trip. These tags will be searchable when scubawhere.com is launched. Then click save">
 							<h4>Select the tags of this trip:</h4>
 							{{#each available_tags}}
 								<label class="tag{{inArray id ../tags}}">

@@ -18,6 +18,7 @@ $(function(){
 	// Default view: show create addon form
 	addonForm = Handlebars.compile( $("#addon-form-template").html() );
 	renderEditForm();
+	startTour();
 
 	$("#addon-form-container").on('submit', '#add-addon-form', function(event) {
 
@@ -199,6 +200,35 @@ $(function(){
 	*/
 });
 
+function startTour() {
+
+	if(window.tourStart) {
+
+		introJs().setOptions( {
+			showStepNumbers : false,
+			exitOnOverlayClick : false,
+            exitOnEsc : false
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+					case "addon-form-container":
+			        	$("#addon-name").val("Reef diving tax");
+			        	$("#addon-price").val(10);
+			        	break;
+			        case "addon-compulsory-div":
+			        	$("#addon-compulsory").attr("checked", true);
+			        	break;
+			        case "addon-list-div":
+			        	$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
+			        	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-addon").remove();
+				clearForm();
+			});
+	}
+
+}
+
 function renderAddonList(callback) {
 
 	$('#addon-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
@@ -304,4 +334,39 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var addon;
+
+	addon = {
+		task: 'add',
+		currency: window.company.currency,
+		/*name: 'TUI',
+		website: 'http://tui.com',
+		branch_name: 'Fishponds',
+		branch_address: 'R8t down the road\nBristol, BS16 2HG',
+		branch_phone: '+44791234567',
+		branch_email: 'fishponds@uk.tui.com',
+		commission: 12.8,
+		terms: 'deposit',
+		has_billing_details: function() {
+			return this.billing_address || this.billing_email || this.billing_phone;
+		},*/
+	};
+	addon.update = false;
+
+	$('#addon-form-container').empty().append( addonForm(addon) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

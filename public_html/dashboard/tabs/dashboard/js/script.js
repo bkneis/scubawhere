@@ -31,7 +31,7 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
-	if(window.company.init != 1) {
+	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-danger" role="alert"><strong>RMS is not configured!</strong> Please use the setup wizard below to configure your system</div>';
 		$("#wrapper").prepend(initWarning);
 		var setupWizard = $("#setup-wizard").html();

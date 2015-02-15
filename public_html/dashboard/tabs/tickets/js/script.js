@@ -81,6 +81,7 @@ $(function () {
 		window.promises.loadedBoats.done(function() {
 			window.promises.loadedBoatrooms.done(function() {
 					renderEditForm();
+					startTour();
 			});
 		});
 	});
@@ -237,6 +238,15 @@ $(function () {
 		$(event.target).parent().remove();
 	});
 
+	$("#tour-next-step").on("click", function() {
+		window.location.href = "#packages";
+		window.currentStep = "#packages";
+	});
+
+});
+
+function startTour() {
+
 	if(window.tourStart) {
 
 		introJs().setOptions( {
@@ -245,6 +255,10 @@ $(function () {
             exitOnEsc : false
 			}).start().onchange(function(targetElement) {
 				switch (targetElement.id) {  
+					case "ticket-form-container":
+			        	$("#ticket-name").val("2 dive boat trip");
+			        	$("#ticket-base").val(50);
+			        	break;
 			        case "tickets-seasonal":
 			        	$("#seasonal-prices-checkbox").click();
 			        	break;
@@ -262,14 +276,9 @@ $(function () {
 				$("#dummy-ticket").remove();
 				clearForm();
 			});
-
-		$("#tour-next-step").on("click", function() {
-			window.location.href = "#packages";
-			window.currentStep = "#packages";
-		});
 	}
 
-});
+}
 
 function renderTicketList(callback) {
 

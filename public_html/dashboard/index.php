@@ -73,7 +73,6 @@
 	<!--intojs tour-->
 	<link href="/common/css/introjs.css" rel="stylesheet">
 	<script src="/common/js/intro.js"></script>
-	<link href="/dashboard/tabs/add-booking/css/style.css" rel="stylesheet">
 
 	<script src="js/Controllers/Company.js"></script>
 	<script>

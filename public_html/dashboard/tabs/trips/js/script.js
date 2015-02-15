@@ -34,6 +34,7 @@ $(function(){
 
 			tripForm = Handlebars.compile( $("#trip-form-template").html() );
 			renderEditForm();
+			startTour();
 		});
 	});
 
@@ -197,23 +198,47 @@ $(function(){
 		);
 	});
 
+	$("#tour-next-step").on("click", function() {
+		if(window.trips.length != 0) {
+			window.location.href = "#tickets";
+			window.currentStep = "#tickets";
+		} else alert("You need to add atleast one trip");
+	});
+
+});
+
+function startTour() {
+
 	if(window.tourStart) {
 
 		introJs().setOptions( {
 			showStepNumbers : false,
 			exitOnOverlayClick : false,
             exitOnEsc : false
-			}).start();
+			}).start().onchange(function(targetElement) {
+				switch (targetElement.id) {  
+			        case "trip-form-container":
+			        	$("#trip-name").val("Single boat dive");
+			        	$("#tripDuration").val(4);
+			        	break;
+			        case "locationsList":
+			        	$('#locationsList').find('.location').filter(':first').click();
+			        	break;
+			        case "tagsList":
+			        	$('#tagsList').find('.tag').filter(':first').click();
+			        	break;
+			        case "trips-list-div":
+			        	$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
+			        	break;
+		        }
+			}).oncomplete(function() {
+				$("#dummy-trip").remove();
+				clearForm();
+			});
 
-		$("#tour-next-step").on("click", function() {
-			if(window.trips.length != 0) {
-				window.location.href = "#tickets";
-				window.currentStep = "#tickets";
-			} else alert("You need to add atleast one trip");
-		});
 	}
 
-});
+}
 
 function renderTripList(callback) {
 
@@ -311,4 +336,32 @@ function setToken(element) {
 			setToken(element);
 		});
 	}
+}
+
+function clearForm() {
+
+	var trip;
+
+	trip = {
+		task: 'add',
+		duration: 6,
+	};
+	trip.update = false;
+
+	trip.locations = _.indexBy(trip.locations, 'id');
+	trip.tags      = _.indexBy(trip.tags, 'id');
+
+	trip.available_locations = window.places;
+	trip.available_tags      = window.tags;
+
+	$('#trip-form-container').empty().append( tripForm(trip) );
+
+	CKEDITOR.replace( 'description' );
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }
