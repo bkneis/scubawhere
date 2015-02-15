@@ -1,5 +1,7 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you highlight your dive locations. First, you’ll see a small house located over the address of the business you disclosed in the registration. If this is incorrect, you can edit your address accordingly in the Settings tab. (We’ll get to that bit later!). There are a few different methods you can use to highlight where exactly you go scuba diving."></div>
+
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you highlight your dive locations. First, you’ll see a small house located over the address of the business you disclosed in the registration. If this is incorrect, you can edit your address accordingly in the Settings tab. (We’ll get to that bit later!). There are a few different methods you can use to highlight where exactly you go scuba diving."></div>
+
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">

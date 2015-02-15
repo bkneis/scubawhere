@@ -1,28 +1,36 @@
 <div id="wrapper" class="clearfix">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">Trips</h4>
-		</div>
-		<div class="panel-body" id="trips">
-			<div class="yellow-helper">
-				Please drag a trip onto a day on the calendar to activate it.
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">Trips</h4>
+				</div>
+				<div class="panel-body" id="trips">
+					<div class="yellow-helper">
+						Please drag a trip onto a day on the calendar to activate it.
+					</div>
+					<ul style="padding-left: 0;">
+						<script id="trip-list" type="text/x-handlebars-template">
+							{{#each trips}}
+								<li class="droppable-event">
+									<div class='trip-event' data-id="{{id}}">
+										{{{name}}}
+									</div>
+									<ul></ul>
+								</li>
+							{{/each}}
+						</script>
+					</ul>
+				</div>
 			</div>
-			<ul style="padding-left: 0;">
-				<script id="trip-list" type="text/x-handlebars-template">
-					{{#each trips}}
-						<li class="droppable-event">
-							<div class='trip-event' data-id="{{id}}">
-								{{{name}}}
-							</div>
-							<ul></ul>
-						</li>
-					{{/each}}
-				</script>
-			</ul>
 		</div>
 	</div>
 
-	<div id='calendar'></div>
+	<div class="row">
+		<div class="col-md-12">
+			<div id='calendar'></div>
+		</div>
+	</div>
 
 	<div id="modalWindows" style="height: 0;">
 		<script id="session-template" type="text/x-handlebars-template">
