@@ -300,10 +300,12 @@ $(function(){
 
 	$("#tour-next-step").on("click", function() {
 		window.location.href = "#agents";
-		window.currentStep = {
-			tab : "#agents",
-			position : 2
-		};
+		if(window.currentStep.position <= 1) {
+			window.currentStep = {
+				tab : "#agents",
+				position : 2
+			};
+		}
 	});
 
 });

@@ -122,11 +122,13 @@ $(function(){
 	});
 
 	$("#tour-next-step").on("click", function() {
-		window.location.href = "#boats";
-		window.currentStep = {
-			tab : "#boats",
-			position : 3
-		};
+		window.location.href = "#locations";
+		if(window.currentStep.position <= 2) {
+			window.currentStep = {
+				tab : "#locations",
+				position : 3
+			};
+		}
 	});
 
 });

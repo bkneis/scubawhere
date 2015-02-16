@@ -239,14 +239,16 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 	});
 
 	$("#tour-next-step").on("click", function() {
-			if(window.boats.length != 0) {
-				window.location.href = "#locations";
+		if(window.boats.length != 0) {
+			window.location.href = "#trips";
+			if(window.currentStep.position <= 4) {
 				window.currentStep = {
 					tab : "#trips",
 					position : 5
 				};
-			} else alert("You need to add atleast one boat");
-		});
+			}
+		} else alert("You need to add atleast one boat");
+	});
 
 });
 

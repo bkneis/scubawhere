@@ -198,10 +198,11 @@ $(function(){
 		});
 	});
 	*/
-	$("#tour-finish").on("click", function(event) {
+	$("#tour-finish").click(function(event) {
 		//Company.initialise()
 		pageMssg("Thank you for following our wizard. Your system is now fully configured. If you need any help using the system, then pleae visit the FAQ tab")
 	});
+
 });
 
 function startTour() {

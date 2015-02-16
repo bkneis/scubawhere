@@ -71,6 +71,13 @@ $(function () {
 						tab : "#accommodations",
 						position : 1
 					};
+					$(".tour-progress").on("click", function(event) {
+					if(window.currentStep.position >= $(this).attr('data-position')) {
+						window.location.href = $(this).attr('data-target');
+					} else {
+						pageMssg("Please complete the unfinished steps");
+					}
+				});
 				});
 			}
 

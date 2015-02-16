@@ -201,11 +201,13 @@ $(function(){
 	$("#tour-next-step").on("click", function() {
 		if(window.trips.length != 0) {
 			window.location.href = "#tickets";
-			window.currentStep = {
-				tab : "#tickets",
-				position : 6
-			};
-		} else alert("You need to add atleast one trip");
+			if(window.currentStep.position <= 5) {
+				window.currentStep = {
+					tab : "#tickets",
+					position : 6
+				};
+			}
+		} else alert("You need to add atleast one ticket");
 	});
 
 });

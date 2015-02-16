@@ -328,10 +328,12 @@ $(function(){
 
 	$("#tour-next-step").on("click", function() {
 		window.location.href = "#add-ons";
-		window.currentStep = {
-			tab : "#add-ons",
-			position : 8
-		};
+		if(window.currentStep.position <= 7) {
+			window.currentStep = {
+				tab : "#add-ons",
+				position : 8
+			};
+		}
 	});
 	
 });

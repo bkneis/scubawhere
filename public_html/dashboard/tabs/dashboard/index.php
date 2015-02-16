@@ -149,43 +149,43 @@
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
     <div class="col-md-10">
       <ul class="nav nav-wizard" role="tablist">
-        <li role="presentation" class="active">
-          <a href="javascript:void(0)" id="prog-acom" role="tab" class="selected" data-toggle="tab" data-target="#source-tab">
+        <li role="presentation" class="active tour-progress" data-position="1" data-target="#accommodations">
+          <a href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
             <span class="step-description">Accommodations</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" id="prog-agents" data-toggle="tab" data-target="#ticket-tab">
+        <li role="presentation" class="tour-progress" data-position="2" data-target="#agents">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Agents</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#customer-tab">
+        <li role="presentation" class="tour-progress" data-position="3" data-target="#locations">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Locations</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#session-tab">
+        <li role="presentation" class="tour-progress" data-position="4" data-target="#boats">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Boats</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#addon-tab">
+        <li role="presentation" class="tour-progress" data-position="5" data-target="#trips">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Trips</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
+        <li role="presentation" class="tour-progress" data-position="6" data-target="#tickets">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Tickets</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#extra-tab">
+        <li role="presentation" class="tour-progress" data-position="7" data-target="#packages">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Packages</span>
           </a>
         </li>
-        <li role="presentation">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#summary-tab">
+        <li role="presentation" class="tour-progress" data-position="8" data-target="#add-ons">
+          <a href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Add ons</span>
           </a>
         </li>

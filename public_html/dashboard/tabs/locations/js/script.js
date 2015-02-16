@@ -15,16 +15,14 @@ $(function() {
 	startTour();
 
 	$("#tour-next-step").on("click", function() {
-			/*if(window.trips.length != 0) {
-				window.location.href = "#trips";
-				window.currentStep = "#trips";
-			} else alert("You need to add atleast one trip");*/
-			window.location.href = "#boats";
+		window.location.href = "#boats";
+		if(window.currentStep.position <= 3) {
 			window.currentStep = {
 				tab : "#boats",
 				position : 4
 			};
-		});
+		}
+	});
 
 });
 

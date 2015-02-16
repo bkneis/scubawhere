@@ -239,11 +239,15 @@ $(function () {
 	});
 
 	$("#tour-next-step").on("click", function() {
-		window.location.href = "#packages";
-		window.currentStep = {
-			tab : "#packages",
-			position : 7
-		};
+		if(window.tickets.length != 0) {
+			window.location.href = "#packages";
+			if(window.currentStep.position <= 6) {
+				window.currentStep = {
+					tab : "#packages",
+					position : 7
+				};
+			}
+		} else pageMssg("Please add atleast one ticket");
 	});
 
 });
