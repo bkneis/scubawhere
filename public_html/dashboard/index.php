@@ -28,7 +28,7 @@
 <html>
 <head>
 
-	<title>Scuba Where | Dashboard</title>
+	<title>scubawhereRMS | Dashboard</title>
 
 	<link rel='stylesheet' href='/common/css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
@@ -123,14 +123,6 @@
 					</div>
 				</li>
 
-				<li data-load="help">
-					<div>
-						<i class="fa fa-question-circle fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-users"></i> -->
-						<span>Help & FAQ</span>
-					</div>
-				</li>
-
 				<li data-load="add-booking">
 					<div>
 						<i class="fa fa-plus fa-lg fa-fw"></i>
@@ -192,6 +184,14 @@
 						<li data-load="tickets">Tickets</li>
 						<li data-load="trips">Trips</li>
 					</ul>
+				</li>
+				
+				<li data-load="help">
+					<div>
+						<i class="fa fa-question-circle fa-lg fa-fw"></i>
+						<!-- <i class="fa fa-users"></i> -->
+						<span>Help & FAQ</span>
+					</div>
 				</li>
 
 				<li data-load="settings">
