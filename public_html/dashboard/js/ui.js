@@ -5,6 +5,8 @@ $(function(){
 	//click function used for in tab switch
 	//content is loaded into section
 	$('#guts').delegate(".switch-option", "click", function(){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 005 found"'); // 2015-02-18
+
 		$('.switch-option').removeClass('option-active');
 		$(this).addClass('option-active');
 
@@ -121,7 +123,7 @@ function initPriceDatepickers() {
 }
 
 function checkDefaultSwitches(){
-	alert('If you see this alert, please contact Soren with the following message: "Tombstone 001 found"');
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 001 found"'); // 2014-12-31
 	//if there is a switch on the page set its default content
 	//do when the new content is loaded
 	if($(".option-active").length > 0){
@@ -138,7 +140,7 @@ function checkDefaultSwitches(){
 }
 
 $.fn.isSure = function(){
-	alert('If you see this alert, please contact Soren with the following message: "Tombstone 002 found"');
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 002 found"'); // 2014-12-31
 	var sure = true;
 
 	if($(this).attr("data-sure")){
@@ -149,7 +151,7 @@ $.fn.isSure = function(){
 };
 
 $.fn.smoothRemove = function(callback){
-	alert('If you see this alert, please contact Soren with the following message: "Tombstone 003 found"');
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 003 found"'); // 2014-12-31
     $(this).animate({height: 0, opacity: 0}, 'slow', function() {
         $(this).remove();
 
@@ -162,7 +164,7 @@ $.fn.smoothRemove = function(callback){
 
 //display error message for use when validating form
 $.fn.errorMssg = function(mssg){
-	alert('If you see this alert, please contact Soren with the following message: "Tombstone 004 found"');
+	alert('If you see this alert, please contact Soren with the following message: "Tombstone 004 found"'); // 2014-12-31
     $(this).after("<div class='errorMssg'>" + mssg + "</div>");
 };
 
