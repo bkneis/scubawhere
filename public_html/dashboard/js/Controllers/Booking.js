@@ -4,7 +4,6 @@ var Booking = function(data) {
 		$.extend(this, data);
 
 		// Set the status attribute to true (needed for Handlebars #if blocks)
-		console.log(this.status);
 		switch(this.status) {
 			case 'saved':     this.saved = true;     break;
 			case 'reserved':  this.reserved = true;  break;
@@ -12,7 +11,6 @@ var Booking = function(data) {
 			case 'cancelled': this.cancelled = true; break;
 			default: break;
 		}
-		console.log(this);
 	}
 	else {
 		this.bookingdetails = [];
@@ -21,9 +19,10 @@ var Booking = function(data) {
 		this.lead_customer  = false;
 	}
 
+	this.decimal_price     = "0.00";
 	this.currentTab        = null;
 	this.selectedTickets   = {};
-	this.selectedPackages = {};
+	this.selectedPackages  = {};
 	this.selectedCustomers = {};
 };
 
@@ -221,7 +220,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				return false;
 
 			// Next, check if a packagefacade exists
-			if( detail.packagefacade === null )
+			if( typeof detail.packagefacade === 'undefined' || detail.packagefacade === null )
 				return false;
 
 			// Next, check if the packagefacade includes the requested package

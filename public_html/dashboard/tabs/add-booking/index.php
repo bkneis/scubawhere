@@ -965,11 +965,11 @@
 			</ul>
 			<script id="booking-summary-template" type="text/x-handlebars-template">
 				<li class="list-group-item active">
-					<h4 class="list-group-item-heading">Summary</h4>
+					<h4 class="list-group-item-heading">Summary<span class="pull-right">{{currency}} {{decimal_price}}</h4>
 				</li>
 				<li class="list-group-item">
-					<strong>Booking Source</strong>
-					<p>{{source}}</p>
+					<strong>Booking Reference</strong>
+					<h4 class="pull-right" style="margin-top: 0;">{{reference}}</h4>
 				</li>
 				{{#notEmptyObj selectedTickets}}
 					<li class="list-group-item" id="selected-tickets">

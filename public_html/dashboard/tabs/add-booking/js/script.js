@@ -279,7 +279,7 @@ $('#source-tab').on('click', '.source-finish', function() {
 	window.booking = new Booking();
 	booking.initiate(params, function(status) {
 		$('[data-target="#ticket-tab"]').tab('show');
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -309,7 +309,7 @@ window.promises.loadedTickets.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	});
 
 	$('#booking-summary').on('click', '.remove-ticket', function() {
@@ -324,7 +324,7 @@ window.promises.loadedTickets.done(function() {
 
 		booking.store();
 
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	});
 });
 
@@ -344,7 +344,7 @@ window.promises.loadedPackages.done(function() {
 		booking.store();
 
 		//Draw the basket
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	});
 });
 
@@ -361,7 +361,7 @@ $('#booking-summary').on('click', '.remove-package', function() {
 
 	booking.store();
 
-	$('#booking-summary').html(bookingSummaryTemplate(booking));
+	drawBasket();
 });
 
 /*
@@ -390,11 +390,11 @@ window.promises.loadedCustomers.done(function() {
 		booking.selectedCustomers[id] = window.customers[id];
 		booking.store();
 
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 
 		if( _.size(booking.selectedCustomers) === 1 ) {
 			booking.setLead({_token: window.token, customer_id: id}, function success(status) {
-				$('#booking-summary').html(bookingSummaryTemplate(booking));
+				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0], 'danger');
@@ -437,6 +437,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 		};
 
 		booking.removeDetail(params, function success(status) {
+			drawBasket();
 			// All good
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
@@ -447,7 +448,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 	delete booking.selectedCustomers[id];
 	booking.store();
 
-	$('#booking-summary').html(bookingSummaryTemplate(booking));
+	drawBasket();
 
 	// Check if we just removed the lead customer
 	if(booking.lead_customer.id == id) {
@@ -459,7 +460,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
 			};
 			booking.setLead(params, function success(status) {
-				$('#booking-summary').html(bookingSummaryTemplate(booking));
+				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.error[0], 'danger');
@@ -501,7 +502,7 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Save');
 				$('#edit-customer-modal').modal('hide');
 
-				$('#booking-summary').html(bookingSummaryTemplate(booking));
+				drawBasket();
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
@@ -533,11 +534,11 @@ window.promises.loadedCustomers.done(function() {
 				btn.html('Add');
 				form[0].reset();
 
-				$('#booking-summary').html(bookingSummaryTemplate(booking));
+				drawBasket();
 
 				if( _.size(booking.selectedCustomers) === 1 ) {
 					booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
-						$('#booking-summary').html(bookingSummaryTemplate(booking));
+						drawBasket();
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
 						pageMssg(data.errors[0], 'danger');
@@ -558,7 +559,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 
 $('#customer-tab').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -733,7 +734,7 @@ function submitAddDetail(params) {
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
 
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -759,7 +760,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 
 		redrawSessionsList(params);
 
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -809,7 +810,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
 	booking.addAddon(params, function success() {
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -828,7 +829,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	params.addon_id         = $(this).data('id');
 
 	booking.removeAddon(params, function success() {
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -881,7 +882,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	params.end              = $(this).parents('.accommodation-item').find('[name="end"]').val();
 
 	booking.addAccommodation(params, function success() {
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -902,7 +903,7 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 	params.customer_id      = customer_id;
 
 	booking.removeAccommodation(params, function success() {
-		$('#booking-summary').html(bookingSummaryTemplate(booking));
+		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -955,7 +956,6 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	$("#summary-accommodations").html(summaryAccommodationsTemplate({accommodations:booking.accommodations}));
 	$("#summary-lead").html(summaryLeadTemplate(booking.lead_customer));
 	$("#summary-price").html(summaryPriceTemplate(booking));
-
 });
 
 $('#summary-tab').on('click', '.save-booking', function() {
@@ -1154,6 +1154,10 @@ function addTransaction() {
 	window.location.hash = 'add-transaction';
 }
 
+function drawBasket() {
+	$('#booking-summary').html(bookingSummaryTemplate(booking));
+}
+
 Booking.initiateStorage();
 
 // Check if the booking variable exists and the user explicitly loaded it
@@ -1172,6 +1176,12 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 				booking.selectedTickets[detail.ticket.id].qty++;
 			}
 		});
+
+		// If their are still no tickets (edge case) set currentTab to ticket selection
+		if(Object.keys(booking.selectedTickets).length === 0) {
+			booking.currentTab = '#ticket-tab';
+		}
+
 		booking.store();
 	}
 
@@ -1182,6 +1192,12 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 				booking.selectedCustomers[detail.customer.id] = $.extend(true, {}, detail.customer);
 			}
 		});
+
+		// If their are still no customers (edge case) set currentTab to customer selection
+		if(Object.keys(booking.selectedCustomers).length === 0) {
+			booking.currentTab = '#customer-tab';
+		}
+
 		booking.store();
 	}
 
@@ -1195,4 +1211,5 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	}
 
 	$('[data-target="'+booking.currentTab+'"]').tab('show');
+	drawBasket();
 }
