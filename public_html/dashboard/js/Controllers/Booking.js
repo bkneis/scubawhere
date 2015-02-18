@@ -155,7 +155,14 @@ Booking.prototype.store = function() {
 Booking.prototype.loadStorage = function() {
 	if(typeof window.basil === 'undefined') Booking.initiateStorage();
 
-	$.extend(this, window.basil.get('booking_' + this.id));
+	// $.extend(this, window.basil.get('booking_' + this.id));
+
+	var storedObject = window.basil.get('booking_' + this.id);
+
+	// Only overwrite these attributes (other attributes could have changed on the server and are thus newer)
+	this.selectedTickets   = storedObject.selectedTickets;
+	this.selectedCustomers = storedObject.selectedCustomers;
+	this.currentTab        = storedObject.currentTab;
 };
 
 /**
