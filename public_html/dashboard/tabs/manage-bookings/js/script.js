@@ -18,13 +18,28 @@ Handlebars.registerHelper('sourceIcon', function() {
 });
 
 Handlebars.registerHelper('statusIcon', function() {
-	var icon = '',
-	    color = 'inherit',
+	var icon    = '',
+	    color   = 'inherit',
 	    tooltip = '';
 
 	if(this.status === 'cancelled') {
-		icon = 'fa-ban';
+		icon    = 'fa-ban';
 		tooltip = 'Cancelled';
+
+		var sum = _.reduce(this.payments, function(memo, payment) {
+			return memo + payment.amount * 1;
+		}, 0);
+
+		if(sum > this.cancellation_fee) {
+			// Refund necessary!
+			color   = '#d9534f';
+			tooltip = 'Cancelled, refund necessary';
+		}
+
+		if(sum < this.cancellation_fee) {
+			color   = '#f0ad4e';
+			tooltip = 'Cancelled, payment outstanding';
+		}
 	}
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
@@ -43,17 +58,17 @@ Handlebars.registerHelper('statusIcon', function() {
 		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
 	}
 	else if(this.status === 'reserved') {
-		icon = 'fa-clock-o';
+		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
 
 		if(this.reserved == null) {
-			icon = 'fa-exclamation';
+			icon    = 'fa-exclamation';
 			tooltip = 'Expired reservation!';
-			color = '#d9534f';
+			color   = '#d9534f';
 		}
 	}
 	else if(this.status === 'saved') {
-		icon = 'fa-floppy-o';
+		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
 
