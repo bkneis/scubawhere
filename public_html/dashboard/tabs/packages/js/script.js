@@ -56,7 +56,7 @@ $(function(){
 
 		packageForm = Handlebars.compile( $("#package-form-template").html() );
 		renderEditForm();
-		startTour();
+		Tour.getPackagesTour();
 	});
 
 	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
@@ -325,60 +325,8 @@ $(function(){
 
 		$(event.target).parent().remove();
 	});
-
-	$("#tour-next-step").on("click", function() {
-		window.location.href = "#add-ons";
-		if(window.currentStep.position <= 7) {
-			window.currentStep = {
-				tab : "#add-ons",
-				position : 8
-			};
-		}
-	});
 	
 });
-
-function startTour() {
-
-	if(window.tourStart) {
-		if(window.currentStep.position < 7) {
-			window.location.href = window.currentStep.tab;
-			console.log(window.currentStep.tab);
-		} else {
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {  
-					case "package-form-container":
-			        	$("#package-name").val("Family dive day");
-			        	break;
-		        	case "package-tickets":
-			        	$("#package-tickets").find(".ticket-select").filter(":first").val(1);
-			        	$("#package-tickets").find(".quantity-input").filter(":first").val(4);
-			        	break;
-			        case "package-base":
-			        	$("#package-base").find(".base-price").filter(":first").val(150);
-			        	break;
-			        case "package-seasonal":
-			        	$("#package-seasonal").find('input[type=checkbox]').filter(':first').click();
-			        	break;
-			        case "package-size":
-			        	$("#package-capacity").val(4);
-			        	break;
-			        case "packages-list-div":
-			        	$("#package-list").append('<li id="dummy-package"><strong>Family dive day</strong> | £150.00 </li>');
-			        	break;
-		        }
-			}).oncomplete(function() {
-				$("#dummy-package").remove();
-				clearForm();
-			});
-		}
-	}
-
-}
 
 function renderPackageList(callback) {
 

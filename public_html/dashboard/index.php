@@ -96,6 +96,7 @@
 	<script src="js/ui.js"></script>
 	<script src="js/navigation.js"></script>
 	<script src="js/validate.js"></script>
+	<script src="js/tour.js"></script>
 
 </head>
 <body>

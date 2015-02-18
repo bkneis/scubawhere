@@ -34,7 +34,7 @@ $(function(){
 
 			tripForm = Handlebars.compile( $("#trip-form-template").html() );
 			renderEditForm();
-			startTour();
+			Tour.getTripsTour();
 		});
 	});
 
@@ -198,55 +198,7 @@ $(function(){
 		);
 	});
 
-	$("#tour-next-step").on("click", function() {
-		if(window.trips.length != 0) {
-			window.location.href = "#tickets";
-			if(window.currentStep.position <= 5) {
-				window.currentStep = {
-					tab : "#tickets",
-					position : 6
-				};
-			}
-		} else alert("You need to add atleast one ticket");
-	});
-
 });
-
-function startTour() {
-
-	if(window.tourStart) {
-		if(window.currentStep.position < 5) {
-			window.location.href = window.currentStep.tab;
-		} else {
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {  
-			        case "trip-form-container":
-			        	$("#trip-name").val("Single boat dive");
-			        	$("#tripDuration").val(4);
-			        	break;
-			        case "locationsList":
-			        	$('#locationsList').find('.location').filter(':first').click();
-			        	break;
-			        case "tagsList":
-			        	$('#tagsList').find('.tag').filter(':first').click();
-			        	break;
-			        case "trips-list-div":
-			        	$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
-			        	break;
-		        }
-			}).oncomplete(function() {
-				$("#dummy-trip").remove();
-				clearForm();
-			});
-		}
-
-	}
-
-}
 
 function renderTripList(callback) {
 

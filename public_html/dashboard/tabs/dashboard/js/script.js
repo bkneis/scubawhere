@@ -48,20 +48,16 @@ $(function () {
 				tourDash.setOptions({
 					steps: [
 					{ 
-						intro: "Welcome to Scuba Where RMS! So we can get you all set up with our system, this wizard will take you throw our system and ask that you fill in some information about your dive centre"
+						intro: "Welcome to scubawhereRMS! So we can get you all set up with our system, this wizard will take you through our system and ask that you fill in some information about your dive operation."
 					},
 					{
-						element: '#setup-wizard',
-						intro: 'Here is your start up wizard. It shows you all the tabs that require some information, These are what I will be guiding you through.',
-						position : 'right'
-					},
-					{
-						intro: "So let's get started. Click done to start the configuration"
+						intro: "So let's get started. Click 'Done' to start the configuration."
 					}
 					],
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
-					exitOnEsc : false
+					exitOnEsc : false,
+					skipLabel : "End"
 				});
 				tourDash.start().oncomplete(function() {
 					window.location.href = '#accommodations';

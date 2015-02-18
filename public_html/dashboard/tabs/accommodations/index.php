@@ -1,7 +1,7 @@
 <div id="wrapper" class="clearfix">
 <div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Firstly, we need to add any accommodations that your dive centre offers. (If you don't have any then just skip this part and click next step)"></div>
 	<div class="col-md-4">
-		<div class="panel panel-default" id="accommodations-list" data-step="6" data-position="right" data-intro="Once an accommodation is saved you can see it in you list. Click on an accommodation to view / edit its details">
+		<div class="panel panel-default" id="accommodations-list" data-step="6" data-position="right" data-intro="Once an accommodation is saved, you will see it in your list. Click on an accommodation to view/edit the details.">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Accommodation</h4>
 			</div>
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="accommodation-form-container" data-step="2" data-position="left" data-intro="To get started, type the room name or type and description and set a base price. You can add yearly price changes to begin on certain dates in the future and also apply seasonal price changes.">
+		<div class="panel panel-default" id="accommodation-form-container" data-step="2" data-position="left" data-intro="To get started, enter the room name and description.">
 			<script type="text/x-handlebars-template" id="accommodation-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} accommodation</h4>
@@ -42,7 +42,7 @@
 							<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
-						<div class="form-row" id="acom-base" data-step="3" data-position="top" data-intro="If you expect your costs of running a trip are to increase, you can set base prices for your trip that can increase or decrease annually.">
+						<div class="form-row" id="acom-base" data-step="3" data-position="top" data-intro="Here you can set any price changes that start from a certain date.">
 							<p><strong>Set base prices for this accommodation:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
@@ -50,7 +50,7 @@
 							<button id="add-base-price" class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="Additionally you can set prices to change seasonly. If you charge accommodation prices on a 4 season year, you can easily manage its price. Just enter the dates of your season and their price.">
+						<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="If you have prices that change throughout the year, you can ajust your prices depening on the seasons">
 							<label>
 								<input id="acom-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
@@ -68,7 +68,7 @@
 							</div>
 						</div>
 
-						<div class="form-row" id="acom-rooms" data-step="5" data-position="top" data-intro="Lastly enter the number of rooms you have available. If you room type is a dorm room, then this should be the number of beds. Lastly click save and your room will be added.">
+						<div class="form-row" id="acom-rooms" data-step="5" data-position="top" data-intro="Lastly enter the number of rooms you have available. If the room is a dorm room, then treat each dorm room. Lastly, click 'save' to add your accommodation.">
 							<label class="field-label">Number of Rooms/Beds</label>
 							<input id="room-amount" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 						</div>

@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
 
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you highlight your dive locations. First, you’ll see a small house located over the address of the business you disclosed in the registration. If this is incorrect, you can edit your address accordingly in the Settings tab. (We’ll get to that bit later!). There are a few different methods you can use to highlight where exactly you go scuba diving."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Here is where you declare your dive locations. These will be used when creating a trip."></div>
 
 	<div class="col-md-6">
-		<div class="panel panel-default">
+		<div class="panel panel-default" data-step="6" data-position="bottom" data-intro="Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag.">
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-your-locations-icon" />
@@ -22,19 +22,19 @@
 	</div>
 
 	<div class="col-md-6">
-		<div class="panel" data-step="2" data-position="bottom" data-intro="To add a location, simply enter in the Latitude and Longitude co-ordinates here and click create. Then give the location a name, description and any tags for that location in the pop ub box.">
+		<div class="panel" data-step="2" data-position="bottom" data-intro="To add a location, simply enter in the Latitude and Longitude co-ordinates and click 'Create'.">
 			<div class="panel-heading text-right" style="padding: 0 1px;">
 				Lat: <input type="number" placeholder="Latitude" step="0.1" min="-90" max="90" id="newMarkerLatitude" class="form-control" style="display: inline-block; width: 115px;" />
 				Long: <input type="number" placeholder="Longitude" step="0.1" min="-180" max="180" id="newMarkerLongitude" class="form-control" style="display: inline-block; width: 115px;" />
-				<button class="btn btn-default" style="margin-right: 5px;" id="showLocation" data-step="3" data-intro="Click ‘Show’ to allow you to see exactly where the co-ordinates display on the Map.">Show</button>
-				<button class="btn btn-primary" id="createLocation">Create</button>
+				<button class="btn btn-default" style="margin-right: 5px;" id="showLocation" data-step="3" data-intro="Click ‘Show’ to see exactly where the co-ordinates display on the Map.">Show</button>
+				<button class="btn btn-primary" id="createLocation" data-step="4" data-position="bottom" data-intro="When you click 'Create', a pop up box will appear. Enter a name and description for the dive location. Additionally, you can select any relevant tags for the dive location.">Create</button>
 			</div>
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	<div id="map-container" class="col-md-12" data-step="4" data-position="top" data-intro="Here is a map that displays all the available dive points, made by you and other dive operators. Click on the point icon to view more information.">
+	<div id="map-container" class="col-md-12" data-step="5" data-position="top" data-intro="Here is a map that displays all the available dive locations, made by you and other dive operators. The house icon represents where your dive operation is based.">
 		<div id="map" style="height: 100%;"></div>
 	</div>
 

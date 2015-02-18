@@ -1,7 +1,7 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your tickets. A ticket can be valid for many trips and are what your customers will be buying, they are displayed in the add-booking process"></div>	
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page)."></div>	
 	<div class="col-md-4">
-		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="Once you save your ticket, you can view it here. Click a ticket to view / edit it's details in the form on the right">
+		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="Once a ticket is saved, you will see it in your list. Click on a ticket to view/edit the details.">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Tickets</h4>
 			</div>
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="ticket-form-container" data-step="2" data-position="left" data-intro="First, give the ticket a name, description and a base price.">
+		<div class="panel panel-default" id="ticket-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and base price for the ticket.">
 			<script type="text/x-handlebars-template" id="ticket-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} Ticket</h4>
@@ -52,7 +52,7 @@
 							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div class="form-row" id="tickets-seasonal" data-step="3" data-position="left" data-intro="You can build seasonal prices depending if the business increases or decreases it’s prices during certain times of the years.">
+						<div class="form-row" id="tickets-seasonal">
 							<label>
 								<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
@@ -70,7 +70,7 @@
 							</div>
 						</div>
 
-						<div class="form-row" id="tickets-trips" data-step="4" data-position="top" data-intro="Here you can select which trips a ticket can be used for. The ticket is still valid for only 1 trip, but multile trips can be selected for tickets that use diffrent trips">
+						<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
 							<h4>Please select the trips that this ticket should be eligable for:</h4>
 							{{#each available_trips}}
 								<p style="margin-left: 4em;">
@@ -82,7 +82,7 @@
 							{{/each}}
 						</div>
 
-						<div class="form-row" id="tickets-boats" data-step="5" data-position="top" data-intro="You can also limit the ticket to be used on specific boats">
+						<div class="form-row" id="tickets-boats" data-step="4" data-position="top" data-intro="You can also limit the ticket to be used for specific boats.">
 							<label style="display: block;">
 								<input id="tickets-boats-checkbox" type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
 							</label>
@@ -99,7 +99,7 @@
 							</div>
 						</div>
 
-						<div class="form-row" id="tickets-boatrooms" data-step="6" data-position="top" data-intro="You can also limit the ticket to be used on specific cabins for overnight trips. Click save to create the ticket">
+						<div class="form-row" id="tickets-boatrooms" data-step="6" data-position="top" data-intro="You can also limit the ticket to be used on specific cabins for overnight trips. Click 'Save' to create the ticket.">
 							<label style="display: block;">
 								<input id="tickets-boatroom-checkbox" type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain cabins?</strong>
 							</label>

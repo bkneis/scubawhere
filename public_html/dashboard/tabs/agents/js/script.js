@@ -22,7 +22,7 @@ $(function(){
 	// Default view: show create agent form
 	agentForm = Handlebars.compile( $("#agent-form-template").html() );
 	renderEditForm();
-	startTour();
+	Tour.getAgentsTour();
 
 	$("#agent-form-container").on('click', '#add-agent', function(event) {
 
@@ -121,56 +121,7 @@ $(function(){
 		renderEditForm();
 	});
 
-	$("#tour-next-step").on("click", function() {
-		window.location.href = "#locations";
-		if(window.currentStep.position <= 2) {
-			window.currentStep = {
-				tab : "#locations",
-				position : 3
-			};
-		}
-	});
-
 });
-
-function startTour() {
-
-	if(window.tourStart) {
-		if(window.currentStep.position < 2) {
-			window.location.href = window.currentStep.tab;
-		} else {
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {  
-			        case "agent-form-container": 
-			            $("#agent-name").val("John doe");
-			   
-			        	$("#agent-web").val("http://www.onlinescubaholidays.com");
-			        	$("#branch-name").val("Scuba holidays R us");
-			        	$("#branch-address").val("46 grand avenue tenerife");
-			        	$("#branch-phone").val("+44 7866565047");
-			        	$("#branch-email").val("john.doe@scubaholidays.com");
-			        break;
-
-			        case "commission-div":
-			        	$("#commission-amount").val(20);
-			        	break;
-
-			        case "agent-list-div":
-			        	$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
-			        	break;
-		        }
-			}).oncomplete(function() {
-				$("#dummy-agent").remove();
-				clearForm();
-			});
-		}
-	}
-	
-}
 
 function renderAgentList(callback) {
 

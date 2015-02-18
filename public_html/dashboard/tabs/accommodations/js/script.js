@@ -55,7 +55,7 @@ $(function(){
 	// Default view: show create accommodation form
 	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
 	renderEditForm();
-	startTour();
+	Tour.getAcommodationsTour();
 
 	$("#accommodation-form-container").on('submit', '#add-accommodation-form', function(event) {
 
@@ -298,54 +298,7 @@ $(function(){
 		$(event.target).parent().remove();
 	});
 
-	$("#tour-next-step").on("click", function() {
-		window.location.href = "#agents";
-		if(window.currentStep.position <= 1) {
-			window.currentStep = {
-				tab : "#agents",
-				position : 2
-			};
-		}
-	});
-
 });
-
-function startTour() {
-
-	if(window.tourStart) {
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {
-			        case "accommodation-form-container":
-			            $("#room-name").val("3* Hotel Single Room");
-			            //$("#acom-description").val("Single bed room in luxury 3* hotel only 10 minutes away from the dive centre. Etc.")
-			        	$("#acom-price").val(50);
-			        break;
-			        case "acom-base":
-			            $("#add-base-price").click();
-			        	$("#acom-price").val(50);
-			        break;
-			        case "acom-season":
-			            $("#acom-season-price").click();
-			        	$("#acom-price").val(50);
-			        break;
-			        case "acom-rooms":
-			        	$("#room-amount").val(6);
-			        break;
-			        case "accommodations-list":
-			        	$("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
-			        break;
-		        }
-			}).oncomplete(function() {
-				$("#dummy-room").remove();
-				clearForm();
-			});
-	}
-
-}
 
 function renderAccommodationList(callback) {
 

@@ -12,33 +12,9 @@ $(function() {
 	$('#map-container').css('height', window.innerHeight - 200);
 
 	loadGoogleMaps();
-	startTour();
-
-	$("#tour-next-step").on("click", function() {
-		window.location.href = "#boats";
-		if(window.currentStep.position <= 3) {
-			window.currentStep = {
-				tab : "#boats",
-				position : 4
-			};
-		}
-	});
+	Tour.getLocationsTour();
 
 });
-
-function startTour() {
-	if(window.tourStart) {
-		if(window.currentStep.position < 3) {
-			window.location.href = window.currentStep.tab;
-		} else { 
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start();
-	}
-	}
-}
 
 function initialise() {
 	console.log('Initialising started');

@@ -20,7 +20,7 @@ $(function (){
 
 	boatsForm = Handlebars.compile( $("#boat-form-template").html() );
 	renderEditForm();
-	startTour();
+	Tour.getBoatsTour();
 
 	boatroomsForm = Handlebars.compile( $("#boatroom-form-template").html() );
 	addRoom = Handlebars.compile( $('#add-room-template').html() );
@@ -238,67 +238,7 @@ $("#boat-form-container").on('click', '.remove-boatroom', function(event){
 		});
 	});
 
-	$("#tour-next-step").on("click", function() {
-		if(window.boats.length != 0) {
-			window.location.href = "#trips";
-			if(window.currentStep.position <= 4) {
-				window.currentStep = {
-					tab : "#trips",
-					position : 5
-				};
-			}
-		} else alert("You need to add atleast one boat");
-	});
-
 });
-
-function startTour() {
-
-if(window.tourStart) {
-	if(window.currentStep.position < 4) {
-		window.location.href = window.currentStep.tab;
-	} else {
-		
-		introJs().setOptions( {
-			showStepNumbers : false,
-			exitOnOverlayClick : false,
-            exitOnEsc : false
-			}).start().onchange(function(targetElement) {
-				switch (targetElement.id) {  
-
-					case "change-to-add-boatroom":
-				    	$("#boatroom-list").append('<li id="dummy-boatroom"><strong>Single Cabin</strong></li>');
-				    	break;
-
-			        case "boat-form-container":
-			        	$("#boat-name").val("Barry's big boat");
-			        	//CKEDITOR.setData("Add a description of your boat here."); 
-			        	$("#boat-capacity").val(25);
-			        	break;
-
-				    case "boat-cabins":
-			        	$("#room-types").append('<p> \
-						<select class="room-type-select"> \
-						<option value="{{id}}">Single Cabin</option> \
-						</select> Number of rooms: \
-						<input type="number" value="6" placeholder="0" style="width: 100px;" min="0"> \
-						<button class="btn btn-danger remove-room">&#215;</button> \
-						</p>');
-			        	break;
-
-				    case "boats-list-div":
-				    	$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
-				    	break;
-		        }
-			}).oncomplete(function() {
-				$("#dummy-boat").remove();
-				clearForm();
-			});
-	}
-
-	}
-	
-}
 
 function renderBoatList(callback) {
 

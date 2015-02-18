@@ -1,7 +1,7 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="This tab is where you create your packages. A package consists of many tickets and is great for offering deals that include more than 1 dive, or more than 1 person!"></div>
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now you need to add your packages. A package consists of many tickets and is great for offering deals that include more than 1 ticket. A package is also used for educational courses that include multiple trips."></div>
 	<div class="col-md-4">
-		<div class="panel panel-default" id="packages-list-div" data-step="7" data-position="right" data-intro="Once you save your package, you can view it here. Click a package to view / edit it's details in the form on the right">
+		<div class="panel panel-default" id="packages-list-div" data-step="7" data-position="right" data-intro="Once a package is saved, you will see it in your list. Click on a package to view/edit the details.">
 			<div class="panel-heading">
 				<h4 class="panel-title">Available Packages</h4>
 			</div>
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="col-md-8">
-		<div class="panel panel-default" id="package-form-container" data-step="2" data-position="left" data-intro="First, give the package a name and description">
+		<div class="panel panel-default" id="package-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and price for the package.">
 			<script type="text/x-handlebars-template" id="package-form-template">
 				<div class="panel-heading">
 					<h4 class="panel-title">{{task}} Package</h4>
@@ -42,7 +42,7 @@
 							<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 						</div>
 
-						<div id="package-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now select the tickets that you want to include in the package. Once you select a ticket another combo box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank">
+						<div id="package-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now, select the tickets that you want to include in the package. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
 							<strong>Select tickets to be included in this package:</strong>
 							{{#each tickets}}
 								{{> ticket_select}}
@@ -50,7 +50,7 @@
 							{{> ticket_select}}
 						</div>
 
-						<div id="package-base" class="form-row" data-step="4" data-position="left" data-intro="Next, give the package a base price. This is the 'standard' price for the package">
+						<div id="package-base" class="form-row">
 							<p><strong>Set base prices for this package:</strong></p>
 							{{#each base_prices}}
 								{{> price_input}}
@@ -58,7 +58,7 @@
 							<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
 						</div>
 
-						<div id="package-seasonal" class="form-row" data-step="5" data-position="left" data-intro="Additionally, if the cost of your package is expected to increase/decrease through the seasons, you can specify a date range to change its price.">
+						<div id="package-seasonal" class="form-row">
 							<label>
 								<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 								Add seasonal price changes?
@@ -76,7 +76,7 @@
 							</div>
 						</div>
 
-						<div id="package-size" class="form-row" data-step="6" data-position="top" data-intro="Lastly, if you have a maxmim group size, you can specify it here. For example if you only allow groups of up to 4, alternatively you can put 0 not to specify a maximum.">
+						<div id="package-size" class="form-row" data-step="4" data-position="top" data-intro="If you have a maximum group/course size, you can specify it here. Alternatively enter 0 to set no maximum.">
 							<label class="field-label">Max. group size per boat</label>
 							<input id="package-capacity" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
 							(Enter 0 or nothing for <i>no limit</i>)
