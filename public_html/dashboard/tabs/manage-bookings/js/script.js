@@ -209,6 +209,7 @@ function editBooking(booking_id, self) {
 	// Load booking data and redirect to add-booking tab
 	Booking.get(booking_id, function success(object) {
 		window.booking = object;
+		window.clickedEdit = true;
 
 		window.location.hash = 'add-booking';
 	});
