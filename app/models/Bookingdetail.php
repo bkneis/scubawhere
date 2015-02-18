@@ -59,11 +59,4 @@ class Bookingdetail extends Ardent {
 	{
 		return $this->belongsTo('Packagefacade');
 	}
-
-	/*
-	public function package()
-	{
-		return $this->hasManyThrough('Package', 'Packagefacade');
-	}
-	*/
 }

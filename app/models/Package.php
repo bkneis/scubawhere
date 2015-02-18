@@ -40,6 +40,21 @@ class Package extends Ardent {
 		    ->count() > 0;
 	}
 
+	public function calculatePrice($start) {
+		$price = Price::where(Price::$owner_id_column_name, $this->id)
+		     ->where(Price::$owner_type_column_name, 'Package')
+		     ->where('from', '<=', $start)
+		     ->where(function($query) use ($start)
+		     {
+		     	$query->whereNull('until')
+		     	      ->orWhere('until', '>=', $start);
+		     })
+		     ->orderBy('id', 'DESC')
+		     ->first();
+
+		$this->decimal_price = $price->decimal_price;
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('Company');

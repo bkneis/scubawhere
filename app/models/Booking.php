@@ -234,14 +234,24 @@ class Booking extends Ardent {
 	{
 		$currency = new Currency( Auth::user()->currency->code );
 
-		$bookingdetails = $this->bookingdetails()->where('packagefacade_id', null)->with('ticket', 'session', 'addons')->get();
+		$bookingdetails = $this->bookingdetails()->with('ticket', 'session', 'addons', 'packagefacade', 'packagefacade.package')->get();
 		$sum = 0;
+		$tickedOffPackagefacades = [];
 
-		$bookingdetails->each(function($detail) use (&$sum, $currency)
+		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades)
 		{
 			if($detail->packagefacade_id != null)
 			{
-				// Skip packages for now
+				// Sum up all packages
+				if(!in_array($detail->packagefacade_id, $tickedOffPackagefacades))
+				{
+					// Add the packagefacadeID to the array so it is not summed again in the next bookingdetails
+					$tickedOffPackagefacades[] = $detail->packagefacade_id;
+
+
+					$detail->packagefacade->package->calculatePrice($detail->session->start);
+					$sum += $detail->packagefacade->package->decimal_price;
+				}
 			}
 			else
 			{
