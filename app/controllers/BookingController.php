@@ -378,7 +378,7 @@ class BookingController extends Controller {
 
 		// Determine if we need a boatroom_id (only when the trip is overnight)
 		$trip             = $departure->trip;
-		$start            = new DateTime($trip->start);
+		$start            = new DateTime($departure->start);
 		$end              = clone $start;
 		$duration_hours   = floor($trip->duration);
 		$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
