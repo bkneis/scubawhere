@@ -441,7 +441,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 			// All good
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.error[0], 'danger');
+			pageMssg(data.errors[0], 'danger');
 		});
 	});
 
@@ -463,7 +463,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.error[0], 'danger');
+				pageMssg(data.errors[0], 'danger');
 			});
 		}
 		else {
@@ -475,7 +475,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				// All good
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.error[0], 'danger');
+				pageMssg(data.errors[0], 'danger');
 			});
 		}
 	}
