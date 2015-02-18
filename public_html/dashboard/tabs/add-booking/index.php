@@ -488,22 +488,33 @@
 										<div class="col-sm-3">
 											<div class="form-group">
 												<label for="after">After:</label>
-												<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
+												<div class="input-group">
+													<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
+													<span class="input-group-addon" onclick="$(this).siblings('input').val('');" style="cursor: pointer;">
+														<i class="fa fa-times" title="Clear date"></i>
+													</span>
+												</div>
 											</div>
 										</div>
 										<div class="col-sm-3">
 											<div class="form-group">
 												<label for="before">Before:</label>
-												<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="before" placeholder="YYYY-MM-DD">
+												<div class="input-group">
+													<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="before" placeholder="YYYY-MM-DD">
+													<span class="input-group-addon" onclick="$(this).siblings('input').val('');" style="cursor: pointer;">
+														<i class="fa fa-times" title="Clear date"></i>
+													</span>
+												</div>
 											</div>
 										</div>
 										<div class="col-sm-4">
 											<div class="form-group">
 												<label for="trips">Trip:</label>
 												<select id="trips" name="trip_id" class="form-control select2">
-													<option selected="selected" value="">Choose trip...</option>
+													<option selected="selected" value="">All trips</option>
 												</select>
 												<script id="trips-list-template" type="text/x-handlebars-template">
+													<option selected="selected" value="">All trips</option>
 													{{#each trips}}
 														<option value="{{id}}">{{{name}}}</option>
 													{{/each}}
@@ -532,7 +543,7 @@
 												</tr>
 											</thead>
 											<tbody>
-
+												<tr><td colspan="6" style="text-align: center;"><br><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
 											</tbody>
 										</table>
 									</div>
