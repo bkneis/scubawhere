@@ -365,10 +365,14 @@ ul#sidenav > li.tab-active > div:hover {
 	background-color: transparent;
 }
 
+ul#sidenav a,
 ul#sidenav div {
+	display: block;
 	padding: 10px;
+	color: inherit;
 }
 
+ul#sidenav a span,
 ul#sidenav div span {
 	line-height: 20px;
 	margin-left: 10px;
@@ -383,7 +387,7 @@ ul#sidenav > li > ul {
 ul#sidenav > li > ul > li {
 	border-bottom: none;
 	background-color: rgba(0,0,0,0.15);
-	padding: 10px 20px;
+	padding: 0 20px;
 }
 
 ul#sidenav > li > ul > li:hover {

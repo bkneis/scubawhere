@@ -10,11 +10,6 @@ $(function() {
     baseHeight = $pageWrap.height() - $mainContent.height();
     */
 
-    $("#sidenav").on('click', '[data-load]', function(event) {
-        event.preventDefault();
-        window.location.hash = $(this).attr("data-load");
-    });
-
     $(window).on('hashchange', function() {
 
         newHash = window.location.hash.substring(1); // Fetch hash without #
@@ -36,7 +31,7 @@ $(function() {
 
         // Set live tab
         $('.tab-active').removeClass('tab-active');
-        $('[data-load="'+newHash+'"]').addClass('tab-active');
+        $('#sidenav a[href="#'+newHash+'"]').parent().addClass('tab-active');
 
         // Open Management submenu if one of its tabs is selected
         submenu = [
@@ -66,7 +61,7 @@ $(function() {
         });
 
         // Get the page title from the menu item
-        var newTitle = $('[data-load="'+newHash+'"]').text();
+        var newTitle = $('#sidenav a[href="#'+newHash+'"]').text();
 
         // Set breadcumb(s)
         if(newHash === 'add-transaction')

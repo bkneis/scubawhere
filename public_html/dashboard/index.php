@@ -81,7 +81,9 @@
 			console.info('Company info loaded');
 			window.company = data;
 
-			$('.username').text(window.company.name);
+			$(function() {
+				$('.username').text(window.company.name);
+			});
 		});
 
 		// Set scubawhere namespace
@@ -116,52 +118,52 @@
 		<div id="sidebar">
 			<!-- Navigation including accordion drop down menus -->
 			<ul id="sidenav">
-				<li data-load="dashboard">
-					<div>
+				<li>
+					<a href="#dashboard">
 						<i class="fa fa-tachometer fa-lg fa-fw"></i>
 						<span>Dashboard</span>
-					</div>
+					</a>
 				</li>
 
-				<li data-load="add-booking">
-					<div>
+				<li>
+					<a href="#add-booking">
 						<i class="fa fa-plus fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-plus-square-o"></i> -->
 						<span>Add Booking</span>
-					</div>
+					</a>
 				</li>
 
-				<li data-load="manage-bookings">
-					<div>
+				<li>
+					<a href="#manage-bookings">
 						<i class="fa fa-pencil fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
-					</div>
+					</a>
 				</li>
 
-				<li data-load="calendar">
-					<div>
+				<li>
+					<a href="#calendar">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Calendar</span>
-					</div>
+					</a>
 				</li>
 
-				<?php /* <li data-load="reviews">
-					<div>
+				<?php /* <li>
+					<a href="#reviews">
 						<i class="fa fa-comments fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Reviews</span>
-					</div>
+					</a>
 				</li> */ ?>
 
-				<li data-load="reports">
-					<div>
+				<li>
+					<a href="#reports">
 						<!-- <i class="fa fa-university"></i> -->
 						<i class="fa fa-line-chart fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-usd"></i> -->
 						<!-- <i class="fa fa-file-text-o"></i> -->
 						<span>Financial Reports</span>
-					</div>
+					</a>
 				</li>
 
 				<li>
@@ -174,31 +176,49 @@
 						<span class="caret"></span>
 					</div>
 					<ul id="management-submenu">
-						<li data-load="accommodations">Accommodations</li>
-						<li data-load="activate-trip">Activate Trips</li>
-						<li data-load="add-ons">Add-ons</li>
-						<li data-load="agents">Agents</li>
-						<li data-load="boats">Boats</li>
-						<li data-load="locations">Locations</li>
-						<li data-load="packages">Packages</li>
-						<li data-load="tickets">Tickets</li>
-						<li data-load="trips">Trips</li>
+						<li>
+							<a href="#accommodations">Accommodations</a>
+						</li>
+						<li>
+							<a href="#activate-trip">Activate Trips</a>
+						</li>
+						<li>
+							<a href="#add-ons">Add-ons</a>
+						</li>
+						<li>
+							<a href="#agents">Agents</a>
+						</li>
+						<li>
+							<a href="#boats">Boats</a>
+						</li>
+						<li>
+							<a href="#locations">Locations</a>
+						</li>
+						<li>
+							<a href="#packages">Packages</a>
+						</li>
+						<li>
+							<a href="#tickets">Tickets</a>
+						</li>
+						<li>
+							<a href="#trips">Trips</a>
+						</li>
 					</ul>
 				</li>
-				
-				<li data-load="help">
-					<div>
+
+				<li>
+					<a href="#help">
 						<i class="fa fa-question-circle fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Help & FAQ</span>
-					</div>
+					</a>
 				</li>
 
-				<li data-load="settings">
-					<div>
+				<li>
+					<a href="#settings">
 						<i class="fa fa-cog fa-lg fa-fw"></i>
 						<span>Settings</span>
-					</div>
+					</a>
 				</li>
 			</ul>
 		</div>
