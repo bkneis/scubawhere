@@ -1024,6 +1024,13 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Bookings that have not been saved, reserved or confirmed can be safely deleted
+		if($booking->status === null)
+		{
+			$booking->delete();
+			return array('status' => 'OK. Booking cancelled.');
+		}
+
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking is already cancelled.')), 403 ); // 403 Forbidden
 
@@ -1037,7 +1044,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return array('status' => 'OK. Booking cancelled. ' . $booking->status);
+		return array('status' => 'OK. Booking cancelled.');
 	}
 
 	public function postConfirm()
