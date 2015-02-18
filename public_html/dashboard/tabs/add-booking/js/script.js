@@ -1156,10 +1156,12 @@ function addTransaction() {
 
 Booking.initiateStorage();
 
-// Check if the booking variable exists and if so, load it
-if(typeof booking !== 'undefined') {
+// Check if the booking variable exists and the user explicitly loaded it
+if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && clickedEdit === true) {
+	window.clickedEdit = false;
 	booking.loadStorage();
 
+	// TODO Remove when selected tickets are removed from the array when they are assigned
 	if(Object.keys(booking.selectedTickets).length === 0) {
 		// Load selectedTickets from bookingdetails
 		_.each(booking.bookingdetails, function(detail) {
@@ -1178,10 +1180,7 @@ if(typeof booking !== 'undefined') {
 		_.each(booking.bookingdetails, function(detail) {
 			if(typeof booking.selectedCustomers[detail.customer.id] === 'undefined') {
 				booking.selectedCustomers[detail.customer.id] = $.extend(true, {}, detail.customer);
-				booking.selectedCustomers[detail.customer.id].bookingdetails = [];
 			}
-
-			booking.selectedCustomers[detail.customer.id].bookingdetails.push($.extend(true, {}, detail));
 		});
 		booking.store();
 	}
