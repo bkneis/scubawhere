@@ -2,6 +2,17 @@ var Booking = function(data) {
 
 	if(data !== undefined) {
 		$.extend(this, data);
+
+		// Set the status attribute to true (needed for Handlebars #if blocks)
+		console.log(this.status);
+		switch(this.status) {
+			case 'saved':     this.saved = true;     break;
+			case 'reserved':  this.reserved = true;  break;
+			case 'confirmed': this.confirmed = true; break;
+			case 'cancelled': this.cancelled = true; break;
+			default: break;
+		}
+		console.log(this);
 	}
 	else {
 		this.bookingdetails = [];
