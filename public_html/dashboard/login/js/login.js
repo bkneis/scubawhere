@@ -9,7 +9,7 @@ $.ajaxSetup({
 
 		// Start new AJAX request with changed url
 		$.ajax(
-			$.extend(this, {
+			$.extend({}, {
 				url: '//' + prefix + '.scubawhere.com' + options.url
 			})
 		);
@@ -63,7 +63,7 @@ $(function(){
 				dataType: "json",
 				data: $("#loginForm").serialize(),
 				success: function(){
-					window.location.href = "/dashboard/";
+					window.location.href = "/";
 				},
 				error: function(xhr){
 					var data = JSON.parse(xhr.responseText);
