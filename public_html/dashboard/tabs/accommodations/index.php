@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Firstly, we need to add any accommodations that your dive centre offers. (If you don't have any then just skip this part and click next step)"></div>
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Do you own or manage any accommodations? If so, please follow these steps. If not, then just 'skip' this step."></div>
 	<div class="col-md-4">
 		<div class="panel panel-default" id="accommodations-list" data-step="6" data-position="right" data-intro="Once an accommodation is saved, you will see it in your list. Click on an accommodation to view/edit the details.">
 			<div class="panel-heading">

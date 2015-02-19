@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Next are agents, these are used as a source of booking. By adding all your agents details, you can easily manage an agent's commission by selecting which agent got you the booking. (If you do not have any agents that work for you, skip this part and click next step)"></div>
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Do you have any agents? If so, please follow these steps. If not, then just 'skip' this step."></div>
 	<div class="col-md-4">
 		<div class="panel panel-default" id="agent-list-div" data-step="6" data-position="right" data-intro="Once an agent is saved, you will see it in your list. Click on an agent to view/edit the details.">
 			<div class="panel-heading">

@@ -192,7 +192,8 @@
       </ul>
       </div>
       <div class="col-md-2" style="min-height:80px" id="tour-button">
-        <button id="tour-next-step" class="btn btn-success text-uppercase">Next Step</button>
+        <button id="tour-next-step" style="margin-top:20px;" class="btn btn-success text-uppercase">Next Step</button>
+        <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
       </div>
     </script>
 

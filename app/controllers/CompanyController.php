@@ -166,4 +166,14 @@ class CompanyController extends Controller {
 
 		return Response::json( array('status' => 'OK. Location created', 'id' => $location->id), 201 ); // 201 Created
 	}
+
+	public function postInit()
+	{
+		$company = Auth::user();
+		$company->fill(array('initialised' => 1));
+		if(!$company->updateUniques())
+			return Response::json( array('errors' => $company->errors()->all()), 406 );
+
+		return array('status' => 'OK. Company initialised');
+	}
 }

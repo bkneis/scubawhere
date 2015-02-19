@@ -2,6 +2,8 @@ var Tour = {
 
 	getAcommodationsTour : function() {
 		if(window.tourStart) {
+			$("#tour-next-step").show();
+			$("#tour-finish").hide();
 			introJs().setOptions( {
 				showStepNumbers : false,
 				exitOnOverlayClick : false,
@@ -41,6 +43,8 @@ var Tour = {
 			    			position : 2
 			    		};
 			    	}
+					$('.nav-wizard li').filter('.active').next('li').addClass("active");
+					$('.nav-wizard li').filter('.active').first().removeClass("active");
 			    });
 			}
 		},
@@ -50,6 +54,8 @@ var Tour = {
 				if(window.currentStep.position < 2) {
 					window.location.href = window.currentStep.tab;
 				} else {
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -87,6 +93,8 @@ var Tour = {
 							position : 3
 						};
 					}
+					$('.nav-wizard li').filter('.active').next('li').addClass("active");
+					$('.nav-wizard li').filter('.active').first().removeClass("active");
 				});
 			}
 		},
@@ -96,6 +104,8 @@ var Tour = {
 				if(window.currentStep.position < 3) {
 					window.location.href = window.currentStep.tab;
 				} else { 
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -110,6 +120,8 @@ var Tour = {
 							position : 4
 						};
 					}
+					$('.nav-wizard li').filter('.active').next('li').addClass("active");
+					$('.nav-wizard li').filter('.active').first().removeClass("active");
 				});
 			}
 		},
@@ -119,7 +131,8 @@ var Tour = {
 				if(window.currentStep.position < 4) {
 					window.location.href = window.currentStep.tab;
 				} else {
-
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -166,6 +179,8 @@ var Tour = {
 							position : 5
 						};
 					}
+					$('.nav-wizard li').filter('.active').next('li').addClass("active");
+					$('.nav-wizard li').filter('.active').first().removeClass("active");
 				} else alert("You need to add atleast one boat");
 			});
 
@@ -177,6 +192,8 @@ var Tour = {
 			if(window.currentStep.position < 5) {
 				window.location.href = window.currentStep.tab;
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -212,6 +229,8 @@ var Tour = {
 						};
 					}
 				} else alert("You need to add atleast one ticket");
+				$('.nav-wizard li').filter('.active').next('li').addClass("active");
+				$('.nav-wizard li').filter('.active').first().removeClass("active");
 			});
 		}
 	},
@@ -221,6 +240,8 @@ var Tour = {
 			if(window.currentStep.position < 6) {
 				window.location.href = window.currentStep.tab;
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -260,6 +281,8 @@ var Tour = {
 						};
 					}
 				} else pageMssg("Please add atleast one ticket");
+				$('.nav-wizard li').filter('.active').next('li').addClass("active");
+				$('.nav-wizard li').filter('.active').first().removeClass("active");
 			});
 		}
 	},
@@ -270,6 +293,8 @@ var Tour = {
 				window.location.href = window.currentStep.tab;
 				console.log(window.currentStep.tab);
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -310,12 +335,16 @@ var Tour = {
 						position : 8
 					};
 				}
+				$('.nav-wizard li').filter('.active').next('li').addClass("active");
+				$('.nav-wizard li').filter('.active').first().removeClass("active");
 			});
 		}
 	},
 
 	getAddonsTour : function() {
 		if(window.tourStart) {
+			$("#tour-next-step").hide();
+			$("#tour-finish").show();
 			if(window.currentStep.position < 8) {
 				window.location.href = window.currentStep.tab;
 			} else {
@@ -345,8 +374,14 @@ var Tour = {
 			}
 
 			$("#tour-finish").click(function(event) {
-				//Company.initialise()
-				pageMssg("Thank you for following our wizard. Your system is now fully configured. If you need any help using the system, then pleae visit the FAQ tab")
+				var params = { _token : window.token };
+				Company.initialise(params, function success(data) {
+					pageMssg("Thank you for following our wizard. Your system is now fully configured", true);
+					window.location.href = "#dashboard";
+				},
+				function error(xhr) {
+
+				}
 			});
 		}
 	}
