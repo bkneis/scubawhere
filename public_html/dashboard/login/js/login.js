@@ -1,5 +1,9 @@
 $.ajaxSetup({
 	beforeSend: function(xhr, options) {
+
+		// Only continue if we have to remap a API request
+		if(options.url.substr(0, 4) !== '/api') return true;
+
 		// Figure out correct url prefix
 		var prefix = window.location.hostname === 'rms.scubawhere.com' ? 'api' : 'api-test';
 
