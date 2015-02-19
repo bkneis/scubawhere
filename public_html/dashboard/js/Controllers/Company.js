@@ -11,7 +11,7 @@ var Company = {
 	initialise : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/company/init",
+			url: "/api/company/init",
 			data: params,
 			success: handleData,
 			error: errorFn

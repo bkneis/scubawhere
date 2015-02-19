@@ -12,7 +12,7 @@
 						{{#each addons}}
 							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency.symbol}} {{decimal_price}}</li>
 						{{else}}
-							<p>No addons available.</p>
+							<p id="no-addons">No addons available.</p>
 						{{/each}}
 					</ul>
 				</script>

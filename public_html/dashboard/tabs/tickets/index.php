@@ -12,7 +12,7 @@
 						{{#each tickets}}
 							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices prices}}</li>
 						{{else}}
-							<p>No tickets available.</p>
+							<p id="no-tickets">No tickets available.</p>
 						{{/each}}
 					</ul>
 				</script>
