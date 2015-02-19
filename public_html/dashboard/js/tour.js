@@ -44,8 +44,8 @@ var Tour = {
 			    			position : 2
 			    		};
 			    	}
-					$('.nav-wizard li').filter('.active').next('li').addClass("active");
-					$('.nav-wizard li').filter('.active').first().removeClass("active");
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#agent-tab').addClass("selected");
 			    });
 			}
 		},
@@ -96,8 +96,8 @@ var Tour = {
 							position : 3
 						};
 					}
-					$('.nav-wizard li').filter('.active').next('li').addClass("active");
-					$('.nav-wizard li').filter('.active').first().removeClass("active");
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#location-tab').addClass("selected");
 				});
 			}
 		},
@@ -123,8 +123,8 @@ var Tour = {
 							position : 4
 						};
 					}
-					$('.nav-wizard li').filter('.active').next('li').addClass("active");
-					$('.nav-wizard li').filter('.active').first().removeClass("active");
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#boat-tab').addClass("selected");
 				});
 			}
 		},
@@ -184,8 +184,8 @@ var Tour = {
 							position : 5
 						};
 					}
-					$('.nav-wizard li').filter('.active').next('li').addClass("active");
-					$('.nav-wizard li').filter('.active').first().removeClass("active");
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#trip-tab').addClass("selected");
 				} else alert("You need to add atleast one boat");
 			});
 
@@ -235,9 +235,9 @@ var Tour = {
 							position : 6
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#ticket-tab').addClass("selected");
 				} else alert("You need to add atleast one ticket");
-				$('.nav-wizard li').filter('.active').next('li').addClass("active");
-				$('.nav-wizard li').filter('.active').first().removeClass("active");
 			});
 		}
 	},
@@ -289,9 +289,9 @@ var Tour = {
 							position : 7
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#package-tab').addClass("selected");
 				} else pageMssg("Please add atleast one ticket");
-				$('.nav-wizard li').filter('.active').next('li').addClass("active");
-				$('.nav-wizard li').filter('.active').first().removeClass("active");
 			});
 		}
 	},
@@ -346,8 +346,8 @@ var Tour = {
 						position : 8
 					};
 				}
-				$('.nav-wizard li').filter('.active').next('li').addClass("active");
-				$('.nav-wizard li').filter('.active').first().removeClass("active");
+				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+				$('#addon-tab').addClass("selected");
 			});
 		}
 	},
@@ -389,6 +389,7 @@ var Tour = {
 			$("#tour-finish").click(function(event) {
 				var params = { _token : window.token };
 				Company.initialise(params, function success(data) {
+					$('#addon-tab').addClass("done");
 					pageMssg("Thank you for following our wizard. Your system is now fully configured.", true);
 					setTimeout(function () {
 				       window.location.href = "#dashboard";
