@@ -281,7 +281,7 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
 			}
 
-			$package = $packagefacade->package;
+			$package = $packagefacade->package()->with('tickets')->first();
 		}
 		elseif( Input::has('package_id') )
 		{
@@ -293,9 +293,14 @@ class BookingController extends Controller {
 			{
 				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 			}
+
+			$packagefacade = false;
 		}
 		else
+		{
 			$package = false;
+			$packagefacade = false;
+		}
 
 		/* Probably not needed because the boatroom_id is only checked against existing and user-owned IDs anyway
 		if( Input::has('boatroom_id') )
@@ -453,16 +458,29 @@ class BookingController extends Controller {
 			}
 		}
 
+		// Check if we have to create a new packagefacade
+		if($package)
+		{
+			do // The do-while loop allows the use of break in a guard condition
+			{
+				if($packagefacade)
+				{
+					// Check if the package still has space for the wanted ticket
+					$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
+
+					if($bookedTicketsQuantity < $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
+						break;
+				}
+
+				$packagefacade = new Packagefacade( array('package_id' => $package->id) );
+				$packagefacade->save();
+
+			} while(false);
+		}
+
 		/*******************
 		 * CHECKS COMPLETE *
 		 *******************/
-
-		// If there is a package, but no packagefacade yet, create a new packagefacade
-		if( $package && !isset($packagefacade) )
-		{
-			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
-			$packagefacade->save();
-		}
 
 		// If all checks completed successfully, write into database
 		$bookingdetail = new Bookingdetail( array(
