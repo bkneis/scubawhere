@@ -312,44 +312,6 @@ class PackageController extends Controller {
 		}
 	}
 
-	protected function checkPricesChanged($old_prices, $prices, $isBase = false)
-	{
-		$old_prices = $old_prices->toArray();
-
-		// Compare number of prices
-		if(count($prices) !== count($old_prices)) return true;
-
-		// Keyify $old_prices and reduce them to input fields
-		$array = array();
-		$input_keys = array('decimal_price' => '', 'from' => '');
-		if(!$isBase)
-			$input_keys['until'] = '';
-
-		foreach($old_prices as $old_price)
-		{
-			$array[ $old_price['id'] ] = array_intersect_key($old_price, $input_keys);
-		}
-		$old_prices = $array; unset($array);
-
-		// Compare price IDs
-		if( count( array_merge( array_diff_key($prices, $old_prices), array_diff_key($old_prices, $prices) ) ) > 0 )
-			return true;
-
-		/**
-		 * The following comparison works, because `array_diff` only compares the values of the arrays, not the keys.
-		 * The $prices arrays have a `new_decimal_price` key, while the $old_prices arrays have a `decimal_price` key,
-		 * but since they represent the same info, the comparison works and returns the expected result.
-		 */
-		foreach($old_prices as $id => $old_price)
-		{
-			// Compare arrays in both directions
-			if( count( array_merge( array_diff($prices[$id], $old_price), array_diff($old_price, $prices[$id]) ) ) > 0 )
-				return true;
-		}
-
-		return false;
-	}
-
 	public function postDeactivate()
 	{
 		try
@@ -413,6 +375,34 @@ class PackageController extends Controller {
 		Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Package')->delete();
 
 		return array('status' => 'Ok. Package deleted');
+	}
+
+	protected function checkTicketsChanged($old_tickets, $tickets)
+	{
+		$old_tickets = $old_tickets->toArray();
+
+		if(count($tickets) !== count($old_tickets)) return true;
+
+		// Convert $old_tickets into same format as $tickets
+		$array = [];
+		foreach($old_tickets as $old_ticket)
+		{
+			$array[$old_ticket['id']]['quantity'] = $old_ticket['pivot']['quantity'];
+		}
+		$old_tickets = $array;
+
+		// Compare keys (both ways)
+		if( count( array_merge( array_diff_key($old_tickets, $tickets), array_diff_key($tickets, $old_tickets) ) ) > 0 )
+			return true;
+
+		// Compare each quantity
+		foreach($old_tickets as $key => $old_ticket)
+		{
+			if( $old_ticket['quantity'] != $tickets[$key]['quantity'] ) // Needs to compare int with numerical string
+				return true;
+		}
+
+		return false;
 	}
 
 }
