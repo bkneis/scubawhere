@@ -234,7 +234,7 @@ class Booking extends Ardent {
 	{
 		$currency = new Currency( Auth::user()->currency->code );
 
-		$bookingdetails = $this->bookingdetails()->with('ticket', 'session', 'addons', 'packagefacade', 'packagefacade.package')->get();
+		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
 		$sum = 0;
 		$tickedOffPackagefacades = [];
 
@@ -242,37 +242,46 @@ class Booking extends Ardent {
 		{
 			if($detail->packagefacade_id != null)
 			{
-				// Sum up all packages
+				// Sum up the package
+
+				// Check if the package has already been summed/counted
 				if(!in_array($detail->packagefacade_id, $tickedOffPackagefacades))
 				{
-					// Add the packagefacadeID to the array so it is not summed again in the next bookingdetails
+					// Add the packagefacadeID to the array so it is not summed/counted again in the next bookingdetails
 					$tickedOffPackagefacades[] = $detail->packagefacade_id;
 
+					// Find the first departure datetime that is booked in this package
+					$bookingdetails = $detail->packagefacade->package->bookingdetails()->with('departure')->get();
+					$firstDetail = $bookingdetails->sortBy(function($detail)
+					{
+						return $detail->departure->start;
+					})->first();
 
-					$detail->packagefacade->package->calculatePrice($detail->session->start);
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start);
 					$sum += $detail->packagefacade->package->decimal_price;
 				}
 			}
 			else
 			{
-				// Sum up all tickets
-				$detail->ticket->calculatePrice($detail->session->start);
+				// Sum up the ticket
+				$detail->ticket->calculatePrice($detail->departure->start);
 				$sum += $detail->ticket->decimal_price;
-
-				// Sum all addons
-				$detail->addons->each(function($addon) use (&$sum, $currency)
-				{
-					$sum += number_format(
-						$addon->price * $addon->pivot->quantity / $currency->getSubunitToUnit(), // number
-						strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-						/* $currency->getDecimalMark() */ '.', // decimal seperator
-						/* $currency->getThousandsSeperator() */ ''
-					);
-				});
 			}
+
+			// Sum up all addons
+			$detail->addons->each(function($addon) use (&$sum, $currency)
+			{
+				$sum += number_format(
+					$addon->price * $addon->pivot->quantity / $currency->getSubunitToUnit(), // number
+					strlen( $currency->getSubunitToUnit() ) - 1, // decimals
+					/* $currency->getDecimalMark() */ '.', // decimal seperator
+					/* $currency->getThousandsSeperator() */ ''
+				);
+			});
 		});
 
-		// Sum all accommodations
+		// Sum up all accommodations
 		$accommodations = $this->accommodations;
 
 		$accommodations->each(function($accommodation) use (&$sum)
