@@ -13,13 +13,15 @@ var Booking = function(data) {
 		}
 	}
 	else {
+		// Defaults for new booking
+		this.decimal_price  = "0.00";
+		this.lead_customer  = false;
 		this.bookingdetails = [];
 		this.accommodations = [];
 		this.payments       = [];
-		this.lead_customer  = false;
 	}
 
-	this.decimal_price     = "0.00";
+	// User interface variables
 	this.currentTab        = null;
 	this.selectedTickets   = {};
 	this.selectedPackages  = {};
@@ -158,11 +160,13 @@ Booking.prototype.loadStorage = function() {
 
 	var storedObject = window.basil.get('booking_' + this.id);
 
-	// Only overwrite these attributes (other attributes could have changed on the server and are thus newer)
-	this.selectedTickets   = storedObject.selectedTickets;
-	this.selectedCustomers = storedObject.selectedCustomers;
-	this.selectedPackages  = storedObject.selectedPackages;
-	this.currentTab        = storedObject.currentTab;
+	if(storedObject !== null) {
+		// Only overwrite these attributes (other attributes could have changed on the server and are thus newer)
+		this.selectedTickets   = storedObject.selectedTickets;
+		this.selectedCustomers = storedObject.selectedCustomers;
+		this.selectedPackages  = storedObject.selectedPackages;
+		this.currentTab        = storedObject.currentTab;
+	}
 };
 
 /**
