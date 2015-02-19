@@ -25,6 +25,7 @@ class BookingController extends Controller {
 					'bookingdetails.ticket',
 					'bookingdetails.packagefacade',
 						'bookingdetails.packagefacade.package',
+							'bookingdetails.packagefacade.package.tickets',
 					'bookingdetails.addons',
 				'accommodations',
 				'payments',

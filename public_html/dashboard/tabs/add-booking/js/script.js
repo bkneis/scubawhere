@@ -1165,6 +1165,22 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	window.clickedEdit = false;
 	booking.loadStorage();
 
+	if(Object.keys(booking.selectedCustomers).length === 0) {
+		// Load selectedCustomers from bookingdetails
+		_.each(booking.bookingdetails, function(detail) {
+			if(typeof booking.selectedCustomers[detail.customer.id] === 'undefined') {
+				booking.selectedCustomers[detail.customer.id] = $.extend(true, {}, detail.customer);
+			}
+		});
+
+		// If their are still no customers (edge case) set currentTab to customer selection
+		if(Object.keys(booking.selectedCustomers).length === 0) {
+			booking.currentTab = '#customer-tab';
+		}
+
+		booking.store();
+	}
+
 	// TODO Remove when selected tickets are removed from the array when they are assigned
 	if(Object.keys(booking.selectedTickets).length === 0) {
 		// Load selectedTickets from bookingdetails
@@ -1185,18 +1201,19 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 		booking.store();
 	}
 
-	if(Object.keys(booking.selectedCustomers).length === 0) {
-		// Load selectedCustomers from bookingdetails
+	if(Object.keys(booking.selectedPackages).length === 0) {
+		// Load selectedPackages from bookingdetails
 		_.each(booking.bookingdetails, function(detail) {
-			if(typeof booking.selectedCustomers[detail.customer.id] === 'undefined') {
-				booking.selectedCustomers[detail.customer.id] = $.extend(true, {}, detail.customer);
+			if(typeof detail.packagefacade === 'undefined') return;
+
+			if(typeof booking.selectedPackages[detail.packagefacade.package.id] === 'undefined') {
+				booking.selectedPackages[detail.packagefacade.package.id] = detail.packagefacade.package;
+				booking.selectedPackages[detail.packagefacade.package.id].tickets = detail.packagefacade.package.tickets;
+				booking.selectedPackages[detail.packagefacade.package.id].qty = 1;
+			} else {
+				booking.selectedPackages[detail.packagefacade.package.id].qty++;
 			}
 		});
-
-		// If their are still no customers (edge case) set currentTab to customer selection
-		if(Object.keys(booking.selectedCustomers).length === 0) {
-			booking.currentTab = '#customer-tab';
-		}
 
 		booking.store();
 	}

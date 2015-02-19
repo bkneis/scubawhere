@@ -161,6 +161,7 @@ Booking.prototype.loadStorage = function() {
 	// Only overwrite these attributes (other attributes could have changed on the server and are thus newer)
 	this.selectedTickets   = storedObject.selectedTickets;
 	this.selectedCustomers = storedObject.selectedCustomers;
+	this.selectedPackages  = storedObject.selectedPackages;
 	this.currentTab        = storedObject.currentTab;
 };
 
