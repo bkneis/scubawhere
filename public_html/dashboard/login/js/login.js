@@ -1,3 +1,20 @@
+$.ajaxSetup({
+	beforeSend: function(xhr, options) {
+		// Figure out correct url prefix
+		var prefix = window.location.hostname === 'rms.scubawhere.com' ? 'api' : 'api-test';
+
+		// Start new AJAX request with changed url
+		$.ajax(
+			$.extend(this, {
+				url: '//' + prefix + '.scubawhere.com' + options.url
+			})
+		);
+
+		// Cancel original request
+		return false;
+	}
+});
+
 $(function(){
 
 	$("#loginDC").click(function(e) {
@@ -37,7 +54,7 @@ $(function(){
 
 			// Send login request
 			$.ajax({
-				url: "/login",
+				url: '/api/login',
 				type: "POST",
 				dataType: "json",
 				data: $("#loginForm").serialize(),

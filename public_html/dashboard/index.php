@@ -3,15 +3,20 @@
 	session_start();
 	if(!$_COOKIE["scubawhere_session"]) {
 		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = '/login';
+			$location = 'http://rms.scubahwere.com/login';
 		else
-			$location = '/dashboard/login';
+			$location = 'http://rms-test.scubahwere.com/login';
 
 		header("Location: " . $location);
 		exit();
 	}
 
-	$ch = curl_init( $_SERVER['HTTP_HOST'].'/api/company' );
+	if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
+	{
+		$ch = curl_init( 'http://api.scubawhere.com/api/company' );
+	} else {
+		$ch = curl_init( 'http://api-test.scubawhere.com/api/company' );
+	}
 
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 
@@ -25,9 +30,9 @@
 	if( empty($result->id) ) {
 		//not logged in
 		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = '/login';
+			$location = 'http://rms.scubahwere.com/login';
 		else
-			$location = '/dashboard/login';
+			$location = 'http://rms-test.scubahwere.com/login';
 		header("Location: " . $location);
 		exit();
 	}
@@ -74,6 +79,13 @@
 	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css">
 	<script type="text/javascript" src="/common/js/intro.js"></script>
 
+	<!-- ScubaWhere Files -->
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/ui.js"></script>
+	<script type="text/javascript" src="js/navigation.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
+	<script type="text/javascript" src="js/tour.js"></script>
+
 	<script type="text/javascript" src="js/Controllers/Company.js"></script>
 	<script>
 		// Load company info
@@ -90,13 +102,6 @@
 		window.sw = {};
 
 	</script>
-
-	<!-- ScubaWhere Files -->
-	<script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript" src="js/ui.js"></script>
-	<script type="text/javascript" src="js/navigation.js"></script>
-	<script type="text/javascript" src="js/validate.js"></script>
-	<script type="text/javascript" src="js/tour.js"></script>
 
 </head>
 <body>

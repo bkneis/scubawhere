@@ -1,3 +1,20 @@
+$.ajaxSetup({
+	beforeSend: function(xhr, options) {
+		// Figure out correct url prefix
+		var prefix = window.location.hostname === 'rms.scubawhere.com' ? 'api' : 'api-test';
+
+		// Start new AJAX request with changed url
+		$.ajax(
+			$.extend(this, {
+				url: '//' + prefix + '.scubawhere.com' + options.url
+			})
+		);
+
+		// Cancel original request
+		return false;
+	}
+});
+
 var completed = false;
 var errorChecking = true;
 
@@ -87,8 +104,9 @@ $(function(){
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
 		console.log(params);
+
 		$.ajax({
-			url: "/register/company",
+			url: '/api/register/company',
 			type: "POST",
 			// dataType: "json",
 			data: params,

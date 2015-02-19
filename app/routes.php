@@ -23,13 +23,13 @@ Route::get('/', function()
 	// return Redirect::to('blog/');
 });
 
-Route::controller('password', 'PasswordController');
+Route::controller('api/password', 'PasswordController');
 
-Route::controller('register', 'RegisterController');
+Route::controller('api/register', 'RegisterController');
 
-Route::post('login', 'AuthenticationController@postLogin');
+Route::post('api/login', 'AuthenticationController@postLogin');
 
-Route::get('logout', 'AuthenticationController@getLogout');
+Route::get('api/logout', 'AuthenticationController@getLogout');
 
 // Needs to be unauthorized, because it's needed in registration
 Route::controller('api/country', 'CountryController');
