@@ -2,6 +2,8 @@ var Tour = {
 
 	getAcommodationsTour : function() {
 		if(window.tourStart) {
+			$("#tour-next-step").show();
+			$("#tour-finish").hide();
 			introJs().setOptions( {
 				showStepNumbers : false,
 				exitOnOverlayClick : false,
@@ -9,27 +11,28 @@ var Tour = {
 			}).start().onchange(function(targetElement) {
 				switch (targetElement.id) {
 					case "accommodation-form-container":
-					$("#room-name").val("3* Hotel Single Room");
-			            //$("#acom-description").val("Single bed room in luxury 3* hotel only 10 minutes away from the dive centre. Etc.")
+						$("#room-name").val("3* Hotel Single Room");
 			            $("#acom-price").val(50);
 			            break;
-			            case "acom-base":
+			        case "acom-base":
 			            $("#add-base-price").click();
 			            $("#acom-price").val(50);
 			            break;
-			            case "acom-season":
+			        case "acom-season":
 			            $("#acom-season-price").click();
 			            $("#acom-price").val(50);
 			            break;
-			            case "acom-rooms":
+			        case "acom-rooms":
 			            $("#room-amount").val(6);
 			            break;
-			            case "accommodations-list":
+			        case "accommodations-list":
+			            $("#no-accommodations").remove();
 			            $("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
 			            break;
 			        }
 			    }).oncomplete(function() {
 			    	$("#dummy-room").remove();
+			    	$("#accommodation-list").append('<p id="no-accommodations">No accommodations available.</p>');
 			    	clearForm();
 			    });
 
@@ -41,6 +44,8 @@ var Tour = {
 			    			position : 2
 			    		};
 			    	}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#agent-tab').addClass("selected");
 			    });
 			}
 		},
@@ -50,6 +55,8 @@ var Tour = {
 				if(window.currentStep.position < 2) {
 					window.location.href = window.currentStep.tab;
 				} else {
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -71,11 +78,13 @@ var Tour = {
 							break;
 
 							case "agent-list-div":
+							$("#no-agents").remove();
 							$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
 							break;
 						}
 					}).oncomplete(function() {
 						$("#dummy-agent").remove();
+						$("#agent-list").append('<p id="no-agents">No agents available.</p>');
 						clearForm();
 					});
 				}
@@ -87,6 +96,8 @@ var Tour = {
 							position : 3
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#location-tab').addClass("selected");
 				});
 			}
 		},
@@ -96,6 +107,8 @@ var Tour = {
 				if(window.currentStep.position < 3) {
 					window.location.href = window.currentStep.tab;
 				} else { 
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -110,6 +123,8 @@ var Tour = {
 							position : 4
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#boat-tab').addClass("selected");
 				});
 			}
 		},
@@ -119,7 +134,8 @@ var Tour = {
 				if(window.currentStep.position < 4) {
 					window.location.href = window.currentStep.tab;
 				} else {
-
+					$("#tour-next-step").show();
+					$("#tour-finish").hide();
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
@@ -148,11 +164,13 @@ var Tour = {
 			        	break;
 
 			        	case "boats-list-div":
+			        	$("#no-boats").remove();
 			        	$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
 			        	break;
 			        }
 			    }).oncomplete(function() {
 			    	$("#dummy-boat").remove();
+			    	$("#boat-list").append('<p id="no-boats">No boats available.</p>');
 			    	clearForm();
 			    });
 			}
@@ -166,6 +184,8 @@ var Tour = {
 							position : 5
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#trip-tab').addClass("selected");
 				} else alert("You need to add atleast one boat");
 			});
 
@@ -177,6 +197,8 @@ var Tour = {
 			if(window.currentStep.position < 5) {
 				window.location.href = window.currentStep.tab;
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -194,11 +216,13 @@ var Tour = {
 						$('#tagsList').find('.tag').filter(':first').click();
 						break;
 						case "trips-list-div":
+						$("#no-trips").remove();
 						$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
 						break;
 					}
 				}).oncomplete(function() {
 					$("#dummy-trip").remove();
+					$("#trip-list").append('<p id="no-trips">No trips available.</p>');
 					clearForm();
 				});
 			}
@@ -211,6 +235,8 @@ var Tour = {
 							position : 6
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#ticket-tab').addClass("selected");
 				} else alert("You need to add atleast one ticket");
 			});
 		}
@@ -221,6 +247,8 @@ var Tour = {
 			if(window.currentStep.position < 6) {
 				window.location.href = window.currentStep.tab;
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -241,11 +269,13 @@ var Tour = {
 						$("#tickets-boatroom-checkbox").click();
 						break;
 						case "tickets-list-div":
+						$("#no-tickets").remove();
 						$("#ticket-list").append('<li id="dummy-ticket"><strong>New diving trip</strong> | £50.00 </li>');
 						break;
 					}
 				}).oncomplete(function() {
 					$("#dummy-ticket").remove();
+					$("#ticket-list").append('<p id="no-tickets">No tickets available.</p>');
 					clearForm();
 				});
 			}
@@ -259,6 +289,8 @@ var Tour = {
 							position : 7
 						};
 					}
+					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+					$('#package-tab').addClass("selected");
 				} else pageMssg("Please add atleast one ticket");
 			});
 		}
@@ -270,6 +302,8 @@ var Tour = {
 				window.location.href = window.currentStep.tab;
 				console.log(window.currentStep.tab);
 			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
@@ -293,11 +327,13 @@ var Tour = {
 						$("#package-capacity").val(4);
 						break;
 						case "packages-list-div":
+						$("#no-packages").remove();
 						$("#package-list").append('<li id="dummy-package"><strong>Family dive day</strong> | £150.00 </li>');
 						break;
 					}
 				}).oncomplete(function() {
 					$("#dummy-package").remove();
+					$("#package-list").append('<p id="no-packages">No packages available.</p>');
 					clearForm();
 				});
 			}
@@ -310,12 +346,16 @@ var Tour = {
 						position : 8
 					};
 				}
+				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+				$('#addon-tab').addClass("selected");
 			});
 		}
 	},
 
 	getAddonsTour : function() {
 		if(window.tourStart) {
+			$("#tour-next-step").hide();
+			$("#tour-finish").show();
 			if(window.currentStep.position < 8) {
 				window.location.href = window.currentStep.tab;
 			} else {
@@ -335,18 +375,27 @@ var Tour = {
 						$("#addon-compulsory").attr("checked", true);
 						break;
 						case "addon-list-div":
+						$("#no-addons").remove();
 						$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
 						break;
 					}
 				}).oncomplete(function() {
 					$("#dummy-addon").remove();
+					$("#addon-list").append('<p id="no-addons">No addons available.</p>');
 					clearForm();
 				});
 			}
 
 			$("#tour-finish").click(function(event) {
-				//Company.initialise()
-				pageMssg("Thank you for following our wizard. Your system is now fully configured. If you need any help using the system, then pleae visit the FAQ tab")
+				var params = { _token : window.token };
+				Company.initialise(params, function success(data) {
+					$('#addon-tab').addClass("done");
+					pageMssg("Thank you for following our wizard. Your system is now fully configured.", true);
+					setTimeout(function () {
+				       window.location.href = "#dashboard";
+				       window.location.reload(true);
+				    }, 3000);
+				});
 			});
 		}
 	}

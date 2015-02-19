@@ -12,7 +12,7 @@
 						{{#each trips}}
 							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{readable duration}}</li>
 						{{else}}
-							<p>No trips available.</p>
+							<p id="no-trips">No trips available.</p>
 						{{/each}}
 					</ul>
 				</script>

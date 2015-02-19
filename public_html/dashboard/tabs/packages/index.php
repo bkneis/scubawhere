@@ -12,7 +12,7 @@
 						{{#each packages}}
 							<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{count tickets}} tickets</li>
 						{{else}}
-							<p>No packages available.</p>
+							<p id="no-packages">No packages available.</p>
 						{{/each}}
 					</ul>
 				</script>

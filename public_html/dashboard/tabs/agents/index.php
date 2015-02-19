@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Next are agents, these are used as a source of booking. By adding all your agents details, you can easily manage an agent's commission by selecting which agent got you the booking. (If you do not have any agents that work for you, skip this part and click next step)"></div>
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Do you have any agents? If so, click 'next'. If not, then just 'skip' this step."></div>
 	<div class="col-md-4">
 		<div class="panel panel-default" id="agent-list-div" data-step="6" data-position="right" data-intro="Once an agent is saved, you will see it in your list. Click on an agent to view/edit the details.">
 			<div class="panel-heading">
@@ -12,7 +12,7 @@
 						{{#each agents}}
 							<li data-id="{{id}}"{{isBanned}}><strong>{{{name}}}</strong> | {{{branch_name}}}</li>
 						{{else}}
-							<p>No agents available.</p>
+							<p id="no-agents">No agents available.</p>
 						{{/each}}
 					</ul>
 				</script>
@@ -87,7 +87,7 @@
 							<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}"> %
 						</div>
 
-						<div class="form-row" data-step="4" data-position="top" data-intro="Define your relationship to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission percentage directly, and the remaning balance will be paid directly to you.\n 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. \n 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.">
+						<div class="form-row" data-step="4" data-position="top" data-intro="Define your relationship to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission percentage directly, and the remaning balance will be paid directly to you. 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.">
 							<label class="field-label">Business Terms</label>
 							<select id="terms" name="terms">
 								<option>Please select..</option>

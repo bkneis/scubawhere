@@ -133,7 +133,7 @@
 							<h4 class="panel-title">Terms and conditions</h4>
 						</div>
 						<div class="panel-body">
-							<textarea style="width:100%" rows="10" id="terms" name="terms" value="{{terms}}"></textarea>
+							<textarea style="width:100%" rows="10" id="terms" name="terms">{{terms}}</textarea>
 							<input type="submit" class="update-settings btn btn-primary btn-lg text-uppercase" value="Update Account">
 						</div>
 					</div>

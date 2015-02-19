@@ -149,50 +149,51 @@
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
     <div class="col-md-10">
       <ul class="nav nav-wizard" role="tablist">
-        <li role="presentation" class="active tour-progress" data-position="1" data-target="#accommodations">
-          <a href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
+        <li role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
+          <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
             <span class="step-description">Accommodations</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="2" data-target="#agents">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="agent-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Agents</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="3" data-target="#locations">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="location-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Locations</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="4" data-target="#boats">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="boat-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Boats</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="5" data-target="#trips">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="trip-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Trips</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="6" data-target="#tickets">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="ticket-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Tickets</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="7" data-target="#packages">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Packages</span>
           </a>
         </li>
         <li role="presentation" class="tour-progress" data-position="8" data-target="#add-ons">
-          <a href="javascript:void(0)" role="tab" data-toggle="tab">
+          <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Add ons</span>
           </a>
         </li>
       </ul>
       </div>
       <div class="col-md-2" style="min-height:80px" id="tour-button">
-        <button id="tour-next-step" class="btn btn-success text-uppercase">Next Step</button>
+        <button id="tour-next-step" style="margin-top:20px;" class="btn btn-success text-uppercase">Next Step</button>
+        <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
       </div>
     </script>
 

@@ -19,8 +19,13 @@ $(function(){
 			url: "/logout",
 			type: "GET",
 			dataType: "json",
-			success: function(log){
-				window.location.href = "/dashboard/login/";
+			success: function(log) {
+				var location = '/dashboard';
+
+				if(window.location.hostname === 'rms.scubawhere.com')
+					location = '';
+
+				window.location.href = location;
 			}
 		});
 		e.preventDefault();

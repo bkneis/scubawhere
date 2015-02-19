@@ -36,7 +36,9 @@ $(function () {
 		$("#wrapper").prepend(initWarning);
 		var setupWizard = $("#setup-wizard").html();
 		$("#row1").prepend(setupWizard);
-
+		if(window.tourStart) {
+			$("#start-wizard").text("Continue wizard");
+		}
 		$("#start-wizard").on('click', function(event) {
 			if(window.tourStart) {
 				window.location.href = window.currentStep.tab;
@@ -68,12 +70,12 @@ $(function () {
 						position : 1
 					};
 					$(".tour-progress").on("click", function(event) {
-					if(window.currentStep.position >= $(this).attr('data-position')) {
-						window.location.href = $(this).attr('data-target');
-					} else {
-						pageMssg("Please complete the unfinished steps");
-					}
-				});
+						if(window.currentStep.position >= $(this).attr('data-position')) {
+							window.location.href = $(this).attr('data-target');
+						} else {
+							pageMssg("Please complete the unfinished steps");
+						}
+					});
 				});
 			}
 

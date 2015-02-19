@@ -1,18 +1,34 @@
 <div id="wrapper" class="clearfix">
-	<div class="col-md-6">
-		<h2>Frequently Asked Questions (FAQ)</h2>
-
-			<!--
+	<div class="col-md-5">
+    <div class="panel panel-default" id="todays-stats">
+      <div class="panel-heading">
+        <h4 class="panel-title">Frequantly Asked Questions</h4>
+      </div>
+      <div class="panel-body">
+      		<!--
 			#############################################################################
 			### TO EDIT THE FAQ, PLEASE EDIT THE JSON OBJECT IN THE SCRIPT.JS FILE!!! ###
 			#############################################################################
 			-->
-
-		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			<span class="loader"></span>
 		</div>
+      </div>
+    </div>
+  </div>
 
-		<script type="text/x-handlebars-template" id="faq-template">
+  <div class="col-md-7">
+    <div class="panel panel-default" id="todays-stats">
+      <div class="panel-heading">
+        <h4 class="panel-title">Training videos</h4>
+      </div>
+      <div style="min-height:250px;" class="panel-body">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/x-handlebars-template" id="faq-template">
 			{{#each faq}}
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading-{{@index}}">
@@ -29,9 +45,6 @@
 					</div>
 				</div>
 			{{/each}}
-		</script>
+</script>
 
-	</div>
-
-	<script src="tabs/help/js/script.js"></script>
-</div>
+<script src="tabs/help/js/script.js"></script>
