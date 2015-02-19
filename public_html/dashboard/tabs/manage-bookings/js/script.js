@@ -200,6 +200,13 @@ $(function() {
 			btn.html('Find Booking');
 		});
 	});
+
+	$('#find-booking-form').on('reset', function(event) {
+		$('#booking-list').html( bookingListItem({bookings: window.bookings}) );
+
+		// Initiate tooltips
+		$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+	});
 });
 
 function editBooking(booking_id, self) {
