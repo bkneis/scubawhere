@@ -11,7 +11,7 @@
 		exit();
 	}
 
-	$ch = curl_init( $_SERVER['HTTP_HOST'].'/company' );
+	$ch = curl_init( $_SERVER['HTTP_HOST'].'/api/company' );
 
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 
@@ -38,25 +38,18 @@
 <head>
 
 	<title>scubawhereRMS | Dashboard</title>
-
-	<link rel='stylesheet' href='/common/css/fullcalendar.css' />
-	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css">
-	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css">
-
-	<!--Bootstrap CSS-->
-	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />
-
-
-	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
-
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 
+	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.css' />
+	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
 
+	<!--Bootstrap CSS-->
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
 
-	<!-- dash config js -->
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<!-- Third Party Libraries -->
 	<script src="/common/js/jquery/jquery.min.js"></script>
@@ -64,26 +57,24 @@
 	<!--Bootstrap js-->
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
-	<script src="/common/js/hashchange.min.js"></script>
+	<script type="text/javascript" src="/common/js/handlebars.min.js"></script>
 
-	<script src="/common/js/handlebars.min.js"></script>
+	<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
 
-	<script src="/common/ckeditor/ckeditor.js"></script>
-	<script src="/common/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="/common/js/moment.min.js"></script>
 
-	<script src="/common/js/moment.min.js"></script>
-
-	<script src="/common/js/underscore-min.js"></script>
+	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
 
 	<!--Datetimepicker-->
-	<link rel="stylesheet" href="/common/css/bootstrap-datetimepicker.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
 	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!--intojs tour-->
-	<link href="/common/css/introjs.css" rel="stylesheet">
-	<script src="/common/js/intro.js"></script>
+	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css">
+	<script type="text/javascript" src="/common/js/intro.js"></script>
 
-	<script src="js/Controllers/Company.js"></script>
+	<script type="text/javascript" src="js/Controllers/Company.js"></script>
 	<script>
 		// Load company info
 		Company.getCompany(function success(data) {
@@ -101,11 +92,11 @@
 	</script>
 
 	<!-- ScubaWhere Files -->
-	<script src="js/main.js"></script>
-	<script src="js/ui.js"></script>
-	<script src="js/navigation.js"></script>
-	<script src="js/validate.js"></script>
-	<script src="js/tour.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/ui.js"></script>
+	<script type="text/javascript" src="js/navigation.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
+	<script type="text/javascript" src="js/tour.js"></script>
 
 </head>
 <body>

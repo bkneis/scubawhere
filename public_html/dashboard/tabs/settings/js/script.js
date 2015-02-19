@@ -19,7 +19,7 @@ $(function() {
 
 		var params = form.serialize();
 		$.ajax({
-			url: "/company/update",
+			url: "/api/company/update",
 			type: "POST",
 			data: params,
 			success: function(data){

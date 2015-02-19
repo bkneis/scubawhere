@@ -19,7 +19,8 @@ Route::get('/', function()
 		return Redirect::to('dashboard/');
 	}
 
-	return Redirect::to('blog/');
+	// Covered by .htaccess
+	// return Redirect::to('blog/');
 });
 
 Route::controller('password', 'PasswordController');
