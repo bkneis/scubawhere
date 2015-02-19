@@ -10,7 +10,7 @@
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.steps.css">
-	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
+	<link rel="stylesheet" type="text/css" href="/css/login-register.css">
 
 	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 </head>
