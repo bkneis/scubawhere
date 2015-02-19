@@ -24,7 +24,11 @@
 	$result = json_decode( $result );
 	if( empty($result->id) ) {
 		//not logged in
-		header('Location: /dashboard/login/');
+		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
+			$location = '/login';
+		else
+			$location = '/dashboard/login';
+		header("Location: " . $location);
 		exit();
 	}
 ?>

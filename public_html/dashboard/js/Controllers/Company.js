@@ -3,7 +3,7 @@ var Company = {
 		$.ajax({
 			type: "GET",
 			async: false,
-			url: "/company",
+			url: "/api/company",
 			success: handleData,
 		});
 	}

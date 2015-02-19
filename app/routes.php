@@ -44,7 +44,7 @@ Route::group(array('before' => 'auth|auth.basic'), function()
 		return Session::getToken();
 	});
 
-	Route::controller('company', 'CompanyController');
+	Route::controller('api/company', 'CompanyController');
 
 	Route::controller('api/accommodation', 'AccommodationController');
 
