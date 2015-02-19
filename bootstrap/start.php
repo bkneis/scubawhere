@@ -31,7 +31,7 @@ $env = $app->detectEnvironment(array(
 	'local_jon'      => array('JonWindows'),
 	'local_jonathan' => array('Jonnerz-LAPTOP', 'Jonnerz-PC'),
 	
-	'production'     => array('poseidon.krystal.co.uk'),
+	'krystal'     => array('poseidon.krystal.co.uk'),
 	'digitalocean'	 => array('rms.scubawhere.com'),
 
 ));

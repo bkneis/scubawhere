@@ -26,5 +26,12 @@ return array(
 	|
 	*/
 
-	'url' => 'http://rms.scubawhere.com',
+	'url' => 'http://api.scubawhere.com',
+	'rms_url' => 'http://rms.scubawhere.com',
+	
+	'providers' => append_config(array(
+
+		'Sisou\Ezmonitor\EzmonitorServiceProvider',
+
+	))
 );
