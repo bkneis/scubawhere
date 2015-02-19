@@ -23,6 +23,14 @@ Order allow,deny
 Allow from all
 Deny from env=spam
 
+<Files 403.shtml>
+    order allow,deny
+    allow from all
+</Files>
+
+# Block known Wordpress login brute-force bots
+deny from 79.137.234.114
+
 # To be removed for production
 <IfModule pagespeed_module>
     ModPagespeed off

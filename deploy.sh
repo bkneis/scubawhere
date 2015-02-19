@@ -9,6 +9,6 @@ git pull origin development
 # Exit the bash that has been started with the ssh-agent
 exit
 
-yes | php -d disable_functions= artisan migrate
+php -d disable_functions= artisan migrate --force
 
 php -d disable_functions= artisan optimize
