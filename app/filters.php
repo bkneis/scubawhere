@@ -20,6 +20,8 @@ App::before(function($request)
 
 	header('Access-Control-Allow-Origin: http://rms.scubawhere.com');
 	header('Access-Control-Allow-Origin: http://rms-test.scubawhere.com');
+
+	header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 });
 
 
