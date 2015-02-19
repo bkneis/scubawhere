@@ -5,7 +5,7 @@ var Place = {
 	//float longitude
 	//int limit
 	around: function(params, handleData) {
-		$.get("api/company/locations", params).done(function(data){
+		$.get("/api/company/locations", params).done(function(data){
 			handleData(data);
 		});
 	},
@@ -22,7 +22,7 @@ var Place = {
 	//gets locations inside a rectangle
 	//requires one param - "area", as above
 	inside: function(params, handleData){
-		$.get("api/company/locations", params).done(function(data){
+		$.get("/api/company/locations", params).done(function(data){
 			handleData(data);
 		});
 	},
@@ -42,7 +42,7 @@ var Place = {
 	create: function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "api/company/add-location",
+			url: "/api/company/add-location",
 			data: params,
 			success: handleData,
 			error: errorFn
