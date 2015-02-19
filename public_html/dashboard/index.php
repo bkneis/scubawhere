@@ -1,8 +1,13 @@
 <?php
 
 	session_start();
-	if(!$_COOKIE["scubawhere_session"]){
-		header("Location: /dashboard/login/");
+	if(!$_COOKIE["scubawhere_session"]) {
+		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
+			$location = '/login';
+		else
+			$location = '/dashboard/login';
+
+		header("Location: " . $location);
 		exit();
 	}
 
