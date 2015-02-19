@@ -32,7 +32,7 @@ class Ticket extends Ardent {
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookings()
-		    ->where('status', 'confirmed')->orWhereNotNull('reserved')
+		    ->whereIn('status', ['confirmed', 'cancelled'])->orWhereNotNull('reserved')
 		    ->count() > 0;
 	}
 
