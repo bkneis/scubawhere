@@ -3,9 +3,9 @@
 	session_start();
 	if(!$_COOKIE["scubawhere_session"]) {
 		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = 'http://rms.scubahwere.com/login';
+			$location = 'http://rms.scubawhere.com/login';
 		else
-			$location = 'http://rms-test.scubahwere.com/login';
+			$location = 'http://rms-test.scubawhere.com/login';
 
 		header("Location: " . $location);
 		exit();
@@ -30,9 +30,9 @@
 	if( empty($result->id) ) {
 		//not logged in
 		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = 'http://rms.scubahwere.com/login';
+			$location = 'http://rms.scubawhere.com/login';
 		else
-			$location = 'http://rms-test.scubahwere.com/login';
+			$location = 'http://rms-test.scubawhere.com/login';
 		header("Location: " . $location);
 		exit();
 	}
