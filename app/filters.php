@@ -18,8 +18,8 @@ App::before(function($request)
 		Log::info(Request::path()." SQL: ".$sql." Bindings: ".implode(', ', $bindings));
 	});*/
 
-	header('Access-Control-Allow-Origin: rms.scubawhere.com');
-	header('Access-Control-Allow-Origin: rms-test.scubawhere.com');
+	header('Access-Control-Allow-Origin: http://rms.scubawhere.com');
+	header('Access-Control-Allow-Origin: http://rms-test.scubawhere.com');
 });
 
 
