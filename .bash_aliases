@@ -9,3 +9,4 @@ function serve() {
 	sudo bash /vagrant/scripts/serve.sh "$1" "$2"
 }
 
+alias "git log"="git log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short"
