@@ -11,6 +11,7 @@
 |
 */
 
+/*
 Route::get('/', function()
 {
 	if (Auth::viaRemember())
@@ -22,14 +23,19 @@ Route::get('/', function()
 	// Covered by .htaccess
 	// return Redirect::to('blog/');
 });
+*/
 
-Route::controller('api/password', 'PasswordController');
-
-Route::controller('api/register', 'RegisterController');
+Route::get('dashboard', function() {
+	return Redirect::to('http://rms.scubawhere.com');
+});
 
 Route::post('api/login', 'AuthenticationController@postLogin');
 
 Route::get('api/logout', 'AuthenticationController@getLogout');
+
+Route::controller('api/password', 'PasswordController');
+
+Route::controller('api/register', 'RegisterController');
 
 // Needs to be unauthorized, because it's needed in registration
 Route::controller('api/country', 'CountryController');
