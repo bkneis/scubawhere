@@ -28,7 +28,6 @@ phpunit-soren.xml
 .cpanel/
 .fontconfig/
 .gnupg/
-.htaccess
 .lastlogin
 .lesshst
 .my.cnf
