@@ -8,6 +8,16 @@ var Company = {
 		});
 	},
 
+	update : function(params, handleData, errorFn) {
+		$.ajax({
+			url: "/api/company/update",
+			type: "POST",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	initialise : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",

@@ -153,5 +153,6 @@
 		</div>
 	</script>
 
+	<script src="/js/Controllers/Company.js"></script>
 	<script src="/tabs/settings/js/script.js"></script>
 </div>

@@ -18,37 +18,32 @@ $(function() {
 		$('.update-settings').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serialize();
-		$.ajax({
-			url: "/api/company/update",
-			type: "POST",
-			data: params,
-			success: function(data){
-				// Assign updated company data to window.company object
-				window.company = data.company;
+		Company.update(params, function success(data) {
+			// Assign updated company data to window.company object
+			window.company = data.company;
 
-				pageMssg(data.status, true);
+			pageMssg(data.status, true);
 
-				$('form').data('hasChanged', false);
+			$('form').data('hasChanged', false);
 
-				$('.update-settings').prop('disabled', false);
-				$('.loader').remove();
+			$('.update-settings').prop('disabled', false);
+			$('.loader').remove();
 
-				//Clear error messages
-				$('.errors').remove();
-			},
-			error: function(xhr) {
-				var data = JSON.parse(xhr.responseText);
-				pageMssg('Oops, something wasn\'t quite right');
+			//Clear error messages
+			$('.errors').remove();
+		},
+		function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			pageMssg('Oops, something wasn\'t quite right.');
 
-				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
-				errorsHTML = errorsHTML(data);
+			var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+			errorsHTML = errorsHTML(data);
 
-				// Render error messages
-				$('.errors').remove();
-				$('#company-form-container').prepend(errorsHTML);
-				$('.update-settings').prop('disabled', false);
-				$('.loader').remove();
-			}
+			// Render error messages
+			$('.errors').remove();
+			$('#company-form-container').prepend(errorsHTML);
+			$('.update-settings').prop('disabled', false);
+			$('.loader').remove();
 		});
 	});
 
