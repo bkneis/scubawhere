@@ -21,4 +21,9 @@ class Paymentgateway extends Ardent {
 		return $this->hasMany('Payment');
 	}
 
+	public function refunds()
+	{
+		return $this->hasMany('Refund');
+	}
+
 }

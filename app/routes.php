@@ -60,6 +60,8 @@ Route::group(array('before' => 'auth|auth.basic'), function()
 
 	Route::controller('payment', 'PaymentController');
 
+	Route::controller('refund', 'RefundController');
+
 	Route::controller('session', 'DepartureController');
 
 	Route::controller('ticket', 'TicketController');

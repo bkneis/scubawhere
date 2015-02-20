@@ -26,17 +26,14 @@ Handlebars.registerHelper('statusIcon', function() {
 		icon    = 'fa-ban';
 		tooltip = 'Cancelled';
 
-		var sum = _.reduce(this.payments, function(memo, payment) {
-			return memo + payment.amount * 1;
-		}, 0);
-
-		if(sum > this.cancellation_fee) {
+		// if(this.sums.refundable > 0 {
+		if(this.sums.have > this.cancellation_fee) {
 			// Refund necessary!
 			color   = '#d9534f';
 			tooltip = 'Cancelled, refund necessary';
 		}
 
-		if(sum < this.cancellation_fee) {
+		if(this.sums.have < this.cancellation_fee) {
 			color   = '#f0ad4e';
 			tooltip = 'Cancelled, payment outstanding';
 		}
@@ -44,18 +41,14 @@ Handlebars.registerHelper('statusIcon', function() {
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
 
-		var sum = _.reduce(this.payments, function(memo, payment) {
-			return memo + payment.amount * 1;
-		}, 0);
-
-		var percentage = sum / this.decimal_price;
+		var percentage = this.sums.have / this.decimal_price;
 
 		if(percentage === 1) color = '#5cb85c';
 		else if(percentage === 0) color = '#d9534f';
 		else color = '#f0ad4e';
 
 		if(percentage === 1) tooltip = 'Confirmed, completely paid';
-		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
+		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
 	}
 	else if(this.status === 'reserved') {
 		icon    = 'fa-clock-o';
@@ -91,21 +84,17 @@ Handlebars.registerHelper('price', function() {
 });
 
 Handlebars.registerHelper('sumPaid', function() {
-	return _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0).toFixed(2);
+	return this.sums.have;
 });
 
 Handlebars.registerHelper("remainingPay", function() {
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
+	if(this.decimal_price === "0.00") return '';
 
-	var remainingPay = this.decimal_price - sum;
-	var percentage   = sum / this.decimal_price;
+	var sum          = this.sums.have;
+	var remainingPay = this.sums.payable;
+	var percentage   = this.sums.have / this.decimal_price;
 
-	remainingPay = remainingPay.toFixed(2);
-	if(remainingPay === 0) remainingPay = '';
+	if(remainingPay == 0) remainingPay = '';
 	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
 
 	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
@@ -115,22 +104,17 @@ Handlebars.registerHelper("remainingPay", function() {
 	var html = '';
 	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
+	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
 	html += '	<span class="percentage-left">' + remainingPay + '</span>';
 	html += '</div>';
+	html += '<div class="percentage-width-marker"></div>';
+	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + this.decimal_price  + '</div>';
 
 	return new Handlebars.SafeString(html);
 });
 
 Handlebars.registerHelper('addTransactionButton', function() {
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
-
-	var disabled = '';
-	if(this.decimal_price === '0.00' || sum == this.decimal_price)
-		disabled = 'disabled';
-
-	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
 Handlebars.registerHelper('editButton', function() {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
@@ -157,6 +141,11 @@ $(function() {
 	*/
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
+		_.each(window.bookings, function(booking) {
+			booking.sums = {};
+			Booking.prototype.calculateSums.call(booking);
+			Booking.prototype.setStatus.call(booking);
+		});
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 
 		// Initiate tooltips

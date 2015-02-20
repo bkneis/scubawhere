@@ -29,8 +29,11 @@ class BookingController extends Controller {
 					'bookingdetails.addons',
 				'accommodations',
 				'payments',
-					'payments.currency',
-					'payments.paymentgateway'
+					// 'payments.currency',
+					'payments.paymentgateway',
+				'refunds',
+					// 'refunds.currency',
+					'refunds.paymentgateway'
 			)
 			->findOrFail( Input::get('id') );
 
@@ -61,7 +64,9 @@ class BookingController extends Controller {
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
-					'payments.paymentgateway'
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->orderBy('updated_at', 'DESC')
 			->skip($from)
@@ -76,7 +81,9 @@ class BookingController extends Controller {
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
-					'payments.paymentgateway'
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->orderBy('updated_at', 'DESC')
 			->take(5)
@@ -128,7 +135,9 @@ class BookingController extends Controller {
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
-					'payments.paymentgateway'
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->where(function($query) use ($reference)
 			{
@@ -1143,6 +1152,21 @@ class BookingController extends Controller {
 		}
 
 		return $booking->payments()->with('paymentgateway')->get();
+	}
+
+	public function getRefunds()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		return $booking->refunds()->with('paymentgateway')->get();
 	}
 
 	private function moreThan5DaysAgo($date) {

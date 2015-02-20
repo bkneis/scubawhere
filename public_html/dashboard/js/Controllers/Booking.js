@@ -1,31 +1,27 @@
 var Booking = function(data) {
 
-	if(data !== undefined) {
-		$.extend(this, data);
-
-		// Set the status attribute to true (needed for Handlebars #if blocks)
-		switch(this.status) {
-			case 'saved':     this.saved = true;     break;
-			case 'reserved':  this.reserved = true;  break;
-			case 'confirmed': this.confirmed = true; break;
-			case 'cancelled': this.cancelled = true; break;
-			default: break;
-		}
-	}
-	else {
-		// Defaults for new booking
-		this.decimal_price  = "0.00";
-		this.lead_customer  = false;
-		this.bookingdetails = [];
-		this.accommodations = [];
-		this.payments       = [];
-	}
+	// Defaults for new booking
+	this.decimal_price  = "0.00";
+	this.lead_customer  = false;
+	this.bookingdetails = [];
+	this.accommodations = [];
+	this.payments       = [];
+	this.refunds        = [];
 
 	// User interface variables
 	this.currentTab        = null;
 	this.selectedTickets   = {};
 	this.selectedPackages  = {};
 	this.selectedCustomers = {};
+	this.sums              = {};
+
+	if(data !== undefined) {
+		$.extend(this, data);
+
+		this.setStatus();
+	}
+
+	this.calculateSums();
 };
 
 
@@ -277,6 +273,8 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
+			this.calculateSums();
+
 			successFn(data.status, params.customer_id);
 		},
 		error: errorFn
@@ -307,6 +305,8 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -378,6 +378,8 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 
 			this.decimal_price = data.decimal_price;
 
+			this.calculateSums();
+
 			successFn(data.status);
 		},
 		error: errorFn
@@ -414,6 +416,8 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -458,6 +462,8 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
+			this.calculateSums();
+
 			successFn(data.status);
 		},
 		error: errorFn
@@ -490,6 +496,8 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -526,6 +534,8 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 			if(params.comment)          this.comment          = params.comment;
 
 			this.decimal_price = data.decimal_price;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -585,8 +595,8 @@ Booking.prototype.save = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.saved = 1;
 			this.status = 'saved';
+			this.setStatus();
 
 			successFn(data.status);
 		},
@@ -614,8 +624,8 @@ Booking.prototype.confirm = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.confirmed = 1;
 			this.status = 'confirmed';
+			this.setStatus();
 
 			successFn(data.status);
 		},
@@ -644,8 +654,12 @@ Booking.prototype.cancel = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.cancelled = 1;
 			this.status = 'cancelled';
+			this.setStatus();
+
+			this.cancellation_fee = params.cancellation_fee;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -680,8 +694,10 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 
 			this.payments.push(payment);
 
-			this.confirmed = 1;
 			this.status = 'confirmed';
+			this.setStatus();
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -689,7 +705,7 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 	});
 };
 
-Booking.prototype.payments = function(successFn, errorFn) {
+Booking.prototype.loadPayments = function(successFn, errorFn) {
 
 	var params = {
 		booking_id: this.id
@@ -703,6 +719,62 @@ Booking.prototype.payments = function(successFn, errorFn) {
 		success: function(data) {
 
 			this.payments = data;
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Adds a refund to the booking
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ * - amount
+ * - paymentgateway_id
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.addRefund = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/refund/add",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			var refund = data.refund;
+			refund.paymentgateway = window.paymentgateways[ refund.paymentgateway_id ];
+
+			this.refunds.push(refund);
+
+			this.calculateSums();
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+Booking.prototype.loadRefunds = function(successFn, errorFn) {
+
+	var params = {
+		booking_id: this.id
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/refunds",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.refunds = data;
 
 			successFn(data.status);
 		},
@@ -733,15 +805,35 @@ Booking.prototype.validate = function(successFn, errorFn){
 	});
 };
 
-Booking.prototype.amountPaid = function() {
-	return _.reduce(this.payments, function(memo, payment) {
+Booking.prototype.calculateSums = function() {
+	this.sums.payed = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
-	}, 0);
+	}, 0).toFixed(2);
+
+	this.sums.refunded = _.reduce(this.refunds, function(memo, refund) {
+		return memo + refund.amount * 1;
+	}, 0).toFixed(2);
+
+	this.sums.have = (this.sums.payed - this.sums.refunded).toFixed(2);
+
+	this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
+
+	this.sums.refundable = (this.sums.have - this.cancellation_fee).toFixed(2);
 };
 
-Booking.prototype.isPaid = function() {
-	return this.amountPaid() == this.decimal_price;
-};
+Booking.prototype.setStatus = function() {
+
+	this.saved = this.reserved = this.confirmed = this.cancelled = false;
+
+	// Set the status attribute to true (needed for Handlebars #if blocks)
+	switch(this.status) {
+		case 'saved':     this.saved = true;     break;
+		case 'reserved':  this.reserved = true;  break;
+		case 'confirmed': this.confirmed = true; break;
+		case 'cancelled': this.cancelled = true; break;
+		default: break;
+	}
+}
 
 
 /*
@@ -749,4 +841,3 @@ Booking.prototype.isPaid = function() {
  ******* PRIVATE FUNCTIONS ******
  ********************************
  */
-

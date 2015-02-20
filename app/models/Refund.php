@@ -3,7 +3,7 @@
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Payment extends Ardent {
+class Refund extends Ardent {
 	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at');
 
 	public static $rules = array(

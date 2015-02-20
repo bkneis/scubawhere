@@ -85,7 +85,7 @@
 				<td colspan="9" class="clearfix">
 					<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
 						{{#if payments}}
-							<h4 class="text-center">Recieved Transactions</h4>
+							<h5 class="text-center">Transactions</h5>
 							<table style="width: 350px;" class="table">
 								<tr>
 									<th>Date</th>
@@ -99,10 +99,17 @@
 										<td>{{paymentgateway.name}}</td>
 									</tr>
 								{{/each}}
+								{{#each refunds}}
+									<tr>
+										<td>{{received_at}}</td>
+										<td class="text-danger">{{currency}} -{{amount}}</td>
+										<td>{{paymentgateway.name}} (refund)</td>
+									</tr>
+								{{/each}}
 								<tr>
 									<td></td>
 									<td class="table-sum">{{currency}} {{sumPaid}}</td>
-									<td>{{remainingPay}}</td>
+									<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
 								</tr>
 							</table>
 						{{else}}

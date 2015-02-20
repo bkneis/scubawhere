@@ -9,7 +9,7 @@
 			<div class="panel-body">
 				<table>
 					<tr>
-						<td style="vertical-align: top; font-weight: bold;">Lead customer</td>
+						<td style="vertical-align: top; font-weight: bold; width: 150px;">Lead customer</td>
 						<td>
 							{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}<br>
 							<a href="mailto:{{lead_customer.email}}">{{lead_customer.email}}</a><br>
@@ -17,15 +17,47 @@
 						</td>
 						<td style="vertical-align: top;"><h3 style="float: right; margin-top: 0;">{{reference}}</h3></td>
 					</tr>
+				</table>
+				<table style="width: auto;">
 					<tr>
-						<td style="vertical-align: top; font-weight: bold;">Status</td>
-						<td>
-							<strong>{{status}}</strong><br>
-							<div style="display: inline-block; width: 200px; position: relative; top: 4px;">{{remainingPayBar}}</div>
+						<td style="vertical-align: top; font-weight: bold; width: 150px;">Status</td>
+						<td style="width: 120px;">
+							<strong>{{status}}</strong>
 						</td>
-						<td></td>
+					</tr>
+					<tr>
+						<td style="vertical-align: top; font-weight: bold;">
+							Payments
+						</td>
+						<td>
+							{{#unless cancelled}}<div style="display: inline-block; width: 200px; position: relative; top: 4px;">{{remainingPayBar}}</div>{{/unless}}
+						</td>
 					</tr>
 					{{#if cancelled}}
+						<tr>
+							<td style="vertical-align: top; font-weight: bold;">
+								Booking value
+							</td>
+							<td>
+								{{currency}} {{decimal_price}}
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; font-weight: bold;">
+								Received payments
+							</td>
+							<td>
+								{{currency}} {{sumPayed}}
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; font-weight: bold;">
+								Refunded
+							</td>
+							<td>
+								{{currency}} {{sumRefunded}}
+							</td>
+						</tr>
 						<tr>
 							<td style="vertical-align: top; font-weight: bold;">
 								Cancellation fee
@@ -38,7 +70,7 @@
 							<td style="vertical-align: top; font-weight: bold;">
 								Necessary refund
 							</td>
-							<td>
+							<td style="border-top: 3px double;">
 								{{necessaryRefundFormated}}
 							</td>
 						</tr>
@@ -49,7 +81,7 @@
 
 		<div class="panel panel-success">
 			<div class="panel-heading">
-				<h3 class="panel-title">Add payment</h3>
+				<h3 class="panel-title">Add Payment</h3>
 			</div>
 			<div class="panel-body" id="add-payment-panel">
 				{{#unless cancelled}}
@@ -78,7 +110,7 @@
 
 						<div class="form-group">
 							<div class="col-sm-6 col-sm-offset-4">
-								<button class="btn btn-primary" id="add-payment-submit">Add payment</button>
+								<button class="btn btn-primary" id="add-payment-submit">Add Payment</button>
 							</div>
 						</div>
 					</form>
@@ -90,7 +122,7 @@
 
 		<div class="panel panel-danger">
 			<div class="panel-heading">
-				<h3 class="panel-title">Add refund</h3>
+				<h3 class="panel-title">Add Refund</h3>
 			</div>
 			<div class="panel-body" id="add-refund-panel">
 				<form role="form" id="add-refund-form" class="form-horizontal">
@@ -100,7 +132,7 @@
 						<div class="col-sm-6">
 							<div class="input-group">
 								<div class="input-group-addon">{{currency}}</div>
-								<input name="amount" type="number" min="0.01" max="{{remainingPay}}" step="0.01" placeholder="0.00" class="form-control" value="{{necessaryRefund}}">
+								<input name="amount" type="number" min="0.01" max="{{necessaryRefund}}" step="0.01" placeholder="0.00" class="form-control" value="{{necessaryRefund}}">
 							</div>
 						</div>
 					</div>
@@ -118,7 +150,7 @@
 
 					<div class="form-group">
 						<div class="col-sm-6 col-sm-offset-4">
-							<button class="btn btn-primary" id="add-refund-submit">Add refund</button>
+							<button class="btn btn-primary" id="add-refund-submit">Add Refund</button>
 						</div>
 					</div>
 				</form>
@@ -147,6 +179,13 @@
 									<td>{{paymentgateway.name}}</td>
 								</tr>
 							{{/each}}
+							{{#each refunds}}
+								<tr>
+									<td>{{received_at}}</td>
+									<td class="text-danger">{{currency}} -{{amount}}</td>
+									<td>{{paymentgateway.name}} (refund)</td>
+								</tr>
+							{{/each}}
 						</tbody>
 					</table>
 				{{else}}
@@ -169,7 +208,9 @@
 
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 
-	<!-- <script src="js/Controllers/Booking.js"></script> -->
 	<script src="/js/Controllers/Payment.js"></script>
+	<!-- <script src="/js/Controllers/Refund.js"></script> Not needed, Payment.js is only needed for the paymentgateways. -->
+	<!-- <script src="/js/Controllers/Booking.js"></script> -->
+
 	<script src="/tabs/add-transaction/script.js"></script>
 </div>

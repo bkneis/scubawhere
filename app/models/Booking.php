@@ -230,6 +230,11 @@ class Booking extends Ardent {
 		return $this->hasMany('Payment')/*->orderBy('created_at', 'DESC')*/;
 	}
 
+	public function refunds()
+	{
+		return $this->hasMany('Refund')/*->orderBy('created_at', 'DESC')*/;
+	}
+
 	public function updatePrice()
 	{
 		$currency = new Currency( Auth::user()->currency->code );

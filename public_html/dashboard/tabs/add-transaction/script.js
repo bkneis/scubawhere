@@ -15,17 +15,22 @@ Handlebars.registerHelper('status', function() {
 	}
 });
 
+Handlebars.registerHelper('sumPayed', function() {
+	return this.sums.payed;
+});
+
+Handlebars.registerHelper('sumRefunded', function() {
+	return this.sums.refunded;
+});
+
 Handlebars.registerHelper("remainingPayBar", function() {
 	if(this.decimal_price === "0.00") return '';
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0).toFixed(2);
 
-	var remainingPay = this.decimal_price - sum;
-	var percentage   = sum / this.decimal_price;
+	var sum          = this.sums.have;
+	var remainingPay = this.sums.payable;
+	var percentage   = this.sums.have / this.decimal_price;
 
-	remainingPay = remainingPay.toFixed(2);
-	if(remainingPay === 0) remainingPay = '';
+	if(remainingPay == 0) remainingPay = '';
 	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
 
 	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
@@ -45,35 +50,18 @@ Handlebars.registerHelper("remainingPayBar", function() {
 });
 
 Handlebars.registerHelper("remainingPay", function() {
-	if(this.decimal_price === "0.00") return '';
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
-
-	return (this.decimal_price - sum).toFixed(2);
+	return this.sums.payable;
 });
 
 Handlebars.registerHelper("necessaryRefundFormated", function() {
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
+	if(this.sums.refundable > 0)
+		return new Handlebars.SafeString('<strong class="text-danger">' + window.company.currency.symbol + ' ' + this.sums.refundable + '</strong>');
 
-	var necessaryRefund = (sum - this.cancellation_fee).toFixed(2)
-
-	if(necessaryRefund > 0)
-		return new Handlebars.SafeString('<strong class="text-danger">' + window.company.currency.symbol + ' ' + necessaryRefund + '</strong>');
-
-	return window.company.currency.symbol + ' ' + necessaryRefund;
+	return new Handlebars.SafeString('<strong class="text-success">' + window.company.currency.symbol + ' ' + this.sums.refundable + '</strong>');
 });
 
 Handlebars.registerHelper("necessaryRefund", function() {
-	var sum = _.reduce(this.payments, function(memo, payment) {
-		return memo + payment.amount * 1;
-	}, 0);
-
-	var necessaryRefund = (sum - this.cancellation_fee).toFixed(2)
-
-	return necessaryRefund;
+	return this.sums.refundable;
 });
 
 $(function() {
@@ -112,7 +100,7 @@ $(function() {
 		event.preventDefault();
 
 		$('#add-payment-submit').prop('disabled', true);
-		$('#add-payment-submit').html('Add Transaction <i class="pull-right fa fa-cog fa-spin" style="font-size: 1.3em;"></i>');
+		$('#add-payment-submit').html('Add Payment <i class="pull-right fa fa-cog fa-spin" style="font-size: 1.3em;"></i>');
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
@@ -141,7 +129,44 @@ $(function() {
 			});
 
 			$('#add-payment-submit').prop('disabled', false);
-			$('#add-payment-submit').html('Add Transaction');
+			$('#add-payment-submit').html('Add Payment');
+		});
+	});
+
+	$('#wrapper').on('submit', '#add-refund-form', function(event) {
+		event.preventDefault();
+
+		$('#add-refund-submit').prop('disabled', true);
+		$('#add-refund-submit').html('Add Refund <i class="pull-right fa fa-cog fa-spin" style="font-size: 1.3em;"></i>');
+
+		var params = $(this).serializeObject();
+		params._token = window.token;
+
+		booking.addRefund(params, function success(status) {
+			pageMssg(status, true);
+			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
+			$('.loader').remove();
+			$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
+			$('#received-at-input').val( moment().format('YYYY-MM-DD') );
+			$('#received-at-input').datetimepicker({
+				pickDate: true,
+				pickTime: false,
+				maxDate: moment(),
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up:   'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				},
+			});
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			_.each(data.errors, function(error) {
+				$('#add-refund-panel').prepend('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><i class="fa fa-exclamation-circle"></i> ' + error + '</div>');
+			});
+
+			$('#add-refund-submit').prop('disabled', false);
+			$('#add-refund-submit').html('Add Refund');
 		});
 	});
 });
