@@ -21,6 +21,7 @@ $(function(){
 
 	//tooltip for hints
 	$("body").on("focus", "[data-tooltip]", function() {
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 006 found"'); // 2015-02-20
 
     	var tooltip = $("[data-tooltip]").attr("data-tooltip");
 
@@ -44,6 +45,7 @@ $(function(){
 
 	//tooltip for hints
 	$("body").on("focusout", "[data-tooltip]", function() {
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 007 found"'); // 2015-02-20
 		//remove all tool tips
 		$(".tooltip").fadeOut("slow");
     	/* $(".tooltip").remove(); */
@@ -94,12 +96,14 @@ $(function(){
 
 	//EXPANDABLE BOX / SPACE-SAVER BOX
 	$("body").delegate(".expand-box-arrow", "click", function(){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 008 found"'); // 2015-02-20
 		$(this).parent().parent().children(".expandable").slideToggle();
 		$(this).toggleClass("rotate");
 	});
 
 	//DELETABLE BOX
 	$("body").delegate(".del-box", "click", function(){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 009 found"'); // 2015-02-20
 		if($(this).isSure()){
 			$(this).parent().parent().smoothRemove(function() {
 				// Trigger saveAll

@@ -30,6 +30,7 @@ $.fn.validate = function(){
 */
 
 $.fn.validateField = function(min, max){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 010 found"'); // 2015-02-20
 	var bool = true;
 	var val = $(this).val();
 
@@ -55,6 +56,7 @@ $.fn.validateField = function(min, max){
 };
 
 $.fn.validateNumericField = function(min, max){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 011 found"'); // 2015-02-20
 	var bool = true;
 	var val = $(this).val();
 
@@ -83,6 +85,7 @@ $.fn.validateNumericField = function(min, max){
 
 //displays error mssg if bool == false
 $.fn.validationAction = function(bool){
+		alert('If you see this alert, please contact Soren with the following message: "Tombstone 012 found"'); // 2015-02-20
 	if(bool === true){
 		$(this).css("border-color", "");
 	}else{
