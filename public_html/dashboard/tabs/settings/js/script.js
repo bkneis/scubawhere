@@ -50,12 +50,18 @@ $(function() {
 	$('#company-form-container').on('click', '#send-password', function(event) {
 		event.preventDefault();
 
+		var btn = $(event.target);
+		btn.data('text', btn.text());
+		btn.prop('disabled', true).html(btn.text() + ' <i class="fa fa-cog fa-spin fa-fw"></i>');
+
 		$.ajax({
-			url: "/password/remind",
+			url: "/api/password/remind",
 			type: "POST",
 			data: {'email': window.company.email},
 			success: function(data) {
 				pageMssg(data.status, true);
+
+				btn.prop('disabled', false).html(btn.data('text'));
 			},
 			error: function(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -63,6 +69,8 @@ $(function() {
 					pageMssg('Server error: ' + data.errors[0]);
 				else
 					pageMssg(data.errors[0]);
+
+				btn.prop('disabled', false).html(btn.data('text'));
 			}
 		});
 	});
@@ -79,6 +87,7 @@ function renderEditForm() {
 	$('#company-form-container').empty().append( companyForm(window.company) );
 
 	CKEDITOR.replace('description');
+	CKEDITOR.replace('terms');
 
 	setToken('[name=_token]');
 

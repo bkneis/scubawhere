@@ -88,7 +88,10 @@
 					{{#unless session.deleted_at}}
 					{{#unless isNew}}
 					{{#unless session.timetable_id}}
-						<label><input type="checkbox" onchange="toggleTimetableForm();"> <h4 style="display: inline-block;">Define a repeating timetable</h4 	></label>
+						<label>
+							<input type="checkbox" onchange="toggleTimetableForm();">
+							<h4 style="display: inline-block;">Create a repeating timetable</h4>
+						</label>
 						<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
 							<table class="table table-striped">
 								<thead>
@@ -118,10 +121,11 @@
 							<input type="hidden" name="_token">
 							<input type="hidden" name="session_id" value="{{session.id}}">
 
-							<button class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
-
-							Until: <input type="date" name="until" placeholder="YYYY-MM-DD"><br>
+							Until:<br>
+							<input type="date" name="until" placeholder="YYYY-MM-DD" style="width: 175px;"><br>
 							<small>Default: for 1.5 years</small>
+
+							<button class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
 						</form>
 					{{else}}
 						<div class="horizontal-seperator"><span>Options</span></div>
@@ -145,13 +149,13 @@
 					<div style="margin-top: 1em; text-align: right">
 						{{#if isNew}}
 							<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-							<button class="submit-session btn btn-primary btn-lg">Activate</button>
+							<button class="submit-session btn btn-primary btn-lg">SAVE</button>
 						{{else}}
 							{{#unless isPast}}
 								{{#unless session.deleted_at}}
 									<button class="delete-session btn btn-danger pull-left">Delete</button>
 									<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-									<button class="update-session btn btn-primary btn-lg">Update</button>
+									<button class="update-session btn btn-primary btn-lg">SAVE</button>
 								{{else}}
 									<button class="delete-session btn btn-danger pull-left">Delete</button>
 									<button class="restore-session btn btn-primary pull-left">Restore</button>

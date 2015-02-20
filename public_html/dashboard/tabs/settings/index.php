@@ -123,7 +123,7 @@
 							</div>
 
 							<input type="hidden" name="_token">
-							<input type="submit" class="update-settings btn btn-primary btn-lg text-uppercase" value="Update Account">
+							<input type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
 						</div>
 					</div>
 				</div>
@@ -133,8 +133,11 @@
 							<h4 class="panel-title">Terms and conditions</h4>
 						</div>
 						<div class="panel-body">
-							<textarea style="width:100%" rows="10" id="terms" name="terms">{{terms}}</textarea>
-							<input type="submit" class="update-settings btn btn-primary btn-lg text-uppercase" value="Update Account">
+							<div class="form-row">
+								<textarea style="width:100%" rows="10" id="terms" name="terms">{{terms}}</textarea>
+							</div>
+
+							<input type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
 						</div>
 					</div>
 				</div>

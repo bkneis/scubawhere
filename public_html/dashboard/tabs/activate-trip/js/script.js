@@ -166,7 +166,7 @@ $(function() {
 
 			showModalWindow(eventObject);
 		},
-		eventDrop: function(eventObject, revertFunc) {
+		eventDrop: function(eventObject, delta, revertFunc) {
 			if(!eventObject.start.hasTime()) {
 				// Combine dropped-on date and session's start time
 				eventObject.start.time(eventObject.session.start.format('HH:mm:ss'));
@@ -200,7 +200,8 @@ $(function() {
 
 				updateCalendarEntry(eventObject);
 
-				pageMssg(xhr.responseText);
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'warning');
 			});
 		},
 		eventClick: function(eventObject) {

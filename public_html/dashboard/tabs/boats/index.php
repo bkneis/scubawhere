@@ -125,7 +125,7 @@
 							<input type="hidden" name="id" value="{{id}}">
 						{{/if}}
 						<input type="hidden" name="_token">
-						<input type="submit" class="btn btn-primary btn-lg text-uppercase" id="{{task}}-boatroom" value="{{task}} boatroom">
+						<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-boatroom" value="SAVE">
 					</form>
 				</div>
 			</script>
