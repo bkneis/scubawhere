@@ -13,65 +13,58 @@
 
 Route::get('/', function()
 {
-	if (Auth::viaRemember())
-	{
-		// If user is remembered as logged in, redirect to dashboard
-		return Redirect::to('dashboard/');
-	}
-
-	// Covered by .htaccess
-	// return Redirect::to('blog/');
+	return Redirect::to('../');
 });
 
-Route::controller('api/password', 'PasswordController');
+Route::controller('password', 'PasswordController');
 
-Route::controller('api/register', 'RegisterController');
+Route::controller('register', 'RegisterController');
 
-Route::post('api/login', 'AuthenticationController@postLogin');
+Route::post('login', 'AuthenticationController@postLogin');
 
-Route::get('api/logout', 'AuthenticationController@getLogout');
+Route::get('logout', 'AuthenticationController@getLogout');
 
 // Needs to be unauthorized, because it's needed in registration
-Route::controller('api/country', 'CountryController');
+Route::controller('country', 'CountryController');
 
-Route::controller('api/currency', 'CurrencyController');
+Route::controller('currency', 'CurrencyController');
 
-Route::controller('api/agency', 'AgencyController');
+Route::controller('agency', 'AgencyController');
 
 Route::group(array('before' => 'auth|auth.basic'), function()
 {
-	Route::get('api/token', function()
+	Route::get('token', function()
 	{
 		return Session::getToken();
 	});
 
-	Route::controller('api/company', 'CompanyController');
+	Route::controller('company', 'CompanyController');
 
-	Route::controller('api/accommodation', 'AccommodationController');
+	Route::controller('accommodation', 'AccommodationController');
 
-	Route::controller('api/addon', 'AddonController');
+	Route::controller('addon', 'AddonController');
 
-	Route::controller('api/agent', 'AgentController');
+	Route::controller('agent', 'AgentController');
 
-	Route::controller('api/boat', 'BoatController');
+	Route::controller('boat', 'BoatController');
 
-	Route::controller('api/boatroom', 'BoatroomController');
+	Route::controller('boatroom', 'BoatroomController');
 
-	Route::controller('api/booking', 'BookingController');
+	Route::controller('booking', 'BookingController');
 
-	Route::controller('api/customer', 'CustomerController');
+	Route::controller('customer', 'CustomerController');
 
-	Route::controller('api/location', 'LocationController');
+	Route::controller('location', 'LocationController');
 
-	Route::controller('api/package', 'PackageController');
+	Route::controller('package', 'PackageController');
 
-	Route::controller('api/payment', 'PaymentController');
+	Route::controller('payment', 'PaymentController');
 
-	Route::controller('api/session', 'DepartureController');
+	Route::controller('session', 'DepartureController');
 
-	Route::controller('api/ticket', 'TicketController');
+	Route::controller('ticket', 'TicketController');
 
-	Route::controller('api/timetable', 'TimetableController');
+	Route::controller('timetable', 'TimetableController');
 
-	Route::controller('api/trip', 'TripController');
+	Route::controller('trip', 'TripController');
 });

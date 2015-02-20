@@ -1,39 +1,49 @@
 <?php
 
-	session_start();
-	if(!$_COOKIE["scubawhere_session"]) {
-		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = 'http://rms.scubawhere.com/login';
-		else
-			$location = 'http://rms-test.scubawhere.com/login';
+	$HOST = $_SERVER['HTTP_HOST'];
+	$PROTOCOL = 'http';
+	if(!empty($_SERVER['HTTPS'])) $PROTOCOL = 'https'; // http://php.net/manual/en/reserved.variables.server.php
+	// If not accessed from the rms subdomain, redirect to it
+	if(substr($HOST, 0, 3) !== 'rms')
+	{
+		// To allow for local dev environments, only change the subdomain part of the url
+		$hostParts = explode('.', $HOST);
+		switch(count($hostParts))
+		{
+			case 2: $location = 'rms.' . $hostParts[0] . '.' . $hostParts[1]; break; // Add the subdomain
+			case 3: $location = 'rms.' . $hostParts[1] . '.' . $hostParts[2]; break; // Replace the subdomain
+			default: die('<h1>URL not recognised!</h1>Please contact us at <a href="mailto:hello@scubawhere.com">hello@scubawhere.com</a>.'); // Case undefined, error
+		}
 
-		header("Location: " . $location);
+		header("Location: " . $PROTOCOL . "://" . $location . "/");
+		exit;
+	}
+	$BASE_URL = $PROTOCOL . "://" . $HOST;
+
+	session_start();
+
+	// Check for the authentication cookie
+	if(!$_COOKIE["scubawhere_session"])
+	{
+		// die("Cookie not found");
+
+		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
 
-	if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-	{
-		$ch = curl_init( 'http://api.scubawhere.com/api/company' );
-	} else {
-		$ch = curl_init( 'http://api-test.scubawhere.com/api/company' );
-	}
-
-	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; domain=.scubawhere.com; path=/';
-
+	// Check if company details can be recieved with Laravel
+	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
+	$ch = curl_init($BASE_URL . '/api/company');
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
-
 	$result = curl_exec( $ch );
 	curl_close( $ch );
-
 	$result = json_decode( $result );
 	if( empty($result->id) ) {
-		//not logged in
-		if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com')
-			$location = 'http://rms.scubawhere.com/login';
-		else
-			$location = 'http://rms-test.scubawhere.com/login';
-		header("Location: " . $location);
+		// die("cURL not able to access API");
+
+		// Not logged in
+		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
 ?>

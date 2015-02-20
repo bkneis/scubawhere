@@ -68,7 +68,8 @@ class PasswordController extends Controller {
 		$response = Password::reset($credentials, function($company, $password) use ($credentials)
 		{
 			$company->password = Hash::make($password);
-			$company->updateUniques();
+			if(!$company->updateUniques())
+				die('<h1>Company validation error!</h1>Password could not be changed! Please contact us at <a href="mailto:hello@scubawhere.com">hello@scubawhere.com</a>.');
 		});
 
 		if( is_object($response) )

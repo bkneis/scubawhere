@@ -142,7 +142,7 @@
 		<span><a href="/terms/">Terms</a> | <a href="/policy/">Policy</a></span>
 	</div>
 
-	<footer><a href="../login/" class="bttn" id="register">Log in</a></footer>
+	<footer><a href="/login/" class="bttn" id="register">Log in</a></footer>
 </body>
 </html>
 

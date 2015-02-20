@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://www.scubawhere.com',
+	'url' => 'http://rms.scubawhere.com',
 
 	/*
 	|--------------------------------------------------------------------------

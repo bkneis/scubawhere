@@ -45,27 +45,6 @@ deny from 79.137.234.114
 
     RewriteRule ^$ /blog/ [R=301,L]
 
-    # Rewrite non-www to www
-    # This is only necessary when we add a separate subdomain for assets, such as static.scubawhere.com
-    # Until then, it only causes problems with e.g. rms.scubawhere.com
-    # RewriteCond %{HTTP_HOST} !^www\.
-    # RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
-
     # Redirect all requests to /coming-soon/* to /blog/*
     Redirect 301 /coming-soon /blog/
-
-    # Do not handle these routes with laravel
-    RewriteRule ^(phpmyadmin) - [L]
-    RewriteRule ^(dashboard) - [L]
-    RewriteRule ^(docs) - [L]
-    RewriteRule ^(blog) - [L]
-    RewriteRule ^(ocp) - [L]
-
-    # Redirect Trailing Slashes
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-    # Handle Front Controller
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
 </IfModule>

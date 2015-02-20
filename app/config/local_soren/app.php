@@ -4,7 +4,7 @@ return array(
 
 	'debug' => true,
 
-	'url' => 'http://www.scubawhere.app',
+	'url' => 'http://rms.scubawhere.app',
 
 	'providers' => append_config(array(
 

@@ -1,27 +1,3 @@
-$.ajaxSetup({
-	beforeSend: function(xhr, options) {
-
-		// Only continue if we have to remap a API request
-		if(options.url.substr(0, 4) !== '/api') return true;
-
-		// Figure out correct url prefix
-		var prefix = window.location.hostname === 'rms.scubawhere.com' ? 'api' : 'api-test';
-
-		// Start new AJAX request with changed url
-		$.ajax(
-			$.extend(this, {
-				url: '//' + prefix + '.scubawhere.com' + options.url,
-				xhrFields: {
-					withCredentials: true
-				}
-			})
-		);
-
-		// Cancel original request
-		return false;
-	}
-});
-
 var completed = false;
 var errorChecking = true;
 

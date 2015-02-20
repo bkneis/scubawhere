@@ -55,26 +55,15 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'scubawhere',
+			'database'  => 'database',
 			'username'  => 'root',
-			'password'  => 'lijlkij',
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
-		), */
-
-		'mysql' => array(
-			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'scubawhe_scubawhere',
-			'username'  => 'scubawhe_main',
-			'password'  => 'Scuba2014',
+			'password'  => '',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		),
 
-		/* 'pgsql' => array(
+		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
 			'database' => 'database',

@@ -3,9 +3,9 @@
 <head>
 	<title>Reset Password | scubawhereRMS</title>
 
-	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/common/css/bootstrap-scubawhere.css">
-	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/common/css/universal-styles.css">
-	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/css/login-register.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
+	<link rel="stylesheet" type="text/css" href="/css/login-register.css">
 </head>
 <body>
 
@@ -13,7 +13,7 @@
 
 		<form action="{{ action('PasswordController@postRemind') }}" method="POST" id="login-form">
 
-			<img src="{{ Config::get('app.rms_url') }}/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/ScubaWhere_logo.svg">
 			<h1>Password Reset</h1>
 
 			<?php
@@ -36,6 +36,6 @@
 			?>
 		</form>
 	</div>
-    <footer><a href="{{ Config::get('app.rms_url') }}/login/" class="bttn" id="register">Log in</a></footer>
+    <footer><a href="/login/" class="bttn" id="register">Log in</a></footer>
 </body>
 </html>

@@ -39,15 +39,11 @@
 
 			</form>
 
-			<?php if($_SERVER['HTTP_HOST'] === 'rms.scubawhere.com') { ?>
-				<a href="//api.scubahwere.com/api/password/remind">Forgot your password?</a>
-			<?php } else { ?>
-				<a href="//api-test.scubahwere.com/api/password/remind">Forgot your password?</a>
-			<?php } ?>
+			<a href="/api/password/remind">Forgot your password?</a>
 		</div>
 	</div>
 
-    <footer><a href="../register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
+    <footer><a href="/register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
 
 </body>
 </html>

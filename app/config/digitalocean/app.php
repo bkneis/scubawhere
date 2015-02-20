@@ -16,16 +16,10 @@ return array(
 	'debug' => true,
 
 	/*
-	|--------------------------------------------------------------------------
-	| Application URL
-	|--------------------------------------------------------------------------
-	|
-	| This URL is used by the console to properly generate URLs when using
-	| the Artisan command line tool. You should set this to the root of
-	| your application so that it is used when running Artisan tasks.
-	|
-	*/
+	'providers' => append_config(array(
 
-	'url' => 'http://api.scubawhere.com',
-	'rms_url' => 'http://rms.scubawhere.com'
+		'Sisou\Ezmonitor\EzmonitorServiceProvider',
+
+	))
+	*/
 );
