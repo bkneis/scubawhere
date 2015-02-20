@@ -176,7 +176,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location')->withTimestamps();
+		return $this->belongsToMany('Location')->withPivot('description')->withTimestamps();
 	}
 
 	public function packages()

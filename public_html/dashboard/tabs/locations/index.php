@@ -50,8 +50,23 @@
 				</p>
 				<h3>{{{name}}}</h3>
 				<span>{{latitude}}, {{longitude}}</span>
-				<h4>Description</h4>
-				<p>{{{description}}}</p>
+
+				<form id="edit-description-form">
+					<h4>
+						Description
+						<p class="pull-right" style="margin-top: -5px;"{{#unless attached}} title="You need to add this location to your locations to be able to change the description."{{/unless}}>
+							<input type="submit" value="Edit description" class="btn btn-sm btn-default"{{#unless attached}} disabled{{/unless}}>
+						</p>
+					</h4>
+					<div id="description-container">
+						{{#if pivot.description}}
+							{{{pivot.description}}}
+						{{else}}
+							{{{description}}}
+						{{/if}}
+					</div>
+				</form>
+
 				<h4>Tags</h4>
 				<div class="clearfix">
 					{{#each tags}}

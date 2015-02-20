@@ -49,6 +49,16 @@ var Place = {
 		});
 	},
 
+	update: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/location/update",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	attached: function(handleData) {
 		$.get("/api/location/all").done(function(data){
 			handleData(data);

@@ -269,6 +269,59 @@ function initialise() {
 			$(event.target).find('.loader').remove();
 		});
 	});
+
+	$('#modalWindows').on('submit', '#edit-description-form', function(event) {
+		event.preventDefault();
+
+		var modal = $(event.target).closest('.reveal-modal');
+		var markerObject = modal.data('markerObject');
+
+		if($('#edit-description-form').hasClass('editing')) {
+			var btn = $('#edit-description-form button').first();
+
+			// Disable button and display loader
+			btn.prop('disabled', true).html('<i class="fa fa-cog fa-fw fa-spin"></i> SAVE');
+
+			var params = $('#edit-description-form').serializeObject();
+
+			Place.update(params, function success(data) {
+
+				// Update the variable
+				window.sw.attachedLocations[markerObject.id].pivot.description = params.description;
+
+				pageMssg(data.status, 'success');
+
+				btn.prop('disabled', false).html('SAVE');
+			},
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
+
+				btn.prop('disabled', false).html('SAVE');
+			});
+		}
+		else {
+			// Display ckEditor and new submit button
+			var description = $('#description-container').html();
+
+			var newHTML = '<textarea name="description">' + description + '</textarea>';
+			newHTML += '<input type="hidden" name="location_id" value="' + markerObject.id + '">';
+			newHTML += '<input type="hidden" name="_token" value="' + window.token + '">';
+			newHTML += '<button class="btn btn-primary pull-right" style="margin-top: 5px;">SAVE</button>';
+
+			// First, remove "Edit description" button
+			$('#edit-description-form [type=submit]').remove();
+
+			// Then, insert newHTML
+			$('#description-container').html(newHTML);
+
+			// Then, add a class to the form to now when we have to go the other route
+			$('#edit-description-form').addClass('editing');
+
+			// Then, replace textarea with ckEditor
+			CKEDITOR.replace('description');
+		}
+	});
 }
 
 function linearAnimation(start, end, percentage) {

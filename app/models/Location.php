@@ -24,7 +24,7 @@ class Location extends Ardent {
 
 	public function companies()
 	{
-		return $this->belongsToMany('Company')->withTimestamps();
+		return $this->belongsToMany('Company')->withPivot('description')->withTimestamps();
 	}
 
 	public function tags()
