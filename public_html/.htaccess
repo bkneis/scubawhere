@@ -56,6 +56,7 @@ deny from 79.137.234.114
 
     # Do not handle these routes with laravel
     RewriteRule ^(phpmyadmin) - [L]
+    RewriteRule ^(dashboard) - [L]
     RewriteRule ^(docs) - [L]
     RewriteRule ^(blog) - [L]
     RewriteRule ^(ocp) - [L]
