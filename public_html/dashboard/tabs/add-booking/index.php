@@ -1106,7 +1106,7 @@
 	</div>
 
 	<!--Styling (Temporary)-->
-	<link rel="stylesheet" href="tabs/add-booking/css/style.css" type="text/css" />
+	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
 
 	<!--Select 2-->
 	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
@@ -1125,17 +1125,17 @@
 	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<!--Controllers-->
-	<script src="/dashboard/js/Controllers/Agent.js"></script>
-	<script src="/dashboard/js/Controllers/Ticket.js"></script>
-	<script src="/dashboard/js/Controllers/Package.js"></script>
-	<script src="/dashboard/js/Controllers/Session.js"></script>
-	<script src="/dashboard/js/Controllers/Booking.js"></script>
-	<script src="/dashboard/js/Controllers/Trip.js"></script>
-	<script src="/dashboard/js/Controllers/Customer.js"></script>
-	<script src="/dashboard/js/Controllers/Addon.js"></script>
-	<script src="/dashboard/js/Controllers/Accommodation.js"></script>
-	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
+	<script src="/js/Controllers/Agent.js"></script>
+	<script src="/js/Controllers/Ticket.js"></script>
+	<script src="/js/Controllers/Package.js"></script>
+	<script src="/js/Controllers/Session.js"></script>
+	<script src="/js/Controllers/Booking.js"></script>
+	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Customer.js"></script>
+	<script src="/js/Controllers/Addon.js"></script>
+	<script src="/js/Controllers/Accommodation.js"></script>
+	<script src="/js/Controllers/Boatroom.js"></script>
 	<!--My scripts-->
-	<script type="text/javascript" src="tabs/add-booking/js/script.js"></script>
+	<script src="/tabs/add-booking/js/script.js"></script>
 
 </div>

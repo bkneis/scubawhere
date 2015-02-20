@@ -142,6 +142,6 @@
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 	<script src="/common/js/rAF.js"></script>
 
-	<script src="/dashboard/js/Controllers/Location.js"></script>
-	<script src="tabs/locations/js/script.js"></script>
+	<script src="/js/Controllers/Location.js"></script>
+	<script src="/tabs/locations/js/script.js"></script>
 </div>

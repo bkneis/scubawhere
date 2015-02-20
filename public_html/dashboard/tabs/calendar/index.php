@@ -145,11 +145,11 @@
 	<script type="text/javascript" src="/common/js/jquery/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/common/js/jquery/jquery.collapsible.js"></script>
 
-	<script src="js/Controllers/Trip.js"></script>
-	<script src="js/Controllers/Boat.js"></script>
-	<script src="js/Controllers/Session.js"></script>
-	<script src="js/Controllers/Timetable.js"></script>
-	<script src="js/Controllers/Accommodation.js"></script>
+	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Boat.js"></script>
+	<script src="/js/Controllers/Session.js"></script>
+	<script src="/js/Controllers/Timetable.js"></script>
+	<script src="/js/Controllers/Accommodation.js"></script>
 
-	<script src="tabs/calendar/js/script.js" type="text/javascript"></script>
+	<script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>

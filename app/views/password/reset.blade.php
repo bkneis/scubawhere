@@ -5,7 +5,7 @@
 
 	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/common/css/bootstrap-scubawhere.css">
 	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/common/css/universal-styles.css">
-	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/dashboard/css/login-register.css">
+	<link rel="stylesheet" type="text/css" href="{{ Config::get('app.rms_url') }}/css/login-register.css">
 </head>
 <body>
 

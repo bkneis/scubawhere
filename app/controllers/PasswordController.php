@@ -82,7 +82,7 @@ class PasswordController extends Controller {
 				return View::make('password.reset', array('error' => Lang::get($response), 'email' => $credentials['email'], 'token' => $credentials['token']));
 
 			case Password::PASSWORD_RESET:
-				return View::make('password.reset', array('email' => $credentials['email'], 'status' => 'A new password has been set.<br><br><a href="../dashboard/login/">Log in</a>'));
+				return View::make('password.reset', array('email' => $credentials['email'], 'status' => 'A new password has been set.<br><br><a href="'.Config::get('app.rms_url').'/login/">Log in</a>'));
 		}
 	}
 

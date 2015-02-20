@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page)."></div>	
+<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page)."></div>
 	<div class="col-md-4">
 		<div id="tickets-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="Once a ticket is saved, you will see it in your list. Click on a ticket to view/edit the details.">
 			<div class="panel-heading">
@@ -162,9 +162,9 @@
 		</div>
 	</script>
 
-	<script src="/dashboard/js/Controllers/Boat.js"></script>
-	<script src="/dashboard/js/Controllers/Boatroom.js"></script>
-	<script src="/dashboard/js/Controllers/Trip.js"></script>
-	<script src="/dashboard/js/Controllers/Ticket.js"></script>
-	<script src="tabs/tickets/js/script.js"></script>
+	<script src="/js/Controllers/Boat.js"></script>
+	<script src="/js/Controllers/Boatroom.js"></script>
+	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Ticket.js"></script>
+	<script src="/tabs/tickets/js/script.js"></script>
 </div>

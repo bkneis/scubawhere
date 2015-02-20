@@ -188,10 +188,10 @@
 	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
 	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
-	<script src="js/Controllers/Trip.js"></script>
-	<script src="js/Controllers/Boat.js"></script>
-	<script src="js/Controllers/Session.js"></script>
-	<script src="js/Controllers/Timetable.js"></script>
+	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Boat.js"></script>
+	<script src="/js/Controllers/Session.js"></script>
+	<script src="/js/Controllers/Timetable.js"></script>
 
-	<script src="tabs/activate-trip/js/script.js" type="text/javascript"></script>
+	<script src="/tabs/activate-trip/js/script.js"></script>
 </div>

@@ -1,6 +1,6 @@
 <div id="wrapper" class="clearfix">
 <div class="row" id="row1">
-  
+
   <div class="col-md-5">
     <div class="panel panel-default" id="todays-stats">
       <div class="panel-heading">
@@ -247,14 +247,9 @@
 
 <link rel="stylesheet" type="text/css" href="/common/css/datatables.css">
 
-<script src="/dashboard/js/Controllers/Session.js"></script>
-<script src="/dashboard/js/Controllers/Trip.js"></script>
+<script src="/js/Controllers/Session.js"></script>
+<script src="/js/Controllers/Trip.js"></script>
+<script src="/js/Controllers/Booking.js"></script>
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
-<script src="tabs/dashboard/js/script.js"></script>
-<script src="js/Controllers/Booking.js"></script>
-<script src="tabs/dashboard/js/bookings.js"></script>
-
-
-
-
-
+<script src="/tabs/dashboard/js/script.js"></script>
+<script src="/tabs/dashboard/js/bookings.js"></script>

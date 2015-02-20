@@ -156,7 +156,7 @@
 		</div>
 	</script>
 
-	<script src="/dashboard/js/Controllers/Ticket.js"></script>
-	<script src="/dashboard/js/Controllers/Package.js"></script>
-	<script src="tabs/packages/js/script.js"></script>
+	<script src="/js/Controllers/Ticket.js"></script>
+	<script src="/js/Controllers/Package.js"></script>
+	<script src="/tabs/packages/js/script.js"></script>
 </div>

@@ -99,7 +99,7 @@
 		</div>
 	</script>
 
-	<script src="/dashboard/js/Controllers/Trip.js"></script>
-	<script src="/dashboard/js/Controllers/Location.js"></script>
-	<script src="tabs/trips/js/script.js"></script>
+	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Location.js"></script>
+	<script src="/tabs/trips/js/script.js"></script>
 </div>

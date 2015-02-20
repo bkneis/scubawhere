@@ -170,6 +170,6 @@
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 
 	<!-- <script src="js/Controllers/Booking.js"></script> -->
-	<script src="js/Controllers/Payment.js"></script>
-	<script src="tabs/add-transaction/script.js"></script>
+	<script src="/js/Controllers/Payment.js"></script>
+	<script src="/tabs/add-transaction/script.js"></script>
 </div>

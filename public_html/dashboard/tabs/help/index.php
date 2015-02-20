@@ -29,22 +29,22 @@
 </div>
 
 <script type="text/x-handlebars-template" id="faq-template">
-			{{#each faq}}
-				<div class="panel panel-default">
-					<div class="panel-heading" role="tab" id="heading-{{@index}}">
-						<h4 class="panel-title">
-							<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{@index}}" aria-expanded="true" aria-controls="collapse-{{@index}}">
-								{{question}}
-							</a>
-						</h4>
-					</div>
-					<div id="collapse-{{@index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{@index}}">
-						<div class="panel-body">
-							{{{answer}}}
-						</div>
-					</div>
+	{{#each faq}}
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="heading-{{@index}}">
+				<h4 class="panel-title">
+					<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{@index}}" aria-expanded="true" aria-controls="collapse-{{@index}}">
+						{{question}}
+					</a>
+				</h4>
+			</div>
+			<div id="collapse-{{@index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{@index}}">
+				<div class="panel-body">
+					{{{answer}}}
 				</div>
-			{{/each}}
+			</div>
+		</div>
+	{{/each}}
 </script>
 
-<script src="tabs/help/js/script.js"></script>
+<script src="/tabs/help/js/script.js"></script>

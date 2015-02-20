@@ -153,5 +153,5 @@
 		</div>
 	</script>
 
-	<script src="/dashboard/tabs/settings/js/script.js"></script>
+	<script src="/tabs/settings/js/script.js"></script>
 </div>
