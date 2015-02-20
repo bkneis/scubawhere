@@ -26,6 +26,11 @@ App::before(function($request)
 	header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 
 	header('Access-Control-Allow-Credentials: true');
+
+	if(Request::method() === 'OPTIONS')
+	{
+		header("Expires: " . gmdate("D, d M Y H:i:s", time() + 3600) . " GMT"); // +1 hour
+	}
 });
 
 
