@@ -167,7 +167,7 @@ class CompanyController extends Controller {
 		return Response::json( array('status' => 'OK. Location created', 'id' => $location->id), 201 ); // 201 Created
 	}
 
-	public function postInit()
+	public function postInitialise()
 	{
 		$company = Auth::user();
 		$company->fill(array('initialised' => 1));
