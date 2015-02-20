@@ -18,8 +18,7 @@ App::before(function($request)
 		Log::info(Request::path()." SQL: ".$sql." Bindings: ".implode(', ', $bindings));
 	});*/
 
-	header('Access-Control-Allow-Origin: http://rms.scubawhere.com');
-	header('Access-Control-Allow-Origin: http://rms-test.scubawhere.com');
+	header('Access-Control-Allow-Origin: ' . Config::get('app.rms_url'));
 
 	header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 
