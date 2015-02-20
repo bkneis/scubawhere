@@ -18,7 +18,7 @@
 		$ch = curl_init( 'http://api-test.scubawhere.com/api/company' );
 	}
 
-	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
+	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; domain=.scubawhere.com; path=/';
 
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
@@ -80,6 +80,10 @@
 	<script type="text/javascript" src="/common/js/intro.js"></script>
 
 	<!-- ScubaWhere Files -->
+	<script type="text/javascript">
+		// Set scubawhere namespace
+		window.sw = {};
+	</script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/ui.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
@@ -97,10 +101,6 @@
 				$('.username').text(window.company.name);
 			});
 		});
-
-		// Set scubawhere namespace
-		window.sw = {};
-
 	</script>
 
 </head>

@@ -40,7 +40,7 @@ Route::controller('api/agency', 'AgencyController');
 
 Route::group(array('before' => 'auth|auth.basic'), function()
 {
-	Route::get('token', function()
+	Route::get('api/token', function()
 	{
 		return Session::getToken();
 	});

@@ -10,7 +10,10 @@ $.ajaxSetup({
 		// Start new AJAX request with changed url
 		$.ajax(
 			$.extend(this, {
-				url: '//' + prefix + '.scubawhere.com' + options.url
+				url: '//' + prefix + '.scubawhere.com' + options.url,
+				xhrFields: {
+					withCredentials: true
+				}
 			})
 		);
 

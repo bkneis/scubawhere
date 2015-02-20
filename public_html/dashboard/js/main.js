@@ -14,7 +14,10 @@ $.ajaxSetup({
 		// Start new AJAX request with changed url
 		$.ajax(
 			$.extend(this, {
-				url: '//' + prefix + '.scubawhere.com' + options.url
+				url: '//' + prefix + '.scubawhere.com' + options.url,
+				xhrFields: {
+					withCredentials: true
+				}
 			})
 		);
 
@@ -64,7 +67,7 @@ function getToken(callback) {
 	}
 
 	$.ajax({
-		url: "/token",
+		url: "/api/token",
 		type: "GET",
 		success: function(data){
 			window.token = data;
