@@ -15,11 +15,9 @@ return array(
 
 	'debug' => true,
 
-	/*
 	'providers' => append_config(array(
 
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 
 	))
-	*/
 );
