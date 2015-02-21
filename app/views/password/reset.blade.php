@@ -13,7 +13,7 @@
 
 		<form action="{{ action('PasswordController@postReset') }}" method="POST" id="login-form">
 
-			<img src="/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Enter a new password for</h1>
 			<pre>{{ $email }}</pre>
 

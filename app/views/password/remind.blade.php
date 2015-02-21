@@ -13,7 +13,7 @@
 
 		<form action="{{ action('PasswordController@postRemind') }}" method="POST" id="login-form">
 
-			<img src="/common/img/ScubaWhere_logo.svg">
+			<img src="/common/img/scubawhere_logo.svg">
 			<h1>Password Reset</h1>
 
 			<?php
