@@ -19,7 +19,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 	}
 
@@ -37,7 +37,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 	}
 
@@ -138,7 +138,7 @@ class DepartureController extends Controller {
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
+				return Response::json( array('errors' => array('The trip_id could not be found.')), 404 ); // 404 Not Found
 			}
 		}
 		else
@@ -291,7 +291,7 @@ class DepartureController extends Controller {
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Sessions cannot be created in the past.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('Trips cannot be activated in the past.')), 403 ); // 403 Forbidden
 
 		try
 		{
@@ -300,7 +300,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip_id could not be found.')), 404 ); // 404 Not Found
 		}
 
 		// Check if the boat_id exists and belongs to the logged in company
@@ -318,7 +318,7 @@ class DepartureController extends Controller {
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
 		if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->validate() )
 		{
@@ -327,7 +327,7 @@ class DepartureController extends Controller {
 
 		$departure = $trip->departures()->save($departure);
 
-		return Response::json( array('status' => 'OK. Session created', 'id' => $departure->id), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Trip activated', 'id' => $departure->id), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -339,14 +339,14 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
-			return Response::json( array('errors' => array('Past or deactivated sessions cannot be updated.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past or deactivated trips cannot be updated.')), 412 ); // 412 Precondition Failed
 
 		if( empty($departure->timetable_id) )
 		{
@@ -365,7 +365,7 @@ class DepartureController extends Controller {
 					return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
 
 				if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $departure->start) {
-					return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+					return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 				}
 			}
 		}
@@ -378,7 +378,7 @@ class DepartureController extends Controller {
 					// Remove this event from the timetable and set new time
 					$capacity = $departure->getCapacityAttribute();
 					if($capacity[0] > 0)
-						return Response::json( array('errors' => array('The session cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+						return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 
 					$departure->timetable_id = null;
 					$departure->start        = Input::get('start');
@@ -405,7 +405,7 @@ class DepartureController extends Controller {
 						array( $timetable->id, $offsetSQL, $departure->start, $departure->timetable_id )
 					);
 
-					return array('status' => 'OK. All sessions updated.');
+					return array('status' => 'OK. All trips updated.');
 				break;
 				default:
 					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
@@ -420,14 +420,14 @@ class DepartureController extends Controller {
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
 		if($departure->isOvernight($departure->trip) && $departure->boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this session. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->save() )
 		{
 			return Response::json( array('errors' => $departure->errors()->all()), 400 ); // 400 Bad Request
 		}
 
-		return array('status' => 'OK. Session updated.');
+		return array('status' => 'OK. Trip updated.');
 	}
 
 	public function postDeactivate()
@@ -439,19 +439,19 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Past sessions cannot be deactivated.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past trips cannot be deactivated.')), 412 ); // 412 Precondition Failed
 
 
 		$departure->delete(); // SoftDelete
 
-		return array('status' => 'OK. Session deactivated');
+		return array('status' => 'OK. Trip deactivated');
 	}
 
 	public function postRestore()
@@ -463,18 +463,18 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Past sessions cannot be restored.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past trips cannot be restored.')), 412 ); // 412 Precondition Failed
 
 		$departure->restore();
 
-		return array('status' => 'OK. Session restored');
+		return array('status' => 'OK. Trip restored');
 	}
 
 	public function postDelete()
@@ -486,14 +486,14 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$isPast = Helper::isPast( $departure->start );
 		if( gettype($isPast) === 'object' ) // Is error Response
 			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Past sessions cannot be deleted.')), 412 ); // 412 Precondition Failed
+			return Response::json( array('errors' => array('Past trips cannot be deleted.')), 412 ); // 412 Precondition Failed
 
 		if( $departure->timetable_id )
 		{
@@ -517,7 +517,7 @@ class DepartureController extends Controller {
 							$session->delete(); // SoftDelete
 					});
 
-					return array('status' => 'OK. All sessions either deleted or deactivated.');
+					return array('status' => 'OK. All trips either deleted or deactivated.');
 				break;
 				default:
 					return Response::json( array('errors' => array('`handle_timetable` parameter is required.')), 400 ); // 400 Bad Request
@@ -531,10 +531,10 @@ class DepartureController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('Cannot delete session. It has been booked!')), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot delete trip. It has already been booked!')), 409 ); // 409 Conflict
 		}
 
-		return array('status' => 'OK. Session deleted');
+		return array('status' => 'OK. Trip deleted');
 	}
 
 }

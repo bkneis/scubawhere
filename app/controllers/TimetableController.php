@@ -37,7 +37,7 @@ class TimetableController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The departure could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		$schedule = $data['schedule'];
