@@ -12,7 +12,7 @@
 		{
 			case 2: $location = 'rms.' . $hostParts[0] . '.' . $hostParts[1]; break; // Add the subdomain
 			case 3: $location = 'rms.' . $hostParts[1] . '.' . $hostParts[2]; break; // Replace the subdomain
-			default: die('<h1>URL not recognised!</h1>Please contact us at <a href="mailto:hello@scubawhere.com">hello@scubawhere.com</a>.'); // Case undefined, error
+			default: $PROTOCOL = 'http'; $location = 'scubawhere.com'; // Case undefined, go to main domain
 		}
 
 		header("Location: " . $PROTOCOL . "://" . $location . "/");
