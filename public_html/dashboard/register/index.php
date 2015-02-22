@@ -146,7 +146,7 @@
 					<h3>Terms</h3>
 					<section>
 						<div id="section3">
-						<div class="form-row">
+							<div style="float:none; margin: 0 auto;" class="form-row">
 								<label for="terms">Copy and paste your terms and conditions here:</label>
 								<textarea id="terms" name="terms" style="width:100%" rows="8"></textarea>
 							</div>
@@ -158,7 +158,7 @@
 						<div class="form-row">
 								<h3>Just one more thing...</h3>
 								<label for="username">Please enter your username:</label>
-								<input class="required"  type="text" id="username" name="username">
+								<input style="margin: 0 auto; width:280px" class="required"  type="text" id="username" name="username">
 								<div style="margin-top:10px"></div>
 								<input type="submit" style="text-align:center; margin: 0 auto;"  class="submit btn btn-primary btn-lg text-uppercase" value="Create Account">
 							</div>

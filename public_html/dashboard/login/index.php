@@ -25,9 +25,9 @@
 
 				<span class="form-error"></span>
 
-				<input type="text" name="username" placeholder="Username">
+				<input style="margin: 0 auto; width:280px" type="text" name="username" placeholder="Username">
 
-				<input type="password" name="password" placeholder="Password"><br>
+				<input style="margin: 0 auto; width:280px" type="password" name="password" placeholder="Password"><br>
 
 				<!-- <label><input type="checkbox" name="remember"> Remember me</label> -->
 
