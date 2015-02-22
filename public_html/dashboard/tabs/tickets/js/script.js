@@ -335,18 +335,6 @@ function showMe(box, self) {
 	}
 }
 
-function setToken(element) {
-	if( window.token ) {
-		$(element).val( window.token );
-	}
-	else {
-		$.get('/token', function success(data) {
-			window.token = data;
-			setToken(element);
-		});
-	}
-}
-
 function clearForm() {
 
 	var ticket;

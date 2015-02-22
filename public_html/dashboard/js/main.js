@@ -57,6 +57,12 @@ function getToken(callback) {
 	return false;
 }
 
+function setToken(element) {
+	getToken(function(token) {
+		$(element).val(token);
+	});
+}
+
 function reproColor(id) { // Stands for: reproducible color
 
 	var colors = [ // 14 options

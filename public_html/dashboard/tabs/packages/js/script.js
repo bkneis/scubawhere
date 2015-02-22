@@ -325,7 +325,7 @@ $(function(){
 
 		$(event.target).parent().remove();
 	});
-	
+
 });
 
 function renderPackageList(callback) {
@@ -427,18 +427,6 @@ function showMe(box, self) {
 	else {
 		div.hide(0);
 		div.find('input, select').prop('disabled', true);
-	}
-}
-
-function setToken(element) {
-	if( window.token ) {
-		$(element).val( window.token );
-	}
-	else {
-		$.get('/token', function success(data) {
-			window.token = data;
-			setToken(element);
-		});
 	}
 }
 
