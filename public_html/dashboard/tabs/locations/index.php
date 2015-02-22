@@ -6,15 +6,15 @@
 		<div class="panel panel-default" data-step="6" data-position="bottom" data-intro="Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag.">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<img src="http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-your-locations-icon" />
+					<img src="//mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-your-locations-icon" />
 					<span class="loader" id="legend-your-locations-loader" style="top: 0;"></span>
 					Your locations
 
-					<img src="http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-available-locations-icon" />
+					<img src="//mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-available-locations-icon" />
 					<span class="loader" id="legend-available-locations-loader" style="top: 0; margin-left: 2em;"></span>
 					Available locations
 
-					<img src="http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em;" />
+					<img src="//mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em;" />
 					New location
 				</h4>
 			</div>
@@ -145,7 +145,7 @@
 
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
-			script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise' + key;
+			script.src = '//maps.googleapis.com/maps/api/js?v=3.exp&callback=initialise' + key;
 
 			document.body.appendChild(script);
 

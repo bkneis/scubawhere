@@ -140,7 +140,7 @@ function initialise() {
 
 			// Update markerObject
 			markerObject.attached = true;
-			markerObject.setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1');
+			markerObject.setIcon('//mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1');
 
 			// Shift location to new collection
 			window.sw.attachedLocations[markerObject.id] = window.sw.locations[markerObject.id];
@@ -177,7 +177,7 @@ function initialise() {
 
 			// Update markerObject
 			markerObject.attached = false;
-			markerObject.setIcon('http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1');
+			markerObject.setIcon('//mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1');
 
 			// Shift location to new collection
 			window.sw.locations[markerObject.id] = window.sw.attachedLocations[markerObject.id];
@@ -234,7 +234,7 @@ function initialise() {
 				position:  new google.maps.LatLng( location.latitude, location.longitude ),
 				map:       gmap,
 				title:     location.name,
-				icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
+				icon:      '//mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 			};
 			var marker = new google.maps.Marker(markerOptions);
 			google.maps.event.addListener(marker, 'click', existingMarkerClick);
@@ -396,7 +396,7 @@ function renderHomeLocation() {
 		position:  new google.maps.LatLng(window.company.latitude, window.company.longitude),
 		map:       gmap,
 		title:     'Home',
-		icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=1'
+		icon:      '//mt.googleapis.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=1'
 	};
 	new google.maps.Marker(markerOptions);
 }
@@ -411,7 +411,7 @@ function renderLocations() {
 			// map:       gmap,
 			title:     location.name,
 			animation: google.maps.Animation.DROP,
-			icon:      'http://mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1'
+			icon:      '//mt.googleapis.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png&scale=1'
 		};
 		markerArray.push( new google.maps.Marker(markerOptions) );
 	});
@@ -437,7 +437,7 @@ function renderAttachedLocations() {
 			// map:       gmap,
 			title:     location.name,
 			animation: google.maps.Animation.DROP,
-			icon:      'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
+			icon:      '//mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 		};
 		markerArray.push( new google.maps.Marker(markerOptions) );
 	});
@@ -467,7 +467,7 @@ function placeNewMarker(location) {
 		position:  location,
 		draggable: true,
 		map:       gmap,
-		icon:      'http://mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
+		icon:      '//mt.googleapis.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
 	};
 	window.sw.newMarker = new google.maps.Marker(markerOptions);
 

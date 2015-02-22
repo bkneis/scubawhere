@@ -15,6 +15,9 @@ return array(
 
 	'debug' => true,
 
+	// To be changed for release
+	'key' => 'KnkmprpiozesA3Kjl7Ea2kV90EWJI5Ng',
+
 	'providers' => append_config(array(
 
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
