@@ -9,7 +9,7 @@ $.ajaxSetup({
 		// Disable caching for API requests by default
 		if(options.url.substr(0, 4) === '/api' && options.type !== 'POST') {
 			$.extend(this, {
-				url: options.url + '?_=' + Date.now(),
+				url: options.url + (options.url.indexOf('?') === -1 ? '?_=' : '&_=') + Date.now(),
 				cache: false,
 			});
 		}
