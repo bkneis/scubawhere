@@ -1,17 +1,30 @@
-//interactions with the API
+// Interactions with the API
 
 $.ajaxSetup({
-	// Disable caching of AJAX responses
-	cache: false
+	beforeSend: function(xhr, options) {
+		// Disable caching for API requests by default
+		if(options.url.substr(0, 4) === '/api' && typeof options.cache === 'undefined') {
+			$.ajax($.extend(this, {
+				cache: false,
+			}));
+
+			return false;
+		}
+	}
 });
 
-//run on page load
+// Run on page load
 $(function(){
 
 	// Error handling
 	$(document).ajaxComplete(function(event, xhr, options) {
 		if(xhr.status >= 400) {
-			pageMssg('<b>' + xhr.status + ' ' + xhr.statusText + '</b> - No separate error message? Contact the developer!', 'info');
+			pageMssg('<strong>' + xhr.status + ' ' + xhr.statusText + '</strong> - No separate error message? Contact the developer!', 'info');
+		}
+
+		if(xhr.status === 503) {
+			// Maintenance mode
+			pageMssg('<strong>The application is in maintenance mode.</strong> Please check back in a few minutes.', 'warning');
 		}
 	});
 
