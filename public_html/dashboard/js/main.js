@@ -1,14 +1,25 @@
 // Interactions with the API
+// Shim for up to IE8
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
+}
 
 $.ajaxSetup({
 	beforeSend: function(xhr, options) {
 		// Disable caching for API requests by default
-		if(options.url.substr(0, 4) === '/api' && typeof options.cache === 'undefined') {
-			$.ajax($.extend(this, {
+		if(options.url.substr(0, 4) === '/api' && options.type !== 'POST') {
+			$.extend(this, {
+				url: options.url + '?_=' + Date.now(),
 				cache: false,
-			}));
-
-			return false;
+			});
+		}
+		// Enable caching for .js scripts by default
+		else if(options.dataType === 'script') {
+			// Remove '?_={random number}'' from the request url
+			$.extend(this, {
+				url: options.url.split('?_=')[0],
+				cache: true,
+			});
 		}
 	}
 });
