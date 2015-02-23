@@ -47,16 +47,12 @@ Handlebars.registerHelper("firstChar", function(s) {
 	return s[0];
 });
 
-Handlebars.registerHelper("isLead", function (id) {
-	if(booking.lead_customer === false) return new Handlebars.SafeString('<small><i class="fa fa-cog fa-spin fa-fw"></i></small>');
-
-	if(booking.lead_customer && booking.lead_customer.id == id) {
-		return new Handlebars.SafeString('<small><span class="label label-warning">LEAD</span></small>');
-	}
+Handlebars.registerHelper("isLead", function (customer, options) {
+	return (booking.lead_customer && booking.lead_customer.id == customer.id) ? options.fn(customer) : options.inverse(customer);
 });
 
 Handlebars.registerHelper("notEmptyObj", function (item, options) {
-		return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
+	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
 Handlebars.registerHelper("priceRange", function(prices) {
@@ -557,7 +553,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 	$(this).parents('form')[0].reset();
 });
 
-$('#customer-tab').on('click', '.lead-customer', function() {
+$('#booking-summary').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
 		drawBasket();
 	}, function error(xhr) {

@@ -187,48 +187,38 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-4">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title">Existing Customer</h3>
 							</div>
 							<div class="panel-body">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="form-group">
-											<label for="existing-customers" class="col-sm-3 control-label">Name</label>
-											<div class="col-sm-9">
-												<select id="existing-customers" name="existing-customers" class="form-control select2">
-													<option selected="selected" value="">Search for a customer...</option>
-												</select>
-												<script id="customers-list-template" type="text/x-handlebars-template">
-													<option selected="selected" value="">Search for a customer...</option>
-													{{#each customers}}
-														<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
-													{{/each}}
-												</script>
-											</div>
-										</div>
-									</div>
+								<div class="form-group">
+									<label for="existing-customers" class="control-label">Name</label>
+									<select id="existing-customers" name="existing-customers" class="form-control select2">
+										<option selected="selected" value="">Search for a customer...</option>
+									</select>
+									<script id="customers-list-template" type="text/x-handlebars-template">
+										<option selected="selected" value="">Search for a customer...</option>
+										{{#each customers}}
+											<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
+										{{/each}}
+									</script>
 								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div id="selected-customer">
+								<div id="selected-customer">
 
-										</div>
-									</div>
 								</div>
 								<script id="selected-customer-template" type="text/x-handlebars-template">
+									<h4>Customer Details</h4>
 									<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
-										<h4 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h4>
+										<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer pull-right" data-id="{{id}}">Edit</a>
+										<h5 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h5>									
 										<p class="list-group-item-text">
 											<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
 											{{{address_1}}}<br>
 											{{{city}}}, {{{county}}}, {{postcode}}<br>
 											<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
-										</p>
-										<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer" data-id="{{id}}">Edit</a>
-										<a href="javascript:void(0);" class="btn btn-warning lead-customer btn-xs" data-id="{{id}}">Lead Customer</a>
+										</p>									
 									</li>
 								</script>
 							</div>
@@ -239,9 +229,10 @@
 									</div>
 								</div>
 							</div>
-						</div>
-
-						<div class="panel panel-success form-horizontal">
+						</div>						
+					</div>
+					<div class="col-md-8">
+						<div class="panel panel-primary form-horizontal">
 							<div class="panel-heading">
 								<h3 class="panel-title">New Customer</h3>
 							</div>
@@ -263,11 +254,11 @@
 												<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
 												<input id="customer-email" name="email" class="form-control" placeholder="@">
 											</div>
-											<div class="col-sm-2">
+											<div class="col-sm-3">
 												<label for="phone" class="control-label">Dialling Code <span class="text-danger">*</span></label>
 												<input type="text" name="dialling_code" class="form-control" placeholder="+44">
 											</div>
-											<div class="col-sm-4">
+											<div class="col-sm-5">
 												<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
 												<input type="text" name="phone" class="form-control" placeholder="02071234567">
 											</div>
@@ -315,7 +306,7 @@
 									</div>
 									<div class="panel-footer">
 										<div class="row">
-											<div class="col-xs-12">
+											<div class="col-md-12">
 												<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
 												<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
 												<button type="submit" class="btn btn-primary new-customer pull-right" style="margin-left:5px;">Create</button>
@@ -998,7 +989,11 @@
 						<strong>Customers</strong>
 						{{#each selectedCustomers}}
 							<p>
-								<i class="fa fa-user fa-fw"></i>{{firstname}} {{lastname}} {{isLead id}}
+							    {{#isLead this}}
+									<i class="fa fa-user fa-fw"></i>&nbsp; {{firstname}} {{lastname}} <small><span class="label label-warning">LEAD</span></small>
+								{{else}}
+									<i class="fa fa-user fa-fw"></i>&nbsp; {{firstname}} {{lastname}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>
+								{{/isLead}}
 								<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}">X</a>
 							</p>
 						{{/each}}
