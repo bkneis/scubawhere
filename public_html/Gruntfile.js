@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             less: {
-               files: ["common/less/*.less", ],
+               files: ["dashboard/common/less/*.less", ],
                 tasks: ["less"] 
             },
             /*jshint: {
@@ -19,16 +19,17 @@ module.exports = function (grunt) {
         less: {
             development: {
                 options: {
-                    paths: ["common/less/"],
+                    paths: ["dashboard/common/less/"],
                 },
                 files: {
-                    "common/css/bootstrap-scubawhere.css": "common/less/base.less"
+                    "dashboard/common/css/bootstrap-scubawhere.css": "dashboard/common/less/base.less"
                 }
             },
         },
         jshint: {
-            files: ['Gruntfile.js', 'common/**/*.js', 'dashboard/js/**/*.js', 'dashboard/tabs/**/*.js']
+            files: ['Gruntfile.js', 'dashboard/js/**/*.js', 'dashboard/tabs/**/*.js']
         }
     });
-     grunt.registerTask('default', ['watch']);
+
+    grunt.registerTask('default', ['watch']);
 };
