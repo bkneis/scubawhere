@@ -154,7 +154,7 @@
 
 .wizard.vertical > .content
 {
-    
+
     margin: 0 2.5% 0.5em 2.5%;
     width: 65%;
 }
@@ -210,6 +210,10 @@
     color: #8a1f11;
     display: inline-block;
     margin-left: 1.5em;
+}
+
+.wizard > .content > .body .form-row {
+    text-align: left;
 }
 
 .wizard > .actions

@@ -33,10 +33,10 @@
 				<input type="hidden" name="email" value="{{ $email }}">
 
 				<small>New password</small>
-				<input type="password" name="password" required="required" placeholder="6 characters min"><br>
+				<input type="password" name="password" required="required" placeholder="6 characters min" style="width: 280px;"><br>
 
 				<small>Confirm new password</small>
-				<input type="password" name="password_confirmation" required="required">
+				<input type="password" name="password_confirmation" required="required" style="width: 280px;">
 
 				<input type="submit" value="Set Password" class="btn btn-primary">
 			<?php

@@ -28,7 +28,7 @@
 					}
 			?>
 				<small>Your email address:</small>
-				<input type="email" name="email" required="required">
+				<input type="email" name="email" required="required" style="width: 280px;">
 
 				<input type="submit" value="Send Reminder" class="btn btn-primary">
 			<?php

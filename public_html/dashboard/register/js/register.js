@@ -16,12 +16,10 @@ function validate(sectionNum){
 	var error = false;
 	var section = "#section" + sectionNum;
 
-	$( ".required", section ).each(function( index ) {
-		$(this).css( "border", "2px #c8c8c8" );
-	});
+	$( ".required", section ).css( "border", "2px #c8c8c8" );
 
-	if(sectionNum == 1) error = validateEmail('email', $('[name="email"]').val());
-	else if(sectionNum == 2) error = validateEmail('business', $('[name="business_email"]').val());
+	if(sectionNum === 1)      error = validateEmail('email', $('[name="email"]').val());
+	else if(sectionNum === 2) error = validateEmail('business', $('[name="business_email"]').val());
 
 	$( ".required", section ).each(function( index ) {
 		if(!($( this ).val())) {
@@ -34,9 +32,7 @@ function validate(sectionNum){
 		return false;
 	}
 	else {
-		$( ".required", section ).each(function( index ) {
-			$(this).css( "border", "2px #c8c8c8" );
-		});
+		$( ".required", section ).css( "border", "2px #c8c8c8" );
 		return true;
 	}
 }
@@ -79,11 +75,13 @@ $(function(){
 
 		event.preventDefault();
 
+		$('.yellow-helper').remove();
+
 		var form = $(this);
 
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		var params = form.serializeArray();
+		var params = form.serializeObject();
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
 		console.log(params);
@@ -107,6 +105,14 @@ $(function(){
 				console.log(data);
 
 				// TODO Show validation errors
+				var html = '';
+				html += '<div class="alert alert-warning errors" style="color: #E82C0C;">';
+				html += '	<h4>There are a few problems with the form:</h4>';
+				for(i = 0; i < data.errors.length; i++)
+					html += '	<h4 style="font-weight: normal;">' + data.errors[i] + '</h4>';
+				html += '</div>';
+
+				$('#page-title').after(html);
 
 				$('.submit').prop('disabled', false);
 				form.find('#save-loader').remove();
@@ -122,7 +128,7 @@ $(function(){
 		onStepChanging : function (event, currentIndex, newIndex) {
 
 			// Always allow going backward even if the current step contains invalid fields!
-			if (currentIndex > newIndex) {
+			if (newIndex < currentIndex) {
 				return true;
 			}
 
@@ -140,11 +146,15 @@ $(function(){
 					//return true;
 				}
 
-				if(currentIndex == 1) {
+				if(currentIndex === 1) {
 					if(validate(2)) {
 						return true;
 					}
 					else return false;
+				}
+
+				if(currentIndex === 2) {
+					return true;
 				}
 			}
 			else return true;
@@ -158,4 +168,8 @@ $(function(){
 		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');
 		$('#currency_id option').filter('[value=' + currency_id + ']').prop('selected', true);
 	});
+
+	CKEDITOR.config.height = 490;
+
+	CKEDITOR.replace('terms');
 });

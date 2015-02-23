@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Scuba Where | Dive Operator Register</title>
+	<title>Registration | scubawhereRMS</title>
 
-	<script src="/common/js/jquery/jquery.min.js"></script>
-	<script src="/common/js/jquery/jquery.steps.min.js"></script>
-
-	<script src="js/register.js"></script>
-
-	<link rel="stylesheet" href="/common/css/bootstrap-scubawhere.css" type="text/css" />
+	<script type="text/javascript" src="/common/js/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/common/js/jquery/jquery.steps.min.js"></script>
+	<script type="text/javascript" src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
+	<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
+
+	<script type="text/javascript" src="js/register.js"></script>
+
+
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.steps.css">
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
 	<link rel="stylesheet" type="text/css" href="/css/login-register.css">
 
 	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
@@ -22,7 +26,7 @@
 	<div id="wrapper" class="clearfix col-md-offset-2">
 		<div id="register-wrapper" class="col-md-10">
 			<img src="/common/img/scubawhere_logo.svg"></img>
-			<h3>Dive Operator Registration</h3>
+			<h3 style="font-weight: 200;" id="page-title">Dive Operator Registration</h3>
 			<form id="register-form" method="post" accept-charset="utf-8">
 				<div id="steps">
 					<h3>General Info</h3>
@@ -39,7 +43,7 @@
 										<tr>
 											<td width="25%" style="padding: 0;">
 												<small>Extension</small>
-												<input style="box-sizing: border-box;" class="required" type="text" id="phone_ext" name="phone_ext" placeholder="+44">
+												<input style="box-sizing: border-box; width: 90%;" class="required" type="text" id="phone_ext" name="phone_ext" placeholder="+44">
 											</td>
 											<td width="75%" style="padding: 0;">
 												<small>Phone number</small>
@@ -53,8 +57,8 @@
 									<input class="required"  type="text" id="email" name="email">
 								</div>
 								<div class="form-row">
-									<label for="agencies">Accepted Training Organisation</label>
-									<div id="agencies">
+									<label for="agencies">Accepted Training Organisations:</label>
+									<div id="agencies" class="clearfix">
 										<div id="save-loader" class="loader"></div>
 									</div>
 								</div>
@@ -106,8 +110,8 @@
 									<table>
 										<tr>
 											<td width="25%" style="padding: 0;">
-												<small>code</small>
-												<input style="box-sizing: border-box;" class="required" type="text" id="business_phone_ext" name="business_phone_ext" placeholder="+44">
+												<small>Extension</small>
+												<input style="box-sizing: border-box; width: 90%;" class="required" type="text" id="business_phone_ext" name="business_phone_ext" placeholder="+44">
 											</td>
 											<td width="75%" style="padding: 0;">
 												<small>Phone number</small>
@@ -130,13 +134,13 @@
 								</div>
 								<div class="form-row">
 									<label for="country_id">Select your country:</label>
-									<select class="required" id="country_id" name="country_id">
+									<select class="required" id="country_id" name="country_id" style="width: 100%;">
 										<option value="">Please select</option>
 									</select>
 								</div>
 								<div class="form-row">
 									<label for="currency_id">Select your currency:</label>
-									<select class="required" id="currency_id" name="currency_id">
+									<select class="required" id="currency_id" name="currency_id" style="width: 100%;">
 										<option value="">Please select</option>
 									</select>
 								</div>
@@ -148,14 +152,14 @@
 						<div id="section3">
 							<div style="float:none; margin: 0 auto;" class="form-row">
 								<label for="terms">Copy and paste your terms and conditions here:</label>
-								<textarea id="terms" name="terms" style="width:100%" rows="8"></textarea>
+								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
 							</div>
 						</div>
 					</section>
 					<h3>Username</h3>
 					<section>
 						<div id="section4">
-						<div class="form-row">
+							<div class="form-row" style="text-align: center;">
 								<h3>Just one more thing...</h3>
 								<label for="username">Please enter your username:</label>
 								<input style="margin: 0 auto; width:280px" class="required"  type="text" id="username" name="username">
@@ -173,5 +177,3 @@
 	<footer><a href="/login/" class="bttn" id="register">Log in</a></footer>
 </body>
 </html>
-
-
