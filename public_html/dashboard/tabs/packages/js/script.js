@@ -1,7 +1,7 @@
 var packageForm,
     packageList,
-    priceInput,
-    ticketSelect;
+    priceInputTemplate,
+    ticketSelectTemplate;
 
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(ticketID) {
@@ -23,10 +23,11 @@ Handlebars.registerHelper('count', function(array) {
 Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
+Handlebars.registerPartial('tickets_template', $('#tickets-template').html());
 Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
 
-priceInput = Handlebars.compile( $('#price-input-template').html() );
-Handlebars.registerPartial('price_input', priceInput);
+priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
+Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
 	id: randomString(),
@@ -59,7 +60,7 @@ $(function(){
 		Tour.getPackagesTour();
 	});
 
-	ticketSelect = Handlebars.compile( $("#ticket-select-template").html() );
+	ticketSelectTemplate = Handlebars.compile( $("#ticket-select-template").html() );
 
 	$("#package-form-container").on('submit', '#add-package-form', function(event) {
 
@@ -117,20 +118,25 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			if(data.id || data.base_prices || data.prices) {
-				if(!data.id)
-					data.id = $('#update-package-form input[name=id]').val();
+			renderPackageList();
 
-				renderPackageList(function() {
-					renderEditForm(data.id);
+			$('.new_price').remove();
+
+			if(data.base_prices) {
+				_.each(data.base_prices, function(price) {
+					$('.add-base-price').before( priceInputTemplate(price) );
 				});
 			}
-			else {
-				renderPackageList();
-				// Remove the loader
-				$('#update-package').prop('disabled', false);
-				$('.loader').remove();
+
+			if(data.prices) {
+				_.each(data.prices, function(price) {
+					$('.add-price').before( priceInputTemplate(price) );
+				});
 			}
+
+			// Remove the loader
+			$('#update-package').prop('disabled', false);
+			$('.loader').remove();
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -190,7 +196,7 @@ $(function(){
 			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
 			numberOfDisabledInputs = disabledInputs.length;
 			if( numberOfDisabledInputs === 0) {
-				$('.ticket-list').append( ticketSelect({available_tickets: window.tickets}) );
+				$('.ticket-list').append( ticketSelectTemplate({available_tickets: window.tickets}) );
 			}
 		}
 	});
@@ -238,61 +244,6 @@ $(function(){
 		}
 	});
 
-	$('#package-form-container').on('click', '.deactivate-package', function(event) {
-    event.preventDefault();
-		var check = confirm('Do you really want to remove this package?');
-		if(check){
-			// Show loading indicator
-			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-			Package.deactivatePackage({
-				'id'    : $('#update-package-form input[name=id]').val(),
-				'_token': $('[name=_token]').val()
-			}, function success(data){
-
-				pageMssg(data.status, true);
-
-				renderPackageList();
-
-				renderEditForm();
-			}, function error(xhr){
-
-				pageMssg('Oops, something wasn\'t quite right');
-
-				$('.deactivate-package').prop('disabled', false);
-				$('#save-loader').remove();
-			});
-		}
-	});
-
-	/*
-	$('#package-form-container').on('click', '.restore-package', function(event){
-
-		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-		Package.restorePackage({
-			'id'    : $('#update-package-form input[name=id]').val(),
-			'_token': $('[name=_token]').val()
-		}, function success(data){
-
-			pageMssg(data.status, true);
-
-			renderPackageList();
-
-			window.packages[ $('#update-package-form input[name=id]').val() ].deleted_at = false;
-
-			renderEditForm( $('#update-package-form input[name=id]').val() );
-		}, function error(xhr){
-
-			pageMssg('Oops, something wasn\'t quite right');
-
-			$('.restore-package').prop('disabled', false);
-			$('#save-loader').remove();
-		});
-	});
-	*/
-
 	$("#package-list-container").on('click', '#change-to-add-package', function(event){
 
 		event.preventDefault();
@@ -305,7 +256,7 @@ $(function(){
 
 		window.sw.default_base_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_base_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_base_price) );
 
 		initPriceDatepickers();
 	});
@@ -315,7 +266,7 @@ $(function(){
 
 		window.sw.default_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_price) );
 
 		initPriceDatepickers();
 	});

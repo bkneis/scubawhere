@@ -33,7 +33,7 @@
 							<input id="package-name" type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
-								<span class="btn btn-danger pull-right {{#if has_bookings}}deactivate-package{{else}}remove-package{{/if}}">Remove</span>
+								<span class="btn btn-danger pull-right remove-package">Remove</span>
 							{{/if}}
 						</div>
 
@@ -44,10 +44,12 @@
 
 						<div id="package-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now, select the tickets that you want to include in the package. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
 							<strong>Select tickets to be included in this package:</strong>
-							{{#each tickets}}
+
+							{{#if update}}
+								{{> tickets_template}}
+							{{else}}
 								{{> ticket_select}}
-							{{/each}}
-							{{> ticket_select}}
+							{{/if}}
 						</div>
 
 						<div id="package-base" class="form-row">
@@ -77,7 +79,7 @@
 						</div>
 
 						<div id="package-size" class="form-row" data-step="4" data-position="top" data-intro="If you have a maximum group/course size, you can specify it here. Alternatively enter 0 to set no maximum.">
-							<label class="field-label">Max. group size per boat</label>
+							<label class="field-label">Max. group size per trip</label>
 							<input id="package-capacity" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
 							(Enter 0 or nothing for <i>no limit</i>)
 						</div>
@@ -123,24 +125,48 @@
 		</p>
 	</script>
 
+	<script type="text/x-handlebars-template" id="tickets-template">
+		{{#each tickets}}
+			<p>
+				<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+			</p>
+		{{/each}}
+	</script>
+
 	<script type="text/x-handlebars-template" id="price-input-template">
-		<p>
+		<p{{#unless decimal_price}} class="new_price"{{/unless}}>
 			<span class="currency">{{currency}}</span>
-			<input class="base-price" type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			{{#if decimal_price}}
+				<span class="amount">{{decimal_price}}</span>
+			{{else}}
+				<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			{{/if}}
 
 			{{#unless isAlways}}
-				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				{{#if decimal_price}}
+					from <big>{{from}}</big>
+				{{else}}
+					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				{{/if}}
 			{{else}}
 				from <strong>the beginning of time</strong>
-				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}">
+				{{#unless decimal_price}}
+					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+				{{/unless}}
 			{{/unless}}
 
 			{{#unless isBase}}
-				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				{{#if decimal_price}}
+					until <big>{{until}}</big>
+				{{else}}
+					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				{{/if}}
 			{{/unless}}
 
 			{{#unless isAlways}}
-				<button class="btn btn-danger remove-price">&#215;</button>
+				{{#unless decimal_price}}
+					<button class="btn btn-danger remove-price">&#215;</button>
+				{{/unless}}
 			{{/unless}}
 		</p>
 	</script>

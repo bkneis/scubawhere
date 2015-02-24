@@ -46,11 +46,10 @@ class PackageController extends Controller {
 		$base_prices = Input::get('base_prices');
 		if( !is_array($base_prices) )
 			return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
-		// Filter out empty price inputs
-		$base_prices = array_filter($base_prices, function($element)
-		{
-			return $element['new_decimal_price'] !== '';
-		});
+
+		// Filter out empty and existing prices
+		$base_prices = Helper::cleanPriceArray($base_prices);
+
 		// Check if 'prices' input array is now empty
 		if( empty($base_prices) )
 			return Response::json( array( 'errors' => array('You must submit at least one base price!')), 400 ); // 400 Bad Request
@@ -60,11 +59,10 @@ class PackageController extends Controller {
 			$prices = Input::get('prices');
 			if( !is_array($prices) )
 				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
-			// Filter out empty price inputs
-			$prices = array_filter($prices, function($element)
-			{
-				return $element['new_decimal_price'] !== '';
-			});
+
+			// Filter out empty and existing prices
+			$prices = Helper::cleanPriceArray($prices);
+
 			// Check if 'prices' input array is now empty
 			if( empty($prices) )
 				$prices = false;
@@ -72,31 +70,6 @@ class PackageController extends Controller {
 		else
 			$prices = false;
 		// ##################### End Prices #####################
-
-		// Normalise base_prices array
-		$base_prices = Helper::normaliseArray($base_prices);
-		// Create base_prices
-		foreach($base_prices as &$base_price)
-		{
-			$base_price = new Price($base_price);
-
-			if( !$base_price->validate() )
-				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		if($prices)
-		{
-			// Normalise prices array
-			$prices = Helper::normaliseArray($prices);
-			// Create prices
-			foreach($prices as &$price)
-			{
-				$price = new Price($price);
-
-				if( !$price->validate() )
-					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
-			}
-		}
 
 		if( $data['capacity'] == 0)
 			$data['capacity'] = null;
@@ -120,10 +93,32 @@ class PackageController extends Controller {
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( $tickets );
 
-		// Save prices
+		// Normalise base_prices array
+		$base_prices = Helper::normaliseArray($base_prices);
+		// Create new base_prices
+		foreach($base_prices as &$base_price)
+		{
+			$base_price = new Price($base_price);
+
+			if( !$base_price->validate() )
+				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
 		$package->basePrices()->saveMany($base_prices);
+
 		if($prices)
 		{
+			// Normalise prices array
+			$prices = Helper::normaliseArray($prices);
+			// Create new prices
+			foreach($prices as &$price)
+			{
+				$price = new Price($price);
+
+				if( !$price->validate() )
+					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
 			$package->prices()->saveMany($prices);
 		}
 
@@ -144,22 +139,16 @@ class PackageController extends Controller {
 			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Validate that tickets are supplied
-		$tickets = Input::get('tickets');
-		if( empty($tickets) )
-			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
-
 		// ####################### Prices #######################
 		if( Input::has('base_prices') )
 		{
 			$base_prices = Input::get('base_prices');
 			if( !is_array($base_prices) )
 				return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
-			// Filter out empty price inputs
-			$base_prices = array_filter($base_prices, function($element)
-			{
-				return $element['new_decimal_price'] !== '';
-			});
+
+			// Filter out empty and existing prices
+			$base_prices = Helper::cleanPriceArray($base_prices);
+
 			// Check if 'base_prices' input array is now empty
 			if( empty($base_prices) )
 				$base_prices = false;
@@ -172,11 +161,10 @@ class PackageController extends Controller {
 			$prices = Input::get('prices');
 			if( !is_array($prices) )
 				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
-			// Filter out empty price inputs
-			$prices = array_filter($prices, function($element)
-			{
-				return $element['new_decimal_price'] !== '';
-			});
+
+			// Filter out empty and existing prices
+			$prices = Helper::cleanPriceArray($prices);
+
 			// Check if 'prices' input array is now empty
 			if( empty($prices) )
 				$prices = false;
@@ -188,165 +176,45 @@ class PackageController extends Controller {
 		if( $data['capacity'] == 0)
 			$data['capacity'] = null;
 
-		// Check if a booking exists for the package and whether a critical value is updated
-		if( $package->has_bookings && (
-			   (!empty($tickets) && $this->checkTicketsChanged($package->tickets, $tickets))
-			|| ($base_prices     && Helper::checkPricesChanged($package->base_prices, $base_prices, true))
-			|| ($prices          && Helper::checkPricesChanged($package->prices, $prices))
-		) )
+		if( !$package->update($data) )
 		{
-			// If yes, create a new package with the input data
-
-			$data['base_prices'] = $base_prices;
-
-			// Only submit $prices, when input has been submitted: Otherwise, all seasonal prices are removed.
-			if( $prices )
-				$data['prices'] = $prices;
-
-			$data['parent_id'] = $package->id;
-
-			// Replace all unavailable input data with data from the old package object
-			if( empty($data['name']) )        $data['name']        = $package->name;
-			if( empty($data['description']) ) $data['description'] = $package->description;
-			if( empty($data['capacity']) )    $data['capacity']    = $package->capacity;
-			if( empty($data['base_prices']) ) $data['base_prices'] = $package->base_prices;
-
-			if( !Input::has('tickets') )
-			{
-				// Convert $package->tickets into input format
-				$data['tickets'] = array();
-				foreach($package->tickets as $ticket) // Includes pivot data by default
-				{
-					$data['tickets'][$ticket->id] = $ticket->pivot->quantity;
-				}
-			}
-			else {
-				$data['tickets'] = Input::get('tickets');
-			}
-
-			// SoftDelete the old ticket
-			$package->delete();
-
-			// TODO MAYBE: Unconnect the original ticket from boats
-
-			// Dispatch add-package route with all data and return result
-			$originalInput = Request::input();
-			$data['_token'] = Input::get('_token');
-			$request = Request::create('api/package/add', 'POST', $data);
-			Request::replace($request->input());
-			return Route::dispatch($request);
-			Request::replace($originalInput);
+			return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
 		}
-		else
+
+		if($base_prices)
 		{
-			$base_prices_changed = $base_prices && Helper::checkPricesChanged($package->base_prices, $base_prices, true);
-			$prices_changed      = $prices && Helper::checkPricesChanged($package->prices, $prices);
-
-			if($base_prices_changed)
+			// Normalise base_prices array
+			$base_prices = Helper::normaliseArray($base_prices);
+			// Create new base_prices
+			foreach($base_prices as &$base_price)
 			{
-				// Normalise base_prices array
-				$base_prices = Helper::normaliseArray($base_prices);
-				// Create base_prices
-				foreach($base_prices as &$base_price)
-				{
-					$base_price = new Price($base_price);
+				$base_price = new Price($base_price);
 
-					if( !$base_price->validate() )
-						return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
-				}
+				if( !$base_price->validate() )
+					return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
 			}
 
-			if($prices_changed)
-			{
-				// Normalise prices array
-				$prices = Helper::normaliseArray($prices);
-				// Create prices
-				foreach($prices as &$price)
-				{
-					$price = new Price($price);
-
-					if( !$price->validate() )
-						return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
-				}
-			}
-
-			if( !$package->update($data) )
-			{
-				return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
-			}
-
-			// Package has been created, let's connect it with its tickets
-			// TODO Validate input
-			/**
-			 * ticket_id => 'required|exists:tickets,id', // validate ownership
-			 * quantity  => 'required|integer|min:1'
-			 */
-			// Input must be of type <input name="tickets[1][quantity]" value="2">
-			//                                ticket_id --^   quantity value --^
-			if( Input::has('tickets') )
-				$package->tickets()->sync( Input::get('tickets') );
-
-			if( $base_prices_changed )
-			{
-				// Delete old base_prices
-				$package->basePrices()->delete();
-				$package->basePrices()->saveMany($base_prices);
-
-				$base_prices = true; // Signal the front-end to reload the form to show the new base_price IDs
-			}
-
-			if( $prices_changed )
-			{
-				// Delete old prices
-				$package->prices()->delete();
-				$package->prices()->saveMany($prices);
-
-				$prices = true; // Signal the front-end to reload the form to show the new price IDs
-			}
-			elseif( !$prices )
-			{
-				$package->prices()->delete();
-			}
-
-			return array('status' => 'OK. Package updated', 'base_prices' => $base_prices, 'prices' => $prices);
+			$base_prices = $package->basePrices()->saveMany($base_prices);
 		}
+
+		if($prices)
+		{
+			// Normalise prices array
+			$prices = Helper::normaliseArray($prices);
+			// Create new prices
+			foreach($prices as &$price)
+			{
+				$price = new Price($price);
+
+				if( !$price->validate() )
+					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			$prices = $package->prices()->saveMany($prices);
+		}
+
+		return array('status' => 'OK. Package updated', 'base_prices' => $base_prices, 'prices' => $prices);
 	}
-
-	public function postDeactivate()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$package->delete();
-
-		return array('status' => 'OK. Package deactivated');
-	}
-
-	/*
-	public function postRestore()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$package = Auth::user()->packages()->onlyTrashed()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$package->restore();
-
-		return array('status' => 'OK. Package restored');
-	}
-	*/
 
 	public function postDelete()
 	{
@@ -360,49 +228,21 @@ class PackageController extends Controller {
 			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$id = $package->id;
-
 		try
 		{
 			$package->forceDelete();
+
+			// If deletion worked, delete associated prices
+			Price::where(Price::$owner_id_column_name, $package->id)->where(Price::$owner_type_column_name, 'Package')->delete();
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The package can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+			// SoftDelete instead
+			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
+			$package->delete();
 		}
-
-		// If deletion worked, delete associated prices
-		Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Package')->delete();
 
 		return array('status' => 'Ok. Package deleted');
-	}
-
-	protected function checkTicketsChanged($old_tickets, $tickets)
-	{
-		$old_tickets = $old_tickets->toArray();
-
-		if(count($tickets) !== count($old_tickets)) return true;
-
-		// Convert $old_tickets into same format as $tickets
-		$array = [];
-		foreach($old_tickets as $old_ticket)
-		{
-			$array[$old_ticket['id']]['quantity'] = $old_ticket['pivot']['quantity'];
-		}
-		$old_tickets = $array;
-
-		// Compare keys (both ways)
-		if( count( array_merge( array_diff_key($old_tickets, $tickets), array_diff_key($tickets, $old_tickets) ) ) > 0 )
-			return true;
-
-		// Compare each quantity
-		foreach($old_tickets as $key => $old_ticket)
-		{
-			if( $old_ticket['quantity'] != $tickets[$key]['quantity'] ) // Needs to compare int with numerical string
-				return true;
-		}
-
-		return false;
 	}
 
 }

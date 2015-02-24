@@ -10,8 +10,6 @@ class Package extends Ardent {
 
 	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
 
-	protected $appends = array('has_bookings');
-
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
@@ -28,16 +26,6 @@ class Package extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-	}
-
-	public function getHasBookingsAttribute()
-	{
-		return $this->bookingdetails()
-		    ->whereHas('booking', function($query)
-		    {
-		    	$query->whereIn('status', ['confirmed', 'cancelled'])->orWhereNotNull('reserved');
-		    })
-		    ->count() > 0;
 	}
 
 	public function calculatePrice($start, $limitBefore = false) {
@@ -87,6 +75,6 @@ class Package extends Ardent {
 
 	public function tickets()
 	{
-		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();
+		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps()->withTrashed();
 	}
 }

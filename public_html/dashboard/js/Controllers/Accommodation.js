@@ -32,28 +32,6 @@ var Accommodation = {
 		});
 	},
 
-	deactivate : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/accommodation/deactivate",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-
-	/*
-	restore : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/accommodation/restore",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-	*/
-
 	delete : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",

@@ -28,11 +28,6 @@ class Accommodation extends Ardent {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 	}
 
-	public function getHasBookingsAttribute()
-	{
-		return $this->bookings()->whereIn('status', Booking::$counted)->exists();
-	}
-
 	public function calculatePrice($start, $end, $limitBefore = false) {
 		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
 		$end = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));

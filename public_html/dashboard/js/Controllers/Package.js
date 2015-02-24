@@ -38,28 +38,6 @@ var Package = {
 		});
 	},
 
-	deactivatePackage : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/package/deactivate",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-
-	/*
-	restorePackage : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/package/restore",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-	*/
-
 	deletePackage : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",

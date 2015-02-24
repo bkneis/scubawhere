@@ -850,7 +850,8 @@ ul#sidenav > li > ul > li:hover {
 }
 
 .currency,
-.amount {
+.amount,
+.margin-right {
 	font-size: 18px;
 	margin-right: 0.5em;
 }

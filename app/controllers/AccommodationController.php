@@ -138,7 +138,6 @@ class AccommodationController extends Controller {
 		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// ####################### Prices #######################
-
 		$base_prices = Input::get('base_prices');
 		if( !is_array($base_prices) )
 			return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
@@ -187,7 +186,7 @@ class AccommodationController extends Controller {
 				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$base_prices = $accommodation->basePrices()->saveMany($base_prices);
+		$accommodation->basePrices()->saveMany($base_prices);
 
 		if($prices)
 		{
@@ -202,7 +201,7 @@ class AccommodationController extends Controller {
 					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
 			}
 
-			$prices = $accommodation->prices()->saveMany($prices);
+			$accommodation->prices()->saveMany($prices);
 		}
 
 		return Response::json( array('status' => 'OK. Accommodation created', 'id' => $accommodation->id), 201 ); // 201 Created
