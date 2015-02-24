@@ -14,8 +14,11 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()
-			->with(
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('id') );
+
+			$booking->loadTrashed = true;
+
+			$booking->load(
 				'lead_customer',
 				'bookingdetails',
 					'bookingdetails.customer',
@@ -34,8 +37,7 @@ class BookingController extends Controller {
 				'refunds',
 					// 'refunds.currency',
 					'refunds.paymentgateway'
-			)
-			->findOrFail( Input::get('id') );
+			);
 
 			$booking->bookingdetails->each(function($detail) use ($booking)
 			{

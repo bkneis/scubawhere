@@ -23,6 +23,8 @@ class Booking extends Ardent {
 
 	protected $appends = array('decimal_price', 'arrival_date');
 
+	public $loadTrashed = false;
+
 	public static $rules = array(
 		'lead_customer_id' => 'integer|min:1',
 		'agent_id'         => 'integer|required_without:source',
@@ -167,6 +169,9 @@ class Booking extends Ardent {
 
 	public function accommodations()
 	{
+		if($this->withTrashed)
+			return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'start', 'end')->withTimestamps()->withTrashed();
+
 		return $this->belongsToMany('Accommodation')->withPivot('customer_id', 'start', 'end')->withTimestamps();
 	}
 
