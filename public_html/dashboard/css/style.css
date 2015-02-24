@@ -849,7 +849,8 @@ ul#sidenav > li > ul > li:hover {
 	background-color: #2ecc71;
 }
 
-.currency {
+.currency,
+.amount {
 	font-size: 18px;
 	margin-right: 0.5em;
 }

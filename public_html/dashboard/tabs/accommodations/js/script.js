@@ -1,6 +1,6 @@
 var accommodationForm,
     accommodationList,
-    priceInput;
+    priceInputTemplate;
 
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('currency', function() {
@@ -27,8 +27,8 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
-priceInput = Handlebars.compile( $('#price-input-template').html() );
-Handlebars.registerPartial('price_input', priceInput);
+priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
+Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
 	id: randomString(),
@@ -113,20 +113,25 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			if(data.id || data.base_prices || data.prices) {
-				if(!data.id)
-					data.id = $('#update-accommodation-form input[name=id]').val();
+			renderAccommodationList();
 
-				renderAccommodationList(function() {
-					renderEditForm(data.id);
+			$('.new_price').remove();
+
+			if(data.base_prices) {
+				_.each(data.base_prices, function(price) {
+					$('.add-base-price').before( priceInputTemplate(price) );
 				});
 			}
-			else {
-				renderAccommodationList();
-				// Remove the loader
-				$('#update-accommodation').prop('disabled', false);
-				$('.loader').remove();
+
+			if(data.prices) {
+				_.each(data.prices, function(price) {
+					$('.add-price').before( priceInputTemplate(price) );
+				});
 			}
+
+			// Remove the loader
+			$('#update-accommodation').prop('disabled', false);
+			$('.loader').remove();
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -195,76 +200,6 @@ $(function(){
 		}
 	});
 
-	$('#accommodation-form-container').on('click', '.deactivate-accommodation', function(event){
-		event.preventDefault();
-    var check = confirm('Do you really want to remove this accommodation?');
-		if(check){
-			// Show loading indicator
-			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-			Accommodation.deactivate({
-				'id'    : $('#update-accommodation-form input[name=id]').val(),
-				'_token': $('[name=_token]').val()
-			}, function success(data){
-
-				pageMssg(data.status, true);
-
-				renderAccommodationList();
-
-				renderEditForm();
-			}, function error(xhr){
-
-				var data = JSON.parse(xhr.responseText);
-				console.log(data);
-
-				if(data.errors.length > 0) {
-
-					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
-					errorsHTML = errorsHTML(data);
-
-					// Render error messages
-					$('.errors').remove();
-					$('#update-accommodation-form').prepend(errorsHTML);
-					$('#update-accommodation').before(errorsHTML);
-				}
-				else {
-					alert(xhr.responseText);
-				}
-
-				$('.deactivate-accommodation').prop('disabled', false);
-				$('#save-loader').remove();
-			});
-		}
-	});
-
-	/*
-	$('#accommodation-form-container').on('click', '.restore-accommodation', function(event){
-
-		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-		Accommodation.restore({
-			'id'    : $('#update-accommodation-form input[name=id]').val(),
-			'_token': $('[name=_token]').val()
-		}, function success(data){
-
-			pageMssg(data.status, true);
-
-			renderAccommodationList();
-
-			window.accommodations[ $('#update-accommodation-form input[name=id]').val() ].deleted_at = null;
-
-			renderEditForm( $('#update-accommodation-form input[name=id]').val() );
-		}, function error(xhr){
-
-			pageMssg('Oops, something wasn\'t quite right');
-
-			$('.restore-accommodation').prop('disabled', false);
-			$('#save-loader').remove();
-		});
-	});
-	*/
-
 	$("#accommodation-list-container").on('click', '#change-to-add-accommodation', function(event){
 
 		event.preventDefault();
@@ -277,7 +212,7 @@ $(function(){
 
 		window.sw.default_base_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_base_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_base_price) );
 
 		initPriceDatepickers();
 	});
@@ -287,7 +222,7 @@ $(function(){
 
 		window.sw.default_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_price) );
 
 		initPriceDatepickers();
 	});
@@ -329,7 +264,7 @@ function renderAccommodationList(callback) {
 function renderEditForm(id) {
 
 	if( unsavedChanges() ) {
-		var question = confirm("ATTENTION: All unsaved changes are lost!");
+		var question = confirm("ATTENTION: All unsaved changes will be lost!");
 		if( !question) {
 			return false;
 		}

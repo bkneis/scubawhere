@@ -10,8 +10,6 @@ class Accommodation extends Ardent {
 
 	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
 
-	protected $appends = array('has_bookings');
-
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
@@ -32,7 +30,7 @@ class Accommodation extends Ardent {
 
 	public function getHasBookingsAttribute()
 	{
-		return $this->bookings()->whereIn('status', ['confirmed', 'cancelled'])->orWhereNotNull('reserved')->count() > 0;
+		return $this->bookings()->whereIn('status', Booking::$counted)->exists();
 	}
 
 	public function calculatePrice($start, $end) {
