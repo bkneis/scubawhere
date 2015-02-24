@@ -212,13 +212,13 @@
 									<h4>Customer Details</h4>
 									<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
 										<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer pull-right" data-id="{{id}}">Edit</a>
-										<h5 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h5>									
+										<h5 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h5>
 										<p class="list-group-item-text">
 											<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
 											{{{address_1}}}<br>
 											{{{city}}}, {{{county}}}, {{postcode}}<br>
 											<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
-										</p>									
+										</p>
 									</li>
 								</script>
 							</div>
@@ -229,7 +229,7 @@
 									</div>
 								</div>
 							</div>
-						</div>						
+						</div>
 					</div>
 					<div class="col-md-8">
 						<div class="panel panel-primary form-horizontal">
@@ -1040,7 +1040,7 @@
 															{{#each addons}}
 																<p>
 																	<i class="fa fa-cart-plus fa-fw"></i> {{{name}}} | {{decimal_price}} <span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
-																	{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
+																	{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
 																</p>
 															{{/each}}
 														</div>
