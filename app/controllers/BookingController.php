@@ -116,9 +116,9 @@ class BookingController extends Controller {
 	{
 		/**
 		 * Allowed input parameter
-		 * reference
-		 * date
-		 * lastname
+		 * reference  {string}
+		 * date       {date, string}
+		 * lastname   {string}
 		 */
 
 		$reference = Input::get('reference', null);
@@ -126,7 +126,7 @@ class BookingController extends Controller {
 		$lastname  = Input::get('lastname', null);
 
 		if(empty($reference) && empty($date) && empty($lastname))
-			return array();
+			return $this->getAll();
 
 		if(!empty($date))
 			$date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
@@ -173,6 +173,80 @@ class BookingController extends Controller {
 			->orderBy('updated_at', 'DESC')
 			->skip($from)
 			->take($take)
+			->get();
+
+		return $bookings;
+	}
+
+	public function getFilterConfirmed()
+	{
+		/**
+		 * Allowed input parameter
+		 * after     {date string}
+		 * before    {date string}
+		 */
+
+		$after     = Input::get('after', false);
+		$before    = Input::get('before', false);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$bookings = Auth::user()->bookings()
+			/*->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
+			)*/
+			->where('status', 'confirmed')
+			->whereBetween('created_at', [$after, $before])
+			->orderBy('created_at')
+			->get();
+
+		return $bookings;
+	}
+
+	public function getFilterConfirmedByAgent()
+	{
+		/**
+		 * Allowed input parameter
+		 * after     {date string}
+		 * before    {date string}
+		 * agent_ids {array of integer}
+		 */
+
+		$after     = Input::get('after', false);
+		$before    = Input::get('before', false);
+		$agent_ids = Input::get('agent_ids', []);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		if(!empty($agent_ids) && !is_array($agent_ids))
+			return Response::json(['errors' => ['The parameter "agent_ids" must be an array!']], 400); // 400 Bad Request
+
+		$bookings = Auth::user()->bookings()
+			->with('agent')
+			/*->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
+			)*/
+			->where('status', 'confirmed')
+			->whereBetween('created_at', [$after, $before])
+			->whereNotNull('agent_id')
+			->where(function($query) use ($agent_ids)
+			{
+				if(!empty($agent_ids))
+					$query->whereIn('agent_id', $agent_ids);
+			})
+			->orderBy('created_at')
 			->get();
 
 		return $bookings;

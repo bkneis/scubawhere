@@ -25,7 +25,18 @@ class PaymentController extends Controller {
 
 	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->payments()->with('currency', 'paymentgateway')->orderBy('created_at', 'DESC')->skip($from)->take($take)->get();
+		return Auth::user()->payments()->with('currency', 'paymentgateway')->orderBy('bookings.created_at')->skip($from)->take($take)->get();
+	}
+
+	public function getFilter()
+	{
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		return Auth::user()->payments()->with('currency', 'paymentgateway', 'booking')->whereBetween('bookings.created_at', [$after, $before])->orderBy('bookings.created_at')->get();
 	}
 
 	public function getPaymentgateways()

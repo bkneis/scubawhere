@@ -89,7 +89,7 @@ class DepartureController extends Controller {
 		$data['with_full'] = Input::get('with_full', false);
 
 		// Transform parameter strings into DateTime objects
-		$data['after']  = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
+		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
 			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
