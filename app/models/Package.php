@@ -40,7 +40,7 @@ class Package extends Ardent {
 		    ->count() > 0;
 	}
 
-	public function calculatePrice($start) {
+	public function calculatePrice($start, $limitBefore = false) {
 		$price = Price::where(Price::$owner_id_column_name, $this->id)
 		     ->where(Price::$owner_type_column_name, 'Package')
 		     ->where('from', '<=', $start)
@@ -48,6 +48,11 @@ class Package extends Ardent {
 		     {
 		     	$query->whereNull('until')
 		     	      ->orWhere('until', '>=', $start);
+		     })
+		     ->where(function($query) use ($limitBefore)
+		     {
+		     	if($limitBefore)
+		     		$query->where('created_at', '<=', $limitBefore);
 		     })
 		     ->orderBy('id', 'DESC')
 		     ->first();

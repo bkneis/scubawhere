@@ -37,14 +37,34 @@ class BookingController extends Controller {
 			)
 			->findOrFail( Input::get('id') );
 
-			$booking->bookingdetails->each(function($detail)
+			$booking->bookingdetails->each(function($detail) use ($booking)
 			{
-				$detail->ticket->calculatePrice( $detail->session->start );
+				$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $detail->created_at : $limitBefore = false;
+
+				if($detail->packagefacade_id != null)
+				{
+					// Find the first departure datetime that is booked in this package
+					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure')->get();
+					$firstDetail = $bookingdetails->sortBy(function($detail)
+					{
+						return $detail->departure->start;
+					})->first();
+
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $limitBefore);
+				}
+				else
+				{
+					// Sum up the ticket
+					$detail->ticket->calculatePrice($detail->session->start, $limitBefore);
+				}
 			});
 
-			$booking->accommodations->each(function($accommodation)
+			$booking->accommodations->each(function($accommodation) use ($booking)
 			{
-				$accommodation->calculatePrice( $accommodation->pivot->start, $accommodation->pivot->end );
+				$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $accommodation->pivot->created_at : $limitBefore = false;
+
+				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 
 				$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
 			});

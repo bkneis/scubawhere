@@ -240,11 +240,14 @@ class Booking extends Ardent {
 		$currency = new Currency( Auth::user()->currency->code );
 
 		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
+
 		$sum = 0;
 		$tickedOffPackagefacades = [];
 
 		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades)
 		{
+			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $detail->created_at : $limitBefore = false;
+
 			if($detail->packagefacade_id != null)
 			{
 				// Sum up the package
@@ -263,14 +266,14 @@ class Booking extends Ardent {
 					})->first();
 
 					// Calculate the package price at this first departure datetime and sum it up
-					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start);
+					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $limitBefore);
 					$sum += $detail->packagefacade->package->decimal_price;
 				}
 			}
 			else
 			{
 				// Sum up the ticket
-				$detail->ticket->calculatePrice($detail->departure->start);
+				$detail->ticket->calculatePrice($detail->departure->start, $limitBefore);
 				$sum += $detail->ticket->decimal_price;
 			}
 
@@ -291,7 +294,10 @@ class Booking extends Ardent {
 
 		$accommodations->each(function($accommodation) use (&$sum)
 		{
-			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end);
+
+			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $accommodation->pivot->created_at : $limitBefore = false;
+
+			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 			$sum += $accommodation->decimal_price;
 		});
 

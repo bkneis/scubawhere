@@ -33,7 +33,7 @@ class Accommodation extends Ardent {
 		return $this->bookings()->whereIn('status', Booking::$counted)->exists();
 	}
 
-	public function calculatePrice($start, $end) {
+	public function calculatePrice($start, $end, $limitBefore = false) {
 		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
 		$end = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
 
@@ -53,6 +53,11 @@ class Accommodation extends Ardent {
 					$query->whereNull('until')
 					      ->orWhere('until', '>=', $date);
 				})
+			     ->where(function($query) use ($limitBefore)
+			     {
+			     	if($limitBefore)
+			     		$query->where('created_at', '<=', $limitBefore);
+			     })
 				->orderBy('id', 'DESC')
 				->first()->decimal_price;
 
