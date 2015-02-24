@@ -78,8 +78,6 @@ class PackageModelTest extends ModelTestCase {
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$package_id = ModelTestHelper::createPackage($company_id);
 		$package = Package::find($package_id);
-
-		$this->assertFalse($package->has_bookings, "Unexpected has_bookings value");
 	}
 
 	public function testEdges(){

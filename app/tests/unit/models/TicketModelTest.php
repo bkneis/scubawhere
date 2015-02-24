@@ -75,8 +75,6 @@ class TicketModelTest extends ModelTestCase {
 		$company_id = ModelTestHelper::createCompany($country_id, $currency_id);
 		$ticket_id = ModelTestHelper::createTicket($company_id);
 		$ticket = Ticket::find($ticket_id);
-
-		$this->assertFalse($ticket->has_bookings, "Unexpected has_bookings value");
 	}
 
 	public function testEdges(){
