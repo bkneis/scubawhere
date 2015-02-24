@@ -304,6 +304,8 @@ class Booking extends Ardent {
 		});
 		*/
 
+		$sum -= $this->discount;
+
 		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
 
 		$this->save();
