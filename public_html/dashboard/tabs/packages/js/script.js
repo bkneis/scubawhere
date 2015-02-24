@@ -124,6 +124,7 @@ $(function(){
 
 			if(data.base_prices) {
 				_.each(data.base_prices, function(price) {
+					price.isBase = true;
 					$('.add-base-price').before( priceInputTemplate(price) );
 				});
 			}

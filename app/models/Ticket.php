@@ -10,8 +10,6 @@ class Ticket extends Ardent {
 
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
 
-	protected $appends = array('has_bookings');
-
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
@@ -27,13 +25,6 @@ class Ticket extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-}
-
-	public function getHasBookingsAttribute()
-	{
-		return $this->bookings()
-		    ->whereIn('status', ['confirmed', 'cancelled'])->orWhereNotNull('reserved')
-		    ->count() > 0;
 	}
 
 	public function calculatePrice($start, $limitBefore = false) {

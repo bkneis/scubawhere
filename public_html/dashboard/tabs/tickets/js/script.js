@@ -1,6 +1,6 @@
 var ticketForm,
     ticketList,
-    priceInput;
+    priceInputTemplate;
 
 window.promises = {};
 
@@ -11,11 +11,13 @@ Handlebars.registerHelper('selected', function(id) {
 	else
 		return '';
 });
-Handlebars.registerHelper('inArray', function(needle, haystack, string, elseString) {
+Handlebars.registerHelper('inArray', function(needle, haystack, ifString, elseString) {
 	if(elseString === undefined) elseString = '';
 	if(haystack === undefined) return elseString;
 
-	return _.has(haystack, needle) ? string : elseString;
+	ifString = ifString.replace('{id}', needle);
+
+	return new Handlebars.SafeString(_.has(haystack, needle) ? ifString : elseString);
 });
 Handlebars.registerHelper('isEqualDeepPivot', function(compare, array, key, attribute, string) {
 	if(!array) return '';
@@ -46,8 +48,8 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
-priceInput = Handlebars.compile( $('#price-input-template').html() );
-Handlebars.registerPartial('price_input', priceInput);
+priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
+Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
 	id: randomString(),
@@ -165,20 +167,26 @@ $(function () {
 
 			$('form').data('hasChanged', false);
 
-			if(data.id || data.base_prices || data.prices) {
-				if(!data.id)
-					data.id = $('#update-ticket-form input[name=id]').val();
+			renderTicketList();
 
-				renderTicketList(function() {
-					renderEditForm(data.id);
+			$('.new_price').remove();
+
+			if(data.base_prices) {
+				_.each(data.base_prices, function(price) {
+					price.isBase = true;
+					$('.add-base-price').before( priceInputTemplate(price) );
 				});
 			}
-			else {
-				renderTicketList();
-				// Remove the loader
-				$('#update-ticket').prop('disabled', false);
-				$('.loader').remove();
+
+			if(data.prices) {
+				_.each(data.prices, function(price) {
+					$('.add-price').before( priceInputTemplate(price) );
+				});
 			}
+
+			// Remove the loader
+			$('#update-ticket').prop('disabled', false);
+			$('.loader').remove();
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -217,7 +225,7 @@ $(function () {
 
 		window.sw.default_base_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_base_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_base_price) );
 
 		initPriceDatepickers();
 	});
@@ -227,7 +235,7 @@ $(function () {
 
 		window.sw.default_price.id = randomString();
 
-		$(event.target).before( priceInput(window.sw.default_price) );
+		$(event.target).before( priceInputTemplate(window.sw.default_price) );
 
 		initPriceDatepickers();
 	});

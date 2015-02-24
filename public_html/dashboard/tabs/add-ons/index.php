@@ -33,7 +33,7 @@
 							<input id="addon-name" type="text" name="name" value="{{{name}}}">
 
 							{{#if update}}
-								<span class="btn btn-danger pull-right{{#if has_bookings}} deactivate-addon{{else}} remove-addon{{/if}}">Remove</span>
+								<span class="btn btn-danger pull-right remove-addon">Remove</span>
 							{{/if}}
 						</div>
 

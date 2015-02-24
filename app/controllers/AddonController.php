@@ -123,42 +123,6 @@ class AddonController extends Controller {
 		}
 	}
 
-	public function postDeactivate()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$addon->delete();
-
-		return array('status' => 'OK. Addon deactivated');
-	}
-
-	/*
-	public function postRestore()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->onlyTrashed()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$addon->restore();
-
-		return array('status' => 'OK. Addon restored');
-	}
-	*/
-
 	public function postDelete()
 	{
 		try
@@ -177,7 +141,9 @@ class AddonController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The addon can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+
+			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
+			$addon->delete();
 		}
 
 		return array('status' => 'Ok. Addon deleted');

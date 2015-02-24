@@ -143,61 +143,6 @@ $(function(){
 		}
 	});
 
-	$('#addon-form-container').on('click', '.deactivate-addon', function(event) {
-    event.preventDefault();
-		var check = confirm('Do you really want to remove this addon?');
-		if(check){
-			// Show loading indicator
-			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-			Addon.deactiveAddon({
-				'id'    : $('#update-addon-form input[name=id]').val(),
-				'_token': $('[name=_token]').val()
-			}, function success(data){
-
-				pageMssg(data.status, true);
-
-				renderAddonList();
-
-				renderEditForm();
-			}, function error(xhr){
-
-				pageMssg('Oops, something wasn\'t quite right');
-
-				$('.deactivate-addon').prop('disabled', false);
-				$('#save-loader').remove();
-			});
-		}
-	});
-
-	/*
-	$('#addon-form-container').on('click', '.restore-addon', function(event) {
-
-		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-		Addon.restoreAddon({
-			'id'    : $('#update-addon-form input[name=id]').val(),
-			'_token': $('[name=_token]').val()
-		}, function success(data){
-
-			pageMssg(data.status, true);
-
-			renderAddonList();
-
-			window.addons[ $('#update-addon-form input[name=id]').val() ].deleted_at = false;
-
-			renderEditForm( $('#update-addon-form input[name=id]').val() );
-		}, function error(xhr){
-
-			pageMssg('Oops, something wasn\'t quite right');
-
-			$('.restore-addon').prop('disabled', false);
-			$('#save-loader').remove();
-		});
-	});
-	*/
-
 });
 
 function renderAddonList(callback) {

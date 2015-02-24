@@ -32,9 +32,9 @@
 							<label class="field-label">Ticket Name</label>
 							<input id="ticket-name" type="text" name="name" value="{{{name}}}">
 
-							{{!-- TODO Enable deletion and deactivation of ticktes, including all necessary checks
+							{{!-- TODO Enable deletion of ticktes, including all necessary checks and propagation
 							{{#if update}}
-								<span class="btn btn-danger pull-right {{#if has_bookings}}deactivate-ticket{{else}}remove-ticket{{/if}}">Remove</span>
+								<span class="btn btn-danger pull-right remove-ticket">Remove</span>
 							{{/if}}
 							--}}
 						</div>
@@ -75,7 +75,7 @@
 							{{#each available_trips}}
 								<p style="margin-left: 4em;">
 									<label>
-										<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked'}}>
+										<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
 										{{{name}}}
 									</label>
 								</p>
@@ -91,7 +91,7 @@
 								{{#each available_boats}}
 									<p>
 										<label>
-											<input type="checkbox" name="boats[]" value="{{id}}"{{inArray id ../boats ' checked'}}>
+											<input type="checkbox" name="boats[]" value="{{id}}"{{inArray id ../boats ' checked' ''}}>
 											{{name}}
 										</label>
 									</p>
@@ -108,7 +108,7 @@
 								{{#each available_boatrooms}}
 									<p>
 										<label>
-											<input type="checkbox" name="boatrooms[]" value="{{id}}"{{inArray id ../boatrooms ' checked'}}>
+											<input type="checkbox" name="boatrooms[]" value="{{id}}"{{inArray id ../boatrooms ' checked' ''}}>
 											{{name}}
 										</label>
 									</p>
@@ -130,23 +130,39 @@
 	</div>
 
 	<script type="text/x-handlebars-template" id="price-input-template">
-		<p>
+		<p{{#unless decimal_price}} class="new_price"{{/unless}}>
 			<span class="currency">{{currency}}</span>
-			<input id="ticket-base" type="number" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" value="{{decimal_price}}" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			{{#if decimal_price}}
+				<span class="amount">{{decimal_price}}</span>
+			{{else}}
+				<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			{{/if}}
 
 			{{#unless isAlways}}
-				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				{{#if decimal_price}}
+					from <big>{{from}}</big>
+				{{else}}
+					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				{{/if}}
 			{{else}}
 				from <strong>the beginning of time</strong>
-				<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}">
+				{{#unless decimal_price}}
+					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+				{{/unless}}
 			{{/unless}}
 
 			{{#unless isBase}}
-				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				{{#if decimal_price}}
+					until <big>{{until}}</big>
+				{{else}}
+					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				{{/if}}
 			{{/unless}}
 
 			{{#unless isAlways}}
-				<button class="btn btn-danger remove-price">&#215;</button>
+				{{#unless decimal_price}}
+					<button class="btn btn-danger remove-price">&#215;</button>
+				{{/unless}}
 			{{/unless}}
 		</p>
 	</script>

@@ -32,28 +32,6 @@ var Addon = {
 		});
 	},
 
-	deactivateAddon : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/addon/deactivate",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-
-	/*
-	restoreAddon : function(params, handleData, errorFn){
-		$.ajax({
-			type: "POST",
-			url: "/api/addon/restore",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-	*/
-
 	deleteAddon : function(params, handleData, errorFn){
 		$.ajax({
 			type: "POST",
