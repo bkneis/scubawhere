@@ -35,7 +35,7 @@ class Departure extends Ardent {
 		$result[0] = $this->bookingdetails()
 		    ->whereHas('booking', function($query)
 		    {
-		    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+		    	$query->whereIn('status', Booking::$counted);
 		    })->count();
 
 		$result[1] = $boat->capacity;
@@ -50,7 +50,7 @@ class Departure extends Ardent {
 			$result[2][$boatroom->id][0] = $this->bookingdetails()
 			    ->whereHas('booking', function($query)
 			    {
-			    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+			    	$query->whereIn('status', Booking::$counted);
 			    })
 			    ->where('boatroom_id', $boatroom->id)
 			    ->count();

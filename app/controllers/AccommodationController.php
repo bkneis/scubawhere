@@ -105,6 +105,8 @@ class AccommodationController extends Controller {
 		})
 		->get();
 
+
+		// Generate the utilisation for every day within the requested date range
 		do
 		{
 			$key = $current_date->format('Y-m-d');
@@ -119,7 +121,7 @@ class AccommodationController extends Controller {
 					    ->wherePivot('end', '>', $current_date)
 					    ->where(function($query)
 					    {
-					    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+					    	$query->whereIn('status', Booking::$counted);
 					    })
 					    ->count(),
 					$el->capacity

@@ -89,51 +89,63 @@ class CronRunCommand extends Command {
 		$this->everyFiveMinutes(function()
 		{
 			/**
-			 * Unreserve all reserved bookings where reserved datetime is overdue
+			 * Set overdue reserved bookings to status='expired'
 			 */
-			$bookings = Booking::whereNotNull('reserved')->with('company')->get();
-			$ids = array();
+			$bookings = Booking::whereIn('status', ['initialised', 'reserved'])->with('company')->get();
+
+			$ids_initialised = array();
+			$ids_reserved    = array();
+
+			$now = new DateTime('now', new DateTimeZone($booking->company->timezone));
+
 			foreach($bookings as $booking)
 			{
-				$before = new DateTime('now', new DateTimeZone($booking->company->timezone));
-				$test   = new DateTime($booking->reserved, new DateTimeZone($booking->company->timezone));
-				if( $test < $before)
+				$test = new DateTime($booking->reserved, new DateTimeZone($booking->company->timezone));
+				if($test < $now)
 				{
-					array_push($ids, $booking->id);
+					$booking->status === 'initialised' ? $ids_initialised[] = $booking->id : $ids_reserved[] = $booking->id;
 				}
 			}
 
-			if(count($ids) > 0)
+			if(count($ids_initialised) > 0)
 			{
 				// Create a string containing as many ?,?... as there are IDs
-				$clause = implode(',', array_fill(0, count($ids), '?'));
+				$clause = implode(',', array_fill(0, count($ids_initialised), '?'));
 				// This query deliberately does not set the `status` to null or 'saved'.
 				// This way, we still know which bookings where reserved but have expired.
-				DB::update("UPDATE bookings SET `reserved` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids);
+				DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_initialised);
 			}
 
-			$this->messages[] = count($ids) . ' expired bookings unreserved';
+			if(count($ids_reserved) > 0)
+			{
+				// Create a string containing as many ?,?... as there are IDs
+				$clause = implode(',', array_fill(0, count($ids_reserved), '?'));
+				// This query deliberately does not set the `status` to null or 'saved'.
+				// This way, we still know which bookings where reserved but have expired.
+				DB::update("UPDATE bookings SET `status` = 'expired', `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_reserved);
+			}
+
+			$this->messages[] = count($ids_initialised) . ' bookings abandoned';
+			$this->messages[] = count($ids_reserved) . ' bookings expired';
 
 			/**
-			 * Delete all unsaved bookings older than 1h
-			 * (This includes abandoned bookings, which are deleted 1h after their `reserved` date is set to NULL)
+			 * Delete all abandoned bookings older than 1h
 			 */
 			$before = date('Y-m-d H:i:s', time() - 1 * 60 * 60);
 			$affectedRows = Booking::where('status', null)
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
-			$this->messages[] = $affectedRows . ' unsaved bookings deleted';
+			$this->messages[] = $affectedRows . ' abandoned bookings deleted';
 
 			/**
-			 * Delete all expired reserved bookings older than 24h
+			 * Delete all expired bookings older than 24h
 			 */
 			/*
 			$before = date('Y-m-d H:i:s', time() - 24 * 60 * 60);
-			$affectedRows = Booking::where('status', 'reserved')
-			                        ->whereNull('reserved')
+			$affectedRows = Booking::where('status', 'expired')
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
-			$this->messages[] = $affectedRows . ' day-old expired bookings deleted';
+			$this->messages[] = $affectedRows . ' expired bookings deleted';
 			*/
 		});
 
@@ -142,6 +154,7 @@ class CronRunCommand extends Command {
 			Artisan::call('auth:clear-reminders');
 		});
 
+		// DO NOT REMOVE!
 		$this->finish();
 	}
 

@@ -223,7 +223,7 @@ class BookingController extends Controller {
 				'refunds',
 					'refunds.paymentgateway'
 			)*/
-			->where('status', 'confirmed')
+			->whereIn('status', ['confirmed'/*, 'reserved' */])
 			->whereBetween('created_at', [$after, $before])
 			->orderBy('created_at')
 			->get();
@@ -260,7 +260,7 @@ class BookingController extends Controller {
 				'refunds',
 					'refunds.paymentgateway'
 			)*/
-			->where('status', 'confirmed')
+			->whereIn('status', ['confirmed'/*, 'reserved' */])
 			->whereBetween('created_at', [$after, $before])
 			->whereNotNull('agent_id')
 			->where(function($query) use ($agent_ids)
@@ -299,7 +299,7 @@ class BookingController extends Controller {
 
 		// Reserve booking for 15 min by default
 		$data['reserved'] = Helper::localTime()->add( new DateInterval('PT15M') )->format('Y-m-d H:i:s');
-		// Do not set `status` to 'reserved'
+		$data['status'] = 'initialised';
 
 		$booking = new Booking($data);
 
@@ -422,7 +422,7 @@ class BookingController extends Controller {
 		*/
 
 		// Validate that the booking is not cancelled or on hold
-		if($booking->status === "cancelled" || $booking->status === "on hold")
+		if(!$booking->isEditable())
 		{
 			return Response::json( array('errors' => array('Cannot add details, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
@@ -842,7 +842,7 @@ class BookingController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The bookingdetail could not be found.')), 404 ); // 404 Not Found
 		}
 
 		// Validate that the booking is not cancelled or on hold
@@ -936,7 +936,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
 
-		// Check if accommodation is available for the selected days
+		// Check if accommodation is available for each of the selected days
 		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
 		$end_date = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
 		do
@@ -946,7 +946,7 @@ class BookingController extends Controller {
 			    ->wherePivot('end', '>', $current_date)
 			    ->where(function($query)
 			    {
-			    	$query->where('status', 'confirmed')->orWhereNotNull('reserved');
+			    	$query->whereIn('status', Booking::$counted);
 			    })
 			    ->count() >= $accommodation->capacity )
 			    return Response::json( array('errors' => array('The accommodation is not available for '.$current_date->format('D, j M Y').'!')), 403 ); // 403 Forbidden
@@ -1125,7 +1125,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( in_array($booking->status, array('reserved', 'confirmed', 'on hold', 'cancelled')) )
+		if( in_array($booking->status, array('reserved', 'expired', 'confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be saved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
 		if( !$booking->update( array('status' => 'saved') ) )
@@ -1148,8 +1148,8 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Bookings that have not been saved, reserved or confirmed can be safely deleted
-		if($booking->status === null)
+		// Bookings that have not been reserved, confirmed, cancelled or are on hold can be safely deleted
+		if($booking->status === null || in_array($booking->status, ['saved', 'initialised', 'expired']))
 		{
 			$booking->delete();
 			return array('status' => 'OK. Booking cancelled.');

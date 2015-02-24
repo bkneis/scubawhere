@@ -23,6 +23,8 @@ class Booking extends Ardent {
 
 	protected $appends = array('decimal_price', 'arrival_date');
 
+	public static $counted = array('initialised, reserved, confirmed');
+
 	public $loadTrashed = false;
 
 	public static $rules = array(
@@ -32,8 +34,8 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'status'           => 'in:saved,reserved,confirmed,on hold,cancelled',
-		'reserved'         => 'date|after_local_now',
+		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled',
+		'reserved'         => 'date',
 		'cancellation_fee' => 'integer|min:0',
 		'pick_up_location' => 'required_with:pick_up_time',
 		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
@@ -238,6 +240,11 @@ class Booking extends Ardent {
 	public function refunds()
 	{
 		return $this->hasMany('Refund')/*->orderBy('created_at', 'DESC')*/;
+	}
+
+	public function isEditable()
+	{
+		return !($this->status === 'cancelled' || $this->status === 'on hold');
 	}
 
 	public function updatePrice()

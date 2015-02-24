@@ -83,7 +83,7 @@ $(function() {
 		$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 	});
 
-	$('#received-at-input').val( moment().format('YYYY-MM-DD') );
+	/* $('#received-at-input').val( moment().format('YYYY-MM-DD') );
 	$('#received-at-input').datetimepicker({
 		pickDate: true,
 		pickTime: false,
@@ -94,7 +94,7 @@ $(function() {
 			up:   'fa fa-chevron-up',
 			down: 'fa fa-chevron-down'
 		},
-	});
+	}); */
 
 	$('#wrapper').on('submit', '#add-payment-form', function(event) {
 		event.preventDefault();
@@ -147,7 +147,7 @@ $(function() {
 			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
 			$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
-			$('#received-at-input').val( moment().format('YYYY-MM-DD') );
+			/* $('#received-at-input').val( moment().format('YYYY-MM-DD') );
 			$('#received-at-input').datetimepicker({
 				pickDate: true,
 				pickTime: false,
@@ -158,7 +158,7 @@ $(function() {
 					up:   'fa fa-chevron-up',
 					down: 'fa fa-chevron-down'
 				},
-			});
+			}); */
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
 			_.each(data.errors, function(error) {

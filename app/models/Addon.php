@@ -66,7 +66,7 @@ class Addon extends Ardent {
 		return $this->bookingdetails()
 		    ->whereHas('booking', function($query)
 		    {
-		    	$query->whereIn('status', ['confirmed', 'cancelled'])->orWhereNotNull('reserved');
+		    	$query->whereIn('status', Booking::$counted);
 		    })
 		    ->count() > 0;
 	}
