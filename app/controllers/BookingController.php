@@ -208,11 +208,14 @@ class BookingController extends Controller {
 		 * before    {date string}
 		 */
 
-		$after     = Input::get('after', false);
-		$before    = Input::get('before', false);
+		$after  = Input::get('after', false);
+		$before = Input::get('before', false);
 
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$bookings = Auth::user()->bookings()
 			/*->with(
@@ -224,7 +227,7 @@ class BookingController extends Controller {
 					'refunds.paymentgateway'
 			)*/
 			->whereIn('status', ['confirmed'/*, 'reserved' */])
-			->whereBetween('created_at', [$after, $before])
+			->whereBetween('created_at', [$afterUTC, $beforeUTC])
 			->orderBy('created_at')
 			->get();
 
@@ -250,6 +253,9 @@ class BookingController extends Controller {
 		if(!empty($agent_ids) && !is_array($agent_ids))
 			return Response::json(['errors' => ['The parameter "agent_ids" must be an array!']], 400); // 400 Bad Request
 
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+
 		$bookings = Auth::user()->bookings()
 			->with('agent')
 			/*->with(
@@ -261,7 +267,7 @@ class BookingController extends Controller {
 					'refunds.paymentgateway'
 			)*/
 			->whereIn('status', ['confirmed'/*, 'reserved' */])
-			->whereBetween('created_at', [$after, $before])
+			->whereBetween('created_at', [$afterUTC, $beforeUTC])
 			->whereNotNull('agent_id')
 			->where(function($query) use ($agent_ids)
 			{
