@@ -29,18 +29,36 @@ class ReportController extends \BaseController {
 
 
 		#############################
-		// Generate total utilisation
+		// Generate utilisation report
 		$departures = Auth::user()->departures()->whereBetween('start', [$after, $before])->get();
+		$cabinNames = Auth::user()->boatrooms()->lists('name', 'id');
 
 		$usedUp = $available = 0;
+		$cabins = [];
+		// Prepare cabins array
+		foreach($cabinNames as $name)
+		{
+			$cabins[$name] = ['used' => 0, 'available' => 0];
+		}
 
 		foreach($departures as $departure)
 		{
-			$usedUp    += $departure->capacity[0] * 1;
-			$available += $departure->capacity[1] * 1;
+			// Calculate total utilisation
+			$usedUp    += $departure->capacity[0];
+			$available += $departure->capacity[1];
+
+			// Calculate utilisation per cabin
+			foreach($departure->capacity[2] as $key => $array)
+			{
+				$name = $cabinNames[$key];
+
+				$cabins[$name]['used']      += $array[0];
+				$cabins[$name]['available'] += $array[1];
+			}
 		}
 
 		$RESULT['utilisation'] = ['used' => $usedUp, 'available' => $available];
+		$RESULT['utilisation_cabins'] = $cabins;
 
 
 		########################################
