@@ -23,9 +23,9 @@ class Booking extends Ardent {
 
 	protected $appends = array('decimal_price', 'arrival_date');
 
-	public static $counted = array('initialised, reserved, confirmed');
-
 	public $loadTrashed = false;
+
+	public static $counted = array('initialised', 'reserved', 'confirmed');
 
 	public static $rules = array(
 		'lead_customer_id' => 'integer|min:1',
