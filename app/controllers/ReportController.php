@@ -1,5 +1,7 @@
 <?php
 
+use ScubaWhere\Helper;
+
 class ReportController extends \BaseController {
 
 	public function __construct()
@@ -26,6 +28,15 @@ class ReportController extends \BaseController {
 
 		$RESULT = [];
 		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
+
+		#################################
+		// Add request paramets to result
+		$RESULT['daterange'] = [
+			'after'    => Helper::sanitiseString($after),
+			'before'   => Helper::sanitiseString($before),
+			'timezone' => Auth::user()->timezone,
+		];
 
 
 		#############################
