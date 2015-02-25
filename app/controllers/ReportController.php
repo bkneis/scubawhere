@@ -87,12 +87,10 @@ class ReportController extends \BaseController {
 		foreach($sql as $object)
 		{
 			$name = $object->source === null ? 'agent' : $object->source;
-			$sources[$name] = number_format(
-				($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit(), // number
-				strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-				/* $currency->getDecimalMark() */ '.', // decimal seperator
-				/* $currency->getThousandsSeperator() */ ''
-			);
+
+			if(empty($sources[$name])) $sources[$name] = 0;
+
+			$sources[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
 		}
 
 		$RESULT['source_revenue'] = $sources;
