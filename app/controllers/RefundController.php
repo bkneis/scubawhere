@@ -25,7 +25,7 @@ class RefundController extends Controller {
 
 	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->refunds()->with('currency', 'paymentgateway')->orderBy('refunds.created_at')->skip($from)->take($take)->get();
+		return Auth::user()->refunds()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
 	}
 
 	public function getFilter()
@@ -36,7 +36,7 @@ class RefundController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		return Auth::user()->refunds()->with('currency', 'paymentgateway', 'booking')->whereBetween('created_at', [$after, $before])->orderBy('refunds.created_at')->get();
+		return Auth::user()->refunds()->with('currency', 'paymentgateway', 'booking')->whereBetween('received_at', [$after, $before])->get();
 	}
 
 	public function getPaymentgateways()
