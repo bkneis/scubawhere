@@ -1,3 +1,5 @@
+set -o errexit
+
 git pull
 
 # Pull updates for ezmonitor
