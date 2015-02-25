@@ -96,10 +96,9 @@ class CronRunCommand extends Command {
 			$ids_initialised = array();
 			$ids_reserved    = array();
 
-			$now = new DateTime('now', new DateTimeZone($booking->company->timezone));
-
 			foreach($bookings as $booking)
 			{
+				$now = new DateTime('now', new DateTimeZone($booking->company->timezone));
 				$test = new DateTime($booking->reserved, new DateTimeZone($booking->company->timezone));
 				if($test < $now)
 				{
