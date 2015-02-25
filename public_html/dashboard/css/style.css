@@ -372,6 +372,10 @@ ul#sidenav div {
 	color: inherit;
 }
 
+ul#sidenav ul a {
+	padding: 10px 30px;
+}
+
 ul#sidenav a span,
 ul#sidenav div span {
 	line-height: 20px;
@@ -387,7 +391,6 @@ ul#sidenav > li > ul {
 ul#sidenav > li > ul > li {
 	border-bottom: none;
 	background-color: rgba(0,0,0,0.15);
-	padding: 0 20px;
 }
 
 ul#sidenav > li > ul > li:hover {
