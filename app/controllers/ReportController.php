@@ -21,7 +21,7 @@ class ReportController extends \BaseController {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$RESULT = [];
@@ -95,9 +95,33 @@ class ReportController extends \BaseController {
 
 		$RESULT['source_revenue'] = $sources;
 
+		###########################################
+		// Generate revenue by customer demographic
+		$sql = DB::table('bookings')
+		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
+		    ->join('countries', 'customers.country_id', '=', 'countries.id')
+		    ->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.status', 'confirmed')
+		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
+		    ->groupBy('customers.country_id')
+		    ->get();
 
-		print_r($RESULT);
-		exit;
+		$countries = [];
+
+		foreach($sql as $object)
+		{
+			$name = $object->{'name'};
+
+			if(empty($countries[$name])) $countries[$name] = 0;
+
+			$countries[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+		}
+
+		$RESULT['country_revenue'] = $countries;
+
+
+		return($RESULT);
 	}
 
 }
