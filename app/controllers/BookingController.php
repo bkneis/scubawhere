@@ -234,6 +234,41 @@ class BookingController extends Controller {
 		return $bookings;
 	}
 
+	public function getFilterConfirmedOnlyDirect()
+	{
+		/**
+		 * Allowed input parameter
+		 * after     {date string}
+		 * before    {date string}
+		 */
+
+		$after  = Input::get('after', false);
+		$before = Input::get('before', false);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+
+		$bookings = Auth::user()->bookings()
+			/*->with(
+				'lead_customer',
+					'lead_customer.country',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
+			)*/
+			->whereIn('status', ['confirmed'/*, 'reserved' */])
+			->whereNull('agent_id')
+			->whereBetween('created_at', [$afterUTC, $beforeUTC])
+			->orderBy('created_at')
+			->get();
+
+		return $bookings;
+	}
+
 	public function getFilterConfirmedByAgent()
 	{
 		/**
