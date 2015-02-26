@@ -36,7 +36,12 @@ class PaymentController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		return Auth::user()->payments()->with('currency', 'paymentgateway', 'booking')->whereBetween('received_at', [$after, $before])->get();
+		return Auth::user()->payments()->with(
+			// 'currency',
+			'paymentgateway',
+			'booking',
+				'booking.lead_customer'
+		)->whereBetween('received_at', [$after, $before])->get();
 	}
 
 	public function getPaymentgateways()
