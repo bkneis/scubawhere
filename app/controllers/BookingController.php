@@ -486,7 +486,7 @@ class BookingController extends Controller {
 		if( $check > 0 )
 			return Response::json( array('errors' => array('The customer is already booked on this session in another booking!')), 403 ); // 403 Forbidden
 
-		// Validate that the ticket/package can be booked for this session
+		// Validate that the ticket (& package) can be booked for this session
 		try
 		{
 			$departure->trip->tickets()->where(function($query) use ($package)
@@ -573,19 +573,19 @@ class BookingController extends Controller {
 			$boatroom_id = null;
 		}
 
+		// If a boatroom is needed, validate remaining capacity of boatroom
+		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
+		{
+			// The selected/required boatroom is already full/overbooked
+			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
+		}
+
 		// Validate remaining capacity on session
 		$capacity = $departure->getCapacityAttribute();
 		if( $capacity[0] >= $capacity[1] )
 		{
 			// Session/Boat already full/overbooked
 			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
-		}
-
-		// If a boatroom is needed, validate remaining capacity of boatroom
-		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
-		{
-			// The selected/required boatroom is already full/overbooked
-			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining package capacity on session
@@ -604,24 +604,21 @@ class BookingController extends Controller {
 			}
 		}
 
-		// Check if we have to create a new packagefacade
-		if($package)
+		// Validate that the ticket still fits into the package
+		if($packagefacade)
 		{
-			do // The do-while loop allows the use of break in a guard condition
-			{
-				if($packagefacade)
-				{
-					// Check if the package still has space for the wanted ticket
-					$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
+			// Check if the package still has space for the wanted ticket
+			$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
 
-					if($bookedTicketsQuantity < $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
-						break;
-				}
+			if($bookedTicketsQuantity >= $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
+				return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403 ); // Forbidden
+		}
 
-				$packagefacade = new Packagefacade( array('package_id' => $package->id) );
-				$packagefacade->save();
-
-			} while(false);
+		// Check if we have to create a new packagefacade
+		if($package && !$packagefacade)
+		{
+			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
+			$packagefacade->save();
 		}
 
 		/*******************
