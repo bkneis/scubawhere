@@ -41,35 +41,55 @@ class ReportController extends \BaseController {
 
 		#############################
 		// Generate utilisation report
-		$departures = Auth::user()->departures()->whereBetween('start', [$after, $before])->get();
-		$cabinNames = Auth::user()->boatrooms()->lists('name', 'id');
+		$departures = Auth::user()->departures()->whereBetween('start', [$after, $before])->with(
+			'trip',
+			'bookingdetails',
+				'bookingdetails.booking',
+				'bookingdetails.ticket'
+		)->get();
 
-		$usedUp = $available = 0;
-		$cabins = [];
-		// Prepare cabins array
-		foreach($cabinNames as $name)
-		{
-			$cabins[$name] = ['used' => 0, 'available' => 0];
-		}
-
+		$utilisation = []; $i = 1;
 		foreach($departures as $departure)
 		{
-			// Calculate total utilisation
-			$usedUp    += $departure->capacity[0];
-			$available += $departure->capacity[1];
+			$max = $departure->capacity[1];
 
-			// Calculate utilisation per cabin
-			foreach($departure->capacity[2] as $key => $array)
+			$utilisation[$i] = [
+				'date'       => $departure->start,
+				'name'       => $departure->trip->name,
+				'tickets'    => [],
+				'unassigned' => $max - $departure->capacity[0],
+				'capacity'   => $max,
+			];
+
+			foreach($departure->bookingdetails as $detail)
 			{
-				$name = $cabinNames[$key];
+				if($detail->booking->status !== 'confirmed') continue;
 
-				$cabins[$name]['used']      += $array[0];
-				$cabins[$name]['available'] += $array[1];
+				if(empty($utilisation[$i]['tickets'][$detail->ticket->name])) $utilisation[$i]['tickets'][$detail->ticket->name] = 0;
+
+				$utilisation[$i]['tickets'][$detail->ticket->name]++;
+			}
+
+			$i++;
+		}
+
+		// Calculate total average
+		$total = ['tickets' => [], 'unassigned' => 0, 'capacity' => 0];
+		foreach ($utilisation as $trip)
+		{
+			$total['unassigned'] += $trip['unassigned'];
+			$total['capacity']   += $trip['capacity'];
+
+			foreach($trip['tickets'] as $name => $number)
+			{
+				if(empty($total['tickets'][$name])) $total['tickets'][$name] = 0;
+
+				$total['tickets'][$name] += $number;
 			}
 		}
 
-		$RESULT['utilisation'] = ['used' => $usedUp, 'available' => $available];
-		$RESULT['utilisation_cabins'] = $cabins;
+		$RESULT['utilisation'] = $utilisation;
+		$RESULT['utilisation_total'] = $total;
 
 
 		########################################
