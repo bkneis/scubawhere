@@ -307,6 +307,9 @@ $(function() {
 
 			pageMssg(data.errors[0]);
 
+			// Remake the moment-object
+			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
 			// Communicate error to user
 			$(event.target).prop('disabled', false);
 			$('#save-loader').remove();
