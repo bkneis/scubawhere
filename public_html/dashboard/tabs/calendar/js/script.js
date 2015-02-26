@@ -5,9 +5,10 @@ var tripFilter;
 var boatsList;
 var tripsList;
 var display = "trips";
+
 $(function() {
 
-  window.trips = {};
+	window.trips = {};
 	window.boats = {};
 	window.sessions = {};
 	window.accommodations = {};
@@ -59,26 +60,24 @@ $(function() {
 		},
 	});
 
-	/*$('.collapsible').collapsible({
-        defaultOpen: 'filters'
-    });*/
+	$('.selectpicker').selectpicker();
 
-    $('#filter-options').on('change', function(event) {
-    	event.preventDefault();
-    	if($("#filter-options").val() == 'boat') {
-    		$("div#filter-settings option[value=boat]").attr('disabled', true);
-    		$("#filter-options").val('all');
-    		$("#filter").append( boatsList({boats : window.boats}) );
-    	}
-    	else if($("#filter-options").val() == 'trip') {
-    		$("div#filter-settings option[value=trip]").attr('disabled', true);
-    		$("#filter-options").val('all');
-    		$("#filter").append( tripsList({trips : window.trips}) );
-    	}
-    });
+	$('#filter-options').on('change', function(event) {
+		event.preventDefault();
+		if($("#filter-options").val() == 'boat') {
+			$("div#filter-settings option[value=boat]").attr('disabled', true);
+			$("#filter-options").val('all');
+			$("#filter").append( boatsList({boats : window.boats}) );
+		}
+		else if($("#filter-options").val() == 'trip') {
+			$("div#filter-settings option[value=trip]").attr('disabled', true);
+			$("#filter-options").val('all');
+			$("#filter").append( tripsList({trips : window.trips}) );
+		}
+	});
 
-    $("#filter").on('change', '.filter', function(event){
-    	event.preventDefault();
+$("#filter").on('change', '.filter', function(event){
+	event.preventDefault();
     	//console.log(this.options[this.selectedIndex].value);
     	console.log(filter);
     	if(this.id == "boats") {
@@ -99,7 +98,7 @@ $(function() {
     	$('#calendar').fullCalendar( 'refetchEvents' );
     });
 
-    $("#filters").on('click', '#remove-boats-filter', function(event){
+	$("#filters").on('click', '#remove-boats-filter', function(event){
 		event.preventDefault();
 		filterByBoat = false;
 		boatFilter = null;
@@ -123,27 +122,36 @@ $(function() {
 		var jumpDate = $.fullCalendar.moment(date);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
 		$("#remove-jump").css('display', 'inline');
+		console.log("qwewe");
 	});
 
 	$("#jump-to-date").on('click', '#remove-jump', function(event){
 		event.preventDefault();
 		var date = new Date();
-    	var d = date.getDate();
+		var d = date.getDate();
     	var m = date.getMonth() + 1; // jan starts at 0
     	var y = date.getFullYear();
     	$("#jump-date").val('');
     	var sDate = y+'-'+m+'-'+d;
-		var jumpDate = $("#calendar").fullCalendar.moment(sDate);
+    	var jumpDate = $("#calendar").fullCalendar.moment(sDate);
 		//var moment = $('#calendar').fullCalendar('getDate');
 		console.log(moment);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
 		$("#remove-jump").css('display', 'none');
 	});
 
-	$("#myonoffswitch").click(function() {
-		if($(this).is(':checked')) display = "trips";
-		else display = "accommodations";
+	$("#filter-types").on('click', '.filter-type', function(event){
+		event.preventDefault();
+		display = $(this).attr("display");
 		$('#calendar').fullCalendar( 'refetchEvents' );
+		if(display == "trips") {
+			$("#filter-t").toggleClass("btn-primary");
+			$("#filter-a").toggleClass("btn-primary");
+		}
+		else {
+			$("#filter-t").toggleClass("btn-primary");
+			$("#filter-a").toggleClass("btn-primary");
+		}
 	});
 
 	$('input.datepicker').datetimepicker({
@@ -290,7 +298,7 @@ function randomString() {
 
 function calcUtil(booked, capacity) {
 	var util = ((booked / capacity) * 100);
-	return util.toString();
+	return Math.round(util).toString();
 }
 
 function getTripEvents(start, end, timezone, callback) {
@@ -371,7 +379,7 @@ function getTripEvents(start, end, timezone, callback) {
 			}
 		});
 
-		callback(events);
+callback(events);
 
 		// Remove loading indictor
 		$('#fetch-events-loader').remove();
@@ -396,13 +404,13 @@ function getAccomEvents(start, end, timezone, callback) {
 		var events = [];
 
 		_.each(data, function(value, key) {
-		    var start = new moment(key);
+			var start = new moment(key);
 
-		    _.each(value, function(util, id) {
-		        var eventObject = {
+			_.each(value, function(util, id) {
+				var eventObject = {
 		            start: start, // change start to readable text instead of moment
 		            end : start,
-				    id : randomString(),
+		            id : randomString(),
 		            title: window.accommodations[ id ].name,
 		            color : "#229930",
 		            booked : util[0],

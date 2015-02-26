@@ -1054,6 +1054,10 @@ big {
     transition: all 200ms ease;
 }
 
+.nav-wizard>li:last-child>a:before {
+	background: transparent;
+}
+
 .nav-wizard>li>a:after {
     content: " ";
     position: absolute;
