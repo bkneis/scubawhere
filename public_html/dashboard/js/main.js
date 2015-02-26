@@ -14,13 +14,13 @@ $.ajaxSetup({
 			});
 		}
 		// Enable caching for .js scripts by default
-		else if(options.dataType === 'script') {
+		/*else if(options.dataType === 'script') {
 			// Remove '?_={random number}'' from the request url
 			$.extend(this, {
 				url: options.url.split('?_=')[0],
 				cache: true,
 			});
-		}
+		}*/
 	}
 });
 
