@@ -9,7 +9,7 @@ class ReportController extends \BaseController {
 		$this->beforeFilter('csrf', array('on' => 'post'));
 	}
 
-	public function getIndex()
+	public function getUtilisation()
 	{
 		/**
 		 * Allowed input parameter
@@ -27,7 +27,6 @@ class ReportController extends \BaseController {
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
 
 
 		#################################
@@ -57,7 +56,7 @@ class ReportController extends \BaseController {
 				'date'       => $departure->start,
 				'name'       => $departure->trip->name,
 				'tickets'    => [],
-				'unassigned' => $max - $departure->capacity[0],
+				'unassigned' => $max,
 				'capacity'   => $max,
 			];
 
@@ -68,6 +67,7 @@ class ReportController extends \BaseController {
 				if(empty($utilisation[$i]['tickets'][$detail->ticket->name])) $utilisation[$i]['tickets'][$detail->ticket->name] = 0;
 
 				$utilisation[$i]['tickets'][$detail->ticket->name]++;
+				$utilisation[$i]['unassigned']--;
 			}
 
 			$i++;
@@ -91,6 +91,37 @@ class ReportController extends \BaseController {
 		$RESULT['utilisation'] = $utilisation;
 		$RESULT['utilisation_total'] = $total;
 
+		return $RESULT;
+	}
+
+	public function getSources()
+	{
+		/**
+		 * Allowed input parameter
+		 * after  {date string}
+		 * before {date string}
+		 */
+
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+
+		$RESULT = [];
+		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
+
+		#################################
+		// Add request paramets to result
+		$RESULT['daterange'] = [
+			'after'    => Helper::sanitiseString($after),
+			'before'   => Helper::sanitiseString($before),
+			'timezone' => Auth::user()->timezone,
+		];
 
 		########################################
 		// Generate frequency of booking sources
@@ -126,6 +157,38 @@ class ReportController extends \BaseController {
 
 		$RESULT['source_revenue'] = $sources;
 
+		return $RESULT;
+	}
+
+	public function getDemographics()
+	{
+		/**
+		 * Allowed input parameter
+		 * after  {date string}
+		 * before {date string}
+		 */
+
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+
+		$RESULT = [];
+		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
+
+		#################################
+		// Add request paramets to result
+		$RESULT['daterange'] = [
+			'after'    => Helper::sanitiseString($after),
+			'before'   => Helper::sanitiseString($before),
+			'timezone' => Auth::user()->timezone,
+		];
+
 		###########################################
 		// Generate revenue by customer demographic
 		$sql = DB::table('bookings')
@@ -150,7 +213,6 @@ class ReportController extends \BaseController {
 		}
 
 		$RESULT['country_revenue'] = $countries;
-
 
 		return($RESULT);
 	}
