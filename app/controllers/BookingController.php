@@ -218,20 +218,33 @@ class BookingController extends Controller {
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$bookings = Auth::user()->bookings()
-			/*->with(
-				'lead_customer',
-					'lead_customer.country',
-				'payments',
-					'payments.paymentgateway',
-				'refunds',
-					'refunds.paymentgateway'
-			)*/
-			->whereIn('status', ['confirmed'/*, 'reserved' */])
+			->with(
+				'agent',
+				'lead_customer'
+			)
+			->whereIn('status', ['confirmed'])
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
 			->orderBy('created_at')
 			->get();
 
-		return $bookings;
+		$TOTALS = [
+			'revenue' => 0,
+		];
+		foreach($bookings as $booking)
+		{
+			if(empty($booking->source))
+			{
+				// By agent
+				$TOTALS['revenue'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+			}
+			else
+			{
+				// Direct
+				$TOTALS['revenue'] += $booking->decimal_price;
+			}
+		}
+
+		return ['bookings' => $bookings, 'totals' => $TOTALS];
 	}
 
 	public function getFilterConfirmedOnlyDirect()
@@ -252,21 +265,24 @@ class BookingController extends Controller {
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$bookings = Auth::user()->bookings()
-			/*->with(
-				'lead_customer',
-					'lead_customer.country',
-				'payments',
-					'payments.paymentgateway',
-				'refunds',
-					'refunds.paymentgateway'
-			)*/
-			->whereIn('status', ['confirmed'/*, 'reserved' */])
+			->with(
+				'lead_customer'
+			)
+			->whereIn('status', ['confirmed'])
 			->whereNull('agent_id')
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
 			->orderBy('created_at')
 			->get();
 
-		return $bookings;
+		$TOTALS = [
+			'revenue' => 0,
+		];
+		foreach($bookings as $booking)
+		{
+			$TOTALS['revenue'] += $booking->decimal_price;
+		}
+
+		return ['bookings' => $bookings, 'totals' => $TOTALS];
 	}
 
 	public function getFilterConfirmedByAgent()
@@ -292,16 +308,11 @@ class BookingController extends Controller {
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
 
 		$bookings = Auth::user()->bookings()
-			->with('agent')
-			/*->with(
-				'lead_customer',
-					'lead_customer.country',
-				'payments',
-					'payments.paymentgateway',
-				'refunds',
-					'refunds.paymentgateway'
-			)*/
-			->whereIn('status', ['confirmed'/*, 'reserved' */])
+			->with(
+				'agent',
+				'lead_customer'
+			)
+			->whereIn('status', ['confirmed'])
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
 			->whereNotNull('agent_id')
 			->where(function($query) use ($agent_ids)
@@ -312,7 +323,24 @@ class BookingController extends Controller {
 			->orderBy('created_at')
 			->get();
 
-		return $bookings;
+		$TOTALS = [
+			'revenue' => 0,
+			'commission' => 0,
+			'invoicable' => 0
+		];
+		foreach($bookings as $booking)
+		{
+			$TOTALS['commission'] += $booking->decimal_price * ($booking->agent->commission / 100);
+
+			$TOTALS['revenue'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+
+			if($booking->agent->terms === 'fullamount')
+			{
+				$TOTALS['invoicable'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+			}
+		}
+
+		return ['bookings' => $bookings, 'totals' => $TOTALS];
 	}
 
 	public function postInit()
