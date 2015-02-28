@@ -978,8 +978,24 @@
 						<strong>Packages</strong>
 						{{#each selectedPackages}}
 							<p>
-								<i class="fa fa-tags fa-fw"></i> {{name}} <span class="badge badge-default">{{qty}}</span>
-								<a href="javascript:void(0);" class="remove-package pull-right" data-id="{{id}}">X</a>
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab">
+										<h4 class="panel-title">
+											<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
+												<i class="fa fa-tags fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default">{{qty}}</span> <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+											</a>
+										</h4>
+									</div>
+									<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
+										<div class="panel-body">
+											{{#each tickets}}
+											<p>
+												<i class="fa fa-ticket fa-fw"></i> {{name}}
+											</p>
+											{{/each}}
+										</div>
+									</div>
+								</div>
 							</p>
 						{{/each}}
 					</li>
