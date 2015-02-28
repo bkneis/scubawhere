@@ -1119,12 +1119,6 @@
 	<!--Styling (Temporary)-->
 	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
 
-	<!--Select 2-->
-	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
-	<link rel="stylesheet" href="/common/css/select2-bootstrap.css" type="text/css" />
-
-	<script type="text/javascript" src="/common/js/select2.min.js"></script>
-
 	<!--Typeahead-->
 	<script type="text/javascript" src="/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
 

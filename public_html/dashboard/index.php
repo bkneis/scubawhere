@@ -84,6 +84,12 @@
 	<!--Datetimepicker-->
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
 	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
+	
+	<!--Select 2-->
+	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
+	<link rel="stylesheet" href="/common/css/select2-bootstrap.css" type="text/css" />
+
+	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
 	<!--intojs tour-->
 	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css">
