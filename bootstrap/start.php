@@ -26,14 +26,14 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local_soren'    => array('packer-virtualbox-iso'),
-	'local_bryan'    => array('laptop1'),
-	'local_jon'      => array('JonWindows'),
-	'local_jonathan' => array('Jonnerz-LAPTOP', 'Jonnerz-PC'),
-    'local_jonathan_c9' => array('devbox.swif.co'),
-	
-	'production'     => array('poseidon.krystal.co.uk'),
-	'digitalocean'	 => array('rms.scubawhere.com'),
+	'local_soren'       => array('packer-virtualbox-iso'),
+	'local_bryan'       => array('laptop1'),
+	'local_jon'         => array('JonWindows'),
+	'local_jonathan'    => array('Jonnerz-LAPTOP', 'Jonnerz-PC'),
+	'local_jonathan_c9' => array('devbox.swif.co'),
+
+	'krystal'           => array('poseidon.krystal.co.uk'),
+	'digitalocean'      => array('rms.scubawhere.com'),
 
 ));
 
