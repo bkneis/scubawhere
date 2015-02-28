@@ -601,19 +601,20 @@ class BookingController extends Controller {
 			$boatroom_id = null;
 		}
 
-		// If a boatroom is needed, validate remaining capacity of boatroom
-		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
-		{
-			// The selected/required boatroom is already full/overbooked
-			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
-		}
-
 		// Validate remaining capacity on session
+		// The $capacity variable is needed in the next check, so don't move this check!
 		$capacity = $departure->getCapacityAttribute();
 		if( $capacity[0] >= $capacity[1] )
 		{
 			// Session/Boat already full/overbooked
 			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
+		}
+
+		// If a boatroom is needed, validate remaining capacity of boatroom
+		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
+		{
+			// The selected/required boatroom is already full/overbooked
+			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
 		}
 
 		// Validate remaining package capacity on session
