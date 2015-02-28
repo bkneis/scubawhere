@@ -30,9 +30,10 @@ $env = $app->detectEnvironment(array(
 	'local_bryan'    => array('laptop1'),
 	'local_jon'      => array('JonWindows'),
 	'local_jonathan' => array('Jonnerz-LAPTOP', 'Jonnerz-PC'),
-
-	'krystal'        => array('poseidon.krystal.co.uk'),
-	'digitalocean'   => array('rms.scubawhere.com'),
+    'local_jonathan_c9' => array('devbox.swif.co'),
+	
+	'production'     => array('poseidon.krystal.co.uk'),
+	'digitalocean'	 => array('rms.scubawhere.com'),
 
 ));
 
