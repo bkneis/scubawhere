@@ -43,15 +43,6 @@ deny from 79.137.234.114
 
     RewriteEngine On
 
-    ## Maintenance configuration
-    # Options +FollowSymLinks
-    # RewriteEngine On
-    # RewriteBase /
-    # RewriteCond %{REMOTE_ADDR} !^YOUR_IP_ADDRESS_HERE
-    # RewriteCond %{REQUEST_URI} !^/MAINTENANCE.php [NC]
-    # RewriteCond %{REQUEST_FILENAME} !.(gif|jpe?g|png)$
-    # RewriteRule .* /MAINTENANCE.php [L]
-
     RewriteRule ^$ /blog/ [R=301,L]
 
     ## Redirect all requests to /coming-soon/* to /blog/*
