@@ -95,8 +95,10 @@ $(function(){
 				console.log(data.status);
 				completed = true;
 				//$("#steps").steps("next");
-				pageMssg(data.status, true);
 
+				// BRYAN | Add success message and the "please check you email" stuff ;)
+
+				$('.errors').remove();
 				form.find('#save-loader').remove();
 			},
 			error: function(xhr) {
