@@ -112,6 +112,7 @@ $(function(){
 					html += '	<h4 style="font-weight: normal;">' + data.errors[i] + '</h4>';
 				html += '</div>';
 
+				$('.errors').remove();
 				$('#page-title').after(html);
 
 				$('.submit').prop('disabled', false);
