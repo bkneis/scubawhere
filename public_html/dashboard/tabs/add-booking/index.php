@@ -449,10 +449,13 @@
 						</div>
 						<script id="session-tickets-template" type="text/x-handlebars-template">
 							{{#each tickets}}
-								<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
-									<span class="label label-default">Ticket</span>
-									{{{name}}}
-								</a>
+								{{#assignCheck this}}
+									<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
+										<span class="label label-default">Ticket</span>
+										{{{name}}}
+										<span class="badge badge-default small">{{free}}</span>
+									</a>
+								{{/assignCheck}}
 							{{/each}}
 						</script>
 						<script id="session-packages-template" type="text/x-handlebars-template">
@@ -460,7 +463,7 @@
 								{{#each tickets}}
 									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
 										<span class="label label-warning">{{{../name}}}</span>
-										{{{name}}}
+										{{{name}}}										
 									</a>
 								{{/each}}
 							{{/each}}
@@ -965,15 +968,15 @@
 					{{/if}}
 				</li>
 				{{#notEmptyObj selectedTickets}}
-					<li class="list-group-item" id="selected-tickets">
-						<strong>Tickets</strong>
-						{{#each selectedTickets}}
-							<p>
-								<i class="fa fa-ticket fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
-								<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
-							</p>
-						{{/each}}
-					</li>
+				<li class="list-group-item" id="selected-tickets">
+					<strong>Tickets</strong>
+					{{#each selectedTickets}}
+						<p>
+							<i class="fa fa-ticket fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
+							<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
+						</p>
+					{{/each}}				
+				</li>
 				{{/notEmptyObj}}
 				{{#notEmptyObj selectedPackages}}
 					<li class="list-group-item" id="selected-packages">

@@ -55,6 +55,27 @@ Handlebars.registerHelper("notEmptyObj", function (item, options) {
 	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
+Handlebars.registerHelper("assignCheck", function (item, options) {
+
+	//Check which bookingdetails the ticket is assigned too
+	var detailsWithTicket = _.filter(booking.bookingdetails, function(detail) {
+		if(detail.ticket.id == item.id) return detail;
+	});
+
+	//Display how many tickets are free, otherwise the ticket will not show. 
+
+	if($.isEmptyObject(detailsWithTicket)) {
+		this.free = this.qty;
+		return options.fn(this);
+	} else if(detailsWithTicket.length != this.qty) {
+		this.free = this.qty - detailsWithTicket.length;
+		return options.fn(this);
+	} else {
+		return false;
+	}
+
+});
+
 Handlebars.registerHelper("priceRange", function(prices) {
 	if(prices.length > 1) {
 		var min=null, max=null;
@@ -698,8 +719,6 @@ $('#session-tab').on('click', '.assign-session', function() {
 	} else {
 		submitAddDetail(params);
 	}
-
-
 });
 
 $('#modalWindows').on('click', '.boatroom-select-option', function(event) {
@@ -733,6 +752,10 @@ function submitAddDetail(params) {
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
 
+		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
+		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
+		$("#session-tickets").children('[data-id="' + params.ticket_id + '"]').addClass('active');
+
 		drawBasket(function() {
 			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
 		});
@@ -760,6 +783,10 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 			params.ticket_id = $('#session-tickets .active').first().data('id');
 
 		redrawSessionsList(params);
+
+		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
+		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
+		$("#session-tickets").children('[data-id="' + params.ticket_id + '"]').addClass('active');
 
 		drawBasket();
 	}, function error(xhr) {

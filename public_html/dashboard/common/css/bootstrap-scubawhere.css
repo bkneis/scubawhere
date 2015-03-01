@@ -6308,6 +6308,7 @@ button.close {
 }
 #booking-summary .badge {
   font-weight: bold;
+  font-size: 11px!important;
 }
 #booking-summary .summary-references span {
   font-size: 16px;
