@@ -4,5 +4,5 @@ return array(
 
 	'debug' => true,
 
-	'url' => 'http://scubawhere.local',
+	'url' => 'http://rms.scubawhere.app',
 );

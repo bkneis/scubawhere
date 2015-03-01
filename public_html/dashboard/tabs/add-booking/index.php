@@ -958,16 +958,18 @@
 				<li class="list-group-item active">
 					<h4 class="list-group-item-heading">Summary<span class="pull-right">{{currency}} {{decimal_price}}</h4>
 				</li>
-				<li class="list-group-item">
-					<strong>Booking Reference</strong>
-					<h4 class="pull-right" style="margin-top: 0;">{{reference}}</h4>
+				<li class="list-group-item summary-references">
+					<p><strong>Booking Reference</strong> <span class="pull-right">{{reference}}</span></p>
+					{{#if agent_reference}}
+						<p><strong>Agent Reference</strong> <span class="pull-right"><small>{{agent_reference}}</small></span></p>
+					{{/if}}
 				</li>
 				{{#notEmptyObj selectedTickets}}
 					<li class="list-group-item" id="selected-tickets">
 						<strong>Tickets</strong>
 						{{#each selectedTickets}}
 							<p>
-								<i class="fa fa-ticket fa-fw"></i> {{name}} <span class="badge badge-default">{{qty}}</span>
+								<i class="fa fa-ticket fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
 								<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
 							</p>
 						{{/each}}
@@ -982,7 +984,8 @@
 									<div class="panel-heading" role="tab">
 										<h4 class="panel-title">
 											<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
-												<i class="fa fa-tags fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default">{{qty}}</span> <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+												<i class="fa fa-tags fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
+												<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 											</a>
 										</h4>
 									</div>

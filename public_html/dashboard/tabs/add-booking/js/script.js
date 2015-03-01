@@ -685,10 +685,11 @@ $('#session-tab').on('click', '.assign-session', function() {
 				btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
 				onFinishModal: function() {
 					// Aborted action
-					if(!window.sw.modalClosedBySelection)
+					if(!window.sw.modalClosedBySelection) {
 						this.btn.html('Assign');            // Reset the button
-					else
+					} else {
 						delete window.sw.modalClosedBySelection;
+					}
 
 					$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
 				}
@@ -697,6 +698,8 @@ $('#session-tab').on('click', '.assign-session', function() {
 	} else {
 		submitAddDetail(params);
 	}
+
+
 });
 
 $('#modalWindows').on('click', '.boatroom-select-option', function(event) {
@@ -730,7 +733,9 @@ function submitAddDetail(params) {
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
 
-		drawBasket();
+		drawBasket(function() {
+			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
+		});
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -1150,8 +1155,10 @@ function addTransaction() {
 	window.location.hash = 'add-transaction';
 }
 
-function drawBasket() {
-	$('#booking-summary').html(bookingSummaryTemplate(booking));
+function drawBasket(doneFn) {
+	$('#booking-summary').html(bookingSummaryTemplate(booking)).promise().done(function(){
+	    if($.isFunction(doneFn)) doneFn();
+	});
 }
 
 Booking.initiateStorage();
