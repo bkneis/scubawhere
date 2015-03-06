@@ -8,14 +8,13 @@ class Package extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
+	protected $fillable = array('name', 'description', 'parent_id');
 
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'capacity'    => 'integer|min:0',
 		'parent_id'   => 'integer|min:1'
 	);
 
@@ -53,6 +52,11 @@ class Package extends Ardent {
 		return $this->belongsTo('Company');
 	}
 
+	public function courses()
+	{
+		return $this->belongsToMany('Course')->withPivot('quantity')->widthTimestamps();
+	}
+
 	public function packagefacades()
 	{
 		return $this->hasMany('Packagefacade')->withTimestamps();
@@ -75,6 +79,6 @@ class Package extends Ardent {
 
 	public function tickets()
 	{
-		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps()->withTrashed();
+		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();
 	}
 }

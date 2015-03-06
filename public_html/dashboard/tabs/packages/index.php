@@ -78,12 +78,6 @@
 							</div>
 						</div>
 
-						<div id="package-size" class="form-row" data-step="4" data-position="top" data-intro="If you have a maximum group/course size, you can specify it here. Alternatively enter 0 to set no maximum.">
-							<label class="field-label">Max. group size per trip</label>
-							<input id="package-capacity" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="0" step="1" placeholder="none">
-							(Enter 0 or nothing for <i>no limit</i>)
-						</div>
-
 						{{#if update}}
 							<input type="hidden" name="id" value="{{id}}">
 						{{/if}}

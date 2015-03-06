@@ -618,7 +618,7 @@ class BookingController extends Controller {
 		}
 
 		// Validate remaining package capacity on session
-		if( isset($package) && !empty($package->capacity) )
+		/* if( isset($package) && !empty($package->capacity) )
 		{
 			// Package's capacity is *not* infinite and must be checked
 			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
@@ -631,7 +631,7 @@ class BookingController extends Controller {
 
 				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
 			}
-		}
+		} */
 
 		// Validate that the ticket still fits into the package
 		if($packagefacade)

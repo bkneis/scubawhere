@@ -35,7 +35,7 @@ class PackageController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
+		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// Validate that tickets are supplied
 		$tickets = Input::get('tickets');
@@ -70,9 +70,6 @@ class PackageController extends Controller {
 		else
 			$prices = false;
 		// ##################### End Prices #####################
-
-		if( $data['capacity'] == 0)
-			$data['capacity'] = null;
 
 		$package = new Package($data);
 
@@ -127,7 +124,7 @@ class PackageController extends Controller {
 
 	public function postEdit()
 	{
-		$data = Input::only('name', 'description', 'capacity');
+		$data = Input::only('name', 'description');
 
 		try
 		{
@@ -172,9 +169,6 @@ class PackageController extends Controller {
 		else
 			$prices = false;
 		// ##################### End Prices #####################
-
-		if( $data['capacity'] == 0)
-			$data['capacity'] = null;
 
 		if( !$package->update($data) )
 		{

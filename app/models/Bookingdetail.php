@@ -4,7 +4,7 @@ use LaravelBook\Ardent\Ardent;
 
 class Bookingdetail extends Ardent {
 
-	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id');
+	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id');
 
 	protected $table = 'booking_details';
 
@@ -17,7 +17,7 @@ class Bookingdetail extends Ardent {
 
 	public function addons()
 	{
-		return $this->belongsToMany('Addon')->withTrashed()->withPivot('quantity')->withTimestamps();
+		return $this->belongsToMany('Addon')->withPivot('quantity')->withTimestamps()->withTrashed();
 	}
 
 	public function boatroom()
@@ -28,6 +28,11 @@ class Bookingdetail extends Ardent {
 	public function booking()
 	{
 		return $this->belongsTo('Booking');
+	}
+
+	public function course()
+	{
+		return $this->belongsTo('Course')->withTrashed();
 	}
 
 	public function customer()
@@ -53,6 +58,11 @@ class Bookingdetail extends Ardent {
 	public function session()
 	{
 		return $this->belongsTo('Departure', 'session_id')->withTrashed();
+	}
+
+	public function training_session()
+	{
+		return $this->belongsTo('TrainingSession')->withTrashed();
 	}
 
 	public function packagefacade()
