@@ -32,27 +32,12 @@
 
 				<div style="margin-top:20px"></div>
 
-				<div id="reports">
-					<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-						<thead>
-				  			<tr>
-				                <th style="color:#313131">Name</th>
-				                <th style="color:#313131">Cash</th>
-				                <th style="color:#313131">Credit card</th>
-				                <th style="color:#313131">Cheque</th>
-				                <th style="color:#313131">Bank</th>
-				                <th style="color:#313131">PayPal</th>
-				            </tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
+				<div id="reports"></div>
 			</div>
 		</div>
 	</div>
 </div>
-<script type="text/x-handlebars-template" id="agent-report">
+<script type="text/x-handlebars-template" id="transactions-report-template">
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
   			<tr>
@@ -61,10 +46,19 @@
                 <th style="color:#313131">Credit card</th>
                 <th style="color:#313131">Cheque</th>
                 <th style="color:#313131">Bank</th>
-                th style="color:#313131">PayPal</th>
+                <th style="color:#313131">PayPal</th>
             </tr>
 		</thead>
 		<tbody>
+			{{#each transactions}}
+				<tr>
+					<td>{{booking.lead_customer}}</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			{{/each}}
 		</tbody>
 	</table>
 </script>

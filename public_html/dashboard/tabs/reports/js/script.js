@@ -4,6 +4,8 @@ $(function() {
 		before: '2015-05-01', // This date is EXCLUSIVE, so it needs to be one day AFTER the final date that should be included
 	};*/
 
+	var transReport;
+
 	$('input.datepicker').datetimepicker({
 		pickDate: true,
 		pickTime: false,
@@ -26,16 +28,23 @@ $(function() {
 		}
 	});
 
-	var dates = {
+	/*var dates = {
 		after : $("#start-date").val(),
 		before : $("#end-date").val()
-	}
+	}*/
+
+	var dates = {
+		after: '2015-01-01',
+		before: '2015-05-01', // This date is EXCLUSIVE, so it needs to be one day AFTER the final date that should be included
+	};
 
 	$.ajax({
 		url: '/api/payment/filter',
 		data: dates,
 		success: function(data) {
 			console.log(data);
+			transReport = Handlebars.compile($("#transactions-report-template").html());
+			$("#reports").append( transReport({transactions : data}) );
 		}
 	});
 
