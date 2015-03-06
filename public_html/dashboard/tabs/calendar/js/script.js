@@ -60,8 +60,6 @@ $(function() {
 		},
 	});
 
-	$('.selectpicker').selectpicker();
-
 	$('#filter-options').on('change', function(event) {
 		event.preventDefault();
 		if($("#filter-options").val() == 'boat') {
@@ -76,8 +74,8 @@ $(function() {
 		}
 	});
 
-$("#filter").on('change', '.filter', function(event){
-	event.preventDefault();
+	$("#filter").on('change', '.filter', function(event){
+		event.preventDefault();
     	//console.log(this.options[this.selectedIndex].value);
     	console.log(filter);
     	if(this.id == "boats") {
@@ -163,6 +161,7 @@ $("#filter").on('change', '.filter', function(event){
 			up:   'fa fa-chevron-up',
 			down: 'fa fa-chevron-down'
 		},
+		clearBtn : true
 	});
 
 });

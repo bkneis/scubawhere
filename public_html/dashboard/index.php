@@ -163,11 +163,33 @@
 					</a>
 				</li>
 
-				<li>
+				<!--<li>
 					<a href="#calendar">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Calendar</span>
 					</a>
+				</li>-->
+
+				<li>
+					<div>
+						<!-- <i class="fa fa-briefcase"></i> -->
+						<!-- <i class="fa fa-bullhorn"></i> -->
+						<!-- <i class="fa fa-paper-plane"></i> -->
+						<i class="fa fa-calendar fa-lg fa-fw"></i>
+						<span>Calendar</span>
+						<span class="caret"></span>
+					</div>
+					<ul id="calendar-submenu">
+						<li>
+							<a href="#calendar">Calendar</a>
+						</li>
+						<li>
+							<a href="#trip-manifest">Trip manifest</a>
+						</li>
+						<li>
+							<a href="#pickup-schedule">Pick up schedule</a>
+						</li>
+					</ul>
 				</li>
 
 				<?php /* <li>
