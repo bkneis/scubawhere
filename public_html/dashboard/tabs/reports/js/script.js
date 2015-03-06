@@ -1,17 +1,42 @@
 $(function() {
-	// This is just a bad example. This should be made into a Report.js controller!
-
-	// Fetch all from the first quarter of 2015
-	var params = {
+	/*var params = {
 		after: '2015-01-01',
 		before: '2015-05-01', // This date is EXCLUSIVE, so it needs to be one day AFTER the final date that should be included
-	};
+	};*/
 
-	$.ajax({
-		url: '/api/report',
-		data: params,
-		success: function(data) {
-			$('code').text(JSON.stringify(data, null, 4));
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
 		}
 	});
+
+	$('.reports-table').DataTable({
+		"paging":   false,
+		"ordering": false,
+		"info":     false,
+		"pageLength" : 10,
+		"searching" : false,
+		"language": {
+			"emptyTable": "There are no transactions between these dates"
+		}
+	});
+
+	var dates = {
+		after : $("#start-date").val(),
+		before : $("#end-date").val()
+	}
+
+	$.ajax({
+		url: '/api/payment/filter',
+		data: dates,
+		success: function(data) {
+			console.log(data);
+		}
+	});
+
 });
