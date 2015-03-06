@@ -33,13 +33,13 @@
 					<p>
 						<div class="input-group">
 							<label class="input-group-addon">Boat : </label>
-							<select class="filter" id="boats" style="height:100%">
+							<select class="filter" id="boats">
 								<option value="all"></option>
 								{{#each boats}}
 									<option value="{{id}}">{{name}}</option>
 								{{/each}}
 							</select>
-							<button id="remove-boats-filter" class="btn btn-danger remove-room">&#215;</button>
+							<button id="remove-boats-filter" class="btn-danger remove-room" style="height:100%;">&#215;</button>
 						</div>
 					</p>
 				</script>
@@ -54,7 +54,7 @@
 								<option value="{{id}}">{{name}}</option>
 								{{/each}}
 							</select>
-							<button id="remove-trips-filter" class="btn btn-danger remove-room">&#215;</button>
+							<button id="remove-trips-filter" style="height:100%;" class="btn-danger remove-room">&#215;</button>
 						</div>
 					</p>
 				</script>
@@ -64,8 +64,8 @@
 
 		</div>
 	</div>
-
 	<div id='calendar'></div>
+	
 </div><!-- end of col-md-12 -->
 
 <div id="modalWindows" style="height: 0; visibility: hidden;">
