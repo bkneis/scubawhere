@@ -7,7 +7,8 @@ var Tour = {
 			introJs().setOptions( {
 				showStepNumbers : false,
 				exitOnOverlayClick : false,
-				exitOnEsc : false
+				exitOnEsc : false,
+				overlayOpacity : 0
 			}).start().onchange(function(targetElement) {
 				switch (targetElement.id) {
 					case "accommodation-form-container":
@@ -60,7 +61,8 @@ var Tour = {
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
-						exitOnEsc : false
+						exitOnEsc : false,
+						overlayOpacity : 0
 					}).start().onchange(function(targetElement) {
 						switch (targetElement.id) {  
 							case "agent-form-container": 
@@ -112,7 +114,8 @@ var Tour = {
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
-						exitOnEsc : false
+						exitOnEsc : false,
+						overlayOpacity : 0
 					}).start();
 				}
 				$("#tour-next-step").on("click", function() {
@@ -139,7 +142,8 @@ var Tour = {
 					introJs().setOptions( {
 						showStepNumbers : false,
 						exitOnOverlayClick : false,
-						exitOnEsc : false
+						exitOnEsc : false,
+						overlayOpacity : 0
 					}).start().onchange(function(targetElement) {
 						switch (targetElement.id) {  
 
@@ -202,7 +206,8 @@ var Tour = {
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
-					exitOnEsc : false
+					exitOnEsc : false,
+					overlayOpacity : 0
 				}).start().onchange(function(targetElement) {
 					switch (targetElement.id) {  
 						case "trip-form-container":
@@ -252,7 +257,8 @@ var Tour = {
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
-					exitOnEsc : false
+					exitOnEsc : false,
+					overlayOpacity : 0
 				}).start().onchange(function(targetElement) {
 					switch (targetElement.id) {  
 						case "ticket-form-container":
@@ -307,7 +313,8 @@ var Tour = {
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
-					exitOnEsc : false
+					exitOnEsc : false,
+					overlayOpacity : 0
 				}).start().onchange(function(targetElement) {
 					switch (targetElement.id) {  
 						case "package-form-container":
@@ -364,7 +371,8 @@ var Tour = {
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
-					exitOnEsc : false
+					exitOnEsc : false,
+					overlayOpacity : 0
 				}).start().onchange(function(targetElement) {
 					switch (targetElement.id) {  
 						case "addon-form-container":
