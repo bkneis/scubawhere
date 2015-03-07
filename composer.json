@@ -10,7 +10,8 @@
 		"mews/purifier": "dev-master",
 		"philipbrown/money": "1.*",
 		"itsgoingd/clockwork": "1.*",
-		"guzzlehttp/guzzle": "~4.0"
+		"guzzlehttp/guzzle": "~4.0",
+		"way/generators": "~2.0"
 	},
 	"autoload": {
 		"classmap": [
