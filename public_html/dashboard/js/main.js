@@ -89,21 +89,21 @@ function setToken(element) {
 
 function reproColor(id) { // Stands for: reproducible color
 
-	var colors = [ // 14 options
-		{bgcolor: '#001F3F', txtcolor: '#FFFFFF'}, // navy
-		{bgcolor: '#0074D9', txtcolor: '#FFFFFF'}, // blue
-		{bgcolor: '#7FDBFF', txtcolor: '#000000'}, // aqua
-		{bgcolor: '#39CCCC', txtcolor: '#000000'}, // teal
-		{bgcolor: '#3D9970', txtcolor: '#000000'}, // olive
-		{bgcolor: '#2ECC40', txtcolor: '#000000'}, // green
-		{bgcolor: '#01FF70', txtcolor: '#000000'}, // lime
-		{bgcolor: '#FFDC00', txtcolor: '#000000'}, // yellow
-		{bgcolor: '#FF851B', txtcolor: '#FFFFFF'}, // orange
-		{bgcolor: '#FF4136', txtcolor: '#FFFFFF'}, // red
-		{bgcolor: '#85144B', txtcolor: '#FFFFFF'}, // maroon
-		{bgcolor: '#F012BE', txtcolor: '#FFFFFF'}, // fuchsia
-		{bgcolor: '#B10DC9', txtcolor: '#FFFFFF'}, // purple
-		{bgcolor: '#DDDDDD', txtcolor: '#000000'}, // silver
+	var colors = [ /* 14 options */
+		{bgcolor: '#001F3F', txtcolor: '#FFFFFF'}, /* navy */
+		{bgcolor: '#0074D9', txtcolor: '#FFFFFF'}, /* blue */
+		{bgcolor: '#7FDBFF', txtcolor: '#000000'}, /* aqua */
+		{bgcolor: '#39CCCC', txtcolor: '#000000'}, /* teal */
+		{bgcolor: '#3D9970', txtcolor: '#000000'}, /* olive */
+		{bgcolor: '#2ECC40', txtcolor: '#000000'}, /* green */
+		{bgcolor: '#01FF70', txtcolor: '#000000'}, /* lime */
+		{bgcolor: '#FFDC00', txtcolor: '#000000'}, /* yellow */
+		{bgcolor: '#FF851B', txtcolor: '#000000'}, /* orange */
+		{bgcolor: '#FF4136', txtcolor: '#FFFFFF'}, /* red */
+		{bgcolor: '#85144B', txtcolor: '#FFFFFF'}, /* maroon */
+		{bgcolor: '#F012BE', txtcolor: '#FFFFFF'}, /* fuchsia */
+		{bgcolor: '#B10DC9', txtcolor: '#FFFFFF'}, /* purple */
+		{bgcolor: '#DDDDDD', txtcolor: '#000000'}, /* silver */
 	];
 
 	var length = colors.length;

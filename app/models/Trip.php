@@ -14,7 +14,7 @@ class Trip extends Ardent {
 
 	public static $rules = array(
 		'name'        => 'required',
-		'description' => 'required',
+		'description' => '',
 		'duration'    => 'required|numeric',
 		'photo'       => '',
 		'video'       => ''
@@ -39,7 +39,7 @@ class Trip extends Ardent {
 
 	public function getDeletableAttribute()
 	{
-		return !($this->tickets()->withTrashed()->count() > 0 || $this->departures()->withTrashed()->count() > 0 );
+		return !($this->tickets()->withTrashed()->exists() || $this->departures()->withTrashed()->exists());
 	}
 
 	public function company()

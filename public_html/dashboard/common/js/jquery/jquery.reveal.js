@@ -115,7 +115,7 @@
 				modalBg.css({"cursor": "pointer"});
 				modalBg.bind('click.modalEvent', function () {
 					if(!locked)
-					modal.trigger('reveal:close');
+						modal.trigger('reveal:close');
 				});
 			}
 
