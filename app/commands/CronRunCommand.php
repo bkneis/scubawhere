@@ -93,8 +93,8 @@ class CronRunCommand extends Command {
 			 */
 			$bookings = Booking::whereIn('status', ['initialised', 'reserved'])->with('company')->get();
 
-			$ids_initialised = array();
-			$ids_reserved    = array();
+			$ids_abandoned = array();
+			$ids_expired   = array();
 
 			foreach($bookings as $booking)
 			{
@@ -102,30 +102,30 @@ class CronRunCommand extends Command {
 				$test = new DateTime($booking->reserved, new DateTimeZone($booking->company->timezone));
 				if($test < $now)
 				{
-					$booking->status === 'initialised' ? $ids_initialised[] = $booking->id : $ids_reserved[] = $booking->id;
+					$booking->status === 'initialised' ? $ids_abandoned[] = $booking->id : $ids_expired[] = $booking->id;
 				}
 			}
 
-			if(count($ids_initialised) > 0)
+			if(count($ids_abandoned) > 0)
 			{
 				// Create a string containing as many ?,?... as there are IDs
-				$clause = implode(',', array_fill(0, count($ids_initialised), '?'));
+				$clause = implode(',', array_fill(0, count($ids_abandoned), '?'));
 				// This query deliberately does not set the `status` to null or 'saved'.
 				// This way, we still know which bookings where reserved but have expired.
-				DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_initialised);
+				DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_abandoned);
 			}
 
-			if(count($ids_reserved) > 0)
+			if(count($ids_expired) > 0)
 			{
 				// Create a string containing as many ?,?... as there are IDs
-				$clause = implode(',', array_fill(0, count($ids_reserved), '?'));
+				$clause = implode(',', array_fill(0, count($ids_expired), '?'));
 				// This query deliberately does not set the `status` to null or 'saved'.
 				// This way, we still know which bookings where reserved but have expired.
-				DB::update("UPDATE bookings SET `status` = 'expired', `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_reserved);
+				DB::update("UPDATE bookings SET `status` = 'expired', `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_expired);
 			}
 
-			$this->messages[] = count($ids_initialised) . ' bookings abandoned';
-			$this->messages[] = count($ids_reserved) . ' bookings expired';
+			$this->messages[] = count($ids_abandoned) . ' bookings abandoned';
+			$this->messages[] = count($ids_expired) . ' bookings expired';
 
 			/**
 			 * Delete all abandoned bookings older than 1h
@@ -170,7 +170,7 @@ class CronRunCommand extends Command {
 
 	protected function everyFiveMinutes(callable $callback)
 	{
-		if((int) date('i', $this->timestamp) % 5 === 0) call_user_func($callback);
+		/* if((int) date('i', $this->timestamp) % 5 === 0) */ call_user_func($callback);
 	}
 
 	protected function everyTenMinutes(callable $callback)
