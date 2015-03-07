@@ -133,23 +133,9 @@ Handlebars.registerHelper('cancelButton', function() {
 });
 
 $(function() {
-	var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
-
-	/*
-	if(typeof window.bookings === 'object')
-		$('#booking-list').html( bookingListItem({bookings: window.bookings}) );
-	*/
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
-		_.each(window.bookings, function(booking) {
-			booking.sums = {};
-			Booking.prototype.calculateSums.call(booking);
-			Booking.prototype.setStatus.call(booking);
-		});
-		$('#booking-list').html( bookingListItem({bookings: data}) );
-
-		// Initiate tooltips
-		$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+		renderBookingList(window.bookings);
 	});
 
 	$('#booking-list').on('click', '.accordion-header', function() {
@@ -177,10 +163,7 @@ $(function() {
 		var params = $(this).serializeObject();
 
 		Booking.filter(params, function success(data) {
-			$('#booking-list').html( bookingListItem({bookings: data}) );
-
-			// Initiate tooltips
-			$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+			renderBookingList(data);
 
 			btn.html('Find Booking');
 		}, function error(xhr) {
@@ -191,12 +174,22 @@ $(function() {
 	});
 
 	$('#find-booking-form').on('reset', function(event) {
-		$('#booking-list').html( bookingListItem({bookings: window.bookings}) );
-
-		// Initiate tooltips
-		$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+		renderBookingList(window.bookings);
 	});
 });
+
+var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
+function renderBookingList(bookings) {
+	_.each(bookings, function(booking) {
+		booking.sums = {};
+		Booking.prototype.calculateSums.call(booking);
+		Booking.prototype.setStatus.call(booking);
+	});
+	$('#booking-list').html( bookingListItem({bookings: bookings}) );
+
+	// Initiate tooltips
+	$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+}
 
 function editBooking(booking_id, self) {
 	// Set loading indicator
@@ -286,12 +279,8 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	Booking.cancel(params, function success(status) {
 
 		Booking.getAll(function(data) {
-			var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 			window.bookings = _.indexBy(data, 'id');
-			$('#booking-list').html( bookingListItem({bookings: data}) );
-
-			// Initiate tooltips
-			$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+			renderBookingList(window.bookings);
 		});
 
 		pageMssg(status, 'success');
