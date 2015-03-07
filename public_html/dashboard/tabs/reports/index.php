@@ -5,12 +5,12 @@
 				<h4 class="panel-title">Transactions Report</h4>
 			</div>
 			<div class="panel-body">
-				<div class="btn-group col-md-offset-3" role="group">
-					<button type="button" class="btn btn-primary">Transactions</button>
-					<button type="button" class="btn btn-default">Agents</button>
-					<button type="button" class="btn btn-default">Booking History</button>
-					<button type="button" class="btn btn-default">Trip Utiisation</button>
-					<button type="button" class="btn btn-default">Ticket / Packages</button>
+				<div id="report-type-btns" class="btn-group col-md-offset-3" role="group">
+					<button type="button" data-report="transactions" data-api="/api/payment/filter" class="btn btn-default btn-primary">Transactions</button>
+					<button type="button" data-report="agents" data-api="/api/booking/filter-confirmed-by-agent" class="btn btn-default">Agents</button>
+					<button type="button" data-report="booking-history" data-api="/api/booking/filter-confirmed" class="btn btn-default">Booking History</button>
+					<button type="button" data-report="utilisation" data-api="/api/reports/utilisation" class="btn btn-default">Trip Utiisation</button>
+					<button type="button" data-report="tickets" class="btn btn-default">Ticket / Packages</button>
 				</div>
 
 				<div style="margin-top:20px"></div>
@@ -50,7 +50,7 @@
             </tr>
 		</thead>
 		<tbody>
-			{{#each transactions}}
+			{{#each entries}}
 				<tr>
 					<td>{{booking.lead_customer}}</td>
 					<td></td>
@@ -58,6 +58,85 @@
 					<td></td>
 					<td></td>
 					<td></td>
+				</tr>
+			{{else}}
+				<tr><td class="text-center">There are no transactions between these dates</td></tr>
+			{{/each}}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td><strong>Total</strong></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
+	</table>
+</script>
+<script type="text/x-handlebars-template" id="agents-report-template">
+	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+		<thead>
+  			<tr>
+                <th style="color:#313131">Name</th>
+                <th style="color:#313131">Agent name</th>
+                <th style="color:#313131">Date</th>
+                <th style="color:#313131">Total balance</th>
+                <th style="color:#313131">Commission</th>
+                <th style="color:#313131">Cleared balance</th>
+            </tr>
+		</thead>
+		<tbody>
+			{{#each entries}}
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			{{else}}
+				<tr><td class="text-center">There are no agent bookings between these dates</td></tr>
+			{{/each}}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td><strong>Total</strong></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
+	</table>
+</script>
+<script type="text/x-handlebars-template" id="booking-history-report-template">
+	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+		<thead>
+  			<tr>
+                <th style="color:#313131">Name</th>
+                <th style="color:#313131">Date</th>
+                <th style="color:#313131">Method of booking</th>
+                <th style="color:#313131">Country</th>
+                <th style="color:#313131">Refrence</th>
+                <th style="color:#313131">Total cost</th>
+            </tr>
+		</thead>
+		<tbody>
+			{{#each entries}}
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			{{else}}
+				<tr><td class="text-center">There are no bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
