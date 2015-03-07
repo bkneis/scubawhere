@@ -17,7 +17,7 @@ class Bookingdetail extends Ardent {
 
 	public function addons()
 	{
-		return $this->belongsToMany('Addon')->withPivot('quantity')->withTimestamps()->withTrashed();
+		return $this->belongsToMany('Addon')->withPivot('quantity', 'packagefacade_id')->withTimestamps()->withTrashed();
 	}
 
 	public function boatroom()
