@@ -44,36 +44,47 @@
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
   			<tr>
-                <th style="color:#313131">Name</th>
-                <th style="color:#313131">Cash</th>
-                <th style="color:#313131">Credit card</th>
-                <th style="color:#313131">Cheque</th>
-                <th style="color:#313131">Bank</th>
-                <th style="color:#313131">PayPal</th>
+                <th style="color:#313131; width:33%">Name</th>
+                <th style="color:#313131">Type</th>
+                <th style="color:#313131">Amount</th>
             </tr>
 		</thead>
 		<tbody>
 			{{#each entries}}
 				<tr>
-					<td>{{booking.lead_customer}}</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>{{booking.lead_customer.firstname}} {{booking.lead_customer.lastname}}</td>
+					<td>{{paymentgateway.name}}</td>
+					<td>{{amount}}</td>
 				</tr>
 			{{else}}
-				<tr><td class="text-center">There are no transactions between these dates</td></tr>
+				<tr><td colspan="3" class="text-center">There are no transactions between these dates</td></tr>
 			{{/each}}
 		</tbody>
 		<tfoot>
 			<tr>
 				<td><strong>Total</strong></td>
+				<td>Cash</td>
+				<td id="transactions-totalCash"></td>
+			</tr>
+			<tr>
 				<td></td>
+				<td>Credit Card</td>
+				<td id="transactions-totalCard"></td>
+			</tr>
+			<tr>
 				<td></td>
+				<td>Cheque</td>
+				<td id="transactions-totalCheque"></td>
+			</tr>
+			<tr>
 				<td></td>
+				<td>Bank</td>
+				<td id="transactions-totalBank"></td>
+			</tr>
+			<tr>
 				<td></td>
-				<td></td>
+				<td>Paypal</td>
+				<td id="transactions-totalPaypal"></td>
 			</tr>
 		</tfoot>
 	</table>
@@ -93,23 +104,20 @@
 		<tbody>
 			{{#each entries.bookings}}
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
+					<td>{{agent}}</td>
+					<td>{{arrival_date}}</td>
+					<td>{{decimal_price}}</td>
 					<td></td>
 					<td></td>
 				</tr>
 			{{else}}
-				<tr><td class="text-center">There are no agent bookings between these dates</td></tr>
+				<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 		<tfoot>
 			<tr>
-				<td><strong>Total</strong></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td colspan="3"><strong>Total</strong></td>
 				<td></td>
 				<td></td>
 			</tr>
@@ -131,15 +139,15 @@
 		<tbody>
 			{{#each entries.bookings}}
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
+					<td>{{arrival_date}}</td>
+					<td>{{source}}</td>
+					<td>{{lead_customer.country_id}}</td>
+					<td>{{reference}}</td>
+					<td>{{decimal_price}}</td>
 				</tr>
 			{{else}}
-				<tr><td class="text-center">There are no bookings between these dates</td></tr>
+				<tr><td colspan="6" class="text-center">There are no bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
@@ -160,13 +168,12 @@
 					<td>{{name}}</td>
 					<td>
 						<div class="progress">
-							<div class="progress-bar progress-bar-success" style="width: 100-{{getUtil capacity unassigned}}%">100-{{getUtil capacity unassigned}}%</div>
-							<div class="progress-bar progress-bar-danger" style="width: {{getUtil capacity unassigned}}%">{{getUtil capacity unassigned}}%</div>
+							<div class="progress-bar progress-bar-success" style="width: {{getUtil capacity unassigned}}%">{{getUtil capacity unassigned}}%</div>
 						</div>
 					</td>
 				</tr>
 			{{else}}
-				<tr><td class="text-center">There are no trips between these dates</td></tr>
+				<tr><td colspan="3" class="text-center">There are no trips between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>

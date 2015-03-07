@@ -3,10 +3,14 @@ var report;
 var filter;
 
 Handlebars.registerHelper('getUtil', function(capacity, unassigned){
-	return ((capacity/unassigned) * 100);
+	return Math.round((100-((unassigned/capacity) * 100)));
 });
 
 Handlebars.registerHelper('getDate', function(date){
+	return (date.substring(0, date.length - 9));
+});
+
+Handlebars.registerHelper('getTransAmount', function(date){
 	return (date.substring(0, date.length - 9));
 });
 
@@ -27,7 +31,7 @@ $(function() {
 	});
 
 	$('#start-date').val('2015-01-01');;
-	$('#end-date').val('2015-03-01');
+	$('#end-date').val('2015-05-01');
 
 	$('.reports-table').DataTable({
 		"paging":   false,
@@ -38,98 +42,18 @@ $(function() {
 	});
 
 	$('#start-date, #end-date').on('change', function() {
-		var dates = {
-			after : $("#start-date").val(),
-			before : $("#end-date").val()
-		}
-		switch(report_type) {
-			case("transactions") :
-				$.ajax({
-					url: '/api/payment/filter',
-					data: dates,
-					success: function(data) {
-						console.log(data);
-						report = Handlebars.compile($("#transactions-report-template").html());
-						$("#reports").empty().append( report({entries : data}) );
-					}
-				});
-				break;
-			case("agents") :
-				/*filter = Handlebars.compile($("#agents-filter-template").html());
-				Agent.getAllAgents(function sucess(data) {
-					$("#report-filters").empty().append( filter({agents : data}) );
-				});*/
-				$.ajax({
-					url: '/api/booking/filter-confirmed-by-agent',
-					data: dates,
-					success: function(data) {
-						console.log(data);
-						report = Handlebars.compile($("#agents-report-template").html());
-						$("#reports").empty().append( report({entries : data}) );
-					}
-				});
-				break;
-			case("booking-history") :
-				$.ajax({
-					url: '/api/booking/filter-confirmed',
-					data: dates,
-					success: function(data) {
-						console.log(data);
-						report = Handlebars.compile($("#agents-report-template").html());
-						$("#reports").empty().append( report({entries : data}) );
-					}
-				});
-				break;
-			case("utilisation") :
-				$.ajax({
-					url: '/api/report/utilisation',
-					data: dates,
-					success: function(data) {
-						console.log(data);
-						report = Handlebars.compile($("#utilisation-report-template").html());
-						$("#reports").empty().append( report({entries : data}) );
-					}
-				});
-				break;
-
-		}
+		getReport(report_type);
 	});
 
 	$("#report-type-btns").on('click', ':button', function(event){
 		event.preventDefault();
-		console.log($(this).attr("data-report"));
 		report_type = $(this).attr("data-report");
-		var dates = {
-			after : $("#start-date").val(),
-			before : $("#end-date").val()
-		}
-		$.ajax({
-			url: $(this).attr("data-api"),
-			data: dates,
-			success: function(data) {
-				console.log(data);
-				report = Handlebars.compile($("#" + report_type + "-report-template").html());
-				$("#reports").empty().append( report({entries : data}) );
-			}
-		});
+		getReport(report_type);
 		$(':button').removeClass("btn-primary");
 		$(this).addClass("btn-primary");
 	});
 
-	var dates = {
-		after: '2015-01-01',
-		before: '2015-05-01', // This date is EXCLUSIVE, so it needs to be one day AFTER the final date that should be included
-	};
-
-	$.ajax({
-		url: '/api/payment/filter',
-		data: dates,
-		success: function(data) {
-			console.log(data);
-			report = Handlebars.compile($("#transactions-report-template").html());
-			$("#reports").empty().append( report({transactions : data}) );
-		}
-	});
+	getReport(report_type);
 
 });
 
@@ -148,4 +72,86 @@ function getDates() {
 	dates.start = (today.getDate() - 7);
 	console.log(dates);
 	//return dates;
+}
+
+function getReport(reportType) {
+	var dates = {
+		after : $("#start-date").val(),
+		before : $("#end-date").val()
+	}
+	switch(reportType) {
+		case("transactions") :
+			$.ajax({
+			url: '/api/payment/filter',
+			data: dates,
+			success: function(data) {
+				console.log(data);
+				report = Handlebars.compile($("#transactions-report-template").html());
+				$("#reports").empty().append( report({entries : data}) );
+				var totalCash = 0, totalCredit = 0, totalCheque = 0, totalBank = 0, totalPaypal = 0;
+				for(var i=0; i < data.length; i++) {
+					switch(data[i].paymentgateway_id) {
+						case(1) :
+							totalCash += data[i].amount;
+							break;
+						case(2) :
+							totalCredit += data[i].amount;
+							break;
+						case(3) :
+							totalCheque += data[i].amount;
+							break;
+						case(4) :
+							totalBank += data[i].amount;
+							break;
+						case(5) :
+							totalPaypal += data[i].amount;
+							break;
+					}
+				}
+				$("#transactions-totalCash").text(totalCash);
+				$("#transactions-totalCredit").text(totalCash);
+				$("#transactions-totalCheque").text(totalCash);
+				$("#transactions-totalBank").text(totalCash);
+				$("#transactions-totalPaypal").text(totalCash);
+			}
+		});
+			break;
+		case("agents") :
+			/*filter = Handlebars.compile($("#agents-filter-template").html());
+			Agent.getAllAgents(function sucess(data) {
+				$("#report-filters").empty().append( filter({agents : data}) );
+			});*/
+			$.ajax({
+				url: '/api/booking/filter-confirmed-by-agent',
+				data: dates,
+				success: function(data) {
+					console.log(data);
+					report = Handlebars.compile($("#agents-report-template").html());
+					$("#reports").empty().append( report({entries : data}) );
+				}
+			});
+			break;
+		case("booking-history") :
+			$.ajax({
+				url: '/api/booking/filter-confirmed',
+				data: dates,
+				success: function(data) {
+					console.log(data);
+					report = Handlebars.compile($("#booking-history-report-template").html());
+					$("#reports").empty().append( report({entries : data}) );
+				}
+			});
+			break;
+		case("utilisation") :
+			$.ajax({
+				url: '/api/report/utilisation',
+				data: dates,
+				success: function(data) {
+					console.log(data);
+					report = Handlebars.compile($("#utilisation-report-template").html());
+					$("#reports").empty().append( report({entries : data}) );
+				}
+			});
+			break;
+	}
 }
