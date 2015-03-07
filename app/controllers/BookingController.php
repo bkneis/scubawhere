@@ -90,7 +90,7 @@ class BookingController extends Controller {
 				'refunds',
 					'refunds.paymentgateway'
 			)
-			->orderBy('updated_at', 'DESC')
+			->orderBy('id', 'DESC')
 			->skip($from)
 			->take($take)
 			->get();
@@ -107,7 +107,7 @@ class BookingController extends Controller {
 				'refunds',
 					'refunds.paymentgateway'
 			)
-			->orderBy('updated_at', 'DESC')
+			->orderBy('id', 'DESC')
 			->take(5)
 			->get();
 	}
@@ -192,7 +192,7 @@ class BookingController extends Controller {
 						$query->where('lastname', 'LIKE', '%'.$lastname.'%');
 					});
 			})
-			->orderBy('updated_at', 'DESC')
+			->orderBy('id', 'DESC')
 			->skip($from)
 			->take($take)
 			->get();
@@ -224,7 +224,7 @@ class BookingController extends Controller {
 			)
 			->whereIn('status', ['confirmed'])
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
-			->orderBy('created_at')
+			->orderBy('id')
 			->get();
 
 		$TOTALS = [
@@ -271,7 +271,7 @@ class BookingController extends Controller {
 			->whereIn('status', ['confirmed'])
 			->whereNull('agent_id')
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
-			->orderBy('created_at')
+			->orderBy('id')
 			->get();
 
 		$TOTALS = [
@@ -320,7 +320,7 @@ class BookingController extends Controller {
 				if(!empty($agent_ids))
 					$query->whereIn('agent_id', $agent_ids);
 			})
-			->orderBy('created_at')
+			->orderBy('id')
 			->get();
 
 		$TOTALS = [
