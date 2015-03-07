@@ -9,7 +9,7 @@
 					<button type="button" data-report="transactions" data-api="/api/payment/filter" class="btn btn-default btn-primary">Transactions</button>
 					<button type="button" data-report="agents" data-api="/api/booking/filter-confirmed-by-agent" class="btn btn-default">Agents</button>
 					<button type="button" data-report="booking-history" data-api="/api/booking/filter-confirmed" class="btn btn-default">Booking History</button>
-					<button type="button" data-report="utilisation" data-api="/api/reports/utilisation" class="btn btn-default">Trip Utiisation</button>
+					<button type="button" data-report="utilisation" data-api="/api/report/utilisation" class="btn btn-default">Trip Utilisation</button>
 					<button type="button" data-report="tickets" class="btn btn-default">Ticket / Packages</button>
 				</div>
 
@@ -27,6 +27,9 @@
 							<label class="input-group-addon">Until : </label>
 							<input style="width:200px; float:left;" id="end-date" type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="jumpto" placeholder="YYYY-MM-DD">
 						</div>
+				    </div>
+				    <div class="col-xs-3">
+				    	<div id="report-filters" class="pull-right"></div>
 				    </div>
 				</div> 
 
@@ -88,7 +91,7 @@
             </tr>
 		</thead>
 		<tbody>
-			{{#each entries}}
+			{{#each entries.bookings}}
 				<tr>
 					<td></td>
 					<td></td>
@@ -126,7 +129,7 @@
             </tr>
 		</thead>
 		<tbody>
-			{{#each entries}}
+			{{#each entries.bookings}}
 				<tr>
 					<td></td>
 					<td></td>
@@ -141,5 +144,44 @@
 		</tbody>
 	</table>
 </script>
+<script type="text/x-handlebars-template" id="utilisation-report-template">
+	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+		<thead>
+  			<tr>
+                <th style="color:#313131; width:15%">Date</th>
+                <th style="color:#313131; width:15%">Trip name</th>
+                <th style="color:#313131">Utilisation</th>
+            </tr>
+		</thead>
+		<tbody>
+			{{#each entries.utilisation}}
+				<tr>
+					<td>{{getDate date}}</td>
+					<td>{{name}}</td>
+					<td>
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" style="width: 100-{{getUtil capacity unassigned}}%">100-{{getUtil capacity unassigned}}%</div>
+							<div class="progress-bar progress-bar-danger" style="width: {{getUtil capacity unassigned}}%">{{getUtil capacity unassigned}}%</div>
+						</div>
+					</td>
+				</tr>
+			{{else}}
+				<tr><td class="text-center">There are no trips between these dates</td></tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+<script type="text/x-handlebars-template" id="agents-filter-template">
+	<div class="input-group">
+		<label class="input-group-addon">Filter by : </label>
+		<select>
+			<option>Please select ...</option>
+			{{#each agents}}
+				<option value="{{id}}">{{name}}</option>
+			{{/each}}
+		</select>
+	</div>
+</script>
+<script type="text/javascript" src="js/Controllers/Agent.js"></script>
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="tabs/reports/js/script.js"></script>

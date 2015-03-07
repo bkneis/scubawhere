@@ -1,5 +1,15 @@
 var report_type;
 var report;
+var filter;
+
+Handlebars.registerHelper('getUtil', function(capacity, unassigned){
+	return ((capacity/unassigned) * 100);
+});
+
+Handlebars.registerHelper('getDate', function(date){
+	return (date.substring(0, date.length - 9));
+});
+
 $(function() {
 
 	report_type = "transactions";
@@ -40,10 +50,48 @@ $(function() {
 					success: function(data) {
 						console.log(data);
 						report = Handlebars.compile($("#transactions-report-template").html());
-						$("#reports").empty().append( report({transactions : data}) );
+						$("#reports").empty().append( report({entries : data}) );
 					}
 				});
 				break;
+			case("agents") :
+				/*filter = Handlebars.compile($("#agents-filter-template").html());
+				Agent.getAllAgents(function sucess(data) {
+					$("#report-filters").empty().append( filter({agents : data}) );
+				});*/
+				$.ajax({
+					url: '/api/booking/filter-confirmed-by-agent',
+					data: dates,
+					success: function(data) {
+						console.log(data);
+						report = Handlebars.compile($("#agents-report-template").html());
+						$("#reports").empty().append( report({entries : data}) );
+					}
+				});
+				break;
+			case("booking-history") :
+				$.ajax({
+					url: '/api/booking/filter-confirmed',
+					data: dates,
+					success: function(data) {
+						console.log(data);
+						report = Handlebars.compile($("#agents-report-template").html());
+						$("#reports").empty().append( report({entries : data}) );
+					}
+				});
+				break;
+			case("utilisation") :
+				$.ajax({
+					url: '/api/report/utilisation',
+					data: dates,
+					success: function(data) {
+						console.log(data);
+						report = Handlebars.compile($("#utilisation-report-template").html());
+						$("#reports").empty().append( report({entries : data}) );
+					}
+				});
+				break;
+
 		}
 	});
 
