@@ -353,12 +353,20 @@ class DepartureController extends Controller {
 			if( Input::has('start') )
 				$departure->start   = Input::get('start');
 
-			// TODO Check if boat belongs to logged in company
 			if( Input::has('boat_id') )
 			{
-				$departure->boat_id = Input::get('boat_id');
+				// Check if the boat_id exists and belongs to the logged in company
+				try
+				{
+					$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+				}
+				catch(ModelNotFoundException $e)
+				{
+					return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
+				}
+				$departure->boat_id = $boat->id;
 
-				$capacity = $departure->getCapacityAttribute();
+				$capacity = $departure->capacity;
 
 				// TODO This next conditional is not checking if any tickets have been booked for the session that require a certain accomodation. It needs to be checked if this accomodation is also present on the new boat.
 				if($capacity[0] > $capacity[1])

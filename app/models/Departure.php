@@ -16,7 +16,7 @@ class Departure extends Ardent {
 
 	public static $rules = array(
 		'start'        => 'required|date',
-		'boat_id'      => 'required|integer|exists:boats,id',
+		'boat_id'      => 'required|integer',
 		'timetable_id' => 'integer|exists:timetables,id'
 	);
 
