@@ -4,8 +4,8 @@ use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use PhilipBrown\Money\Currency;
 
-class Price extends Ardent {                       // ↓ The price here is needed for creation of new ticket/package during update, when old one is booked
-	protected $fillable = array('new_decimal_price', 'price', 'from', 'until');
+class Price extends Ardent {
+	protected $fillable = array('new_decimal_price', 'from', 'until');
 
 	protected $appends = array('decimal_price');
 
