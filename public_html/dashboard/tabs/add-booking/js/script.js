@@ -62,7 +62,7 @@ Handlebars.registerHelper("assignCheck", function (item, options) {
 		if(detail.ticket.id == item.id) return detail;
 	});
 
-	//Display how many tickets are free, otherwise the ticket will not show. 
+	//Display how many tickets are free, otherwise the ticket will not show.
 
 	if($.isEmptyObject(detailsWithTicket)) {
 		this.free = this.qty;
@@ -670,52 +670,55 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 		var ticket  = window.tickets[ticket_id];
 
-		var boatroomDetermined = false;
 		var boatBoatrooms   = _.pluck(session.boat.boatrooms, 'id');
 		var ticketBoatrooms = _.pluck(ticket.boatrooms, 'id');
 		var intersectingBoatrooms = [];
 
-		if(boatBoatrooms.length === 1)
-			boatroomDetermined = true;
-		else if(ticketBoatrooms.length > 0) {
+		if(boatBoatrooms.length === 1) {
+			submitAddDetail(params);
+			return;
+		}
+
+		if(ticketBoatrooms.length > 0) {
 			intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
-			if(intersectingBoatrooms.length === 1)
+			if(intersectingBoatrooms.length === 1) {
 				boatroomDetermined = true;
-		}
-
-		if(boatroomDetermined === false) {
-			// If the boatroom could not be determined, we need to ask the user:
-			var boatrooms = {};
-			if(intersectingBoatrooms.length > 0) {
-				boatrooms = _.map(intersectingBoatrooms, function(value) {
-					return window.boatrooms[value];
-				});
-			} else {
-				boatrooms = session.boat.boatrooms;
+				submitAddDetail(params);
+				return;
 			}
-
-			$('#modalWindows')
-			.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
-			.children('#modal-boatroom-select')             // Directly find it and use it
-			.data('params', params)                         // Assign the eventObject to the modal DOM element
-			.reveal({                                       // Open modal window | Options:
-				animation: 'fadeAndPop',                    // fade, fadeAndPop, none
-				animationSpeed: 300,                        // how fast animtions are
-				closeOnBackgroundClick: true,               // if you click background will modal close?
-				dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
-				btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
-				onFinishModal: function() {
-					// Aborted action
-					if(!window.sw.modalClosedBySelection) {
-						this.btn.html('Assign');            // Reset the button
-					} else {
-						delete window.sw.modalClosedBySelection;
-					}
-
-					$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
-				}
-			});
 		}
+
+		// If the boatroom could not be determined, we need to ask the user:
+		var boatrooms = {};
+		if(intersectingBoatrooms.length > 0) {
+			boatrooms = _.map(intersectingBoatrooms, function(value) {
+				return window.boatrooms[value];
+			});
+		} else {
+			boatrooms = session.boat.boatrooms;
+		}
+
+		$('#modalWindows')
+		.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
+		.children('#modal-boatroom-select')             // Directly find it and use it
+		.data('params', params)                         // Assign the eventObject to the modal DOM element
+		.reveal({                                       // Open modal window | Options:
+			animation: 'fadeAndPop',                    // fade, fadeAndPop, none
+			animationSpeed: 300,                        // how fast animtions are
+			closeOnBackgroundClick: true,               // if you click background will modal close?
+			dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
+			btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
+			onFinishModal: function() {
+				// Aborted action
+				if(!window.sw.modalClosedBySelection) {
+					this.btn.html('Assign');            // Reset the button
+				} else {
+					delete window.sw.modalClosedBySelection;
+				}
+
+				$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
+			}
+		});
 	} else {
 		submitAddDetail(params);
 	}
