@@ -79,8 +79,16 @@ function getReport(reportType) {
 		after : $("#start-date").val(),
 		before : $("#end-date").val()
 	}
+	$("#report-filters").empty();
 	switch(reportType) {
 		case("transactions") :
+			filter = Handlebars.compile($("#transactions-filter-template").html());
+			$.ajax({
+				url: '/api/payment/paymentgateways',
+				success: function(data) {
+					$("#report-filters").empty().append( filter({gateways : data}) );
+				}
+			});
 			$.ajax({
 			url: '/api/payment/filter',
 			data: dates,
@@ -90,37 +98,45 @@ function getReport(reportType) {
 				$("#reports").empty().append( report({entries : data}) );
 				var totalCash = 0, totalCredit = 0, totalCheque = 0, totalBank = 0, totalPaypal = 0;
 				for(var i=0; i < data.length; i++) {
+					console.log(data[i].amount);
+					console.log(data[i].paymentgateway_id);
 					switch(data[i].paymentgateway_id) {
-						case(1) :
-							totalCash += data[i].amount;
+						case("1") :
+							totalCash += parseInt(data[i].amount);
 							break;
-						case(2) :
-							totalCredit += data[i].amount;
+						case("2") :
+							totalCredit += parseInt(data[i].amount);
 							break;
-						case(3) :
-							totalCheque += data[i].amount;
+						case("3") :
+							totalCheque += parseInt(data[i].amount);
 							break;
-						case(4) :
-							totalBank += data[i].amount;
+						case("4") :
+							totalBank += parseInt(data[i].amount);
 							break;
-						case(5) :
-							totalPaypal += data[i].amount;
+						case("5") :
+							totalPaypal += parseInt(data[i].amount);
 							break;
 					}
 				}
-				$("#transactions-totalCash").text(totalCash);
-				$("#transactions-totalCredit").text(totalCash);
-				$("#transactions-totalCheque").text(totalCash);
-				$("#transactions-totalBank").text(totalCash);
-				$("#transactions-totalPaypal").text(totalCash);
+				$("#transactions-totalCash").text(data[0].currency.symbol + " " + totalCash);
+				$("#transactions-cash-percentage").css("width", ((totalCash/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-totalCredit").text(data[0].currency.symbol + " " + totalCredit);
+				$("#transactions-credit-percentage").css("width", ((totalCredit/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-totalCheque").text(data[0].currency.symbol + " " + totalCheque);
+				$("#transactions-cheque-percentage").css("width", ((totalCheque/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-totalBank").text(data[0].currency.symbol + " " + totalBank);
+				$("#transactions-bank-percentage").css("width", ((totalBank/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");;
+				$("#transactions-totalPaypal").text(data[0].currency.symbol + " " + totalPaypal);
+				$("#transactions-paypal-percentage").css("width", ((totalPaypal/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 			}
 		});
 			break;
 		case("agents") :
-			/*filter = Handlebars.compile($("#agents-filter-template").html());
+			filter = Handlebars.compile($("#agents-filter-template").html());
 			Agent.getAllAgents(function sucess(data) {
 				$("#report-filters").empty().append( filter({agents : data}) );
-			});*/
+			});
 			$.ajax({
 				url: '/api/booking/filter-confirmed-by-agent',
 				data: dates,
@@ -132,6 +148,9 @@ function getReport(reportType) {
 			});
 			break;
 		case("booking-history") :
+			filter = Handlebars.compile($("#booking-history-filter-template").html());
+			var data = [{name : "Telephone"}, {name: "Agent"}, {name: "In person"}, {name: "Email"}];
+			$("#report-filters").empty().append( filter({sources : data}) );
 			$.ajax({
 				url: '/api/booking/filter-confirmed',
 				data: dates,
@@ -143,6 +162,10 @@ function getReport(reportType) {
 			});
 			break;
 		case("utilisation") :
+			filter = Handlebars.compile($("#utilisation-filter-template").html());
+			Trip.getAllTrips(function sucess(data) {
+				$("#report-filters").empty().append( filter({trips : data}) );
+			});
 			$.ajax({
 				url: '/api/report/utilisation',
 				data: dates,
