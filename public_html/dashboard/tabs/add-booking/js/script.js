@@ -589,15 +589,15 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		return false;
 	}
 	if(!booking.lead_customer.email) {
-		pageMssg("Lead customer requires an email!", "danger");
+		pageMssg("The lead customer requires an email!", "danger");
 		return false;
 	}
 	if(!booking.lead_customer.phone) {
-		pageMssg("Lead customer requires a phone number!", "danger");
+		pageMssg("The lead customer requires a phone number!", "danger");
 		return false;
 	}
 	if(!booking.lead_customer.country_id) {
-		pageMssg("Lead customer requires a country!", "danger");
+		pageMssg("The lead customer requires a country!", "danger");
 		return false;
 	}
 });
@@ -650,6 +650,12 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var ticket_id   = $('#session-tickets').children('.active').first().data('id');
 	var customer_id = $('#session-customers').children('.active').first().data('id');
 	var session_id  = btn.data('id');
+
+	if(!ticket_id) {
+		pageMssg('Please select a ticket!', 'warning');
+		btn.html('Assign');
+		return false;
+	}
 
 	var params = {};
 	params._token      = window.token;
