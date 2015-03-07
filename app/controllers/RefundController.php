@@ -78,7 +78,7 @@ class RefundController extends Controller {
 		$data['amount']            = Input::get('amount');
 		$data['paymentgateway_id'] = Input::get('paymentgateway_id');
 		// $data['received_at']       = Input::get('received_at');
-		$data['received_at']       = Helper::localTime()->format('Y-m-d H:i:s');
+		$data['received_at']       = Helper::localTime()->format('Y-m-d');
 
 		// Check that received_at date lies in the past
 		/* if(!Helper::isPast($data['received_at']))
