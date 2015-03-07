@@ -207,8 +207,10 @@
 					<td>{{getDate date}}</td>
 					<td>{{name}}</td>
 					<td>
-						<div class="progress">
-							<div class="progress-bar progress-bar-success" style="width: {{getUtil capacity unassigned}}%">{{getUtil capacity unassigned}}%</div>
+						
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">	
+							<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>	
+							<span class="percentage-left">{{capacity}}</span>
 						</div>
 					</td>
 				</tr>
@@ -219,11 +221,11 @@
 		<table>
 			<thead style="font-weight: bold;">
 				<tr>
-					<td>Date range</td>
-					<td>Average</td>
-					<td id="utilisation-average">
-						<div class="progress">
-							<div class="progress-bar progress-bar-success"></div>
+					<td id="utilisation-date-range" style="width:30%">Average</td>
+					<td>
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">	
+							<div id="utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>	
+							<span id="utilisation-total-capacity" class="percentage-left"></span>
 						</div>
 					</td>
 			</thead>

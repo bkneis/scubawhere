@@ -14,6 +14,10 @@ Handlebars.registerHelper('getTransAmount', function(date){
 	return (date.substring(0, date.length - 9));
 });
 
+Handlebars.registerHelper('getRemaining', function(capacity, unassigned){
+	return capacity - unassigned;
+});
+
 $(function() {
 
 	report_type = "transactions";
@@ -118,16 +122,17 @@ function getReport(reportType) {
 							break;
 					}
 				}
+				var total = totalCash + totalCredit + totalCheque + totalBank + totalPaypal;
 				$("#transactions-totalCash").text(data[0].currency.symbol + " " + totalCash);
-				$("#transactions-cash-percentage").css("width", ((totalCash/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-cash-percentage").css("width", ((totalCash/total)*100) + "%");
 				$("#transactions-totalCredit").text(data[0].currency.symbol + " " + totalCredit);
-				$("#transactions-credit-percentage").css("width", ((totalCredit/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-credit-percentage").css("width", ((totalCredit/total)*100) + "%");
 				$("#transactions-totalCheque").text(data[0].currency.symbol + " " + totalCheque);
-				$("#transactions-cheque-percentage").css("width", ((totalCheque/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-cheque-percentage").css("width", ((totalCheque/total)*100) + "%");
 				$("#transactions-totalBank").text(data[0].currency.symbol + " " + totalBank);
-				$("#transactions-bank-percentage").css("width", ((totalBank/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");;
+				$("#transactions-bank-percentage").css("width", ((totalBank/total)*100) + "%");
 				$("#transactions-totalPaypal").text(data[0].currency.symbol + " " + totalPaypal);
-				$("#transactions-paypal-percentage").css("width", ((totalPaypal/(totalCash + totalCredit + totalCheque + totalBank + totalPaypal)*100)) + "%");
+				$("#transactions-paypal-percentage").css("width", ((totalPaypal/total)*100) + "%");
 				$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 			}
 		});
@@ -173,8 +178,12 @@ function getReport(reportType) {
 					console.log(data);
 					report = Handlebars.compile($("#utilisation-report-template").html());
 					$("#reports").empty().append( report({entries : data}) );
+					$("#utilisation-total-capacity").text(data.utilisation_total.unassigned);
+					$("#utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
+					$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				}
 			});
+			
 			break;
 	}
 }
