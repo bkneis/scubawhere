@@ -114,6 +114,7 @@
 			if (options.closeOnBackgroundClick) {
 				modalBg.css({"cursor": "pointer"});
 				modalBg.bind('click.modalEvent', function () {
+					if(!locked)
 					modal.trigger('reveal:close');
 				});
 			}
