@@ -27,6 +27,27 @@ class Course extends Ardent {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 	}
 
+	public function calculatePrice($start, $limitBefore)
+	{
+		$price = Price::where(Price::$owner_id_column_name, $this->id)
+		     ->where(Price::$owner_type_column_name, 'Course')
+		     ->where('from', '<=', $start)
+		     ->where(function($query) use ($start)
+		     {
+		     	$query->whereNull('until')
+		     	      ->orWhere('until', '>=', $start);
+		     })
+		     ->where(function($query) use ($limitBefore)
+		     {
+		     	if($limitBefore)
+		     		$query->where('created_at', '<=', $limitBefore);
+		     })
+		     ->orderBy('id', 'DESC')
+		     ->first();
+
+		$this->decimal_price = $price->decimal_price;
+	}
+
 	public function bookingdetails()
 	{
 		return $this->hasMany('Bookingdetail');

@@ -214,7 +214,296 @@ class ReportController extends \BaseController {
 
 		$RESULT['country_revenue'] = $countries;
 
-		return($RESULT);
+		return $RESULT;
+	}
+
+	public function getRevenueStreams()
+	{
+		/**
+		 * Allowed input parameter
+		 * after  {date string}
+		 * before {date string}
+		 */
+
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+
+		$RESULT = [];
+		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
+
+		#################################
+		// Add request paramets to result
+		$RESULT['daterange'] = [
+			'after'    => Helper::sanitiseString($after),
+			'before'   => Helper::sanitiseString($before),
+			'timezone' => Auth::user()->timezone,
+		];
+
+		$timer = -microtime(true);
+
+		###################################################
+		// Aggregate all tickets (that are not in packages)
+
+		$counted_packagefacades = $counted_courses = [];
+
+		  $RESULT['tickets']
+		= $RESULT['packages']
+		= $RESULT['courses']
+		= $RESULT['addons']
+		= $RESULT['fees']
+		= $RESULT['accommodations'] = [];
+
+		  $RESULT['tickets_total']
+		= $RESULT['packages_total']
+		= $RESULT['courses_total']
+		= $RESULT['addons_total']
+		= $RESULT['fees_total']
+		= $RESULT['accommodations_total'] = ['quantity' => 0, 'revenue' => 0];
+
+		$bookingdetails = Bookingdetail::with(
+		    	'ticket',
+		    	'departure',
+		    	'packagefacade',
+		    		'packagefacade.package',
+		    	'course',
+		    	'training_session',
+		    	'addons'
+		    )
+		    ->whereHas('booking', function($query) use ($afterUTC, $beforeUTC)
+		    {
+		    	$query
+		    	    ->where('company_id', Auth::user()->id)
+		    	    ->whereIn('status', ['confirmed'])
+		    	    ->whereBetween('created_at', [$afterUTC, $beforeUTC]);
+		    })->get();
+
+		$bookingdetails->load('booking.agent');
+
+
+		foreach($bookingdetails as $detail)
+		{
+			if(!empty($detail->ticket_id) && !empty($detail->session_id) && empty($detail->packagefacade_id) && empty($detail->course_id))
+			{
+				### -------------------------------- ###
+				### This is a directly booked ticket ###
+				### -------------------------------- ###
+
+				$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+
+				$revenue = $detail->ticket->decimal_price;
+				$model   = 'tickets';
+				$name    = $detail->ticket->name;
+
+
+			}
+			elseif(empty($detail->packagefacade_id) && !empty($detail->course_id))
+			{
+				### -------------------------------- ###
+				### This is a directly booked course ###
+				### -------------------------------- ###
+
+				$identifier = $detail->booking_id . '-' . $detail->customer_id . '-' . $detail->course_id;
+
+				// Only continue, if the course has not been counted yet
+				if(!in_array($identifier, $counted_courses))
+				{
+					$counted_courses[] = $identifier;
+
+					// Find the first departure or training datetime that is booked in this course
+					$details = $detail->course->bookingdetails()
+					    ->where('booking_id', $detail->booking_id)
+					    ->where('customer_id', $detail->customer_id)
+					    ->with('departure', 'training_session')
+					    ->get();
+
+					$firstDetail = $details->sortBy(function($d)
+					{
+						if(!empty($d->departure))
+							return $d->departure->start;
+						else
+							return $d->training_session->start;
+					})->first();
+
+					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : $firstDetail->training_session->start;
+
+					// Calculate the course price at this first departure/training_session datetime
+					$detail->course->calculatePrice($start, $detail->created_at);
+
+					$revenue = $detail->course->decimal_price;
+					$model   = 'courses';
+					$name    = $detail->course->name;
+				}
+				else
+					$model = null;
+			}
+			elseif(!empty($detail->packagefacade_id))
+			{
+				### ----------------- ###
+				### This is a package ###
+				### ----------------- ###
+
+				// Only continue, if the package has not been counted yet
+				if(!in_array($detail->packagefacade_id, $counted_packagefacades))
+				{
+					$counted_packagefacades[] = $detail->packagefacade_id;
+
+					// Find the first departure datetime that is booked in this package
+					$details = $detail->packagefacade->bookingdetails()->with('departure')->get();
+					$firstDetail = $details->sortBy(function($d)
+					{
+						return $d->departure->start;
+					})->first();
+
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $detail->created_at);
+
+					$revenue = $detail->packagefacade->package->decimal_price;
+					$model   = 'packages';
+					$name    = $detail->packagefacade->package->name;
+				}
+				else
+					$model = null;
+			}
+
+			// The detail does not fall into a category
+			else
+			{
+				Log::write('Unable to parse bookingdetail: ' . json_encode($detail));
+				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
+			}
+
+			$real_price_percentage = $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount);
+
+			if(!empty($model))
+			{
+				### ---------------------------------- ###
+				### Apply all special cases to revenue ###
+				### ---------------------------------- ###
+
+				// Apply percentage discount to price and sum up
+				$revenue = $detail->ticket->decimal_price * $real_price_percentage;
+
+				// If booked through agent, subtract agent's commission
+				if(!empty($detail->booking->agent))
+				{
+					$revenue = $revenue * (1 - $detail->booking->agent->commission / 100);
+				}
+
+				// Sum revenue and increase counter
+				if(empty($RESULT[$model][$name])) $RESULT[$model][$name] = ['quantity' => 0, 'revenue' => 0];
+
+				$RESULT[$model][$name]['quantity']++;
+				$RESULT[$model][$name]['revenue'] += $revenue;
+
+				$RESULT[$model . '_total']['quantity']++;
+				$RESULT[$model . '_total']['revenue'] += $revenue;
+			}
+
+			// Sum up addons that are not part of a package
+			// (packages would have been caught above, because packaged addons are only allowed on tickets of the same package)
+			foreach($detail->addons as $addon)
+			{
+				if(!empty($addon->pivot->packagefacade_id)) continue;
+
+				if($addon->compulsory)
+				{
+					// Handle as a fee
+
+					// Sum revenue and increase counter
+					if(empty($RESULT['fees'][$addon->name])) $RESULT['fees'][$addon->name] = ['quantity' => 0, 'revenue' => 0];
+
+					$RESULT['fees'][$addon->name]['quantity']++;
+					$RESULT['fees'][$addon->name]['revenue'] += $addon->decimal_price;
+
+					$RESULT['fees_total']['quantity']++;
+					$RESULT['fees_total']['revenue'] += $addon->decimal_price;
+				}
+				else
+				{
+					// Handle as regular addon
+
+					// Apply percentage discount to price and sum up
+					$revenue = $addon->decimal_price * $addon->pivot->quantity * $real_price_percentage;
+
+					// If booked through agent, subtract agent's commission
+					if(!empty($detail->booking->agent))
+					{
+						$revenue = $revenue * (1 - $detail->booking->agent->commission / 100);
+					}
+
+					// Sum revenue and increase counter
+					if(empty($RESULT['addons'][$addon->name])) $RESULT['addons'][$addon->name] = ['quantity' => 0, 'revenue' => 0];
+
+					$RESULT['addons'][$addon->name]['quantity']++;
+					$RESULT['addons'][$addon->name]['revenue'] += $revenue;
+
+					$RESULT['addons_total']['quantity']++;
+					$RESULT['addons_total']['revenue'] += $revenue;
+				}
+			}
+		}
+
+		// Sum up accommodations
+		$accommodations = Accommodation::whereHas('bookings', function($query) use ($afterUTC, $beforeUTC)
+		{
+			$query
+			    ->where('company_id', Auth::user()->id)
+			    ->whereIn('status', ['confirmed'])
+			    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC]);
+		})->get();
+
+		$accommodations->load('bookings.agent');
+
+		foreach($accommodations as $accommodation)
+		{
+			foreach($accommodation->bookings as $booking)
+			{
+				// Only continue if the accommodation is not part of a package that has already been counted
+				if(empty($booking->pivot->packagefacade_id) || !in_array($booking->pivot->packagefacade_id, $counted_packagefacades))
+				{
+					if(!empty($booking->pivot->packagefacade_id))
+						$counted_packagefacades[] = $booking->pivot->packagefacade_id;
+
+					$accommodation->calculatePrice(
+						$booking->pivot->start,
+						$booking->pivot->end,
+						$booking->pivot->created_at
+					);
+
+					$real_price_percentage = $booking->decimal_price / ($booking->decimal_price + $booking->discount);
+
+					// Apply percentage discount to price and sum up
+					$revenue = $accommodation->decimal_price * $real_price_percentage;
+
+					// If booked through agent, subtract agent's commission
+					if(!empty($booking->agent))
+					{
+						$revenue = $revenue * (1 - $booking->agent->commission / 100);
+					}
+
+					// Sum revenue and increase counter
+					if(empty($RESULT['accommodations'][$accommodation->name])) $RESULT['accommodations'][$accommodation->name] = ['quantity' => 0, 'revenue' => 0];
+
+					$RESULT['accommodations'][$accommodation->name]['quantity']++;
+					$RESULT['accommodations'][$accommodation->name]['revenue'] += $revenue;
+
+					$RESULT['accommodations_total']['quantity']++;
+					$RESULT['accommodations_total']['revenue'] += $revenue;
+				}
+			}
+		}
+
+		$timer += microtime(true);
+		$RESULT['execution_time'] = round($timer * 1000, 3);
+
+		return $RESULT;
 	}
 
 }
