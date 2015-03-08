@@ -199,6 +199,6 @@ class CompanyController extends Controller {
 			$booking->number_of_customers = $booking->customers()->distinct()->count();
 		}
 
-		return $bookings;
+		return ['date' => $date, 'bookings' => $bookings];
 	}
 }
