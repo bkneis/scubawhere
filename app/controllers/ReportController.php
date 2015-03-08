@@ -300,6 +300,7 @@ class ReportController extends \BaseController {
 				$revenue = $detail->ticket->decimal_price;
 				$model   = 'tickets';
 				$name    = $detail->ticket->name;
+				$id      = $detail->ticket->id;
 
 
 			}
@@ -339,6 +340,7 @@ class ReportController extends \BaseController {
 					$revenue = $detail->course->decimal_price;
 					$model   = 'courses';
 					$name    = $detail->course->name;
+					$id      = $detail->course->id;
 				}
 				else
 					$model = null;
@@ -367,6 +369,7 @@ class ReportController extends \BaseController {
 					$revenue = $detail->packagefacade->package->decimal_price;
 					$model   = 'packages';
 					$name    = $detail->packagefacade->package->name;
+					$id      = $detail->packagefacade->package->id;
 				}
 				else
 					$model = null;
@@ -397,10 +400,10 @@ class ReportController extends \BaseController {
 				}
 
 				// Sum revenue and increase counter
-				if(empty($RESULT[$model][$name])) $RESULT[$model][$name] = ['quantity' => 0, 'revenue' => 0];
+				if(empty($RESULT[$model][$id])) $RESULT[$model][$id] = ['name' => $name, 'quantity' => 0, 'revenue' => 0];
 
-				$RESULT[$model][$name]['quantity']++;
-				$RESULT[$model][$name]['revenue'] += $revenue;
+				$RESULT[$model][$id]['quantity']++;
+				$RESULT[$model][$id]['revenue'] += $revenue;
 
 				$RESULT[$model . '_total']['quantity']++;
 				$RESULT[$model . '_total']['revenue'] += $revenue;
@@ -417,10 +420,10 @@ class ReportController extends \BaseController {
 					// Handle as a fee
 
 					// Sum revenue and increase counter
-					if(empty($RESULT['fees'][$addon->name])) $RESULT['fees'][$addon->name] = ['quantity' => 0, 'revenue' => 0];
+					if(empty($RESULT['fees'][$addon->id])) $RESULT['fees'][$addon->id] = ['name' => $addon->name, 'quantity' => 0, 'revenue' => 0];
 
-					$RESULT['fees'][$addon->name]['quantity']++;
-					$RESULT['fees'][$addon->name]['revenue'] += $addon->decimal_price;
+					$RESULT['fees'][$addon->id]['quantity']++;
+					$RESULT['fees'][$addon->id]['revenue'] += $addon->decimal_price;
 
 					$RESULT['fees_total']['quantity']++;
 					$RESULT['fees_total']['revenue'] += $addon->decimal_price;
@@ -439,10 +442,10 @@ class ReportController extends \BaseController {
 					}
 
 					// Sum revenue and increase counter
-					if(empty($RESULT['addons'][$addon->name])) $RESULT['addons'][$addon->name] = ['quantity' => 0, 'revenue' => 0];
+					if(empty($RESULT['addons'][$addon->id])) $RESULT['addons'][$addon->id] = ['name' => $addon->name, 'quantity' => 0, 'revenue' => 0];
 
-					$RESULT['addons'][$addon->name]['quantity']++;
-					$RESULT['addons'][$addon->name]['revenue'] += $revenue;
+					$RESULT['addons'][$addon->id]['quantity']++;
+					$RESULT['addons'][$addon->id]['revenue'] += $revenue;
 
 					$RESULT['addons_total']['quantity']++;
 					$RESULT['addons_total']['revenue'] += $revenue;
@@ -489,10 +492,10 @@ class ReportController extends \BaseController {
 					}
 
 					// Sum revenue and increase counter
-					if(empty($RESULT['accommodations'][$accommodation->name])) $RESULT['accommodations'][$accommodation->name] = ['quantity' => 0, 'revenue' => 0];
+					if(empty($RESULT['accommodations'][$accommodation->id])) $RESULT['accommodations'][$accommodation->id] = ['name' => $accommodation->name, 'quantity' => 0, 'revenue' => 0];
 
-					$RESULT['accommodations'][$accommodation->name]['quantity']++;
-					$RESULT['accommodations'][$accommodation->name]['revenue'] += $revenue;
+					$RESULT['accommodations'][$accommodation->id]['quantity']++;
+					$RESULT['accommodations'][$accommodation->id]['revenue'] += $revenue;
 
 					$RESULT['accommodations_total']['quantity']++;
 					$RESULT['accommodations_total']['revenue'] += $revenue;
