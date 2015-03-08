@@ -292,12 +292,7 @@ class Booking extends Ardent {
 			// Sum up all addons
 			$detail->addons->each(function($addon) use (&$sum, $currency)
 			{
-				$sum += number_format(
-					$addon->price * $addon->pivot->quantity / $currency->getSubunitToUnit(), // number
-					strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-					/* $currency->getDecimalMark() */ '.', // decimal seperator
-					/* $currency->getThousandsSeperator() */ ''
-				);
+				$sum += $addon->decimal_price * $addon->pivot->quantity;
 			});
 		});
 

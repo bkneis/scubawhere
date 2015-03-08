@@ -83,7 +83,7 @@ class Addon extends Ardent {
 
 	public function bookingdetails()
 	{
-		return $this->belongsToMany('Bookingdetail')->withPivot('quantity')->withTimestamps();
+		return $this->belongsToMany('Bookingdetail')->withPivot('quantity', 'packagefacade_id')->withTimestamps();
 	}
 
 	public function company()

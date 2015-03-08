@@ -86,6 +86,6 @@ class Accommodation extends Ardent {
 
 	public function bookings()
 	{
-		return $this->belongsToMany('Booking')->withPivot('customer_id', 'start', 'end')->withTimestamps();
+		return $this->belongsToMany('Booking')->withPivot('customer_id', 'start', 'end', 'packagefacade_id')->withTimestamps();
 	}
 }
