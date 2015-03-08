@@ -13,19 +13,30 @@
 							<button id="remove-jump" style="display:none;" class="btn btn-danger">Clear</button>
 						</div>
 				    </div>
-				</div> 
+				</div>
 
 				<div style="margin-top:20px"></div>
 
 				<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
             		<thead>
-              			<tr>
-			                <th style="color:#313131">Name</th>
-			                <th style="color:#313131">Location</th>
-			                <th style="color:#313131">Time</th>
+              			<tr style="color:#313131">
+              				<th>Reference</th>
+			                <th>Name</th>
+			                <th>Phone</th>
+			                <th># of customers</th>
+			                <th>Location</th>
+			                <th>Time</th>
 			            </tr>
             		</thead>
             		<tbody>
+            			<tr>
+            				<td>ABDX</td>
+            				<td>Bryan Kneis</td>
+            				<td>+44 123456789</td>
+            				<td>2</td>
+            				<td>Gloucester Road</td>
+            				<td>10:00</td>
+            			</tr>
             		</tbody>
         		</table>
 

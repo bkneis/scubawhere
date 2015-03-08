@@ -176,4 +176,29 @@ class CompanyController extends Controller {
 
 		return array('status' => 'OK. Company initialised');
 	}
+
+	public function getPickUpSchedule()
+	{
+		$date = Input::get('date');
+
+		if(empty($date))
+			return Response::json(['errors' => ['A date is required.']], 406); // 406 Not Acceptable
+
+		$date = new DateTime($date);
+		$date = $date->format('Y-m-d');
+
+		$bookings = Auth::user()->bookings()->with('lead_customer')
+		    ->whereNotNull('pick_up_location')
+		    ->where('pick_up_date', $date)
+		    ->whereIn('status', Booking::$counted)
+		    ->orderBy('pick_up_time')
+		    ->get();
+
+		foreach($bookings as &$booking)
+		{
+			$booking->number_of_customers = $booking->customers()->distinct()->count();
+		}
+
+		return $bookings;
+	}
 }
