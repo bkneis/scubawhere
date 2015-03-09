@@ -38,9 +38,9 @@
 				</button>
 
 			</form>
-
-			<a href="/api/password/remind">Forgot your password?</a>
 		</div>
+
+		<a href="/api/password/remind" class="forgot-password">Forgot your password?</a>
 	</div>
 
     <footer><a href="/register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
