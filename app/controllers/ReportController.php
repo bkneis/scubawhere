@@ -248,8 +248,44 @@ class ReportController extends \BaseController {
 
 		$timer = -microtime(true);
 
-		###################################################
-		// Aggregate all tickets (that are not in packages)
+		###############################
+		// Generate true booking prices
+
+		/**
+		 * We are going to save the true booking prices (without fees) in this associative
+		 * array, but only for bookings that have compulsory addons (fees).
+		 */
+		$realDiscountPercentage = [];
+
+		$bookings = Booking::where('company_id', Auth::user()->id)
+		    ->whereIn('status', ['confirmed'])
+		    ->whereBetween('created_at', [$afterUTC, $beforeUTC])
+		    ->whereHas('bookingdetails', function($query)
+		    {
+		    	$query->whereHas('addons', function($query)
+		    	{
+		    		$query->where('compulsory', 1);
+		    	});
+		    })
+		    ->get();
+
+		foreach ($bookings as $booking) {
+			$feeSum = 0;
+			foreach ($booking->bookingdetails as $detail) {
+				foreach ($detail->addons as $addon) {
+					if($addon->compulsory === 1)
+						$feeSum += $addon->decimal_price;
+
+					print_r($feeSum . "\n");
+				}
+			}
+			print_r("\n");
+			$realPrice = $booking->decimal_price - $feeSum;
+			$realDiscountPercentage[$booking->id] = $realPrice / ($realPrice + $booking->discount);
+		}
+
+		print_r($realDiscountPercentage);
+		exit;
 
 		$counted_packagefacades = $counted_courses = [];
 
@@ -382,7 +418,9 @@ class ReportController extends \BaseController {
 				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
 			}
 
-			$real_price_percentage = $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount);
+			$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
+				? $realDiscountPercentage[$detail->booking->id]
+				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount);
 
 			if(!empty($model))
 			{
@@ -391,7 +429,7 @@ class ReportController extends \BaseController {
 				### ---------------------------------- ###
 
 				// Apply percentage discount to price and sum up
-				$revenue = $detail->ticket->decimal_price * $real_price_percentage;
+				$revenue = $detail->ticket->decimal_price * $realPricePercentage;
 
 				// If booked through agent, subtract agent's commission
 				if(!empty($detail->booking->agent))
@@ -433,7 +471,7 @@ class ReportController extends \BaseController {
 					// Handle as regular addon
 
 					// Apply percentage discount to price and sum up
-					$revenue = $addon->decimal_price * $addon->pivot->quantity * $real_price_percentage;
+					$revenue = $addon->decimal_price * $addon->pivot->quantity * $realPricePercentage;
 
 					// If booked through agent, subtract agent's commission
 					if(!empty($detail->booking->agent))
@@ -480,10 +518,12 @@ class ReportController extends \BaseController {
 						$booking->pivot->created_at
 					);
 
-					$real_price_percentage = $booking->decimal_price / ($booking->decimal_price + $booking->discount);
+					$realPricePercentage = !empty($realDiscountPercentage[$booking->id])
+						? $realDiscountPercentage[$booking->id]
+						: $booking->decimal_price / ($booking->decimal_price + $booking->discount);
 
 					// Apply percentage discount to price and sum up
-					$revenue = $accommodation->decimal_price * $real_price_percentage;
+					$revenue = $accommodation->decimal_price * $realPricePercentage;
 
 					// If booked through agent, subtract agent's commission
 					if(!empty($booking->agent))
