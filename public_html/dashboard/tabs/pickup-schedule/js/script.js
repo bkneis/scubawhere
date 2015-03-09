@@ -1,4 +1,4 @@
-var tripsList;
+var pickupList;
 $(function() {
 
 	$('input.datepicker').datetimepicker({
@@ -23,4 +23,26 @@ $(function() {
 		}
 	});
 
+	pickupList = Handlebars.compile($("#pick-up-schedule-template").html());
+
+	$("#date-select").val("2015-03-09");
+
+	loadPickups();
+
+	$('#date-select').on('change', function() {
+		loadPickups();
+	});
+
 });
+
+function loadPickups() {
+	var params = { date : $("#date-select").val() };
+	$.ajax({
+		url: 'api/company/pick-up-schedule',
+		data: params,
+		success: function(data) {
+			$("#pickup-table").empty().append( pickupList({ pickups : data }) );
+			console.log(data);
+		}
+	});
+}
