@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-	<div class="col-md-12">
+	<div class="col-md-4">
 		<div class="panel panel-default" id="calendar-filters">
 			<div class="panel-heading">
 				<h4 class="panel-title">Filters</h4>
@@ -14,7 +14,7 @@
 					<div class="input-group">
 						<label class="input-group-addon">Jump to : </label>
 						<input style="width:200px; float:left;" id="jump-date" type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="jumpto" placeholder="YYYY-MM-DD">
-						<button id="remove-jump" style="display:none;" class="btn btn-danger">Clear</button>
+						<!--<button id="remove-jump" style="display:none;" class="btn btn-danger">Clear</button>-->
 					</div>
 				</div>
 				<div style="clear:both"></div>
@@ -64,9 +64,12 @@
 
 		</div>
 	</div>
-	<div id='calendar'></div>
+	
 	
 </div><!-- end of col-md-12 -->
+<div class="col-md-8">
+	<div id='calendar'></div>
+</div>
 
 <div id="modalWindows" style="height: 0; visibility: hidden;">
 	<script id="session-template" type="text/x-handlebars-template">
