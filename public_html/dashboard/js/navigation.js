@@ -25,8 +25,12 @@ $(function() {
 
         // Fire off AJAX to load new content
         var newContentUrl = "tabs/" + newHash + "/index.php";
-        $.get(newContentUrl, function(data) {
-            tabLoaded.resolve(data);
+        $.ajax({
+            url: newContentUrl,
+            type: "GET",
+            success: function(data) {
+                tabLoaded.resolve(data);
+            },
         });
 
         // Set live tab

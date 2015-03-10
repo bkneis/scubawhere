@@ -35,12 +35,12 @@ body{
 	box-shadow: 0px 0px 10px black;
 	position: fixed;
 	width: 100%;
-	z-index: 9997;
+	z-index: 1000;
 }
 
 #nav-wrapper{
 	margin: 0px auto;
-	z-index: 9997;
+	z-index: 1000;
 	padding: 8px 30px 8px 10px; /* The additional padding on the right side is needed for IE, where the scrollbar is *inside* the window */
 }
 
@@ -163,7 +163,7 @@ body{
 	position: fixed;
 	top: 25px;
 	left: 30%;
-	z-index: 9998;
+	z-index: 2000;
 }
 
 /*				GENERIC STYLES
@@ -221,13 +221,13 @@ body{
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UI */
 .draggable{
 	position: relative;
-	z-index: 1000;
+	z-index: 1500;
 	cursor: move;
 }
 
 .droppable{
 	position: relative;
-	z-index: 999;
+	z-index: 1499;
 }
 
 .ui-state-hover{ background-color: #fff7cb }
@@ -1115,5 +1115,12 @@ big {
     font-size: 12px;
 }
 
+#nprogress .bar {
+	height: 5px;
+}
+
+#nprogress .spinner {
+	top: 70px;
+}
 
 

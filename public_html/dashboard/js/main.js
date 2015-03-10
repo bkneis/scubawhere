@@ -13,6 +13,7 @@ $.ajaxSetup({
 				cache: false,
 			});
 		}
+
 		// Enable caching for .js scripts by default
 		/*else if(options.dataType === 'script') {
 			// Remove '?_={random number}'' from the request url
@@ -37,6 +38,16 @@ $(function(){
 			// Maintenance mode
 			pageMssg('<strong>The application is in maintenance mode.</strong> Please check back in a few minutes.', 'warning');
 		}
+	});
+
+	$(document).ajaxStart(function() {
+		NProgress.start();
+		var interval = 400 + Math.random() * 400;
+		window.sw.nProgressInterval = window.setInterval(function(){NProgress.inc();}, interval);
+	});
+	$(document).ajaxStop(function() {
+		window.clearInterval(window.sw.nProgressInterval);
+		NProgress.done();
 	});
 
 	$("#logout").click(function(e){
