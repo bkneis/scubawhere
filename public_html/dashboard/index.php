@@ -46,9 +46,7 @@
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
-?>
-
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 <head>
 
@@ -56,12 +54,17 @@
 	<!-- favicon -->
 	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 
+	<!--Bootstrap CSS-->
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+
 	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
-
-	<!--Bootstrap CSS-->
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/select2.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
 
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -82,18 +85,16 @@
 	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
 
 	<!--Datetimepicker-->
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
 	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
-	
-	<!--Select 2-->
-	<link rel="stylesheet" href="/common/css/select2.css" type="text/css" />
-	<link rel="stylesheet" href="/common/css/select2-bootstrap.css" type="text/css" />
 
+	<!--Select 2-->
 	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
 	<!--intojs tour-->
-	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css">
 	<script type="text/javascript" src="/common/js/intro.js"></script>
+
+	<!--nprogress bar-->
+	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
 	<!-- ScubaWhere Files -->
 	<script type="text/javascript">
@@ -129,7 +130,7 @@
 		</div>
 	</div>
 
-	<!-- PAGE MESSAGE FOR ERRORS AND SUCCESS MASAGES -->
+	<!-- Container for page messages -->
 	<div id="pageMssg"></div>
 
 	<div class="sidebar-background"></div><!-- This is needed for pages that are shorter than the window height -->
