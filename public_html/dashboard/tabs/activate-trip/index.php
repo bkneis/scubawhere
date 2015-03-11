@@ -1,5 +1,4 @@
 <div id="wrapper" class="clearfix">
-	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -24,13 +23,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="row">
 		<div class="col-md-12">
 			<div id='calendar'></div>
 		</div>
-	</div>
 
 	<div id="modalWindows" style="height: 0;">
 		<script id="session-template" type="text/x-handlebars-template">
