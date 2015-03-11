@@ -37,7 +37,6 @@
 			</div>
 		</div>
 	</div><!-- .row -->
-
 	<script type="text/x-handlebars-template" id="pick-up-schedule-template">
 		{{#each pickups.bookings}}
 			<tr>

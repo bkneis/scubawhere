@@ -19,7 +19,7 @@ $(function() {
 		"pageLength" : 10,
 		"searching" : false,
 		"language": {
-			"emptyTable": "There are no trips between these dates"
+			"emptyTable": "There are no customers that need picking up today"
 		}
 	});
 
