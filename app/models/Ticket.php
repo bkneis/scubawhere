@@ -71,12 +71,12 @@ class Ticket extends Ardent {
 
 	public function boats()
 	{
-		return $this->belongsToMany('Boat')->withTimestamps();
+		return $this->morphedByMany('Boat', 'ticketable')->withTimestamps();
 	}
 
 	public function boatrooms()
 	{
-		return $this->belongsToMany('Boatroom', 'boat_ticket')->withTimestamps();
+		return $this->morphedByMany('Boatroom', 'ticketable')->withTimestamps();
 	}
 
 	public function courses()

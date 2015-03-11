@@ -1266,6 +1266,7 @@ return array(
     'MakeDiscountColumnOnBookingTableIntoInteger' => $baseDir . '/app/database/migrations/2014_07_26_164147_make_discount_column_on_booking_table_into_integer.php',
     'MakeFieldsInCompanyTableNullable' => $baseDir . '/app/database/migrations/2014_11_08_152034_make_fields_in_company_table_nullable.php',
     'MakeOtherFieldsNullableOnCompaniesTable' => $baseDir . '/app/database/migrations/2014_11_08_180948_make_other_fields_nullable_on_companies_table.php',
+    'MakeTicketBoatBoatroomRelationshipPolymorphic' => $baseDir . '/app/database/migrations/2015_03_11_182409_make_ticket_boat_boatroom_relationship_polymorphic.php',
     'MakeTicketIdAndSessionIdNullableOnBookingDetailsTable' => $baseDir . '/app/database/migrations/2015_03_07_195147_make_ticket_id_and_session_id_nullable_on_booking_details_table.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mews\\Purifier\\Facades\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Facades/Purifier.php',

@@ -40,7 +40,7 @@ class Boatroom extends Ardent {
 
 	public function tickets()
 	{
-		return $this->belongsToMany('Ticket', 'boat_ticket')->withTimestamps();
+		return $this->morphToMany('Ticket', 'ticketable')->withTimestamps();
 	}
 
 	public function bookingdetails()
