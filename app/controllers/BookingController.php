@@ -220,7 +220,11 @@ class BookingController extends Controller {
 		$bookings = Auth::user()->bookings()
 			->with(
 				'agent',
-				'lead_customer'
+				'lead_customer',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->whereIn('status', ['confirmed'])
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
@@ -266,7 +270,11 @@ class BookingController extends Controller {
 
 		$bookings = Auth::user()->bookings()
 			->with(
-				'lead_customer'
+				'lead_customer',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->whereIn('status', ['confirmed'])
 			->whereNull('agent_id')
@@ -310,7 +318,11 @@ class BookingController extends Controller {
 		$bookings = Auth::user()->bookings()
 			->with(
 				'agent',
-				'lead_customer'
+				'lead_customer',
+				'payments',
+					'payments.paymentgateway',
+				'refunds',
+					'refunds.paymentgateway'
 			)
 			->whereIn('status', ['confirmed'])
 			->whereBetween('created_at', [$afterUTC, $beforeUTC])
