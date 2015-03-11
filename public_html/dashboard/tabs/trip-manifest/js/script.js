@@ -29,3 +29,39 @@ $(function() {
 	});
 
 });
+
+function getDates() {
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+
+	var lastWeek = new Date();
+	lastWeek.setDate(today.getDate() - 7);
+	var dd2 = lastWeek.getDate();
+	var mm2 = lastWeek.getMonth()+1; //January is 0!
+	var yyyy2 = lastWeek.getFullYear();
+
+	if(dd2<10) {
+	    dd2='0'+dd2
+	} 
+
+	if(mm2<10) {
+	    mm2='0'+mm2
+	}
+
+	var dates = {
+		todayDate : yyyy+'-'+mm+'-'+dd,
+		lastWeek : yyyy2+'-'+mm2+'-'+dd2
+	};
+
+	return dates;
+}

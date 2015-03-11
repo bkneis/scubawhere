@@ -153,7 +153,7 @@
 		<tbody>
 			{{#each entries.bookings}}
 			<tr>
-				<td>{{arrival_date}}</td>
+				<td>{{getDate created_at}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{{agent.name}}}</td>
 				<td>{{currency}} {{decimal_price}}</td>
@@ -197,7 +197,7 @@
 		<tbody>
 			{{#each entries.bookings}}
 			<tr>
-				<td>{{arrival_date}}</td>
+				<td>{{getDate created_at}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{#if source}} {{source}} {{else}} Agent - {{{agent.name}}} {{/if}}</td>
 				<td>{{getCountry lead_customer.country_id}}</td>
