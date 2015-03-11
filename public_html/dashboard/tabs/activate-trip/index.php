@@ -1,6 +1,6 @@
 <div id="wrapper" class="clearfix">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">Trips</h4>
@@ -26,8 +26,9 @@
 		</div>
 	</div>
 
+
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-8">
 			<div id='calendar'></div>
 		</div>
 	</div>
