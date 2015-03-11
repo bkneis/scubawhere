@@ -89,11 +89,11 @@ function getDates() {
 
 	if(dd<10) {
 	    dd='0'+dd
-	} 
+	}
 
 	if(mm<10) {
 	    mm='0'+mm
-	} 
+	}
 
 	var lastWeek = new Date();
 	lastWeek.setDate(today.getDate() - 7);
@@ -103,7 +103,7 @@ function getDates() {
 
 	if(dd2<10) {
 	    dd2='0'+dd2
-	} 
+	}
 
 	if(mm2<10) {
 	    mm2='0'+mm2
@@ -129,7 +129,7 @@ function getReport(reportType) {
 			filter = Handlebars.compile($("#transactions-filter-template").html());
 			report = Handlebars.compile($("#transactions-report-template").html());
 			//summaries = Handlebars.compile($("#transactions-totals-template").html());
-			
+
 			Report.getPayments(dates, function success(data) {
 				Report.getRefunds(dates, function success(data2) {
 					var newData = data.concat(data2);
@@ -164,15 +164,15 @@ function getReport(reportType) {
 						}
 					}
 					var total = totalCash + totalCredit + totalCheque + totalBank + totalPaypal;
-					$("#transactions-totalCash").text(data[0].currency.symbol + " " + totalCash);
+					$("#transactions-totalCash").text(window.company.currency.symbol + " " + totalCash);
 					$("#transactions-cash-percentage").css("width", ((totalCash/total)*100) + "%");
-					$("#transactions-totalCredit").text(data[0].currency.symbol + " " + totalCredit);
+					$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
 					$("#transactions-credit-percentage").css("width", ((totalCredit/total)*100) + "%");
-					$("#transactions-totalCheque").text(data[0].currency.symbol + " " + totalCheque);
+					$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
 					$("#transactions-cheque-percentage").css("width", ((totalCheque/total)*100) + "%");
-					$("#transactions-totalBank").text(data[0].currency.symbol + " " + totalBank);
+					$("#transactions-totalBank").text(window.company.currency.symbol + " " + totalBank);
 					$("#transactions-bank-percentage").css("width", ((totalBank/total)*100) + "%");
-					$("#transactions-totalPaypal").text(data[0].currency.symbol + " " + totalPaypal);
+					$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
 					$("#transactions-paypal-percentage").css("width", ((totalPaypal/total)*100) + "%");
 					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				});
@@ -186,13 +186,13 @@ function getReport(reportType) {
 			Agent.getAllAgents(function sucess(data) {
 				$("#report-filters").empty().append( filter({agents : data}) );
 			});
-			
+
 			Report.getAgentBookings(dates, function success(data) {
 				console.log(data);
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
 				/*var agentsTotal = 0;
-					for(var i=0; i < data.bookings.length; i++) 
+					for(var i=0; i < data.bookings.length; i++)
 					{
 						agentsTotal += parseInt(data.bookings[i].decimal_price);
 					}
@@ -207,7 +207,7 @@ function getReport(reportType) {
 
 			var data = [{name : "Telephone"}, {name: "Agent"}, {name: "In person"}, {name: "Email"}];
 			$("#report-filters").empty().append( filter({sources : data}) );
-			
+
 			Report.getBookingHistory(dates, function success(data) {
 				console.log(data);
 				report = Handlebars.compile($("#booking-history-report-template").html());
