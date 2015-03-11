@@ -1,4 +1,5 @@
 var tripsList;
+var sessionList;
 $(function() {
 
 	tripsList = Handlebars.compile($("#trips-list-template").html());
@@ -14,7 +15,7 @@ $(function() {
 			date: 'fa fa-calendar',
 			up:   'fa fa-chevron-up',
 			down: 'fa fa-chevron-down'
-		},
+		}
 	});
 
 	$('.reports-table').DataTable({
@@ -26,6 +27,20 @@ $(function() {
 		"language": {
 			"emptyTable": "There are no trips between these dates"
 		}
+	});
+
+	$("#start-date").val(getDates().lastWeek);
+	$("#end-date").val(getDates().todayDate);
+
+	var dates = {
+		after : $("#start-date").val(),
+		before : $("#end-date").val()
+	};
+
+	sessionList = Handlebars.compile($("#sessions-list-template").html());
+	Session.filter(dates, function success(data) {
+		console.log(data);
+		$("#sessions-table").append( sessionList({sessions : data}) );
 	});
 
 });
