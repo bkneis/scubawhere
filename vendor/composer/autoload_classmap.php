@@ -2485,6 +2485,7 @@ return array(
     'TruncateBoatTicketTable' => $baseDir . '/app/database/migrations/2014_11_20_185558_truncate_boat_ticket_table.php',
     'UpdateAgenciesTable' => $baseDir . '/app/database/migrations/2015_02_07_154847_update_agencies_table.php',
     'UpdateCustomersTable' => $baseDir . '/app/database/migrations/2014_02_18_234149_update_customers_table.php',
+    'UpdateDescriptionToTextTypeOnAddonsTable' => $baseDir . '/app/database/migrations/2015_03_11_170335_update_description_to_text_type_on_addons_table.php',
     'Way\\Generators\\Commands\\ControllerGeneratorCommand' => $vendorDir . '/way/generators/src/Way/Generators/Commands/ControllerGeneratorCommand.php',
     'Way\\Generators\\Commands\\GeneratorCommand' => $vendorDir . '/way/generators/src/Way/Generators/Commands/GeneratorCommand.php',
     'Way\\Generators\\Commands\\MigrationGeneratorCommand' => $vendorDir . '/way/generators/src/Way/Generators/Commands/MigrationGeneratorCommand.php',
