@@ -28,6 +28,7 @@ $(function() {
         $.ajax({
             url: newContentUrl,
             type: "GET",
+            global: false, // Do not trigger global ajax events. Helps prevent double flash of progress bar when loading a tab.
             success: function(data) {
                 tabLoaded.resolve(data);
             },

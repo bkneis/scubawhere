@@ -22,6 +22,18 @@ $.ajaxSetup({
 				cache: true,
 			});
 		}*/
+
+		// Manually trigger progress bar for tab loads, which have been set to global:false
+		if(options.url.indexOf('index.php') > -1)
+			NProgress.start();
+
+		// Since the help tab does not include API requests, the progress bar needs to be manually stopped
+		if(options.url.indexOf('help/index.php') > -1)
+			$.extend(this, {
+				complete: function() {
+					NProgress.done();
+				}
+			});
 	}
 });
 
