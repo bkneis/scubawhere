@@ -51,5 +51,7 @@
 		<tr><tdcolspan="6" class="text-center">There are no customers that need picking up today </td></tr>
 	{{/each}}
 </script>
+<script type="text/javascript" src="js/Controllers/Report.js"></script>
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="tabs/pickup-schedule/js/script.js"></script>
+
