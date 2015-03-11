@@ -27,6 +27,10 @@ Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
 
+Handlebars.registerHelper('getFee', function(amount, commision) {
+	return parseFloat(amount*(commision/100));
+});
+
 $(function() {
 
 	$.ajax({

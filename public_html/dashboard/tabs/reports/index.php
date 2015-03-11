@@ -147,7 +147,6 @@
 				<th style="color:#313131">Agent name</th>
 				<th style="color:#313131">Total balance</th>
 				<th style="color:#313131">Commission</th>
-				<th style="color:#313131">Cleared balance</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -157,8 +156,7 @@
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{{agent.name}}}</td>
 				<td>{{currency}} {{decimal_price}}</td>
-				<td>{{agent.commission}}%</td>
-				<td></td>
+				<td>{{agent.commission}}% ({{currency}}{{getFee decimal_price agent.commission}})</td>
 			</tr>
 			{{else}}
 			<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
