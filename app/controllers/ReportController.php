@@ -275,17 +275,11 @@ class ReportController extends \BaseController {
 				foreach ($detail->addons as $addon) {
 					if($addon->compulsory === 1)
 						$feeSum += $addon->decimal_price;
-
-					print_r($feeSum . "\n");
 				}
 			}
-			print_r("\n");
 			$realPrice = $booking->decimal_price - $feeSum;
 			$realDiscountPercentage[$booking->id] = $realPrice / ($realPrice + $booking->discount);
 		}
-
-		print_r($realDiscountPercentage);
-		exit;
 
 		$counted_packagefacades = $counted_courses = [];
 
