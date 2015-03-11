@@ -21,7 +21,7 @@ class Booking extends Ardent {
 		'comment'
 	);
 
-	protected $appends = array('decimal_price', 'arrival_date');
+	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date');
 
 	public $loadTrashed = false;
 
@@ -60,11 +60,26 @@ class Booking extends Ardent {
 		$currency = new Currency( Auth::user()->currency->code );
 
 		return number_format(
-			$this->price / $currency->getSubunitToUnit() - $this->discount, // number
+			$this->price / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''
 		);
+	}
+
+	public function getRealDecimalPriceAttribute()
+	{
+		$feeSum = 0;
+		$this->load('bookingdetails', 'bookingdetails.addons');
+
+		foreach ($this->bookingdetails as $detail) {
+			foreach ($detail->addons as $addon) {
+				if($addon->compulsory === 1)
+					$feeSum += $addon->decimal_price;
+			}
+		}
+
+		return $this->decimal_price - $feeSum;
 	}
 
 	public function getArrivalDateAttribute() {

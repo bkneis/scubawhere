@@ -255,7 +255,7 @@ class ReportController extends \BaseController {
 		 * We are going to save the true booking prices (without fees) in this associative
 		 * array, but only for bookings that have compulsory addons (fees).
 		 */
-		$realDiscountPercentage = [];
+		/*$realDiscountPercentage = [];
 
 		$bookings = Booking::where('company_id', Auth::user()->id)
 		    ->whereIn('status', ['confirmed'])
@@ -279,7 +279,7 @@ class ReportController extends \BaseController {
 			}
 			$realPrice = $booking->decimal_price - $feeSum;
 			$realDiscountPercentage[$booking->id] = $realPrice / ($realPrice + $booking->discount);
-		}
+		} */
 
 		$counted_packagefacades = $counted_courses = [];
 
@@ -412,9 +412,11 @@ class ReportController extends \BaseController {
 				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
 			}
 
-			$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
+			/*$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
 				? $realDiscountPercentage[$detail->booking->id]
-				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount);
+				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount); */
+
+			$realPricePercentage = $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
 
 			if(!empty($model))
 			{
@@ -512,9 +514,11 @@ class ReportController extends \BaseController {
 						$booking->pivot->created_at
 					);
 
-					$realPricePercentage = !empty($realDiscountPercentage[$booking->id])
+					/* $realPricePercentage = !empty($realDiscountPercentage[$booking->id])
 						? $realDiscountPercentage[$booking->id]
-						: $booking->decimal_price / ($booking->decimal_price + $booking->discount);
+						: $booking->decimal_price / ($booking->decimal_price + $booking->discount); */
+
+					$realPricePercentage = $booking->real_decimal_price / ($booking->real_decimal_price + $booking->discount);
 
 					// Apply percentage discount to price and sum up
 					$revenue = $accommodation->decimal_price * $realPricePercentage;
