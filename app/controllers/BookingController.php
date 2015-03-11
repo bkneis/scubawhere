@@ -216,6 +216,7 @@ class BookingController extends Controller {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$bookings = Auth::user()->bookings()
 			->with(
@@ -267,6 +268,7 @@ class BookingController extends Controller {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$bookings = Auth::user()->bookings()
 			->with(
@@ -314,6 +316,7 @@ class BookingController extends Controller {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$bookings = Auth::user()->bookings()
 			->with(

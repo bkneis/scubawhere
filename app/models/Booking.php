@@ -21,7 +21,7 @@ class Booking extends Ardent {
 		'comment'
 	);
 
-	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date');
+	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local');
 
 	public $loadTrashed = false;
 
@@ -108,6 +108,13 @@ class Booking extends Ardent {
 			return $earliestDeparture->format('Y-m-d');
 
 		return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
+	}
+
+	public function getCreatedAtLocalAttribute() {
+		$datetime = new DateTime( $this->created_at, new DateTimeZone('Europe/London') );
+		$datetime->setTimezone( new DateTimeZone( Auth::user()->timezone ) );
+
+		return $datetime->format('Y-m-d H:i:s');
 	}
 
 	public function getLastReturnDateAttribute() {

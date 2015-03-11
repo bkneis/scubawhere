@@ -31,7 +31,7 @@
 					<div class="col-xs-6">
 						<div id="report-filters" class="pull-right"></div>
 					</div>
-				</div> 
+				</div>
 
 				<div style="margin-top:20px"></div>
 
@@ -71,7 +71,7 @@
 			<tr><td colspan="4" class="text-center">There are no transactions between these dates</td></tr>
 			{{/each}}
 		</tbody>
-		
+
 	</table>
 	<table>
 		<thead style="font-weight: bold;">
@@ -81,8 +81,8 @@
 				<td class="pull-right" id="transactions-date-range">Total </td>
 				<td id="transactions-cash">
 					Cash
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div id="transactions-cash-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-cash-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 						<span id="transactions-totalCash" class="percentage-left"></span>
 					</div>
 				</td>
@@ -93,8 +93,8 @@
 				<td></td>
 				<td id="transactions-credit">
 					Credit card
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div id="transactions-credit-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-credit-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 						<span id="transactions-totalCredit" class="percentage-left"></span>
 					</div>
 				</td>
@@ -105,8 +105,8 @@
 				<td></td>
 				<td id="transactions-cheque">
 					Cheques
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div id="transactions-cheque-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-cheque-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 						<span id="transactions-totalCheque" class="percentage-left"></span>
 					</div>
 				</td>
@@ -117,8 +117,8 @@
 				<td></td>
 				<td id="transactions-bank">
 					Bank
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div id="transactions-bank-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-bank-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 						<span id="transactions-totalBank" class="percentage-left"></span>
 					</div>
 				</td>
@@ -129,8 +129,8 @@
 				<td></td>
 				<td id="transactions-paypal">
 					Paypal
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div id="transactions-paypal-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-paypal-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 						<span id="transactions-totalPaypal" class="percentage-left"></span>
 					</div>
 				</td>
@@ -151,15 +151,15 @@
 		</thead>
 		<tbody>
 			{{#each entries.bookings}}
-			<tr>
-				<td>{{getDate created_at}}</td>
-				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{{agent.name}}}</td>
-				<td>{{currency}} {{decimal_price}}</td>
-				<td>{{agent.commission}}% ({{currency}}{{getFee decimal_price agent.commission}})</td>
-			</tr>
+				<tr>
+					<td>{{getDate created_at_local}}</td>
+					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+					<td>{{{agent.name}}}</td>
+					<td>{{currency}} {{decimal_price}}</td>
+					<td>{{agent.commission}}% ({{currency}} {{getCommissionAmount}})</td>
+				</tr>
 			{{else}}
-			<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
+				<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
@@ -171,8 +171,8 @@
 				<td class="pull-right">Date range </td>
 				<td>
 					Total
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-					<div id="agents-percentage-total" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+					<div id="agents-percentage-total" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
 					<span id="agents-total" class="percentage-left"></span>
 					</div>
 				</td>
@@ -195,7 +195,7 @@
 		<tbody>
 			{{#each entries.bookings}}
 			<tr>
-				<td>{{getDate created_at}}</td>
+				<td>{{getDate created_at_local}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 				<td>{{#if source}} {{source}} {{else}} Agent - {{{agent.name}}} {{/if}}</td>
 				<td>{{getCountry lead_customer.country_id}}</td>
@@ -224,8 +224,8 @@
 				<td>{{{name}}}</td>
 				<td>
 
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>	
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>
 						<span class="percentage-left">{{capacity}}</span>
 					</div>
 				</td>
@@ -239,8 +239,8 @@
 				<tr>
 					<td id="utilisation-date-range" style="width:30%">Average</td>
 					<td>
-						<div style="width:100%" class="percentage-bar-container bg-success border-success">	
-							<div id="utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>	
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>
 							<span id="utilisation-total-capacity" class="percentage-left"></span>
 						</div>
 					</td>

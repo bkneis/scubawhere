@@ -23,8 +23,9 @@ class ReportController extends \BaseController {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$before = new DateTime($before);
+		$before->add(new DateInterval('P1D'));
+		$before = $before->format('Y-m-d H:i:s');
 
 		$RESULT = [];
 
@@ -45,7 +46,7 @@ class ReportController extends \BaseController {
 			'bookingdetails',
 				'bookingdetails.booking',
 				'bookingdetails.ticket'
-		)->get();
+		)->orderBy('start')->get();
 
 		$utilisation = []; $i = 1;
 		foreach($departures as $departure)
@@ -110,6 +111,7 @@ class ReportController extends \BaseController {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
 		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
@@ -176,6 +178,7 @@ class ReportController extends \BaseController {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
 		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
@@ -233,10 +236,9 @@ class ReportController extends \BaseController {
 
 		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
 		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
+		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
-
 
 		#################################
 		// Add request paramets to result

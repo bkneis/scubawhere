@@ -4,15 +4,15 @@ var filter;
 var summaries;
 
 Handlebars.registerHelper('getUtil', function(capacity, unassigned){
-	return Math.round((100-((unassigned/capacity) * 100)));
+	return Math.round((1 - unassigned/capacity) * 100);
 });
 
 Handlebars.registerHelper('getDate', function(date){
-	return (date.substring(0, date.length - 9));
+	return date.split(' ')[0];
 });
 
 Handlebars.registerHelper('getTransAmount', function(date){
-	return (date.substring(0, date.length - 9));
+	//
 });
 
 Handlebars.registerHelper('getRemaining', function(capacity, unassigned){
@@ -20,15 +20,17 @@ Handlebars.registerHelper('getRemaining', function(capacity, unassigned){
 });
 
 Handlebars.registerHelper('getCountry', function(id){
-	return _.findWhere(window.countries, {id: id}).name;
+	return window.countries[id].name;
 });
 
 Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
 
-Handlebars.registerHelper('getFee', function(amount, commision) {
-	return parseFloat(amount*(commision/100));
+Handlebars.registerHelper('getCommissionAmount', function() {
+	var price = this.real_decimal_price ? this.real_decimal_price : this.decimal_price;
+
+	return (price * this.agent.commission / 100).toFixed(2);
 });
 
 $(function() {
