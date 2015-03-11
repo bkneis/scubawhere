@@ -1,73 +1,75 @@
 <div id="wrapper" class="clearfix">
-	<div class="col-md-3">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title">Search for a booking</h4>
-			</div>
-			<div class="panel-body">
-				<form id="find-booking-form">
-					<div class="form-row">
-						<label class="field-label">Reference</label>
-						<input type="text" name="reference" class="form-control" style="text-transform: uppercase;">
-					</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">Search for a booking</h4>
+				</div>
+				<div class="panel-body">
+					<form id="find-booking-form">
+						<div class="form-row">
+							<label class="field-label">Reference</label>
+							<input type="text" name="reference" class="form-control" style="text-transform: uppercase;">
+						</div>
 
-					<div class="form-row">
-						<label class="field-label">Date</label>
-						<input type="text" name="date" class="datepicker form-control" data-date-format="YYYY-MM-DD">
-					</div>
+						<div class="form-row">
+							<label class="field-label">Date</label>
+							<input type="text" name="date" class="datepicker form-control" data-date-format="YYYY-MM-DD">
+						</div>
 
-					<div class="form-row">
-						<label class="field-label">Customer's Last Name</label>
-						<input type="text" name="lastname" class="form-control">
-					</div>
+						<div class="form-row">
+							<label class="field-label">Customer's Last Name</label>
+							<input type="text" name="lastname" class="form-control">
+						</div>
 
-					<!--<div class="form-row">
-						<label class="">Ticket</label>
-						<select id="type-product" class="form-control">
-							<option>Loading..</option>
-						</select>
-						<script type="text/x-handlebars-template" id="ticket-list-template">
-							<option>Please select...</option>
-							{{#each tickets}}
-								<option value="{{id}}">{{{name}}}</option>
-							{{/each}}
-						</script>
-					</div>-->
+						<!--<div class="form-row">
+							<label class="">Ticket</label>
+							<select id="type-product" class="form-control">
+								<option>Loading..</option>
+							</select>
+							<script type="text/x-handlebars-template" id="ticket-list-template">
+								<option>Please select...</option>
+								{{#each tickets}}
+									<option value="{{id}}">{{{name}}}</option>
+								{{/each}}
+							</script>
+						</div>-->
 
-					<input type="reset" class="btn btn-danger btn-sm" value="Clear">
-					<button class="btn btn-primary pull-right" id="find-booking">Find Booking</button>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-9">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title">Bookings</h4>
-			</div>
-			<div class="panel-body">
-				<table class="bluethead">
-					<thead>
-						<tr class="bg-primary">
-							<th></th> <!-- icons -->
-							<th>Ref</th>
-							<th>Arrival</th>
-							<th>Customer</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th></th>
-							<th>Total</th>
-						</tr>
-					</thead>
-					<tbody id="booking-list">
-						<tr><td colspan="9" style="text-align: center;"> </td></tr>
-						<tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
-					</tbody>
-				</table>
+						<input type="reset" class="btn btn-danger btn-sm" value="Clear">
+						<button class="btn btn-primary pull-right" id="find-booking">Find Booking</button>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
+
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">Bookings</h4>
+				</div>
+				<div class="panel-body">
+					<table class="bluethead">
+						<thead>
+							<tr class="bg-primary">
+								<th></th> <!-- icons -->
+								<th>Ref</th>
+								<th>Arrival</th>
+								<th>Customer</th>
+								<th>Email</th>
+								<th>Phone</th>
+								<th></th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody id="booking-list">
+							<tr><td colspan="9" style="text-align: center;"> </td></tr>
+							<tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div><!-- .row -->
 
 	<script type="text/x-handlebars-template" id="booking-list-item-template">
 		{{#each bookings}}
