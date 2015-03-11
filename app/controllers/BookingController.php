@@ -235,7 +235,7 @@ class BookingController extends Controller {
 			if(empty($booking->source))
 			{
 				// By agent
-				$TOTALS['revenue'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+				$TOTALS['revenue'] += $booking->decimal_price - $booking->real_decimal_price * ($booking->agent->commission / 100);
 			}
 			else
 			{
@@ -330,13 +330,13 @@ class BookingController extends Controller {
 		];
 		foreach($bookings as $booking)
 		{
-			$TOTALS['commission'] += $booking->decimal_price * ($booking->agent->commission / 100);
+			$TOTALS['commission'] += $booking->real_decimal_price * ($booking->agent->commission / 100);
 
-			$TOTALS['revenue'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+			$TOTALS['revenue'] += $booking->decimal_price - $booking->real_decimal_price * ($booking->agent->commission / 100);
 
 			if($booking->agent->terms === 'fullamount')
 			{
-				$TOTALS['invoicable'] += $booking->decimal_price * (1 - ($booking->agent->commission / 100));
+				$TOTALS['invoicable'] += $booking->decimal_price - $booking->real_decimal_price * ($booking->agent->commission / 100);
 			}
 		}
 

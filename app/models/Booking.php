@@ -69,6 +69,11 @@ class Booking extends Ardent {
 
 	public function getRealDecimalPriceAttribute()
 	{
+		// The real price is not of interest for bookings that either have no discount applied or are not made by an agent
+		// Thus we can skip this costly operation
+		// However, in this case the real_decimal_price is still NOT the same as the decimal_price! That's why we return null instead (as it's not needed anyway)
+		if($this->discount < 1 || $this->agent_id === null) return null;
+
 		$feeSum = 0;
 		$this->load('bookingdetails', 'bookingdetails.addons');
 
