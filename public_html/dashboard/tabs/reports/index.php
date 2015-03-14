@@ -234,6 +234,7 @@
 			<tr><td colspan="3" class="text-center">There are no trips between these dates</td></tr>
 			{{/each}}
 		</tbody>
+		</table>
 		<table>
 			<thead style="font-weight: bold;">
 				<tr>
@@ -246,7 +247,6 @@
 					</td>
 				</thead>
 			</table>
-		</table>
 	</script>
 	<script type="text/x-handlebars-template" id="agents-filter-template">
 		<div class="input-group">

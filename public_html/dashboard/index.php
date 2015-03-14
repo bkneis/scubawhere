@@ -118,6 +118,11 @@
 				$('.username').text(window.company.name);
 			});
 		});
+
+		$(window).on('hashchange', function() {
+			//if tour started then dont allow them to click away
+		});
+
 	</script>
 
 </head>

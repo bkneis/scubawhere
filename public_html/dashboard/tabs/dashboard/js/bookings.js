@@ -107,7 +107,7 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	if(this.decimal_price === '0.00' || sum == this.decimal_price)
 		disabled = 'disabled';
 
-	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default btn-sm" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 });
 Handlebars.registerHelper('editButton', function() {
 	/*if(this.status === 'confirmed')
