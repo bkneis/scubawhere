@@ -113,7 +113,7 @@ Handlebars.registerHelper('editButton', function() {
 	/*if(this.status === 'confirmed')
 		return '';*/
 
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default btn-sm"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
 });
 
 $(function() {

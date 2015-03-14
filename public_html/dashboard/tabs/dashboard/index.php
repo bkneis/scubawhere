@@ -209,10 +209,10 @@
       </tr>
       <tr class="accordion-body accordion-{{id}}">
         <td colspan="5" style="overflow: auto;">
-          <div style="float: left; width: 180px; margin-right: 10px; border-right: 1px solid #C3D9F4;">
+          <div>
             {{#if payments}}
-            <h4 class="text-center">Recieved Transactions</h4>
-            <table style="width: 160px;" class="table">
+            <p class="text-center"><strong>Recieved Transactions</strong></p>
+            <table class="table">
               <tr>
                 <th>Date</th>
                 <th>Amount</th>
