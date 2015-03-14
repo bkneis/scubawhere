@@ -73,7 +73,7 @@
 		</tbody>
 
 	</table>
-	<table>
+	<table id="transactions-summary">
 		<thead style="font-weight: bold;">
 			<tr>
 				<td></td>
@@ -235,7 +235,7 @@
 			{{/each}}
 		</tbody>
 		</table>
-		<table>
+		<table id="utilisation-summary">
 			<thead style="font-weight: bold;">
 				<tr>
 					<td id="utilisation-date-range" style="width:30%">Average</td>
@@ -251,8 +251,8 @@
 	<script type="text/x-handlebars-template" id="agents-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
-			<select>
-				<option>Please select ...</option>
+			<select onchange="filterReport('agents', this.value)">
+				<option value="0">Please select ...</option>
 				{{#each agents}}
 					<option value="{{id}}">{{{name}}}</option>
 				{{/each}}
@@ -262,8 +262,8 @@
 	<script type="text/x-handlebars-template" id="transactions-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
-			<select>
-				<option>Please select ...</option>
+			<select onchange="filterReport('transactions', this.value)">
+				<option value="0">Please select ...</option>
 				{{#each gateways}}
 					<option value="{{id}}">{{{name}}}</option>
 				{{/each}}
@@ -273,10 +273,10 @@
 	<script type="text/x-handlebars-template" id="booking-history-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
-			<select>
-				<option>Please select ...</option>
+			<select onchange="filterReport('booking-history', this.value)">
+				<option value="0">Please select ...</option>
 				{{#each sources}}
-				<option value="{{name}}">{{{name}}}</option>
+					<option value="{{source}}">{{{name}}}</option>
 				{{/each}}
 			</select>
 		</div>
@@ -284,10 +284,10 @@
 	<script type="text/x-handlebars-template" id="utilisation-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
-			<select id="utilisation-filter">
-				<option>Please select ...</option>
+			<select onchange="filterReport('utilisation', this.value)">
+				<option value="0">Please select ...</option>
 				{{#each trips}}
-					<option value="{{id}}">{{{name}}}</option>
+					<option value="{{name}}">{{{name}}}</option>
 				{{/each}}
 			</select>
 		</div>

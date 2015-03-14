@@ -2,6 +2,11 @@ var report_type;
 var report;
 var filter;
 var summaries;
+window.transactions;
+window.agentBookings;
+window.bookings;
+window.utilisations;
+window.sources;
 
 Handlebars.registerHelper('getUtil', function(capacity, unassigned){
 	return Math.round((1 - unassigned/capacity) * 100);
@@ -34,6 +39,13 @@ Handlebars.registerHelper('getCommissionAmount', function() {
 });
 
 $(function() {
+
+	window.sources = [
+		{name : "Telephone", source : "telephone"}, 
+		{name: "Agent", source : "agent"}, 
+		{name: "In person", source : "facetoface"}, 
+		{name: "Email", source : "email"}
+	];
 
 	$.ajax({
 		url : "/api/country/all",
@@ -130,7 +142,11 @@ function getReport(reportType) {
 			$("#report-title").empty().append("Transactions Report");
 			filter = Handlebars.compile($("#transactions-filter-template").html());
 			report = Handlebars.compile($("#transactions-report-template").html());
-			//summaries = Handlebars.compile($("#transactions-totals-template").html());
+			
+			Report.getPaymentGateways(function success(data) {
+				$("#report-filters").empty().append( filter({gateways : data}) );
+			});
+
 
 			Report.getPayments(dates, function success(data) {
 				Report.getRefunds(dates, function success(data2) {
@@ -139,6 +155,7 @@ function getReport(reportType) {
 						data2[i].refund = true;
 					}
 					console.log(newData);
+					window.transactions = newData;
 					$("#reports").empty().append( report({entries : newData}) );
 					var totalCash = 0, totalCredit = 0, totalCheque = 0, totalBank = 0, totalPaypal = 0;
 					for(var i=0; i < newData.length; i++) {
@@ -191,6 +208,7 @@ function getReport(reportType) {
 
 			Report.getAgentBookings(dates, function success(data) {
 				console.log(data);
+				window.agentBookings = data;
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
 				/*var agentsTotal = 0;
@@ -207,11 +225,11 @@ function getReport(reportType) {
 			$("#report-title").empty().append("Booking History Report");
 			filter = Handlebars.compile($("#booking-history-filter-template").html());
 
-			var data = [{name : "Telephone"}, {name: "Agent"}, {name: "In person"}, {name: "Email"}];
-			$("#report-filters").empty().append( filter({sources : data}) );
+			$("#report-filters").empty().append( filter({sources : window.sources}) );
 
 			Report.getBookingHistory(dates, function success(data) {
 				console.log(data);
+				window.bookings = data;
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
 			});
@@ -227,12 +245,91 @@ function getReport(reportType) {
 
 			Report.getTripUtilisation(dates, function sucess(data) {
 				console.log(data);
+				window.utlisations = data;
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
 				$("#utilisation-total-capacity").text(data.utilisation_total.unassigned);
 				$("#utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 			});
+
+			break;
+	}
+}
+
+function filterReport(reportType, value) 
+{
+	switch(reportType) 
+	{
+		case('transactions') :
+			if(value == 0) getReport("transactions");
+			else 
+			{
+				var results = [];
+				_.each(window.transactions, function(transaction) {
+					if(parseInt(transaction.paymentgateway_id) == value) results.push(transaction);
+				});
+
+				console.log(results);
+				report = Handlebars.compile($("#transactions-report-template").html());
+				$("#reports").empty().append( report({entries : results}) );
+				$("#transactions-summary").css('display', 'none');
+			}
+
+			break;
+
+		case('agents') :
+			if(value == 0) getReport("agents");
+			else 
+			{
+				var results = [];
+				_.each(window.agentBookings.bookings, function(booking) {
+					if(parseInt(booking.agent_id) == value) results.push(booking);
+				});
+
+				console.log(results);
+				var results2 = {bookings : results};
+				report = Handlebars.compile($("#agents-report-template").html());
+				$("#reports").empty().append( report({entries : results2}) );
+			}
+
+			break;
+
+		case('booking-history') :
+			if(value == 0) getReport("booking-history");
+			else 
+			{
+				var results = [];
+				_.each(window.bookings.bookings, function(booking) {
+					console.log(booking.source);
+					if(booking.source == value) results.push(booking);
+					else if(booking.source == null & value == "agent") results.push(booking);
+				});
+
+				console.log(results);
+				var results2 = {bookings : results};
+				report = Handlebars.compile($("#booking-history-report-template").html());
+				$("#reports").empty().append( report({entries : results2}) );
+			}
+
+			break;
+
+		case('utilisation') :
+			if(value == 0) getReport("utilisation");
+			else 
+			{
+				var results = [];
+				_.each(window.utlisations.utilisation, function(trip) {
+					console.log(trip);
+					if(trip.name == value) results.push(trip);
+				});
+
+				console.log(results);
+				var results2 = {utilisation : results};
+				report = Handlebars.compile($("#utilisation-report-template").html());
+				$("#reports").empty().append( report({entries : results2}) );
+				$("#utilisation-summary").css('display', 'none');
+			}
 
 			break;
 	}
