@@ -229,7 +229,7 @@
 							<a href="#accommodations">Accommodations</a>
 						</li>
 						<li>
-							<a href="#activate-trip">Activate Trips</a>
+							<a href="#activate-trip">Schedule Trips</a>
 						</li>
 						<li>
 							<a href="#add-ons">Add-ons</a>
