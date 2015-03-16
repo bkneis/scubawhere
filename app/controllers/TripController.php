@@ -228,7 +228,7 @@ class TripController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The trip can not be removed because it has tickets or active sessions assigned to it.'/*.' Try deactivating it instead.'*/)), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The trip can not be removed because it has tickets or active trips assigned to it.'/*.' Try deactivating it instead.'*/)), 409); // 409 Conflict
 		}
 
 		return array('status' => 'Ok. Trip deleted');

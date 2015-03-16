@@ -8,7 +8,7 @@ class Trip extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'duration', 'photo', 'video');
+	protected $fillable = array('name', 'description', 'duration'/*, 'photo', 'video'*/);
 
 	protected $appends = array('deletable');
 
