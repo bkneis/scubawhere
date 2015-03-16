@@ -545,7 +545,7 @@ class BookingController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('This ticket/package can not be booked for this session.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('This ticket/package can not be booked for this trip.')), 403 ); // 403 Forbidden
 		}
 
 		// Check if the session's boat is allowed for the ticket
@@ -553,22 +553,7 @@ class BookingController extends Controller {
 		{
 			$boatIDs = $ticket->boats()->lists('id');
 			if( !in_array($departure->boat_id, $boatIDs) )
-				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat.')), 403 ); // 403 Forbidden
-		}
-
-		$boatroom_id = false;
-		$boatBoatrooms   = $departure->boat->boatrooms()->lists('id');
-		$ticketBoatrooms = $ticket->boatrooms()->lists('id');
-
-		// Check if the session's boat's boatrooms are allowed for the ticket
-		if( count($ticketBoatrooms) > 0 )
-		{
-			$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
-			if( count($intersect) === 0 )
-				return Response::json( array('errors' => array('This ticket is not eligable for this session\'s boat\'s cabin(s).')), 403 ); // 403 Forbidden
-
-			if( count($intersect) === 1 )
-				$boatroom_id = $intersect[0];
+				return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
 		}
 
 		// Determine if we need a boatroom_id (only when the trip is overnight)
@@ -581,6 +566,21 @@ class BookingController extends Controller {
 		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
 		{
 			// The trip is overnight and we do need a boatroom_id
+
+			$boatroom_id = false;
+			$boatBoatrooms   = $departure->boat->boatrooms()->lists('id');
+			$ticketBoatrooms = $ticket->boatrooms()->lists('id');
+
+			// Check if the session's boat's boatrooms are allowed for the ticket
+			if( count($ticketBoatrooms) > 0 )
+			{
+				$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
+				if( count($intersect) === 0 )
+					return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat\'s cabin(s).')), 403 ); // 403 Forbidden
+
+				if( count($intersect) === 1 )
+					$boatroom_id = $intersect[0];
+			}
 
 			// Just in case, check if the boat has boatrooms assigned
 			if( count($boatBoatrooms) === 0 )
