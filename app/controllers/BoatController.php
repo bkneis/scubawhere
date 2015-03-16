@@ -200,25 +200,32 @@ class BoatController extends Controller {
 			return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Need to check this before attempting the delete, because the relationship is not protected by a foreign key in the database
+		/*
+		if( $boat->tickets()->exists() )
+			return Response::json( array('errors' => array('The boat can not be removed because it is still used in active tickets.')), 409); // 409 Conflict
+		*/
+
 		try
 		{
 			$boat->forceDelete();
+
+			// Manually remove from ticketable table, as no foreign key possible
+			$boat->tickets()->detach();
 		}
 		catch(QueryException $e)
 		{
-			if( $boat->tickets()->count() > 0 )
-				return Response::json( array('errors' => array('The boat can not be removed because it is still used in tickets.')), 409); // 409 Conflict
+			// Deletion can only fail when the boat is used in sessions
 
 			// Check if the boat is only used in past sessions
 			// Gets latest session's start date and compares to user's local time
 			$isPast = Helper::isPast( $boat->departures()->withTrashed()->orderBy('start', 'DESC')->first()->start );
-			if( gettype($isPast) === 'object' ) // Is error Response
-				return $isPast;
 			if( !$isPast )
-				return Response::json( array('errors' => array('The boat can not be removed because it is still used in future sessions.')), 409); // 409 Conflict
+				return Response::json( array('errors' => array('The boat can not be removed because it is still used in future trips.')), 409); // 409 Conflict
 
 			// Need to recreate the Boat object, because otherwise it will try to execute the forceDelete SQL query
 			// TODO Is there a better way?
+			// Edit: No, not really, since the ->forcing property is private to the Eloquent object and thus not changeable from the outside.
 			$boat = Auth::user()->boats()->find( Input::get('id') );
 			$boat->delete(); // Soft delete
 		}

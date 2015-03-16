@@ -120,22 +120,31 @@ class BoatroomController extends Controller {
 			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if( $boatroom->boats->count() > 0 )
+		// TODO Evaluate removing this
+		if( $boatroom->boats->exists() )
 			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in boats.')), 409); // 409 Conflict
 
-		if( $boatroom->tickets->count() > 0 )
+		/*
+		if( $boatroom->tickets->exists() )
 			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in tickets.')), 409); // 409 Conflict
+		*/
 
+		// TODO Evaluate removing this
 		if( $boatroom->bookingdetails()->whereHas('departure', function($query)
 		{
 			return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-		})->count() > 0 )
+		})->exists() )
 			return Response::json( array('errors' => array('The cabin can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
 
-		if( $boatroom->bookingdetails()->count() > 0 )
+		if( $boatroom->bookingdetails()->exists() )
 			$boatroom->delete(); // softDeletes
 		else
+		{
 			$boatroom->forceDelete();
+
+			// Manually remove from ticketable table, as no foreign key possible
+			$boatroom->tickets()->detach();
+		}
 
 		return array('status' => 'Ok. Cabin deleted');
 	}
