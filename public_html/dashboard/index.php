@@ -192,9 +192,6 @@
 							<a href="#calendar">Calendar</a>
 						</li>
 						<li>
-							<a href="#trip-manifest">Trip manifest</a>
-						</li>
-						<li>
 							<a href="#pickup-schedule">Pick up schedule</a>
 						</li>
 					</ul>
