@@ -279,25 +279,25 @@ function getReport(reportType) {
 				_.each(data.packages, function(package) {
 					package.statColor = assignColor();
 					colorID++;
-					ticket.type = "Packages";
+					package.type = "Packages";
 					stats.streams.push(package);
 				});
 				_.each(data.courses, function(course) {
 					course.statColor = assignColor();
 					colorID++;
-					ticket.type = "Courses";
+					course.type = "Courses";
 					stats.streams.push(course);
 				});
 				_.each(data.addons, function(addon) {
 					addon.statColor = assignColor();
 					colorID++;
-					ticket.type = "Addons";
+					addon.type = "Addons";
 					stats.streams.push(addon);
 				});
 				_.each(data.accommodations, function(acom) {
 					acom.statColor = assignColor();
 					colorID++;
-					ticket.type = "Accommodations";
+					acom.type = "Accommodations";
 					stats.streams.push(acom);
 				});
 				stats.acomTotal = data.accommodations_total.revenue;
