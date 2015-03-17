@@ -8,6 +8,8 @@ window.bookings;
 window.utilisations;
 window.sources;
 
+var colorID = 0;
+
 Handlebars.registerHelper('getUtil', function(capacity, unassigned){
 	return Math.round((1 - unassigned/capacity) * 100);
 });
@@ -255,60 +257,59 @@ function getReport(reportType) {
 
 			break;
 
-		case("tickets") :
+		case("revenue") :
 			$("#report-title").empty().append("Revenue Analysis Report");
+			filter = Handlebars.compile($("#revenue-filter-template").html());
+
+			var types = ["Packages", "Addons", "Courses", "Tickets", "Accommodations", "Summary"];
+			$("#report-filters").empty().append( filter({types : types}) );
 
 			Report.getTicketsPackages(dates, function sucess(data) {
 				console.log(data);
-				var colors = [
-				"#800000", // maroon
-				"#FF0000", // red
-				"#808000", // olive
-				"#FFFF00", // yellow
-				"#008000", // green
-				"#00FF00", // lime
-				"#008080", // teal
-				"#00FFFF", // aqua
-				"#000080", // navy
-				"#0000FF", // blue
-				"#800080", // purple
-				"#FF00FF" //fuschia
-				];
-				var i = 0;
 
 				var stats = {};
 				stats.streams = [];
-
+				colorID = 0;
 				_.each(data.tickets, function(ticket) {
-					ticket.statColor = colors[i];
-					i++;
+					ticket.statColor = assignColor();
+					colorID++;
+					ticket.type = "Tickets";
 					stats.streams.push(ticket);
 				});
 				_.each(data.packages, function(package) {
-					package.statColor = colors[i];
-					i++;
+					package.statColor = assignColor();
+					colorID++;
+					ticket.type = "Packages";
 					stats.streams.push(package);
 				});
 				_.each(data.courses, function(course) {
-					course.statColor = colors[i];
-					i++;
+					course.statColor = assignColor();
+					colorID++;
+					ticket.type = "Courses";
 					stats.streams.push(course);
 				});
 				_.each(data.addons, function(addon) {
-					addon.statColor = colors[i];
-					i++;
+					addon.statColor = assignColor();
+					colorID++;
+					ticket.type = "Addons";
 					stats.streams.push(addon);
 				});
 				_.each(data.accommodations, function(acom) {
-					acom.statColor = colors[i];
-					i++;
+					acom.statColor = assignColor();
+					colorID++;
+					ticket.type = "Accommodations";
 					stats.streams.push(acom);
 				});
-				
+				stats.acomTotal = data.accommodations_total.revenue;
+				stats.ticketTotal = data.tickets_total.revenue;
+				stats.packageTotal = data.packages_total.revenue;
+				stats.courseTotal = data.courses_total.revenue;
+				stats.addonTotal = data.addons_total.revenue;
 				stats.total = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
 				data.courses_total.revenue + data.addons_total.revenue;
 				console.log(stats);
-				report = Handlebars.compile($("#tickets-packages-report-template").html());
+				window.revenueAnalysis = stats;
+				report = Handlebars.compile($("#revenue-report-template").html());
 				$("#reports").empty().append( report({entries : stats}) );
 
 				var pieStats = [];
@@ -321,7 +322,6 @@ function getReport(reportType) {
 						label : stream.name
 					};
 					pieStats.push(stat);
-					i++;
 				});
 
 				var ctx = $("#myChart").get(0).getContext("2d");
@@ -408,5 +408,116 @@ function filterReport(reportType, value)
 			}
 
 			break;
+
+		case('revenue') :
+			if(value == 0) getReport("revenue");
+			else
+			{
+				if(value == "Summary") 
+				{
+					var summary = [
+					{
+						name : "Tickets",
+						//quantity : ,
+						statColor : "#800000",
+						revenue : window.revenueAnalysis.ticketTotal
+					},
+					{
+						name : "Packages",
+						//quantity : ,
+						statColor : "#FF0000",
+						revenue : window.revenueAnalysis.packageTotal
+					},
+					{
+						name : "Courses",
+						//quantity : ,
+						statColor : "#808000",
+						revenue : window.revenueAnalysis.courseTotal
+					},
+					{
+						name : "Addons",
+						//quantity : ,
+						statColor : "#FFFF00",
+						revenue : window.revenueAnalysis.addonTotal
+					},
+					{
+						name : "Accommodations",
+						//quantity : ,
+						statColor : "#008000",
+						revenue : window.revenueAnalysis.acomTotal
+					}
+					];
+
+					var pieStats = [];
+					
+					_.each(summary, function(stream) {
+						var stat = {
+							value : stream.revenue,
+							color : stream.statColor,
+							//highlight : "#FF0",
+							label : stream.name
+						};
+						pieStats.push(stat);
+					});
+					console.log(pieStats);
+					report = Handlebars.compile($("#revenue-report-template").html());
+					var results2 = {streams : summary};
+					$("#reports").empty().append( report({entries : results2}) );
+					var ctx = $("#myChart").get(0).getContext("2d");
+					var myPieChart = new Chart(ctx).Pie(pieStats, {
+						animateScale: true
+					});
+				}
+				else
+				{
+					var results = [];
+					_.each(window.revenueAnalysis.streams, function(revenue) {
+						//console.log(revenue);
+						if(revenue.type == value) results.push(revenue);
+					});
+
+					console.log(results);
+					var results2 = {streams : results};
+					report = Handlebars.compile($("#revenue-report-template").html());
+					$("#reports").empty().append( report({entries : results2}) );
+
+					var pieStats = [];
+					
+					_.each(results, function(stream) {
+						var stat = {
+							value : stream.revenue,
+							color : stream.statColor,
+							//highlight : "#FF0",
+							label : stream.name
+						};
+						pieStats.push(stat);
+					});
+
+					var ctx = $("#myChart").get(0).getContext("2d");
+					var myPieChart = new Chart(ctx).Pie(pieStats, {
+						animateScale: true
+					});
+				}
+			}
+			break;
 	}
+}
+
+function assignColor() {
+	var colors = [
+		"#800000", // maroon
+		"#FF0000", // red
+		"#808000", // olive
+		"#FFFF00", // yellow
+		"#008000", // green
+		"#00FF00", // lime
+		"#008080", // teal
+		"#00FFFF", // aqua
+		"#000080", // navy
+		"#0000FF", // blue
+		"#800080", // purple
+		"#FF00FF" //fuschia
+	];
+	if(colorID == colors.length) colorID = 0;
+	return colors[colorID];
 }

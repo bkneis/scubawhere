@@ -10,7 +10,7 @@
 					<button type="button" data-report="agents" class="btn btn-default">Agents</button>
 					<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
 					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
-					<button type="button" data-report="tickets" class="btn btn-default">Revenue Analysis</button>
+					<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
 				</div>
 
 				<div style="margin-top:20px"></div>
@@ -248,7 +248,7 @@
 				</thead>
 			</table>
 	</script>
-	<script type="text/x-handlebars-template" id="tickets-packages-report-template">
+	<script type="text/x-handlebars-template" id="revenue-report-template">
 	<div class="col-md-6">
 		<canvas id="myChart" width="400" height="400"></canvas>
 	</div>
@@ -269,7 +269,7 @@
 					<td>{{revenue}}</td>
 				</tr>
 				{{else}}
-				<tr><td colspan="2" class="text-center">There has been no tickets or packages sold between these dates</td></tr>
+				<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
 				{{/each}}
 			</tbody>
 		</table>
@@ -315,6 +315,17 @@
 				<option value="0">Please select ...</option>
 				{{#each trips}}
 					<option value="{{name}}">{{{name}}}</option>
+				{{/each}}
+			</select>
+		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="revenue-filter-template">
+		<div class="input-group">
+			<label class="input-group-addon">Filter by : </label>
+			<select onchange="filterReport('revenue', this.value)">
+				<option value="0">Please select ...</option>
+				{{#each types}}
+					<option value="{{this}}">{{this}}</option>
 				{{/each}}
 			</select>
 		</div>
