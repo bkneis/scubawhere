@@ -226,9 +226,9 @@
               </tr>
               {{/each}}
               <tr>
-                <td></td>
+                <td><strong>Total</strong></td>
                 <td class="table-sum">{{currency}} {{sumPaid}}</td>
-                <td>{{remainingPay}}</td>
+                <td><strong>Remaining</strong> {{remainingPay}}</td>
               </tr>
             </table>
             {{else}}
