@@ -115,7 +115,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a>view trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showManifest({{session.id}})">view trip manifest</a></td>
 						<td></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
@@ -142,6 +142,36 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
+		<script id="manifest-template" type="text/x-handlebars-template">
+			<div id="modal-{{id}}" class="reveal-modal">
+
+				<h3>{{trip.name}} - Trip Manifest</h3>
+				<table style="margin-top: 2em;" id="customer-data-table">
+					<thead>
+              			<tr>
+			                <th style="color:#313131">Name</th>
+			                <th style="color:#313131">Email</th>
+			                <th style="color:#313131">Country</th>
+			                <th style="color:#313131">Phone Number</th>
+			            </tr>
+            		</thead>
+            		<tbody id="customers-table">
+            		</tbody>
+				</table>
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+		<script id="customer-rows-template" type="text/x-handlebars-template">
+  			{{#each customers}}
+	  			<tr>
+	                <th>{{{firstname}}} {{{lastname}}}</th>
+	                <th>{{{email}}}</th>
+	                <th>{{country}}</th>
+	                <th>{{phone}}</th>
+	            </tr>
+	            {{else}} <tr><th colspan="4">No customers</th></tr>
+            {{/each}}
+		</script>
 	</div>
 
 	<script src="/common/js/fullcalendar.min.js"></script>
@@ -158,5 +188,6 @@
 	<script src="/js/Controllers/Timetable.js"></script>
 	<script src="/js/Controllers/Accommodation.js"></script>
 
+	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>
