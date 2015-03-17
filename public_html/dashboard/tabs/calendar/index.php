@@ -114,6 +114,9 @@
 							{{/unless}}
 						</td>
 					</tr>
+					<tr>
+						<td><a>view trip manifest</a></td>
+						<td></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
