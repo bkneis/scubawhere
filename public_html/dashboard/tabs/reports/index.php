@@ -257,6 +257,7 @@
 			<thead>
 				<tr>
 					<th style="color:#313131">Revenue Name</th>
+					<th style="color:#313131">Color</th>
 					<th style="color:#313131">No. Sold</th>
 					<th style="color:#313131">Total</th>
 				</tr>
@@ -265,6 +266,7 @@
 				{{#each entries.streams}}
 				<tr>
 					<td>{{{name}}}</td>
+					<td style="width:20px;" bgcolor="{{statColor}}"></td>
 					<td>{{quantity}}</td>
 					<td>{{revenue}}</td>
 				</tr>

@@ -319,14 +319,19 @@ function getReport(reportType) {
 						value : stream.revenue,
 						color : stream.statColor,
 						//highlight : "#FF0",
-						label : stream.name
+						label : stream.name,
+                		labelColor : 'white',
+                		labelFontSize : '16'
+
 					};
 					pieStats.push(stat);
 				});
 
 				var ctx = $("#myChart").get(0).getContext("2d");
 				var myPieChart = new Chart(ctx).Pie(pieStats, {
-					animateScale: true
+					animateScale: true,
+					multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>",
+					showTooltips: true
 				});
 			});
 			break;
