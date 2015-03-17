@@ -50,6 +50,14 @@ var Report = {
 			data: params,
 			success: handleData
 		});
+	},
+
+	getTicketsPackages : function(params, handleData) {
+		$.ajax({
+			url: 'api/report/revenue-streams',
+			data: params,
+			success: handleData
+		});
 	}
 
 };

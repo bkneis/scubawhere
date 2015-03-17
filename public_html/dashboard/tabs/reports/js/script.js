@@ -254,6 +254,82 @@ function getReport(reportType) {
 			});
 
 			break;
+
+		case("tickets") :
+			$("#report-title").empty().append("Revenue Analysis Report");
+
+			Report.getTicketsPackages(dates, function sucess(data) {
+				console.log(data);
+				var colors = [
+				"#800000", // maroon
+				"#FF0000", // red
+				"#808000", // olive
+				"#FFFF00", // yellow
+				"#008000", // green
+				"#00FF00", // lime
+				"#008080", // teal
+				"#00FFFF", // aqua
+				"#000080", // navy
+				"#0000FF", // blue
+				"#800080", // purple
+				"#FF00FF" //fuschia
+				];
+				var i = 0;
+
+				var stats = {};
+				stats.streams = [];
+
+				_.each(data.tickets, function(ticket) {
+					ticket.statColor = colors[i];
+					i++;
+					stats.streams.push(ticket);
+				});
+				_.each(data.packages, function(package) {
+					package.statColor = colors[i];
+					i++;
+					stats.streams.push(package);
+				});
+				_.each(data.courses, function(course) {
+					course.statColor = colors[i];
+					i++;
+					stats.streams.push(course);
+				});
+				_.each(data.addons, function(addon) {
+					addon.statColor = colors[i];
+					i++;
+					stats.streams.push(addon);
+				});
+				_.each(data.accommodations, function(acom) {
+					acom.statColor = colors[i];
+					i++;
+					stats.streams.push(acom);
+				});
+				
+				stats.total = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
+				data.courses_total.revenue + data.addons_total.revenue;
+				console.log(stats);
+				report = Handlebars.compile($("#tickets-packages-report-template").html());
+				$("#reports").empty().append( report({entries : stats}) );
+
+				var pieStats = [];
+				
+				_.each(stats.streams, function(stream) {
+					var stat = {
+						value : stream.revenue,
+						color : stream.statColor,
+						//highlight : "#FF0",
+						label : stream.name
+					};
+					pieStats.push(stat);
+					i++;
+				});
+
+				var ctx = $("#myChart").get(0).getContext("2d");
+				var myPieChart = new Chart(ctx).Pie(pieStats, {
+					animateScale: true
+				});
+			});
+			break;
 	}
 }
 

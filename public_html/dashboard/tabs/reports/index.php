@@ -6,11 +6,11 @@
 			</div>
 			<div class="panel-body">
 				<div id="report-type-btns" class="btn-group col-md-offset-3" role="group">
-					<button type="button" data-report="transactions" data-api="/api/payment/filter" class="btn btn-default btn-primary">Transactions</button>
-					<button type="button" data-report="agents" data-api="/api/booking/filter-confirmed-by-agent" class="btn btn-default">Agents</button>
-					<button type="button" data-report="booking-history" data-api="/api/booking/filter-confirmed" class="btn btn-default">Booking History</button>
-					<button type="button" data-report="utilisation" data-api="/api/report/utilisation" class="btn btn-default">Trip Utilisation</button>
-					<button type="button" data-report="tickets" class="btn btn-default">Ticket / Packages</button>
+					<button type="button" data-report="transactions" class="btn btn-default btn-primary">Transactions</button>
+					<button type="button" data-report="agents" class="btn btn-default">Agents</button>
+					<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
+					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
+					<button type="button" data-report="tickets" class="btn btn-default">Revenue Analysis</button>
 				</div>
 
 				<div style="margin-top:20px"></div>
@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+
 <script type="text/x-handlebars-template" id="transactions-report-template">
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
@@ -248,6 +248,33 @@
 				</thead>
 			</table>
 	</script>
+	<script type="text/x-handlebars-template" id="tickets-packages-report-template">
+	<div class="col-md-6">
+		<canvas id="myChart" width="400" height="400"></canvas>
+	</div>
+	<div class="col-md-6">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th style="color:#313131">Revenue Name</th>
+					<th style="color:#313131">No. Sold</th>
+					<th style="color:#313131">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each entries.streams}}
+				<tr>
+					<td>{{{name}}}</td>
+					<td>{{quantity}}</td>
+					<td>{{revenue}}</td>
+				</tr>
+				{{else}}
+				<tr><td colspan="2" class="text-center">There has been no tickets or packages sold between these dates</td></tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</script>
 	<script type="text/x-handlebars-template" id="agents-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
@@ -296,4 +323,7 @@
 	<script type="text/javascript" src="js/Controllers/Trip.js"></script>
 	<script type="text/javascript" src="js/Controllers/Report.js"></script>
 	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
+	<script type="text/javascript" src="tabs/reports/js/Chart.js"></script>
 	<script type="text/javascript" src="tabs/reports/js/script.js"></script>
+
+</div>
