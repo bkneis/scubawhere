@@ -88,6 +88,7 @@ return array(
     'ChangeBookingDetailsToIncludeCustomerIdAndLeadStatus' => $baseDir . '/app/database/migrations/2014_06_04_105146_change_booking_details_to_include_customer_id_and_lead_status.php',
     'ChangeDayAndMonthFieldsOnPricesTableIntoDateFields' => $baseDir . '/app/database/migrations/2014_11_03_131716_change_day_and_month_fields_on_prices_table_into_date_fields.php',
     'ChangeDurationToDecimal' => $baseDir . '/app/database/migrations/2015_01_24_172633_change_duration_to_decimal.php',
+    'ChangeForeignKeyPackagefacadeIdOnBookingDetailsTable' => $baseDir . '/app/database/migrations/2015_03_18_095141_change_foreign_key_packagefacade_id_on_booking_details_table.php',
     'ChangeForeignKeyTrainingIdOnCoursesTable' => $baseDir . '/app/database/migrations/2015_03_16_134334_change_foreign_key_training_id_on_courses_table.php',
     'ChangeLatitudeAndLongitudeFieldsToDoupleType' => $baseDir . '/app/database/migrations/2015_02_11_015111_change_latitude_and_longitude_fields_to_douple_type.php',
     'ChangeNightsColumnToEndDateOnAccommodationBooking' => $baseDir . '/app/database/migrations/2014_11_21_194518_change_nights_column_to_end_date_on_accommodation_booking.php',
