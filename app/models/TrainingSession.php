@@ -46,7 +46,7 @@ class TrainingSession extends Ardent {
 
 	public function bookingdetails()
 	{
-		return $this->hasMany('Bookingdetail', 'session_id');
+		return $this->hasMany('Bookingdetail');
 	}
 
 	public function customers()
@@ -54,7 +54,7 @@ class TrainingSession extends Ardent {
 		return $this->belongsToMany('Customer', 'booking_details')->withTimestamps();
 	}
 
-	public function Training()
+	public function training()
 	{
 		return $this->belongsTo('Training')->withTrashed();
 	}

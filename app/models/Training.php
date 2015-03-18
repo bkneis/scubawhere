@@ -10,6 +10,8 @@ class Training extends Ardent {
 
 	protected $fillable = array('name', 'description', 'duration');
 
+	protected $appends = array('deletable');
+
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
@@ -25,6 +27,12 @@ class Training extends Ardent {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
 		$this->duration = round($this->duration, 1);
+	}
+
+	public function getDeletableAttribute()
+	{
+		// TODO Only deny when future training_sessions are affected
+		return !($this->courses()->exists() || $this->training_sessions()->exists());
 	}
 
 	public function company()

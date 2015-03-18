@@ -27,7 +27,7 @@ class Course extends Ardent {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 	}
 
-	public function calculatePrice($start, $limitBefore)
+	public function calculatePrice($start, $limitBefore = false)
 	{
 		$price = Price::where(Price::$owner_id_column_name, $this->id)
 		     ->where(Price::$owner_type_column_name, 'Course')
@@ -81,10 +81,5 @@ class Course extends Ardent {
 	public function training()
 	{
 		return $this->belongsTo('Training');
-	}
-
-	public function training_sessions()
-	{
-		return $this->hasMany('TrainingSession');
 	}
 }
