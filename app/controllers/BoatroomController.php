@@ -4,11 +4,6 @@ use Illuminate\Database\QueryException;
 
 class BoatroomController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
 		try

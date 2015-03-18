@@ -2,12 +2,7 @@
 
 use ScubaWhere\Helper;
 
-class ReportController extends \BaseController {
-
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
+class ReportController extends Controller {
 
 	public function getUtilisation()
 	{

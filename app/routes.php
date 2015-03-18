@@ -13,62 +13,50 @@
 
 Route::get('/', function()
 {
+	// Handles requests to /api
 	return Redirect::to('../');
 });
 
 Route::controller('password', 'PasswordController');
-
 Route::controller('register', 'RegisterController');
 
 Route::post('login', 'AuthenticationController@postLogin');
-
 Route::get('logout', 'AuthenticationController@getLogout');
 
-// Needs to be unauthorized, because it's needed in registration
-Route::controller('country', 'CountryController');
+// These controllers need to be unauthorized, because they are required in registration
+Route::controllers([
+	'agency'   => 'AgencyController',
+	'country'  => 'CountryController',
+	'currency' => 'CurrencyController'
+]);
 
-Route::controller('currency', 'CurrencyController');
-
-Route::controller('agency', 'AgencyController');
-
-Route::group(array('before' => 'auth|auth.basic'), function()
+Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 {
 	Route::get('token', function()
 	{
 		return Session::getToken();
 	});
 
-	Route::controller('company', 'CompanyController');
-
-	Route::controller('accommodation', 'AccommodationController');
-
-	Route::controller('addon', 'AddonController');
-
-	Route::controller('agent', 'AgentController');
-
-	Route::controller('boat', 'BoatController');
-
-	Route::controller('boatroom', 'BoatroomController');
-
-	Route::controller('booking', 'BookingController');
-
-	Route::controller('customer', 'CustomerController');
-
-	Route::controller('location', 'LocationController');
-
-	Route::controller('package', 'PackageController');
-
-	Route::controller('payment', 'PaymentController');
-
-	Route::controller('refund', 'RefundController');
-
-	Route::controller('report', 'ReportController');
-
-	Route::controller('session', 'DepartureController');
-
-	Route::controller('ticket', 'TicketController');
-
-	Route::controller('timetable', 'TimetableController');
-
-	Route::controller('trip', 'TripController');
+	Route::controllers([
+		'accommodation' => 'AccommodationController',
+		'addon'         => 'AddonController',
+		'agent'         => 'AgentController',
+		'boat'          => 'BoatController',
+		'boatroom'      => 'BoatroomController',
+		'booking'       => 'BookingController',
+		'class'         => 'TrainingController',
+		'company'       => 'CompanyController',
+		'course'        => 'CourseController',
+		'customer'      => 'CustomerController',
+		'location'      => 'LocationController',
+		'package'       => 'PackageController',
+		'payment'       => 'PaymentController',
+		'refund'        => 'RefundController',
+		'report'        => 'ReportController',
+		'search'        => 'SearchController',
+		'session'       => 'DepartureController',
+		'ticket'        => 'TicketController',
+		'timetable'     => 'TimetableController',
+		'trip'          => 'TripController'
+	]);
 });

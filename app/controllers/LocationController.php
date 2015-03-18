@@ -4,11 +4,6 @@ use ScubaWhere\Helper;
 
 class LocationController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getAll()
 	{
 		return Auth::user()->locations()->with('tags')->get();

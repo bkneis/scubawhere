@@ -5,11 +5,6 @@ use ScubaWhere\Helper;
 
 class PaymentController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
 		try

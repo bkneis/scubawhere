@@ -76,10 +76,12 @@ Route::filter('guest', function()
 
 Route::filter('csrf', function()
 {
-	if ( ! Symfony\Component\Security\Core\Util\StringUtils::equals(Session::token(), Input::get('_token')) )
+	if ( Request::method() === 'POST' && !Symfony\Component\Security\Core\Util\StringUtils::equals(Session::token(), Input::get('_token')) )
 	{
-		throw new Illuminate\Session\TokenMismatchException;
-	}
+		// throw new Illuminate\Session\TokenMismatchException;
 
-	// TODO Renew token
+		$message = 'The CSRF token is ' . (!Input::has('_token') ? 'missing' : 'not valid') . '!';
+
+		return Response::json(['errors' => ['TokenMismatchException: ' . $message]], 401); // 401 Unauthorized
+	}
 });

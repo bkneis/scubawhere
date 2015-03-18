@@ -5,11 +5,6 @@ use ScubaWhere\Helper;
 
 class PackageController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
 		try

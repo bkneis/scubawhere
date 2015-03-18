@@ -10,11 +10,6 @@ use ScubaWhere\Helper;
  */
 class CompanyController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
         return Auth::user();

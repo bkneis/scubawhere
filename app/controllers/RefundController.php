@@ -5,11 +5,6 @@ use ScubaWhere\Helper;
 
 class RefundController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
 		try

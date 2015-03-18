@@ -3,11 +3,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller {
 
-	public function __construct()
-	{
-		$this->beforeFilter('csrf', array('on' => 'post'));
-	}
-
 	public function getIndex()
 	{
 		try
