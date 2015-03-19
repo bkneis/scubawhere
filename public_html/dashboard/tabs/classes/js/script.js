@@ -20,6 +20,12 @@ $(function () {
 		renderEditForm( event.target.getAttribute('data-id') );
 	});
 
+	$("#class-list-container").on('click', '#change-to-add-class', function(event){
+
+		event.preventDefault();
+		renderEditForm();
+	});
+
 	$("#class-form-container").on('submit', '#add-class-form', function(event) {
 
 		event.preventDefault();

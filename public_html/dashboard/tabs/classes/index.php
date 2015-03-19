@@ -74,9 +74,6 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Boat.js"></script>
-	<script src="/js/Controllers/Boatroom.js"></script>
-	<script src="/js/Controllers/Trip.js"></script>
 	<script src="/js/Controllers/Class.js"></script>
 	<script src="/tabs/classes/js/script.js"></script>
 </div>
