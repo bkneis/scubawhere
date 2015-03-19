@@ -241,6 +241,9 @@
 							<a href="#boats">Boats</a>
 						</li>
 						<li>
+							<a href="#classes">Classes</a>
+						</li>
+						<li>
 							<a href="#locations">Locations</a>
 						</li>
 						<li>
