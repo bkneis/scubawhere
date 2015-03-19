@@ -115,7 +115,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a class="close-modal" title="Abort" onclick="showManifest({{session.id}})">view trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">view trip manifest</a></td>
 						<td></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>

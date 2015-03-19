@@ -250,30 +250,41 @@ function showModalWindowA(eventObject) {
 	});
 }
 
-function showModalWindowM(object) {
+function showModalWindowM(id) {
 	// Create the modal window from session-template
 	window.sw.accommodationTemplateD = Handlebars.compile( $("#manifest-template").html() );
 
-	$('#modalWindows')
-	.append( window.sw.accommodationTemplateD(object) )        // Create the modal
-	.children('#modal-' + object.id)          // Directly find it and use it
-	.data('eventObject', object)              // Assign the eventObject to the modal DOM element
-	.reveal({                                      // Open modal window | Options:
-		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
-		animationSpeed: 300,                       // how fast animtions are
-		closeOnBackgroundClick: false,             // if you click background will modal close?
-		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
-		onFinishModal: function() {
-			$('#modal-' + this.object.id).remove();
-		},
-	});
-
-	var dataTable = $('#customer-data-table').DataTable({
+	var params = "id=" + id;
+	Session.getAllCustomers(params, function sucess(data) {
+		//showModalWindowM(data);
+		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+		//$("#customers-table").append(customer({customers : data.customers}));
+		$('#modalWindows')
+			.append( window.sw.accommodationTemplateD(data) )        // Create the modal
+			.children('#modal-' + data.id)          // Directly find it and use it
+			.reveal({                                      // Open modal window | Options:
+				animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+				animationSpeed: 300,                       // how fast animtions are
+				closeOnBackgroundClick: false,             // if you click background will modal close?
+				dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
+				onFinishModal: function() {
+					$('#modal-' + this.data.id).remove();
+				}
+		});
+		$('#customer-data-table').dataTable({
 		"paging":   false,
 		"ordering": false,
 		"info":     false,
 		"pageLength" : 10,
-		"searching" : false
+		"searching" : false,
+		data : data.customers,
+		columns : [
+			{"data" : "firstname"},
+			{"data" : "email"},
+			{"data" : "country_id"},
+			{"data" : "phone"}
+		]
+	});
 	});
 }
 
@@ -456,7 +467,7 @@ function getAccomEvents(start, end, timezone, callback) {
 	});
 }
 
-function showManifest(id) {
+function showManifest(id) { // use data tables to isnert data instead of handle bars
 	var params = "id=" + id;
 	Session.getAllCustomers(params, function sucess(data) {
 		showModalWindowM(data);
