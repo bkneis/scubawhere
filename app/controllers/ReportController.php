@@ -409,13 +409,11 @@ class ReportController extends Controller {
 				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
 			}
 
-			$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
+			/*$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
 				? $realDiscountPercentage[$detail->booking->id]
-				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount); 
+				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount); */
 
-			/*if(($detail->booking->real_decimal_price + $detail->booking->discount) != 0) {
-				$realPricePercentage = $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
-			} else $realPricePercentage = 0;*/
+			$realPricePercentage = $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
 
 			if(!empty($model))
 			{
