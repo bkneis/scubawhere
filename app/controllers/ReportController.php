@@ -413,7 +413,9 @@ class ReportController extends Controller {
 				? $realDiscountPercentage[$detail->booking->id]
 				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount); */
 
-			$realPricePercentage = $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
+			$realPricePercentage = ($detail->booking->real_decimal_price === null)
+				? 1
+				: $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
 
 			if(!empty($model))
 			{
@@ -515,7 +517,9 @@ class ReportController extends Controller {
 						? $realDiscountPercentage[$booking->id]
 						: $booking->decimal_price / ($booking->decimal_price + $booking->discount); */
 
-					$realPricePercentage = $booking->real_decimal_price / ($booking->real_decimal_price + $booking->discount);
+					$realPricePercentage = ($booking->real_decimal_price === null)
+						? 1
+						: $booking->real_decimal_price / ($booking->real_decimal_price + $booking->discount);
 
 					// Apply percentage discount to price and sum up
 					$revenue = $accommodation->decimal_price * $realPricePercentage;
