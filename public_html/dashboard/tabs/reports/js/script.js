@@ -157,15 +157,20 @@ function getReport(reportType) {
 					}
 					var total = totalCash + totalCredit + totalCheque + totalBank + totalPaypal;
 					$("#transactions-totalCash").text(window.company.currency.symbol + " " + totalCash);
-					$("#transactions-cash-percentage").css("width", ((totalCash/total)*100) + "%");
+					if(totalCash < 1) $("#transactions-cash-percentage").css("width", "0%");
+					else $("#transactions-cash-percentage").css("width", ((totalCash/total)*100) + "%");
 					$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
-					$("#transactions-credit-percentage").css("width", ((totalCredit/total)*100) + "%");
+					if(totalCredit < 1) $("#transactions-credit-percentage").css("width", "0%");
+					else $("#transactions-credit-percentage").css("width", ((totalCredit/total)*100) + "%");
 					$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
-					$("#transactions-cheque-percentage").css("width", ((totalCheque/total)*100) + "%");
+					if(totalCheque < 1) $("#transactions-cheque-percentage").css("width", "0%");
+					else $("#transactions-cheque-percentage").css("width", ((totalCheque/total)*100) + "%");
 					$("#transactions-totalBank").text(window.company.currency.symbol + " " + totalBank);
-					$("#transactions-bank-percentage").css("width", ((totalBank/total)*100) + "%");
+					if(totalBank < 1) $("#transactions-bank-percentage").css("width", "0%");
+					else $("#transactions-bank-percentage").css("width", ((totalBank/total)*100) + "%");
 					$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
-					$("#transactions-paypal-percentage").css("width", ((totalPaypal/total)*100) + "%");
+					if(totalPaypal < 1) $("#transactions-paypal-percentage").css("width", "0%");
+					else $("#transactions-paypal-percentage").css("width", ((totalPaypal/total)*100) + "%");
 					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				});
 			});
