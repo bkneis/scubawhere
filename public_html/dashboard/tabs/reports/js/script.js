@@ -123,7 +123,7 @@ function getReport(reportType) {
 
 			Report.getPayments(dates, function success(data) {
 				Report.getRefunds(dates, function success(data2) {
-					var newData = data.concat(data2);
+					var newData = _.sortBy(data.concat(data2), 'received_at');
 					for(var i = 0; i < data2.length; i++) {
 						data2[i].refund = true;
 					}
