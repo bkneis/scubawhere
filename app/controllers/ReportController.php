@@ -401,11 +401,13 @@ class ReportController extends Controller {
 				else
 					$model = null;
 			}
-
-			// The detail does not fall into a category
 			else
 			{
-				Log::write('Unable to parse bookingdetail: ' . json_encode($detail));
+				### ---------------------------------------- ###
+				### The detail does not fall into a category ###
+				### ---------------------------------------- ###
+
+				Log::write('ERROR: Unable to parse bookingdetail: ' . json_encode($detail));
 				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
 			}
 
@@ -436,10 +438,10 @@ class ReportController extends Controller {
 				if(empty($RESULT[$model][$id])) $RESULT[$model][$id] = ['name' => $name, 'quantity' => 0, 'revenue' => 0];
 
 				$RESULT[$model][$id]['quantity']++;
-				$RESULT[$model][$id]['revenue'] += $revenue;
+				$RESULT[$model][$id]['revenue'] += round($revenue, 2);
 
 				$RESULT[$model . '_total']['quantity']++;
-				$RESULT[$model . '_total']['revenue'] += $revenue;
+				$RESULT[$model . '_total']['revenue'] += round($revenue, 2);
 			}
 
 			// Sum up addons that are not part of a package
@@ -456,10 +458,10 @@ class ReportController extends Controller {
 					if(empty($RESULT['fees'][$addon->id])) $RESULT['fees'][$addon->id] = ['name' => $addon->name, 'quantity' => 0, 'revenue' => 0];
 
 					$RESULT['fees'][$addon->id]['quantity']++;
-					$RESULT['fees'][$addon->id]['revenue'] += $addon->decimal_price;
+					$RESULT['fees'][$addon->id]['revenue'] += round($addon->decimal_price, 2);
 
 					$RESULT['fees_total']['quantity']++;
-					$RESULT['fees_total']['revenue'] += $addon->decimal_price;
+					$RESULT['fees_total']['revenue'] += round($addon->decimal_price, 2);
 				}
 				else
 				{
@@ -478,10 +480,10 @@ class ReportController extends Controller {
 					if(empty($RESULT['addons'][$addon->id])) $RESULT['addons'][$addon->id] = ['name' => $addon->name, 'quantity' => 0, 'revenue' => 0];
 
 					$RESULT['addons'][$addon->id]['quantity']++;
-					$RESULT['addons'][$addon->id]['revenue'] += $revenue;
+					$RESULT['addons'][$addon->id]['revenue'] += round($revenue, 2);
 
 					$RESULT['addons_total']['quantity']++;
-					$RESULT['addons_total']['revenue'] += $revenue;
+					$RESULT['addons_total']['revenue'] += round($revenue, 2);
 				}
 			}
 		}
@@ -534,10 +536,10 @@ class ReportController extends Controller {
 					if(empty($RESULT['accommodations'][$accommodation->id])) $RESULT['accommodations'][$accommodation->id] = ['name' => $accommodation->name, 'quantity' => 0, 'revenue' => 0];
 
 					$RESULT['accommodations'][$accommodation->id]['quantity']++;
-					$RESULT['accommodations'][$accommodation->id]['revenue'] += $revenue;
+					$RESULT['accommodations'][$accommodation->id]['revenue'] += round($revenue, 2);
 
 					$RESULT['accommodations_total']['quantity']++;
-					$RESULT['accommodations_total']['revenue'] += $revenue;
+					$RESULT['accommodations_total']['revenue'] += round($revenue, 2);
 				}
 			}
 		}

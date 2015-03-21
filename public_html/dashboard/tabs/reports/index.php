@@ -275,6 +275,12 @@
 				{{/each}}
 			</tbody>
 		</table>
+
+		<div class="alert alert-warning">
+			<h4><!--<i class="fa fa-exclamation-triangle fa-fw"></i> -->About these numbers</h4>
+			<p>The revenue analysis is a <em><strong>qualitative</strong></em> report. Due to discounts being applied and rounded at different times for this report than when calculating the total price for a booking, the individual revenue numbers shown here can slightly differ from your actual revenue.</p>
+			<p>For accounting, please refer to the <em>transactions</em>, <em>agents</em> or <em>booking history</em> reports.</p>
+		</div>
 	</div>
 </script>
 	<script type="text/x-handlebars-template" id="agents-filter-template">
