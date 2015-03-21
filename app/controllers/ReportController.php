@@ -411,10 +411,6 @@ class ReportController extends Controller {
 				return Response::json(['errors' => ['A bookingdetail cannot be handled, as it doesn\'t fit the rules! Please check the log file to see what happened.']], 500); // 500 Internal Server Error
 			}
 
-			/*$realPricePercentage = !empty($realDiscountPercentage[$detail->booking->id])
-				? $realDiscountPercentage[$detail->booking->id]
-				: $detail->booking->decimal_price / ($detail->booking->decimal_price + $detail->booking->discount); */
-
 			$realPricePercentage = ($detail->booking->real_decimal_price === null)
 				? 1
 				: $detail->booking->real_decimal_price / ($detail->booking->real_decimal_price + $detail->booking->discount);
@@ -479,10 +475,10 @@ class ReportController extends Controller {
 					// Sum revenue and increase counter
 					if(empty($RESULT['addons'][$addon->id])) $RESULT['addons'][$addon->id] = ['name' => $addon->name, 'quantity' => 0, 'revenue' => 0];
 
-					$RESULT['addons'][$addon->id]['quantity']++;
+					$RESULT['addons'][$addon->id]['quantity'] += $addon->pivot->quantity;
 					$RESULT['addons'][$addon->id]['revenue'] += round($revenue, 2);
 
-					$RESULT['addons_total']['quantity']++;
+					$RESULT['addons_total']['quantity'] += $addon->pivot->quantity;
 					$RESULT['addons_total']['revenue'] += round($revenue, 2);
 				}
 			}
@@ -514,10 +510,6 @@ class ReportController extends Controller {
 						$booking->pivot->end,
 						$booking->pivot->created_at
 					);
-
-					/* $realPricePercentage = !empty($realDiscountPercentage[$booking->id])
-						? $realDiscountPercentage[$booking->id]
-						: $booking->decimal_price / ($booking->decimal_price + $booking->discount); */
 
 					$realPricePercentage = ($booking->real_decimal_price === null)
 						? 1
