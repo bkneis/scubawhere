@@ -35,7 +35,7 @@ class CourseController extends Controller {
 		try
 		{
 			if( !Input::get('training_id') ) throw new ModelNotFoundException();
-			Auth::user()->trainings()->findOrFail( Input::get('id') );
+			Auth::user()->trainings()->findOrFail( Input::get('training_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
