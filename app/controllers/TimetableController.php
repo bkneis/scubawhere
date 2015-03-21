@@ -23,7 +23,7 @@ class TimetableController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('weeks', 'schedule');
+		$data = Input::only('schedule');
 
 		try
 		{
@@ -36,10 +36,10 @@ class TimetableController extends Controller {
 		}
 
 		$schedule = $data['schedule'];
-		$length = count($schedule);
+		$length   = count($schedule);
 
 		$data['schedule'] = json_encode( $schedule );
-		$data['weeks'] = $length;
+		$data['weeks']    = $length;
 
 		$timetable = new Timetable($data);
 
@@ -58,7 +58,7 @@ class TimetableController extends Controller {
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //
 		////////////////////////////////////////////
-		$start = new DateTime( $departure->start, new DateTimeZone( Auth::user()->timezone ) );
+		$start = new DateTime( $departure->start);
 		$start_DayOfTheWeek = $start->format('N'); // Day of the week, 1 through 7. 1 for Monday, 7 for Sunday
 		// $startTime = $start->format('H:I');
 		$days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
@@ -137,7 +137,7 @@ class TimetableController extends Controller {
 		///////////////////////////////////////////////////////////////////////////
 
 		$now = new DateTime;
-		foreach( $sessionDates as &$date)
+		foreach($sessionDates as &$date)
 		{
 			$date = array(
 				'trip_id'      => $departure->trip_id,
@@ -159,7 +159,7 @@ class TimetableController extends Controller {
 		}
 
 		return Response::json( array(
-			'status'   => 'OK. Timetable and sessions created',
+			'status'   => 'OK. Timetable and trips created',
 			'id'       => $timetable->id,
 			/*'sessions' => $timetable->departures()
 				->where('start', '>', strtotime('first day of this month'))

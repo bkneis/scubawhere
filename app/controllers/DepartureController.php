@@ -115,7 +115,7 @@ class DepartureController extends Controller {
 			'after'      => 'date|required_with:before',
 			'before'     => 'date',
 			'trip_id'    => 'integer|min:1',
-			'ticket_id'  => 'integer|min:1', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
+			'ticket_id'  => 'integer|min:1|required_with:package_id', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
 			'package_id' => 'integer|min:1', // Same goes for packages
 			'with_full'  => 'boolean'
 		) );
@@ -133,7 +133,7 @@ class DepartureController extends Controller {
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The trip_id could not be found.')), 404 ); // 404 Not Found
+				return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 			}
 		}
 		else
@@ -204,7 +204,8 @@ class DepartureController extends Controller {
 						});
 					});
 				}
-				else
+				/*else
+				// trip doesn't have a direct relation/connection with package...?
 				{
 					// Conditional where clause (only when package_id is provided)
 					if( $package )
@@ -214,7 +215,7 @@ class DepartureController extends Controller {
 							$query->where('id', $package->id);
 						});
 					}
-				}
+				}*/
 			});
 		})
 		// Filter by dates
@@ -228,7 +229,7 @@ class DepartureController extends Controller {
 		->get();
 
 		// Conditionally filter by boat
-		if( $ticket && $ticket->boats()->count() > 0 )
+		if( $ticket && $ticket->boats()->exists() )
 		{
 			$boatIDs = $ticket->boats()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatIDs)
@@ -238,7 +239,7 @@ class DepartureController extends Controller {
 		}
 
 		// Conditionally filter by boatrooms
-		if( $ticket && $ticket->boatrooms()->count() > 0)
+		if( $ticket && $ticket->boatrooms()->exists())
 		{
 			$boatroomIDs = $ticket->boatrooms()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatroomIDs)
@@ -259,7 +260,7 @@ class DepartureController extends Controller {
 					return false;
 				}
 
-				if( $package && !empty($package->capacity) )
+				/*if( $package && !empty($package->capacity) )
 				{
 					$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
 					{
@@ -269,7 +270,7 @@ class DepartureController extends Controller {
 					{
 						return false;
 					}
-				}
+				}*/
 
 				return true;
 			});
@@ -283,10 +284,8 @@ class DepartureController extends Controller {
 		$data = Input::only('start', 'boat_id');
 
 		$isPast = Helper::isPast( $data['start'] );
-		if( gettype($isPast) === 'object' ) // Is error Response
-			return $isPast;
 		if( $isPast )
-			return Response::json( array('errors' => array('Trips cannot be activated in the past.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('Trips cannot be scheduled in the past.')), 403 ); // 403 Forbidden
 
 		try
 		{
@@ -295,7 +294,7 @@ class DepartureController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The trip_id could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
 		// Check if the boat_id exists and belongs to the logged in company
@@ -322,7 +321,7 @@ class DepartureController extends Controller {
 
 		$departure = $trip->departures()->save($departure);
 
-		return Response::json( array('status' => 'OK. Trip activated', 'id' => $departure->id), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Trip scheduled', 'id' => $departure->id), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -338,15 +337,19 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = Helper::isPast( $departure->start );
-		if( gettype($isPast) === 'object' ) // Is error Response
-			return $isPast;
 		if( !empty($departure->deleted_at) || $isPast )
 			return Response::json( array('errors' => array('Past or deactivated trips cannot be updated.')), 412 ); // 412 Precondition Failed
 
 		if( empty($departure->timetable_id) )
 		{
 			if( Input::has('start') )
-				$departure->start   = Input::get('start');
+				$departure->start = Input::get('start');
+
+			$capacity = $departure->capacity;
+			if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $departure->start)
+			{
+				return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+			}
 
 			if( Input::has('boat_id') )
 			{
@@ -366,10 +369,6 @@ class DepartureController extends Controller {
 				// TODO This next conditional is not checking if any tickets have been booked for the session that require a certain accomodation. It needs to be checked if this accomodation is also present on the new boat.
 				if($capacity[0] > $capacity[1])
 					return Response::json( array('errors' => array('The boat could not be changed. The new boat\'s capacity is too small.')), 406 ); // 406 Not Acceptable
-
-				if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $departure->start) {
-					return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
-				}
 			}
 		}
 		// If the session is part of a timetable and has been changed, check if request sent instructions on what to do
@@ -394,11 +393,11 @@ class DepartureController extends Controller {
 					$timetable = $departure->timetable()->first()->replicate();
 					$timetable->save();
 
-					$start = new DateTime( Input::get('start'), new DateTimeZone( Auth::user()->timezone ) );
+					$start = new DateTime( Input::get('start') );
 
 					// Update all following session with new time and timetable_id
 					// First, calculate offset between old_time and new_time
-					$offset    = new DateTime($departure->start, new DateTimeZone( Auth::user()->timezone ));
+					$offset    = new DateTime($departure->start);
 					$offset    = $offset->diff($start);
 					$offsetSQL = $offset->format('%h:%i'); // hours:minutes
 
@@ -446,8 +445,6 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = Helper::isPast( $departure->start );
-		if( gettype($isPast) === 'object' ) // Is error Response
-			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Past trips cannot be deactivated.')), 412 ); // 412 Precondition Failed
 
@@ -470,8 +467,6 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = Helper::isPast( $departure->start );
-		if( gettype($isPast) === 'object' ) // Is error Response
-			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Past trips cannot be restored.')), 412 ); // 412 Precondition Failed
 
@@ -493,8 +488,6 @@ class DepartureController extends Controller {
 		}
 
 		$isPast = Helper::isPast( $departure->start );
-		if( gettype($isPast) === 'object' ) // Is error Response
-			return $isPast;
 		if( $isPast )
 			return Response::json( array('errors' => array('Past trips cannot be deleted.')), 412 ); // 412 Precondition Failed
 
