@@ -112,6 +112,8 @@ function setToken(element) {
 
 function reproColor(id) { // Stands for: reproducible color
 
+	// Colors from http://clrs.cc
+
 	var colors = [ /* 14 options */
 		{bgcolor: '#001F3F', txtcolor: '#FFFFFF'}, /* navy */
 		{bgcolor: '#0074D9', txtcolor: '#FFFFFF'}, /* blue */

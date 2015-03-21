@@ -298,15 +298,21 @@ function getReport(reportType) {
 					pieStats.push(stat);
 				});
 
-				var ctx = $("#myChart").get(0).getContext("2d");
-				var myPieChart = new Chart(ctx).Pie(pieStats, {
-					animateScale: true,
-					multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>",
-					showTooltips: true
-				});
+				renderDoughnutChart(pieStats);
 			});
 			break;
 	}
+}
+
+function renderDoughnutChart(data) {
+	var ctx = $("#myChart").get(0).getContext("2d");
+	new Chart(ctx).Doughnut(data, {
+		animateRotate: true,
+		animateScale: false,
+		animationEasing: 'easeOutQuart', // http://jqueryui.com/resources/demos/effect/easing.html
+		tooltipTemplate: "<%= label %>: " + window.company.currency.symbol + " <%= value %>",
+		showTooltips: true
+	});
 }
 
 function filterReport(reportType, value)
@@ -395,31 +401,31 @@ function filterReport(reportType, value)
 					{
 						name : "Tickets",
 						//quantity : ,
-						statColor : "#800000",
+						statColor : "#0074D9",
 						revenue : window.revenueAnalysis.ticketTotal
 					},
 					{
 						name : "Packages",
 						//quantity : ,
-						statColor : "#FF0000",
+						statColor : "#FF4136",
 						revenue : window.revenueAnalysis.packageTotal
 					},
 					{
 						name : "Courses",
 						//quantity : ,
-						statColor : "#808000",
+						statColor : "#3D9970",
 						revenue : window.revenueAnalysis.courseTotal
 					},
 					{
 						name : "Addons",
 						//quantity : ,
-						statColor : "#FFFF00",
+						statColor : "#FFDC00",
 						revenue : window.revenueAnalysis.addonTotal
 					},
 					{
 						name : "Accommodations",
 						//quantity : ,
-						statColor : "#008000",
+						statColor : "#2ECC40",
 						revenue : window.revenueAnalysis.acomTotal
 					}
 					];
@@ -439,10 +445,8 @@ function filterReport(reportType, value)
 					report = Handlebars.compile($("#revenue-report-template").html());
 					var results2 = {streams : summary};
 					$("#reports").empty().append( report({entries : results2}) );
-					var ctx = $("#myChart").get(0).getContext("2d");
-					var myPieChart = new Chart(ctx).Pie(pieStats, {
-						animateScale: true
-					});
+
+					renderDoughnutChart(pieStats);
 				}
 				else
 				{
@@ -469,10 +473,7 @@ function filterReport(reportType, value)
 						pieStats.push(stat);
 					});
 
-					var ctx = $("#myChart").get(0).getContext("2d");
-					var myPieChart = new Chart(ctx).Pie(pieStats, {
-						animateScale: true
-					});
+					renderDoughnutChart(pieStats);
 				}
 			}
 			break;
@@ -480,19 +481,21 @@ function filterReport(reportType, value)
 }
 
 function assignColor() {
+	// Colors from http://clrs.cc
 	var colors = [
-		"#800000", // maroon
-		"#FF0000", // red
-		"#808000", // olive
-		"#FFFF00", // yellow
-		"#008000", // green
-		"#00FF00", // lime
-		"#008080", // teal
-		"#00FFFF", // aqua
-		"#000080", // navy
-		"#0000FF", // blue
-		"#800080", // purple
-		"#FF00FF" //fuschia
+		"#85144b", // maroon
+		"#FF4136", // red
+		"#FF851B", // orange
+		"#3D9970", // olive
+		"#FFDC00", // yellow
+		"#2ECC40", // green
+		"#01FF70", // lime
+		"#39CCCC", // teal
+		"#7FDBFF", // aqua
+		"#001f3f", // navy
+		"#0074D9", // blue
+		"#B10DC9", // purple
+		"#F012BE", // fuchsia
 	];
 	if(colorID == colors.length) colorID = 0;
 	return colors[colorID];

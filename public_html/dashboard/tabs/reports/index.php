@@ -249,7 +249,7 @@
 			</table>
 	</script>
 	<script type="text/x-handlebars-template" id="revenue-report-template">
-	<div class="col-md-6">
+	<div class="col-md-6 text-center">
 		<canvas id="myChart" width="400" height="400"></canvas>
 	</div>
 	<div class="col-md-6">
