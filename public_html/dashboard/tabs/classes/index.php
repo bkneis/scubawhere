@@ -33,6 +33,10 @@
 							<div class="form-row">
 								<label class="field-label">Class Name</label>
 								<input id="class-name" type="text" name="name" value="{{{name}}}">
+
+								{{#if update}}
+									<span class="btn btn-danger pull-right remove-class">Remove</span>
+								{{/if}}
 							</div>
 
 							<div class="form-row">

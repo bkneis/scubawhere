@@ -230,7 +230,7 @@ $(function(){
 		*/
 	});
 
-	/*$('#course-form-container').on('click', '.remove-course', function(event) {
+	$('#course-form-container').on('click', '.remove-course', function(event) {
     event.preventDefault();
 		var check = confirm('Do you really want to remove this course?');
 		if(check){
@@ -238,24 +238,24 @@ $(function(){
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Course.delete({
-				'id'    : $('#update-package-form input[name=id]').val(),
+				'id'    : $('#update-course-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 
 				pageMssg(data.status, true);
 
-				renderPackageList();
+				renderCourseList();
 
 				renderEditForm();
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
 
-				$('.remove-package').prop('disabled', false);
+				$('.remove-course').prop('disabled', false);
 				$('#save-loader').remove();
 			});
 		}
-	});*/
+	});
 
 	$("#course-list-container").on('click', '#change-to-add-course', function(event){
 

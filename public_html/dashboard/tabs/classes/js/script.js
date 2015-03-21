@@ -114,6 +114,33 @@ $(function () {
 		});
 	});
 
+	$('#class-form-container').on('click', '.remove-class', function(event) {
+    	event.preventDefault();
+		var check = confirm('Do you really want to remove this class?');
+		if(check){
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			Class.delete({
+				'id'    : $('#update-class-form input[name=id]').val(),
+				'_token': $('[name=_token]').val()
+			}, function success(data){
+
+				pageMssg(data.status, true);
+
+				renderClassList();
+
+				renderEditForm();
+			}, function error(xhr){
+
+				pageMssg('Oops, something wasn\'t quite right');
+
+				$('.remove-class').prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+	});
+
 });
 
 function renderClassList(callback) {
