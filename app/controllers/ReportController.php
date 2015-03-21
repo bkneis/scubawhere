@@ -249,6 +249,12 @@ class ReportController extends Controller {
 		// Generate true booking prices
 
 		/**
+		 * # REASON OF COMMENTING #
+		 * This logic has been moved to the Booking model. This commented code should remain
+		 * here until all performance impact questions have been sufficently resolved.
+		 */
+
+		/**
 		 * We are going to save the true booking prices (without fees) in this associative
 		 * array, but only for bookings that have compulsory addons (fees).
 		 */
@@ -422,12 +428,12 @@ class ReportController extends Controller {
 				### ---------------------------------- ###
 
 				// Apply percentage discount to price and sum up
-				$revenue = $detail->ticket->decimal_price * $realPricePercentage;
+				$revenue *= $realPricePercentage;
 
 				// If booked through agent, subtract agent's commission
 				if(!empty($detail->booking->agent))
 				{
-					$revenue = $revenue * (1 - $detail->booking->agent->commission / 100);
+					$revenue *= (1 - $detail->booking->agent->commission / 100);
 				}
 
 				// Sum revenue and increase counter
