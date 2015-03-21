@@ -121,6 +121,7 @@
 
 		$(window).on('hashchange', function() {
 			//if tour started then dont allow them to click away
+			window.scrollTo(0, 0);
 		});
 
 	</script>
@@ -242,6 +243,9 @@
 						</li>
 						<li>
 							<a href="#classes">Classes</a>
+						</li>
+						<li>
+							<a href="#courses">Courses</a>
 						</li>
 						<li>
 							<a href="#locations">Locations</a>
