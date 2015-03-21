@@ -179,12 +179,22 @@
             <span class="step-description">Tickets</span>
           </a>
         </li>
-        <li role="presentation" class="tour-progress" data-position="7" data-target="#packages">
+        <li role="presentation" class="tour-progress" data-position="7" data-target="#classes">
+          <a id="class-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+            <span class="step-description">Classes</span>
+          </a>
+        </li>
+        <li role="presentation" class="tour-progress" data-position="8" data-target="#courses">
+          <a id="course-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+            <span class="step-description">Courses</span>
+          </a>
+        </li>
+        <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
           <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Packages</span>
           </a>
         </li>
-        <li role="presentation" class="tour-progress" data-position="8" data-target="#add-ons">
+        <li role="presentation" class="tour-progress" data-position="10" data-target="#add-ons">
           <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Add ons</span>
           </a>

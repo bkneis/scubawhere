@@ -302,6 +302,50 @@ var Tour = {
 		}
 	},
 
+	getClassesTour : function() {
+		if(window.tourStart) {
+			if(window.currentStep.position < 7) {
+				window.location.href = window.currentStep.tab;
+			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
+				introJs().setOptions( {
+					showStepNumbers : false,
+					exitOnOverlayClick : false,
+					exitOnEsc : false,
+					overlayOpacity : 0
+				}).start().onchange(function(targetElement) {
+					switch (targetElement.id) {  
+						case "class-form-container":
+							$("#class-name").val("Open Water Theory");
+							$("#class-description").val("Open Water Theory");
+							break;
+						case "class-list-div":
+							$("#no-classes").remove();
+							$("#class-list").append('<li id="dummy-class"><strong>Open Water Theory</strong> | £10.00 </li>');
+							break;
+					}
+				}).oncomplete(function() {
+					$("#dummy-class").remove();
+					$("#class-list").append('<p id="no-classes">No classes available.</p>');
+					clearForm();
+				});
+			}
+
+			$("#tour-next-step").on("click", function() {
+				window.location.href = "#courses";
+				if(window.currentStep.position <= 7) {
+					window.currentStep = {
+						tab : "#courses",
+						position : 8
+					};
+				}
+				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+				$('#courses-tab').addClass("selected");
+			});
+		}
+	},
+
 	getPackagesTour : function() {
 		if(window.tourStart) {
 			if(window.currentStep.position < 7) {
