@@ -232,7 +232,7 @@ function getReport(reportType) {
 			$("#report-title").empty().append("Revenue Analysis Report");
 			filter = Handlebars.compile($("#revenue-filter-template").html());
 
-			var types = ["Packages", "Addons", "Courses", "Tickets", "Accommodations", "Summary"];
+			var types = ["Packages", "Addons", "Fees", "Courses", "Tickets", "Accommodations", "Summary"];
 			$("#report-filters").empty().append( filter({types : types}) );
 
 			Report.getTicketsPackages(dates, function sucess(data) {
@@ -265,20 +265,27 @@ function getReport(reportType) {
 					addon.type = "Addons";
 					stats.streams.push(addon);
 				});
+				_.each(data.fees, function(fee) {
+					fee.statColor = assignColor();
+					colorID++;
+					fee.type = "Fees";
+					stats.streams.push(fee);
+				});
 				_.each(data.accommodations, function(acom) {
 					acom.statColor = assignColor();
 					colorID++;
 					acom.type = "Accommodations";
 					stats.streams.push(acom);
 				});
-				stats.acomTotal = data.accommodations_total.revenue;
-				stats.ticketTotal = data.tickets_total.revenue;
+				stats.acomTotal    = data.accommodations_total.revenue;
+				stats.ticketTotal  = data.tickets_total.revenue;
 				stats.packageTotal = data.packages_total.revenue;
-				stats.courseTotal = data.courses_total.revenue;
-				stats.addonTotal = data.addons_total.revenue;
-				stats.total = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
-				data.courses_total.revenue + data.addons_total.revenue;
-				console.log(stats);
+				stats.courseTotal  = data.courses_total.revenue;
+				stats.addonTotal   = data.addons_total.revenue;
+				stats.FeeTotal     = data.fees_total.revenue;
+				stats.total        = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
+				data.courses_total.revenue + data.addons_total.revenue + data.fees_total.revenue;
+				// console.log(stats);
 				window.revenueAnalysis = stats;
 				report = Handlebars.compile($("#revenue-report-template").html());
 				$("#reports").empty().append( report({entries : stats}) );
@@ -421,6 +428,12 @@ function filterReport(reportType, value)
 						//quantity : ,
 						statColor : "#FFDC00",
 						revenue : window.revenueAnalysis.addonTotal
+					},
+					{
+						name : "Fees",
+						//quantity : ,
+						statColor : "#FF851B",
+						revenue : window.revenueAnalysis.feeTotal
 					},
 					{
 						name : "Accommodations",
