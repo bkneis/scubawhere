@@ -414,7 +414,7 @@ function filterReport(reportType, value)
 					{
 						name : "Packages",
 						//quantity : ,
-						statColor : "#FF4136",
+						statColor : "#39CCCC",
 						revenue : window.revenueAnalysis.packageTotal
 					},
 					{
