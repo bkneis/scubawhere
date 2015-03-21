@@ -30,6 +30,16 @@ var Class = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	delete : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/class/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 
 };

@@ -30,6 +30,16 @@ var Course = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	delete : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/course/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 
 };
