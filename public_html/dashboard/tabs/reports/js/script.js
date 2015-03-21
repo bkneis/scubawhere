@@ -43,7 +43,7 @@ Handlebars.registerHelper('getCommissionAmount', function() {
 $(function() {
 
 	window.sources = [
-		{name : "Telephone", source : "telephone"},
+		{name: "Telephone", source : "telephone"},
 		{name: "Agent", source : "agent"},
 		{name: "In person", source : "facetoface"},
 		{name: "Email", source : "email"}
@@ -282,7 +282,7 @@ function getReport(reportType) {
 				stats.packageTotal = data.packages_total.revenue;
 				stats.courseTotal  = data.courses_total.revenue;
 				stats.addonTotal   = data.addons_total.revenue;
-				stats.FeeTotal     = data.fees_total.revenue;
+				stats.feeTotal     = data.fees_total.revenue;
 				stats.total        = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
 				data.courses_total.revenue + data.addons_total.revenue + data.fees_total.revenue;
 				// console.log(stats);
