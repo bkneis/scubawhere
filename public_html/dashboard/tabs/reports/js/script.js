@@ -127,50 +127,51 @@ function getReport(reportType) {
 					for(var i = 0; i < data2.length; i++) {
 						data2[i].refund = true;
 					}
-					console.log(newData);
+					// console.log(newData);
 					window.transactions = newData;
-					$("#reports").empty().append( report({entries : newData}) );
+					$("#reports").html( report({entries : newData}) );
 					var totalCash = 0, totalCredit = 0, totalCheque = 0, totalBank = 0, totalPaypal = 0;
 					for(var i=0; i < newData.length; i++) {
 						switch(parseInt(newData[i].paymentgateway_id)) {
 							case(1) :
 								if(newData[i].refund) totalCash -= parseInt(newData[i].amount);
-								else totalCash += parseInt(newData[i].amount);
+								else                  totalCash += parseInt(newData[i].amount);
 								break;
 							case(2) :
 								if(newData[i].refund) totalCredit -= parseInt(newData[i].amount);
-								else totalCredit += parseInt(newData[i].amount);
+								else                  totalCredit += parseInt(newData[i].amount);
 								break;
 							case(3) :
 								if(newData[i].refund) totalCheque -= parseInt(newData[i].amount);
-								else totalCheque += parseInt(newData[i].amount);
+								else                  totalCheque += parseInt(newData[i].amount);
 								break;
 							case(4) :
 								if(newData[i].refund) totalBank -= parseInt(newData[i].amount);
-								else totalBank += parseInt(newData[i].amount);
+								else                  totalBank += parseInt(newData[i].amount);
 								break;
 							case(5) :
 								if(newData[i].refund) totalPaypal -= parseInt(newData[i].amount);
-								else totalPaypal += parseInt(newData[i].amount);
+								else                  totalPaypal += parseInt(newData[i].amount);
 								break;
 						}
 					}
-					var total = totalCash + totalCredit + totalCheque + totalBank + totalPaypal;
-					$("#transactions-totalCash").text(window.company.currency.symbol + " " + totalCash);
-					if(totalCash < 1) $("#transactions-cash-percentage").css("width", "0%");
-					else $("#transactions-cash-percentage").css("width", ((totalCash/total)*100) + "%");
+
+					// Only respect positive totals
+					var total = Math.max(totalCash, 0) + Math.max(totalCredit, 0) + Math.max(totalCheque, 0) + Math.max(totalBank, 0) + Math.max(totalPaypal, 0);
+					// If the no positive totals are in this daterange, set total to 1 (division by zero is not possible) as it doesn't matter anyway as all totals are < 0
+					if(total === 0) total = 1;
+
+					$("#transactions-totalCash"  ).text(window.company.currency.symbol + " " + totalCash);
 					$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
-					if(totalCredit < 1) $("#transactions-credit-percentage").css("width", "0%");
-					else $("#transactions-credit-percentage").css("width", ((totalCredit/total)*100) + "%");
 					$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
-					if(totalCheque < 1) $("#transactions-cheque-percentage").css("width", "0%");
-					else $("#transactions-cheque-percentage").css("width", ((totalCheque/total)*100) + "%");
-					$("#transactions-totalBank").text(window.company.currency.symbol + " " + totalBank);
-					if(totalBank < 1) $("#transactions-bank-percentage").css("width", "0%");
-					else $("#transactions-bank-percentage").css("width", ((totalBank/total)*100) + "%");
+					$("#transactions-totalBank"  ).text(window.company.currency.symbol + " " + totalBank);
 					$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
-					if(totalPaypal < 1) $("#transactions-paypal-percentage").css("width", "0%");
-					else $("#transactions-paypal-percentage").css("width", ((totalPaypal/total)*100) + "%");
+
+					$("#transactions-cash-percentage"  ).css("width", ((Math.max(totalCash  , 0)/total) * 100) + "%");
+					$("#transactions-credit-percentage").css("width", ((Math.max(totalCredit, 0)/total) * 100) + "%");
+					$("#transactions-cheque-percentage").css("width", ((Math.max(totalCheque, 0)/total) * 100) + "%");
+					$("#transactions-bank-percentage"  ).css("width", ((Math.max(totalBank  , 0)/total) * 100) + "%");
+					$("#transactions-paypal-percentage").css("width", ((Math.max(totalPaypal, 0)/total) * 100) + "%");
 					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				});
 			});
@@ -185,7 +186,7 @@ function getReport(reportType) {
 			});
 
 			Report.getAgentBookings(dates, function success(data) {
-				console.log(data);
+				// console.log(data);
 				window.agentBookings = data;
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
@@ -206,7 +207,7 @@ function getReport(reportType) {
 			$("#report-filters").empty().append( filter({sources : window.sources}) );
 
 			Report.getBookingHistory(dates, function success(data) {
-				console.log(data);
+				// console.log(data);
 				window.bookings = data;
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
@@ -222,7 +223,7 @@ function getReport(reportType) {
 			});
 
 			Report.getTripUtilisation(dates, function sucess(data) {
-				console.log(data);
+				// console.log(data);
 				window.utlisations = data;
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
@@ -241,7 +242,7 @@ function getReport(reportType) {
 			$("#report-filters").empty().append( filter({types : types}) );
 
 			Report.getTicketsPackages(dates, function sucess(data) {
-				console.log(data);
+				// console.log(data);
 
 				var stats = {};
 				stats.streams = [];
@@ -340,7 +341,7 @@ function filterReport(reportType, value)
 					if(parseInt(transaction.paymentgateway_id) == value) results.push(transaction);
 				});
 
-				console.log(results);
+				// console.log(results);
 				report = Handlebars.compile($("#transactions-report-template").html());
 				$("#reports").empty().append( report({entries : results}) );
 				$("#transactions-summary").css('display', 'none');
@@ -357,7 +358,7 @@ function filterReport(reportType, value)
 					if(parseInt(booking.agent_id) == value) results.push(booking);
 				});
 
-				console.log(results);
+				// console.log(results);
 				var results2 = {bookings : results};
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
@@ -371,12 +372,12 @@ function filterReport(reportType, value)
 			{
 				var results = [];
 				_.each(window.bookings.bookings, function(booking) {
-					console.log(booking.source);
+					// console.log(booking.source);
 					if(booking.source == value) results.push(booking);
 					else if(booking.source == null & value == "agent") results.push(booking);
 				});
 
-				console.log(results);
+				// console.log(results);
 				var results2 = {bookings : results};
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
@@ -390,11 +391,11 @@ function filterReport(reportType, value)
 			{
 				var results = [];
 				_.each(window.utlisations.utilisation, function(trip) {
-					console.log(trip);
+					// console.log(trip);
 					if(trip.name == value) results.push(trip);
 				});
 
-				console.log(results);
+				// console.log(results);
 				var results2 = {utilisation : results};
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
@@ -459,7 +460,7 @@ function filterReport(reportType, value)
 						};
 						pieStats.push(stat);
 					});
-					console.log(pieStats);
+					// console.log(pieStats);
 					report = Handlebars.compile($("#revenue-report-template").html());
 					var results2 = {streams : summary};
 					$("#reports").empty().append( report({entries : results2}) );
@@ -474,7 +475,7 @@ function filterReport(reportType, value)
 						if(revenue.type == value) results.push(revenue);
 					});
 
-					console.log(results);
+					// console.log(results);
 					var results2 = {streams : results};
 					report = Handlebars.compile($("#revenue-report-template").html());
 					$("#reports").empty().append( report({entries : results2}) );
