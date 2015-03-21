@@ -43,9 +43,9 @@ Handlebars.registerHelper('getCommissionAmount', function() {
 $(function() {
 
 	window.sources = [
-		{name : "Telephone", source : "telephone"}, 
-		{name: "Agent", source : "agent"}, 
-		{name: "In person", source : "facetoface"}, 
+		{name : "Telephone", source : "telephone"},
+		{name: "Agent", source : "agent"},
+		{name: "In person", source : "facetoface"},
 		{name: "Email", source : "email"}
 	];
 
@@ -70,7 +70,7 @@ $(function() {
 		autoclose : true
 	});
 
-	$('#start-date').val(getDates().lastWeek);
+	$('#start-date').val(getDates().firstDayOfTheMonth);
 	$('#end-date').val(getDates().todayDate);
 
 	var dataTable = $('.reports-table').DataTable({
@@ -98,39 +98,10 @@ $(function() {
 });
 
 function getDates() {
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-	var yyyy = today.getFullYear();
-
-	if(dd<10) {
-	    dd='0'+dd
+	return {
+		todayDate:          moment().format('YYYY-MM-DD'),
+		firstDayOfTheMonth: moment().startOf('month').format('YYYY-MM-DD'),
 	}
-
-	if(mm<10) {
-	    mm='0'+mm
-	}
-
-	var lastWeek = new Date();
-	lastWeek.setDate(today.getDate() - 7);
-	var dd2 = lastWeek.getDate();
-	var mm2 = lastWeek.getMonth()+1; //January is 0!
-	var yyyy2 = lastWeek.getFullYear();
-
-	if(dd2<10) {
-	    dd2='0'+dd2
-	}
-
-	if(mm2<10) {
-	    mm2='0'+mm2
-	}
-
-	var dates = {
-		todayDate : yyyy+'-'+mm+'-'+dd,
-		lastWeek : yyyy2+'-'+mm2+'-'+dd2
-	};
-
-	return dates;
 }
 
 function getReport(reportType) {
@@ -144,7 +115,7 @@ function getReport(reportType) {
 			$("#report-title").empty().append("Transactions Report");
 			filter = Handlebars.compile($("#transactions-filter-template").html());
 			report = Handlebars.compile($("#transactions-report-template").html());
-			
+
 			Report.getPaymentGateways(function success(data) {
 				$("#report-filters").empty().append( filter({gateways : data}) );
 			});
@@ -313,7 +284,7 @@ function getReport(reportType) {
 				$("#reports").empty().append( report({entries : stats}) );
 
 				var pieStats = [];
-				
+
 				_.each(stats.streams, function(stream) {
 					var stat = {
 						value : stream.revenue,
@@ -338,13 +309,13 @@ function getReport(reportType) {
 	}
 }
 
-function filterReport(reportType, value) 
+function filterReport(reportType, value)
 {
-	switch(reportType) 
+	switch(reportType)
 	{
 		case('transactions') :
 			if(value == 0) getReport("transactions");
-			else 
+			else
 			{
 				var results = [];
 				_.each(window.transactions, function(transaction) {
@@ -361,7 +332,7 @@ function filterReport(reportType, value)
 
 		case('agents') :
 			if(value == 0) getReport("agents");
-			else 
+			else
 			{
 				var results = [];
 				_.each(window.agentBookings.bookings, function(booking) {
@@ -378,7 +349,7 @@ function filterReport(reportType, value)
 
 		case('booking-history') :
 			if(value == 0) getReport("booking-history");
-			else 
+			else
 			{
 				var results = [];
 				_.each(window.bookings.bookings, function(booking) {
@@ -397,7 +368,7 @@ function filterReport(reportType, value)
 
 		case('utilisation') :
 			if(value == 0) getReport("utilisation");
-			else 
+			else
 			{
 				var results = [];
 				_.each(window.utlisations.utilisation, function(trip) {
@@ -418,7 +389,7 @@ function filterReport(reportType, value)
 			if(value == 0) getReport("revenue");
 			else
 			{
-				if(value == "Summary") 
+				if(value == "Summary")
 				{
 					var summary = [
 					{
@@ -454,7 +425,7 @@ function filterReport(reportType, value)
 					];
 
 					var pieStats = [];
-					
+
 					_.each(summary, function(stream) {
 						var stat = {
 							value : stream.revenue,
@@ -487,7 +458,7 @@ function filterReport(reportType, value)
 					$("#reports").empty().append( report({entries : results2}) );
 
 					var pieStats = [];
-					
+
 					_.each(results, function(stream) {
 						var stat = {
 							value : stream.revenue,
