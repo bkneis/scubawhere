@@ -14,6 +14,8 @@ class CreateCoursesTable extends Migration {
 	{
 		Schema::create('courses', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->increments('id');
 
 			$table->integer('company_id')->unsigned();

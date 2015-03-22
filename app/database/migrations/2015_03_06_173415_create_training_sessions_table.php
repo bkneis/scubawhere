@@ -14,6 +14,8 @@ class CreateTrainingSessionsTable extends Migration {
 	{
 		Schema::create('training_sessions', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->increments('id');
 
 			$table->integer('training_id')->unsigned();

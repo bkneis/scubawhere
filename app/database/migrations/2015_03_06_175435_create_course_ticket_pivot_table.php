@@ -14,6 +14,8 @@ class CreateCourseTicketPivotTable extends Migration {
 	{
 		Schema::create('course_ticket', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('course_id')->unsigned();
 			$table->integer('ticket_id')->unsigned();
 			$table->integer('quantity');

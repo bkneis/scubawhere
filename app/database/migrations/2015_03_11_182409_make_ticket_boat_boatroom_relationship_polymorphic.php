@@ -16,6 +16,8 @@ class MakeTicketBoatBoatroomRelationshipPolymorphic extends Migration {
 
 		Schema::create('ticketables', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('ticket_id')->unsigned();
 			$table->integer('ticketable_id')->unsigned();
 			$table->string('ticketable_type');
@@ -37,6 +39,8 @@ class MakeTicketBoatBoatroomRelationshipPolymorphic extends Migration {
 
 		Schema::create('boat_ticket', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('boat_id')->unsigned()->nullable()->default(null);
 			$table->integer('ticket_id')->unsigned();
 			$table->integer('boatroom_id')->unsigned()->nullable()->default(null);

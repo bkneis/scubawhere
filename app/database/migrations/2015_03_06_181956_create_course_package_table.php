@@ -14,6 +14,8 @@ class CreateCoursePackageTable extends Migration {
 	{
 		Schema::create('course_package', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('course_id')->unsigned();
 			$table->integer('package_id')->unsigned();
 			$table->integer('quantity');

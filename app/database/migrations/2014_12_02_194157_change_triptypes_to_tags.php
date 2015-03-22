@@ -32,6 +32,8 @@ class ChangeTriptypesToTags extends Migration {
 		// Create new pivot table
 		Schema::create('taggables', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('tag_id')->unsigned();
 			$table->integer('taggable_id')->unsigned();
 			$table->string('taggable_type', 128);
@@ -71,6 +73,8 @@ class ChangeTriptypesToTags extends Migration {
 		// Create new pivot table
 		Schema::create('trip_triptype', function($table)
 		{
+			$table->engine = 'InnoDB';
+
 			$table->integer('trip_id')->unsigned();
 			$table->integer('triptype_id')->unsigned();
 
