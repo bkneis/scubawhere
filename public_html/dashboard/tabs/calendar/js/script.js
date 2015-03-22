@@ -13,6 +13,10 @@ $(function() {
 	window.sessions = {};
 	window.accommodations = {};
 
+	$.get("/api/country/all", function(data){
+		window.countries = _.indexBy(data, 'id');
+	});
+
 	boatsList = Handlebars.compile($("#boats-list-template").html());
 	tripsList = Handlebars.compile($("#trips-list-template").html());
 
@@ -268,7 +272,7 @@ function showModalWindowM(id) {
 				closeOnBackgroundClick: false,             // if you click background will modal close?
 				dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
 				onFinishModal: function() {
-					$('#modal-' + this.data.id).remove();
+					$('#modal-' + data.id).remove();
 				}
 		});
 		$('#customer-data-table').dataTable({
