@@ -130,7 +130,7 @@
 	</script>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=9">
-	
+
 </head>
 <body>
 	<div id="nav">
@@ -233,9 +233,6 @@
 							<a href="#accommodations">Accommodations</a>
 						</li>
 						<li>
-							<a href="#activate-trip">Schedule Trips</a>
-						</li>
-						<li>
 							<a href="#add-ons">Add-ons</a>
 						</li>
 						<li>
@@ -255,6 +252,9 @@
 						</li>
 						<li>
 							<a href="#packages">Packages</a>
+						</li>
+						<li>
+							<a href="#activate-trip">Scheduling</a>
 						</li>
 						<li>
 							<a href="#tickets">Tickets</a>

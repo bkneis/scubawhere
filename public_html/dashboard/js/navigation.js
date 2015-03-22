@@ -41,12 +41,14 @@ $(function() {
         // Open Management submenu if one of its tabs is selected
         submenu = [
             'accommodations',
-            'activate-trip',
             'add-ons',
             'agents',
+            'classes',
+            'courses',
             'boats',
             'locations',
             'packages',
+            'activate-trip',
             'tickets',
             'trips'
         ];
