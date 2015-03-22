@@ -1,15 +1,11 @@
 var packageForm,
     packageList,
     priceInputTemplate,
-    ticketSelectTemplate;
+    entitySelectTemplate;
+
+window.promises = {};
 
 // Needs to be declared before the $(function) call
-Handlebars.registerHelper('selected', function(ticketID) {
-	if(this.id == ticketID)
-		return ' selected';
-	else
-		return '';
-});
 Handlebars.registerHelper('multiply', function(a, b) {
 	return (a * b).toFixed(2);
 });
@@ -23,8 +19,8 @@ Handlebars.registerHelper('count', function(array) {
 Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
-Handlebars.registerPartial('tickets_template', $('#tickets-template').html());
-Handlebars.registerPartial('ticket_select', $('#ticket-select-template').html());
+
+Handlebars.registerPartial('entity_select', $('#entity-select-template').html());
 
 priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
 Handlebars.registerPartial('price_input', priceInputTemplate);
@@ -51,16 +47,45 @@ $(function(){
 	packageList = Handlebars.compile( $("#package-list-template").html() );
 	renderPackageList();
 
-	// Default view: show create package form
-	Ticket.getAllTickets(function success(data) {
-		window.tickets = _.indexBy(data, 'id');
+	window.promises.loadedTickets        = $.Deferred();
+	window.promises.loadedCourses        = $.Deferred();
+	window.promises.loadedAccommodations = $.Deferred();
+	window.promises.loadedAddons         = $.Deferred();
 
-		packageForm = Handlebars.compile( $("#package-form-template").html() );
-		renderEditForm();
-		Tour.getPackagesTour();
+	window.promises.loadedTickets.done(function() {
+		window.promises.loadedCourses.done(function() {
+			window.promises.loadedAccommodations.done(function() {
+				window.promises.loadedAddons.done(function() {
+					packageForm = Handlebars.compile( $("#package-form-template").html() );
+					renderEditForm();
+					Tour.getPackagesTour();
+				});
+			});
+		});
 	});
 
-	ticketSelectTemplate = Handlebars.compile( $("#ticket-select-template").html() );
+	Ticket.getAllTickets(function success(data) {
+		window.tickets = _.indexBy(data, 'id');
+		window.promises.loadedTickets.resolve();
+	});
+
+	Course.getAll(function success(data) {
+		window.courses = _.indexBy(data, 'id');
+		window.promises.loadedCourses.resolve();
+	});
+
+	Accommodation.getAll(function success(data) {
+		window.accommodations = _.indexBy(data, 'id');
+		window.promises.loadedAccommodations.resolve();
+	});
+
+	Addon.getAllAddons(function success(data) {
+		data = _.reject(data, function(addon) { return addon.compulsory === '1' || addon.compulsory === 1; });
+		window.addons = _.indexBy(data, 'id');
+		window.promises.loadedAddons.resolve();
+	});
+
+	entitySelectTemplate = Handlebars.compile( $("#entity-select-template").html() );
 
 	$("#package-form-container").on('submit', '#add-package-form', function(event) {
 
@@ -164,12 +189,13 @@ $(function(){
 		});
 	});
 
-	$('#package-form-container').on('change', '.ticket-select', function(event) {
+	$('#package-form-container').on('change', '.entity-select', function(event) {
 		var $self     = $(event.target);
 		var $quantity = $self.siblings('.quantity-input').first();
-		var $prices   = $self.siblings('.ticket-prices').first();
+		// var $prices   = $self.siblings('.ticket-prices').first();
 
 		var id = $self.val(), disabledInputs, numberOfDisabledInputs;
+		var model = $self.attr('data-model');
 
 		if(id == "0") {
 			// Reset
@@ -177,46 +203,49 @@ $(function(){
 			$quantity.attr('name', '');
 			$quantity.val('');
 
-			$prices.html( $prices.attr('data-default') );
+			// $prices.html( $prices.attr('data-default') );
 
 			// Check if more than one empty ticket-selects exist and if so, remove the extra one
-			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			disabledInputs         = $('.entity-lists').find('.quantity-input[disabled]');
 			numberOfDisabledInputs = disabledInputs.length;
-			if( numberOfDisabledInputs > 1) {
-				disabledInputs.last().parent().remove();
+			if( numberOfDisabledInputs > 4) {
+				$self.parent().remove();
 			}
 		}
 		else {
 			$quantity.prop('disabled', false);
-			$quantity.attr('name', 'tickets[' + id + '][quantity]');
+			$quantity.attr('name', model + 's[' + id + '][quantity]');
 			$quantity.val(1);
 
-			$quantity.trigger('change');
+			// $quantity.trigger('change');
 
 			// Check if empty ticket-select exists and if not, create and append one
-			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
+			disabledInputs         = $('.entity-lists').find('.quantity-input[disabled]');
 			numberOfDisabledInputs = disabledInputs.length;
-			if( numberOfDisabledInputs === 0) {
-				$('.ticket-list').append( ticketSelectTemplate({available_tickets: window.tickets}) );
+			if( numberOfDisabledInputs === 3) {
+				$('.entity-lists select[data-model=' + model + ']').last().parent().after(
+					entitySelectTemplate({
+						availables: window[model + 's'],
+						model: model,
+					})
+				);
 			}
 		}
 	});
 
-	$('#package-form-container').on('change', '.quantity-input', function(event) {
+	/*$('#package-form-container').on('change', '.quantity-input', function(event) {
 		var $quantity = $(event.target);
 		var $prices   = $quantity.siblings('.ticket-prices').first();
 		var $ticket   = $quantity.siblings('.ticket-select').first();
 		var id = $ticket.val();
 
-		/*
 		var html = '';
 		_.each(window.tickets[id].prices, function(p, index, list) {
 			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + window.company.currency.symbol + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
 		});
 
 		$prices.html(html);
-		*/
-	});
+	});*/
 
 	$('#package-form-container').on('click', '.remove-package', function(event) {
     event.preventDefault();
@@ -323,11 +352,6 @@ function renderEditForm(id) {
 		package.task   = 'update';
 		package.update = true;
 
-		_.each(package.tickets, function(value) {
-			value.existing = true;
-			value.available_tickets = window.tickets;
-		});
-
 		_.each(package.base_prices, function(value) {
 			value.isBase   = true;
 
@@ -344,10 +368,16 @@ function renderEditForm(id) {
 		};
 	}
 
-	package.available_tickets = window.tickets;
+	package.availables = {
+		'ticket'       : {'availables': window.tickets},
+		'course'       : {'availables': window.courses},
+		'accommodation': {'availables': window.accommodations},
+		'addon'        : {'availables': window.addons},
+	};
+
 	package.default_price     = window.sw.default_price;
 
-	$('#package-form-container').empty().append( packageForm(package) );
+	$('#package-form-container').html( packageForm(package) );
 
 	if(!id)
 		$('input[name=name]').focus();
@@ -396,7 +426,7 @@ function clearForm() {
 	package.available_tickets = window.tickets;
 	package.default_price     = window.sw.default_price;
 
-	$('#package-form-container').empty().append( packageForm(package) );
+	$('#package-form-container').html( packageForm(package) );
 
 	$('input[name=name]').focus();
 

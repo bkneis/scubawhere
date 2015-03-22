@@ -10,7 +10,14 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->packages()->withTrashed()->with('tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Auth::user()->packages()->withTrashed()->with(
+				'tickets',
+				'courses',
+				'accommodations',
+				'addons',
+				'basePrices',
+				'prices'
+			)->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,12 +27,26 @@ class PackageController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->packages()->with('tickets', 'basePrices', 'prices')->get();
+		return Auth::user()->packages()->with(
+			'tickets',
+			'courses',
+			'accommodations',
+			'addons',
+			'basePrices',
+			'prices'
+		)->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->packages()->withTrashed()->with('tickets', 'basePrices', 'prices')->get();
+		return Auth::user()->packages()->withTrashed()->with(
+			'tickets',
+			'courses',
+			'accommodations',
+			'addons',
+			'basePrices',
+			'prices'
+		)->get();
 	}
 
 	public function postAdd()
@@ -33,9 +54,12 @@ class PackageController extends Controller {
 		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
 
 		// Validate that tickets are supplied
-		$tickets = Input::get('tickets');
-		if( empty($tickets) )
-			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
+		$tickets = Input::get('tickets', []);
+		/*if( empty($tickets) )
+			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable*/
+		$courses = Input::get('courses', []);
+		$accommodations = Input::get('accommodations', []);
+		$addons = Input::get('addons', []);
 
 		// ####################### Prices #######################
 		$base_prices = Input::get('base_prices');
@@ -84,6 +108,9 @@ class PackageController extends Controller {
 		// Input must be of type <input name="tickets[1][quantity]" value="2">
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( $tickets );
+		$package->courses()->sync( $courses );
+		$package->accommodations()->sync( $accommodations );
+		$package->addons()->sync( $addons );
 
 		// Normalise base_prices array
 		$base_prices = Helper::normaliseArray($base_prices);

@@ -44,13 +44,45 @@
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div id="package-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now, select the tickets that you want to include in the package. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
-								<strong>Select tickets to be included in this package:</strong>
+							<div id="package-entities" class="form-row entity-lists" data-step="3" data-position="left" data-intro="Now, select the tickets, courses, accommodations and addons that you want to include in the package. Once you select one of them, another drop down box will appear to allow you to add another one. When you are finished adding, leave the remaining select boxes blank.">
 
 								{{#if update}}
-									{{> tickets_template}}
+									<strong>Included tickets:</strong>
+									{{#each tickets}}
+										<p>
+											<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+										</p>
+									{{else}} <p>-</p>
+									{{/each}}
+
+									<strong>Included courses:</strong>
+									{{#each courses}}
+										<p>
+											<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+										</p>
+									{{else}} <p>-</p>
+									{{/each}}
+
+									<strong>Included accommodations:</strong>
+									{{#each accommodations}}
+										<p>
+											<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+										</p>
+									{{else}} <p>-</p>
+									{{/each}}
+
+									<strong>Included addons:</strong>
+									{{#each addons}}
+										<p>
+											<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+										</p>
+									{{else}} <p>-</p>
+									{{/each}}
 								{{else}}
-									{{> ticket_select}}
+									{{#each availables}}
+										<strong>Select {{@key}}s to be included in this package:</strong>
+										{{> entity_select}}
+									{{/each}}
 								{{/if}}
 							</div>
 
@@ -94,40 +126,17 @@
 		</div>
 	</div><!-- .row -->
 
-	<script type="text/x-handlebars-template" id="ticket-select-template">
+	<script type="text/x-handlebars-template" id="entity-select-template">
 		<p>
-			<select class="ticket-select">
-				<option value="0">Select a ticket</option>
-				{{#each available_tickets}}
-					<option value="{{id}}"
-						{{#if ../existing}}
-							{{selected ../../id}}
-						{{/if}}
-					>{{{name}}}</option>
+			<select data-model="{{#if model}}{{model}}{{else}}{{@key}}{{/if}}" class="entity-select">
+				<option value="0">Select {{#if model}}{{model}}{{else}}{{@key}}{{/if}}</option>
+				{{#each availables}}
+					<option value="{{id}}">{{{name}}}</option>
 				{{/each}}
 			</select>
 
-			Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
-			{{!--
-			<span class="ticket-prices" data-default="-">
-				{{#if existing}}
-					{{#each prices}}
-						<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">{{from}} - {{until}}: {{currency}} {{multiply ../pivot.quantity decimal_price}}</span>
-					{{/each}}
-				{{else}}
-				-
-				{{/if}}
-			</span>
-			--}}
+			Quantity: &nbsp;<input type="number" class="quantity-input" disabled value="" min="1" step="1" style="width: 50px;">
 		</p>
-	</script>
-
-	<script type="text/x-handlebars-template" id="tickets-template">
-		{{#each tickets}}
-			<p>
-				<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
-			</p>
-		{{/each}}
 	</script>
 
 	<script type="text/x-handlebars-template" id="price-input-template">
@@ -180,6 +189,9 @@
 	</script>
 
 	<script src="/js/Controllers/Ticket.js"></script>
+	<script src="/js/Controllers/Course.js"></script>
+	<script src="/js/Controllers/Accommodation.js"></script>
+	<script src="/js/Controllers/Addon.js"></script>
 	<script src="/js/Controllers/Package.js"></script>
 	<script src="/tabs/packages/js/script.js"></script>
 </div>
