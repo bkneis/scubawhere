@@ -259,7 +259,10 @@ class TicketController extends Controller {
 		return array('status' => 'OK. Ticket updated', 'base_prices' => $base_prices, 'prices' => $prices);
 	}
 
-	protected function checkRemovedTripBookings($ticket_id, $old_trips, $new_trips)
+	/*
+		No longer necessary
+	 */
+	/*protected function checkRemovedTripBookings($ticket_id, $old_trips, $new_trips)
 	{
 		// Check, which tripIDs have been removed
 		$removed_trips = array_diff($old_trips, $new_trips);
@@ -275,7 +278,7 @@ class TicketController extends Controller {
 		    })->exists();
 
 		return $result;
-	}
+	}*/
 
 	public function postDelete()
 	{
@@ -294,10 +297,13 @@ class TicketController extends Controller {
 		try
 		{
 			$ticket->forceDelete();
+
+			// If deletion worked, delete associated prices
+			Price::where(Price::$owner_id_column_name, $ticket->id)->where(Price::$owner_type_column_name, 'Ticket')->delete();
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The ticket can not be removed because it has been booked at least once. Try deactivating it instead.')), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The ticket can not be removed currently because it has been booked at least once or is used in packages or courses.'/*.' Try deactivating it instead.'*/)), 409); // 409 Conflict
 		}
 
 		// If deletion worked, delete associated prices

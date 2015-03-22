@@ -446,7 +446,10 @@ class ReportController extends Controller {
 				$RESULT[$model . '_total']['revenue'] += round($revenue, 2);
 			}
 
-			// Sum up addons that are not part of a package
+			### -------------------------------------------- ###
+			### Sum up addons that are not part of a package ###
+			### -------------------------------------------- ###
+
 			// (packages would have been caught above, because packaged addons are only allowed on tickets of the same package)
 			foreach($detail->addons as $addon)
 			{
@@ -490,7 +493,10 @@ class ReportController extends Controller {
 			}
 		}
 
-		// Sum up accommodations
+		### --------------------- ###
+		### Sum up accommodations ###
+		### --------------------- ###
+
 		$accommodations = Accommodation::whereHas('bookings', function($query) use ($afterUTC, $beforeUTC)
 		{
 			$query

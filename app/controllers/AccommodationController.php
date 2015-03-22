@@ -314,7 +314,7 @@ class AccommodationController extends Controller {
 		catch(QueryException $e)
 		{
 			// SoftDelete instead
-			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
+			$accommodation = Auth::user()->accommodations()->find( Input::get('id') );
 			$accommodation->delete();
 		}
 

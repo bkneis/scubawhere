@@ -137,7 +137,7 @@ class AddonController extends Controller {
 		catch(QueryException $e)
 		{
 
-			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
+			$addon = Auth::user()->addons()->find( Input::get('id') );
 			$addon->delete();
 		}
 

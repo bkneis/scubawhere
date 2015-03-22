@@ -227,7 +227,7 @@ class PackageController extends Controller {
 		catch(QueryException $e)
 		{
 			// SoftDelete instead
-			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
+			$package = Auth::user()->packages()->find( Input::get('id') );
 			$package->delete();
 		}
 
