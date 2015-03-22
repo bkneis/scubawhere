@@ -197,7 +197,7 @@
 			<tr>
 				<td>{{getDate created_at_local}}</td>
 				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{#if source}} {{source}} {{else}} Agent - {{{agent.name}}} {{/if}}</td>
+				<td>{{sourceName}}</td>
 				<td>{{getCountry lead_customer.country_id}}</td>
 				<td>{{reference}}</td>
 				<td>{{currency}} {{decimal_price}}</td>
@@ -212,8 +212,8 @@
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th style="color:#313131; width:15%">Date</th>
-				<th style="color:#313131; width:15%">Trip name</th>
+				<th style="color:#313131; width: 100px">Date</th>
+				<th style="color:#313131; width: 250px">Trip name</th>
 				<th style="color:#313131">Utilisation</th>
 			</tr>
 		</thead>

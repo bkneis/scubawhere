@@ -40,6 +40,15 @@ Handlebars.registerHelper('getCommissionAmount', function() {
 	return (price * this.agent.commission / 100).toFixed(2);
 });
 
+Handlebars.registerHelper('sourceName', function() {
+	switch(this.source) {
+		case 'telephone' : return 'Telephone';
+		case 'email'     : return 'Email';
+		case 'facetoface': return 'In erson';
+		default: return new Handlebars.SafeString('Agent - ' + this.agent.name);
+	}
+})
+
 $(function() {
 
 	window.sources = [
