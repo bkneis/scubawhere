@@ -309,7 +309,7 @@ class AccommodationController extends Controller {
 			$accommodation->forceDelete();
 
 			// If deletion worked, delete associated prices
-			Price::where(Price::$owner_id_column_name, $accommodation->$id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
+			Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
 		}
 		catch(QueryException $e)
 		{

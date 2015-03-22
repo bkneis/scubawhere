@@ -15,7 +15,7 @@ class Accommodation extends Ardent {
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'capacity'    => 'integer|min:1',
+		'capacity'    => 'required|integer|min:1',
 		'parent_id'   => 'integer|min:1'
 	);
 

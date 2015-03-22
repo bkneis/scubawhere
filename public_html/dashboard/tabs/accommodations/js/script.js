@@ -292,6 +292,7 @@ function renderEditForm(id) {
 			task: 'add',
 			update: false,
 			base_prices: [ window.sw.default_first_base_price ],
+			capacity: 0,
 		};
 	}
 
