@@ -292,7 +292,8 @@ class TicketController extends Controller {
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$id = $ticket->id;
+		if($ticket->packages()->exists() || $ticket->courses()->exists())
+			return Response::json( array('errors' => array('The ticket can not be removed currently because it is used in packages or courses.')), 409); // 409 Conflict
 
 		try
 		{
@@ -303,11 +304,8 @@ class TicketController extends Controller {
 		}
 		catch(QueryException $e)
 		{
-			return Response::json( array('errors' => array('The ticket can not be removed currently because it has been booked at least once or is used in packages or courses.'/*.' Try deactivating it instead.'*/)), 409); // 409 Conflict
+			return Response::json( array('errors' => array('The ticket can not be removed currently because it has been booked at least once.')), 409); // 409 Conflict
 		}
-
-		// If deletion worked, delete associated prices
-		Price::where(Price::$owner_id_column_name, $id)->where(Price::$owner_type_column_name, 'Ticket')->delete();
 
 		return array('status' => 'OK. Ticket deleted');
 	}

@@ -130,6 +130,9 @@ class AddonController extends Controller {
 			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($addon->packages()->exists())
+			return Response::json( array('errors' => array('The addon can not be removed currently because it is used in packages.')), 409); // 409 Conflict
+
 		try
 		{
 			$addon->forceDelete();

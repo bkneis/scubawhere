@@ -227,6 +227,9 @@ class CourseController extends Controller {
 			return Response::json( array('errors' => array('The course could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($course->packages()->exists())
+			return Response::json( array('errors' => array('The course can not be removed currently because it is used in packages.')), 409); // 409 Conflict
+
 		try
 		{
 			$course->forceDelete();

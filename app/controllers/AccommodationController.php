@@ -304,6 +304,9 @@ class AccommodationController extends Controller {
 			return Response::json( array('errors' => array('The accommodation could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($accommodation->packages()->exists())
+			return Response::json( array('errors' => array('The accommodation can not be removed currently because it is used in packages.')), 409); // 409 Conflict
+
 		try
 		{
 			$accommodation->forceDelete();
