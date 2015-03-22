@@ -47,6 +47,21 @@ class Package extends Ardent {
 		$this->decimal_price = $price->decimal_price;
 	}
 
+	public function accommodations()
+	{
+		return $this->morphedByMany('Accommodation', 'packageable')->withPivot('quantity')->withTimestamps();
+	}
+
+	public function addons()
+	{
+		return $this->morphedByMany('Addon', 'packageable')->withPivot('quantity')->withTimestamps();
+	}
+
+	public function bookingdetails()
+	{
+		return $this->hasManyThrough('Bookingdetail', 'Packagefacade');
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('Company');
@@ -54,7 +69,7 @@ class Package extends Ardent {
 
 	public function courses()
 	{
-		return $this->belongsToMany('Course')->withPivot('quantity')->widthTimestamps();
+		return $this->morphedByMany('Course', 'packageable')->withPivot('quantity')->withTimestamps();
 	}
 
 	public function packagefacades()
@@ -72,13 +87,8 @@ class Package extends Ardent {
 		return $this->morphMany('Price', 'owner')->whereNotNull('until');
 	}
 
-	public function bookingdetails()
-	{
-		return $this->hasManyThrough('Bookingdetail', 'Packagefacade');
-	}
-
 	public function tickets()
 	{
-		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();
+		return $this->morphedByMany('Ticket', 'packageable')->withPivot('quantity')->withTimestamps();
 	}
 }

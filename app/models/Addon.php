@@ -95,4 +95,9 @@ class Addon extends Ardent {
 	{
 		return $this->hasManyThrough('Customer', 'Bookingdetail');
 	}
+
+	public function packages()
+	{
+		return $this->morphToMany('Package', 'packageable')->withPivot('quantity')->withTimestamps();
+	}
 }

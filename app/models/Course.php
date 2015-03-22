@@ -60,7 +60,7 @@ class Course extends Ardent {
 
 	public function packages()
 	{
-		return $this->belongsToMany('Package')->withPivot('quantity')->withTimestamps();
+		return $this->morphToMany('Package', 'packageable')->withPivot('quantity')->withTimestamps();
 	}
 
 	public function basePrices()
