@@ -282,31 +282,65 @@ class Booking extends Ardent {
 
 		$sum = 0;
 		$tickedOffPackagefacades = [];
+		$tickedOffCourses = [];
 
-		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades)
+		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses)
 		{
 			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
-			if($detail->packagefacade_id != null)
+			if($detail->packagefacade_id !== null)
 			{
-				// Sum up the package
-
-				// Check if the package has already been summed/counted
 				if(!in_array($detail->packagefacade_id, $tickedOffPackagefacades))
 				{
 					// Add the packagefacadeID to the array so it is not summed/counted again in the next bookingdetails
 					$tickedOffPackagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure')->get();
+					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
 					$firstDetail = $bookingdetails->sortBy(function($detail)
 					{
-						return $detail->departure->start;
+						if($detail->departure)
+							return $detail->departure->start;
+						else
+							return $detail->training_session->start;
 					})->first();
 
+					if($firstDetail->departure)
+						$start = $firstDetail->departure->start;
+					else
+						$start = $firstDetail->training_session->start;
+
 					// Calculate the package price at this first departure datetime and sum it up
-					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $limitBefore);
+					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
 					$sum += $detail->packagefacade->package->decimal_price;
+				}
+			}
+			elseif($detail->course_id !== null)
+			{
+				$identifier = $detail->booking_id . '-' . $detail->customer_id . '-' . $detail->course_id;
+
+				if(!in_array($identifier, $tickedOffCourses))
+				{
+					$tickedOffCourses[] = $identifier;
+
+					// Find the first departure datetime that is booked in this package
+					$bookingdetails = $detail->course->bookingdetails()->with('departure', 'training_session')->get();
+					$firstDetail = $bookingdetails->sortBy(function($detail)
+					{
+						if($detail->departure)
+							return $detail->departure->start;
+						else
+							return $detail->training_session->start;
+					})->first();
+
+					if($firstDetail->departure)
+						$start = $firstDetail->departure->start;
+					else
+						$start = $firstDetail->training_session->start;
+
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->course->calculatePrice($start, $limitBefore);
+					$sum += $detail->course->decimal_price;
 				}
 			}
 			else
@@ -316,23 +350,27 @@ class Booking extends Ardent {
 				$sum += $detail->ticket->decimal_price;
 			}
 
-			// Sum up all addons
+			// Sum up all addons that are not part of a package
 			$detail->addons->each(function($addon) use (&$sum, $currency)
 			{
-				$sum += $addon->decimal_price * $addon->pivot->quantity;
+				if($addon->pivot->packagefacade_id === null)
+					$sum += $addon->decimal_price * $addon->pivot->quantity;
 			});
 		});
 
-		// Sum up all accommodations
+		// Sum up all accommodations that are not part of a package
 		$accommodations = $this->accommodations;
 
 		$accommodations->each(function($accommodation) use (&$sum)
 		{
+			if(empty($accommodation->pivot->packagefacade_id))
+			{
 				$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
 
-			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
-			$sum += $accommodation->decimal_price;
+				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
+				$sum += $accommodation->decimal_price;
+			}
 		});
 
 		/*

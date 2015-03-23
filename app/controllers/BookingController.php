@@ -28,7 +28,10 @@ class BookingController extends Controller {
 				'bookingdetails.ticket',
 				'bookingdetails.packagefacade',
 					'bookingdetails.packagefacade.package',
-						'bookingdetails.packagefacade.package.tickets',
+						// 'bookingdetails.packagefacade.package.tickets',
+				'bookingdetails.training_session',
+					'bookingdetails.training_session.training',
+				'bookingdetails.course',
 				'bookingdetails.addons',
 			'accommodations',
 			'payments',
@@ -39,21 +42,76 @@ class BookingController extends Controller {
 				'refunds.paymentgateway'
 		);
 
-		$booking->bookingdetails->each(function($detail) use ($booking)
+		$pricedPackagefacades = [];
+		$pricedCourses = [];
+
+		$booking->bookingdetails->each(function($detail) use ($booking, &$pricedPackagefacades, &$pricedCourses)
 		{
 			$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
-			if($detail->packagefacade_id != null)
+			if($detail->packagefacade_id !== null)
 			{
-				// Find the first departure datetime that is booked in this package
-				$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure')->get();
-				$firstDetail = $bookingdetails->sortBy(function($detail)
+				if(!array_key_exists($detail->packagefacade_id, $pricedPackagefacades))
 				{
-					return $detail->departure->start;
-				})->first();
+					// Find the first departure datetime that is booked in this package
+					// $bookingdetails = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
+					$firstDetail = $booking->bookingdetails->filter(function($d) use ($detail)
+					{
+						return $d->packagefacade_id === $detail->packagefacade_id;
+					})
+					->sortBy(function($detail)
+					{
+						if($detail->departure)
+							return $detail->departure->start;
+						else
+							return $detail->training_session->start;
+					})->first();
 
-				// Calculate the package price at this first departure datetime and sum it up
-				$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $limitBefore);
+					if($firstDetail->departure)
+						$start = $firstDetail->departure->start;
+					else
+						$start = $firstDetail->training_session->start;
+
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
+
+					$pricedPackagefacades[$detail->packagefacade_id] = $detail->packagefacade->package->decimal_price;
+				}
+				else
+					$detail->packagefacade->package->decimal_price = $pricedPackagefacades[$detail->packagefacade_id];
+			}
+			elseif($detail->course_id !== null)
+			{
+				$identifier = $detail->booking_id . '-' . $detail->customer_id . '-' . $detail->course_id;
+
+				if(!array_key_exists($identifier, $pricedCourses))
+				{
+					// Find the first departure datetime that is booked in this package
+					// $bookingdetails = $detail->course->bookingdetails()->with('departure', 'training_session')->get();
+					$firstDetail = $booking->bookingdetails->filter(function($d) use ($detail)
+					{
+						return $d->course_id === $detail->course_id;
+					})
+					->sortBy(function($detail)
+					{
+						if($detail->departure)
+							return $detail->departure->start;
+						else
+							return $detail->training_session->start;
+					})->first();
+
+					if($firstDetail->departure)
+						$start = $firstDetail->departure->start;
+					else
+						$start = $firstDetail->training_session->start;
+
+					// Calculate the package price at this first departure datetime and sum it up
+					$detail->course->calculatePrice($start, $limitBefore);
+
+					$pricedCourses[$identifier] = $detail->course->decimal_price;
+				}
+				else
+					$detail->course->decimal_price = $pricedCourses[$identifier];
 			}
 			else
 			{
@@ -62,13 +120,16 @@ class BookingController extends Controller {
 			}
 		});
 
-		$booking->accommodations->each(function($accommodation) use ($booking)
+		$booking->accommodations->each(function($accommodation) use ($booking, &$pricedPackagefacades)
 		{
+			if(empty($accommodation->pivot->packagefacade_id))
+			{
 				$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
-			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
+				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 
-			$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
+				$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
+			}
 		});
 
 		return $booking;

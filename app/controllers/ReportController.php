@@ -390,14 +390,22 @@ class ReportController extends Controller {
 					$counted_packagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$details = $detail->packagefacade->bookingdetails()->with('departure')->get();
-					$firstDetail = $details->sortBy(function($d)
+					$details = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
+					$firstDetail = $details->sortBy(function($detail)
 					{
-						return $d->departure->start;
+						if($detail->departure)
+							return $detail->departure->start;
+						else
+							return $detail->training_session->start;
 					})->first();
 
+					if($firstDetail->departure)
+						$start = $firstDetail->departure->start;
+					else
+						$start = $firstDetail->training_session->start;
+
 					// Calculate the package price at this first departure datetime and sum it up
-					$detail->packagefacade->package->calculatePrice($firstDetail->departure->start, $detail->created_at);
+					$detail->packagefacade->package->calculatePrice($start, $detail->created_at);
 
 					$revenue = $detail->packagefacade->package->decimal_price;
 					$model   = 'packages';
@@ -511,12 +519,9 @@ class ReportController extends Controller {
 		{
 			foreach($accommodation->bookings as $booking)
 			{
-				// Only continue if the accommodation is not part of a package that has already been counted
-				if(empty($booking->pivot->packagefacade_id) || !in_array($booking->pivot->packagefacade_id, $counted_packagefacades))
+				// Only continue if the accommodation is not part of a package
+				if(empty($booking->pivot->packagefacade_id))
 				{
-					if(!empty($booking->pivot->packagefacade_id))
-						$counted_packagefacades[] = $booking->pivot->packagefacade_id;
-
 					$accommodation->calculatePrice(
 						$booking->pivot->start,
 						$booking->pivot->end,
