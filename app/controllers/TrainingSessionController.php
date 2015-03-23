@@ -185,34 +185,6 @@ class TrainingSessionController extends Controller {
 		// ->take(25)
 		->get();
 
-		// Filter by capacity/availability
-		/*if( !$options['with_full'] )
-		{
-			$departures = $departures->filter(function($departure) use ($course, $options)
-			{
-				$capacity = $departure->getCapacityAttribute();
-				if( $capacity[0] >= $capacity[1] )
-				{
-					// Session/Boat full/overbooked
-					return false;
-				}
-
-				if( $course && !empty($course->capacity) )
-				{
-					$usedUp = $departure->bookingdetails()->whereHas('coursefacade', function($query) use ($course)
-					{
-						$query->where('course_id', $course->id);
-					})->count();
-					if( $usedUp >= $course->capacity )
-					{
-						return false;
-					}
-				}
-
-				return true;
-			});
-		}*/
-
 		return $training_sessions;
 	}
 
@@ -268,11 +240,11 @@ class TrainingSessionController extends Controller {
 			if( Input::has('start') )
 				$training_session->start = Input::get('start');
 
-			/*$capacity = $training_session->capacity;
+			$capacity = $training_session->capacity;
 			if($capacity[0] > 0 && Input::has('start') && Input::get('start') != $training_session->start)
 			{
 				return Response::json( array('errors' => array('The class cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
-			}*/
+			}
 		}
 		// If the session is part of a schedule and has been changed, check if request sent instructions on what to do
 		elseif( Input::get('start') && Input::get('start') !== $training_session->start)
