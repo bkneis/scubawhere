@@ -68,7 +68,26 @@ class BookingController extends Controller {
 					else
 						$start = $firstDetail->training_session->start;
 
-					// Calculate the package price at this first departure datetime and sum it up
+					$firstAccommodation = $booking->accommodations->filter(function($a) use ($detail)
+					{
+						return $a->pivot->packagefacade_id === $detail->packagefacade_id;
+					})
+					->sortBy(function($accommodation)
+					{
+						return $accommodation->pivot->start;
+					})->first();
+
+					if(!empty($firstAccommodation))
+					{
+						$detailStart = new DateTime($start);
+						$accommStart = new DateTime($firstAccommodation->pivot->start);
+
+						$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
+
+						$start = $start->format('Y-m-d H:i:s');
+					}
+
+					// Calculate the package price at this first datetime and sum it up
 					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
 
 					$pricedPackagefacades[$detail->packagefacade_id] = $detail->packagefacade->package->decimal_price;
