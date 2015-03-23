@@ -1243,7 +1243,7 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	if(Object.keys(booking.selectedPackages).length === 0) {
 		// Load selectedPackages from bookingdetails
 		_.each(booking.bookingdetails, function(detail) {
-			if(detail.packagefacade === null) return;
+			if(typeof detail.packagefacade === 'undefined' || detail.packagefacade === null) return;
 
 			if(typeof booking.selectedPackages[detail.packagefacade.package.id] === 'undefined') {
 				booking.selectedPackages[detail.packagefacade.package.id] = detail.packagefacade.package;

@@ -18,7 +18,7 @@ class Addon extends Ardent {
 		'parent_id'
 	);
 
-	protected $appends = array('decimal_price', 'currency');
+	protected $appends = array('decimal_price'/*, 'currency'*/);
 
 	protected $hidden = array('parent_id');
 
