@@ -32,15 +32,26 @@ class CourseController extends Controller {
 	{
 		$data = Input::only('name', 'description', 'capacity', 'training_id', 'training_quantity');
 
-		try
+		if(!empty($data['training_id']))
 		{
-			if( !Input::get('training_id') ) throw new ModelNotFoundException();
-			Auth::user()->trainings()->findOrFail( Input::get('training_id') );
+			try
+			{
+				if( !Input::get('training_id') ) throw new ModelNotFoundException();
+				$training = Auth::user()->trainings()->findOrFail( Input::get('training_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The class could not be found.')), 404 ); // 404 Not Found
+			}
 		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The class could not be found.')), 404 ); // 404 Not Found
-		}
+		else
+			$training = $data['training_id'] = $data['training_quantity'] = null;
+
+		// Check if tickets are supplied
+		$tickets = Input::get('tickets', []);
+
+		if(empty($training) && empty($tickets))
+			return Response::json( array('errors' => array('Either a class or a ticket is required.')), 406 ); // 406 Not Acceptable */
 
 		// ####################### Prices #######################
 		$base_prices = Input::get('base_prices');
@@ -79,11 +90,6 @@ class CourseController extends Controller {
 		}
 
 		$course = Auth::user()->courses()->save($course);
-
-		// Check if tickets are supplied
-		$tickets = Input::get('tickets');
-		if( empty($tickets) )
-			return Response::json( array('errors' => array('At least one ticket is required.')), 406 ); // 406 Not Acceptable
 
 		// Course has been created, let's connect it with its tickets
 		// TODO Validate input

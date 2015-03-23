@@ -14,8 +14,8 @@ class Course extends Ardent {
 		'name'              => 'required',
 		'description'       => '',
 		'capacity'          => 'integer|min:0',
-		'training_id'       => 'required|integer',
-		'training_quantity' => 'required|integer|min:1',
+		'training_id'       => 'integer|min:1',
+		'training_quantity' => 'required_with:training_id|integer|min:1',
 	);
 
 	public function beforeSave()

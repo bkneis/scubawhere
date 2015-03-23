@@ -1274,6 +1274,7 @@ return array(
     'MakeOtherFieldsNullableOnCompaniesTable' => $baseDir . '/app/database/migrations/2014_11_08_180948_make_other_fields_nullable_on_companies_table.php',
     'MakeTicketBoatBoatroomRelationshipPolymorphic' => $baseDir . '/app/database/migrations/2015_03_11_182409_make_ticket_boat_boatroom_relationship_polymorphic.php',
     'MakeTicketIdAndSessionIdNullableOnBookingDetailsTable' => $baseDir . '/app/database/migrations/2015_03_07_195147_make_ticket_id_and_session_id_nullable_on_booking_details_table.php',
+    'MakeTrainingIdAndTrainingQuantityNullableOnCoursesTable' => $baseDir . '/app/database/migrations/2015_03_23_112635_make_training_id_and_training_quantity_nullable_on_courses_table.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mews\\Purifier\\Facades\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Facades/Purifier.php',
     'Mews\\Purifier\\Purifier' => $vendorDir . '/mews/purifier/src/Mews/Purifier/Purifier.php',

@@ -142,17 +142,19 @@
 			<p>
 				<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
 			</p>
+		{{else}}<p>-</p>
 		{{/each}}
 	</script>
 
 	<script type="text/x-handlebars-template" id="class-select-template">
 		<p>
 			<select id="class-select" class="class-select">
+				<option value="0">Select a class</option>
 				{{#each available_training}}
 					<option value="{{id}}">{{name}}</option>
 				{{/each}}
 			</select>
-			Number of sessions : 
+			Number of sessions :
 			<input type="number" name="training_quantity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 			<input type="hidden" type="number" name="training_id" id="training_id">
 		</p>
@@ -160,7 +162,11 @@
 
 	<script type="text/x-handlebars-template" id="class-template">
 		<p>
-			<big class="margin-right">{{{training.name}}}</big> Quantity: <big class="margin-right">{{training_quantity}}</big>
+			{{#unless training}}
+				-
+			{{else}}
+				<big class="margin-right">{{{training.name}}}</big> Quantity: <big class="margin-right">{{training_quantity}}</big>
+			{{/unless}}
 		</p>
 	</script>
 
