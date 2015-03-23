@@ -9,38 +9,34 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('id') );
+			$booking = Auth::user()->bookings()->with(
+				'lead_customer',
+				'bookingdetails',
+					'bookingdetails.customer',
+						'bookingdetails.customer.country',
+					'bookingdetails.session',
+						'bookingdetails.session.trip',
+					'bookingdetails.ticket',
+					'bookingdetails.packagefacade',
+						'bookingdetails.packagefacade.package',
+							// 'bookingdetails.packagefacade.package.tickets',
+					'bookingdetails.training_session',
+						'bookingdetails.training_session.training',
+					'bookingdetails.course',
+					'bookingdetails.addons',
+				'accommodations',
+				'payments',
+					// 'payments.currency',
+					'payments.paymentgateway',
+				'refunds',
+					// 'refunds.currency',
+					'refunds.paymentgateway'
+			)->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
-
-		$booking->loadTrashed = true;
-
-		$booking->load(
-			'lead_customer',
-			'bookingdetails',
-				'bookingdetails.customer',
-					'bookingdetails.customer.country',
-				'bookingdetails.session',
-					'bookingdetails.session.trip',
-				'bookingdetails.ticket',
-				'bookingdetails.packagefacade',
-					'bookingdetails.packagefacade.package',
-						// 'bookingdetails.packagefacade.package.tickets',
-				'bookingdetails.training_session',
-					'bookingdetails.training_session.training',
-				'bookingdetails.course',
-				'bookingdetails.addons',
-			'accommodations',
-			'payments',
-				// 'payments.currency',
-				'payments.paymentgateway',
-			'refunds',
-				// 'refunds.currency',
-				'refunds.paymentgateway'
-		);
 
 		$pricedPackagefacades = [];
 		$pricedCourses = [];
