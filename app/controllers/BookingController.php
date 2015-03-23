@@ -50,7 +50,7 @@ class BookingController extends Controller {
 				if(!array_key_exists($detail->packagefacade_id, $pricedPackagefacades))
 				{
 					// Find the first departure datetime that is booked in this package
-					// $bookingdetails = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
+					// $bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
 					$firstDetail = $booking->bookingdetails->filter(function($d) use ($detail)
 					{
 						return $d->packagefacade_id === $detail->packagefacade_id;

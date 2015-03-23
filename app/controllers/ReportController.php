@@ -390,7 +390,7 @@ class ReportController extends Controller {
 					$counted_packagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$details = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
+					$details = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
 					$firstDetail = $details->sortBy(function($detail)
 					{
 						if($detail->departure)

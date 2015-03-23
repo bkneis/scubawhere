@@ -297,7 +297,7 @@ class Booking extends Ardent {
 					$tickedOffPackagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure, training_session')->get();
+					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
 					$firstDetail = $bookingdetails->sortBy(function($detail)
 					{
 						if($detail->departure)
