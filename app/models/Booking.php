@@ -75,7 +75,8 @@ class Booking extends Ardent {
 		if((empty($this->discount) || $this->discount < 1) && empty($this->agent_id)) return null;
 
 		$feeSum = 0;
-		$this->load('bookingdetails', 'bookingdetails.addons');
+		if(empty($this->bookingdetails))
+			$this->load('bookingdetails', 'bookingdetails.addons');
 
 		foreach ($this->bookingdetails as $detail) {
 			foreach ($detail->addons as $addon) {
