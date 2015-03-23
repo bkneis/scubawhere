@@ -89,17 +89,17 @@ class Helper
 
 		$length = 4;
 
+		// Taken from http://www.noswearing.com/fourletterwords.php
+		$forbidden  = array('ANUS', 'ARSE', 'CLIT', 'COCK', 'COON', 'CUNT', 'DAGO', 'DAMN', 'DICK', 'DIKE', 'DYKE', 'FUCK', 'GOOK', 'HEEB', 'HELL', 'HOMO', 'JIZZ', 'KIKE', 'KUNT', 'KYKE', 'MICK', 'MUFF', 'PAKI', 'PISS', 'POON', 'POOP', 'PUTO', 'SHIT', 'SHIZ', 'SLUT', 'SMEG', 'SPIC', 'TARD', 'TITS', 'TWAT', 'WANK');
+
 		// $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-		// Only use uppercase letters for clarity
+		// Only use uppercase letters (and numbers) for clarity
 		$chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 		$size = strlen($chars);
 
 		$references = \Booking::lists('reference');
-
-		// Taken from http://www.noswearing.com/fourletterwords.php
-		$forbidden  = array('ANUS', 'ARSE', 'CLIT', 'COCK', 'COON', 'CUNT', 'DAGO', 'DAMN', 'DICK', 'DIKE', 'DYKE', 'FUCK', 'GOOK', 'HEEB', 'HELL', 'HOMO', 'JIZZ', 'KIKE', 'KUNT', 'KYKE', 'MICK', 'MUFF', 'PAKI', 'PISS', 'POON', 'POOP', 'PUTO', 'SHIT', 'SHIZ', 'SLUT', 'SMEG', 'SPIC', 'TARD', 'TITS', 'TWAT', 'WANK');
 
 		$unallowed = array_merge($references, $forbidden);
 

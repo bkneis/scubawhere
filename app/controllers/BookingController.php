@@ -41,7 +41,7 @@ class BookingController extends Controller {
 
 		$booking->bookingdetails->each(function($detail) use ($booking)
 		{
-			$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $detail->created_at : $limitBefore = false;
+			$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
 			if($detail->packagefacade_id != null)
 			{
@@ -64,7 +64,7 @@ class BookingController extends Controller {
 
 		$booking->accommodations->each(function($accommodation) use ($booking)
 		{
-			$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $accommodation->pivot->created_at : $limitBefore = false;
+				$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
 			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 
@@ -382,14 +382,7 @@ class BookingController extends Controller {
 
 		$booking = new Booking($data);
 
-		// Generate a reference number and check whether it is unique
-		// TODO This is OK, because the reference number is not validated in the ruleset, but it may create an unreasonable amount of database queries in the future
-		// MONITOR
-		do
-		{
-			$booking->reference = Helper::booking_reference_number();
-		}
-		while( Booking::where('reference', $booking->reference)->count() >= 1 );
+		$booking->reference = Helper::booking_reference_number(); // The helper function already validates that the reference is unique
 
 		if( !$booking->validate() )
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable

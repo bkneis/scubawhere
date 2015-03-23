@@ -285,7 +285,7 @@ class Booking extends Ardent {
 
 		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades)
 		{
-			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $detail->created_at : $limitBefore = false;
+			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
 			if($detail->packagefacade_id != null)
 			{
@@ -328,8 +328,8 @@ class Booking extends Ardent {
 
 		$accommodations->each(function($accommodation) use (&$sum)
 		{
+				$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
-			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $limitBefore = $accommodation->pivot->created_at : $limitBefore = false;
 
 			$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 			$sum += $accommodation->decimal_price;
