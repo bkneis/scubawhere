@@ -9,7 +9,7 @@ class TrainingSession extends Ardent {
 
 	protected $fillable = array('start', 'schedule_id');
 
-	// protected $appends = array('capacity');
+	protected $appends = array('capacity');
 
 	public static $rules = array(
 		'start'       => 'required|date',
