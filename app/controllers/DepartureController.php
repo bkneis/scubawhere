@@ -74,14 +74,15 @@ class DepartureController extends Controller {
 		 * trip_id
 		 * ticket_id
 		 * package_id
+		 * course_id
 		 * after
 		 * before
 		 * with_full
 		 */
 
-		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id');
+		$data = Input::only('after', 'before', 'trip_id', 'ticket_id', 'package_id', 'course_id');
 
-		$data['with_full'] = Input::get('with_full', false);
+		$data['with_full'] = Input::get('with_full', true);
 
 		// Transform parameter strings into DateTime objects
 		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
@@ -117,6 +118,7 @@ class DepartureController extends Controller {
 			'trip_id'    => 'integer|min:1',
 			'ticket_id'  => 'integer|min:1|required_with:package_id', // Here, we are not testing for 'exists:trips,id', because that would open the API for bruteforce tests of ALL existing trip_ids. trip_ids are private to the owning dive center and are not meant to be known by others.
 			'package_id' => 'integer|min:1', // Same goes for packages
+			'course_id'  => 'integer|min:1',
 			'with_full'  => 'boolean'
 		) );
 
@@ -167,13 +169,27 @@ class DepartureController extends Controller {
 		else
 			$package = false;
 
+		if( !empty( $options['course_id'] ) )
+		{
+			try
+			{
+				$course = Auth::user()->courses()->findOrFail( $options['package_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The course could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$course = false;
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via trip to
 		  ticket and then (conditionally) to package.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
 		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat', 'boat.boatrooms', 'trip')
-		->whereHas('trip', function($query) use ($trip, $ticket, $package)
+		->whereHas('trip', function($query) use ($trip, $ticket, $package, $course)
 		{
 			$query
 			->where(function($query) use ($trip)
@@ -184,13 +200,20 @@ class DepartureController extends Controller {
 					$query->where('id', $trip->id);
 				}
 			})
-			->where(function($query) use ($ticket, $package)
+			->where(function($query) use ($ticket, $package, $course)
 			{
-				if($ticket)
+				if($ticket || $package || $course)
 				{
-					$query->whereHas('tickets', function($query) use ($ticket, $package)
+					$query->whereHas('tickets', function($query) use ($ticket, $package, $course)
 					{
-						$query->where('id', $ticket->id)
+						$query->where(function($query) use ($ticket)
+						{
+							// Conditional where clause (only when package_id is provided)
+							if( $ticket )
+							{
+								$query->where('id', $ticket->id);
+							}
+						})
 						->where(function($query) use ($package)
 						{
 							// Conditional where clause (only when package_id is provided)
@@ -201,21 +224,19 @@ class DepartureController extends Controller {
 									$query->where('id', $package->id);
 								});
 							}
+						})->where(function($query) use ($course)
+						{
+							// Conditional where clause (only when package_id is provided)
+							if( $course )
+							{
+								$query->whereHas('courses', function($query) use ($course)
+								{
+									$query->where('id', $course->id);
+								});
+							}
 						});
 					});
 				}
-				/*else
-				// trip doesn't have a direct relation/connection with package...?
-				{
-					// Conditional where clause (only when package_id is provided)
-					if( $package )
-					{
-						$query->whereHas('packages', function($query) use ($package)
-						{
-							$query->where('id', $package->id);
-						});
-					}
-				}*/
 			});
 		})
 		// Filter by dates
@@ -251,7 +272,7 @@ class DepartureController extends Controller {
 		// Filter by capacity/availability
 		if( !$options['with_full'] )
 		{
-			$departures = $departures->filter(function($departure) use ($package, $options)
+			$departures = $departures->filter(function($departure) use ($course)
 			{
 				$capacity = $departure->getCapacityAttribute();
 				if( $capacity[0] >= $capacity[1] )
@@ -260,17 +281,17 @@ class DepartureController extends Controller {
 					return false;
 				}
 
-				/*if( $package && !empty($package->capacity) )
+				if( $course && !empty($course->capacity) )
 				{
-					$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
+					$usedUp = $departure->bookingdetails()->whereHas('course', function($query) use ($course)
 					{
-						$query->where('package_id', $package->id);
+						$query->where('id', $course->id);
 					})->count();
-					if( $usedUp >= $package->capacity )
+					if( $usedUp >= $course->capacity )
 					{
 						return false;
 					}
-				}*/
+				}
 
 				return true;
 			});
