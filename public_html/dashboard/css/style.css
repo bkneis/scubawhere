@@ -1093,6 +1093,9 @@ big {
     font-size: 13px;
     padding-left: 2px;
 }
+.nav-wizard>li>a.selected>span {
+	font-weight: bold;
+}
 
 .nav-wizard>li>a.done:before {
     background: #95b75d;
