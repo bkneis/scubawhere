@@ -1081,17 +1081,17 @@
 					{{#notEmptyObj accommodations}}
 						<li class="list-group-item">
 							<strong>Accommodation</strong>
-							<div class="panel-group" id="booking-summary-acommodation" role="tablist" aria-multiselectable="true">
+							<div class="panel-group" id="booking-summary-accommodation" role="tablist" aria-multiselectable="true">
 								{{#each accommodations}}
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab">
 											<h4 class="panel-title">
-												<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-acommodation" href="#booking-summary-acommodation-{{id}}">
+												<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-accommodation" href="#booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}">
 													<i class="fa fa-bed fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 												</a>
 											</h4>
 										</div>
-										<div id="booking-summary-acommodation-{{id}}" class="panel-collapse collapse" role="tabpanel">
+										<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}" class="panel-collapse collapse" role="tabpanel">
 											<div class="panel-body">
 												<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate pivot.start}} - {{friendlyDate pivot.end}}</p>
 												<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
