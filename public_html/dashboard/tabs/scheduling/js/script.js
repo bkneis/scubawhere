@@ -8,6 +8,10 @@ Handlebars.registerHelper('hours', function(datetime) {
 Handlebars.registerHelper('minutes', function(datetime) {
 	return datetime.format('mm');
 });
+Handlebars.registerHelper('isTrip', function(type) {
+	if(type == "trip") return true;
+	else return false;
+});
 Handlebars.registerHelper('readableDuration', function(duration) {
 	if(duration >= 24)
 		return Math.floor(duration/24) + ' days, ' + (duration%24) + ' hours';
@@ -20,6 +24,10 @@ Handlebars.registerHelper('isWeekday', function(day) {
 	else
 		return '';
 });
+Handlebars.registerHelper('isTrip', function(type) {
+	if(type == "trip") return true;
+	else return false;
+});
 
 var timetableWeek;
 
@@ -29,6 +37,9 @@ $(function() {
 	var tripsTemplate = $("#trip-list").html();
 	tripsTemplate     = Handlebars.compile(tripsTemplate);
 
+	var classesTemplate = $("#class-list").html();
+	classesTemplate     = Handlebars.compile(classesTemplate);
+
 	timetableWeek = $('#timetable-week-template').html();
 	timetableWeek = Handlebars.compile(timetableWeek);
 
@@ -36,16 +47,21 @@ $(function() {
 		return new Handlebars.SafeString( timetableWeek( {'week': week} ) );
 	});
 
-  window.trips    = {};
+  	window.trips    = {};
 	window.boats    = {};
 	window.token    = '';
 	window.sessions = {};
+	window.training = {};
 
 	// 1. Get trips
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
-		$('#trips ul').append(tripsTemplate({trips: data}));
+		$('#trip-class-list').append(tripsTemplate({trips: data}));
 		initDraggables();
+	});
+
+	Class.getAll(function(data) {
+		window.training = _.indexBy(data, 'id');
 	});
 
 	Boat.getAllWithTrashed(function(data) {
@@ -62,18 +78,38 @@ $(function() {
 
 			// Create an eventObject (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
 			// It doesn't need to have a start or end as that is assigned onDrop
-			var eventObject = {
-				title   : $.trim( $(this).text() ), // use the element's text as the event title
-				allDay  : false,
-				id      : randomString(),
-				trip    : window.trips[ $(this).attr('data-id') ],
-				session : {
-					trip_id: $(this).attr('data-id'),
-				},
-				isNew   : true,
-				durationEditable: false,
-				startEditable: true,
-			};
+			if($(this).attr('data-type') == "trip") {
+				var eventObject = {
+					title   : $.trim( $(this).text() ), // use the element's text as the event title
+					allDay  : false,
+					id      : randomString(),
+					trip    : window.trips[ $(this).attr('data-id') ],
+					session : {
+						trip_id: $(this).attr('data-id'),
+					},
+					isNew   : true,
+					durationEditable: false,
+					startEditable: true,
+					eventType : "trip",
+					isTrip : true
+				};
+			} else {
+				var eventObject = {
+					title   : $.trim( $(this).text() ), // use the element's text as the event title
+					allDay  : false,
+					id      : randomString(),
+					trip    : window.training[ $(this).attr('data-id') ],
+					session : {
+						training_id: $(this).attr('data-id'),
+					},
+					isNew   : true,
+					durationEditable: false,
+					startEditable: true,
+					eventType : "class",
+					isTrip : false
+				};
+			}
+			
 
 			// Store the eventObject in the DOM element so we can get it back later
 			$(this).data('eventObject', eventObject);
@@ -103,14 +139,42 @@ $(function() {
 			// Start loading indicator
 			$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
 
+			var events = [];
+
+			Class.getAllSessions({
+				'after': start.format(),
+				'before': end.format(),
+				'with_full': 1
+			}, function success(data) {
+				window.trainingSessions = _.indexBy(data, 'id');
+
+				// Create eventObjects
+				_.each(window.trainingSessions, function(value) {
+					var eventObject = {
+						title: window.training[ value.training_id ].name, // use the element's text as the event title
+						allDay: false,
+						trip: window.training[ value.training_id ],
+						session: value,
+						isNew: false,
+						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
+						durationEditable: false,
+						className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+						isTrip : false
+					};
+
+					eventObject.session.start = $.fullCalendar.moment(value.start);
+
+					events.push( createCalendarEntry(eventObject) );
+				});
+
+			});
+
 			Session.filter({
 				'after': start.format(),
 				'before': end.format(),
 				'with_full': 1
 			}, function success(data) {
 				window.sessions = _.indexBy(data, 'id');
-
-				var events = [];
 
 				// Create eventObjects
 				_.each(window.sessions, function(value) {
@@ -123,6 +187,7 @@ $(function() {
 						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
 						durationEditable: false,
 						className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose
+						isTrip : true
 					};
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);
@@ -180,29 +245,59 @@ $(function() {
 
 			// console.log(eventObject.session);
 
-			Session.updateSession(eventObject.session, function success(data){
-				// Sync worked, now save and update the calendar item
+			if(eventObject.isTrip) {
+				Session.updateSession(eventObject.session, function success(data){
+					// Sync worked, now save and update the calendar item
 
-				// Remake the moment-object
-				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+					// Remake the moment-object
+					eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
-				updateCalendarEntry(eventObject);
-				// console.log(data.status + '|' + data.id);
+					updateCalendarEntry(eventObject);
+					// console.log(data.status + '|' + data.id);
 
-				// Close modal window
-				$('#modalWindows .close-reveal-modal').click();
+					// Close modal window
+					$('#modalWindows .close-reveal-modal').click();
 
-				pageMssg(data.status, true);
-			}, function error(xhr) {
-				revertFunc();
+					pageMssg(data.status, true);
+				}, 
+				function error(xhr) {
+					revertFunc();
 
-				eventObject.session.start = $.fullCalendar.moment(eventObject.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss');
+					eventObject.session.start = $.fullCalendar.moment(eventObject.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss');
 
-				updateCalendarEntry(eventObject);
+					updateCalendarEntry(eventObject);
 
-				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'warning');
-			});
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0], 'warning');
+				});
+			}
+			else {
+				Class.updateSession(eventObject.session, function success(data){
+					// Sync worked, now save and update the calendar item
+
+					// Remake the moment-object
+					eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
+					updateCalendarEntry(eventObject);
+					// console.log(data.status + '|' + data.id);
+
+					// Close modal window
+					$('#modalWindows .close-reveal-modal').click();
+
+					pageMssg(data.status, true);
+				}, 
+				function error(xhr) {
+					revertFunc();
+
+					eventObject.session.start = $.fullCalendar.moment(eventObject.start.format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss');
+
+					updateCalendarEntry(eventObject);
+
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0], 'warning');
+				});
+			}
+			
 		},
 		eventClick: function(eventObject) {
 			showModalWindow(eventObject);
@@ -279,7 +374,8 @@ $(function() {
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
-		Session.createSession(eventObject.session, function success(data) {
+		if(eventObject.isTrip) {
+			Session.createSession(eventObject.session, function success(data) {
 
 			// Whenever the session is saved, it is not new anymore
 			eventObject.isNew = false;
@@ -301,22 +397,66 @@ $(function() {
 
 			pageMssg(data.status, true);
 		},
-		function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
 
-			pageMssg(data.errors[0]);
+				pageMssg(data.errors[0]);
+
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
+				// Communicate error to user
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+
+				// Trigger boatroomWarning
+				$('#modalWindows .boatSelect').change();
+			});
+		}
+		else {
+
+			Class.createSession(eventObject.session, function success(data) {
+
+			// Whenever the session is saved, it is not new anymore
+			eventObject.isNew = false;
+
+			// Communicate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-loader').remove();
 
 			// Remake the moment-object
 			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+			eventObject.session.id = data.id;
 
-			// Communicate error to user
-			$(event.target).prop('disabled', false);
-			$('#save-loader').remove();
+			// console.log(eventObject.session);
+			$('#calendar').fullCalendar('removeEvents', eventObject.id);
+			$('#calendar').fullCalendar('refetchEvents');
 
-			// Trigger boatroomWarning
-			$('#modalWindows .boatSelect').change();
-		});
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		},
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				pageMssg(data.errors[0]);
+
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
+				// Communicate error to user
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+
+				// Trigger boatroomWarning
+				$('#modalWindows .boatSelect').change();
+			});
+		}
+
+		
 	});
 
 	// The UPDATE button
@@ -359,7 +499,8 @@ $(function() {
 		// Format the time in a PHP readable format
 		eventObject.session.start = eventObject.session.start.format('YYYY-MM-DD HH:mm:ss');
 
-		Session.updateSession(eventObject.session, function success(data) {
+		if(eventObject.isTrip) {
+			Session.updateSession(eventObject.session, function success(data) {
 
 			// Communicate success to user
 			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -379,27 +520,73 @@ $(function() {
 
 			pageMssg(data.status, true);
 		},
-		function error(xhr) {
+			function error(xhr) {
+				// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
+				delete eventObject.session.handle_timetable;
+
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				_.each(data.errors, function(error) {
+					pageMssg(error);
+				});
+
+				// Communicate error to user
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+
+				// Trigger boatroomWarning
+				$('#modalWindows .boatSelect').change();
+			});
+		}
+		else {
+			Class.updateSession(eventObject.session, function success(data) {
+
+			// Communicate success to user
+			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+			$('#save-loader').remove();
+
 			// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
 			delete eventObject.session.handle_timetable;
 
 			// Remake the moment-object
 			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
 
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
+			// updateCalendarEntry(eventObject);
+			$('#calendar').fullCalendar('refetchEvents');
 
-			_.each(data.errors, function(error) {
-				pageMssg(error);
+			// Close modal window
+			$('#modalWindows .close-reveal-modal').click();
+
+			pageMssg(data.status, true);
+		},
+			function error(xhr) {
+				// Remove extra payload parameter from eventObject so it doesn't automatically transfer over to the next request
+				delete eventObject.session.handle_timetable;
+
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				_.each(data.errors, function(error) {
+					pageMssg(error);
+				});
+
+				// Communicate error to user
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+
+				// Trigger boatroomWarning
+				$('#modalWindows .boatSelect').change();
 			});
+		}
 
-			// Communicate error to user
-			$(event.target).prop('disabled', false);
-			$('#save-loader').remove();
-
-			// Trigger boatroomWarning
-			$('#modalWindows .boatSelect').change();
-		});
+		
 	});
 
 	// The RESTORE button
@@ -413,7 +600,8 @@ $(function() {
 
 		eventObject.session._token = window.token;
 
-		Session.restoreSession({
+		if(eventObject.isTrip) {
+			Session.restoreSession({
 			'id'              : eventObject.session.id,
 			'_token'          : eventObject.session._token
 		}, function success(data) {
@@ -428,12 +616,38 @@ $(function() {
 			$('#modalWindows .close-reveal-modal').click();
 
 			pageMssg(data.status, true);
-		}, function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0]);
-			$(event.target).prop('disabled', false);
-			$('#save-loader').remove();
-		});
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+		else {
+			Class.restoreSession({
+			'id'              : eventObject.session.id,
+			'_token'          : eventObject.session._token
+			}, 
+			function success(data) {
+				// Communicate success to user
+				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+				$('#save-loader').remove();
+
+				$('#calendar').fullCalendar('refetchEvents');
+
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
+
+				pageMssg(data.status, true);
+			}, 
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
+				$(event.target).prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+
 	});
 
 	// The DELETE button
@@ -466,68 +680,135 @@ $(function() {
 
 		// console.log(eventObject.session);
 
-		Session.deleteSession({
+		if(eventObject.isTrip) {
+			Session.deleteSession({
 			'id'              : eventObject.session.id,
 			'_token'          : eventObject.session._token,
 			'handle_timetable': eventObject.session.handle_timetable
-		}, function success(data) {
+			}, function success(data) {
 
-			// Communitcate success to user
-			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-loader').remove();
+				// Communitcate success to user
+				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+				$('#save-loader').remove();
 
-			if(eventObject.session.handle_timetable === 'following')
-				$('#calendar').fullCalendar('refetchEvents');
-			else
-				$('#calendar').fullCalendar('removeEvents', eventObject.id);
+				if(eventObject.session.handle_timetable === 'following')
+					$('#calendar').fullCalendar('refetchEvents');
+				else
+					$('#calendar').fullCalendar('removeEvents', eventObject.id);
 
-			// Unset eventObject
-			delete eventObject;
+				// Unset eventObject
+				delete eventObject;
 
-			// Close modal window
-			$('#modalWindows .close-reveal-modal').click();
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
 
-			pageMssg(data.status, true);
-		}, function error(xhr) {
-			if(xhr.status == 409 && !eventObject.session.deleted_at) {
-				var message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
-				var question = confirm(message);
-				if( question ) {
-					// Deactivate
-					Session.deactivateSession({
-						'id': eventObject.session.id,
-						'_token': eventObject.session._token,
-						'handle_timetable': 'only_this'
-					}, function success(data) {
+				pageMssg(data.status, true);
+			}, function error(xhr) {
+				if(xhr.status == 409 && !eventObject.session.deleted_at) {
+					var message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
+					var question = confirm(message);
+					if( question ) {
+						// Deactivate
+						Session.deactivateSession({
+							'id': eventObject.session.id,
+							'_token': eventObject.session._token,
+							'handle_timetable': 'only_this'
+						}, function success(data) {
 
-						// Communitcate success to user
-						$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-						$('#save-loader').remove();
+							// Communitcate success to user
+							$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+							$('#save-loader').remove();
 
-						eventObject.session.deleted_at = true;
+							eventObject.session.deleted_at = true;
 
-						updateCalendarEntry(eventObject);
+							updateCalendarEntry(eventObject);
 
-						pageMssg(data.status, true);
+							pageMssg(data.status, true);
 
-						// Close modal window
-						$('#modalWindows .close-reveal-modal').click();
+							// Close modal window
+							$('#modalWindows .close-reveal-modal').click();
 
-						// TODO Hack!
-						// window.location.reload();
-					});
+							// TODO Hack!
+							// window.location.reload();
+						});
+					}
+					else {
+						// do nothing
+					}
 				}
 				else {
-					// do nothing
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0]);
+					$(event.target).prop('disabled', false);
+					$('#save-loader').remove();
 				}
-			}
-			else {
-				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0]);
-				$(event.target).prop('disabled', false);
+			});
+		}
+		else {
+			Class.deleteSession({
+			'id'              : eventObject.session.id,
+			'_token'          : eventObject.session._token,
+			'handle_timetable': eventObject.session.handle_timetable
+			}, function success(data) {
+
+				// Communitcate success to user
+				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
 				$('#save-loader').remove();
-			}
-		});
+
+				if(eventObject.session.handle_timetable === 'following')
+					$('#calendar').fullCalendar('refetchEvents');
+				else
+					$('#calendar').fullCalendar('removeEvents', eventObject.id);
+
+				// Unset eventObject
+				delete eventObject;
+
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
+
+				pageMssg(data.status, true);
+			}, function error(xhr) {
+				if(xhr.status == 409 && !eventObject.session.deleted_at) {
+					var message = 'ATTENTION:\n\nThis session has already been booked. Do you want to deactivate it instead, so it can not be booked anymore?';
+					var question = confirm(message);
+					if( question ) {
+						// Deactivate
+						Session.deactivateSession({
+							'id': eventObject.session.id,
+							'_token': eventObject.session._token,
+							'handle_timetable': 'only_this'
+						}, function success(data) {
+
+							// Communitcate success to user
+							$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+							$('#save-loader').remove();
+
+							eventObject.session.deleted_at = true;
+
+							updateCalendarEntry(eventObject);
+
+							pageMssg(data.status, true);
+
+							// Close modal window
+							$('#modalWindows .close-reveal-modal').click();
+
+							// TODO Hack!
+							// window.location.reload();
+						});
+					}
+					else {
+						// do nothing
+					}
+				}
+				else {
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0]);
+					$(event.target).prop('disabled', false);
+					$('#save-loader').remove();
+				}
+			});
+		}
+
 	});
 
 	// The CREATE TIMETABLE button
@@ -574,6 +855,16 @@ $(function() {
 				$button.prop('disabled', true);
 			}
 		}
+	});
+
+	$("#filter-types").on('click', '.filter-type', function() {
+		$(".filter-type").removeClass("btn-primary");
+		display = $(this).attr("display");
+		console.log(display);
+		$("#filter-"+display).addClass("btn-primary");
+		if(display == "classes") $('#trip-class-list').empty().append(classesTemplate({classes: window.training}));
+		else $('#trip-class-list').empty().append(tripsTemplate({trips: window.trips}));
+		initDraggables();
 	});
 });
 

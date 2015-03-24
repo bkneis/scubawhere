@@ -9,11 +9,25 @@
 					<div class="yellow-helper">
 						Please drag a trip onto a day on the calendar to activate it.
 					</div>
-					<ul style="padding-left: 0;">
+					<div id="filter-types" class="btn-group" role="group" style="margin-bottom:10px;">
+					  <button id="filter-trips" display="trips" type="button" class="btn btn-default btn-primary filter-type">Trips</button>
+					  <button id="filter-classes" display="classes" type="button" class="btn btn-default filter-type">Classes</button>
+					</div>
+					<ul id="trip-class-list" style="padding-left: 0;">
 						<script id="trip-list" type="text/x-handlebars-template">
 							{{#each trips}}
 								<li class="droppable-event">
-									<div class='trip-event' data-id="{{id}}">
+									<div data-type="trip" class='trip-event' data-id="{{id}}">
+										{{{name}}}
+									</div>
+									<ul></ul>
+								</li>
+							{{/each}}
+						</script>
+						<script id="class-list" type="text/x-handlebars-template">
+							{{#each classes}}
+								<li class="droppable-event">
+									<div data-type="class" class='trip-event' data-id="{{id}}">
 										{{{name}}}
 									</div>
 									<ul></ul>
@@ -66,8 +80,8 @@
 						</td>
 					</tr>
 				</table>
-
 				<div class="form-group">
+				{{#if isTrip}}
 					Boat for this session:&nbsp;
 					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
 						{{#each boats}}
@@ -81,7 +95,7 @@
 						{{/each}}
 					</select>
 				</div>
-
+				{{/if}}
 				{{#unless isPast}}
 					{{#unless session.deleted_at}}
 					{{#unless isNew}}
@@ -191,9 +205,10 @@
 	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Class.js"></script>
 	<script src="/js/Controllers/Boat.js"></script>
 	<script src="/js/Controllers/Session.js"></script>
 	<script src="/js/Controllers/Timetable.js"></script>
 
-	<script src="/tabs/activate-trip/js/script.js"></script>
+	<script src="/tabs/scheduling/js/script.js"></script>
 </div>
