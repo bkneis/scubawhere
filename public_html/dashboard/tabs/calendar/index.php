@@ -7,8 +7,9 @@
 				</div>
 				<div class="panel-body" id="filters">
 					<div id="filter-types" class="btn-group" role="group">
-					  <button id="filter-t" display="trips" type="button" class="btn btn-default btn-primary filter-type">Trips</button>
-					  <button id="filter-a" display="accommodations" type="button" class="btn btn-default filter-type">Accommodations</button>
+					  <button id="filter-trips" display="trips" type="button" class="btn btn-default btn-primary filter-type">Trips</button>
+					  <button id="filter-accommodations" display="accommodations" type="button" class="btn btn-default filter-type">Accommodations</button>
+					  <button id="filter-classes" display="classes" type="button" class="btn btn-default filter-type">Classes</button>
 					</div>
 						<div style="clear:both; padding-top:10px;"></div>
 						<div id="jump-to-date" class="form-row">
@@ -115,8 +116,8 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">view trip manifest</a></td>
-						<td></td>
+						<td><strong>Customer Information</strong></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
@@ -128,16 +129,48 @@
 				<table style="margin-top: 2em;">
 					<tr>
 						<td><strong>Date</strong></td>
-						<td>{{start}}</td>
+						<td>{{date start}}</td>
 					</tr>
 					<tr>
-						<td><strong>Rooms available</strong></td>
-						<td>{{available}}</td>
+						<td><strong>Rooms Available</strong></td>
+						<td>{{#unless available}}
+							<span class="soldout">SOLD OUT</span>
+							{{else}}
+							{{getRemaining available booked}} out of {{available}}</a>
+							{{/unless}}
+						</td>
+					</tr>
+				</table>
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+		<script id="session-template" type="text/x-handlebars-template">
+			<div id="modal-{{id}}" class="reveal-modal">
+
+				<h3>{{{training.name}}}</h3>
+				<table style="margin-top: 2em;" class="striped">
+					<tr>
+						<td><strong>Date</strong></td>
+						<td>{{date start}}</td>
 					</tr>
 					<tr>
-						<td><strong>Rooms booked</strong></td>
-						<td>{{booked}}</td>
+						<td><strong>Start - End time</strong></td>
+						<td>
+							<span class="enddatetime">{{hours start}}:{{minutes start}} - {{hours end}}:{{minutes end}}</span>
+						</td>
 					</tr>
+					<tr>
+						<td><strong>No. of Students</strong></td>
+						<td>{{#unless ticketsLeft}}
+							<span class="soldout">SOLD OUT</span>
+							{{else}}
+							{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
+							{{/unless}}
+						</td>
+					</tr>
+					<tr>
+						<td><strong>Customer Information</strong></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{training_session.id}})">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
@@ -183,6 +216,7 @@
 	<script type="text/javascript" src="/common/js/jquery/jquery.collapsible.js"></script>
 
 	<script src="/js/Controllers/Trip.js"></script>
+	<script src="/js/Controllers/Class.js"></script>
 	<script src="/js/Controllers/Boat.js"></script>
 	<script src="/js/Controllers/Session.js"></script>
 	<script src="/js/Controllers/Timetable.js"></script>

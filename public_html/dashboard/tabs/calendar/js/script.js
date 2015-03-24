@@ -1,7 +1,9 @@
 var filterByBoat = false;
 var filterByTrip = false;
+var filterByClass = false;
 var boatFilter;
 var tripFilter;
+var classFilter;
 var boatsList;
 var tripsList;
 var display = "trips";
@@ -48,6 +50,7 @@ $(function() {
 		events: function(start, end, timezone, callback) {
 			if(display == "trips") getTripEvents(start, end, timezone, callback);
 			if(display == "accommodations") getAccomEvents(start, end, timezone, callback);
+			if(display == "classes") getClassEvents(start, end, timezone, callback);
 		},
 		eventRender: function(event, element) {
 			// Intercept the event rendering to inject the non-html-escaped version of the title
@@ -59,6 +62,7 @@ $(function() {
 		eventClick: function(eventObject) {
 			if(display == "trips") showModalWindow(eventObject);
 			if(display == "accommodations") showModalWindowA(eventObject);
+			if(display == "classes") showModalWindowC(eventObject);
 			//console.log(display);
 			//console.log(eventObject);
 		},
@@ -144,16 +148,10 @@ $(function() {
 
 	$("#filter-types").on('click', '.filter-type', function(event){
 		event.preventDefault();
+		$("#filter-"+display).removeClass("btn-primary");
 		display = $(this).attr("display");
 		$('#calendar').fullCalendar( 'refetchEvents' );
-		if(display == "trips") {
-			$("#filter-t").toggleClass("btn-primary");
-			$("#filter-a").toggleClass("btn-primary");
-		}
-		else {
-			$("#filter-t").toggleClass("btn-primary");
-			$("#filter-a").toggleClass("btn-primary");
-		}
+		$("#filter-"+display).addClass("btn-primary");
 	});
 
 	$('input.datepicker').datetimepicker({
@@ -254,6 +252,28 @@ function showModalWindowA(eventObject) {
 	});
 }
 
+function showModalWindowC(eventObject) {
+	// Create the modal window from session-template
+	window.sw.classTemplateD = Handlebars.compile( $("#class-template").html() );
+
+	console.log(eventObject);
+
+	$('#modalWindows')
+	.append( window.sw.classTemplateD(eventObject) )        // Create the modal
+	.children('#modal-' + eventObject.id)          // Directly find it and use it
+	.data('eventObject', eventObject)              // Assign the eventObject to the modal DOM element
+	.reveal({                                      // Open modal window | Options:
+		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+		animationSpeed: 300,                       // how fast animtions are
+		closeOnBackgroundClick: false,             // if you click background will modal close?
+		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
+		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
+		onFinishModal: function() {
+			$('#modal-' + this.eventObject.id).remove();
+		},
+	});
+}
+
 function showModalWindowM(id) {
 	// Create the modal window from session-template
 	window.sw.accommodationTemplateD = Handlebars.compile( $("#manifest-template").html() );
@@ -306,6 +326,9 @@ Handlebars.registerHelper('readableDuration', function(duration) {
 		return Math.floor(duration/24) + ' days, ' + (duration%24) + ' hours';
 	else
 		return duration + ' hours';
+});
+Handlebars.registerHelper('getRemaining', function(capacity, booking) {
+	return capacity - booking;
 });
 Handlebars.registerHelper('isWeekday', function(day) {
 	if(this.start.format('d') == day)
@@ -421,6 +444,64 @@ function getTripEvents(start, end, timezone, callback) {
 		});
 
 callback(events);
+
+		// Remove loading indictor
+		$('#fetch-events-loader').remove();
+	},
+	function error(xhr){
+		$('.loader').remove();
+	});
+
+}
+
+function getClassEvents(start, end, timezone, callback) {
+
+	// Start loading indicator
+	$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
+	//console.log(start.format(), end.format());
+	var sessionFilters = {
+		'after': start.format(),
+		'before': end.format(),
+		'with_full': 1
+	};
+	if(filterByClass) sessionFilters.training_id = classFilter;
+	Class.getAllSessions(sessionFilters, function success(data) {
+		//console.log(data);
+		window.training = _.indexBy(data, 'id');
+
+		console.log(window.training);
+
+		var events = [];
+
+		// Create eventObjects
+		_.each(window.training, function(value) {
+			//var booked = value.capacity[0];
+			//var capacity = value.capacity[1];
+			//var ticketsLeft = capacity - booked;
+			var sameDay = true;
+			if(window.training[value.training_id].duration > 24) sameDay = false;
+			var eventObject = {
+				title: window.training[ value.training_id ].name ,//+ ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
+				allDay: false,
+				trip: window.training[ value.training_id ],
+				session: value,
+				isNew: false,
+				editable: false, // This uses a 'falsy' check on purpose
+				durationEditable: false,
+				//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
+				//ticketsLeft : ticketsLeft,
+				//capacity : capacity,
+				//sameDay : sameDay
+			};
+
+			if(ticketsLeft == 0) eventObject.title = window.training[ value.training_id ].name + " FULL";
+
+			eventObject.session.start = $.fullCalendar.moment(value.start);
+
+			events.push( createCalendarEntry(eventObject) );
+		});
+
+		callback(events);
 
 		// Remove loading indictor
 		$('#fetch-events-loader').remove();
