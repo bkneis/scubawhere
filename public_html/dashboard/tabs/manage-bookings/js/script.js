@@ -135,6 +135,7 @@ Handlebars.registerHelper('cancelButton', function() {
 $(function() {
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
+		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
 		renderBookingList(window.bookings);
 	});
 
@@ -163,6 +164,7 @@ $(function() {
 		var params = $(this).serializeObject();
 
 		Booking.filter(params, function success(data) {
+			// Doesn't need sorting, because the server sorts DESC
 			renderBookingList(data);
 
 			btn.html('Find Booking');
@@ -280,6 +282,7 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 
 		Booking.getAll(function(data) {
 			window.bookings = _.indexBy(data, 'id');
+			window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
 			renderBookingList(window.bookings);
 		});
 
