@@ -76,25 +76,25 @@ Handlebars.registerHelper("assignCheck", function (item, options) {
 
 });
 
-Handlebars.registerHelper("priceRange", function(prices) {
-	if(prices.length > 1) {
-		var min=null, max=null;
-		$.each(prices, function(item, value) {
-			var price = parseFloat(value.decimal_price).toFixed(2);
-			if ((min === null) || (price < min)) { min = price; }
-			if ((max === null) || (price > max)) { max = price; }
-		});
-		if(min != max) {
-			return min+" - "+max;
-		}else{
-			return min;
-		}
+Handlebars.registerHelper('pricerange', function(base_prices, prices) {
+	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
+	    max = 0;
 
-	}else if(prices.length == 1){
-		return prices[0].decimal_price;
-	}else{
-		return "hmmm";
+	if( base_prices.length === 1 && prices.length === 0) {
+		return window.company.currency.symbol + ' ' + base_prices[0].decimal_price;
 	}
+
+	_.each(base_prices, function(value) {
+		min = Math.min(value.decimal_price, min).toFixed(2);
+		max = Math.max(value.decimal_price, max).toFixed(2);
+	});
+
+	_.each(prices, function(value) {
+		min = Math.min(value.decimal_price, min).toFixed(2);
+		max = Math.max(value.decimal_price, max).toFixed(2);
+	});
+
+	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
 Handlebars.registerHelper("countryName", function(id) {

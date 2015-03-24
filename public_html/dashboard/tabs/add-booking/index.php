@@ -139,7 +139,7 @@
 													<div class="panel-body">
 														<p class="text-center ticket-icon"><i class="fa fa-ticket fa-4x"></i></p>
 														<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
-														<p class="text-center ticket-price">{{priceRange base_prices}}</p>
+														<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
 														<a role="button" class="btn btn-primary btn-block btn-sm add-ticket" data-id="{{id}}">Add</a>
 													</div>
 												</div>
@@ -158,7 +158,7 @@
 													<div class="panel-body">
 														<p class="text-center ticket-icon"><i class="fa fa-tags fa-4x"></i></p>
 														<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
-														<p class="text-center ticket-price">{{priceRange base_prices}}</p>
+														<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
 															<ul class="list-group">
 																{{#each tickets}}
 																	<li class="list-group-item package-ticket-item">
