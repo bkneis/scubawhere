@@ -196,6 +196,9 @@
 							<a href="#calendar">Calendar</a>
 						</li>
 						<li>
+							<a href="#scheduling">Scheduling</a>
+						</li>
+						<li>
 							<a href="#pickup-schedule">Pick up schedule</a>
 						</li>
 					</ul>
@@ -253,9 +256,9 @@
 						<li>
 							<a href="#packages">Packages</a>
 						</li>
-						<li>
+						<!--<li>
 							<a href="#activate-trip">Scheduling</a>
-						</li>
+						</li>-->
 						<li>
 							<a href="#tickets">Tickets</a>
 						</li>
