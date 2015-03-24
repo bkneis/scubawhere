@@ -1049,6 +1049,7 @@
 												</p>
 												<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
 												<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
+												<p><i class="fa fa-money fa-fw"></i> {{currency}} {{ticket.decimal_price}}</p>
 												{{#notEmptyObj addons}}
 													<div class="panel panel-default">
 														<div class="panel-heading" role="tab">
@@ -1093,6 +1094,7 @@
 										<div id="booking-summary-acommodation-{{id}}" class="panel-collapse collapse" role="tabpanel">
 											<div class="panel-body">
 												<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate pivot.start}} - {{friendlyDate pivot.end}}</p>
+												<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
 											</div>
 										</div>
 									</div>
