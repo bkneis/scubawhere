@@ -29,8 +29,8 @@ class Accommodation extends Ardent {
 	}
 
 	public function calculatePrice($start, $end, $limitBefore = false) {
-		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
-		$end = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
+		$current_date = gettype($start) === "object" ? $start : new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+		$end          = gettype($end)   === "object" ? $end :   new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
 
 		$totalPrice = 0;
 		$numberOfDays = 0;
@@ -61,8 +61,13 @@ class Accommodation extends Ardent {
 		}
 		while( $current_date < $end );
 
-		$this->decimal_price         = $totalPrice;
-		$this->decimal_price_per_day = $totalPrice / $numberOfDays;
+		$this->decimal_price         = number_format($totalPrice, 2, '.', ',');
+		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', ',');
+	}
+
+	public function bookings()
+	{
+		return $this->belongsToMany('Booking')->withPivot('customer_id', 'start', 'end', 'packagefacade_id')->withTimestamps();
 	}
 
 	public function company()
@@ -83,11 +88,6 @@ class Accommodation extends Ardent {
 	public function prices()
 	{
 		return $this->morphMany('Price', 'owner')->whereNotNull('until');
-	}
-
-	public function bookings()
-	{
-		return $this->belongsToMany('Booking')->withPivot('customer_id', 'start', 'end', 'packagefacade_id')->withTimestamps();
 	}
 
 	public function packages()

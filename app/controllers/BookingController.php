@@ -474,12 +474,14 @@ class BookingController extends Controller {
 		 * Valid input parameters
 		 * booking_id
 		 * customer_id
-		 * ticket_id
-		 * session_id
+		 * ticket_id (or training_session_id)
+		 * session_id (or training_session_id)
 		 * boatroom_id (only sometimes required)
+		 * training_session_id
 		 *
 		 * package_id (optional)
 		 * packagefacade_id (optional)
+		 * course_id (optional)
 		 */
 
 		// Check if all IDs exist and belong to the signed-in company
@@ -503,25 +505,47 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
 		}
 
-		try
+		if(Input::has('ticket_id'))
 		{
-			if( !Input::has('ticket_id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
+			try
+			{
+				$ticket = Auth::user()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
+			}
 		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
-		}
+		else
+			$ticket = false;
 
-		try
+		if(Input::has('session_id'))
 		{
-			if( !Input::has('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail(array('sessions.*'));
+			try
+			{
+				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail(array('sessions.*'));
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			}
 		}
-		catch(ModelNotFoundException $e)
+		else
+			$departure = false;
+
+		if(Input::has('training_session_id'))
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			try
+			{
+				$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('training_session_id'))->firstOrFail(array('training_sessions.*'));
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The class could not be found.')), 404 ); // 404 Not Found
+			}
 		}
+		else
+			$training_session = false;
 
 		if( Input::has('packagefacade_id') )
 		{
@@ -534,13 +558,13 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
 			}
 
-			$package = $packagefacade->package()->with('tickets')->first();
+			$package = $packagefacade->package()->with('tickets', 'courses')->first();
 		}
 		elseif( Input::has('package_id') )
 		{
 			try
 			{
-				$package = Auth::user()->packages()->findOrFail( Input::get('package_id') );
+				$package = Auth::user()->packages()->with('tickets', 'courses')->findOrFail( Input::get('package_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -555,19 +579,19 @@ class BookingController extends Controller {
 			$packagefacade = false;
 		}
 
-		/* Probably not needed because the boatroom_id is only checked against existing and user-owned IDs anyway
-		if( Input::has('boatroom_id') )
+		if( Input::has('course_id') )
 		{
 			try
 			{
-				Auth::user()->boatrooms()->findOrFail( Input::get('boatroom_id') );
+				$package = Auth::user()->courses()->findOrFail( Input::get('course_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
+				return Response::json( array('errors' => array('The course could not be found.')), 404 ); // 404 Not Found
 			}
 		}
-		*/
+		else
+			$course = false;
 
 		// Validate that the booking is not cancelled or on hold
 		if(!$booking->isEditable())
@@ -575,152 +599,231 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('Cannot add details, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
 
+		// TODO Validate all input and their relations instead
+		// Validate that either a session or a training_session has been submitted
+		if(!$departure && !$training_session)
+			return Response::json(['errors' => ['Either the session_id or training_session_id is required!']], 406); // 406 Not Acceptable
+
 		// Validate that the session start date has not already passed
-		if(Helper::isPast($departure->start))
+		if($departure && Helper::isPast($departure->start))
 		{
 			return Response::json( array('errors' => array('Cannot add details, because the trip has already departed!')), 403 ); // 403 Forbidden
 		}
 
-		// Validate that the customer is not already booked for this session on another booking
+		// Validate that the training_session start date has not already passed
+		if($training_session && Helper::isPast($training_session->start))
+		{
+			return Response::json( array('errors' => array('Cannot add details, because the class has already started!')), 403 ); // 403 Forbidden
+		}
+
+		// Validate that the customer is not already booked for this session or training_session on another booking
 		$check = Auth::user()->bookings()
 			->whereNotIn('id', array($booking->id))
 			->whereIn('status', Booking::$counted)
-			->whereHas('bookingdetails', function($query) use ($customer, $departure)
+			->whereHas('bookingdetails', function($query) use ($customer, $departure, $training_session)
 			{
 				$query
 					->where('customer_id', $customer->id)
-					->where('session_id', $departure->id);
+					->where(function($query) use ($departure, $training_session)
+					{
+						if($departure)
+							$query->where('session_id', $departure->id);
+						elseif($training_session)
+							$query->where('training_session_id', $training_session->id);
+					});
 			})->exists();
 		if( $check )
-			return Response::json( array('errors' => array('The customer is already booked on this session in another booking!')), 403 ); // 403 Forbidden
-
-		// Validate that the ticket (& package) can be booked for this session
-		try
 		{
-			$departure->trip->tickets()->where(function($query) use ($package)
-			{
-				if( $package )
-				{
-					$query->whereHas('packages', function($query) use ($package)
-					{
-						$query->where('id', $package->id);
-					});
-				}
-			})->findOrFail( $ticket->id );
+			$model = $departure ? 'trip' : 'class';
+			return Response::json( array('errors' => array('The customer is already booked on this '.$model.' in another booking!')), 403 ); // 403 Forbidden
 		}
-		catch(ModelNotFoundException $e)
+
+		// Validate that the ticket can be booked for this session
+		if($departure)
 		{
-			return Response::json( array('errors' => array('This ticket/package can not be booked for this trip.')), 403 ); // 403 Forbidden
+			$exists = $departure->trip->tickets()->where('id', $ticket->id)->exists();
+			if(!$exists)
+				return Response::json( array('errors' => array('This ticket can not be booked for this trip.')), 403 ); // 403 Forbidden
+
+			// Validate that the ticket can be booked in the course
+			if($course)
+			{
+				$exists = $course->tickets()->where('id', $ticket->id)->exists();
+				if(!$exists)
+					return Response::json(['errors' => ['This ticket can not be booked as part of this course.']], 403); // 403 Forbidden
+			}
+
+			// Validate that the ticket can be booked directly in the package
+			if($package && !$course)
+			{
+				$exists = $package->tickets()->where('id', $ticket->id)->exists();
+				if(!$exists)
+					return Response::json(['errors' => ['This ticket can not be booked as part of this package.']], 403); // 403 Forbidden
+			}
+		}
+
+		// Validate that the course can be booked for this training_session
+		if($training_session)
+		{
+			if($course->training_id !== $training_session->training_id)
+				return Response::json( ['errors' => ['This course can not be booked for this class.']], 403 ); // 403 Forbidden
+		}
+
+		// Validate that the course can be booked in the package
+		if($course && $package)
+		{
+			$exists = $package->courses()->where('id', $course->id)->exists();
+			if(!$exists)
+				return Response::json(['error' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
 		}
 
 		// Check if the session's boat is allowed for the ticket
-		if( $ticket->boats()->count() > 0 )
+		if($departure && $ticket->boats()->exists())
 		{
 			$boatIDs = $ticket->boats()->lists('id');
 			if( !in_array($departure->boat_id, $boatIDs) )
 				return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
 		}
 
-		// Determine if we need a boatroom_id (only when the trip is overnight)
-		$trip             = $departure->trip;
-		$start            = new DateTime($departure->start);
-		$end              = clone $start;
-		$duration_hours   = floor($trip->duration);
-		$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
-		$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
-		if($start->format('Y-m-d') !== $end->format('Y-m-d'))
+		if($departure)
 		{
-			// The trip is overnight and we do need a boatroom_id
-
-			$boatroom_id = false;
-			$boatBoatrooms   = $departure->boat->boatrooms()->lists('id');
-			$ticketBoatrooms = $ticket->boatrooms()->lists('id');
-
-			// Check if the session's boat's boatrooms are allowed for the ticket
-			if( count($ticketBoatrooms) > 0 )
+			// Determine if we need a boatroom_id (only when the trip is overnight)
+			$trip             = $departure->trip;
+			$start            = new DateTime($departure->start);
+			$end              = clone $start;
+			$duration_hours   = floor($trip->duration);
+			$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+			$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+			if($start->format('Y-m-d') !== $end->format('Y-m-d'))
 			{
-				$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
-				if( count($intersect) === 0 )
-					return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat\'s cabin(s).')), 403 ); // 403 Forbidden
+				// The trip is overnight and we do need a boatroom_id
 
-				if( count($intersect) === 1 )
-					$boatroom_id = $intersect[0];
-			}
+				$boatroom_id = false;
+				$boatBoatrooms   = $departure->boat->boatrooms()->lists('id');
+				$ticketBoatrooms = $ticket->boatrooms()->lists('id');
 
-			// Just in case, check if the boat has boatrooms assigned
-			if( count($boatBoatrooms) === 0 )
-				return Response::json( array('errors' => array('Could not assign the customer, the boat has no cabins.')), 412 ); // 412 Precondition Failed
+				// Check if the session's boat's boatrooms are allowed for the ticket
+				if( count($ticketBoatrooms) > 0 )
+				{
+					$intersect = array_intersect($boatBoatrooms, $ticketBoatrooms);
+					if( count($intersect) === 0 )
+						return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat\'s cabin(s).')), 403 ); // 403 Forbidden
 
-			// Check if the boat only has one boatroom assigned
-			if( count($boatBoatrooms) === 1 )
-				$boatroom_id = $boatBoatrooms[0];
+					if( count($intersect) === 1 )
+						$boatroom_id = $intersect[0];
+				}
 
-			// Check if the boatroom is still not determined
-			if($boatroom_id === false)
-			{
-				// Check if a boatroom_id got submitted
-				if( !Input::has('boatroom_id') )
-					return Response::json( array('errors' => array('Please select in which cabin the customer will sleep.')), 406 ); // 406 Not Acceptable
+				// Just in case, check if the boat has boatrooms assigned
+				if( count($boatBoatrooms) === 0 )
+					return Response::json( array('errors' => array('Could not assign the customer, the boat has no cabins.')), 412 ); // 412 Precondition Failed
 
-				// Check if the submitted boatroom_id is allowed
-				$boatroom_id = Input::get('boatroom_id');
-				if( !in_array($boatroom_id, $boatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
-					return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
+				// Check if the boat only has one boatroom assigned
+				if( count($boatBoatrooms) === 1 )
+					$boatroom_id = $boatBoatrooms[0];
+
+				// Check if the boatroom is still not determined
+				if($boatroom_id === false)
+				{
+					// Check if a boatroom_id got submitted
+					if( !Input::has('boatroom_id') )
+						return Response::json( array('errors' => array('Please select in which cabin the customer will sleep.')), 406 ); // 406 Not Acceptable
+
+					// Check if the submitted boatroom_id is allowed
+					$boatroom_id = Input::get('boatroom_id');
+					if( !in_array($boatroom_id, $boatBoatrooms) || ( count($ticketBoatrooms) > 0 && !in_array($boatroom_id, $ticketBoatrooms) ) )
+						return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
+				}
+				else
+				{
+					// The above checks already determined that there is only one possible boatroom to take
+					// If a boatroom_id got submitted anyway, check if it is the same that we determined
+					if( Input::has('boatroom_id') && Input::get('boatroom_id') != $boatroom_id )
+						return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
+				}
 			}
 			else
 			{
-				// The above checks already determined that there is only one possible boatroom to take
-				// If a boatroom_id got submitted anyway, check if it is the same that we determined
-				if( Input::has('boatroom_id') && Input::get('boatroom_id') != $boatroom_id )
-					return Response::json( array('errors' => array('The selected cabin cannot be booked for this session.')), 403 ); // 403 Forbidden
+				// The trip ends on the same day it starts and thus customers are not assigned to boatrooms
+				$boatroom_id = null;
+			}
+
+			// Validate remaining capacity on session
+			// The $capacity variable is needed in the next check, so don't move this check!
+			$capacity = $departure->getCapacityAttribute();
+			if( $capacity[0] >= $capacity[1] )
+			{
+				// Session/Boat already full/overbooked
+				return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
+			}
+
+			// If a boatroom is needed, validate remaining capacity of boatroom
+			if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
+			{
+				// The selected/required boatroom is already full/overbooked
+				return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
 			}
 		}
-		else
-		{
-			// The trip ends on the same day it starts and thus customers are not assigned to boatrooms
-			$boatroom_id = null;
-		}
 
-		// Validate remaining capacity on session
-		// The $capacity variable is needed in the next check, so don't move this check!
-		$capacity = $departure->getCapacityAttribute();
-		if( $capacity[0] >= $capacity[1] )
+		// Validate remaining course capacity on session
+		if($departure && $course && !empty($course->capacity))
 		{
-			// Session/Boat already full/overbooked
-			return Response::json( array('errors' => array('The session is already fully booked!')), 403 ); // 403 Forbidden
-		}
-
-		// If a boatroom is needed, validate remaining capacity of boatroom
-		if($boatroom_id !== null && $capacity[2][$boatroom_id][0] >= $capacity[2][$boatroom_id][1] )
-		{
-			// The selected/required boatroom is already full/overbooked
-			return Response::json( array('errors' => array('The selected cabin is already fully booked!')), 403 ); // 403 Forbidden
-		}
-
-		// Validate remaining package capacity on session
-		/* if( isset($package) && !empty($package->capacity) )
-		{
-			// Package's capacity is *not* infinite and must be checked
-			$usedUp = $departure->bookingdetails()->whereHas('packagefacade', function($query) use ($package)
+			// Course's capacity is *not* infinite and must be checked
+			$usedUp = $departure->bookingdetails()->where('course_id', $course->id)->count();
+			if( $usedUp >= $course->capacity )
 			{
-				$query->where('package_id', $package->id);
-			})->count();
-			if( $usedUp >= $package->capacity )
-			{
-				// TODO Check for extra one-time packages for this session and their capacity
+				// TODO Check for extra one-time courses for this session and their capacity
 
-				return Response::json( array('errors' => array('The package\'s capacity on this session is already reached!')), 403 ); // 403 Forbidden
+				return Response::json( array('errors' => array('The course\'s capacity on this trip is already reached!')), 403 ); // 403 Forbidden
 			}
-		} */
+		}
 
 		// Validate that the ticket still fits into the package
-		if($packagefacade)
+		if($ticket && $packagefacade)
 		{
 			// Check if the package still has space for the wanted ticket
 			$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
 
 			if($bookedTicketsQuantity >= $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
 				return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403 ); // Forbidden
+		}
+
+		// Validate that the course still fits into the package
+		if($course && $packagefacade)
+		{
+			// Check if the package still has space for the wanted course
+			$bookedCoursesQuantity = $packagefacade->bookingdetails()->where('course_id', $course->id)->groupBy('customer_id')->count();
+
+			if($bookedCoursesQuantity >= $package->courses()->where('id', $course->id)->first()->pivot->quantity)
+				return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
+		}
+
+		// Validate that the ticket still fits into the course
+		if($ticket && $course)
+		{
+			// Check if the course still has space for the wanted ticket
+			$bookedTicketsQuantity = $course->bookingdetails()
+				->where('ticket_id', $ticket->id)
+				->where('customer_id', $customer->id)
+				->where('booking_id', $booking->id)
+				->count();
+
+			if($bookedTicketsQuantity >= $course->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
+				return Response::json(['errors' => ['The ticket cannot be assigned because the course\'s limit for the ticket is reached.']], 403 ); // Forbidden
+		}
+
+		// Validate that the class still fits into the course
+		if($training_session && $course)
+		{
+			// Check if the course still has space for the wanted class
+			$bookedTrainingsQuantity = $course->bookingdetails()
+				->where('course_id', $course->id)
+				->where('customer_id', $customer->id)
+				->where('booking_id', $booking->id)
+				->whereNotNull('training_session_id')
+				->count();
+
+			if($bookedTrainingsQuantity >= $course->training_quantity)
+				return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
 		}
 
 		// Check if we have to create a new packagefacade
@@ -736,29 +839,42 @@ class BookingController extends Controller {
 
 		// If all checks completed successfully, write into database
 		$bookingdetail = new Bookingdetail( array(
-			'customer_id'      => $customer->id,
-			'ticket_id'        => $ticket->id,
-			'session_id'       => $departure->id,
-			'boatroom_id'      => $boatroom_id,
-			'packagefacade_id' => $package ? $packagefacade->id : null
+			'customer_id'         => $customer->id,
+			'ticket_id'           => $ticket           ? $ticket->id           : null,
+			'session_id'          => $departure        ? $departure->id        : null,
+			'boatroom_id'         => $departure        ? $boatroom_id          : null,
+			'packagefacade_id'    => $package          ? $packagefacade->id    : null,
+			'course_id'           => $course           ? $course->id           : null,
+			'training_session_id' => $training_session ? $training_session->id : null
 		) );
+
+		if(!$bookingdetail->validate())
+			return Response::json(['errors' => $bookingdetails->errors()->all()], 406); // 406 Not Acceptable
+
 		$bookingdetail = $booking->bookingdetails()->save($bookingdetail);
 
 		// If this is the booking's first added details, set lead_customer_id
 		if($booking->bookingdetails()->count() === 1)
 			$booking->update( array('lead_customer_id' => $customer->id) );
 
-		// Add compulsory addons
-		$addons = Auth::user()->addons()->where('compulsory', true)->get();
-		if($addons->count() > 0) {
-			$addons->each(function($addon) use ($bookingdetail)
-			{
-				$bookingdetail->addons()->attach( $addon->id, array('quantity' => 1) );
-			});
+		if($departure)
+		{
+			// Add compulsory addons
+			$addons = Auth::user()->addons()->where('compulsory', true)->get();
+			if($addons->count() > 0) {
+				$addons->each(function($addon) use ($bookingdetail)
+				{
+					$bookingdetail->addons()->attach( $addon->id, array('quantity' => 1) );
+				});
+			}
 		}
 
 		// Update booking price
-		$ticket->calculatePrice($departure->start);
+		if($departure)
+			$ticket->calculatePrice($departure->start);
+
+		if($training_session)
+			$course->calculatePrice($training_session->start);
 
 		$booking->updatePrice();
 
@@ -767,7 +883,8 @@ class BookingController extends Controller {
 			'id'                   => $bookingdetail->id,
 			'addons'               => $addons->lists('id'),
 			'decimal_price'        => $booking->decimal_price,
-			'ticket_decimal_price' => $ticket->decimal_price,
+			'ticket_decimal_price' => $ticket? $ticket->decimal_price : false,
+			'course_decimal_price' => $course ? $course->decimal_price : false,
 			'packagefacade_id'     => $package ? $packagefacade->id : false
 		); // 200 OK
 	}
@@ -795,7 +912,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
-			$bookingdetail = $booking->bookingdetails()->with('departure')->findOrFail( Input::get('bookingdetail_id') );
+			$bookingdetail = $booking->bookingdetails()->with('departure', 'training_session')->findOrFail( Input::get('bookingdetail_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -809,10 +926,12 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the session start date has not already passed
-		if(Helper::isPast($bookingdetail->departure->start))
-		{
-			return Response::json( array('errors' => array('Cannot remove details, because the trip has already departed!')), 403 ); // 403 Forbidden
-		}
+		$start = !empty($bookingdetail->departure) ? $bookingdetail->departure->start : $bookingdetail->training_session->start;
+
+			if(Helper::isPast($start))
+			{
+				return Response::json( array('errors' => array('Cannot remove details, because the trip/class has already departed/started!')), 403 ); // 403 Forbidden
+			}
 
 		// Execute delete
 		$bookingdetail->delete();
@@ -880,6 +999,7 @@ class BookingController extends Controller {
 		 *
 		 * Optional input parameters
 		 * quantity
+		 * packagefacade_id
 		 */
 
 		// Check if the addon belongs to the company
@@ -893,6 +1013,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Break, if the addon is compulsory, as those cannot be added manually
 		if($addon->compulsory === 1 || $addon->compulsory === "1")
 			return Response::json( array('errors' => array('The addon is compulsory and cannot be added manually.')), 403 ); // 403 Forbidden
 
@@ -907,6 +1028,12 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Check if the bookingdetail belongs to the booking
 		try
 		{
@@ -915,14 +1042,12 @@ class BookingController extends Controller {
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The bookingdetail could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Validate that the booking is not cancelled or on hold
-		if($booking->status === "cancelled" || $booking->status === "on hold")
-		{
-			return Response::json( array('errors' => array('Cannot add addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
-		}
+		// Validate that the bookingdetail is for a trip and not a class
+		if(empty($bookingdetail->departure))
+			return Response::json(['errors' => ['Addons can only be added to trips, not classes.']], 403); // 403 Forbidden
 
 		// Check if trip departed more than 5 days ago
 		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
@@ -930,19 +1055,64 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
 
-		$quantity = Input::get('quantity', 1);
-		$validator = Validator::make(
-			array('quantity' => $quantity),
-			array('quantity' => 'integer|min:1')
-		);
+		if( Input::has('packagefacade_id') )
+		{
+			try
+			{
+				$packagefacade = $booking->packagefacades()->where('packagefacades.id', Input::get('packagefacade_id'))->firstOrFail(array('packagefacades.*'));
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+			}
 
+			$package = $packagefacade->package()->with('addons')->first();
+		}
+		else
+		{
+			$package = false;
+			$packagefacade = false;
+		}
+
+		// Validate that the addon can be booked as part of the package
+		if($package)
+		{
+			$exists = $package->addons()->where('id', $addon->id)->exists();
+			if(!$exists)
+				return Response::json(['errors' => ['This addon can not be booked as part of this package.']], 403); // 403 Forbidden
+		}
+
+		$quantity = Input::get('quantity', 1);
+
+		// Validate that the addon(s) still fit(s) into the package
+		if($packagefacade)
+		{
+			// Check if the package still has space for the wanted addon
+			$bookedAddonsQuantity = $addon->bookingdetails()
+				->wherePivot('packagefacade_id', $packagefacade->id)
+				->whereHas('booking', function($query) use ($booking)
+				{
+					$query->where('id', $booking->id);
+				})
+				->sum('addon_bookingdetail.quantity');
+
+			if(($bookedAddonsQuantity + $quantity) > $package->addons()->where('id', $ticket->id)->first()->pivot->quantity)
+				return Response::json(['errors' => ['The addon cannot be assigned because the package\'s limit for the addon would be exceeded.']], 403 ); // Forbidden
+		}
+
+		$validator = Validator::make(array('quantity' => $quantity), array('quantity' => 'integer|min:1'));
 		if( $validator->fails() )
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 
-		$bookingdetail->addons()->attach( $addon->id, array('quantity' => $quantity) );
+		$pivotData = array('quantity' => $quantity);
+		if($packagefacade)
+			$pivotData['packagefacade_id'] = $packagefacade->id;
+
+		$bookingdetail->addons()->attach( $addon->id, $pivotData );
 
 		// Update booking price
-		$booking->updatePrice();
+		if(!$packagefacade)
+			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
 
 		return array('status' => 'OK. Addon added.', 'decimal_price' => $booking->decimal_price);
 	}
@@ -981,6 +1151,12 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot remove addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
 		// Check if the bookingdetail belongs to the booking
 		try
 		{
@@ -992,11 +1168,9 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The bookingdetail could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Validate that the booking is not cancelled or on hold
-		if($booking->status === "cancelled" || $booking->status === "on hold")
-		{
-			return Response::json( array('errors' => array('Cannot remove addon, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
-		}
+		// Validate that the bookingdetail is for a trip and not a class
+		if(empty($bookingdetail->departure))
+			return Response::json(['errors' => ['Addons can only be added to trips, not classes.']], 403); // 403 Forbidden
 
 		// Check if trip departed more than 5 days ago
 		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
@@ -1010,7 +1184,7 @@ class BookingController extends Controller {
 		// Update booking price
 		$booking->updatePrice();
 
-		return array('status' => 'OK. Addon removed.', 'decimal_price' => $booking->decimal_price);
+		return array('status' => 'OK. Addon(s) removed.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postAddAccommodation()
@@ -1023,6 +1197,8 @@ class BookingController extends Controller {
 		 * customer_id
 		 * start
 		 * end
+		 *
+		 * packagefacade_id (optional)
 		 */
 
 		// Check if the booking belongs to the company
@@ -1034,6 +1210,12 @@ class BookingController extends Controller {
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add accommodation, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
 
 		// Check if the accommodation belongs to the company
@@ -1058,34 +1240,82 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Validate that the booking is not cancelled or on hold
-		if($booking->status === "cancelled" || $booking->status === "on hold")
-		{
-			return Response::json( array('errors' => array('Cannot add accommodation, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
-		}
-
-		// Validate that the start and end dates are maximum 1 days ago
 		$start = Input::get('start');
-		$end = Input::get('end');
+		$end   = Input::get('end');
 		$validator = Validator::make(
 			array(
 				'start' => $start,
 				'end'   => $end
 			),
 			array(
-				'start' => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago')),
-				'end'   => 'required|date|after:'.date('Y-m-d', strtotime('2 days ago'))
+				'start' => 'required|date',
+				'end'   => 'required|date'
 			)
 		);
-
 		if( $validator->fails() )
 		{
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
 
+		$start = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
+		$end   = new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
+
+		Clockwork::info($start->diff($end)->format('%R%a'));
+
+		if($start->diff($end)->format('%R%a') < 1)
+			return Response::json(['errors' => ['The end date must be after the start date.']], 400); // 400 Bad Request
+
+		// Validate that the start and end dates are maximum 1 days ago
+		$now = Helper::localTime();
+		if($start->diff($now)->format('%R%a') > 1 || $end->diff($now)->format('%R%a') > 1)
+			return Response::json(['errors' => ['The start date can only be a maximum of 1 day ago.']], 400); // 400 Bad Request
+
+		if( Input::has('packagefacade_id') )
+		{
+			try
+			{
+				$packagefacade = $booking->packagefacades()->where('packagefacades.id', Input::get('packagefacade_id'))->firstOrFail(array('packagefacades.*'));
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+			}
+
+			$package = $packagefacade->package()->with('addons')->first();
+		}
+		else
+		{
+			$package = false;
+			$packagefacade = false;
+		}
+
+		// Validate that the accommodation can be booked as part of the package
+		if($package)
+		{
+			$exists = $package->accommodations()->where('id', $accommodation->id)->exists();
+			if(!$exists)
+				return Response::json(['errors' => ['This accommodation can not be booked as part of this package.']], 403); // 403 Forbidden
+
+			// Check if the package still has space for the number of nights selected
+			$numberOfNights = $start->diff($end)->format('%a');
+
+			// TODO Sum up all nights that have been booked in this package already
+			$alreadyBookedNights = 0;
+			/*$alreadyBookedNights = $accommodation->bookings()
+				->wherePivot('packagefacade_id', $packagefacade->id)
+				->whereHas('booking', function($query) use ($booking)
+				{
+					$query->where('id', $booking->id);
+				})
+				->sum('addon_bookingdetail.quantity');*/
+
+			if(($alreadyBookedNights + $numberOfNights) > $package->accommodations()->where('id', $accommodation->id)->first()->pivot->quantity)
+				return Response::json(['errors' => ['The accommodation cannot be booked because the package\'s limit for the accommodation would be exceeded.']], 403 ); // Forbidden
+		}
+
 		// Check if accommodation is available for each of the selected days
-		$current_date = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
-		$end_date = new DateTime($end, new DateTimeZone( Auth::user()->timezone ));
+		$current_date = clone $start;
+		$end_date = $end;
 		do
 		{
 			if( $accommodation->bookings()
@@ -1102,17 +1332,22 @@ class BookingController extends Controller {
 		}
 		while( $current_date < $end_date );
 
-		$booking->accommodations()->attach( $accommodation->id, array('customer_id' => $customer->id, 'start' => $start, 'end' => $end) );
+		$pivotData = array('customer_id' => $customer->id, 'start' => $start, 'end' => $end);
+		if($packagefacade)
+			$pivotData['packagefacade_id'] = $packagefacade->id;
+
+		$booking->accommodations()->attach( $accommodation->id, $pivotData );
 
 		// Update booking price
-		$accommodation->calculatePrice($start, $end);
+		if(!$package)
+			$accommodation->calculatePrice($start, $end);
 
 		$booking->updatePrice();
 
 		return array(
 			'status'                      => 'OK. Accommodation added.',
 			'decimal_price'               => $booking->decimal_price,
-			'accommodation_decimal_price' => $accommodation->decimal_price
+			'accommodation_decimal_price' => !$package ? $accommodation->decimal_price : null
 		);
 	}
 

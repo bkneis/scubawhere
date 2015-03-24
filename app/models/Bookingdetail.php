@@ -8,7 +8,15 @@ class Bookingdetail extends Ardent {
 
 	protected $table = 'booking_details';
 
-	public static $rules = array();
+	public static $rules = array(
+		'customer_id'         => 'required|integer|min:1',
+		'ticket_id'           => 'integer|min:1|required_with:session_id|required_without:course_id',
+		'session_id'          => 'integer|min:1|required_with:ticket_id|required_without:training_session_id',
+		'boatroom_id'         => 'integer|min:1',
+		'packagefacade_id'    => 'integer|min:1',
+		'course_id'           => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
+		'training_session_id' => 'integer|min:1|required_with:course_id|required_without:session_id'
+	);
 
 	public function beforeSave()
 	{
