@@ -288,15 +288,15 @@ var Tour = {
 
 			$("#tour-next-step").on("click", function() {
 				if(window.tickets.length != 0) {
-					window.location.href = "#packages";
+					window.location.href = "#classes";
 					if(window.currentStep.position <= 6) {
 						window.currentStep = {
-							tab : "#packages",
+							tab : "#classes",
 							position : 7
 						};
 					}
 					$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-					$('#package-tab').addClass("selected");
+					$('#class-tab').addClass("selected");
 				} else pageMssg("Please add atleast one ticket");
 			});
 		}
@@ -341,14 +341,58 @@ var Tour = {
 					};
 				}
 				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-				$('#courses-tab').addClass("selected");
+				$('#course-tab').addClass("selected");
+			});
+		}
+	},
+
+	getCoursesTour : function() {
+		if(window.tourStart) {
+			if(window.currentStep.position < 8) {
+				window.location.href = window.currentStep.tab;
+			} else {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
+				introJs().setOptions( {
+					showStepNumbers : false,
+					exitOnOverlayClick : false,
+					exitOnEsc : false,
+					overlayOpacity : 0
+				}).start().onchange(function(targetElement) {
+					switch (targetElement.id) {  
+						case "class-form-container":
+							$("#class-name").val("Open Water Theory");
+							$("#class-description").val("Open Water Theory");
+							break;
+						case "class-list-div":
+							$("#no-classes").remove();
+							$("#class-list").append('<li id="dummy-class"><strong>Open Water Theory</strong> | £10.00 </li>');
+							break;
+					}
+				}).oncomplete(function() {
+					$("#dummy-class").remove();
+					$("#class-list").append('<p id="no-classes">No classes available.</p>');
+					clearForm();
+				});
+			}
+
+			$("#tour-next-step").on("click", function() {
+				window.location.href = "#packages";
+				if(window.currentStep.position <= 8) {
+					window.currentStep = {
+						tab : "#packages",
+						position : 9
+					};
+				}
+				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+				$('#package-tab').addClass("selected");
 			});
 		}
 	},
 
 	getPackagesTour : function() {
 		if(window.tourStart) {
-			if(window.currentStep.position < 7) {
+			if(window.currentStep.position < 9) {
 				window.location.href = window.currentStep.tab;
 				console.log(window.currentStep.tab);
 			} else {
@@ -391,10 +435,10 @@ var Tour = {
 
 			$("#tour-next-step").on("click", function() {
 				window.location.href = "#add-ons";
-				if(window.currentStep.position <= 7) {
+				if(window.currentStep.position <= 9) {
 					window.currentStep = {
 						tab : "#add-ons",
-						position : 8
+						position : 10
 					};
 				}
 				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -407,7 +451,7 @@ var Tour = {
 		if(window.tourStart) {
 			$("#tour-next-step").hide();
 			$("#tour-finish").show();
-			if(window.currentStep.position < 8) {
+			if(window.currentStep.position < 10) {
 				window.location.href = window.currentStep.tab;
 			} else {
 				$("#tour-button").empty();
