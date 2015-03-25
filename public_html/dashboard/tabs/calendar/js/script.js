@@ -280,15 +280,16 @@ function showModalWindowC(eventObject) {
 
 function showModalWindowM(id) {
 	// Create the modal window from session-template
-	window.sw.accommodationTemplateD = Handlebars.compile( $("#manifest-template").html() );
 
 	var params = "id=" + id;
-	Session.getAllCustomers(params, function sucess(data) {
+	if(display == "trips") {
+		window.sw.manifestTemplateD = Handlebars.compile( $("#manifest-template").html() );
+		Session.getAllCustomers(params, function sucess(data) {
 		//showModalWindowM(data);
 		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
 		//$("#customers-table").append(customer({customers : data.customers}));
 		$('#modalWindows')
-			.append( window.sw.accommodationTemplateD(data) )        // Create the modal
+			.append( window.sw.manifestTemplateD(data) )        // Create the modal
 			.children('#modal-' + data.id)          // Directly find it and use it
 			.reveal({                                      // Open modal window | Options:
 				animation: 'fadeAndPop',                   // fade, fadeAndPop, none
@@ -314,6 +315,42 @@ function showModalWindowM(id) {
 				]
 			});
 		});
+	}
+	else {
+		window.sw.manifestTemplateDC = Handlebars.compile( $("#class-manifest-template").html() );
+		Class.getAllCustomers(params, function sucess(data) {
+		//showModalWindowM(data);
+		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+		//$("#customers-table").append(customer({customers : data.customers}));
+		$('#modalWindows')
+			.append( window.sw.manifestTemplateDC(data) )        // Create the modal
+			.children('#modal-' + data.id)          // Directly find it and use it
+			.reveal({                                      // Open modal window | Options:
+				animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+				animationSpeed: 300,                       // how fast animtions are
+				closeOnBackgroundClick: false,             // if you click background will modal close?
+				dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
+				onFinishModal: function() {
+					$('#modal-' + data.id).remove();
+				}
+			});
+			$('#customer-data-table').dataTable({
+				"paging":   false,
+				"ordering": false,
+				"info":     false,
+				"pageLength" : 10,
+				"searching" : false,
+				data : data.customers,
+				columns : [
+				{"data" : "firstname"},
+				{"data" : "email"},
+				{"data" : "country_id"},
+				{"data" : "phone"}
+				]
+			});
+		});
+	}
+	
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -476,6 +513,7 @@ function getClassEvents(start, end, timezone, callback) {
 		'with_full': 1
 	}, function success(data) {
 		window.trainingSessions = _.indexBy(data, 'id');
+		console.log(data);
 
 		// Create eventObjects
 		_.each(window.trainingSessions, function(value) {
@@ -497,6 +535,8 @@ function getClassEvents(start, end, timezone, callback) {
 		});
 
 		callback(events);
+
+		$('#fetch-events-loader').remove();
 
 	},
 	function error(xhr){

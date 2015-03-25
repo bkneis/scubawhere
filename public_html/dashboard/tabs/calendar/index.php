@@ -144,10 +144,10 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="session-template" type="text/x-handlebars-template">
+		<script id="class-template" type="text/x-handlebars-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
-				<h3>{{{training.name}}}</h3>
+				<h3>{{{title}}}</h3>
 				<table style="margin-top: 2em;" class="striped">
 					<tr>
 						<td><strong>Date</strong></td>
@@ -160,17 +160,12 @@
 						</td>
 					</tr>
 					<tr>
-						<td><strong>No. of Students</strong></td>
-						<td>{{#unless ticketsLeft}}
-							<span class="soldout">SOLD OUT</span>
-							{{else}}
-							{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
-							{{/unless}}
-						</td>
+						<td><strong>Number of students</strong></td>
+						<td>{{session.capacity}}</td>
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{training_session.id}})">View trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
@@ -179,6 +174,25 @@
 			<div id="modal-{{id}}" class="reveal-modal">
 
 				<h3>{{trip.name}} - Trip Manifest</h3>
+				<table style="margin-top: 2em;" id="customer-data-table">
+					<thead>
+              			<tr>
+			                <th style="color:#313131">Name</th>
+			                <th style="color:#313131">Email</th>
+			                <th style="color:#313131">Country</th>
+			                <th style="color:#313131">Phone Number</th>
+			            </tr>
+            		</thead>
+            		<tbody id="customers-table">
+            		</tbody>
+				</table>
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
+		<script id="class-manifest-template" type="text/x-handlebars-template">
+			<div id="modal-{{id}}" class="reveal-modal">
+
+				<h3>{{training.name}} - Trip Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
 					<thead>
               			<tr>

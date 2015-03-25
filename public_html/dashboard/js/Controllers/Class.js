@@ -94,6 +94,16 @@ var Class = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	getAllCustomers: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "GET",
+			url: "/api/class-session/manifest",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 
 };
