@@ -20,105 +20,101 @@
 		{{/if}}
 	</li>
 	{{#notEmptyObj selectedTickets}}
-	<li class="list-group-item" id="selected-tickets">
-		<strong>Tickets</strong>
-		{{#each selectedTickets}}
-			<p>
-				<i class="fa fa-ticket fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
-				<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
-			</p>
-		{{/each}}
-	</li>
+		<li class="list-group-item" id="selected-tickets">
+			<h5>Selected Tickets</h5>
+			{{#each selectedTickets}}
+				<p>
+					<i class="fa fa-ticket fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+					<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
+				</p>
+			{{/each}}
+		</li>
 	{{/notEmptyObj}}
 	{{#notEmptyObj selectedPackages}}
 		<li class="list-group-item" id="selected-packages">
-			<strong>Packages</strong>
+			<h5>Selected Packages</h5>
 			{{#each selectedPackages}}
-				<p>
-					<div class="panel panel-default">
-						<div class="panel-heading" role="tab">
-							<h4 class="panel-title">
-								<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
-									<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
-									<i class="fa fa-plus-square-o expand-icon pull-right"></i>
-								</a>
-							</h4>
-						</div>
-						<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
-							<div class="panel-body">
-								{{#if courses}}
-									<strong>Courses</strong>
-									{{#each courses}}
-										<p>
-											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
-										</p>
-									{{/each}}
-								{{/if}}
-								{{#if tickets}}
-									<strong>Tickets</strong>
-									{{#each tickets}}
-										<p>
-											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
-										</p>
-									{{/each}}
-								{{/if}}
-								{{#if addons}}
-									<strong>Addons</strong>
-									{{#each addons}}
-										<p>
-											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
-										</p>
-									{{/each}}
-								{{/if}}
-								{{#if accommodations}}
-									<strong>Accommodations</strong>
-									{{#each accommodations}}
-										<p>
-											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
-										</p>
-									{{/each}}
-								{{/if}}
-							</div>
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab">
+						<h4 class="panel-title">
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
+								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+							</a>
+						</h4>
+					</div>
+					<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
+						<div class="panel-body">
+							{{#if courses}}
+								<strong>Courses</strong>
+								{{#each courses}}
+									<p>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+									</p>
+								{{/each}}
+							{{/if}}
+							{{#if tickets}}
+								<strong>Tickets</strong>
+								{{#each tickets}}
+									<p>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+									</p>
+								{{/each}}
+							{{/if}}
+							{{#if addons}}
+								<strong>Addons</strong>
+								{{#each addons}}
+									<p>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+									</p>
+								{{/each}}
+							{{/if}}
+							{{#if accommodations}}
+								<strong>Accommodations</strong>
+								{{#each accommodations}}
+									<p>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+									</p>
+								{{/each}}
+							{{/if}}
 						</div>
 					</div>
-				</p>
+				</div>
 			{{/each}}
 		</li>
 	{{/notEmptyObj}}
 	{{#notEmptyObj selectedCourses}}
 		<li class="list-group-item" id="selected-courses">
-			<strong>Courses</strong>
+			<h5>Selected Courses</h5>
 			{{#each selectedCourses}}
-				<p>
-					<div class="panel panel-default">
-						<div class="panel-heading" role="tab">
-							<h4 class="panel-title">
-								<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-course-{{id}}">
-									<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
-									<i class="fa fa-plus-square-o expand-icon pull-right"></i>
-								</a>
-							</h4>
-						</div>
-						<div id="booking-summary-course-{{id}}" class="panel-collapse collapse" role="tabpanel">
-							<div class="panel-body">
-								{{#if training}}
-									<strong>Class</strong>
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab">
+						<h4 class="panel-title">
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-course-{{id}}">
+								<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+							</a>
+						</h4>
+					</div>
+					<div id="booking-summary-course-{{id}}" class="panel-collapse collapse" role="tabpanel">
+						<div class="panel-body">
+							{{#if training}}
+								<strong>Class</strong>
+								<p>
+									<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}} <span class="badge badge-default small">{{training_quantity}}</span>
+								</p>
+							{{/if}}
+							{{#if tickets}}
+								<strong>Tickets</strong>
+								{{#each tickets}}
 									<p>
-										<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}} <span class="badge badge-default small">{{training_quantity}}</span>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
 									</p>
-								{{/if}}
-								{{#if tickets}}
-									<strong>Tickets</strong>
-									{{#each tickets}}
-										<p>
-											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
-										</p>
-									{{/each}}
-								{{/if}}
-							</div>
+								{{/each}}
+							{{/if}}
 						</div>
 					</div>
-				</p>
+				</div>
 			{{/each}}
 		</li>
 	{{/notEmptyObj}}
