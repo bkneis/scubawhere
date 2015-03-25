@@ -138,10 +138,11 @@ Booking.prototype.store = function() {
 	if(typeof window.basil === 'undefined') Booking.initiateStorage();
 
 	window.basil.set('booking_' + this.id, {
-		currentTab: this.currentTab,
-		selectedCustomers: this.selectedCustomers,
-		selectedTickets:   this.selectedTickets,
-		selectedPackages:  this.selectedPackages,
+		selectedTickets   : this.selectedTickets,
+		selectedCustomers : this.selectedCustomers,
+		selectedPackages  : this.selectedPackages,
+		selectedCourses   : this.selectedCourses,
+		currentTab        : this.currentTab,
 	});
 
 	return true;
@@ -162,6 +163,7 @@ Booking.prototype.loadStorage = function() {
 		this.selectedTickets   = storedObject.selectedTickets;
 		this.selectedCustomers = storedObject.selectedCustomers;
 		this.selectedPackages  = storedObject.selectedPackages;
+		this.selectedCourses   = storedObject.selectedCourses ;
 		this.currentTab        = storedObject.currentTab;
 	}
 };

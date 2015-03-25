@@ -24,7 +24,7 @@
 		<strong>Tickets</strong>
 		{{#each selectedTickets}}
 			<p>
-				<i class="fa fa-ticket fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
+				<i class="fa fa-ticket fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 				<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
 			</p>
 		{{/each}}
@@ -39,18 +39,82 @@
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
 								<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
-									<i class="fa fa-tags fa-fw"></i>&nbsp; {{name}} <span class="badge badge-default small">{{qty}}</span>
+									<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
 						</div>
 						<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								{{#each tickets}}
+								{{#if courses}}
+									<strong>Courses</strong>
+									{{#each courses}}
+										<p>
+											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										</p>
+									{{/each}}
+								{{/if}}
+								{{#if tickets}}
+									<strong>Tickets</strong>
+									{{#each tickets}}
+										<p>
+											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										</p>
+									{{/each}}
+								{{/if}}
+								{{#if addons}}
+									<strong>Addons</strong>
+									{{#each addons}}
+										<p>
+											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										</p>
+									{{/each}}
+								{{/if}}
+								{{#if accommodations}}
+									<strong>Accommodations</strong>
+									{{#each accommodations}}
+										<p>
+											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										</p>
+									{{/each}}
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</p>
+			{{/each}}
+		</li>
+	{{/notEmptyObj}}
+	{{#notEmptyObj selectedCourses}}
+		<li class="list-group-item" id="selected-courses">
+			<strong>Courses</strong>
+			{{#each selectedCourses}}
+				<p>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab">
+							<h4 class="panel-title">
+								<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-course-{{id}}">
+									<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+									<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+								</a>
+							</h4>
+						</div>
+						<div id="booking-summary-course-{{id}}" class="panel-collapse collapse" role="tabpanel">
+							<div class="panel-body">
+								{{#if training}}
+									<strong>Class</strong>
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{name}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}} <span class="badge badge-default small">{{training_quantity}}</span>
 									</p>
-								{{/each}}
+								{{/if}}
+								{{#if tickets}}
+									<strong>Tickets</strong>
+									{{#each tickets}}
+										<p>
+											<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										</p>
+									{{/each}}
+								{{/if}}
 							</div>
 						</div>
 					</div>
@@ -64,9 +128,9 @@
 			{{#each selectedCustomers}}
 				<p>
 				    {{#isLead this}}
-						<i class="fa fa-user fa-fw"></i>&nbsp; {{firstname}} {{lastname}} <small><span class="label label-warning">LEAD</span></small>
+						<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-warning">LEAD</span></small>
 					{{else}}
-						<i class="fa fa-user fa-fw"></i>&nbsp; {{firstname}} {{lastname}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>
+						<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>
 					{{/isLead}}
 					<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}">X</a>
 				</p>
