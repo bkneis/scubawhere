@@ -32,6 +32,10 @@ $(function() {
 		window.boats = _.indexBy(data, 'id');
 	});
 
+	Class.getAll(function(data) {
+		window.training = _.indexBy(data, 'id');
+	});
+
 	Accommodation.getAll(function(data) {
 		window.accommodations = _.indexBy(data, 'id');
 	});
@@ -466,7 +470,7 @@ function getClassEvents(start, end, timezone, callback) {
 	};
 	var events = [];
 
-	Class.getAllSessions({
+	Class.getSessions({
 		'after': start.format(),
 		'before': end.format(),
 		'with_full': 1

@@ -141,7 +141,7 @@ $(function() {
 
 			var events = [];
 
-			Class.getAllSessions({
+			Class.getSessions({
 				'after': start.format(),
 				'before': end.format(),
 				'with_full': 1

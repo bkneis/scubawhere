@@ -12,6 +12,12 @@ var Class = {
 		});
 	},
 
+	getSessions : function(params, handleData) {
+		$.get("/api/class-session/filter", params, function(data){
+			handleData(data);
+		});
+	},
+
 	getAllSessions : function(params, handleData) {
 		$.get("/api/class-session/all", params, function(data){
 			handleData(data);
