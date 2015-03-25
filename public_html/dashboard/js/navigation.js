@@ -38,8 +38,13 @@ $(function() {
         $('.tab-active').removeClass('tab-active');
         $('#sidenav a[href="#'+newHash+'"]').parent().addClass('tab-active');
 
-        // Open Management submenu if one of its tabs is selected
-        submenu = [
+        // Open submenu if one of its tabs is selected
+        var submenuCalendar = [
+            'calendar',
+            'scheduling',
+            'pickup-schedule'
+        ];
+        var submenuManagement = [
             'accommodations',
             'add-ons',
             'agents',
@@ -52,8 +57,9 @@ $(function() {
             'tickets',
             'trips'
         ];
-        if(submenu.indexOf(newHash) !== -1)
-            $('#management-submenu').css('display', 'block');
+
+        if(submenuCalendar.indexOf(newHash) !== -1)   $('#calendar-submenu').css('display', 'block');
+        if(submenuManagement.indexOf(newHash) !== -1) $('#management-submenu').css('display', 'block');
 
         // Blend out old content and display new content
         $mainContent.find('#wrapper').fadeOut(200, function() {
