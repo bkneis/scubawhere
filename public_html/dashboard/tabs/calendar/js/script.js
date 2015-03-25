@@ -68,22 +68,22 @@ $(function() {
 		},
 	});
 
-	$('#filter-options').on('change', function(event) {
-		event.preventDefault();
-		if($("#filter-options").val() == 'boat') {
-			$("div#filter-settings option[value=boat]").attr('disabled', true);
-			$("#filter-options").val('all');
-			$("#filter").append( boatsList({boats : window.boats}) );
-		}
-		else if($("#filter-options").val() == 'trip') {
-			$("div#filter-settings option[value=trip]").attr('disabled', true);
-			$("#filter-options").val('all');
-			$("#filter").append( tripsList({trips : window.trips}) );
-		}
-	});
+$('#filter-options').on('change', function(event) {
+	event.preventDefault();
+	if($("#filter-options").val() == 'boat') {
+		$("div#filter-settings option[value=boat]").attr('disabled', true);
+		$("#filter-options").val('all');
+		$("#filter").append( boatsList({boats : window.boats}) );
+	}
+	else if($("#filter-options").val() == 'trip') {
+		$("div#filter-settings option[value=trip]").attr('disabled', true);
+		$("#filter-options").val('all');
+		$("#filter").append( tripsList({trips : window.trips}) );
+	}
+});
 
-	$("#filter").on('change', '.filter', function(event){
-		event.preventDefault();
+$("#filter").on('change', '.filter', function(event){
+	event.preventDefault();
     	//console.log(this.options[this.selectedIndex].value);
     	console.log(filter);
     	if(this.id == "boats") {
@@ -104,37 +104,37 @@ $(function() {
     	$('#calendar').fullCalendar( 'refetchEvents' );
     });
 
-	$("#filters").on('click', '#remove-boats-filter', function(event){
-		event.preventDefault();
-		filterByBoat = false;
-		boatFilter = null;
-		$("div#filter-settings option[value=boat]").attr('disabled', false);
-		$(event.target).parent().remove();
-		$('#calendar').fullCalendar( 'refetchEvents' );
-	});
+$("#filters").on('click', '#remove-boats-filter', function(event){
+	event.preventDefault();
+	filterByBoat = false;
+	boatFilter = null;
+	$("div#filter-settings option[value=boat]").attr('disabled', false);
+	$(event.target).parent().remove();
+	$('#calendar').fullCalendar( 'refetchEvents' );
+});
 
-	$("#filters").on('click', '#remove-trips-filter', function(event){
-		event.preventDefault();
-		filterByTrip = false;
-		tripFilter = null;
-		$("div#filter-settings option[value=trip]").attr('disabled', false);
-		$(event.target).parent().remove();
-		$('#calendar').fullCalendar( 'refetchEvents' );
-	});
+$("#filters").on('click', '#remove-trips-filter', function(event){
+	event.preventDefault();
+	filterByTrip = false;
+	tripFilter = null;
+	$("div#filter-settings option[value=trip]").attr('disabled', false);
+	$(event.target).parent().remove();
+	$('#calendar').fullCalendar( 'refetchEvents' );
+});
 
-	$("#jump-to-date").on('change', '#jump-date', function(event){
-		event.preventDefault();
-		var date = $("#jump-date").val();
-		var jumpDate = $.fullCalendar.moment(date);
-		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-		$("#remove-jump").css('display', 'inline');
-		console.log("qwewe");
-	});
+$("#jump-to-date").on('change', '#jump-date', function(event){
+	event.preventDefault();
+	var date = $("#jump-date").val();
+	var jumpDate = $.fullCalendar.moment(date);
+	$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+	$("#remove-jump").css('display', 'inline');
+	console.log("qwewe");
+});
 
-	$("#jump-to-date").on('click', '#remove-jump', function(event){
-		event.preventDefault();
-		var date = new Date();
-		var d = date.getDate();
+$("#jump-to-date").on('click', '#remove-jump', function(event){
+	event.preventDefault();
+	var date = new Date();
+	var d = date.getDate();
     	var m = date.getMonth() + 1; // jan starts at 0
     	var y = date.getFullYear();
     	$("#jump-date").val('');
@@ -146,25 +146,25 @@ $(function() {
 		$("#remove-jump").css('display', 'none');
 	});
 
-	$("#filter-types").on('click', '.filter-type', function(event){
-		event.preventDefault();
-		$("#filter-"+display).removeClass("btn-primary");
-		display = $(this).attr("display");
-		$('#calendar').fullCalendar( 'refetchEvents' );
-		$("#filter-"+display).addClass("btn-primary");
-	});
+$("#filter-types").on('click', '.filter-type', function(event){
+	event.preventDefault();
+	$("#filter-"+display).removeClass("btn-primary");
+	display = $(this).attr("display");
+	$('#calendar').fullCalendar( 'refetchEvents' );
+	$("#filter-"+display).addClass("btn-primary");
+});
 
-	$('input.datepicker').datetimepicker({
-		pickDate: true,
-		pickTime: false,
-		icons: {
-			time: 'fa fa-clock-o',
-			date: 'fa fa-calendar',
-			up:   'fa fa-chevron-up',
-			down: 'fa fa-chevron-down'
-		},
-		clearBtn : true
-	});
+$('input.datepicker').datetimepicker({
+	pickDate: true,
+	pickTime: false,
+	icons: {
+		time: 'fa fa-clock-o',
+		date: 'fa fa-calendar',
+		up:   'fa fa-chevron-up',
+		down: 'fa fa-chevron-down'
+	},
+	clearBtn : true
+});
 
 });
 
@@ -294,22 +294,22 @@ function showModalWindowM(id) {
 				onFinishModal: function() {
 					$('#modal-' + data.id).remove();
 				}
+			});
+			$('#customer-data-table').dataTable({
+				"paging":   false,
+				"ordering": false,
+				"info":     false,
+				"pageLength" : 10,
+				"searching" : false,
+				data : data.customers,
+				columns : [
+				{"data" : "firstname"},
+				{"data" : "email"},
+				{"data" : "country_id"},
+				{"data" : "phone"}
+				]
+			});
 		});
-		$('#customer-data-table').dataTable({
-		"paging":   false,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		data : data.customers,
-		columns : [
-			{"data" : "firstname"},
-			{"data" : "email"},
-			{"data" : "country_id"},
-			{"data" : "phone"}
-		]
-	});
-	});
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -461,40 +461,31 @@ function getClassEvents(start, end, timezone, callback) {
 	//console.log(start.format(), end.format());
 	var sessionFilters = {
 		'after': start.format(),
+		'before': end.format()//,
+		//'with_full': 1
+	};
+	var events = [];
+
+	Class.getAllSessions({
+		'after': start.format(),
 		'before': end.format(),
 		'with_full': 1
-	};
-	if(filterByClass) sessionFilters.training_id = classFilter;
-	Class.getAllSessions(sessionFilters, function success(data) {
-		//console.log(data);
-		window.training = _.indexBy(data, 'id');
-
-		console.log(window.training);
-
-		var events = [];
+	}, function success(data) {
+		window.trainingSessions = _.indexBy(data, 'id');
 
 		// Create eventObjects
-		_.each(window.training, function(value) {
-			//var booked = value.capacity[0];
-			//var capacity = value.capacity[1];
-			//var ticketsLeft = capacity - booked;
-			var sameDay = true;
-			if(window.training[value.training_id].duration > 24) sameDay = false;
+		_.each(window.trainingSessions, function(value) {
 			var eventObject = {
-				title: window.training[ value.training_id ].name ,//+ ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
+				title: window.training[ value.training_id ].name, // use the element's text as the event title
 				allDay: false,
 				trip: window.training[ value.training_id ],
 				session: value,
 				isNew: false,
-				editable: false, // This uses a 'falsy' check on purpose
+				editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
 				durationEditable: false,
-				//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
-				//ticketsLeft : ticketsLeft,
-				//capacity : capacity,
-				//sameDay : sameDay
+				className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+				isTrip : false
 			};
-
-			if(ticketsLeft == 0) eventObject.title = window.training[ value.training_id ].name + " FULL";
 
 			eventObject.session.start = $.fullCalendar.moment(value.start);
 
@@ -503,8 +494,6 @@ function getClassEvents(start, end, timezone, callback) {
 
 		callback(events);
 
-		// Remove loading indictor
-		$('#fetch-events-loader').remove();
 	},
 	function error(xhr){
 		$('.loader').remove();
