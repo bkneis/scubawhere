@@ -164,20 +164,13 @@
 																<div class="panel-heading" role="tab">
 																	<h5 class="panel-title" id="-collapsible-list-group-">
 																		<a class="collapsed" data-toggle="collapse" href="#package-collapse-{{id}}" aria-expanded="false" aria-controls="package-collapse-{{id}}">
-																			Package Details
+																			Package Details <span class="caret"></span>
 																		</a>
-																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a></h5>
-																	</div>
-																	<div id="package-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
-																		<h5>Tickets</h5>	
-																		<ul class="list-group">
-																			{{#each tickets}}
-																				<li class="list-group-item package-ticket-item">
-																					<span class="badge">{{pivot.quantity}}</span>
-																					<i class="fa fa-ticket fa-fw"></i> {{{name}}}
-																				</li>
-																			{{/each}}
-																		</ul>
+																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a>
+																	</h5>
+																</div>
+																<div id="package-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
+																	{{#if courses}}
 																		<h5>Courses</h5>
 																		<ul class="list-group">
 																			{{#each courses}}
@@ -187,6 +180,19 @@
 																				</li>
 																			{{/each}}
 																		</ul>
+																	{{/if}}
+																	{{#if tickets}}
+																		<h5>Tickets</h5>
+																		<ul class="list-group">
+																			{{#each tickets}}
+																				<li class="list-group-item package-ticket-item">
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+																				</li>
+																			{{/each}}
+																		</ul>
+																	{{/if}}
+																	{{#if accommodations}}
 																		<h5>Accommodations</h5>
 																		<ul class="list-group">
 																			{{#each accommodations}}
@@ -196,6 +202,8 @@
 																				</li>
 																			{{/each}}
 																		</ul>
+																	{{/if}}
+																	{{#if addons}}
 																		<h5>Addons</h5>
 																		<ul class="list-group">
 																			{{#each addons}}
@@ -205,7 +213,7 @@
 																				</li>
 																			{{/each}}
 																		</ul>
-																	</div>
+																	{{/if}}
 																</div>
 															</div>
 														</div>
@@ -233,32 +241,32 @@
 																<div class="panel-heading" role="tab">
 																	<h5 class="panel-title" id="-collapsible-list-group-">
 																		<a class="collapsed" data-toggle="collapse" href="#course-collapse-{{id}}" aria-expanded="false" aria-controls="course-collapse-{{id}}">
-																			Course Details
+																			Course Details <span class="caret"></span>
 																		</a>
-																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a></h5>
-																	</div>
-																	<div id="course-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
-																		{{#if tickets}}
-																			<h5>Tickets</h5>	
-																			<ul class="list-group">
-																				{{#each tickets}}
-																					<li class="list-group-item package-ticket-item">
-																						<span class="badge">{{pivot.quantity}}</span>
-																						<i class="fa fa-ticket fa-fw"></i> {{{name}}}
-																					</li>
-																				{{/each}}
-																			</ul>
-																		{{/if}}
-																		{{#if training}}
-																			<h5>Class</h5>
-																			<ul class="list-group">
+																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a>
+																	</h5>
+																</div>
+																<div id="course-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
+																	{{#if training}}
+																		<h5>Class</h5>
+																		<ul class="list-group">
+																			<li class="list-group-item package-ticket-item">
+																			<span class="badge">{{training_quantity}}</span>
+																				<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}}
+																			</li>
+																		</ul>
+																	{{/if}}
+																	{{#if tickets}}
+																		<h5>Tickets</h5>
+																		<ul class="list-group">
+																			{{#each tickets}}
 																				<li class="list-group-item package-ticket-item">
-																				<span class="badge">{{training_quantity}}</span>
-																					<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}}
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-ticket fa-fw"></i> {{{name}}}
 																				</li>
-																			</ul>
-																		{{/if}}
-																	</div>
+																			{{/each}}
+																		</ul>
+																	{{/if}}
 																</div>
 															</div>
 														</div>
