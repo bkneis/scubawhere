@@ -351,13 +351,13 @@ class ReportController extends Controller {
 					$counted_courses[] = $identifier;
 
 					// Find the first departure or training datetime that is booked in this course
-					$details = $detail->course->bookingdetails()
+					$bookingdetails = $detail->course->bookingdetails()
 					    ->where('booking_id', $detail->booking_id)
 					    ->where('customer_id', $detail->customer_id)
 					    ->with('departure', 'training_session')
 					    ->get();
 
-					$firstDetail = $details->sortBy(function($d)
+					$firstDetail = $bookingdetails->sortBy(function($d)
 					{
 						if(!empty($d->departure))
 							return $d->departure->start;

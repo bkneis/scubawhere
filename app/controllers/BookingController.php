@@ -101,7 +101,7 @@ class BookingController extends Controller {
 
 				if(!array_key_exists($identifier, $pricedCourses))
 				{
-					// Find the first departure datetime that is booked in this package
+					// Find the first departure or class datetime that is booked in this course
 					// $bookingdetails = $detail->course->bookingdetails()->with('departure', 'training_session')->get();
 					$firstDetail = $booking->bookingdetails->filter(function($d) use ($detail)
 					{
@@ -853,8 +853,8 @@ class BookingController extends Controller {
 
 		$bookingdetail = $booking->bookingdetails()->save($bookingdetail);
 
-		// If this is the booking's first added details, set lead_customer_id
-		if($booking->bookingdetails()->count() === 1)
+		// If this is the booking's first added details and there is no lead customer yet, set lead_customer_id
+		if(empty($booking->lead_customer_id) && $booking->bookingdetails()->count() === 1)
 			$booking->update( array('lead_customer_id' => $customer->id) );
 
 		if($departure)
@@ -1074,19 +1074,15 @@ class BookingController extends Controller {
 			$packagefacade = false;
 		}
 
-		// Validate that the addon can be booked as part of the package
+		$quantity = Input::get('quantity', 1);
+
 		if($package)
 		{
+			// Validate that the addon can be booked as part of the package
 			$exists = $package->addons()->where('id', $addon->id)->exists();
 			if(!$exists)
 				return Response::json(['errors' => ['This addon can not be booked as part of this package.']], 403); // 403 Forbidden
-		}
 
-		$quantity = Input::get('quantity', 1);
-
-		// Validate that the addon(s) still fit(s) into the package
-		if($packagefacade)
-		{
 			// Check if the package still has space for the wanted addon
 			$bookedAddonsQuantity = $addon->bookingdetails()
 				->wherePivot('packagefacade_id', $packagefacade->id)
@@ -1105,13 +1101,13 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 
 		$pivotData = array('quantity' => $quantity);
-		if($packagefacade)
+		if($package)
 			$pivotData['packagefacade_id'] = $packagefacade->id;
 
 		$bookingdetail->addons()->attach( $addon->id, $pivotData );
 
 		// Update booking price
-		if(!$packagefacade)
+		if(!$package)
 			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
 
 		return array('status' => 'OK. Addon added.', 'decimal_price' => $booking->decimal_price);
@@ -1125,20 +1121,6 @@ class BookingController extends Controller {
 		 * bookingdetail_id
 		 * addon_id
 		 */
-
-		// Check if the addon belongs to the company
-		try
-		{
-			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->findOrFail( Input::get('addon_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
-		}
-
-		if($addon->compulsory === 1 || $addon->compulsory === "1")
-			return Response::json( array('errors' => array('The addon is compulsory and cannot be removed.')), 403 ); // 403 Forbidden
 
 		// Check if the booking belongs to the company
 		try
@@ -1178,11 +1160,26 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
 
+		// Check if the addon belongs to the bookingdetail
+		try
+		{
+			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
+			$addon = $bookingdetail->addons()->findOrFail( Input::get('addon_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The addon could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if($addon->compulsory === 1 || $addon->compulsory === "1")
+			return Response::json( array('errors' => array('The addon is compulsory and cannot be removed.')), 403 ); // 403 Forbidden
+
 		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
 		$bookingdetail->addons()->detach( $addon->id );
 
 		// Update booking price
-		$booking->updatePrice();
+		if(empty($addon->pivot->packagefacade_id))
+			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
 
 		return array('status' => 'OK. Addon(s) removed.', 'decimal_price' => $booking->decimal_price);
 	}
