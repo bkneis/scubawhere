@@ -8,7 +8,7 @@ $excluded_filenames = [
 ];
 
 while(false !== ($filename = readdir($dir_open))) {
-    if(!in_array($filename, $excluded_filenames){
+    if(!in_array($filename, $excluded_filenames)) {
         echo "<a href='./$filename'>$filename</a><br />";
     }
 }
