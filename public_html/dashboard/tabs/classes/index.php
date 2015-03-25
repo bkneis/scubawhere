@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your classes. A class can be valid for many trips. A class is a single reservation for a trip. For an educational course please create a package (see next page)."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your classes. A class is any event that requires students to participate in learning for a qualification"></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div id="classes-list-div" class="panel panel-default" data-step="7" data-position="right" data-intro="Once a class is saved, you will see it in your list. Click on a class to view/edit the details.">
+			<div id="classes-list-div" class="panel panel-default" data-step="3" data-position="right" data-intro="Once a class is saved, you will see it in your list. Click on a class to view/edit the details.">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Classes</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="class-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and base price for the class.">
+			<div class="panel panel-default" id="class-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and duration for the class.">
 				<script type="text/x-handlebars-template" id="class-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} Class</h4>

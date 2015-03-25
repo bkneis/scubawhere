@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now you need to add your packages. A package consists of many tickets and is great for offering deals that include more than 1 ticket. A package is also used for educational courses that include multiple trips."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now you need to add your courses. A course is defined by its class, each course consists of a single class and many/one tickets."></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="packages-list-div" data-step="7" data-position="right" data-intro="Once a package is saved, you will see it in your list. Click on a package to view/edit the details.">
+			<div class="panel panel-default" id="packages-list-div" data-step="5" data-position="right" data-intro="Once a course is saved, you will see it in your list. Click on a course to view/edit the details.">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Courses</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="course-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and price for the package.">
+			<div class="panel panel-default" id="course-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and price for the course.">
 				<script type="text/x-handlebars-template" id="course-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} Course</h4>
@@ -44,12 +44,12 @@
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div class="form-row" data-step="6" data-position="left" data-intro="Enter your boat capacity, excluding your crew.">
+							<div class="form-row">
 								<label class="field-label">Course capacity</label>
 								<input id="course-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 							</div>
 
-							<div id="course-tickets" class="form-row" data-step="3" data-position="left" data-intro="Now, select the tickets that you want to include in the package. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
+							<div id="course-tickets" class="form-row" data-step="3" data-position="left" data-intro="Now, select the class that you want to include in the course.">
 								<strong>Select the class to be included in this course:</strong>
 
 								{{#if update}}
@@ -59,7 +59,7 @@
 								{{/if}}
 							</div>
 
-							<div id="course-tickets" class="form-row ticket-list" data-step="3" data-position="left" data-intro="Now, select the tickets that you want to include in the package. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
+							<div id="course-tickets" class="form-row ticket-list" data-step="4" data-position="left" data-intro="Now, select the tickets that you want to include in the course. Once you select another ticket, another drop down box will appear to allow you to add another ticket. If you are finished adding tickets, leave the last one blank.">
 								<strong>Select tickets to be included in this course:</strong>
 
 								{{#if update}}

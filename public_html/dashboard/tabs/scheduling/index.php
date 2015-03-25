@@ -142,7 +142,7 @@
 							<input type="date" name="until" placeholder="YYYY-MM-DD" style="width: 175px;"><br>
 							<small>Default: for 1.5 years</small>
 
-							<button data-type="{{#if isTrip}}trips{{else}}classes{{/if}}" class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
+							<button data-type="{{#if isTrip}}trips{{else}}classes{{/if}}" class="btn btn-primary btn-lg create-window.training-button pull-right">Create timetable</button>
 						</form>
 					{{else}}
 						<div class="horizontal-seperator"><span>Options</span></div>

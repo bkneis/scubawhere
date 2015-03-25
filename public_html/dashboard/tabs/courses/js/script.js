@@ -65,7 +65,7 @@ $(function(){
 
 		courseForm = Handlebars.compile( $("#course-form-template").html() );
 		renderEditForm();
-		//Tour.getCoursesTour();
+		Tour.getCoursesTour();
 	});
 
 	ticketSelectTemplate = Handlebars.compile( $("#ticket-select-template").html() );
@@ -389,4 +389,27 @@ function showMe(box, self) {
 		div.hide(0);
 		div.find('input, select').prop('disabled', true);
 	}
+}
+
+function clearForm() {
+
+	var course;
+
+	course = {
+		task: 'add',
+		update: false
+	};
+
+	$('#course-form-container').empty().append( courseForm(course) );
+
+	$('input[name=name]').focus();
+
+	CKEDITOR.replace( 'description' );
+
+	setToken('[name=_token]');
+
+	// Set up change monitoring
+	$('form').on('change', 'input, select, textarea', function() {
+		$('form').data('hasChanged', true);
+	});
 }

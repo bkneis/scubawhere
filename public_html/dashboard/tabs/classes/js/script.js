@@ -14,6 +14,8 @@ $(function () {
 	renderClassList();
 	renderEditForm();
 
+	Tour.getClassesTour();
+
 	$('#class-list-container').on('click', 'li', function(event) {
 
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;

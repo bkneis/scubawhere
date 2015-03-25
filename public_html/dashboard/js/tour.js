@@ -318,7 +318,7 @@ var Tour = {
 					switch (targetElement.id) {  
 						case "class-form-container":
 							$("#class-name").val("Open Water Theory");
-							$("#class-description").val("Open Water Theory");
+							$("#trip-duration").val(5);
 							break;
 						case "class-list-div":
 							$("#no-classes").remove();
@@ -360,18 +360,19 @@ var Tour = {
 					overlayOpacity : 0
 				}).start().onchange(function(targetElement) {
 					switch (targetElement.id) {  
-						case "class-form-container":
-							$("#class-name").val("Open Water Theory");
-							$("#class-description").val("Open Water Theory");
+						case "course-form-container":
+							$("#course-name").val("PADI open water");
+							$("#course-capacity").val(10);
+							//$("#course-description").val("Beginers course to diving");
 							break;
-						case "class-list-div":
-							$("#no-classes").remove();
-							$("#class-list").append('<li id="dummy-class"><strong>Open Water Theory</strong> | £10.00 </li>');
+						case "course-list-div":
+							$("#no-courses").remove();
+							$("#course-list").append('<li id="dummy-course"><strong>PADI open water</strong> | £10.00 </li>');
 							break;
 					}
 				}).oncomplete(function() {
-					$("#dummy-class").remove();
-					$("#class-list").append('<p id="no-classes">No classes available.</p>');
+					$("#dummy-course").remove();
+					//$("#course-list").append('<p id="no-courses">No courses available.</p>');
 					clearForm();
 				});
 			}
