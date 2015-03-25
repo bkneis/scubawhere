@@ -215,6 +215,8 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	// Determine whether we need to inject a packagefacade_id into the request
 	if(typeof params.packagefacade_id === 'undefined' && typeof params.package_id !== 'undefined') {
+		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted, trying to detect packagefacade_id.');
+
 		var existingDetail = _.find(this.bookingdetails, function(detail) {
 			// First, test the customer_id
 			if( detail.customer.id != params.customer_id )
@@ -228,8 +230,12 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			if( detail.packagefacade.package.id == params.package_id)
 				return true;
 		});
-		if(typeof existingDetail !== 'undefined') // _.find() returns `undefined` if no match is found
+		if(typeof existingDetail !== 'undefined') { // _.find() returns `undefined` if no match is found
+			console.info('Existing packagefacade_id detected: ' + existingDetail.packagefacade.id + ' - For package "' + existingDetail.packagefacade.package.name + '"');
 			params.packagefacade_id = existingDetail.packagefacade.id;
+		}
+		else
+			console.info('No packagefacade_id detected. Assigning new package.');
 	}
 
 	$.ajax({
@@ -241,25 +247,32 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			var detail = {
 				id: data.id,
 				customer: window.customers[params.customer_id],
-				session: window.sessions[params.session_id],
-				ticket: $.extend(true, {}, window.tickets[params.ticket_id]), // Need to clone the ticket object, because we are going to write its decimal_price for the session's date in it
-				addons: [] // Prepare the addons array to be able to just push to it later
+				session: params.session_id ? window.sessions[params.session_id] : null,
+				ticket: params.ticket_id ? $.extend(true, {}, window.tickets[params.ticket_id]) : null, // Need to clone the ticket object, because we are going to write its decimal_price for the session's date in it
+				course: params.course_id ? $.extend(true, {}, window.courses[params.course_id]) : null,
+				training_session: params.training_session_id ? window.training_sessions[params.training_session_id] : null,
+				addons: [], // Prepare the addons array to be able to just push to it later
 			};
-
-			detail.ticket.decimal_price = data.ticket_decimal_price;
 
 			if(params.package_id) {
 				detail.packagefacade = {
 					id: data.packagefacade_id,
-					package: window.packages[params.package_id]
+					package: $.extend(true, {}, window.packages[params.package_id]),
 				};
+				detail.packagefacade.package.decimal_price = data.package_decimal_price;
+			}
+			else if(params.course_id) {
+				detail.course.decimal_price = data.course_decimal_price;
+			}
+			else {
+				detail.ticket.decimal_price = data.ticket_decimal_price;
 			}
 
 			// Add compulsory addons
 			_.each(data.addons, function(id) {
 				var addon = $.extend(true, {}, window.addons[id]);
 				addon.pivot = {
-					quantity: 1
+					quantity: 1,
 				};
 				detail.addons.push(addon);
 			});
@@ -369,7 +382,8 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 
 			var addon = $.extend(true, {}, window.addons[params.addon_id]);
 			addon.pivot = {
-				quantity: params.quantity
+				quantity: params.quantity,
+				packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
 			};
 
 			_.find(this.bookingdetails, function(detail) {
@@ -378,7 +392,8 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 
 			this.decimal_price = data.decimal_price;
 
-			this.calculateSums();
+			if(!params.packagefacade_id)
+				this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -411,13 +426,18 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 				return detail.id == params.bookingdetail_id;
 			});
 
+			var packaged = _.find(detail.addons, function(addon) {
+				return addon.id == params.addon_id;
+			}).pivot.packagefacade_id !== null;
+
 			detail.addons = _.reject(detail.addons, function(addon) {
 				return addon.id == params.addon_id;
 			});
 
 			this.decimal_price = data.decimal_price;
 
-			this.calculateSums();
+			if(!packaged)
+				this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -452,7 +472,8 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			accommodation.pivot = {
 				start: params.start,
 				end: params.end,
-				customer_id: params.customer_id
+				customer_id: params.customer_id,
+				packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
@@ -462,7 +483,8 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
-			this.calculateSums();
+			if(!params.packagefacade_id)
+				this.calculateSums();
 
 			successFn(data.status);
 		},
@@ -491,13 +513,18 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
+			var packaged = _.find(this.accommodations, function(accommodation) {
+				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
+			}).pivot.packagefacade_id !== null;
+
 			this.accommodations = _.reject(this.accommodations, function(accommodation) {
 				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
 			});
 
 			this.decimal_price = data.decimal_price;
 
-			this.calculateSums();
+			if(!packaged)
+				this.calculateSums();
 
 			successFn(data.status);
 		},
