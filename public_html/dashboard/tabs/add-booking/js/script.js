@@ -175,8 +175,11 @@ if(typeof window.countries === 'undefined')
 		$("#edit-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
 		window.promises.loadedCountries.resolve();
 	});
-else
+else {
+	$("#add-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
+	$("#edit-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
 	window.promises.loadedCountries.resolve();
+}
 
 window.promises.loadedTrips = $.Deferred();
 Trip.getAllTrips(function(data){
@@ -613,6 +616,7 @@ window.promises.loadedCustomers.done(function() {
 
 				if( _.size(booking.selectedCustomers) === 1 ) {
 					booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
+						booking.store();
 						drawBasket();
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);

@@ -6,7 +6,7 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Existing Customer</h3>
@@ -20,13 +20,13 @@
 					<script id="customers-list-template" type="text/x-handlebars-template">
 						<option selected="selected" value="">Search for a customer...</option>
 						{{#each customers}}
-							<option value="{{id}}">{{{firstname}}} {{{lastname}}} - {{email}}</option>
+							<option value="{{id}}">{{{firstname}}} {{{lastname}}}{{#if email}} - {{email}}{{/if}}</option>
 						{{/each}}
 					</script>
 				</div>
-				<div id="selected-customer">
 
-				</div>
+				<div id="selected-customer"></div>
+
 				<script id="selected-customer-template" type="text/x-handlebars-template">
 					<h4>Customer Details</h4>
 					<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="panel panel-primary form-horizontal">
 			<div class="panel-heading">
 				<h3 class="panel-title">New Customer</h3>
@@ -150,7 +150,7 @@
 					<fieldset id="edit-customer-details"></fieldset>
 					<fieldset id="edit-customer-countries">
 						<div class="form-group">
-							<label for="country_id">Country</label>
+							<label for="country_id">Country <span class="text-danger">*</span></label></label>
 							<select id="country_id" name="country_id" class="form-control select2">
 								<option value="">Choose Country...</option>
 							</select>
@@ -163,6 +163,8 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
+					<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
+					<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary">Save changes</button>
 				</div>
@@ -173,19 +175,19 @@
 <script id="edit-customer-template" type="text/x-handlebars-template">
 	<input type="hidden" name="id" value="{{id}}">
 	<div class="form-group">
-		<label for="email" class="col-sm-4 control-label">Email</label>
+		<label for="email" class="col-sm-4 control-label">Email <span class="text-danger">*</span></label></label>
 		<div class="col-sm-8">
 			<input type="email" name="email" class="form-control" placeholder="Email" value="{{email}}">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="firstname" class="col-sm-4 control-label">First Name</label>
+		<label for="firstname" class="col-sm-4 control-label">First Name <span class="text-danger">**</span></label></label>
 		<div class="col-sm-8">
 			<input type="text" name="firstname" class="form-control" placeholder="First Name" value="{{{firstname}}}">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="lastname" class="col-sm-4 control-label">Last Name</label>
+		<label for="lastname" class="col-sm-4 control-label">Last Name <span class="text-danger">**</span></label></label>
 		<div class="col-sm-8">
 			<input type="text" name="lastname" class="form-control" placeholder="Last Name" value="{{{lastname}}}">
 		</div>
@@ -221,7 +223,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="phone" class="col-sm-4 control-label">Phone</label>
+		<label for="phone" class="col-sm-4 control-label">Phone <span class="text-danger">*</span></label></label>
 		<div class="col-sm-8">
 			<input type="text" name="phone" class="form-control" placeholder="Phone" value="{{phone}}">
 		</div>
