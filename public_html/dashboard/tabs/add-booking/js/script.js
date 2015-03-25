@@ -1,6 +1,10 @@
-getToken();
 
 window.promises = {};
+
+window.promises.loadedToken = $.Deferred();
+getToken(function callback() {
+	window.promises.loadedToken.resolve();
+});
 
 Handlebars.registerHelper('currency', function() {
 	if(typeof window.company !== 'undefined')
@@ -262,53 +266,55 @@ $('#source-tab').on('click', '.booking-source a', function() {
 
 });
 
-$('#source-tab').on('click', '.source-finish', function() {
+window.promises.loadedToken.done(function() {
+	$('#source-tab').on('click', '.source-finish', function() {
 
-	//Get that cog spinning!
-	$(this).html('<i class="fa fa-cog fa-spin"></i> Initiating...');
+		//Get that cog spinning!
+		$(this).html('<i class="fa fa-cog fa-spin"></i> Initiating...');
 
-	//Find the source type that has been selected
-	var type = $('.booking-source').children('.active').first().data("type");
+		//Find the source type that has been selected
+		var type = $('.booking-source').children('.active').first().data("type");
 
-	if(typeof type === "undefined") {
-		pageMssg('Please select the source of the booking.', 'warning');
-		$('.source-finish').html('Next');
-		return false;
-	}
+		if(typeof type === "undefined") {
+			pageMssg('Please select the source of the booking.', 'warning');
+			$('.source-finish').html('Next');
+			return false;
+		}
 
-	//If agent type selected, find the selected agent and prepare the ajax params
-  	var params = {};
+		//If agent type selected, find the selected agent and prepare the ajax params
+	  	var params = {};
 
-	if(type == "agent") {
-		var agentId   = $('#agents-list').children('.active').data('id');
-		var reference = $('#agent-reference-' + agentId).val();
-		params = {
-			_token: window.token,
-			agent_id: agentId,
-			agent_reference: reference
-		};
-	} else {
-		params = {
-			_token: window.token,
-			source: type
-		};
-	}
+		if(type == "agent") {
+			var agentId   = $('#agents-list').children('.active').data('id');
+			var reference = $('#agent-reference-' + agentId).val();
+			params = {
+				_token: window.token,
+				agent_id: agentId,
+				agent_reference: reference
+			};
+		} else {
+			params = {
+				_token: window.token,
+				source: type
+			};
+		}
 
-	if(type == "agent" && typeof(agentId) === 'undefined') {
-		pageMssg('Please select an agent from the list to continue.', 'warning');
-		$('.source-finish').html('Next');
-		return false;
-	}
+		if(type == "agent" && typeof(agentId) === 'undefined') {
+			pageMssg('Please select an agent from the list to continue.', 'warning');
+			$('.source-finish').html('Next');
+			return false;
+		}
 
-	// Instantiate new Booking
-	window.booking = new Booking();
-	booking.initiate(params, function(status) {
-		$('[data-target="#ticket-tab"]').tab('show');
-		drawBasket();
-	}, function error(xhr) {
-		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
-		$('.source-finish').html('Next');
+		// Instantiate new Booking
+		window.booking = new Booking();
+		booking.initiate(params, function(status) {
+			$('[data-target="#ticket-tab"]').tab('show');
+			drawBasket();
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0], 'danger');
+			$('.source-finish').html('Next');
+		});
 	});
 });
 
