@@ -23,8 +23,6 @@ class TrainingSession extends Ardent {
 
 	public function getCapacityAttribute()
 	{
-		$boat = $this->boat()->with('boatrooms')->withTrashed()->first();
-
 		$result = array();
 
 		$result[0] = $this->bookingdetails()
@@ -32,8 +30,6 @@ class TrainingSession extends Ardent {
 		    {
 		    	$query->whereIn('status', Booking::$counted);
 		    })->count();
-
-		// $result[1] = $boat->capacity;
 
 		return $result;
 	}
