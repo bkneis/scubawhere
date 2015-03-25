@@ -870,22 +870,86 @@ class BookingController extends Controller {
 		}
 
 		// Update booking price
-		if($departure)
-			$ticket->calculatePrice($departure->start);
+		if($package)
+		{
+			// Find the first departure datetime that is booked in this package
+			$bookingdetails = $packagefacade->bookingdetails()->with('departure', 'training_session')->get();
+			$firstDetail = $bookingdetails->sortBy(function($detail)
+			{
+				if($detail->departure)
+					return $detail->departure->start;
+				else
+					return $detail->training_session->start;
+			})->first();
 
-		if($training_session)
-			$course->calculatePrice($training_session->start);
+			if($firstDetail->departure)
+				$start = $firstDetail->departure->start;
+			else
+				$start = $firstDetail->training_session->start;
+
+			$firstAccommodation = $booking->accommodations->wherePivot('packagefacade_id', $detail->packagefacade_id)->get()
+			->sortBy(function($accommodation)
+			{
+				return $accommodation->pivot->start;
+			})->first();
+
+			if(!empty($firstAccommodation))
+			{
+				$detailStart = new DateTime($start);
+				$accommStart = new DateTime($firstAccommodation->pivot->start);
+
+				$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
+
+				$start = $start->format('Y-m-d H:i:s');
+			}
+
+			// Calculate the package price at this first datetime and sum it up
+			$package->calculatePrice($start, $limitBefore);
+		}
+		elseif($course)
+		{
+			// Find the first departure or class datetime that is booked in this course
+			$bookingdetails = $course->bookingdetails()
+				->where('booking_id', $booking->id)
+				->where('customer_id', $customer->id)
+				->with('departure', 'training_session')
+				->get();
+
+			$firstDetail = $bookingdetails->sortBy(function($detail)
+			{
+				if($detail->departure)
+					return $detail->departure->start;
+				else
+					return $detail->training_session->start;
+			})->first();
+
+			if($firstDetail->departure)
+				$start = $firstDetail->departure->start;
+			else
+				$start = $firstDetail->training_session->start;
+
+			// Calculate the package price at this first departure datetime and sum it up
+			$course->calculatePrice($start, $limitBefore);
+		}
+		else
+		{
+			if($departure)
+				$ticket->calculatePrice($departure->start);
+		}
 
 		$booking->updatePrice();
 
 		return array(
-			'status'               => 'OK. Booking details added.',
-			'id'                   => $bookingdetail->id,
-			'addons'               => $addons->lists('id'),
-			'decimal_price'        => $booking->decimal_price,
-			'ticket_decimal_price' => $ticket? $ticket->decimal_price : false,
-			'course_decimal_price' => $course ? $course->decimal_price : false,
-			'packagefacade_id'     => $package ? $packagefacade->id : false
+			'status'                => 'OK. Booking details added.',
+			'id'                    => $bookingdetail->id,
+			'addons'                => $addons->lists('id'),
+			'decimal_price'         => $booking->decimal_price,
+
+			'package_decimal_price' => $package ? $package->decimal_price : false,
+			'course_decimal_price'  => !$package && $course ? $course->decimal_price : false,
+			'ticket_decimal_price'  => !$package && !$course && $ticket ? $ticket->decimal_price : false,
+
+			'packagefacade_id'      => $package ? $packagefacade->id : false
 		); // 200 OK
 	}
 
