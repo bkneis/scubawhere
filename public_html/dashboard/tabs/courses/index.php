@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="course-list-template">
 						<ul id="course-list" class="entity-list">
 							{{#each courses}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{count tickets}} tickets</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{training_quantity}} classes | {{count tickets}} tickets</li>
 							{{else}}
 								<p id="no-courses">No courses available.</p>
 							{{/each}}
