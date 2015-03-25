@@ -99,7 +99,10 @@
           <h4 class="panel-title">Setup Wizard</h4>
         </div>
         <div style="min-height:250px;" class="panel-body">
-          <p>Welcome to scub rms ...</p>
+          <p>Welcome to scubawhereRMS! So we can get you all set up with our system, 
+          this wizard will take you through our system and ask that you fill in some 
+          information about your dive operation.</p>
+          <p>So lets get started. Click start wizard to begin the configuration.</p>
             <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
         </div>
       </div>
@@ -202,7 +205,7 @@
       </ul>
       </div>
       <div class="col-md-2" style="min-height:80px" id="tour-button">
-        <button id="tour-next-step" style="margin-top:20px;" class="btn btn-success text-uppercase">Next Step</button>
+        <button id="tour-next-step" style="margin-top:20px" class="btn btn-success text-uppercase">Next Step</button>
         <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
       </div>
     </script>
