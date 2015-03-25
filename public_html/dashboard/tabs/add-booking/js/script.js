@@ -558,10 +558,14 @@ window.promises.loadedCustomers.done(function() {
 		var params = $(this).serializeObject();
 		params._token = window.token;
 
-		Customer.updateCustomer(params, function success() {
+		Customer.updateCustomer(params, function success(data) {
+			pageMssg(data.status, 'success');
 			Customer.getCustomer("id="+params.id, function(data) {
 				//Updated selectedCustomers data
 				window.customers[params.id] = data;
+
+				$("#existing-customers").html(customersTemplate({customers:window.customers}));
+
 				booking.selectedCustomers[params.id] = window.customers[params.id];
 				booking.store();
 				booking.lead_customer = booking.selectedCustomers[params.id];
@@ -591,10 +595,14 @@ window.promises.loadedCustomers.done(function() {
 		params._token = window.token;
 		params.phone = (params.dialling_code).replace(/[^a-zA-Z 0-9]+/g, '') + ' ' + params.phone;
 
-		Customer.createCustomer(params, function success(data){
-			Customer.getCustomer("id="+data.id, function(data) {
+		Customer.createCustomer(params, function success(data) {
+			pageMssg(data.status, 'success');
+			Customer.getCustomer("id="+data.id, function success(data) {
 
 				window.customers[data.id] = data;
+
+				$("#existing-customers").html(customersTemplate({customers:window.customers}));
+
 				booking.selectedCustomers[data.id] = window.customers[data.id];
 				booking.store();
 
