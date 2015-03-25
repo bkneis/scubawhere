@@ -12,6 +12,7 @@ var Booking = function(data) {
 	this.currentTab        = null;
 	this.selectedTickets   = {};
 	this.selectedPackages  = {};
+	this.selectedCourses   = {};
 	this.selectedCustomers = {};
 	this.sums              = {};
 

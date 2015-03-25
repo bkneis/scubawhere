@@ -159,15 +159,110 @@
 														<p class="text-center ticket-icon"><i class="fa fa-tags fa-4x"></i></p>
 														<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
 														<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
-															<ul class="list-group">
-																{{#each tickets}}
-																	<li class="list-group-item package-ticket-item">
-																		<span class="badge">{{pivot.quantity}}</span>
-																		<i class="fa fa-ticket fa-fw"></i> {{{name}}}
-																	</li>
-																{{/each}}
-															</ul>
+														<div class="panel-group panel-packages" role="tablist">
+															<div class="panel panel-default">
+																<div class="panel-heading" role="tab">
+																	<h5 class="panel-title" id="-collapsible-list-group-">
+																		<a class="collapsed" data-toggle="collapse" href="#package-collapse-{{id}}" aria-expanded="false" aria-controls="package-collapse-{{id}}">
+																			Package Details
+																		</a>
+																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a></h5>
+																	</div>
+																	<div id="package-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
+																		<h5>Tickets</h5>	
+																		<ul class="list-group">
+																			{{#each tickets}}
+																				<li class="list-group-item package-ticket-item">
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+																				</li>
+																			{{/each}}
+																		</ul>
+																		<h5>Courses</h5>
+																		<ul class="list-group">
+																			{{#each courses}}
+																				<li class="list-group-item package-ticket-item">
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
+																				</li>
+																			{{/each}}
+																		</ul>
+																		<h5>Accommodations</h5>
+																		<ul class="list-group">
+																			{{#each accommodations}}
+																				<li class="list-group-item package-ticket-item">
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-bed fa-fw"></i> {{{name}}}
+																				</li>
+																			{{/each}}
+																		</ul>
+																		<h5>Addons</h5>
+																		<ul class="list-group">
+																			{{#each addons}}
+																				<li class="list-group-item package-ticket-item">
+																					<span class="badge">{{pivot.quantity}}</span>
+																					<i class="fa fa-cubes fa-fw"></i> {{{name}}}
+																				</li>
+																			{{/each}}
+																		</ul>
+																	</div>
+																</div>
+															</div>
+														</div>
 														<a role="button" class="btn btn-warning btn-block btn-sm add-package" data-id="{{id}}">Add</a>
+													</div>
+												</div>
+											</div>
+										{{/each}}
+									</script>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12" id="course-list">
+									<span class="loader"></span>
+									<script id="course-list-template" type="text/x-handlebars-template">
+										{{#each courses}}
+											<div class="col-sm-6 col-md-4">
+												<div class="panel panel-default">
+													<div class="panel-body">
+														<p class="text-center ticket-icon"><i class="fa fa-graduation-cap fa-4x"></i></p>
+														<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
+														<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
+														<div class="panel-group panel-packages" role="tablist">
+															<div class="panel panel-default">
+																<div class="panel-heading" role="tab">
+																	<h5 class="panel-title" id="-collapsible-list-group-">
+																		<a class="collapsed" data-toggle="collapse" href="#course-collapse-{{id}}" aria-expanded="false" aria-controls="course-collapse-{{id}}">
+																			Course Details
+																		</a>
+																		<a class="anchorjs-link" href="#-collapsible-list-group-"><span class="anchorjs-icon"></span></a></h5>
+																	</div>
+																	<div id="course-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
+																		{{#if tickets}}
+																			<h5>Tickets</h5>	
+																			<ul class="list-group">
+																				{{#each tickets}}
+																					<li class="list-group-item package-ticket-item">
+																						<span class="badge">{{pivot.quantity}}</span>
+																						<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+																					</li>
+																				{{/each}}
+																			</ul>
+																		{{/if}}
+																		{{#if training}}
+																			<h5>Class</h5>
+																			<ul class="list-group">
+																				<li class="list-group-item package-ticket-item">
+																				<span class="badge">{{training_quantity}}</span>
+																					<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}}
+																				</li>
+																			</ul>
+																		{{/if}}
+																	</div>
+																</div>
+															</div>
+														</div>
+														<a role="button" class="btn btn-info btn-block btn-sm add-course" data-id="{{id}}">Add</a>
 													</div>
 												</div>
 											</div>
@@ -1142,6 +1237,8 @@
 	<script src="/js/Controllers/Agent.js"></script>
 	<script src="/js/Controllers/Ticket.js"></script>
 	<script src="/js/Controllers/Package.js"></script>
+	<script src="/js/Controllers/Course.js"></script>
+	<script src="/js/Controllers/Class.js"></script>
 	<script src="/js/Controllers/Session.js"></script>
 	<script src="/js/Controllers/Booking.js"></script>
 	<script src="/js/Controllers/Trip.js"></script>
