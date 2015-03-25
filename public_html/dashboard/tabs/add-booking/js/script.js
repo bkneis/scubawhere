@@ -648,20 +648,26 @@ $('#booking-summary').on('click', '.lead-customer', function() {
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
   if(!booking.lead_customer) {
 		pageMssg("Please designate a lead customer.", "danger");
+		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
 	if(!booking.lead_customer.email) {
 		pageMssg("The lead customer requires an email!", "danger");
+		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
 	if(!booking.lead_customer.phone) {
 		pageMssg("The lead customer requires a phone number!", "danger");
+		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
 	if(!booking.lead_customer.country_id) {
 		pageMssg("The lead customer requires a country!", "danger");
+		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
+
+	$('[data-target="#session-tab"]').data('validated', true);
 });
 
 /*
@@ -674,7 +680,9 @@ var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-templat
 var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
 var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
 
-$('[data-target="#session-tab"]').on('show.bs.tab', function () {
+$('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
+	if($('[data-target="#session-tab"]').data('validated') === false) return false;
+
 	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#session-customers").children().first().addClass('active');
 
