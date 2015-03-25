@@ -28,4 +28,14 @@ var Timetable = {
 			error: errorFn
 		});
 	},
+
+	createClassTimetable: function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/schedule/add",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
 };

@@ -131,13 +131,18 @@
 								{{timetableWeek 2}}
 							</table>
 							<input type="hidden" name="_token">
+
+							{{#if isTrip}}
 							<input type="hidden" name="session_id" value="{{session.id}}">
+							{{else}}
+							<input type="hidden" name="training_session_id" value="{{session.id}}">
+							{{/if}}
 
 							Until:<br>
 							<input type="date" name="until" placeholder="YYYY-MM-DD" style="width: 175px;"><br>
 							<small>Default: for 1.5 years</small>
 
-							<button class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
+							<button data-type="{{#if isTrip}}trips{{else}}classes{{/if}}" class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
 						</form>
 					{{else}}
 						<div class="horizontal-seperator"><span>Options</span></div>
