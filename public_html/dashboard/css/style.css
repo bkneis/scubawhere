@@ -1109,6 +1109,112 @@ big {
     font-size: 10px;
 }
 
+
+/* Tour naviagtion izard css */
+
+.tnav-wizard>li {
+    float: left;
+    display: block;
+    width: 9.8%;
+}
+
+.tnav-wizard>li#accomli {
+    float: left;
+    display: block;
+    width: 11%;
+}
+
+.tnav-wizard>li>a {
+    font-size: 12px;
+    color: #656d78;
+    text-decoration: none;
+    display: block;
+    line-height: 18px;
+    padding: 10px 20px 20px 6px!important;
+    position: relative;
+}
+
+.tnav-wizard>li>a .step-description {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .tnav-wizard>li>a .step-description {
+        display: block;
+    }
+}
+
+.tnav-wizard>li>a:before {
+    content: " ";
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 2px;
+    background: #D5D5D5;
+    z-index: 2;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+.tnav-wizard>li:last-child>a:before {
+	background: transparent;
+}
+
+.tnav-wizard>li>a:after {
+    content: " ";
+    position: absolute;
+    bottom: -10px;
+    left: 0px;
+    width: 22px;
+    height: 22px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #FFF;
+    border: 3px solid #D5D5D5;
+    z-index: 3;
+    text-align: center;
+    line-height: 17px;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+    color: #DDD;
+}
+
+.tnav-wizard>li>a.selected:before {
+    background: #656d78;
+}
+
+.tnav-wizard>li>a.selected:after {
+    border-color: #656d78;
+    content: "\f0da";
+    font-family: FontAwesome;
+    color: #656d78;
+    font-size: 13px;
+    padding-left: 2px;
+}
+.tnav-wizard>li>a.selected>span {
+	font-weight: bold;
+}
+
+.tnav-wizard>li>a.done:before {
+    background: #95b75d;
+}
+
+.tnav-wizard>li>a.done:after {
+    border-color: #95b75d;
+    content: "\f00c";
+    font-family: FontAwesome;
+    color: #95b75d;
+    font-size: 10px;
+}
+
 .summary-totals {
     font-size: 18px;
 }

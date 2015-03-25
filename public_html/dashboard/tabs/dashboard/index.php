@@ -151,8 +151,8 @@
 
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
     <div class="col-md-10">
-      <ul class="nav nav-wizard" role="tablist">
-        <li role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
+      <ul class="nav tnav-wizard" role="tablist">
+        <li id="accomli" role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
           <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
             <span class="step-description">Accommodations</span>
           </a>
