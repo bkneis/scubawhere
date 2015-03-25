@@ -153,7 +153,7 @@ $(function() {
 					var eventObject = {
 						title: window.training[ value.training_id ].name, // use the element's text as the event title
 						allDay: false,
-						trip: window.training[ value.training_id ],
+						trip: window.training[ value.training_id ], // actually is training, used for less repetive of handlebars
 						session: value,
 						isNew: false,
 						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
