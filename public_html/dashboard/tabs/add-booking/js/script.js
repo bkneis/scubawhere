@@ -677,6 +677,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-template").html());
 var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
 var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
+// var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 	if($('[data-target="#session-tab"]').data('validated') === false) return false;

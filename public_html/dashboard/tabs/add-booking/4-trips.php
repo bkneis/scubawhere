@@ -36,23 +36,47 @@
 		</div>
 		<script id="session-tickets-template" type="text/x-handlebars-template">
 			{{#each tickets}}
-				{{#assignCheck this}}
-					<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
-						<span class="label label-default">Ticket</span>
-						{{{name}}}
-						<span class="badge badge-default small">{{free}}</span>
-					</a>
-				{{/assignCheck}}
+				<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
+					<i class="fa fa-ticket fa-fw"></i>
+					{{{name}}}
+					<span class="badge badge-default small">{{qty}}</span>
+				</a>
 			{{/each}}
 		</script>
 		<script id="session-packages-template" type="text/x-handlebars-template">
 			{{#each packages}}
-				{{#each tickets}}
-					<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
-						<span class="label label-warning">{{{../name}}}</span>
-						{{{name}}}
-					</a>
-				{{/each}}
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab">
+						<h4 class="panel-title">
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-package-{{id}}">
+								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+							</a>
+						</h4>
+					</div>
+					<div id="booking-ticket-list-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
+						<div class="panel-body">
+							{{#if courses}}
+								{{#each courses}}
+									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
+										<i class="fa fa-graduation-cap fa-fw"></i>
+										{{{name}}}
+										<span class="badge badge-default small">{{pivot.quantity}}</span>
+									</a>
+								{{/each}}
+							{{/if}}
+							{{#if tickets}}
+								{{#each tickets}}
+									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
+										<i class="fa fa-ticket fa-fw"></i>
+										{{{name}}}
+										<span class="badge badge-default small">{{pivot.quantity}}</span>
+									</a>
+								{{/each}}
+							{{/if}}
+						</div>
+					</div>
+				</div>
 			{{/each}}
 		</script>
 	</div>

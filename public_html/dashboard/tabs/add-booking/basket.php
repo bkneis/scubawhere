@@ -50,7 +50,7 @@
 								<strong>Courses</strong>
 								{{#each courses}}
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -66,7 +66,7 @@
 								<strong>Addons</strong>
 								{{#each addons}}
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-cubes fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -74,7 +74,7 @@
 								<strong>Accommodations</strong>
 								{{#each accommodations}}
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-bed fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
