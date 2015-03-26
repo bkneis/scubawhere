@@ -39,29 +39,41 @@ $(function() {
 		return new Handlebars.SafeString( timetableWeek( {'week': week} ) );
 	});
 
-	window.trips    = {};
-	window.boats    = {};
-	window.token    = '';
-	window.sessions = {};
-	window.training = {};
+	window.trips     = {};
+	window.boats     = {};
+	window.sessions  = {};
+	window.trainings = {};
 
-	// 1. Get trips
+	window.promises  = {};
+
+	window.promises.loadedTrips = $.Deferred();
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
 		$('#trip-class-list').append(tripsTemplate({trips: data}));
-		initDraggables();
+		window.promises.loadedTrips.resolve();
 	});
 
+	window.promises.loadedClasses = $.Deferred();
 	Class.getAll(function(data) {
-		window.training = _.indexBy(data, 'id');
+		window.trainings = _.indexBy(data, 'id');
+		window.promises.loadedClasses.resolve();
 	});
 
+	window.promises.loadedBoats = $.Deferred();
 	Boat.getAllWithTrashed(function(data) {
 		window.boats = _.indexBy(data, 'id');
+		window.promises.loadedBoats.resolve();
 	});
 
 	getToken();
 
+	window.promises.loadedTrips.done(function() {
+		window.promises.loadedClasses.done(function() {
+			window.promises.loadedBoats.done(function() {
+				initDraggables();
+			});
+		});
+	});
 
 	/* Initialize the external events
 	---------------------------------*/
@@ -90,7 +102,7 @@ $(function() {
 					title   : $.trim( $(this).text() ), // use the element's text as the event title
 					allDay  : false,
 					id      : randomString(),
-					trip    : window.training[ $(this).attr('data-id') ],
+					trip    : window.trainings[ $(this).attr('data-id') ],
 					session : {
 						training_id: $(this).attr('data-id'),
 					},
@@ -101,7 +113,7 @@ $(function() {
 					isTrip : false
 				};
 			}
-			
+
 
 			// Store the eventObject in the DOM element so we can get it back later
 			$(this).data('eventObject', eventObject);
@@ -143,9 +155,9 @@ $(function() {
 				// Create eventObjects
 				_.each(window.trainingSessions, function(value) {
 					var eventObject = {
-						title: window.training[ value.training_id ].name, // use the element's text as the event title
+						title: window.trainings[ value.training_id ].name, // use the element's text as the event title
 						allDay: false,
-						trip: window.training[ value.training_id ], // actually is training, used for less repetive of handlebars
+						trip: window.trainings[ value.training_id ], // actually is training, used for less repetive of handlebars
 						session: value,
 						isNew: false,
 						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
@@ -251,7 +263,7 @@ $(function() {
 					$('#modalWindows .close-reveal-modal').click();
 
 					pageMssg(data.status, true);
-				}, 
+				},
 				function error(xhr) {
 					revertFunc();
 
@@ -277,7 +289,7 @@ $(function() {
 					$('#modalWindows .close-reveal-modal').click();
 
 					pageMssg(data.status, true);
-				}, 
+				},
 				function error(xhr) {
 					revertFunc();
 
@@ -289,7 +301,7 @@ $(function() {
 					pageMssg(data.errors[0], 'warning');
 				});
 			}
-			
+
 		},
 		eventClick: function(eventObject) {
 			showModalWindow(eventObject);
@@ -619,7 +631,7 @@ else {
 			Class.restoreSession({
 				'id'              : eventObject.session.id,
 				'_token'          : eventObject.session._token
-			}, 
+			},
 			function success(data) {
 				// Communicate success to user
 				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
@@ -631,7 +643,7 @@ else {
 				$('#modalWindows .close-reveal-modal').click();
 
 				pageMssg(data.status, true);
-			}, 
+			},
 			function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0]);
@@ -842,7 +854,7 @@ else {
 				console.log(xhr);
 			});
 		}
-		
+
 	});
 
 	$('#modalWindows').on('change', '.boatSelect, .starthours, .startminutes', function() {
@@ -871,8 +883,8 @@ else {
 		display = $(this).attr("display");
 		console.log(display);
 		$("#filter-"+display).addClass("btn-primary");
-		if(display == "classes") $('#trip-class-list').empty().append(classesTemplate({classes: window.training}));
-		else $('#trip-class-list').empty().append(tripsTemplate({trips: window.trips}));
+		if(display == "classes") $('#trip-class-list').html(classesTemplate({classes: window.trainings}));
+		else $('#trip-class-list').html(tripsTemplate({trips: window.trips}));
 		initDraggables();
 	});
 });
