@@ -26,7 +26,7 @@ class CSVSeeder extends Seeder
 		//Seed the table if data was returned
 		if ($data !== false) {
 			DB::table($this->tableName)->insert($data);
-		}		
+		}
 	}
 
 	/**
@@ -38,7 +38,7 @@ class CSVSeeder extends Seeder
 	private function readCSV($csvFile, $deliminator = ",")
 	{
 		//Check the file exists & we can read it
-		if(!file_exists($csvFile) || !is_readable($csvFile)) {			
+		if(!file_exists($csvFile) || !is_readable($csvFile)) {
 			return false;
 		}
 
@@ -49,7 +49,7 @@ class CSVSeeder extends Seeder
 		if(($fileHandle = fopen($csvFile, 'r')) !== false) {
 			while(($row = fgetcsv($fileHandle, 1000, $deliminator)) !== false) {
 				if(!$headings) {
-					$headings = $row;
+					$headings = $row; // This assigns the first line to the $heading variable, after which it is no longer NULL and thus gets skipped for the rest of the file
 				} else {
 					$data[] = array_combine($headings, $row);
 				}
