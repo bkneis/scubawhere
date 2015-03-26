@@ -107,12 +107,11 @@
             dive operation.
           </p>
           <p>
-            So lets get started. Click the button to begin
+            So let's get started. Click the button to begin
             the configuration.
           </p>
           <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
         </div>
-
       </div>
     </div>
   </script>
