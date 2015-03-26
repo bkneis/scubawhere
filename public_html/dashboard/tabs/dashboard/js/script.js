@@ -98,9 +98,9 @@ $(function () {
 } else {
 
 	var todaysSessionsWidget = $("#todays-sessions-widget").html();
-
+	
 	$("#row1").prepend(todaysSessionsWidget);
-
+	
 	todaySession = Handlebars.compile($('#today-session-template').html());
 	Session.getToday(function success(data){
 		window.todaySessions = _.indexBy(data, 'id');
