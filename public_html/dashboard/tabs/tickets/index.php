@@ -86,7 +86,7 @@
 
 							<div class="form-row" id="tickets-boats" data-step="4" data-position="top" data-intro="You can also limit the ticket to be used for specific boats.">
 								<label style="display: block;">
-									<input id="tickets-boats-checkbox" type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}><strong>Limit the ticket to certain boats?</strong>
+									<input id="tickets-boats-checkbox" type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}> <strong>Limit the ticket to certain boats?</strong>
 								</label>
 								<div class="dashed-border" id="boat-select"{{#unless hasBoats}} style="display:none;"{{/unless}}>
 									<p>Please select the boats that you want this ticket to be eligible for:</p>
@@ -103,7 +103,7 @@
 
 							<div class="form-row" id="tickets-boatrooms" data-step="6" data-position="top" data-intro="You can also limit the ticket to be used on specific cabins for overnight trips. Click 'Save' to create the ticket.">
 								<label style="display: block;">
-									<input id="tickets-boatroom-checkbox" type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong>Limit the ticket to certain cabins?</strong>
+									<input id="tickets-boatroom-checkbox" type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong> Limit the ticket to certain cabins?</strong>
 								</label>
 								<div class="dashed-border" id="boatroom-select"{{#unless hasBoatrooms}} style="display:none;"{{/unless}}>
 									<p>Please select the cabins that you want this ticket to be eligible for:</p>
