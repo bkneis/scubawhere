@@ -121,7 +121,7 @@ Handlebars.registerHelper('editButton', function() {
 	/*if(this.status === 'cancelled')
 		return '';*/
 
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> View & Edit</button>');
 });
 Handlebars.registerHelper('cancelButton', function() {
 	var disabled = '';
