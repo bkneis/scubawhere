@@ -150,7 +150,8 @@
   </script>
 
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
-    <div class="col-md-10">
+  <div>
+    <div style="width:88%; margin-left:20px; float:left" class="">
       <ul class="nav tnav-wizard" role="tablist">
         <li id="accomli" role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
           <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
@@ -204,9 +205,10 @@
         </li>
       </ul>
       </div>
-      <div class="col-md-2" style="min-height:80px" id="tour-button">
+      <div class="" style="min-height:80px; width:10%; float:left" id="tour-button">
         <button id="tour-next-step" style="margin-top:20px" class="btn btn-success text-uppercase">Next Step</button>
         <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
+      </div>
       </div>
     </script>
 
