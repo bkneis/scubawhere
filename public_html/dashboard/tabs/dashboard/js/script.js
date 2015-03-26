@@ -32,7 +32,7 @@ Handlebars.registerHelper('getPer', function(capacity){
 $(function () {
 
 	if(window.company.initialised != 1) {
-		var initWarning = '<div class="alert alert-danger" role="alert"><strong>RMS is not configured!</strong> Please use the setup wizard below to configure your system</div>';
+		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
 		$("#wrapper").prepend(initWarning);
 		var setupWizard = $("#setup-wizard").html();
 		$("#row1").prepend(setupWizard);
@@ -63,7 +63,7 @@ $(function () {
 				/*var tourDash = introJs();
 				tourDash.setOptions({
 					steps: [
-					{ 
+					{
 						intro: "Welcome to scubawhereRMS! So we can get you all set up with our system, this wizard will take you through our system and ask that you fill in some information about your dive operation."
 					},
 					{

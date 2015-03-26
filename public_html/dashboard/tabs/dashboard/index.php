@@ -99,11 +99,18 @@
           <h4 class="panel-title">Setup Wizard</h4>
         </div>
         <div style="min-height:250px;" class="panel-body">
-          <p>Welcome to scubawhereRMS! So we can get you all set up with our system, 
-          this wizard will take you through our system and ask that you fill in some 
-          information about your dive operation.</p>
-          <p>So lets get started. Click start wizard to begin the configuration.</p>
-            <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
+          <h4>Welcome to scubawhereRMS!</h4>
+          <p>
+            So we can get you all set up with your content,
+            this wizard will take you through our system
+            and help you fill in the information about your
+            dive operation.
+          </p>
+          <p>
+            So let's get started. Click the button to begin
+            the configuration.
+          </p>
+          <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
         </div>
       </div>
     </div>
