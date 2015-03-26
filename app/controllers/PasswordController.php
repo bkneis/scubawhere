@@ -20,9 +20,9 @@ class PasswordController extends Controller {
 		$response = Password::remind(Input::only('email'), function($message)
 		{
 			if( Input::has('welcome'))
-				$message->subject('Welcome to ScubawhereRMS');
+				$message->subject('Welcome to scubawhereRMS!');
 			else
-				$message->subject('Scubawhere Password Reminder');
+				$message->subject('scubawhereRMS password reset');
 		});
 
 		switch( $response )

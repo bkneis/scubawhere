@@ -40,7 +40,7 @@ class AuthenticationController extends Controller {
 				$company = false;
 			}
 			if( $company && $company->verified == 0)
-				return Response::json( array('errors' => array('Your account is on the waiting list.<br><br>Please <a href="mailto:hello@scubawhere.com?subject=Please verify my account&body=Hello Team Scubawhere!%0A%0APlease verify my account.%0AMy username is: '.$company->username.'. %0A%0AThank you!">contact us</a> to accelerate your verification.')), 406 ); // 406 Not Acceptable
+				return Response::json( array('errors' => array('Your account is on the waiting list.<br><br>Please <a href="mailto:hello@scubawhere.com?subject=Please verify my account&body=Hello Team scubawhere!%0A%0APlease verify my new RMS account.%0AMy username is: '.$company->username.'. %0A%0AThank you!">contact us</a> to accelerate your verification.')), 406 ); // 406 Not Acceptable
 
 			return Response::json( array('errors' => array('Oops, something wasn\'t correct.')), 401 ); // 401 Unauthorized
 		}

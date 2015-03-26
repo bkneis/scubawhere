@@ -1,5 +1,6 @@
 var completed = false;
 var errorChecking = true;
+var editor;
 
 function validateEmail(type, email){
 	var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -75,6 +76,11 @@ $(function(){
 
 		event.preventDefault();
 
+		if(completed) {
+			alert('The registration has already been sent!');
+			return false;
+		}
+
 		$('.yellow-helper').remove();
 
 		var form = $(this);
@@ -82,6 +88,10 @@ $(function(){
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serializeObject();
+		params.terms = $('#terms').val();
+		console.log(params.terms);
+		return false;
+
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
 		console.log(params);
@@ -94,9 +104,9 @@ $(function(){
 			success: function(data){
 				console.log(data.status);
 				completed = true;
-				//$("#steps").steps("next");
 
 				// BRYAN | Add success message and the "please check you email" stuff ;)
+				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for trying out scubawhereRMS!</p><p><strong>Please check your email inbox for a confirmation mail and click the link provided.</p></center>');
 
 				$('.errors').remove();
 				form.find('#save-loader').remove();
@@ -174,5 +184,5 @@ $(function(){
 
 	CKEDITOR.config.height = 490;
 
-	CKEDITOR.replace('terms');
+	editor = CKEDITOR.replace('terms');
 });

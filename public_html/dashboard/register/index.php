@@ -164,7 +164,7 @@
 								<label for="username">Please enter your username:</label>
 								<input style="margin: 0 auto; width:280px" class="required"  type="text" id="username" name="username">
 								<div style="margin-top:10px"></div>
-								<input type="submit" style="text-align:center; margin: 0 auto;"  class="submit btn btn-primary btn-lg text-uppercase" value="Create Account">
+								<input type="submit" style="text-align:center; margin: 0 auto;"  class="submit btn btn-success btn-lg text-uppercase" value="Create Account">
 							</div>
 						</div>
 					</section>
