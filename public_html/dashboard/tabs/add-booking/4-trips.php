@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Trips <small>When would you like to go diving?</small></h2>
+			<h2>Trips & Classes <small>When would you like to go diving?</small></h2>
 		</div>
 	</div>
 </div>

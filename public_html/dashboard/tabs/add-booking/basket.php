@@ -122,7 +122,7 @@
 	{{/notEmptyObj}}
 	{{#notEmptyObj selectedCustomers}}
 		<li class="list-group-item" id="selected-customers">
-			<strong>Customers</strong>
+			<h5>Customers</h5>
 			{{#each selectedCustomers}}
 				<p>
 				    {{#isLead this}}
@@ -137,7 +137,7 @@
 	{{/notEmptyObj}}
 	{{#notEmptyObj bookingdetails}}
 		<li class="list-group-item">
-			<strong>Trips</strong>
+			<h5>Trips</h5>
 			<div class="panel-group" id="booking-summary-trips" role="tablist" aria-multiselectable="true">
 				{{#each bookingdetails}}
 					<div class="panel panel-default">
@@ -193,7 +193,7 @@
 	{{/notEmptyObj}}
 	{{#notEmptyObj accommodations}}
 		<li class="list-group-item">
-			<strong>Accommodation</strong>
+			<h5>Accommodation</h5>
 			<div class="panel-group" id="booking-summary-accommodation" role="tablist" aria-multiselectable="true">
 				{{#each accommodations}}
 					<div class="panel panel-default">
