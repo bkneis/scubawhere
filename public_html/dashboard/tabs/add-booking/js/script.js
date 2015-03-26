@@ -692,7 +692,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 	$('#session-filters').submit();
 });
 
-$('#session-tab').on('click', '#session-tickets > a', function() {
+$('#session-tab').on('click', '#session-tickets .list-group-item', function() {
 	setTimeout(function() {
 		$('#session-filters').submit();
 	}, 50); // Need to give the browser time to set the .active class on the clicked list-item first

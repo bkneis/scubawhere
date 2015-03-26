@@ -30,17 +30,18 @@
 				<h2 class="panel-title">Select Ticket</h2>
 			</div>
 			<div class="panel-body">
-				<div class="list-group" id="session-tickets">
+				<div class="list-group" id="session-tickets" data-toggle="buttons">
 				</div>
 			</div>
 		</div>
 		<script id="session-tickets-template" type="text/x-handlebars-template">
 			{{#each tickets}}
-				<a href="javascript:void(0);" data-id="{{id}}" data-type="ticket" class="list-group-item list-group-radio">
+				<label data-id="{{id}}" data-type="ticket" class="list-group-item btn btn-default">
+					<input type="radio" name="selectables" />
 					<i class="fa fa-ticket fa-fw"></i>
 					{{{name}}}
 					<span class="badge badge-default small">{{qty}}</span>
-				</a>
+				</label>
 			{{/each}}
 		</script>
 		<script id="session-packages-template" type="text/x-handlebars-template">
@@ -56,24 +57,27 @@
 					</div>
 					<div id="booking-ticket-list-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
-							{{#if courses}}
-								{{#each courses}}
-									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
-										<i class="fa fa-graduation-cap fa-fw"></i>
-										{{{name}}}
-										<span class="badge badge-default small">{{pivot.quantity}}</span>
-									</a>
-								{{/each}}
-							{{/if}}
-							{{#if tickets}}
-								{{#each tickets}}
-									<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
-										<i class="fa fa-ticket fa-fw"></i>
-										{{{name}}}
-										<span class="badge badge-default small">{{pivot.quantity}}</span>
-									</a>
-								{{/each}}
-							{{/if}}
+							<div class="list-group">
+								{{!--{{#if courses}}
+									{{#each courses}}
+										<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
+											<i class="fa fa-graduation-cap fa-fw"></i>
+											{{{name}}}
+											<span class="badge badge-default small">{{pivot.quantity}}</span>
+										</a>
+									{{/each}}
+								{{/if}}--}}
+								{{#if tickets}}
+									{{#each tickets}}
+										<label data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item btn btn-default">
+											<input type="radio" name="selectables" />
+											<i class="fa fa-ticket fa-fw"></i>
+											{{{name}}}
+											<span class="badge badge-default small">{{pivot.quantity}}</span>
+										</label>
+									{{/each}}
+								{{/if}}
+							</div>
 						</div>
 					</div>
 				</div>
