@@ -139,3 +139,20 @@
     margin-top: -10px;
     margin-right: -10px;
 }
+
+#session-tab .list-group {
+    margin-bottom: 0;
+}
+
+#session-tickets .btn {
+    text-align: left;
+}
+#session-tickets .btn input[type="radio"] {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    pointer-events: none;
+}
+
+#session-tickets .panel {
+    margin-bottom: 0;
+}
