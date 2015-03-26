@@ -40,6 +40,7 @@ return array(
     'AddSavedColumnToBookingsTable' => $baseDir . '/app/database/migrations/2014_11_23_172511_add_saved_column_to_bookings_table.php',
     'AddSoftDeletionToBoatsTable' => $baseDir . '/app/database/migrations/2014_11_18_165840_add_soft_deletion_to_boats_table.php',
     'AddStatusFieldToBookingsTable' => $baseDir . '/app/database/migrations/2014_12_11_200307_add_status_field_to_bookings_table.php',
+    'AddThaiBahtToCurrencies' => $baseDir . '/app/database/migrations/2015_03_26_132625_add_thai_baht_to_currencies.php',
     'AddTimestampsToCoursePivotTables' => $baseDir . '/app/database/migrations/2015_03_16_140240_add_timestamps_to_course_pivot_tables.php',
     'AddTimezoneFieldToCompaniesTable' => $baseDir . '/app/database/migrations/2014_12_01_153154_add_timezone_field_to_companies_table.php',
     'Addon' => $baseDir . '/app/models/Addon.php',
