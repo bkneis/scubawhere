@@ -25,7 +25,7 @@
 			{{#each selectedTickets}}
 				<p>
 					<i class="fa fa-ticket fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
-					<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}">X</a>
+					<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
 				</p>
 			{{/each}}
 		</li>
@@ -45,6 +45,7 @@
 					</div>
 					<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
+							<a href="javascript:void(0);" class="remove-package pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
 							{{#if courses}}
 								<strong>Courses</strong>
 								{{#each courses}}
@@ -98,6 +99,7 @@
 					</div>
 					<div id="booking-summary-course-{{id}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
+							<a href="javascript:void(0);" class="remove-course pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
 							{{#if training}}
 								<strong>Class</strong>
 								<p>
@@ -128,7 +130,7 @@
 					{{else}}
 						<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>
 					{{/isLead}}
-					<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}">X</a>
+					<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
 				</p>
 			{{/each}}
 		</li>
@@ -148,7 +150,7 @@
 						</div>
 						<div id="booking-summary-trips-{{id}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<p> <strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong> <a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}">X</a></p>
+								<p> <strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong> <a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a></p>
 								<p>
 									{{#if packagefacade}}
 										<i class="fa fa-tags fa-fw"></i> <span class="label label-warning">{{{packagefacade.package.name}}}</span>
@@ -175,7 +177,7 @@
 												{{#each addons}}
 													<p>
 														<i class="fa fa-cart-plus fa-fw"></i> {{{name}}} | {{decimal_price}} <span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
-														{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}">X</a>{{else}} <small>(compulsory)</small>{{/unless}}
+														{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}
 													</p>
 												{{/each}}
 											</div>

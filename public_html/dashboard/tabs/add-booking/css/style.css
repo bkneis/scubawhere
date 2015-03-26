@@ -133,3 +133,9 @@
 #booking-summary .panel {
     margin-bottom: 5px;
 }
+
+.remove-package,
+.remove-course {
+    margin-top: -10px;
+    margin-right: -10px;
+}
