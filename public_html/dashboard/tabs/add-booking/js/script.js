@@ -360,36 +360,6 @@ window.promises.loadedTickets.done(function() {
 
 		drawBasket();
 	});
-
-	$('#booking-summary').on('click', '.remove-package', function() {
-		var id = $(this).data('id');
-
-		//Lower quantity, if last package, remove from selected tickets.
-		if(booking.selectedPackages[id].qty > 1) {
-			booking.selectedPackages[id].qty--;
-		}else{
-			delete booking.selectedPackages[id];
-		}
-
-		booking.store();
-
-		drawBasket();
-	});
-
-	$('#booking-summary').on('click', '.remove-course', function() {
-		var id = $(this).data('id');
-
-		//Lower quantity, if last course, remove from selected tickets.
-		if(booking.selectedCourses[id].qty > 1) {
-			booking.selectedCourses[id].qty--;
-		}else{
-			delete booking.selectedCourses[id];
-		}
-
-		booking.store();
-
-		drawBasket();
-	});
 });
 
 window.promises.loadedPackages.done(function() {
@@ -408,6 +378,21 @@ window.promises.loadedPackages.done(function() {
 		booking.store();
 
 		//Draw the basket
+		drawBasket();
+	});
+
+	$('#booking-summary').on('click', '.remove-package', function() {
+		var id = $(this).data('id');
+
+		//Lower quantity, if last package, remove from selected tickets.
+		if(booking.selectedPackages[id].qty > 1) {
+			booking.selectedPackages[id].qty--;
+		}else{
+			delete booking.selectedPackages[id];
+		}
+
+		booking.store();
+
 		drawBasket();
 	});
 });
@@ -430,38 +415,21 @@ window.promises.loadedCourses.done(function() {
 		//Draw the basket
 		drawBasket();
 	});
-});
 
-$('#booking-summary').on('click', '.remove-package', function() {
+	$('#booking-summary').on('click', '.remove-course', function() {
+		var id = $(this).data('id');
 
-	var id = $(this).data('id');
+		//Lower quantity, if last course, remove from selected tickets.
+		if(booking.selectedCourses[id].qty > 1) {
+			booking.selectedCourses[id].qty--;
+		}else{
+			delete booking.selectedCourses[id];
+		}
 
-	//Lower quantity, if last ticket, remove from selected tickets.
-	if(booking.selectedPackages[id].qty > 1) {
-		booking.selectedPackages[id].qty--;
-	}else{
-		delete booking.selectedPackages[id];
-	}
+		booking.store();
 
-	booking.store();
-
-	drawBasket();
-});
-
-$('#booking-summary').on('click', '.remove-course', function() {
-
-	var id = $(this).data('id');
-
-	//Lower quantity, if last ticket, remove from selected tickets.
-	if(booking.selectedCourses[id].qty > 1) {
-		booking.selectedCourses[id].qty--;
-	}else{
-		delete booking.selectedCourses[id];
-	}
-
-	booking.store();
-
-	drawBasket();
+		drawBasket();
+	});
 });
 
 /*
