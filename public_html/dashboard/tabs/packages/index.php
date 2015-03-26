@@ -91,7 +91,7 @@
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								<button class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
+								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
 							</div>
 
 							<div id="package-seasonal" class="form-row">
@@ -108,7 +108,7 @@
 											{{> price_input}}
 										{{/with}}
 									{{/each}}
-									<button class="btn btn-success text-uppercase add-price"> &plus; Add seasonal price</button>
+									<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
 								</div>
 							</div>
 

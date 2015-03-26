@@ -49,7 +49,7 @@
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								<button id="add-base-price" class="btn btn-success text-uppercase add-base-price"> &plus; Add base price</button>
+								<button id="add-base-price" class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
 							</div>
 
 							<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="If you have prices that change throughout the year, you can ajust your prices depening on the seasons">
@@ -66,7 +66,7 @@
 											{{> price_input}}
 										{{/with}}
 									{{/each}}
-									<button class="btn btn-success text-uppercase add-price"> &plus; Add seasonal price</button>
+									<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
 								</div>
 							</div>
 
