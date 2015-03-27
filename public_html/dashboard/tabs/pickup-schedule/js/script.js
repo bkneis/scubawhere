@@ -12,25 +12,36 @@ $(function() {
 		},
 	});
 
-	$('.reports-table').DataTable({
-		"paging":   false,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		"language": {
-			"emptyTable": "There are no customers that need picking up today"
-		}
-	});
-
 	pickupList = Handlebars.compile($("#pick-up-schedule-template").html());
 
 	$("#date-select").val(getToday());
 
 	var params = { date : $("#date-select").val() };
 	Report.getPickupSchedule(params, function success(data) {
-		$("#pickup-table").append( pickupList({ pickups : data }) );
+		console.log(data);
+		//$("#pickup-table").append( pickupList({ pickups : data }) );
+		$('.reports-table').DataTable({
+		"paging":   false,
+		"ordering": false,
+		"info":     false,
+		"pageLength" : 10,
+		"searching" : false,
+		"data": data.bookings,
+    	"columns": [
+	        { data: 'reference' },
+	        { data: 'lead_customer.firstname' },
+	        { data: 'lead_customer.phone' },
+	        { data: 'number_of_customers' },
+	        { data: 'pick_up_location' },
+	        { data: 'pick_up_time' },
+	    ],
+		"language": {
+			"emptyTable": "There are no customers that need picking up today"
+		}
 	});
+	});
+
+	
 
 	$('#date-select').on('change', function() {
 		loadPickups();
