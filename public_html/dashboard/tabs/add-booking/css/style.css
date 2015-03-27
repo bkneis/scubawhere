@@ -140,6 +140,10 @@
     margin-right: -10px;
 }
 
+#tickets-ticket-list .panel {
+    border-color: rgba(0, 0, 0, 0);
+}
+
 #session-tab .list-group {
     margin-bottom: 0;
 }

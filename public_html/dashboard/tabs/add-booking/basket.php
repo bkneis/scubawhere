@@ -34,7 +34,7 @@
 		<li class="list-group-item" id="selected-packages">
 			<h5>Selected Packages</h5>
 			{{#each selectedPackages}}
-				<div class="panel panel-default">
+				<div class="panel panel-warning">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
 							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
@@ -88,7 +88,7 @@
 		<li class="list-group-item" id="selected-courses">
 			<h5>Selected Courses</h5>
 			{{#each selectedCourses}}
-				<div class="panel panel-default">
+				<div class="panel panel-info">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
 							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">

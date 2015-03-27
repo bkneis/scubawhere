@@ -5,7 +5,7 @@
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row" id="tickets-ticket-list">
 	<div class="col-sm-12">
 		<div class="row">
 			<div class="col-sm-12" id="tickets-list">
@@ -38,7 +38,7 @@
 									<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
 									<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
 									<div class="panel-group panel-packages" role="tablist">
-										<div class="panel panel-default">
+										<div class="panel panel-warning">
 											<div class="panel-heading" role="tab">
 												<h5 class="panel-title" id="-collapsible-list-group-">
 													<a class="collapsed" data-toggle="collapse" href="#package-collapse-{{id}}" aria-expanded="false" aria-controls="package-collapse-{{id}}">
@@ -115,7 +115,7 @@
 									<p class="text-center ticket-name"><strong>{{{name}}}</strong></p>
 									<p class="text-center ticket-price">{{pricerange base_prices prices}}</p>
 									<div class="panel-group panel-packages" role="tablist">
-										<div class="panel panel-default">
+										<div class="panel panel-info">
 											<div class="panel-heading" role="tab">
 												<h5 class="panel-title" id="-collapsible-list-group-">
 													<a class="collapsed" data-toggle="collapse" href="#course-collapse-{{id}}" aria-expanded="false" aria-controls="course-collapse-{{id}}">
