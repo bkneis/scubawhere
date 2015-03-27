@@ -474,7 +474,7 @@ class BookingController extends Controller {
 		 * Valid input parameters
 		 * booking_id
 		 * customer_id
-		 * ticket_id (or training_session_id)
+		 * ticket_id (or nothing)
 		 * session_id (or training_session_id)
 		 * boatroom_id (only sometimes required)
 		 * training_session_id

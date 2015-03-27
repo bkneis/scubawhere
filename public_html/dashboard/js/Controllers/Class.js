@@ -12,15 +12,53 @@ var Class = {
 		});
 	},
 
-	getSessions : function(params, handleData) {
-		$.get("/api/class-session/filter", params, function(data){
-			handleData(data);
+	create : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/class/add",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
+
+	update : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/class/edit",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	delete : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/class/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
+	/////////////////////////////////////////
+	////// C L A S S - S E S S I O N S //////
+	/////////////////////////////////////////
 
 	getAllSessions : function(params, handleData) {
 		$.get("/api/class-session/all", params, function(data){
 			handleData(data);
+		});
+	},
+
+	filter : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "GET",
+			url: "/api/class-session/filter",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
 	},
 
@@ -63,36 +101,6 @@ var Class = {
 	restoreSession: function(params, handleData) {
 		$.post("/api/class-session/restore", params, function(data){
 			handleData(data);
-		});
-	},
-
-	create : function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/class/add",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-
-	update : function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/class/edit",
-			data: params,
-			success: handleData,
-			error: errorFn
-		});
-	},
-
-	delete : function(params, handleData, errorFn) {
-		$.ajax({
-			type: "POST",
-			url: "/api/class/delete",
-			data: params,
-			success: handleData,
-			error: errorFn
 		});
 	},
 

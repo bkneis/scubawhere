@@ -75,7 +75,7 @@ class TrainingSessionController extends Controller {
 
 		$data = Input::only('after', 'before', 'training_id', 'course_id');
 
-		$data['with_full'] = Input::get('with_full', false);
+		$data['with_full'] = Input::get('with_full', true);
 
 		// Transform parameter strings into DateTime objects
 		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
