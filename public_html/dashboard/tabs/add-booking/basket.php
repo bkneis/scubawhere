@@ -146,25 +146,54 @@
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
 								<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-trips" href="#booking-summary-trips-{{id}}">
-									<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if trip}}{{{session.trip.name}}}{{else}}{{session.training.name}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+									{{#if session}}
+										<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>
+									{{/if}}
+									{{#if training_session}}
+										<i class="fa fa-graduation-cap fa-fw visible-lg-inline-block"></i>
+									{{/if}}
+									&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if trip}}{{{session.trip.name}}}{{else}}{{training_session.training.name}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
 						</div>
 						<div id="booking-summary-trips-{{id}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<p> <strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong> <a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a></p>
 								<p>
-									{{#if packagefacade}}
-										<i class="fa fa-tags fa-fw"></i> <span class="label label-warning">{{{packagefacade.package.name}}}</span>
-									{{else}}
-										<i class="fa fa-ticket fa-fw"></i> <span class="label label-default text-uppercase"><small>Ticket</small></span>
-									{{/if}}
-
-									{{#if ticket}}{{{ticket.name}}}{{else}}{{course.name}}{{/if}}
+									<strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong>
+									<a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}">
+										<i class="fa fa-times fa-lg"></i>
+									</a>
 								</p>
-								<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
-								<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
-								<p><i class="fa fa-money fa-fw"></i> {{currency}} {{ticket.decimal_price}}</p>
+								{{#if packagefacade}}
+									<p class="bg-warning">
+										<i class="fa fa-tags fa-fw"></i> {{{packagefacade.package.name}}}
+									</p>
+								{{/if}}
+								{{#if course}}
+									<p class="bg-info">
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{course.name}}}
+									</p>
+								{{/if}}
+								{{#if ticket}}
+									<p>
+										<i class="fa fa-ticket fa-fw"></i> {{{ticket.name}}}
+									</p>
+								{{/if}}
+
+								{{#if session}}
+									<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
+									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
+									{{#unless packagefacade}}{{#unless course}}
+										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{ticket.decimal_price}}</p>
+									{{/unless}}{{/unless}}
+								{{/if}}
+								{{#if training_session}}
+									<p><i class="fa fa-graduation-cap fa-fw"></i> {{{training_session.training.name}}}</p>
+									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate training_session.start}}</p>
+									{{#unless packagefacade}}{{#unless course}}
+										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{course.decimal_price}}</p>
+									{{/unless}}{{/unless}}
+								{{/if}}
 								{{#notEmptyObj addons}}
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab">

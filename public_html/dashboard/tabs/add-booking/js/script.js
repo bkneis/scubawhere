@@ -932,6 +932,9 @@ function submitAddDetail(params, data) {
 			booking.selectedPackages[UID].packagefacade = packagefacade_id;
 		}
 
+		// Reduce selected quantity
+
+
 		drawSessionTicketsList();
 
 		drawBasket(function() {
@@ -1374,7 +1377,8 @@ function listGroupRadio(selector, additionalClass) {
 }
 
 function friendlyDate(date) {
-	return moment(date).format('DD/MM/YYYY HH:mm');
+	// return moment(date).format('DD/MM/YYYY HH:mm');
+	return moment(date).format('DD MMM YYYY HH:mm');
 }
 
 function addTransaction() {

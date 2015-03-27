@@ -52,46 +52,48 @@
 				</li>
 			</ul>
 
-			<div class="col-md-9" id="booking-area-column">
+			<div class="row">
+				<div class="col-md-9" id="booking-area-column">
 
-				<div class="tab-content">
+					<div class="tab-content">
 
-					<div role="tabpanel" class="tab-pane fade in active" id="source-tab">
-						<?php require('1-sources.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade in active" id="source-tab">
+							<?php require('1-sources.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="ticket-tab">
-						<?php require('2-tickets.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="ticket-tab">
+							<?php require('2-tickets.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="customer-tab">
-						<?php require('3-customers.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="customer-tab">
+							<?php require('3-customers.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="session-tab">
-						<?php require('4-trips.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="session-tab">
+							<?php require('4-trips.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="addon-tab">
-						<?php require('5-addons.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="addon-tab">
+							<?php require('5-addons.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="accommodation-tab">
-						<?php require('6-accommodation.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="accommodation-tab">
+							<?php require('6-accommodation.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="extra-tab">
-						<?php require('7-extra-info.php'); ?>
-					</div>
+						<div role="tabpanel" class="tab-pane fade" id="extra-tab">
+							<?php require('7-extra-info.php'); ?>
+						</div>
 
-					<div role="tabpanel" class="tab-pane fade" id="summary-tab">
-						<?php require('8-summary.php'); ?>
+						<div role="tabpanel" class="tab-pane fade" id="summary-tab">
+							<?php require('8-summary.php'); ?>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-3" id="booking-summary-column">
-				<?php require('basket.php'); ?>
-			</div>
+				<div class="col-md-3" id="booking-summary-column">
+					<?php require('basket.php'); ?>
+				</div>
+			</div><!-- .row -->
 		</div>
 	</div><!-- .row -->
 
