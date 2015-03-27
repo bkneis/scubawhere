@@ -15,160 +15,175 @@ $(function() {
 	window.sessions = {};
 	window.accommodations = {};
 
-	$.get("/api/country/all", function(data){
-		window.countries = _.indexBy(data, 'id');
-	});
+	window.promises  = {};
 
 	boatsList = Handlebars.compile($("#boats-list-template").html());
 	tripsList = Handlebars.compile($("#trips-list-template").html());
 
 	// 1. Get trips
+	window.promises.loadedTrips = $.Deferred();
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
 		$("#trips-select").append( tripsList({trips : data}) );
+		window.promises.loadedTrips.resolve();
 	});
 
+	window.promises.loadedBoats = $.Deferred();
 	Boat.getAll(function(data) {
 		window.boats = _.indexBy(data, 'id');
+		window.promises.loadedBoats.resolve();
 	});
 
+	window.promises.loadedClasses = $.Deferred();
 	Class.getAll(function(data) {
-		window.training = _.indexBy(data, 'id');
+		window.trainings = _.indexBy(data, 'id');
+		window.promises.loadedClasses.resolve();
 	});
 
+	window.promises.loadedAccommodations = $.Deferred();
 	Accommodation.getAll(function(data) {
 		window.accommodations = _.indexBy(data, 'id');
+		window.promises.loadedAccommodations.resolve();
 	});
 
 	/* Initialize the calendar
 	--------------------------*/
-	$('#calendar').fullCalendar({
-		header: {
-			left: 'basicDay basicWeek month',
-			center: 'title',
-		},
-		defaultView : 'basicWeek',
-		timezone: false,
-		height : 450,
-		firstDay: 1, // Set Monday as the first day of the week
-		events: function(start, end, timezone, callback) {
-			if(display == "trips") getTripEvents(start, end, timezone, callback);
-			if(display == "accommodations") getAccomEvents(start, end, timezone, callback);
-			if(display == "classes") getClassEvents(start, end, timezone, callback);
-		},
-		eventRender: function(event, element) {
-			// Intercept the event rendering to inject the non-html-escaped version of the title
-			// Needed for trip names with special characters in it (like ó, à, etc.)
-			element.find('.fc-title').html(event.title);
-		},
-		editable: false,
-		droppable: false, // This allows things to be dropped onto the calendar
-		eventClick: function(eventObject) {
-			if(display == "trips") showModalWindow(eventObject);
-			if(display == "accommodations") showModalWindowA(eventObject);
-			if(display == "classes") showModalWindowC(eventObject);
-			//console.log(display);
-			//console.log(eventObject);
-		},
+
+	window.promises.loadedTrips.done(function() {
+		window.promises.loadedClasses.done(function() {
+			window.promises.loadedBoats.done(function() {
+				window.promises.loadedAccommodations.done(function() {
+					$('#calendar').fullCalendar({
+						header: {
+							left: 'basicDay basicWeek month',
+							center: 'title',
+						},
+						defaultView : 'basicWeek',
+						timezone: false,
+						height : 450,
+						firstDay: 1, // Set Monday as the first day of the week
+						events: function(start, end, timezone, callback) {
+							if(display == "trips") getTripEvents(start, end, timezone, callback);
+							if(display == "accommodations") getAccomEvents(start, end, timezone, callback);
+							if(display == "classes") getClassEvents(start, end, timezone, callback);
+						},
+						eventRender: function(event, element) {
+							// Intercept the event rendering to inject the non-html-escaped version of the title
+							// Needed for trip names with special characters in it (like ó, à, etc.)
+							element.find('.fc-title').html(event.title);
+						},
+						editable: false,
+						droppable: false, // This allows things to be dropped onto the calendar
+						eventClick: function(eventObject) {
+							if(display == "trips") showModalWindow(eventObject);
+							if(display == "accommodations") showModalWindowA(eventObject);
+							if(display == "classes") showModalWindowC(eventObject);
+							//console.log(display);
+							//console.log(eventObject);
+						},
+					});
+				});
+			});
+		});
 	});
 
-$('#filter-options').on('change', function(event) {
-	event.preventDefault();
-	if($("#filter-options").val() == 'boat') {
-		$("div#filter-settings option[value=boat]").attr('disabled', true);
-		$("#filter-options").val('all');
-		$("#filter").append( boatsList({boats : window.boats}) );
-	}
-	else if($("#filter-options").val() == 'trip') {
-		$("div#filter-settings option[value=trip]").attr('disabled', true);
-		$("#filter-options").val('all');
-		$("#filter").append( tripsList({trips : window.trips}) );
-	}
-});
+	$('#filter-options').on('change', function(event) {
+		event.preventDefault();
+		if($("#filter-options").val() == 'boat') {
+			$("div#filter-settings option[value=boat]").attr('disabled', true);
+			$("#filter-options").val('all');
+			$("#filter").append( boatsList({boats : window.boats}) );
+		}
+		else if($("#filter-options").val() == 'trip') {
+			$("div#filter-settings option[value=trip]").attr('disabled', true);
+			$("#filter-options").val('all');
+			$("#filter").append( tripsList({trips : window.trips}) );
+		}
+	});
 
-$("#filter").on('change', '.filter', function(event){
-	event.preventDefault();
-    	//console.log(this.options[this.selectedIndex].value);
-    	console.log(filter);
-    	if(this.id == "boats") {
-    		if(filter == "all") filterByBoat = false;
-    		else filterByBoat = true;
-    		filterByBoat = true;
-    		boatFilter = this.options[this.selectedIndex].value;
-    		//console.log(boatFilter);
-    	}
-    	else if(this.id == "trips") {
-    		var filter = $("#trips:selected").val();
-    		if(filter == "all") filterByTrip = false;
-    		else filterByTrip = true;
-    		filterByTrip = true;
-    		tripFilter = this.options[this.selectedIndex].value;
-    		console.log("trip filter =  ",tripFilter);
-    	}
-    	$('#calendar').fullCalendar( 'refetchEvents' );
-    });
+	$("#filter").on('change', '.filter', function(event){
+		event.preventDefault();
+	    	//console.log(this.options[this.selectedIndex].value);
+	    	console.log(filter);
+	    	if(this.id == "boats") {
+	    		if(filter == "all") filterByBoat = false;
+	    		else filterByBoat = true;
+	    		filterByBoat = true;
+	    		boatFilter = this.options[this.selectedIndex].value;
+	    		//console.log(boatFilter);
+	    	}
+	    	else if(this.id == "trips") {
+	    		var filter = $("#trips:selected").val();
+	    		if(filter == "all") filterByTrip = false;
+	    		else filterByTrip = true;
+	    		filterByTrip = true;
+	    		tripFilter = this.options[this.selectedIndex].value;
+	    		console.log("trip filter =  ",tripFilter);
+	    	}
+	    	$('#calendar').fullCalendar( 'refetchEvents' );
+	    });
 
-$("#filters").on('click', '#remove-boats-filter', function(event){
-	event.preventDefault();
-	filterByBoat = false;
-	boatFilter = null;
-	$("div#filter-settings option[value=boat]").attr('disabled', false);
-	$(event.target).parent().remove();
-	$('#calendar').fullCalendar( 'refetchEvents' );
-});
+	$("#filters").on('click', '#remove-boats-filter', function(event){
+		event.preventDefault();
+		filterByBoat = false;
+		boatFilter = null;
+		$("div#filter-settings option[value=boat]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
-$("#filters").on('click', '#remove-trips-filter', function(event){
-	event.preventDefault();
-	filterByTrip = false;
-	tripFilter = null;
-	$("div#filter-settings option[value=trip]").attr('disabled', false);
-	$(event.target).parent().remove();
-	$('#calendar').fullCalendar( 'refetchEvents' );
-});
+	$("#filters").on('click', '#remove-trips-filter', function(event){
+		event.preventDefault();
+		filterByTrip = false;
+		tripFilter = null;
+		$("div#filter-settings option[value=trip]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
-$("#jump-to-date").on('change', '#jump-date', function(event){
-	event.preventDefault();
-	var date = $("#jump-date").val();
-	var jumpDate = $.fullCalendar.moment(date);
-	$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-	$("#remove-jump").css('display', 'inline');
-	console.log("qwewe");
-});
-
-$("#jump-to-date").on('click', '#remove-jump', function(event){
-	event.preventDefault();
-	var date = new Date();
-	var d = date.getDate();
-    	var m = date.getMonth() + 1; // jan starts at 0
-    	var y = date.getFullYear();
-    	$("#jump-date").val('');
-    	var sDate = y+'-'+m+'-'+d;
-    	var jumpDate = $("#calendar").fullCalendar.moment(sDate);
-		//var moment = $('#calendar').fullCalendar('getDate');
-		console.log(moment);
+	$("#jump-to-date").on('change', '#jump-date', function(event){
+		event.preventDefault();
+		var date = $("#jump-date").val();
+		var jumpDate = $.fullCalendar.moment(date);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-		$("#remove-jump").css('display', 'none');
+		$("#remove-jump").css('display', 'inline');
+		console.log("qwewe");
 	});
 
-$("#filter-types").on('click', '.filter-type', function(event){
-	event.preventDefault();
-	$("#filter-"+display).removeClass("btn-primary");
-	display = $(this).attr("display");
-	$('#calendar').fullCalendar( 'refetchEvents' );
-	$("#filter-"+display).addClass("btn-primary");
-});
+	$("#jump-to-date").on('click', '#remove-jump', function(event){
+		event.preventDefault();
+		var date = new Date();
+		var d = date.getDate();
+	    	var m = date.getMonth() + 1; // jan starts at 0
+	    	var y = date.getFullYear();
+	    	$("#jump-date").val('');
+	    	var sDate = y+'-'+m+'-'+d;
+	    	var jumpDate = $("#calendar").fullCalendar.moment(sDate);
+			//var moment = $('#calendar').fullCalendar('getDate');
+			console.log(moment);
+			$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+			$("#remove-jump").css('display', 'none');
+		});
 
-$('input.datepicker').datetimepicker({
-	pickDate: true,
-	pickTime: false,
-	icons: {
-		time: 'fa fa-clock-o',
-		date: 'fa fa-calendar',
-		up:   'fa fa-chevron-up',
-		down: 'fa fa-chevron-down'
-	},
-	clearBtn : true
-});
+	$("#filter-types").on('click', '.filter-type', function(event){
+		event.preventDefault();
+		$("#filter-"+display).removeClass("btn-primary");
+		display = $(this).attr("display");
+		$('#calendar').fullCalendar( 'refetchEvents' );
+		$("#filter-"+display).addClass("btn-primary");
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+		clearBtn : true
+	});
 
 });
 
@@ -350,7 +365,7 @@ function showModalWindowM(id) {
 			});
 		});
 	}
-	
+
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -377,29 +392,6 @@ Handlebars.registerHelper('isWeekday', function(day) {
 	else
 		return '';
 });
-
-var randomStrings = [];
-function randomString() {
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-	var string_length = 15;
-	var result = '';
-	for (var i=0; i<string_length; i++) {
-		var rnum = Math.floor(Math.random() * chars.length);
-		result += chars.substring(rnum,rnum+1);
-	}
-
-	if(_.indexOf(randomStrings, result) >= 0)
-	{
-		// If the random string is not unique (unlikely, but possible) the function recursively calls itself again
-		return randomString();
-	}
-	else
-	{
-		// When the random string has been approved as unique, it is added to the list of generated strings and then returned
-		randomStrings.push(result);
-		return result;
-	}
-}
 
 function calcUtil(booked, capacity) {
 	var util = ((booked / capacity) * 100);
@@ -507,7 +499,7 @@ function getClassEvents(start, end, timezone, callback) {
 	};
 	var events = [];
 
-	Class.getSessions({
+	Class.filter({
 		'after': start.format(),
 		'before': end.format(),
 		'with_full': 1
@@ -518,9 +510,9 @@ function getClassEvents(start, end, timezone, callback) {
 		// Create eventObjects
 		_.each(window.trainingSessions, function(value) {
 			var eventObject = {
-				title: window.training[ value.training_id ].name, // use the element's text as the event title
+				title: window.trainings[ value.training_id ].name, // use the element's text as the event title
 				allDay: false,
-				trip: window.training[ value.training_id ],
+				trip: window.trainings[ value.training_id ],
 				session: value,
 				isNew: false,
 				editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
