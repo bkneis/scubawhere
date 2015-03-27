@@ -15,7 +15,7 @@ class Bookingdetail extends Ardent {
 		'boatroom_id'         => 'integer|min:1',
 		'packagefacade_id'    => 'integer|min:1',
 		'course_id'           => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
-		'training_session_id' => 'integer|min:1|required_with:course_id|required_without:session_id'
+		'training_session_id' => 'integer|min:1|required_without:session_id'
 	);
 
 	public function beforeSave()
