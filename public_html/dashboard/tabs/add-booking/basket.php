@@ -50,7 +50,7 @@
 								<strong>Courses</strong>
 								{{#each courses}}
 									<p>
-										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
 									</p>
 								{{/each}}
 							{{/if}}

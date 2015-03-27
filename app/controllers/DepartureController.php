@@ -173,7 +173,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$course = Auth::user()->courses()->findOrFail( $options['package_id'] );
+				$course = Auth::user()->courses()->findOrFail( $options['course_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -208,30 +208,42 @@ class DepartureController extends Controller {
 					{
 						$query->where(function($query) use ($ticket)
 						{
-							// Conditional where clause (only when package_id is provided)
+							// Conditional where clause (only when ticket_id is provided)
 							if( $ticket )
 							{
 								$query->where('id', $ticket->id);
 							}
 						})
-						->where(function($query) use ($package)
+						->where(function($query) use ($package, $course)
 						{
-							// Conditional where clause (only when package_id is provided)
-							if( $package )
+							// Conditional where clause (only when package_id is provided and course_id NOT)
+							if( $package && !$course )
 							{
 								$query->whereHas('packages', function($query) use ($package)
 								{
 									$query->where('id', $package->id);
 								});
 							}
-						})->where(function($query) use ($course)
+						})->where(function($query) use ($package, $course)
 						{
-							// Conditional where clause (only when package_id is provided)
+							// Conditional where clause (only when course_id is provided)
 							if( $course )
 							{
-								$query->whereHas('courses', function($query) use ($course)
+								$query->whereHas('courses', function($query) use ($package, $course)
 								{
-									$query->where('id', $course->id);
+									$query
+									->where('id', $course->id)
+									->where(function($query) use ($package)
+									{
+										// Conditional where clause (only when package AND course are provided)
+										if($package)
+										{
+											$query->whereHas('packages', function($query) use ($package)
+											{
+												$query->where('id', $package->id);
+											});
+										}
+									});
 								});
 							}
 						});

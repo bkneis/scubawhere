@@ -76,7 +76,7 @@
 													<div class="list-group">
 														{{#if training}}
 															{{#with training}}
-																<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../id}}" class="list-group-item btn btn-default">
+																<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../../id}}" data-identifier="{{../identifier}}" data-packagefacade="{{../../../packagefacade}}" class="list-group-item btn btn-default">
 																	<input type="radio" name="selectables" />
 																	<i class="fa fa-graduation-cap fa-fw"></i>
 																	{{{name}}}
@@ -86,7 +86,7 @@
 														{{/if}}
 														{{#if tickets}}
 															{{#each tickets}}
-																<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../id}}" class="list-group-item btn btn-default">
+																<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../../id}}" data-identifier="{{../identifier}}" data-packagefacade="{{../../../packagefacade}}" class="list-group-item btn btn-default">
 																	<input type="radio" name="selectables" />
 																	<i class="fa fa-ticket fa-fw"></i>
 																	{{{name}}}
@@ -102,7 +102,7 @@
 								{{/if}}
 								{{#if tickets}}
 									{{#each tickets}}
-										<label data-id="{{id}}" data-type="ticket" data-parent="package" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
+										<label data-id="{{id}}" data-type="ticket" data-parent="package" data-parent-id="{{../id}}" data-packagefacade="{{../packagefacade}}" class="list-group-item btn btn-default">
 											<input type="radio" name="selectables" />
 											<i class="fa fa-ticket fa-fw"></i>
 											{{{name}}}
@@ -134,7 +134,7 @@
 								<div class="list-group">
 									{{#if training}}
 										{{#with training}}
-											<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
+											<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-identifier="{{../identifier}}" class="list-group-item btn btn-default">
 												<input type="radio" name="selectables" />
 												<i class="fa fa-graduation-cap fa-fw"></i>
 												{{{name}}}
@@ -144,7 +144,7 @@
 									{{/if}}
 									{{#if tickets}}
 										{{#each tickets}}
-											<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
+											<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-identifier="{{../identifier}}" class="list-group-item btn btn-default">
 												<input type="radio" name="selectables" />
 												<i class="fa fa-ticket fa-fw"></i>
 												{{{name}}}

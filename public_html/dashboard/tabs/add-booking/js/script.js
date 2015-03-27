@@ -59,27 +59,6 @@ Handlebars.registerHelper("notEmptyObj", function (item, options) {
 	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
-Handlebars.registerHelper("assignCheck", function (item, options) {
-
-	//Check which bookingdetails the ticket is assigned too
-	var detailsWithTicket = _.filter(booking.bookingdetails, function(detail) {
-		if(detail.ticket.id == item.id) return detail;
-	});
-
-	//Display how many tickets are free, otherwise the ticket will not show.
-
-	if($.isEmptyObject(detailsWithTicket)) {
-		this.free = this.qty;
-		return options.fn(this);
-	} else if(detailsWithTicket.length != this.qty) {
-		this.free = this.qty - detailsWithTicket.length;
-		return options.fn(this);
-	} else {
-		return false;
-	}
-
-});
-
 Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
 	    max = 0;
@@ -381,6 +360,10 @@ window.promises.loadedTickets.done(function() {
 		booking.store();
 
 		drawBasket();
+
+		// If on trips screen, redraw session-ticket list
+		if($('#session-tab').hasClass('active'))
+			drawSessionTicketsList();
 	});
 });
 
@@ -390,9 +373,27 @@ window.promises.loadedPackages.done(function() {
 		var id = $(this).data('id');
 		var UID = randomString();
 
-		// Add ticket to selectedTickets
-		booking.selectedPackages[UID] = $.extend(true, {}, window.packages[id]);
-		booking.selectedPackages[UID].UID = UID;
+		var package = $.extend(true, {}, window.packages[id]);
+
+		package.UID = UID;
+
+		// Individualise potentially contained courses
+		if(package.courses) {
+			console.log(package.courses);
+			var courses = $.extend(true, {}, package.courses);
+			package.courses = {};
+
+			for(var i = 0; i < Object.keys(courses).length; i++) {
+				for(var j = 0; j < courses[i].pivot.quantity; j++) {
+					courseUID = randomString();
+					package.courses[courseUID] = $.extend(true, {}, courses[i]);
+					package.courses[courseUID].UID = courseUID;
+				}
+			}
+		}
+
+		// Add package to selectedPackages
+		booking.selectedPackages[UID] = package;
 
 		booking.store();
 
@@ -407,12 +408,16 @@ window.promises.loadedPackages.done(function() {
 			return false;
 		}
 
-		// Remove from selected tickets
+		// Remove from selected packages
 		delete booking.selectedPackages[UID];
 
 		booking.store();
 
 		drawBasket();
+
+		// If on trips screen, redraw session-ticket list
+		if($('#session-tab').hasClass('active'))
+			drawSessionTicketsList();
 	});
 });
 
@@ -422,7 +427,7 @@ window.promises.loadedCourses.done(function() {
 		var id = $(this).data('id');
 		var UID = randomString();
 
-		// Add ticket to selectedCourses
+		// Add course to selectedCourses
 		booking.selectedCourses[UID] = $.extend(true, {}, window.courses[id]);
 		booking.selectedCourses[UID].UID = UID;
 
@@ -440,12 +445,16 @@ window.promises.loadedCourses.done(function() {
 			return false;
 		}
 
-		// Remove from selected tickets
+		// Remove from selected courses
 		delete booking.selectedCourses[UID];
 
 		booking.store();
 
 		drawBasket();
+
+		// If on trips screen, redraw session-ticket list
+		if($('#session-tab').hasClass('active'))
+			drawSessionTicketsList();
 	});
 });
 
@@ -691,10 +700,10 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 *************************
 */
 
-var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-template").html());
-var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
-var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
-var sessionCoursesTemplate   	= Handlebars.compile($("#session-courses-template").html());
+var sessionCustomersTemplate = Handlebars.compile($("#session-customers-template").html());
+var sessionTicketsTemplate   = Handlebars.compile($("#session-tickets-template").html());
+var sessionPackagesTemplate  = Handlebars.compile($("#session-packages-template").html());
+var sessionCoursesTemplate   = Handlebars.compile($("#session-courses-template").html());
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 	if($('[data-target="#session-tab"]').data('validated') === false) return false;
@@ -702,12 +711,9 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#session-customers").children().first().addClass('active');
 
-	$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-	$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-	$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
-	$("#session-tickets").find('list-group-item').first().addClass('active');
+	drawSessionTicketsList();
 
-	$('#session-filters').submit();
+	// $('#session-filters').submit();
 });
 
 $('#session-tab').on('click', '#session-tickets .list-group-item', function() {
@@ -719,18 +725,32 @@ $('#session-tab').on('click', '#session-tickets .list-group-item', function() {
 $('#session-tab').on('submit', '#session-filters', function(e) {
 	e.preventDefault();
 
-
-	if($('#session-tickets .active').first().data('type') === 'training') {
-		pageMssg('<b>Classes are not yet supported</b> Sorry, mate!');
-		return false;
-	}
-
-
 	$('#session-filters [type=submit]').html('Filter <i class="fa fa-cog fa-spin"></i>');
 
 	var params = $(this).serializeObject();
-	if( $('#session-tickets .active').length !== 0 )
-		params.ticket_id = $('#session-tickets .active').first().data('id');
+	if( $('#session-tickets .active').length > 0 ) {
+		var data = $('#session-tickets .active').first().data();
+		if(data.type === 'ticket') {
+			params.ticket_id = data.id;
+
+			if(data.parent === 'package')
+				params.package_id = data.parentId;
+			else if(data.parentParent === 'package')
+				params.package_id = data.parentParentId;
+		}
+		else if(data.type === 'training') {
+			params.training_id = data.id;
+		}
+		else {
+			pageMssg('ERROR Type could not be determined!', 'danger');
+			return false;
+		}
+
+		if(data.parent === 'course')
+			params.course_id = data.parentId;
+	}
+
+	params.type = data.type;
 
 	redrawSessionsList(params);
 });
@@ -741,88 +761,122 @@ $('#session-tab').on('click', '.assign-session', function() {
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 	btn.addClass('waiting');
 
-	var package_id  = $('#session-tickets').children('.active').first().data('package-id');
-	var ticket_id   = $('#session-tickets').children('.active').first().data('id');
-	var customer_id = $('#session-customers').children('.active').first().data('id');
-	var session_id  = btn.data('id');
+	var $selected = $('#session-tickets').find('.active').first();
+	var data = $selected.data();
 
-	if(!ticket_id) {
-		pageMssg('Please select a ticket!', 'warning');
+	if(!data.id) {
+		pageMssg('Please select a ticket or class.', 'warning');
 		btn.html('Assign');
 		return false;
 	}
 
 	var params = {};
-	params._token      = window.token;
-	params.customer_id = customer_id;
-	if(package_id) params.package_id = package_id;
-	params.ticket_id   = ticket_id;
-	params.session_id  = session_id;
+	params.customer_id = $('#session-customers').children('.active').first().data('id');
 
-	// Determine if we need to submit a boatroom_id
-	var session = window.sessions[session_id];
-	var trip    = window.trips[session.trip_id];
+	if(data.parentParent || data.parent === 'course') {
+		// Is a ticket or class in a course in a package
 
-	var start = moment(session.start);
-	var end   = moment(start).add(trip.duration, 'hours');
+		// Check if course identifier is given and if so, check if the customer is the same
+		if(data.identifier) {
+			console.info('type compare');
+			console.log(data.identifier.split('-')[1]);
+			console.log(params.customer_id);
 
-	if(start.format('YYYY-MM-DD') !== end.format('YYYY-MM-DD')) {
-		// The trip is overnight
-
-		var ticket  = window.tickets[ticket_id];
-
-		var boatBoatrooms   = _.pluck(session.boat.boatrooms, 'id');
-		var ticketBoatrooms = _.pluck(ticket.boatrooms, 'id');
-		var intersectingBoatrooms = [];
-
-		if(boatBoatrooms.length === 1) {
-			submitAddDetail(params);
-			return;
+			var ownerId = data.identifier.split('-')[1];
+			if(ownerId != params.customer_id) {
+				pageMssg('This course is <b>already assigned</b> to ' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].name + ' and cannot be assigned to another customer.', 'danger');
+				return false;
+			}
 		}
 
-		if(ticketBoatrooms.length > 0) {
-			intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
-			if(intersectingBoatrooms.length === 1) {
-				boatroomDetermined = true;
+		params.course_id  = data.parentId;
+
+		if(data.parentParent)
+			params.package_id = data.parentParentId;
+		else if(data.parent === 'package')
+			params.package_id = data.parentId;
+
+		if(data.packagefacade)
+			params.packagefacade_id = data.packagefacade;
+	}
+
+	if(data.type === 'ticket') {
+		params.ticket_id  = data.id;
+		params.session_id = btn.data('id');
+	}
+	else
+		params.training_session_id = btn.data('id');
+
+	params._token = window.token;
+
+	if(data.type === 'ticket') {
+		// Determine if we need to submit a boatroom_id
+		var session = window.sessions[params.session_id];
+		var trip    = window.trips[session.trip_id];
+
+		var start = moment(session.start);
+		var end   = moment(start).add(trip.duration, 'hours');
+
+		if(start.format('YYYY-MM-DD') !== end.format('YYYY-MM-DD')) {
+			// The trip is overnight
+
+			var ticket  = window.tickets[params.ticket_id];
+
+			var boatBoatrooms   = _.pluck(session.boat.boatrooms, 'id');
+			var ticketBoatrooms = _.pluck(ticket.boatrooms, 'id');
+			var intersectingBoatrooms = [];
+
+			if(boatBoatrooms.length === 1) {
 				submitAddDetail(params);
 				return;
 			}
-		}
 
-		// If the boatroom could not be determined, we need to ask the user:
-		var boatrooms = {};
-		if(intersectingBoatrooms.length > 0) {
-			boatrooms = _.map(intersectingBoatrooms, function(value) {
-				return window.boatrooms[value];
-			});
-		} else {
-			boatrooms = session.boat.boatrooms;
-		}
-
-		$('#modalWindows')
-		.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
-		.children('#modal-boatroom-select')             // Directly find it and use it
-		.data('params', params)                         // Assign the eventObject to the modal DOM element
-		.reveal({                                       // Open modal window | Options:
-			animation: 'fadeAndPop',                    // fade, fadeAndPop, none
-			animationSpeed: 300,                        // how fast animtions are
-			closeOnBackgroundClick: true,               // if you click background will modal close?
-			dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
-			btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
-			onFinishModal: function() {
-				// Aborted action
-				if(!window.sw.modalClosedBySelection) {
-					this.btn.html('Assign');            // Reset the button
-				} else {
-					delete window.sw.modalClosedBySelection;
+			if(ticketBoatrooms.length > 0) {
+				intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
+				if(intersectingBoatrooms.length === 1) {
+					boatroomDetermined = true;
+					submitAddDetail(params);
+					return;
 				}
-
-				$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
 			}
-		});
-	} else {
-		submitAddDetail(params);
+
+			// If the boatroom could not be determined, we need to ask the user:
+			var boatrooms = {};
+			if(intersectingBoatrooms.length > 0) {
+				boatrooms = _.map(intersectingBoatrooms, function(value) {
+					return window.boatrooms[value];
+				});
+			} else {
+				boatrooms = session.boat.boatrooms;
+			}
+
+			$('#modalWindows')
+			.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
+			.children('#modal-boatroom-select')             // Directly find it and use it
+			.data('params', params)                         // Assign the eventObject to the modal DOM element
+			.reveal({                                       // Open modal window | Options:
+				animation: 'fadeAndPop',                    // fade, fadeAndPop, none
+				animationSpeed: 300,                        // how fast animtions are
+				closeOnBackgroundClick: true,               // if you click background will modal close?
+				dismissModalClass: 'close-modal',           // the class of a button or element that will close an open modal
+				btn: btn,                                   // Submit by reference to later get it as this.btn for resetting
+				onFinishModal: function() {
+					// Aborted action
+					if(!window.sw.modalClosedBySelection) {
+						this.btn.html('Assign');            // Reset the button
+					} else {
+						delete window.sw.modalClosedBySelection;
+					}
+
+					$('#modal-boatroom-select').remove();   // Remove the modal from the DOM
+				}
+			});
+
+			return false;
+		}
 	}
+
+	submitAddDetail(params);
 });
 
 $('#modalWindows').on('click', '.boatroom-select-option', function(event) {
@@ -838,15 +892,19 @@ $('#modalWindows').on('click', '.boatroom-select-option', function(event) {
 });
 
 function submitAddDetail(params) {
+	console.info('Add-detail params:');
+	console.log(params);
+	return false;
+
 	booking.addDetail(params, function success(status, customer_id) {
 		// $('.free-spaces[data-id="' + params.session_id + '"]').html('<i class="fa fa-refresh fa-spin"></i>');
 
-		var params = $("#session-filters").serializeObject();
-		if( $('#session-tickets .active').length !== 0 ) {
-			params.ticket_id = $('#session-tickets .active').first().data('id');
-		}
+		// var params = $("#session-filters").serializeObject();
+		// if( $('#session-tickets .active').length !== 0 ) {
+		// 	params.ticket_id = $('#session-tickets .active').first().data('id');
+		// }
 
-		redrawSessionsList(params);
+		// redrawSessionsList(params);
 
 		//List customer's bookingdetails in selectedCustomers for accommodations tab
 		var details = _.filter(booking.bookingdetails, function (detail) {
@@ -856,10 +914,7 @@ function submitAddDetail(params) {
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
 
-		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-		$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
-		$("#session-tickets").find('list-group-item').first().addClass('active');
+		drawSessionTicketsList();
 
 		drawBasket(function() {
 			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
@@ -874,6 +929,14 @@ function submitAddDetail(params) {
 	});
 }
 
+function drawSessionTicketsList() {
+	var $list = $("#session-tickets");
+	$list.html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
+	$list.append(sessionPackagesTemplate({packages:booking.selectedPackages}));
+	$list.append(sessionCoursesTemplate({courses:booking.selectedCourses}));
+	$list.find('.list-group-item').first().addClass('active').click();
+}
+
 $('#booking-summary').on('click', '.unassign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Unassigning...');
@@ -883,16 +946,13 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 	params.bookingdetail_id = $(this).data('id');
 
 	booking.removeDetail(params, function success() {
-		var params = $("#session-filters").serializeObject();
-		if( $('#session-tickets .active').length !== 0 )
-			params.ticket_id = $('#session-tickets .active').first().data('id');
+		// var params = $("#session-filters").serializeObject();
+		// if( $('#session-tickets .active').length !== 0 )
+		// 	params.ticket_id = $('#session-tickets .active').first().data('id');
 
-		redrawSessionsList(params);
+		// redrawSessionsList(params);
 
-		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
-		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-		$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
-		$("#session-tickets").find('list-group-item').first().addClass('active');
+		drawSessionTicketsList();
 
 		drawBasket();
 	}, function error(xhr) {
@@ -1230,44 +1290,56 @@ $(document).ready(function() {
 			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
 			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideUp();
 		}
-
-
 	});
 
 	$('.alert-container').remove();
 
 });
 
+var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
 function redrawSessionsList(params) {
+
+	console.info('Filter params:');
+	console.log(params);
 
 	if(typeof(params) === 'undefined') params = "";
 
-	var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
+	// First, make the list opaque so the user knows that it should not be clicked
+	$("#sessions-table tbody").css('opacity', 0.3);
 
-	Session.filter(params, function(data){
+	var model;
+	if(params.type === 'ticket')
+		model = Session;
+	else
+		model = Class;
+
+	model.filter(params, function(data) {
 		window.sessions = _.indexBy(data, 'id');
 		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
+		$("#sessions-table tbody").css('opacity', 1);
 
-		window.promises.loadedBoatrooms.done(function() {
-			// Generate popovers
-			_.each(window.sessions, function(session) {
-				var html = '<table>';
-				_.each(session.capacity[2], function(capacity, key) {
-					html += '<tr>';
-					html += 	'<td>' + window.boatrooms[key].name + '</td>';
-					html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>';
-					html += '</tr>';
-				});
-				html += '</table>';
-				$('.percentage-bar-container[data-id=' + session.id + ']').popover({
-					title: 'Free spaces by cabin',
-					content: html,
-					html: true,
-					placement: 'top',
-					trigger: 'hover',
+		if(params.type === 'ticket') {
+			window.promises.loadedBoatrooms.done(function() {
+				// Generate popovers
+				_.each(window.sessions, function(session) {
+					var html = '<table>';
+					_.each(session.capacity[2], function(capacity, key) {
+						html += '<tr>';
+						html += 	'<td>' + window.boatrooms[key].name + '</td>';
+						html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>';
+						html += '</tr>';
+					});
+					html += '</table>';
+					$('.percentage-bar-container[data-id=' + session.id + ']').popover({
+						title: 'Free spaces by cabin',
+						content: html,
+						html: true,
+						placement: 'top',
+						trigger: 'hover',
+					});
 				});
 			});
-		});
+		}
 
 		$('#session-filters [type=submit]').html('Filter');
 	});
