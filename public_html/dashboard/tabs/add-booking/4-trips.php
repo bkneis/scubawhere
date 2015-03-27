@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</div>
-		<script id="session-customers-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="session-customers-template">
 			{{#each customers}}
 				<a href="javascript:void(0);" data-id="{{id}}" class="list-group-item list-group-radio">
 					{{{firstname}}} {{{lastname}}}
@@ -34,7 +34,7 @@
 				</div>
 			</div>
 		</div>
-		<script id="session-tickets-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="session-tickets-template">
 			{{#each tickets}}
 				<label data-id="{{id}}" data-type="ticket" class="list-group-item btn btn-default">
 					<input type="radio" name="selectables" />
@@ -44,36 +44,67 @@
 				</label>
 			{{/each}}
 		</script>
-		<script id="session-packages-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="session-packages-template">
 			{{#each packages}}
-				<div class="panel panel-default">
+				<div class="panel panel-warning">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-package-{{id}}">
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
 								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 							</a>
 						</h4>
 					</div>
-					<div id="booking-ticket-list-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
+					<div id="booking-ticket-list-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
 							<div class="list-group">
-								{{!--{{#if courses}}
+								{{#if courses}}
 									{{#each courses}}
-										<a href="javascript:void(0);" data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item list-group-radio">
-											<i class="fa fa-graduation-cap fa-fw"></i>
-											{{{name}}}
-											<span class="badge badge-default small">{{pivot.quantity}}</span>
-										</a>
+										<div class="panel panel-info">
+											<div class="panel-heading" role="tab">
+												<h4 class="panel-title">
+													<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
+														<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+														<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+													</a>
+												</h4>
+											</div>
+											<div id="booking-ticket-list-{{UID}}" class="panel-collapse collapse" role="tabpanel">
+												<div class="panel-body">
+													<div class="list-group">
+														{{#if training}}
+															{{#with training}}
+																<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../id}}" class="list-group-item btn btn-default">
+																	<input type="radio" name="selectables" />
+																	<i class="fa fa-graduation-cap fa-fw"></i>
+																	{{{name}}}
+																	<span class="badge badge-default small">{{qty ../training_quantity}}</span>
+																</label>
+															{{/with}}
+														{{/if}}
+														{{#if tickets}}
+															{{#each tickets}}
+																<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-parent-parent="package" data-parent-parent-id="{{../../id}}" class="list-group-item btn btn-default">
+																	<input type="radio" name="selectables" />
+																	<i class="fa fa-ticket fa-fw"></i>
+																	{{{name}}}
+																	<span class="badge badge-default small">{{qty}}</span>
+																</label>
+															{{/each}}
+														{{/if}}
+													</div>
+												</div>
+											</div>
+										</div>
 									{{/each}}
-								{{/if}}--}}
+								{{/if}}
 								{{#if tickets}}
 									{{#each tickets}}
-										<label data-id="{{id}}" data-package-id="{{../id}}" data-type="package" class="list-group-item btn btn-default">
+										<label data-id="{{id}}" data-type="ticket" data-parent="package" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
 											<input type="radio" name="selectables" />
 											<i class="fa fa-ticket fa-fw"></i>
 											{{{name}}}
-											<span class="badge badge-default small">{{pivot.quantity}}</span>
+											<span class="badge badge-default small">{{qty}}</span>
 										</label>
 									{{/each}}
 								{{/if}}
@@ -82,6 +113,48 @@
 					</div>
 				</div>
 			{{/each}}
+		</script>
+		<script type="text/x-handlebars-template" id="session-courses-template">
+			{{#if courses}}
+				{{#each courses}}
+					<div class="panel panel-info">
+						<div class="panel-heading" role="tab">
+							<h4 class="panel-title">
+								<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
+									<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+									<i class="fa fa-plus-square-o expand-icon pull-right"></i>
+								</a>
+							</h4>
+						</div>
+						<div id="booking-ticket-list-{{UID}}" class="panel-collapse collapse" role="tabpanel">
+							<div class="panel-body">
+								<div class="list-group">
+									{{#if training}}
+										{{#with training}}
+											<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
+												<input type="radio" name="selectables" />
+												<i class="fa fa-graduation-cap fa-fw"></i>
+												{{{name}}}
+												<span class="badge badge-default small">{{qty ../training_quantity}}</span>
+											</label>
+										{{/with}}
+									{{/if}}
+									{{#if tickets}}
+										{{#each tickets}}
+											<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" class="list-group-item btn btn-default">
+												<input type="radio" name="selectables" />
+												<i class="fa fa-ticket fa-fw"></i>
+												{{{name}}}
+												<span class="badge badge-default small">{{qty}}</span>
+											</label>
+										{{/each}}
+									{{/if}}
+								</div>
+							</div>
+						</div>
+					</div>
+				{{/each}}
+			{{/if}}
 		</script>
 	</div>
 </div>
@@ -122,7 +195,7 @@
 								<select id="trips" name="trip_id" class="form-control select2">
 									<option selected="selected" value="">All trips</option>
 								</select>
-								<script id="trips-list-template" type="text/x-handlebars-template">
+								<script type="text/x-handlebars-template" id="trips-list-template">
 									<option selected="selected" value="">All trips</option>
 									{{#each trips}}
 										<option value="{{id}}">{{{name}}}</option>
@@ -156,7 +229,7 @@
 							</tbody>
 						</table>
 					</div>
-					<script id="sessions-table-template" type="text/x-handlebars-template">
+					<script type="text/x-handlebars-template" id="sessions-table-template">
 						{{#each sessions}}
 							{{#unless deleted_at}}
 								<tr>

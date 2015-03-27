@@ -113,6 +113,28 @@ Handlebars.registerHelper("countryName", function(id) {
 	}
 });
 
+Handlebars.registerHelper('qty', function(training_quantity) {
+	if(this.qty)
+		return this.qty;
+	else if(this.pivot && this.pivot.quantity) {
+		this.qty = this.pivot.quantity;
+		return this.qty;
+	}
+	else if(training_quantity) {
+		this.qty = training_quantity;
+		return this.qty;
+	}
+	else alert('ERROR: Cannot determine qty!');
+});
+
+Handlebars.registerHelper('UID', function() {
+	if(this.UID)
+		return this.UID;
+
+	this.UID = randomString();
+	return this.UID;
+});
+
 // Load all initial handlebars templates
 
 var agentTemplate          = Handlebars.compile($("#agents-list-template").html());
@@ -677,7 +699,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 var sessionCustomersTemplate 	= Handlebars.compile($("#session-customers-template").html());
 var sessionTicketsTemplate   	= Handlebars.compile($("#session-tickets-template").html());
 var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
-// var sessionPackagesTemplate   	= Handlebars.compile($("#session-packages-template").html());
+var sessionCoursesTemplate   	= Handlebars.compile($("#session-courses-template").html());
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 	if($('[data-target="#session-tab"]').data('validated') === false) return false;
@@ -687,7 +709,8 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 
 	$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
 	$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-	$("#session-tickets").children().first().addClass('active');
+	$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
+	$("#session-tickets").find('list-group-item').first().addClass('active');
 
 	$('#session-filters').submit();
 });
@@ -701,6 +724,13 @@ $('#session-tab').on('click', '#session-tickets .list-group-item', function() {
 $('#session-tab').on('submit', '#session-filters', function(e) {
 	e.preventDefault();
 
+
+	if($('#session-tickets .active').first().data('type') === 'training') {
+		pageMssg('<b>Classes are not yet supported</b> Sorry, mate!');
+		return false;
+	}
+
+
 	$('#session-filters [type=submit]').html('Filter <i class="fa fa-cog fa-spin"></i>');
 
 	var params = $(this).serializeObject();
@@ -712,6 +742,7 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
+
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 	btn.addClass('waiting');
 
@@ -832,7 +863,8 @@ function submitAddDetail(params) {
 
 		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
 		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-		$("#session-tickets").children('[data-id="' + params.ticket_id + '"]').addClass('active');
+		$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
+		$("#session-tickets").find('list-group-item').first().addClass('active');
 
 		drawBasket(function() {
 			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
@@ -864,7 +896,8 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 
 		$("#session-tickets").html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
 		$("#session-tickets").append(sessionPackagesTemplate({packages:booking.selectedPackages}));
-		$("#session-tickets").children('[data-id="' + params.ticket_id + '"]').addClass('active');
+		$("#session-tickets").append(sessionCoursesTemplate({courses:booking.selectedCourses}));
+		$("#session-tickets").find('list-group-item').first().addClass('active');
 
 		drawBasket();
 	}, function error(xhr) {
@@ -1289,6 +1322,11 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 		booking.store();
 	}
 
+	/**
+	 * The system has been changed to remove selected tickets/packages/courses from the list when they are assigned.
+	 * Thus we cannot recreate the selected* lists from the existing bookingdetails.
+	 * Instead, new selections need to be made if new tickets/packages/courses should be added.
+
 	// TODO Remove when selected tickets are removed from the array when they are assigned
 	if(Object.keys(booking.selectedTickets).length === 0) {
 		// Load selectedTickets from bookingdetails
@@ -1325,6 +1363,7 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 
 		booking.store();
 	}
+	*/
 
 	if(booking.currentTab === null) {
 		booking.currentTab = '#ticket-tab';

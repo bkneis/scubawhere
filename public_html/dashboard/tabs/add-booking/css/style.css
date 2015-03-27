@@ -147,6 +147,11 @@
 #session-tickets .btn {
     text-align: left;
 }
+#session-tickets .btn:active,
+#session-tickets .btn.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
 #session-tickets .btn input[type="radio"] {
     position: absolute;
     clip: rect(0, 0, 0, 0);

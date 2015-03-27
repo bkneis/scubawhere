@@ -13,6 +13,8 @@ class PackageController extends Controller {
 			return Auth::user()->packages()->withTrashed()->with(
 				'tickets',
 				'courses',
+					'courses.training',
+					'courses.tickets',
 				'accommodations',
 				'addons',
 				'basePrices',
@@ -30,6 +32,8 @@ class PackageController extends Controller {
 		return Auth::user()->packages()->with(
 			'tickets',
 			'courses',
+				'courses.training',
+				'courses.tickets',
 			'accommodations',
 			'addons',
 			'basePrices',
@@ -42,6 +46,8 @@ class PackageController extends Controller {
 		return Auth::user()->packages()->withTrashed()->with(
 			'tickets',
 			'courses',
+				'courses.training',
+				'courses.tickets',
 			'accommodations',
 			'addons',
 			'basePrices',
