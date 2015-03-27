@@ -170,7 +170,7 @@ class CronRunCommand extends Command {
 
 	protected function everyFiveMinutes(callable $callback)
 	{
-		/* if((int) date('i', $this->timestamp) % 5 === 0) */ call_user_func($callback);
+		/* if((int) date('i', $this->timestamp) % 5 === 0) */ // call_user_func($callback);
 	}
 
 	protected function everyTenMinutes(callable $callback)
