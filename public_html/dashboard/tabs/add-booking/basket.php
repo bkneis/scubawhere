@@ -146,7 +146,7 @@
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
 								<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-trips" href="#booking-summary-trips-{{id}}">
-									<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{session.trip.name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+									<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if trip}}{{{session.trip.name}}}{{else}}{{session.training.name}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
 						</div>
@@ -160,7 +160,7 @@
 										<i class="fa fa-ticket fa-fw"></i> <span class="label label-default text-uppercase"><small>Ticket</small></span>
 									{{/if}}
 
-									{{{ticket.name}}}
+									{{#if ticket}}{{{ticket.name}}}{{else}}{{course.name}}{{/if}}
 								</p>
 								<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
 								<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>

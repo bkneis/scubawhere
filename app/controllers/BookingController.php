@@ -583,7 +583,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$package = Auth::user()->courses()->findOrFail( Input::get('course_id') );
+				$course = Auth::user()->courses()->findOrFail( Input::get('course_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -868,6 +868,8 @@ class BookingController extends Controller {
 				});
 			}
 		}
+		else
+			$addons = false;
 
 		// Update booking price
 		if($package)
@@ -887,7 +889,7 @@ class BookingController extends Controller {
 			else
 				$start = $firstDetail->training_session->start;
 
-			$firstAccommodation = $booking->accommodations->wherePivot('packagefacade_id', $detail->packagefacade_id)->get()
+			$firstAccommodation = $booking->accommodations()->wherePivot('packagefacade_id', $packagefacade->id)->get()
 			->sortBy(function($accommodation)
 			{
 				return $accommodation->pivot->start;
@@ -904,7 +906,7 @@ class BookingController extends Controller {
 			}
 
 			// Calculate the package price at this first datetime and sum it up
-			$package->calculatePrice($start, $limitBefore);
+			$package->calculatePrice($start);
 		}
 		elseif($course)
 		{
@@ -929,7 +931,7 @@ class BookingController extends Controller {
 				$start = $firstDetail->training_session->start;
 
 			// Calculate the package price at this first departure datetime and sum it up
-			$course->calculatePrice($start, $limitBefore);
+			$course->calculatePrice($start);
 		}
 		else
 		{
@@ -942,7 +944,7 @@ class BookingController extends Controller {
 		return array(
 			'status'                => 'OK. Booking details added.',
 			'id'                    => $bookingdetail->id,
-			'addons'                => $addons->lists('id'),
+			'addons'                => $addons ? $addons->lists('id') : false,
 			'decimal_price'         => $booking->decimal_price,
 
 			'package_decimal_price' => $package ? $package->decimal_price : false,
@@ -1321,7 +1323,7 @@ class BookingController extends Controller {
 		$start = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
 		$end   = new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
 
-		Clockwork::info($start->diff($end)->format('%R%a'));
+		// Clockwork::info($start->diff($end)->format('%R%a'));
 
 		if($start->diff($end)->format('%R%a') < 1)
 			return Response::json(['errors' => ['The end date must be after the start date.']], 400); // 400 Bad Request

@@ -218,9 +218,9 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	// Determine whether we need to inject a packagefacade_id into the request
 	if(typeof params.packagefacade_id === 'undefined' && typeof params.package_id !== 'undefined') {
-		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted, trying to detect packagefacade_id.');
+		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted. A new package will be assigned.');
 
-		var existingDetail = _.find(this.bookingdetails, function(detail) {
+		/*var existingDetail = _.find(this.bookingdetails, function(detail) {
 			// First, test the customer_id
 			if( detail.customer.id != params.customer_id )
 				return false;
@@ -238,7 +238,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			params.packagefacade_id = existingDetail.packagefacade.id;
 		}
 		else
-			console.info('No packagefacade_id detected. Assigning new package.');
+			console.info('No packagefacade_id detected. Assigning new package.');*/
 	}
 
 	$.ajax({
@@ -291,7 +291,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 			this.calculateSums();
 
-			successFn(data.status, params.customer_id);
+			successFn(data.status, data.packagefacade_id);
 		},
 		error: errorFn
 	});

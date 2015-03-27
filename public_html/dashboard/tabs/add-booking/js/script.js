@@ -23,8 +23,8 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
  * @return {string}          Handlebars.SafeString containing the progress bar markup
  */
 function generateFreeSpacesBar(capacity, id) {
-	var freeSpaces = capacity[1] - capacity[0];
-	var percentage = (capacity[0] / capacity[1]) * 100;
+	var freeSpaces = capacity[1] ? capacity[1] - capacity[0] : '∞';
+	var percentage = capacity[1] ? (capacity[0] / capacity[1]) * 100 : 0;
 
 	var color = '#5cb85c'; var bgClasses = 'bg-success border-success';
 	if(percentage >= 75) { color = '#f0ad4e'; bgClasses = 'bg-warning border-warning'; }
@@ -827,7 +827,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			var intersectingBoatrooms = [];
 
 			if(boatBoatrooms.length === 1) {
-				submitAddDetail(params);
+				submitAddDetail(params, data);
 				return;
 			}
 
@@ -835,7 +835,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 				intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
 				if(intersectingBoatrooms.length === 1) {
 					boatroomDetermined = true;
-					submitAddDetail(params);
+					submitAddDetail(params, data);
 					return;
 				}
 			}
@@ -853,7 +853,8 @@ $('#session-tab').on('click', '.assign-session', function() {
 			$('#modalWindows')
 			.append( boatroomModalTemplate({boatrooms: boatrooms}) )     // Create the modal
 			.children('#modal-boatroom-select')             // Directly find it and use it
-			.data('params', params)                         // Assign the eventObject to the modal DOM element
+			.data('params', params)                         // Assign the params to the modal DOM element
+			.data('data', data)                             // Assign the data to the modal DOM element
 			.reveal({                                       // Open modal window | Options:
 				animation: 'fadeAndPop',                    // fade, fadeAndPop, none
 				animationSpeed: 300,                        // how fast animtions are
@@ -876,27 +877,27 @@ $('#session-tab').on('click', '.assign-session', function() {
 		}
 	}
 
-	submitAddDetail(params);
+	submitAddDetail(params, data);
 });
 
 $('#modalWindows').on('click', '.boatroom-select-option', function(event) {
-	var modal = $(event.target).closest('.reveal-modal');
+	var modal  = $(event.target).closest('.reveal-modal');
 	var params = modal.data('params');
+	var data   = modal.data('data');
 	params.boatroom_id = $(event.target).data('id');
 
-	submitAddDetail(params);
+	submitAddDetail(params, data);
 
 	// Close modal window
 	window.sw.modalClosedBySelection = true;
 	$('#modal-boatroom-select .close-reveal-modal').click();
 });
 
-function submitAddDetail(params) {
+function submitAddDetail(params, data) {
 	console.info('Add-detail params:');
 	console.log(params);
-	return false;
 
-	booking.addDetail(params, function success(status, customer_id) {
+	booking.addDetail(params, function success(status, packagefacade_id) {
 		// $('.free-spaces[data-id="' + params.session_id + '"]').html('<i class="fa fa-refresh fa-spin"></i>');
 
 		// var params = $("#session-filters").serializeObject();
@@ -904,15 +905,32 @@ function submitAddDetail(params) {
 		// 	params.ticket_id = $('#session-tickets .active').first().data('id');
 		// }
 
-		// redrawSessionsList(params);
+		// redrawSessionsList(params); // Now triggered by drawSessionTicketsList()
 
 		//List customer's bookingdetails in selectedCustomers for accommodations tab
-		var details = _.filter(booking.bookingdetails, function (detail) {
+		/*var details = _.filter(booking.bookingdetails, function (detail) {
 		    return detail.customer.id == customer_id;
-		});
+		});*/
 
 		//booking.selectedCustomers[customer_id].bookingdetails = details;
 		//booking.store();
+
+		// Validate and assign packagefacade_id, if returned
+		if(packagefacade_id) {
+			// If a packagefacade_id already exists, validate that they are the same
+			if(params.packagefacade_id && params.packagefacade_id != packagefacade_id) {
+				pageMssg('<b>ERROR: UNDEFINED BEHAVIOR</b> Submitted and returned packagefacade_id do not match!', 'danger', true);
+				return false;
+			}
+
+			var UID;
+			if(data.parentParent)
+				UID = data.parentParentUid;
+			else
+				UID = data.parentUid;
+
+			booking.selectedPackages[UID].packagefacade = packagefacade_id;
+		}
 
 		drawSessionTicketsList();
 
@@ -924,8 +942,7 @@ function submitAddDetail(params) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
 		var btn = $('#sessions-table .waiting');
-		btn.html('Assign');
-		btn.removeClass('waiting');
+		btn.removeClass('waiting').html('Assign');
 	});
 }
 
@@ -1314,8 +1331,13 @@ function redrawSessionsList(params) {
 		model = Class;
 
 	model.filter(params, function(data) {
-		window.sessions = _.indexBy(data, 'id');
-		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
+		if(params.type === 'ticket') {
+			window.sessions = _.indexBy(data, 'id');
+		}
+		else {
+			window.training_sessions = _.indexBy(data, 'id');
+		}
+			$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
 		$("#sessions-table tbody").css('opacity', 1);
 
 		if(params.type === 'ticket') {

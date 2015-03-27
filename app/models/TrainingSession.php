@@ -31,6 +31,8 @@ class TrainingSession extends Ardent {
 		    	$query->whereIn('status', Booking::$counted);
 		    })->count();
 
+		$result[1] = $this->training->courses()->sum('capacity') ?: null;
+
 		return $result;
 	}
 
