@@ -849,7 +849,7 @@ class BookingController extends Controller {
 		) );
 
 		if(!$bookingdetail->validate())
-			return Response::json(['errors' => $bookingdetails->errors()->all()], 406); // 406 Not Acceptable
+			return Response::json(['errors' => $bookingdetail->errors()->all()], 406); // 406 Not Acceptable
 
 		$bookingdetail = $booking->bookingdetails()->save($bookingdetail);
 
