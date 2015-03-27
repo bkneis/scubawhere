@@ -1153,6 +1153,26 @@ $('#extra-tab').on('submit', '#extra-form', function(e) {
 	});
 });
 
+$('#extra-tab').on('change', '#discount-percentage', function(e) {
+	$discount            = $('#discount');
+	$discount_percentage = $(e.target);
+
+	$discount.val( (booking.decimal_price * $discount_percentage.val() / 100).toFixed(2) );
+
+	$('#discounted-price').html( window.company.currency.symbol + ' ' + (booking.decimal_price - $discount.val()).toFixed(2) );
+});
+
+$('#extra-tab').on('change', '#discount', function(e) {
+	$discount            = $(e.target);
+	$discount_percentage = $('#discount-percentage');
+
+	$discount.val(parseInt($discount.val()).toFixed(2));
+
+	$discount_percentage.val( Math.round($discount.val() / booking.decimal_price * 100, 2) );
+
+	$('#discounted-price').html( window.company.currency.symbol + ' ' + (booking.decimal_price - $discount.val()).toFixed(2) );
+});
+
 /*
 *************************
 ******** Summary ********
@@ -1254,7 +1274,7 @@ $(document).ready(function() {
 			return item.substr(6);
 		},
 		afterSelect: function() {
-			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location').val() ] );
+			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location').val() ].substr(0, 5) );
 		}
 	});
 

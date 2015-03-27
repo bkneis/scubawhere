@@ -1529,6 +1529,9 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
+		if(!empty($data['discount']))
+			$booking->updatePrice(true);
+
 		return array('status' => 'OK. Booking information updated.', 'decimal_price' => $booking->decimal_price);
 	}
 

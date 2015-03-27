@@ -54,7 +54,7 @@
 					<div class="col-md-5">
 						<ul class="list-group">
 							<li class="list-group-item active">
-								<h4 class="list-group-item-heading">Accommodation</h4>
+								<h4 class="list-group-item-heading">Accommodations</h4>
 							</li>
 							<div id="summary-accommodations"></div>
 							<script id="summary-accommodations-template" type="text/x-handlebars-template">
@@ -69,12 +69,6 @@
 								{{/each}}
 							</script>
 						</ul>
-						<div class="form-group">
-							<label for="discount" class="col-sm-4 control-label">Discount</label>
-							<div class="col-md-8">
-								<input id="discount" name="discount" class="form-control" type="number">
-							</div>
-						</div>
 					</div>
 				</div>
 				<div class="row">

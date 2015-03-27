@@ -275,15 +275,28 @@ class Booking extends Ardent {
 		return !($this->status === 'cancelled' || $this->status === 'on hold');
 	}
 
-	public function updatePrice()
+	public function updatePrice($onlyApplyDiscount = false)
 	{
 		$currency = new Currency( Auth::user()->currency->code );
-
-		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
-
-		$sum = 0;
 		$tickedOffPackagefacades = [];
 		$tickedOffCourses = [];
+		$sum = 0;
+
+		$sum -= $this->discount;
+
+		if($onlyApplyDiscount) {
+			$sum += $this->price / $currency->getSubunitToUnit();
+
+			$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
+
+			$this->save();
+
+			$this->decimal_price = $sum;
+
+			return true;
+		}
+
+		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
 
 		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses)
 		{
@@ -398,8 +411,6 @@ class Booking extends Ardent {
 			$packagesSum += $packagefacade->package()->first()->price;
 		});
 		*/
-
-		$sum -= $this->discount;
 
 		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
 
