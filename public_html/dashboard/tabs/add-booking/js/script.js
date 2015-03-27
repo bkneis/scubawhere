@@ -358,7 +358,7 @@ window.promises.loadedTickets.done(function() {
 		if(typeof booking.selectedTickets[id] != "undefined") {
 			booking.selectedTickets[id].qty++;
 		}else{
-			booking.selectedTickets[id] = window.tickets[id];
+			booking.selectedTickets[id] = $.extend(true, {}, window.tickets[id]);
 			booking.selectedTickets[id].qty = 1;
 		}
 
@@ -388,30 +388,27 @@ window.promises.loadedPackages.done(function() {
 	$('#ticket-tab').on('click', '.add-package', function() {
 
 		var id = $(this).data('id');
+		var UID = randomString();
 
-		//Add ticket to selectedTickets if new, otherwise increase qty
-		if(typeof booking.selectedPackages[id] != "undefined") {
-			booking.selectedPackages[id].qty++;
-		}else{
-			booking.selectedPackages[id] = window.packages[id];
-			booking.selectedPackages[id].qty = 1;
-		}
+		// Add ticket to selectedTickets
+		booking.selectedPackages[UID] = $.extend(true, {}, window.packages[id]);
+		booking.selectedPackages[UID].UID = UID;
 
 		booking.store();
 
-		//Draw the basket
 		drawBasket();
 	});
 
 	$('#booking-summary').on('click', '.remove-package', function() {
-		var id = $(this).data('id');
+		var UID = $(this).data('uid');
 
-		//Lower quantity, if last package, remove from selected tickets.
-		if(booking.selectedPackages[id].qty > 1) {
-			booking.selectedPackages[id].qty--;
-		}else{
-			delete booking.selectedPackages[id];
+		if(!UID) {
+			pageMssg('<b>ERROR</b> Could not find package UID on click element!');
+			return false;
 		}
+
+		// Remove from selected tickets
+		delete booking.selectedPackages[UID];
 
 		booking.store();
 
@@ -423,14 +420,11 @@ window.promises.loadedCourses.done(function() {
 	$('#ticket-tab').on('click', '.add-course', function() {
 
 		var id = $(this).data('id');
+		var UID = randomString();
 
-		//Add ticket to selectedCourses if new, otherwise increase qty
-		if(typeof booking.selectedCourses[id] != "undefined") {
-			booking.selectedCourses[id].qty++;
-		}else{
-			booking.selectedCourses[id] = window.courses[id];
-			booking.selectedCourses[id].qty = 1;
-		}
+		// Add ticket to selectedCourses
+		booking.selectedCourses[UID] = $.extend(true, {}, window.courses[id]);
+		booking.selectedCourses[UID].UID = UID;
 
 		booking.store();
 
@@ -439,14 +433,15 @@ window.promises.loadedCourses.done(function() {
 	});
 
 	$('#booking-summary').on('click', '.remove-course', function() {
-		var id = $(this).data('id');
+		var UID = $(this).data('uid');
 
-		//Lower quantity, if last course, remove from selected tickets.
-		if(booking.selectedCourses[id].qty > 1) {
-			booking.selectedCourses[id].qty--;
-		}else{
-			delete booking.selectedCourses[id];
+		if(!UID) {
+			pageMssg('<b>ERROR</b> Could not find course UID on click element!');
+			return false;
 		}
+
+		// Remove from selected tickets
+		delete booking.selectedCourses[UID];
 
 		booking.store();
 
@@ -1315,9 +1310,9 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 		});
 
 		// If their are still no customers (edge case) set currentTab to customer selection
-		if(Object.keys(booking.selectedCustomers).length === 0) {
+		/*if(Object.keys(booking.selectedCustomers).length === 0) {
 			booking.currentTab = '#customer-tab';
-		}
+		}*/
 
 		booking.store();
 	}
@@ -1367,8 +1362,8 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 
 	if(booking.currentTab === null) {
 		booking.currentTab = '#ticket-tab';
-		if(Object.keys(booking.selectedTickets).length > 0) booking.currentTab = '#customer-tab';
-		if(Object.keys(booking.selectedCustomers).length > 0) booking.currentTab = '#session-tab';
+		// if(Object.keys(booking.selectedTickets).length > 0) booking.currentTab = '#customer-tab';
+		// if(Object.keys(booking.selectedCustomers).length > 0) booking.currentTab = '#session-tab';
 		if(booking.bookingdetails.length > 0) booking.currentTab = '#summary-tab';
 
 		booking.store();

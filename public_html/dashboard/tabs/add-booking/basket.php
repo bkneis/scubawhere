@@ -37,20 +37,20 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-package-{{id}}">
-								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
+								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}}
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 							</a>
 						</h4>
 					</div>
-					<div id="booking-summary-package-{{id}}" class="panel-collapse collapse" role="tabpanel">
+					<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
-							<a href="javascript:void(0);" class="remove-package pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
+							<a href="javascript:void(0);" class="remove-package pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>
 							{{#if courses}}
 								<strong>Courses</strong>
 								{{#each courses}}
 									<p>
-										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -58,7 +58,7 @@
 								<strong>Tickets</strong>
 								{{#each tickets}}
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -66,7 +66,7 @@
 								<strong>Addons</strong>
 								{{#each addons}}
 									<p>
-										<i class="fa fa-cubes fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-cubes fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -74,7 +74,7 @@
 								<strong>Accommodations</strong>
 								{{#each accommodations}}
 									<p>
-										<i class="fa fa-bed fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-bed fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
@@ -91,26 +91,28 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-course-{{id}}">
-								<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
+							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
+								<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}}
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 							</a>
 						</h4>
 					</div>
-					<div id="booking-summary-course-{{id}}" class="panel-collapse collapse" role="tabpanel">
+					<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
-							<a href="javascript:void(0);" class="remove-course pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
+							<a href="javascript:void(0);" class="remove-course pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>
 							{{#if training}}
 								<strong>Class</strong>
-								<p>
-									<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}} <span class="badge badge-default small">{{training_quantity}}</span>
-								</p>
+									{{#with training}}
+									<p>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty ../training_quantity}}</span>
+									</p>
+								{{/with}}
 							{{/if}}
 							{{#if tickets}}
 								<strong>Tickets</strong>
 								{{#each tickets}}
 									<p>
-										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{pivot.quantity}}</span>
+										<i class="fa fa-ticket fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
 								{{/each}}
 							{{/if}}
