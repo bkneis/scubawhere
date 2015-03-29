@@ -563,6 +563,7 @@ return array(
     'File_ASN1_Element' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ASN1.php',
     'File_X509' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/X509.php',
     'FillTimezoneFieldOnCompaniesTable' => $baseDir . '/app/database/migrations/2014_12_01_153430_fill_timezone_field_on_companies_table.php',
+    'FixAndReseedCountriesAndCurrenciesTables' => $baseDir . '/app/database/migrations/2015_03_29_171129_fix_and_reseed_countries_and_currencies_tables.php',
     'FixBookingsTable' => $baseDir . '/app/database/migrations/2014_05_20_165002_fix_bookings_table.php',
     'GuzzleHttp\\Adapter\\AdapterInterface' => $vendorDir . '/guzzlehttp/guzzle/src/Adapter/AdapterInterface.php',
     'GuzzleHttp\\Adapter\\Curl\\BatchContext' => $vendorDir . '/guzzlehttp/guzzle/src/Adapter/Curl/BatchContext.php',
