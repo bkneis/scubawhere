@@ -5,12 +5,13 @@
 				<h4 id="report-title" class="panel-title">Transactions Report</h4>
 			</div>
 			<div class="panel-body">
-				<div id="report-type-btns" class="btn-group col-md-offset-3" role="group">
+				<div id="report-type-btns" class="btn-group col-md-offset-2" role="group">
 					<button type="button" data-report="transactions" class="btn btn-default btn-primary">Transactions</button>
 					<button type="button" data-report="agents" class="btn btn-default">Agents</button>
 					<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
 					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
 					<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
+					<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>
 				</div>
 
 				<div style="margin-top:20px"></div>
@@ -250,7 +251,7 @@
 	</script>
 	<script type="text/x-handlebars-template" id="revenue-report-template">
 	<div class="col-md-6 text-center">
-		<canvas id="myChart" width="400" height="400"></canvas>
+		<canvas id="revenue-chart" width="400" height="400"></canvas>
 	</div>
 	<div class="col-md-6">
 		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
@@ -258,8 +259,8 @@
 				<tr>
 					<th style="color:#313131">Revenue Name</th>
 					<th style="color:#313131">Color</th>
-					<th style="color:#313131">No. Sold</th>
-					<th style="color:#313131">Total</th>
+					<th style="color:#313131; text-align:center;">No. Sold</th>
+					<th style="color:#313131; text-align:center;">Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -267,8 +268,8 @@
 				<tr>
 					<td>{{{name}}}</td>
 					<td style="width:20px;" bgcolor="{{statColor}}"></td>
-					<td>{{quantity}}</td>
-					<td>{{revenue}}</td>
+					<td style="text-align:center;">{{quantity}}</td>
+					<td style="text-align:center;">{{currency}} {{revenue}}</td>
 				</tr>
 				{{else}}
 				<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
@@ -281,6 +282,33 @@
 			<p>The revenue analysis is a <em><strong>qualitative</strong></em> report. Due to discounts being applied and rounded at different times for this report than when calculating the total price for a booking, the individual revenue numbers shown here can slightly differ from your actual revenue.</p>
 			<p>For accounting, please refer to the <em>transactions</em>, <em>agents</em> or <em>booking history</em> reports.</p>
 		</div>
+	</div>
+</script>
+<script type="text/x-handlebars-template" id="demographics-report-template">
+	<div class="col-md-6 text-center">
+		<canvas id="demographics-chart" width="400" height="400"></canvas>
+	</div>
+	<div class="col-md-6">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th style="color:#313131">Country</th>
+					<th style="color:#313131">Color</th>
+					<th style="color:#313131; text-align:center;">Total Revenue</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each countries}}
+				<tr>
+					<td>{{@key}}</td>
+					<td style="width:20px;" id="{{getStatID @key}}-colour"></td>
+					<td style="text-align:center;">{{currency}} {{this}}</td>
+				</tr>
+				{{else}}
+				<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
+				{{/each}}
+			</tbody>
+		</table>
 	</div>
 </script>
 	<script type="text/x-handlebars-template" id="agents-filter-template">

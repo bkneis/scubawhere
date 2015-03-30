@@ -44,6 +44,14 @@ var Report = {
 		});
 	},
 
+	getDemographics : function(params, handleData) {
+		$.ajax({
+			url: '/api/report/demographics',
+			data: params,
+			success: handleData
+		});
+	},
+
 	getPickupSchedule : function(params, handleData) {
 		$.ajax({
 			url: 'api/company/pick-up-schedule',

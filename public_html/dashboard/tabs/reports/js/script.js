@@ -1,14 +1,30 @@
 var report_type;
 var report;
 var filter;
-var summaries;
 window.transactions;
 window.agentBookings;
 window.bookings;
 window.utilisations;
 window.sources;
 
+var colors = [
+	"#85144b", // maroon
+	"#FF4136", // red
+	"#FF851B", // orange
+	"#3D9970", // olive
+	"#FFDC00", // yellow
+	"#2ECC40", // green
+	"#01FF70", // lime
+	"#39CCCC", // teal
+	"#7FDBFF", // aqua
+	"#001f3f", // navy
+	"#0074D9", // blue
+	"#B10DC9", // purple
+	"#F012BE", // fuchsia
+];
+
 var colorID = 0;
+var democolorID = 0;
 
 Handlebars.registerHelper('getUtil', function(capacity, unassigned){
 	return Math.round((1 - unassigned/capacity) * 100);
@@ -24,6 +40,10 @@ Handlebars.registerHelper('getTransAmount', function(date){
 
 Handlebars.registerHelper('getRemaining', function(capacity, unassigned){
 	return capacity - unassigned;
+});
+
+Handlebars.registerHelper('getStatID', function(country){
+	return country.replace(/\s/g, '');
 });
 
 Handlebars.registerHelper('getCountry', function(id){
@@ -100,6 +120,8 @@ $(function() {
 		getReport(report_type);
 		$(':button').removeClass("btn-primary");
 		$(this).addClass("btn-primary");
+		colorID = 0;
+		democolorID = 0;
 	});
 
 	getReport(report_type);
@@ -257,38 +279,32 @@ function getReport(reportType) {
 				stats.streams = [];
 				colorID = 0;
 				_.each(data.tickets, function(ticket) {
-					ticket.statColor = assignColor();
-					colorID++;
+					ticket.statColor = assignColor("revenue");
 					ticket.type = "Tickets";
 					stats.streams.push(ticket);
 				});
 				_.each(data.packages, function(package) {
-					package.statColor = assignColor();
-					colorID++;
+					package.statColor = assignColor("revenue");
 					package.type = "Packages";
 					stats.streams.push(package);
 				});
 				_.each(data.courses, function(course) {
-					course.statColor = assignColor();
-					colorID++;
+					course.statColor = assignColor("revenue");
 					course.type = "Courses";
 					stats.streams.push(course);
 				});
 				_.each(data.addons, function(addon) {
-					addon.statColor = assignColor();
-					colorID++;
+					addon.statColor = assignColor("revenue");
 					addon.type = "Addons";
 					stats.streams.push(addon);
 				});
 				_.each(data.fees, function(fee) {
-					fee.statColor = assignColor();
-					colorID++;
+					fee.statColor = assignColor("revenue");
 					fee.type = "Fees";
 					stats.streams.push(fee);
 				});
 				_.each(data.accommodations, function(acom) {
-					acom.statColor = assignColor();
-					colorID++;
+					acom.statColor = assignColor("revenue");
 					acom.type = "Accommodations";
 					stats.streams.push(acom);
 				});
@@ -320,14 +336,51 @@ function getReport(reportType) {
 					pieStats.push(stat);
 				});
 
-				renderDoughnutChart(pieStats);
+				renderDoughnutChart(pieStats, "revenue");
 			});
 			break;
+
+		case("demographics") :
+			$("#report-title").empty().append("Demographics Report");
+			/*filter = Handlebars.compile($("#demographics-filter-template").html());
+
+			Trip.getAllTrips(function sucess(data) {
+				$("#report-filters").empty().append( filter({trips : data}) );
+			}); */
+
+			Report.getDemographics(dates, function sucess(data) {
+				report = Handlebars.compile($("#demographics-report-template").html());
+				$("#reports").empty().append( report({countries : data.country_revenue}) );
+
+				var pieStats = [];
+				_.each(data.country_revenue, function(value, key) {
+					var stat = {
+						value : value,
+						color : assignColor("demographics"),
+						//highlight : "#FF0",
+						label : key,
+                		labelColor : 'white',
+                		labelFontSize : '16'
+
+					};
+					pieStats.push(stat);
+					var statID = key.replace(/\s/g, '');
+					$("#" + statID + "-colour").css('background-color', stat.color);
+					console.log(stat.color);
+				});
+				renderDoughnutChart(pieStats, "demographics");
+			});
+
+			break;
+
 	}
 }
 
-function renderDoughnutChart(data) {
-	var ctx = $("#myChart").get(0).getContext("2d");
+function renderDoughnutChart(data, type) {
+	var ctx;
+	if(type == "revenue") ctx = $("#revenue-chart").get(0).getContext("2d");
+	else ctx = $("#demographics-chart").get(0).getContext("2d");
+
 	new Chart(ctx).Doughnut(data, {
 		animateRotate: true,
 		animateScale: false,
@@ -474,7 +527,7 @@ function filterReport(reportType, value)
 					var results2 = {streams : summary};
 					$("#reports").empty().append( report({entries : results2}) );
 
-					renderDoughnutChart(pieStats);
+					renderDoughnutChart(pieStats, "revenue");
 				}
 				else
 				{
@@ -501,30 +554,28 @@ function filterReport(reportType, value)
 						pieStats.push(stat);
 					});
 
-					renderDoughnutChart(pieStats);
+					renderDoughnutChart(pieStats, "revenue");
 				}
 			}
 			break;
 	}
 }
 
-function assignColor() {
+function assignColor(type) {
 	// Colors from http://clrs.cc
-	var colors = [
-		"#85144b", // maroon
-		"#FF4136", // red
-		"#FF851B", // orange
-		"#3D9970", // olive
-		"#FFDC00", // yellow
-		"#2ECC40", // green
-		"#01FF70", // lime
-		"#39CCCC", // teal
-		"#7FDBFF", // aqua
-		"#001f3f", // navy
-		"#0074D9", // blue
-		"#B10DC9", // purple
-		"#F012BE", // fuchsia
-	];
-	if(colorID == colors.length) colorID = 0;
-	return colors[colorID];
+
+	var id;
+	if(type == "demographics") {
+		if(democolorID == colors.length) democolorID = 0;
+		id = democolorID;
+		democolorID++;
+	}
+	else {
+		if(colorID == colors.length) colorID = 0;
+		id = colorID;
+		colorID++;
+	} 
+
+	return colors[id];
+
 }
