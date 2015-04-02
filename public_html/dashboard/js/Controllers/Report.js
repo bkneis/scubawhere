@@ -44,6 +44,14 @@ var Report = {
 		});
 	},
 
+	getClassUtilisation : function(params, handleData) {
+		$.ajax({
+			url: '/api/report/trainingutilisation',
+			data: params,
+			success: handleData
+		});
+	},
+
 	getDemographics : function(params, handleData) {
 		$.ajax({
 			url: '/api/report/demographics',

@@ -120,11 +120,7 @@
 		});
 
 		$(window).on('hashchange', function() {
-			//if tour started then dont allow them to click away
 			window.scrollTo(0, 0);
-			/*if(window.tourStart) {
-				alert('dont leave');
-			}*/
 		});
 
 	</script>

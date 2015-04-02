@@ -90,6 +90,92 @@ class ReportController extends Controller {
 		return $RESULT;
 	}
 
+	public function getTrainingutilisation()
+	{
+		/**
+		 * Allowed input parameter
+		 * after  {date string}
+		 * before {date string}
+		 */
+
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before))
+			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
+
+		$before = new DateTime($before);
+		$before->add(new DateInterval('P1D'));
+		$before = $before->format('Y-m-d H:i:s');
+
+		$RESULT = [];
+
+
+		#################################
+		// Add request paramets to result
+		$RESULT['daterange'] = [
+			'after'    => Helper::sanitiseString($after),
+			'before'   => Helper::sanitiseString($before),
+			'timezone' => Auth::user()->timezone,
+		];
+
+
+		#############################
+		// Generate utilisation report
+		$trainings = Auth::user()->training_sessions()->whereBetween('start', [$after, $before])->with(
+			'training',
+			'bookingdetails',
+				'bookingdetails.booking',
+				'bookingdetails.course'
+		)->orderBy('start')->get();
+
+		$utilisation = []; $i = 1;
+		foreach($trainings as $training)
+		{
+			$max = $training->capacity[1];
+
+			$utilisation[$i] = [
+				'date'       => $training->start,
+				'name'       => $training->training->name,
+				'courses'    => [],
+				'unassigned' => $max,
+				'capacity'   => $max,
+			];
+
+			foreach($training->bookingdetails as $detail)
+			{
+				if($detail->booking->status !== 'confirmed') continue;
+
+				if(empty($utilisation[$i]['courses'][$detail->course->name])) $utilisation[$i]['courses'][$detail->course->name] = 0;
+
+				$utilisation[$i]['courses'][$detail->course->name]++;
+				$utilisation[$i]['unassigned']--;
+			}
+
+			$i++;
+		}
+
+		// Calculate total average
+		$total = ['courses' => [], 'unassigned' => 0, 'capacity' => 0];
+		foreach ($utilisation as $training)
+		{
+			$total['unassigned'] += $training['unassigned'];
+			$total['capacity']   += $training['capacity'];
+
+			foreach($training['courses'] as $name => $number)
+			{
+				if(empty($total['courses'][$name])) $total['courses'][$name] = 0;
+
+				$total['courses'][$name] += $number;
+			}
+		}
+
+		$RESULT['utilisation'] = $utilisation;
+		$RESULT['utilisation_total'] = $total;
+
+		return $RESULT;
+	}
+
 	public function getSources()
 	{
 		/**

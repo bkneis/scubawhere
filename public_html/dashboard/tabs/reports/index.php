@@ -5,11 +5,12 @@
 				<h4 id="report-title" class="panel-title">Transactions Report</h4>
 			</div>
 			<div class="panel-body">
-				<div id="report-type-btns" class="btn-group col-md-offset-2" role="group">
+				<div id="report-type-btns" class="btn-group col-md-offset-1" role="group">
 					<button type="button" data-report="transactions" class="btn btn-default btn-primary">Transactions</button>
 					<button type="button" data-report="agents" class="btn btn-default">Agents</button>
 					<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
 					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
+					<button type="button" data-report="class-utilisation" class="btn btn-default">Class Utilisation</button>
 					<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
 					<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>
 				</div>
@@ -249,6 +250,45 @@
 				</thead>
 			</table>
 	</script>
+	<script type="text/x-handlebars-template" id="class-utilisation-report-template">
+	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+		<thead>
+			<tr>
+				<th style="color:#313131; width: 100px">Date</th>
+				<th style="color:#313131; width: 250px">Class name</th>
+				<th style="color:#313131">Utilisation</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each entries.utilisation}}
+			<tr>
+				<td>{{getDate date}}</td>
+				<td>{{{name}}}</td>
+				<td>
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>
+						<span class="percentage-left">{{capacity}}</span>
+					</div>
+				</td>
+			</tr>
+			{{else}}
+			<tr><td colspan="3" class="text-center">There are no classes between these dates</td></tr>
+			{{/each}}
+		</tbody>
+		</table>
+		<table id="class-utilisation-summary">
+			<thead style="font-weight: bold;">
+				<tr>
+					<td id="class-utilisation-date-range" style="width:30%">Average</td>
+					<td>
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="class-utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>
+							<span id="class-utilisation-total-capacity" class="percentage-left"></span>
+						</div>
+					</td>
+				</thead>
+			</table>
+	</script>
 	<script type="text/x-handlebars-template" id="revenue-report-template">
 	<div class="col-md-6 text-center">
 		<canvas id="revenue-chart" width="400" height="400"></canvas>
@@ -355,6 +395,17 @@
 			</select>
 		</div>
 	</script>
+	<script type="text/x-handlebars-template" id="class-utilisation-filter-template">
+		<div class="input-group">
+			<label class="input-group-addon">Filter by : </label>
+			<select onchange="filterReport('class-utilisation', this.value)">
+				<option value="0">Please select ...</option>
+				{{#each classes}}
+					<option value="{{name}}">{{{name}}}</option>
+				{{/each}}
+			</select>
+		</div>
+	</script>
 	<script type="text/x-handlebars-template" id="revenue-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>
@@ -369,6 +420,7 @@
 	<script type="text/javascript" src="js/Controllers/Agent.js"></script>
 	<script type="text/javascript" src="js/Controllers/Trip.js"></script>
 	<script type="text/javascript" src="js/Controllers/Report.js"></script>
+	<script type="text/javascript" src="js/Controllers/Class.js"></script>
 	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script type="text/javascript" src="/common/js/Chart.js"></script>
 	<script type="text/javascript" src="tabs/reports/js/script.js"></script>

@@ -64,7 +64,7 @@ Handlebars.registerHelper('sourceName', function() {
 	switch(this.source) {
 		case 'telephone' : return 'Telephone';
 		case 'email'     : return 'Email';
-		case 'facetoface': return 'In erson';
+		case 'facetoface': return 'In Person';
 		default: return new Handlebars.SafeString('Agent - ' + this.agent.name);
 	}
 })
@@ -265,6 +265,26 @@ function getReport(reportType) {
 
 			break;
 
+		case("class-utilisation") :
+			$("#report-title").empty().append("Class Utilisation Report");
+			filter = Handlebars.compile($("#class-utilisation-filter-template").html());
+
+			Class.getAll(function sucess(data) {
+				$("#report-filters").empty().append( filter({classes : data}) );
+			});
+
+			Report.getClassUtilisation(dates, function sucess(data) {
+				// console.log(data);
+				window.classUtlisations = data;
+				report = Handlebars.compile($("#class-utilisation-report-template").html());
+				$("#reports").empty().append( report({entries : data}) );
+				$("#class-utilisation-total-capacity").text(data.utilisation_total.unassigned);
+				$("#class-utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
+				$("#class-utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+			});
+
+			break;
+
 		case("revenue") :
 			$("#report-title").empty().append("Revenue Analysis Report");
 			filter = Handlebars.compile($("#revenue-filter-template").html());
@@ -373,6 +393,7 @@ function getReport(reportType) {
 
 			break;
 
+
 	}
 }
 
@@ -462,6 +483,25 @@ function filterReport(reportType, value)
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
 				$("#utilisation-summary").css('display', 'none');
+			}
+
+			break;
+
+		case('class-utilisation') :
+			if(value == 0) getReport("class-utilisation");
+			else
+			{
+				var results = [];
+				_.each(window.classUtlisations.utilisation, function(training) {
+					// console.log(trip);
+					if(training.name == value) results.push(training);
+				});
+
+				// console.log(results);
+				var results2 = {utilisation : results};
+				report = Handlebars.compile($("#class-utilisation-report-template").html());
+				$("#reports").empty().append( report({entries : results2}) );
+				$("#class-utilisation-summary").css('display', 'none');
 			}
 
 			break;
