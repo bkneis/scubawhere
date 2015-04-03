@@ -132,7 +132,12 @@ Handlebars.registerHelper('cancelButton', function() {
 	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> Cancel</button>');
 });
 
+var display;
+
 $(function() {
+
+	display = "confirmed";
+
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
@@ -178,16 +183,29 @@ $(function() {
 	$('#find-booking-form').on('reset', function(event) {
 		renderBookingList(window.bookings);
 	});
+
+	$("#booking-types").on('click', ':button', function(){
+		$("#filter-"+display).removeClass("btn-primary");
+		display = $(this).attr('display');
+		$("#filter-"+display).addClass("btn-primary");
+		renderBookingList(window.bookings);
+	});
 });
 
 var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 function renderBookingList(bookings) {
+
+	var results = [];
+
 	_.each(bookings, function(booking) {
 		booking.sums = {};
 		Booking.prototype.calculateSums.call(booking);
 		Booking.prototype.setStatus.call(booking);
+		if(display != "all") {
+			if(booking.status == display) results.push(booking);
+		} else results.push(booking);
 	});
-	$('#booking-list').html( bookingListItem({bookings: bookings}) );
+	$('#booking-list').html( bookingListItem({bookings: results}) );
 
 	// Initiate tooltips
 	$('#booking-list').find('[data-toggle=tooltip]').tooltip();

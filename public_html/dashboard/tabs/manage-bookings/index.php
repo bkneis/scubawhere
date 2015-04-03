@@ -48,6 +48,14 @@
 					<h4 class="panel-title">Bookings</h4>
 				</div>
 				<div class="panel-body">
+					<div id="booking-types" class="btn-group col-md-offset-3" role="group">
+						<button id="filter-confirmed" type="button" display="confirmed" class="btn btn-default btn-primary">Confirmed</button>
+						<button id="filter-cancelled" type="button" display="cancelled" class="btn btn-default">Cancelled</button>
+						<button id="filter-reserved" type="button" display="reserved" class="btn btn-default">Reserved</button>
+						<button id="filter-saved" type="button" display="saved" class="btn btn-default">Saved</button>
+						<button id="filter-all" type="button" display="all" class="btn btn-default">All</button>
+					</div>
+					<div style="margin-bottom:10px"></div>
 					<table class="bluethead">
 						<thead>
 							<tr class="bg-primary">
