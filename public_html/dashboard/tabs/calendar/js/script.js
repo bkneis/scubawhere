@@ -1,11 +1,14 @@
 var filterByBoat = false;
 var filterByTrip = false;
 var filterByClass = false;
+var filterByAccom = false;
 var boatFilter;
 var tripFilter;
 var classFilter;
+var accomFilter;
 var boatsList;
 var tripsList;
+var filterSelect;
 var display = "trips";
 
 $(function() {
@@ -19,6 +22,9 @@ $(function() {
 
 	boatsList = Handlebars.compile($("#boats-list-template").html());
 	tripsList = Handlebars.compile($("#trips-list-template").html());
+
+	filterSelect = Handlebars.compile($("#trip-filter-template").html());
+	$("#filter-settings").empty().append(filterSelect());
 
 	// 1. Get trips
 	window.promises.loadedTrips = $.Deferred();
@@ -87,7 +93,34 @@ $(function() {
 		});
 	});
 
-	$('#filter-options').on('change', function(event) {
+	$("#filter-types").on('click', '.filter-type', function(event){
+		event.preventDefault();
+		$("#filter-"+display).removeClass("btn-primary");
+		display = $(this).attr("display");
+		
+		if(display == "trips") {
+			filterSelect = Handlebars.compile($("#trip-filter-template").html());
+			$("#filter-settings").empty().append(filterSelect());
+		}
+		else if(display == "classes") {
+			$('#filter').empty();
+			filterSelect = Handlebars.compile($("#class-list-template").html());
+			$("#filter-settings").empty().append(filterSelect({classes : window.trainings}));
+		}
+		else {
+			$('#filter').empty();
+			filterSelect = Handlebars.compile($("#accom-list-template").html());
+			$("#filter-settings").empty().append(filterSelect({accoms : window.accommodations}));
+		}
+		filterByBoat = false;
+		filterByTrip = false;
+		filterByAccom = false;
+		filterByClass = false;
+		$('#calendar').fullCalendar( 'refetchEvents' );
+		$("#filter-"+display).addClass("btn-primary");
+	});
+
+	/*$('#filter-options').on('change', function(event) {
 		event.preventDefault();
 		if($("#filter-options").val() == 'boat') {
 			$("div#filter-settings option[value=boat]").attr('disabled', true);
@@ -99,21 +132,22 @@ $(function() {
 			$("#filter-options").val('all');
 			$("#filter").append( tripsList({trips : window.trips}) );
 		}
-	});
+	});*/
 
 	$("#filter").on('change', '.filter', function(event){
 		event.preventDefault();
 	    	//console.log(this.options[this.selectedIndex].value);
 	    	console.log(filter);
 	    	if(this.id == "boats") {
+	    		var filter = $("#boats option:selected").val();
 	    		if(filter == "all") filterByBoat = false;
 	    		else filterByBoat = true;
-	    		filterByBoat = true;
+	    		//filterByBoat = true;
 	    		boatFilter = this.options[this.selectedIndex].value;
 	    		//console.log(boatFilter);
 	    	}
 	    	else if(this.id == "trips") {
-	    		var filter = $("#trips:selected").val();
+	    		var filter = $("#trips option:selected").val();
 	    		if(filter == "all") filterByTrip = false;
 	    		else filterByTrip = true;
 	    		filterByTrip = true;
@@ -122,6 +156,26 @@ $(function() {
 	    	}
 	    	$('#calendar').fullCalendar( 'refetchEvents' );
 	    });
+
+	$("#filter-settings").on('change', '.filter', function(event) {
+		event.preventDefault();
+		if(this.id == "accoms") {
+			var filter = $("#accoms option:selected").val();
+			console.log(filter);
+	    	if(filter == "all") filterByAccom = false;
+	    	else filterByAccom = true;
+	    	//filterByBoat = true;
+	    	accomFilter = this.options[this.selectedIndex].value;
+		}
+		else {
+			var filter = $("#classes option:selected").val();
+	    	if(filter == "all") filterByClass = false;
+	    	else filterByClass = true;
+	    	//filterByBoat = true;
+	    	classFilter = this.options[this.selectedIndex].value;
+		}
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
 	$("#filters").on('click', '#remove-boats-filter', function(event){
 		event.preventDefault();
@@ -147,7 +201,6 @@ $(function() {
 		var jumpDate = $.fullCalendar.moment(date);
 		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
 		$("#remove-jump").css('display', 'inline');
-		console.log("qwewe");
 	});
 
 	$("#jump-to-date").on('click', '#remove-jump', function(event){
@@ -165,13 +218,6 @@ $(function() {
 			$("#remove-jump").css('display', 'none');
 		});
 
-	$("#filter-types").on('click', '.filter-type', function(event){
-		event.preventDefault();
-		$("#filter-"+display).removeClass("btn-primary");
-		display = $(this).attr("display");
-		$('#calendar').fullCalendar( 'refetchEvents' );
-		$("#filter-"+display).addClass("btn-primary");
-	});
 
 	$('input.datepicker').datetimepicker({
 		pickDate: true,
@@ -494,16 +540,13 @@ function getClassEvents(start, end, timezone, callback) {
 	//console.log(start.format(), end.format());
 	var sessionFilters = {
 		'after': start.format(),
-		'before': end.format()//,
-		//'with_full': 1
-	};
-	var events = [];
-
-	Class.filter({
-		'after': start.format(),
 		'before': end.format(),
 		'with_full': 1
-	}, function success(data) {
+	};
+	if(filterByClass) sessionFilters.training_id = classFilter;
+	var events = [];
+
+	Class.filter(sessionFilters, function success(data) {
 		window.trainingSessions = _.indexBy(data, 'id');
 		console.log(data);
 
@@ -545,6 +588,7 @@ function getAccomEvents(start, end, timezone, callback) {
 		'before': end.format(),
 		'with_full': 1
 	};
+	if(filterByAccom) sessionFilters.accommodation_id = accomFilter;
 	Accommodation.filter(sessionFilters, function success(data) {
 
 		console.log(data);
@@ -584,4 +628,19 @@ function showManifest(id) { // use data tables to isnert data instead of handle 
 		var customer = Handlebars.compile( $("#customer-rows-template").html() );
 		$("#customers-table").append(customer({customers : data.customers}));
 	});
+}
+
+function addTripFilter(value) {
+
+	if(value == 'boat') {
+		$("div#filter-settings option[value=boat]").attr('disabled', true);
+		$("#filter-options").val('all');
+		$("#filter").append( boatsList({boats : window.boats}) );
+	}
+	else if(value == 'trip') {
+		$("div#filter-settings option[value=trip]").attr('disabled', true);
+		$("#filter-options").val('all');
+		$("#filter").append( tripsList({trips : window.trips}) );
+	}
+
 }
