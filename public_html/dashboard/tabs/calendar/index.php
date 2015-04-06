@@ -44,7 +44,7 @@
 
 						<script type="text/x-handlebars-template" id="accom-list-template">
 							<div class="input-group">
-								<label class="input-group-addon">Add Filter : </label>
+								<label class="input-group-addon">Filter by : </label>
 								<select id="accoms" class="filter">
 									<option value="all">Please Select ..</option>
 									{{#each accoms}}
@@ -56,7 +56,7 @@
 
 						<script type="text/x-handlebars-template" id="class-list-template">
 							<div class="input-group">
-								<label class="input-group-addon">Add Filter : </label>
+								<label class="input-group-addon">Filter by : </label>
 								<select id="classes" class="filter">
 									<option value="all">Please Select ..</option>
 									{{#each classes}}
