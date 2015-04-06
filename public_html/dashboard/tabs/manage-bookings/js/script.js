@@ -132,16 +132,16 @@ Handlebars.registerHelper('cancelButton', function() {
 	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> Cancel</button>');
 });
 
-var display;
+//var display;
 
 $(function() {
 
-	display = "confirmed";
+	var display;
 
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
-		renderBookingList(window.bookings);
+		renderBookingList(window.bookings, display);
 	});
 
 	$('#booking-list').on('click', '.accordion-header', function() {
@@ -170,7 +170,7 @@ $(function() {
 
 		Booking.filter(params, function success(data) {
 			// Doesn't need sorting, because the server sorts DESC
-			renderBookingList(data);
+			renderBookingList(data, display);
 
 			btn.html('Find Booking');
 		}, function error(xhr) {
@@ -181,30 +181,34 @@ $(function() {
 	});
 
 	$('#find-booking-form').on('reset', function(event) {
-		renderBookingList(window.bookings);
+		renderBookingList(window.bookings, display);
 	});
 
 	$("#booking-types").on('click', ':button', function(){
 		$("#filter-"+display).removeClass("btn-primary");
 		display = $(this).attr('display');
 		$("#filter-"+display).addClass("btn-primary");
-		renderBookingList(window.bookings);
+		renderBookingList(window.bookings, display);
 	});
 });
 
 var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
-function renderBookingList(bookings) {
+function renderBookingList(bookings, display) {
+
+	if(!display) var display = "confirmed";
 
 	var results = [];
 
-	_.each(bookings, function(booking) {
+	var results = _.filter(bookings, function(booking) {
 		booking.sums = {};
 		Booking.prototype.calculateSums.call(booking);
 		Booking.prototype.setStatus.call(booking);
+		console.log(booking);
 		if(display != "all") {
-			if(booking.status == display) results.push(booking);
-		} else results.push(booking);
+			if(booking.status == display) return booking;
+		} else return booking;
 	});
+
 	$('#booking-list').html( bookingListItem({bookings: results}) );
 
 	// Initiate tooltips
