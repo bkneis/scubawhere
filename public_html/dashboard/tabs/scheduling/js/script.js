@@ -199,6 +199,8 @@ $(function() {
 					events.push( createCalendarEntry(eventObject) );
 				});
 
+
+
 				callback(events);
 
 				// Remove loading indictor

@@ -99,7 +99,7 @@
 				{{#unless isPast}}
 					{{#unless session.deleted_at}}
 					{{#unless isNew}}
-					{{#unless session.timetable_id}}
+					{{#unlessCond session.timetable_id '||' session.schedule_id}}
 						<label>
 							<input type="checkbox" onchange="toggleTimetableForm();">
 							<h4 style="display: inline-block;">Create a repeating timetable</h4>
@@ -159,7 +159,7 @@
 								<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
 							</p>
 						</div>
-					{{/unless}}
+					{{/unlessCond}}
 					{{/unless}}
 					{{/unless}}
 
