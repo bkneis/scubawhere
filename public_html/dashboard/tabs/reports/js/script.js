@@ -293,7 +293,7 @@ function getReport(reportType) {
 			$("#report-filters").empty().append( filter({types : types}) );
 
 			Report.getTicketsPackages(dates, function sucess(data) {
-				// console.log(data);
+				 console.log("revwenue", data);
 
 				var stats = {};
 				stats.streams = [];
@@ -336,6 +336,12 @@ function getReport(reportType) {
 				stats.feeTotal     = data.fees_total.revenue;
 				stats.total        = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
 				data.courses_total.revenue + data.addons_total.revenue + data.fees_total.revenue;
+				stats.acomAmount = data.accommodations_total.quantity;
+				stats.ticketAmount = data.tickets_total.quantity;
+				stats.packageAmount = data.packages_total.quantity;
+				stats.courseAmount = data.courses_total.quantity;
+				stats.addonAmount = data.addons_total.quantity;
+				stats.feeAmount = data.fees_total.quantity;
 				// console.log(stats);
 				window.revenueAnalysis = stats;
 				report = Handlebars.compile($("#revenue-report-template").html());
@@ -515,37 +521,37 @@ function filterReport(reportType, value)
 					var summary = [
 					{
 						name : "Tickets",
-						//quantity : ,
+						quantity : window.revenueAnalysis.ticketAmount,
 						statColor : "#0074D9",
 						revenue : window.revenueAnalysis.ticketTotal
 					},
 					{
 						name : "Packages",
-						//quantity : ,
+						quantity : window.revenueAnalysis.packageAmount,
 						statColor : "#39CCCC",
 						revenue : window.revenueAnalysis.packageTotal
 					},
 					{
 						name : "Courses",
-						//quantity : ,
+						quantity : window.revenueAnalysis.courseAmount,
 						statColor : "#3D9970",
 						revenue : window.revenueAnalysis.courseTotal
 					},
 					{
 						name : "Addons",
-						//quantity : ,
+						quantity : window.revenueAnalysis.addonAmount,
 						statColor : "#FFDC00",
 						revenue : window.revenueAnalysis.addonTotal
 					},
 					{
 						name : "Fees",
-						//quantity : ,
+						quantity : window.revenueAnalysis.feeAmount,
 						statColor : "#FF851B",
 						revenue : window.revenueAnalysis.feeTotal
 					},
 					{
 						name : "Accommodations",
-						//quantity : ,
+						quantity : window.revenueAnalysis.acomAmount,
 						statColor : "#2ECC40",
 						revenue : window.revenueAnalysis.acomTotal
 					}
