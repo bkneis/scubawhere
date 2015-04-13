@@ -59,6 +59,36 @@ Handlebars.registerHelper("notEmptyObj", function (item, options) {
 	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
+Handlebars.registerHelper("sessionTicket", function (item, options) {
+	console.log(item);
+	//Check which bookingdetails the ticket is assigned too
+	var detailsWithTicket = _.filter(booking.bookingdetails, function(detail) {
+		if(detail.ticket.id == item.id) return detail;
+	});
+
+	console.log(detailsWithTicket);
+
+	console.log(item.hasOwnProperty('qty'));
+
+	if (item.hasOwnProperty('qty')) {
+		var qty = this.qty;
+	} else {
+		var qty = this.pivot.quantity;
+	}
+
+	//Display how many tickets are free, otherwise the ticket will not show.
+
+	if($.isEmptyObject(detailsWithTicket)) {
+		this.free = qty;
+		return options.fn(this);
+	} else if(detailsWithTicket.length != qty) {
+		this.free = qty - detailsWithTicket.length;
+		return options.fn(this);
+	} else {
+		return false;
+	}
+});
+
 Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
 	    max = 0;
@@ -760,8 +790,7 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
 
-	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
-	btn.addClass('waiting');
+	btn.addClass('waiting').html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 
 	var $selected = $('#session-tickets').find('.active').first();
 	var data = $selected.data();
