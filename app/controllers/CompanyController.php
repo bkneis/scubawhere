@@ -196,4 +196,15 @@ class CompanyController extends Controller {
 
 		return ['date' => $date, 'bookings' => $bookings];
 	}
+
+	public function postFeedback() {
+		$data = Input::only('tab', 'feature', 'issue');
+
+		if(empty($data['tab'] && $data['issue']))
+			return Response::json(['errors' => ['A tab and issue is required.']], 406); // 406 Not Acceptable
+
+		Mail::send('emails.feedback', array('company' => Auth::user(), 'feedback' => $data), function($message) {
+		    $message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
+		});
+	}
 }

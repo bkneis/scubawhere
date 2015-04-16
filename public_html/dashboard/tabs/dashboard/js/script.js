@@ -31,6 +31,18 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
+	$("#feedback-div").on('submit', '#feedback-form', function(event){
+		event.preventDefault();
+		setToken('[name=_token]');
+		Company.sendFeedback($('#feedback-form').serialize(), function success(data){
+			pageMssg('Thank you, your feedback has been submitted', true);
+			$('#feedback-form').trigger('reset');
+		},
+		function error(xhr) {
+			pageMssg(xhr);
+		});
+	});
+
 	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
 		$("#wrapper").prepend(initWarning);

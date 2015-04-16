@@ -37,7 +37,7 @@
   </div>
 
   <div class="col-md-7">
-    <div class="panel panel-default" id="feedback-form">
+    <div class="panel panel-default" id="feedback-div">
       <div class="panel-heading">
         <h4 class="panel-title">Feedback Form</h4>
       </div>
@@ -46,18 +46,20 @@
 
           <div class="form-row">
             <label class="field-label">Tab * : </label>
-            <input style="width:100%" type="text" name="name">
+            <input style="width:100%" type="text" name="tab">
           </div>
 
           <div class="form-row">
             <label class="field-label">Feature : </label>
-            <input style="width:100%" type="text" name="name">
+            <input style="width:100%" type="text" name="feature">
           </div>
 
           <div class="form-row">
             <label class="field-label">Issue * : </label>
-            <textarea style="width:100%" name="branch_address" rows="3"></textarea>
+            <textarea style="width:100%" name="issue" rows="3"></textarea>
           </div>
+
+          <input type="hidden" name="_token">
 
           <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
 
@@ -200,14 +202,14 @@
             <span class="step-description">Courses</span>
           </a>
         </li>
-        <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
-          <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Packages</span>
-          </a>
-        </li>
         <li role="presentation" class="tour-progress" data-position="10" data-target="#add-ons">
           <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
             <span class="step-description">Add ons</span>
+          </a>
+        </li>
+        <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
+          <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+            <span class="step-description">Packages</span>
           </a>
         </li>
       </ul>
