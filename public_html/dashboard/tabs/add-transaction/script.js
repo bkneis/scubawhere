@@ -169,4 +169,12 @@ $(function() {
 			$('#add-refund-submit').html('Add Refund');
 		});
 	});
+
+	$('#wrapper').on('click', '#view-summary', function() {
+		// the window.booking object already exists
+		window.clickedEdit = true;
+
+		window.location.hash = 'add-booking';
+	});
+
 });

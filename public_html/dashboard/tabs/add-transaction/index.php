@@ -15,7 +15,10 @@
 							<a href="mailto:{{lead_customer.email}}">{{lead_customer.email}}</a><br>
 							{{lead_customer.country.abbreviation}} {{lead_customer.phone}}
 						</td>
-						<td style="vertical-align: top;"><h3 style="float: right; margin-top: 0;">{{reference}}</h3></td>
+						<td style="vertical-align: top;">
+							<h3 style="float: right; margin-top: 0;">{{reference}}</h3>
+							<a id="view-summary">View booking summary</a>
+						</td>
 					</tr>
 				</table>
 				<table style="width: auto;">
