@@ -21,14 +21,6 @@
 						</div>
 						<div style="clear:both"></div>
 						<div id="filter-settings" class="form-row">
-							<!--<div class="input-group">
-								<label class="input-group-addon">Add Filter : </label>
-								<select id="filter-options">
-									<option value="all">Please Select ..</option>
-									<option value="boat">Boats</option>
-									<option value="trip">Trips</option>
-								</select>
-							</div>-->
 						</div>
 
 						<script type="text/x-handlebars-template" id="trip-filter-template">

@@ -76,6 +76,11 @@ $(function(){
 
 		event.preventDefault();
 
+		if(!$('#our-terms').is(':checked')) {
+			pageMssg('Please confim you have read and agreed to our terms and conditions');
+			return false;
+		}
+
 		if(completed) {
 			alert('The registration has already been sent!');
 			return false;

@@ -153,6 +153,8 @@
 							<div style="float:none; margin: 0 auto;" class="form-row">
 								<label for="terms">Copy and paste your terms and conditions here:</label>
 								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
+								<label for="our-terms">Please check the box if you have read and agreed to our terms and conditions:</label>
+								<input id="our-terms" name="our-terms" type="checkbox" class="required" value="agreed-terms">
 							</div>
 						</div>
 					</section>
