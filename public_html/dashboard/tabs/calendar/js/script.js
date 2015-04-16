@@ -369,10 +369,13 @@ function showModalWindowM(id) {
 				"searching" : false,
 				data : data.customers,
 				columns : [
-				{"data" : "firstname"},
-				{"data" : "email"},
-				{"data" : "country_id"},
-				{"data" : "phone"}
+					/*{"render" : {
+						"firstname" : "firstname",
+						"lastname" : "lastname"}
+					},*/
+					{"data" : "email"},
+					{"data" : "country_id"},
+					{"data" : "phone"}
 				]
 			});
 		});
