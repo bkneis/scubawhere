@@ -26,5 +26,11 @@ var Company = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	getNotifications : function(handleData) {
+		$.get("/api/notifications/all", function(data){
+			handleData(data);
+		});
 	}
 };

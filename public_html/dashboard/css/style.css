@@ -1232,4 +1232,69 @@ big {
 	top: 70px;
 }
 
+.notifications {
+  display:block;
+  position:relative;
+  width:35px;
+  height:35px;
+  background-color:white;
+  border-radius:50%;
+}
+
+.notifications .toggle {
+  display:block;
+  position:absolute;
+  width:100%;
+  height:100%;
+}
+
+.notifications .toggle:before,
+.notifications .toggle:after {
+  content:'.';
+  display:block;
+  position:absolute;
+  left:15px;
+  width:5px;
+  background-color:#bdc3c7;
+  color:transparent;
+  border-radius:5px;
+}
+
+.notifications .messages {
+  display:block;
+  position:absolute;
+  top:50px;
+  left:-105px;
+  width:240px;
+  max-height:240px;
+}
+
+.notifications .messages:before {
+  content:'.';
+  display:block;
+  position:absolute;
+  margin-left:-10px;
+  left:50%;
+  top:-18px;
+  width:0;
+  height:0;
+  color:transparent;
+  border:10px solid black;
+  border-color:transparent transparent white;
+}
+
+.notifications .messages .message {
+  display:block;
+  position:relative;
+  padding:10px;
+  background-color:white;
+  color:black;
+  text-decoration:none;
+}
+
+.notifications .messages .message + .message {
+  border-top:1px solid #e0e0e0;
+}
+
+
 

@@ -1,7 +1,7 @@
 // Interactions with the API
 // Shim for up to IE8
 if (!Date.now) {
-    Date.now = function() { return new Date().getTime(); }
+	Date.now = function() { return new Date().getTime(); }
 }
 
 $.ajaxSetup({
@@ -21,7 +21,7 @@ $.ajaxSetup({
 				url: options.url.split('?_=')[0],
 				cache: true,
 			});
-		}*/
+}*/
 
 		// Manually trigger progress bar for tab loads, which have been set to global:false
 		if(options.url.indexOf('index.php') > -1)
@@ -60,6 +60,19 @@ $(function(){
 	$(document).ajaxStop(function() {
 		window.clearInterval(window.sw.nProgressInterval);
 		NProgress.done();
+	});
+
+	Company.getNotifications(function sucess(data) {
+		//var notificationTemplate = Handlebars.compile( $("#notification-message-template").html() );
+		window.notifications = data; //_.indexBy('id', createNotifications(data)); // change to time
+		//$('#notification-messages').append(notificationTemplate({notifications : window.notifications}));
+	});
+
+	$(".notifications .messages").hide();
+	$(".notifications").click(function() {
+		if($(this).children(".messages").children().length > 0) {
+			$(this).children(".messages").fadeToggle(300);
+		}
 	});
 
 	$("#logout").click(function(e){
@@ -115,20 +128,20 @@ function reproColor(id) { // Stands for: reproducible color
 	// Colors from http://clrs.cc
 
 	var colors = [ /* 14 options */
-		{bgcolor: '#001F3F', txtcolor: '#FFFFFF'}, /* navy */
-		{bgcolor: '#0074D9', txtcolor: '#FFFFFF'}, /* blue */
-		{bgcolor: '#7FDBFF', txtcolor: '#000000'}, /* aqua */
-		{bgcolor: '#39CCCC', txtcolor: '#000000'}, /* teal */
-		{bgcolor: '#3D9970', txtcolor: '#000000'}, /* olive */
-		{bgcolor: '#2ECC40', txtcolor: '#000000'}, /* green */
-		{bgcolor: '#01FF70', txtcolor: '#000000'}, /* lime */
-		{bgcolor: '#FFDC00', txtcolor: '#000000'}, /* yellow */
-		{bgcolor: '#FF851B', txtcolor: '#000000'}, /* orange */
-		{bgcolor: '#FF4136', txtcolor: '#FFFFFF'}, /* red */
-		{bgcolor: '#85144B', txtcolor: '#FFFFFF'}, /* maroon */
-		{bgcolor: '#F012BE', txtcolor: '#FFFFFF'}, /* fuchsia */
-		{bgcolor: '#B10DC9', txtcolor: '#FFFFFF'}, /* purple */
-		{bgcolor: '#DDDDDD', txtcolor: '#000000'}, /* silver */
+	{bgcolor: '#001F3F', txtcolor: '#FFFFFF'}, /* navy */
+	{bgcolor: '#0074D9', txtcolor: '#FFFFFF'}, /* blue */
+	{bgcolor: '#7FDBFF', txtcolor: '#000000'}, /* aqua */
+	{bgcolor: '#39CCCC', txtcolor: '#000000'}, /* teal */
+	{bgcolor: '#3D9970', txtcolor: '#000000'}, /* olive */
+	{bgcolor: '#2ECC40', txtcolor: '#000000'}, /* green */
+	{bgcolor: '#01FF70', txtcolor: '#000000'}, /* lime */
+	{bgcolor: '#FFDC00', txtcolor: '#000000'}, /* yellow */
+	{bgcolor: '#FF851B', txtcolor: '#000000'}, /* orange */
+	{bgcolor: '#FF4136', txtcolor: '#FFFFFF'}, /* red */
+	{bgcolor: '#85144B', txtcolor: '#FFFFFF'}, /* maroon */
+	{bgcolor: '#F012BE', txtcolor: '#FFFFFF'}, /* fuchsia */
+	{bgcolor: '#B10DC9', txtcolor: '#FFFFFF'}, /* purple */
+	{bgcolor: '#DDDDDD', txtcolor: '#000000'}, /* silver */
 	];
 
 	var length = colors.length;
@@ -137,6 +150,12 @@ function reproColor(id) { // Stands for: reproducible color
 		return colors[0];
 
 	return colors[ (id % length) ];
+}
+
+function createNotifications(data) {
+	// handle data from api call and create notification messages
+	return data;
+
 }
 
 function colorOpacity(hex, opa) {
@@ -150,13 +169,13 @@ function colorOpacity(hex, opa) {
 
 	// convert to decimal and change luminosity
 	var rgb = "rgba(", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		rgb += c + ', ';
-	}
-	rgb += opa + ')';
+		for (i = 0; i < 3; i++) {
+			c = parseInt(hex.substr(i*2,2), 16);
+			rgb += c + ', ';
+		}
+		rgb += opa + ')';
 
-	return rgb;
+return rgb;
 }
 
 window.sw.randomStrings = [];
@@ -183,48 +202,48 @@ function randomString() {
 
 Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
 
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
+	switch (operator) {
+		case '==':
+		return (v1 == v2) ? options.fn(this) : options.inverse(this);
+		case '===':
+		return (v1 === v2) ? options.fn(this) : options.inverse(this);
+		case '<':
+		return (v1 < v2) ? options.fn(this) : options.inverse(this);
+		case '<=':
+		return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+		case '>':
+		return (v1 > v2) ? options.fn(this) : options.inverse(this);
+		case '>=':
+		return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+		case '&&':
+		return (v1 && v2) ? options.fn(this) : options.inverse(this);
+		case '||':
+		return (v1 || v2) ? options.fn(this) : options.inverse(this);
+		default:
+		return options.inverse(this);
+	}
 });
 
 Handlebars.registerHelper('unlessCond', function (v1, operator, v2, options) {
 
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.inverse(this) : options.fn(this);
-        case '===':
-            return (v1 === v2) ? options.inverse(this) : options.fn(this);
-        case '<':
-            return (v1 < v2) ? options.inverse(this) : options.fn(this);
-        case '<=':
-            return (v1 <= v2) ? options.inverse(this) : options.fn(this);
-        case '>':
-            return (v1 > v2) ? options.inverse(this) : options.fn(this);
-        case '>=':
-            return (v1 >= v2) ? options.inverse(this) : options.fn(this);
-        case '&&':
-            return (v1 && v2) ? options.inverse(this) : options.fn(this);
-        case '||':
-            return (v1 || v2) ? options.inverse(this) : options.fn(this);
-        default:
-            return options.inverse(this);
-    }
+	switch (operator) {
+		case '==':
+		return (v1 == v2) ? options.inverse(this) : options.fn(this);
+		case '===':
+		return (v1 === v2) ? options.inverse(this) : options.fn(this);
+		case '<':
+		return (v1 < v2) ? options.inverse(this) : options.fn(this);
+		case '<=':
+		return (v1 <= v2) ? options.inverse(this) : options.fn(this);
+		case '>':
+		return (v1 > v2) ? options.inverse(this) : options.fn(this);
+		case '>=':
+		return (v1 >= v2) ? options.inverse(this) : options.fn(this);
+		case '&&':
+		return (v1 && v2) ? options.inverse(this) : options.fn(this);
+		case '||':
+		return (v1 || v2) ? options.inverse(this) : options.fn(this);
+		default:
+		return options.inverse(this);
+	}
 });
