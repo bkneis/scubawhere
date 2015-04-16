@@ -373,8 +373,56 @@ var Tour = {
 				window.location.href = "#packages";
 				if(window.currentStep.position <= 8) {
 					window.currentStep = {
-						tab : "#packages",
+						tab : "#add-ons",
 						position : 9
+					};
+				}
+				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+				$('#addon-tab').addClass("selected");
+			});
+		}
+	},
+
+	getAddonsTour : function() {
+		if(window.tourStart) {
+			$("#tour-next-step").hide();
+			$("#tour-finish").show();
+			if(window.currentStep.position < 9) {
+				window.location.href = window.currentStep.tab;
+			} else {
+				$("#tour-button").empty();
+				$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
+				introJs().setOptions( {
+					showStepNumbers : false,
+					exitOnOverlayClick : false,
+					exitOnEsc : false
+				}).start().onchange(function(targetElement) {
+					switch (targetElement.id) {  
+						case "addon-form-container":
+						$("#addon-name").val("Reef diving tax");
+						$("#addon-price").val(10);
+						break;
+						case "addon-compulsory-div":
+						$("#addon-compulsory").attr("checked", true);
+						break;
+						case "addon-list-div":
+						$("#no-addons").remove();
+						$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
+						break;
+					}
+				}).oncomplete(function() {
+					$("#dummy-addon").remove();
+					$("#addon-list").append('<p id="no-addons">No addons available.</p>');
+					clearForm();
+				});
+			}
+
+			$("#tour-next-step").on("click", function() {
+				window.location.href = "#packages";
+				if(window.currentStep.position <= 9) {
+					window.currentStep = {
+						tab : "#packages",
+						position : 10
 					};
 				}
 				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -385,7 +433,7 @@ var Tour = {
 
 	getPackagesTour : function() {
 		if(window.tourStart) {
-			if(window.currentStep.position < 9) {
+			if(window.currentStep.position < 10) {
 				window.location.href = window.currentStep.tab;
 				console.log(window.currentStep.tab);
 			} else {
@@ -425,54 +473,6 @@ var Tour = {
 				});
 			}
 
-			$("#tour-next-step").on("click", function() {
-				window.location.href = "#add-ons";
-				if(window.currentStep.position <= 9) {
-					window.currentStep = {
-						tab : "#add-ons",
-						position : 10
-					};
-				}
-				$('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-				$('#addon-tab').addClass("selected");
-			});
-		}
-	},
-
-	getAddonsTour : function() {
-		if(window.tourStart) {
-			$("#tour-next-step").hide();
-			$("#tour-finish").show();
-			if(window.currentStep.position < 10) {
-				window.location.href = window.currentStep.tab;
-			} else {
-				$("#tour-button").empty();
-				$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
-				introJs().setOptions( {
-					showStepNumbers : false,
-					exitOnOverlayClick : false,
-					exitOnEsc : false
-				}).start().onchange(function(targetElement) {
-					switch (targetElement.id) {  
-						case "addon-form-container":
-						$("#addon-name").val("Reef diving tax");
-						$("#addon-price").val(10);
-						break;
-						case "addon-compulsory-div":
-						$("#addon-compulsory").attr("checked", true);
-						break;
-						case "addon-list-div":
-						$("#no-addons").remove();
-						$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
-						break;
-					}
-				}).oncomplete(function() {
-					$("#dummy-addon").remove();
-					$("#addon-list").append('<p id="no-addons">No addons available.</p>');
-					clearForm();
-				});
-			}
-
 			$("#tour-finish").click(function(event) {
 				var params = { _token : window.token };
 				Company.initialise(params, function success(data) {
@@ -484,6 +484,7 @@ var Tour = {
 				    }, 3000);
 				});
 			});
+			
 		}
 	}
 

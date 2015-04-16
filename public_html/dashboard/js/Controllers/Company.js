@@ -32,5 +32,15 @@ var Company = {
 		$.get("/api/notifications/all", function(data){
 			handleData(data);
 		});
+	},
+
+	sendFeedback : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/company/feedback",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 };
