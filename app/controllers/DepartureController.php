@@ -355,9 +355,11 @@ class DepartureController extends Controller {
 			->get();
 		foreach ($departures as $dep) {
 			$trip_duration = Auth::user()->trips()->findOrFail($dep->trip_id)->duration + 0;
-			$durationString = 'PT' . $trip_duration . 'H';
+			$trip_duration = $trip_duration * 60;
+			$durationString = 'PT' . $trip_duration . 'M';
 			$trip_duration2 = Auth::user()->trips()->findOrFail(Input::get('trip_id'))->duration + 0;
-			$durationString2 = 'PT' . $trip_duration2 . 'H';
+			$trip_duration2 = $trip_duration2 * 60;
+			$durationString2 = 'PT' . $trip_duration2 . 'M';
 			$startTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
 			$finishTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
 			$finishTime = $finishTime->add(new DateInterval($durationString));
