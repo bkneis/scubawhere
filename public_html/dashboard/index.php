@@ -209,7 +209,7 @@ $PROTOCOL = 'http';
 							<a href="#scheduling">Scheduling</a>
 						</li>
 						<li>
-							<a href="#pickup-schedule">Pick-up schedule</a>
+							<a href="#pickup-schedule">Pick-Up Schedule</a>
 						</li>
 					</ul>
 				</li>
