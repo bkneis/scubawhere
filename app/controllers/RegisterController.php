@@ -27,6 +27,11 @@ class RegisterController extends Controller {
 			'terms'
 		);
 
+		// Check for the acceptance of scubawhereRMS' terms & conditions
+		$terms = Input::get('our_terms', false);
+		if(empty($terms))
+			return Response::json(['errors' => ['Please accept scubawhereRMS\' terms & conditions']], 412); // 412 Precondition Failed
+
 		try
 		{
 			if( !Input::get('country_id') ) throw new ModelNotFoundException();

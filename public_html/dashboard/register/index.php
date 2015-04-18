@@ -169,7 +169,7 @@
 
 								<label for="our-terms">
 									<small>Please check the box if you have read and agreed to our <a href="/api/terms" target="_blank">terms and conditions</a>:</small>
-									<input id="our-terms" name="our-terms" type="checkbox" class="required" value="agreed-terms">
+									<input type="checkbox" id="our-terms" name="our_terms" class="required" value="1">
 								</label>
 
 								<div style="margin-top:10px"></div>

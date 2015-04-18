@@ -77,7 +77,7 @@ $(function(){
 		event.preventDefault();
 
 		if(!$('#our-terms').is(':checked')) {
-			pageMssg('Please confim you have read and agreed to our terms and conditions');
+			alert('Please confim you have read and agreed to our terms and conditions');
 			return false;
 		}
 
@@ -94,8 +94,6 @@ $(function(){
 
 		var params = form.serializeObject();
 		params.terms = $('#terms').val();
-		console.log(params.terms);
-		return false;
 
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
