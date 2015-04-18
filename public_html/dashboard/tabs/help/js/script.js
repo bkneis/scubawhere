@@ -21,11 +21,11 @@ var faq = [
 	},
 	{
 		question: "How do I edit a Reservation?",
-		answer: "<p><a href="#manage-bookings" alt="Manage Bookings">Manage Bookings</a> > Search for Reservation > Expand Reservation Details > View & Edit</p><p>When you click on View and Edit, the reservation is returned to the Add Booking process, where you can edit the booking accordingly and proceed as if it was a new booking.</p>"
+		answer: "<p><a href='#manage-bookings' alt='Manage Bookings'>Manage Bookings</a> > Search for Reservation > Expand Reservation Details > View & Edit</p><p>When you click on View and Edit, the reservation is returned to the Add Booking process, where you can edit the booking accordingly and proceed as if it was a new booking.</p>"
 	},
 	{
 		question: "How do I update my Travel Agents?",
-		answer: "<p>Management > <a href="#agents" alt="Agents">Agents</a></p><p>You can update the agent who supply you with bookings when you click on the agent. Remember to click ‘Save’.</p><p>In a re-cap of Business Terms,</p><p>Full Amount means the agent takes the full amount from the customer, which you can send an invoice to or as per your agreed arrangement to getting paid from the agent.</p><p>Deposit Only means the agent purely takes their commission and you need to collect the remaining balance from the customer directly.</p><p>Banned means you no longer are accepting bookings from that agent and effectively block them from generating you custom.</p>"
+		answer: "<p>Management > <a href='#agents' alt='Agents'>Agents</a></p><p>You can update the agent who supply you with bookings when you click on the agent. Remember to click ‘Save’.</p><p>In a re-cap of Business Terms,</p><p>Full Amount means the agent takes the full amount from the customer, which you can send an invoice to or as per your agreed arrangement to getting paid from the agent.</p><p>Deposit Only means the agent purely takes their commission and you need to collect the remaining balance from the customer directly.</p><p>Banned means you no longer are accepting bookings from that agent and effectively block them from generating you custom.</p>"
 	},
 	{
 		question: "What if I don’t have a boat and operate dives from a pontoon/ beach or something similar?",
