@@ -152,7 +152,7 @@
 									{{#if training_session}}
 										<i class="fa fa-graduation-cap fa-fw visible-lg-inline-block"></i>
 									{{/if}}
-									&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if session}}{{{session.trip.name}}}{{else}}{{training_session.training.name}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+									&nbsp;{{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if session}}{{{session.trip.name}}}{{else}}{{training_session.training.name}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
 						</div>

@@ -348,6 +348,7 @@ window.promises.loadedTickets.done(function() {
 
 		//Draw the basket
 		drawBasket();
+		pageMssg('<i class="fa fa-ticket"></i> ' + window.tickets[id].name + ' added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-ticket', function() {
@@ -363,6 +364,8 @@ window.promises.loadedTickets.done(function() {
 		booking.store();
 
 		drawBasket();
+
+		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.courses[id].name + ' removed from basket.', 'success');
 
 		// If on trips screen, redraw session-ticket list
 		if($('#session-tab').hasClass('active'))
@@ -401,6 +404,8 @@ window.promises.loadedPackages.done(function() {
 		booking.store();
 
 		drawBasket();
+
+		pageMssg('<i class="fa fa-tags"></i> ' + window.packages[id].name + ' added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-package', function() {
@@ -421,6 +426,8 @@ window.promises.loadedPackages.done(function() {
 		// If on trips screen, redraw session-ticket list
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
+
+		pageMssg('<i class="fa fa-ticket"></i> ' + window.tickets[id].name + ' removed from basket.', 'success');
 	});
 });
 
@@ -438,6 +445,8 @@ window.promises.loadedCourses.done(function() {
 
 		//Draw the basket
 		drawBasket();
+
+		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.courses[id].name + ' added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-course', function() {
@@ -458,6 +467,8 @@ window.promises.loadedCourses.done(function() {
 		// If on trips screen, redraw session-ticket list
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
+
+		pageMssg('<i class="fa fa-tags"></i> ' + window.packages[id].name + ' removed from basket.', 'success');
 	});
 });
 
@@ -603,6 +614,7 @@ window.promises.loadedCustomers.done(function() {
 				$('#edit-customer-modal').modal('hide');
 
 				drawBasket();
+				$("#selected-customer").html(selectedCustomerTemplate(window.customers[params.id]));
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);

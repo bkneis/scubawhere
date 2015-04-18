@@ -34,9 +34,9 @@
 						<h5 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h5>
 						<p class="list-group-item-text">
 							<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>
-							{{{address_1}}}<br>
-							{{{city}}}, {{{county}}}, {{postcode}}<br>
-							<abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>
+							{{#if address_1}}{{{address_1}}}<br>{{/if}}
+							{{{city}}}{{#if county}}, {{/if}}{{{county}}}{{#if postcode}}, {{/if}}{{#if postcode}}{{postcode}}{{/if}}
+							{{#if phone}}<br><abbr title="Phone">P:</abbr> <span class="customer-phone">{{phone}}</span>{{/if}}
 						</p>
 					</li>
 				</script>
