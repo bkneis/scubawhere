@@ -36,14 +36,12 @@
 		</div>
 		<script type="text/x-handlebars-template" id="session-tickets-template">
 			{{#each tickets}}
-				{{#sessionTicket this}}
-					<label data-id="{{id}}" data-type="ticket" class="list-group-item btn btn-default">
-						<input type="radio" name="selectables" />
-						<i class="fa fa-ticket fa-fw"></i>
-						{{{name}}}
-						<span class="badge badge-default small">{{free}}</span>
-					</label>
-				{{/sessionTicket}}
+				<label data-id="{{id}}" data-type="ticket" class="list-group-item btn btn-default">
+					<input type="radio" name="selectables" />
+					<i class="fa fa-ticket fa-fw"></i>
+					{{{name}}}
+					<span class="badge badge-default small">{{qty}}</span>
+				</label>
 			{{/each}}
 		</script>
 		<script type="text/x-handlebars-template" id="session-packages-template">
@@ -88,14 +86,12 @@
 														{{/if}}
 														{{#if tickets}}
 															{{#each tickets}}
-																{{#sessionTicket this}}
-																	<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../../id}}" data-parent-uid="{{../../UID}}" data-parent-parent="package" data-parent-parent-id="{{../../../../id}}" data-parent-parent-uid="{{../../../../UID}}" data-identifier="{{../../identifier}}" data-packagefacade="{{../../../../packagefacade}}" class="list-group-item btn btn-default">
-																		<input type="radio" name="selectables" />
-																		<i class="fa fa-ticket fa-fw"></i>
-																		{{{name}}}
-																		<span class="badge badge-default small">{{free}}</span>
-																	</label>
-																{{/sessionTicket}}
+																<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-parent-uid="{{../UID}}" data-parent-parent="package" data-parent-parent-id="{{../../../id}}" data-parent-parent-uid="{{../../../UID}}" data-identifier="{{../identifier}}" data-packagefacade="{{../../../packagefacade}}" class="list-group-item btn btn-default">
+																	<input type="radio" name="selectables" />
+																	<i class="fa fa-ticket fa-fw"></i>
+																	{{{name}}}
+																	<span class="badge badge-default small">{{qty}}</span>
+																</label>
 															{{/each}}
 														{{/if}}
 													</div>
@@ -106,14 +102,12 @@
 								{{/if}}
 								{{#if tickets}}
 									{{#each tickets}}
-										{{#sessionTicket this}}
-											<label data-id="{{id}}" data-type="ticket" data-parent="package" data-parent-id="{{../../id}}" data-parent-uid="{{../../UID}}" data-packagefacade="{{../../packagefacade}}" class="list-group-item btn btn-default">
-												<input type="radio" name="selectables" />
-												<i class="fa fa-ticket fa-fw"></i>
-												{{{name}}}
-												<span class="badge badge-default small">{{free}}</span>
-											</label>
-										{{/sessionTicket}}
+										<label data-id="{{id}}" data-type="ticket" data-parent="package" data-parent-id="{{../id}}" data-parent-uid="{{../UID}}" data-packagefacade="{{../packagefacade}}" class="list-group-item btn btn-default">
+											<input type="radio" name="selectables" />
+											<i class="fa fa-ticket fa-fw"></i>
+											{{{name}}}
+											<span class="badge badge-default small">{{qty}}</span>
+										</label>
 									{{/each}}
 								{{/if}}
 							</div>
@@ -150,14 +144,12 @@
 									{{/if}}
 									{{#if tickets}}
 										{{#each tickets}}
-											{{#sessionTicket this}}
-												<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../../id}}" data-parent-uid="{{../../UID}}" data-identifier="{{../../identifier}}" class="list-group-item btn btn-default">
-													<input type="radio" name="selectables" />
-													<i class="fa fa-ticket fa-fw"></i>
-													{{{name}}}
-													<span class="badge badge-default small">{{free}}</span>
-												</label>
-											{{/sessionTicket}}
+											<label data-id="{{id}}" data-type="ticket" data-parent="course" data-parent-id="{{../id}}" data-parent-uid="{{../UID}}" data-identifier="{{../identifier}}" class="list-group-item btn btn-default">
+												<input type="radio" name="selectables" />
+												<i class="fa fa-ticket fa-fw"></i>
+												{{{name}}}
+												<span class="badge badge-default small">{{qty}}</span>
+											</label>
 										{{/each}}
 									{{/if}}
 								</div>
