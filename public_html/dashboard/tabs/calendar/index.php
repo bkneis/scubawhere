@@ -263,6 +263,5 @@
 	<script src="/js/Controllers/Timetable.js"></script>
 	<script src="/js/Controllers/Accommodation.js"></script>
 
-	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>

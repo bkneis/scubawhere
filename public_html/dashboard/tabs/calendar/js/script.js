@@ -374,7 +374,7 @@ function showModalWindowM(id) {
 						"lastname" : "lastname"}
 					},*/
 					{"data" : "email"},
-					{"data" : "country_id"},
+					{"data" : window.countries["country_id"]},
 					{"data" : "phone"}
 				]
 			});

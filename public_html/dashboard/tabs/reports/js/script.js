@@ -102,31 +102,49 @@ $(function() {
 	$('#start-date').val(getDates().firstDayOfTheMonth);
 	$('#end-date').val(getDates().todayDate);
 
-	var dataTable = $('.reports-table').DataTable({
-		"paging":   false,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false
-	});
-
 	$('#start-date, #end-date').on('change', function() {
-		getReport(report_type);
+		getReport(report_type, createDataTable);
 	});
 
 	$("#report-type-btns").on('click', ':button', function(event){
 		event.preventDefault();
 		report_type = $(this).attr("data-report");
-		getReport(report_type);
+		getReport(report_type, createDataTable);
 		$(':button').removeClass("btn-primary");
 		$(this).addClass("btn-primary");
 		colorID = 0;
 		democolorID = 0;
 	});
 
-	getReport(report_type);
+	getReport(report_type, createDataTable);
+
+	/*$('.reports-table').dataTable({
+		"paging":   false,
+		"ordering": false,
+		"info":     false,
+		"pageLength" : 10,
+		"searching" : false,
+		"dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+        }
+	});*/
 
 });
+
+function createDataTable() {
+	$('.reports-table').dataTable({
+		"paging":   false,
+		"ordering": false,
+		"info":     false,
+		"pageLength" : 10,
+		"searching" : false,
+		"dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+        }
+	});
+}
 
 function getDates() {
 	return {
@@ -135,7 +153,7 @@ function getDates() {
 	}
 }
 
-function getReport(reportType) {
+function getReport(reportType, callback) {
 	var dates = {
 		after : $("#start-date").val(),
 		before : $("#end-date").val()
@@ -204,6 +222,7 @@ function getReport(reportType) {
 					$("#transactions-bank-percentage"  ).css("width", ((Math.max(totalBank  , 0)/total) * 100) + "%");
 					$("#transactions-paypal-percentage").css("width", ((Math.max(totalPaypal, 0)/total) * 100) + "%");
 					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+					callback();
 				});
 			});
 			break;
@@ -221,13 +240,7 @@ function getReport(reportType) {
 				window.agentBookings = data;
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-				/*var agentsTotal = 0;
-					for(var i=0; i < data.bookings.length; i++)
-					{
-						agentsTotal += parseInt(data.bookings[i].decimal_price);
-					}
-					$("#agents-total").text(agentsTotal);
-					$("#agents-percentage-total").css("width", agentsTotal + "%");*/
+				callback();
 			});
 			break;
 
@@ -242,6 +255,7 @@ function getReport(reportType) {
 				window.bookings = data;
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
+				callback();
 			});
 			break;
 
@@ -261,6 +275,7 @@ function getReport(reportType) {
 				$("#utilisation-total-capacity").text(data.utilisation_total.unassigned);
 				$("#utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+				callback();
 			});
 
 			break;
@@ -281,6 +296,7 @@ function getReport(reportType) {
 				$("#class-utilisation-total-capacity").text(data.utilisation_total.unassigned);
 				$("#class-utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#class-utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+				callback();
 			});
 
 			break;
@@ -363,6 +379,7 @@ function getReport(reportType) {
 				});
 
 				renderDoughnutChart(pieStats, "revenue");
+				callback();
 			});
 			break;
 
@@ -395,12 +412,14 @@ function getReport(reportType) {
 					console.log(stat.color);
 				});
 				renderDoughnutChart(pieStats, "demographics");
+				callback();
 			});
 
 			break;
 
 
 	}
+
 }
 
 function renderDoughnutChart(data, type) {

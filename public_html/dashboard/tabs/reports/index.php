@@ -421,7 +421,6 @@
 	<script type="text/javascript" src="js/Controllers/Trip.js"></script>
 	<script type="text/javascript" src="js/Controllers/Report.js"></script>
 	<script type="text/javascript" src="js/Controllers/Class.js"></script>
-	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script type="text/javascript" src="/common/js/Chart.js"></script>
 	<script type="text/javascript" src="tabs/reports/js/script.js"></script>
 
