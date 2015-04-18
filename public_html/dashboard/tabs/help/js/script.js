@@ -17,7 +17,7 @@ var faq = [
 	},
 	{
 		question: "How do I cancel a Reservation?",
-		answer: "<p>Manage Bookings > Search for Reservation > Expand Reservation Details > Transaction</p><p>Under the refund section of that reservation transaction, you will need to declare how the customer is being refunded. To cancel the reservation, ensure you check the ‘Cancel Booking’ checkbox. You can also cancel a reservation by clicking the ‘Cancel’ button when you expand the reservation details. However, you will still need to refund the customer to ensure you do not create a discrepancy between scubawhereRMS and your bank account.</p>"
+		answer: "<p><a href='#manage-bookings' alt='Manage Bookings'>Manage Bookings</a> > Search for Reservation > Expand Reservation Details > Transaction</p><p>Under the refund section of that reservation transaction, you will need to declare how the customer is being refunded. To cancel the reservation, ensure you check the ‘Cancel Booking’ checkbox. You can also cancel a reservation by clicking the ‘Cancel’ button when you expand the reservation details. However, you will still need to refund the customer to ensure you do not create a discrepancy between scubawhereRMS and your bank account.</p>"
 	},
 	{
 		question: "How do I edit a Reservation?",
