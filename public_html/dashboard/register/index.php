@@ -153,8 +153,6 @@
 							<div style="float:none; margin: 0 auto;" class="form-row">
 								<label for="terms">Copy and paste your terms and conditions here:</label>
 								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
-								<label for="our-terms">Please check the box if you have read and agreed to our terms and conditions:</label>
-								<input id="our-terms" name="our-terms" type="checkbox" class="required" value="agreed-terms">
 							</div>
 						</div>
 					</section>
@@ -163,16 +161,26 @@
 						<div id="section4">
 							<div class="form-row" style="text-align: center;">
 								<h3>Just one more thing...</h3>
+
 								<label for="username">Please enter your username:</label>
 								<input style="margin: 0 auto; width:280px" class="required"  type="text" id="username" name="username">
+
 								<div style="margin-top:10px"></div>
+
+								<label for="our-terms">
+									<small>Please check the box if you have read and agreed to our <a href="/api/terms" target="_blank">terms and conditions</a>:</small>
+									<input id="our-terms" name="our-terms" type="checkbox" class="required" value="agreed-terms">
+								</label>
+
+								<div style="margin-top:10px"></div>
+
 								<input type="submit" style="text-align:center; margin: 0 auto;"  class="submit btn btn-success btn-lg text-uppercase" value="Create Account">
 							</div>
 						</div>
 					</section>
 				</div>
 			</form>
-			<span><a href="/terms/">Terms</a> | <a href="/policy/">Policy</a></span>
+			<span><a href="/api/terms" target="_blank">Terms & Conditions</a> <!--| <a href="/policy/">Policy</a>--></span>
 		</div>
 	</div>
 

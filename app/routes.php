@@ -19,6 +19,18 @@ Route::get('/', function()
 
 Route::controller('password', 'PasswordController');
 Route::controller('register', 'RegisterController');
+Route::get('terms', function()
+{
+	return Redirect::to("../common/scubawhereRMS_Terms_and_Conditions_for_operators.pdf");
+
+	// The above opens the PDF in the browser (if supported), while the below directly downloads
+
+	/*$file= public_path(). "/common/scubawhereRMS_Terms_and_Conditions_for_operators.pdf";
+	$headers = array(
+		'Content-Type: application/pdf',
+	);
+	return Response::download($file, null, $headers);*/
+});
 
 Route::post('login', 'AuthenticationController@postLogin');
 Route::get('logout', 'AuthenticationController@getLogout');
