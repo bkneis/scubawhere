@@ -151,6 +151,8 @@
 					<section>
 						<div id="section3">
 							<div style="float:none; margin: 0 auto;" class="form-row">
+								<label for="our-terms">Please check the box if you have read and agreed to our <a target="_blank" href="/terms/">Terms and Conditions</a> :</label>
+								<input id="our-terms" name="our-terms" type="checkbox" class="required" value="agreed-terms">
 								<label for="terms">Copy and paste your terms and conditions here:</label>
 								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
 							</div>
