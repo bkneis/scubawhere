@@ -39,7 +39,8 @@ $(function () {
 			$('#feedback-form').trigger('reset');
 		},
 		function error(xhr) {
-			pageMssg(xhr);
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0], 'danger');
 		});
 	});
 
@@ -110,9 +111,9 @@ $(function () {
 } else {
 
 	var todaysSessionsWidget = $("#todays-sessions-widget").html();
-	
+
 	$("#row1").prepend(todaysSessionsWidget);
-	
+
 	todaySession = Handlebars.compile($('#today-session-template').html());
 	Session.getToday(function success(data){
 		window.todaySessions = _.indexBy(data, 'id');
@@ -124,7 +125,8 @@ $(function () {
 		}
 	},
 	function error(xhr){
-		console.log('could not retrieve sessions');
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], 'danger');
 	});
 
 	$('#sessions-list').on('click', '.accordion-header', function() {

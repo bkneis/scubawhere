@@ -46,7 +46,33 @@
 
           <div class="form-row">
             <label class="field-label">Tab * : </label>
-            <input style="width:100%" type="text" name="tab">
+            <select name="tab" style="width:100%">
+              <option value="">Please select an area of the RMS</option>
+              <option>General</option>
+              <optgroup label="Tabs">
+                <option>Dashboard</option>
+                <option>Add Booking</option>
+                <option>Manage Bookings</option>
+                <option>Calendar</option>
+                <option>Scheduling</option>
+                <option>Pick-Up Schedule</option>
+                <option>Financial Reports</option>
+                <option>Help & FAQ</option>
+                <option>Settings</option>
+              </optgroup>
+              <optgroup label="Management Tabs">
+                <option>Accommodations</option>
+                <option>Add-Ons</option>
+                <option>Agents</option>
+                <option>Boats</option>
+                <option>Classes</option>
+                <option>Courses</option>
+                <option>Locations</option>
+                <option>Packages</option>
+                <option>Tickets</option>
+                <option>Trips</option>
+              </optgroup>
+            </select>
           </div>
 
           <div class="form-row">
