@@ -128,6 +128,17 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">Social Media Integration</h4>
+							</div>
+							<div class="panel-body">
+								<fb:login-button scope="public_profile,email,read_insights" onlogin="checkLoginState();">
+								</fb:login-button>
+							</div>
+						</div>
+					</div>
 					<div class="col-md-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">

@@ -4,9 +4,10 @@
   <div class="col-md-5">
     <div class="panel panel-default" id="todays-stats">
       <div class="panel-heading">
-        <h4 class="panel-title">Today's Stats</h4>
+        <h4 class="panel-title">Social Meida Stats</h4>
       </div>
       <div style="min-height:250px;" class="panel-body">
+        <div id="social-media-stats"></div>
       </div>
     </div>
   </div>
@@ -118,6 +119,12 @@
         </div>
       </div>
     </div>
+  </script>
+
+  <script type="text/x-handlebars-template" id="social-media-template">
+      {{#each facebook}}
+        <p><span style="font-weight:bold; font-size:22px">{{data}}</span> {{title}}</p>
+      {{/each}}
   </script>
 
   <script type="text/x-handlebars-template" id="setup-wizard">
@@ -299,11 +306,8 @@
     {{/each}}
   </script>
 
-<link rel="stylesheet" type="text/css" href="/common/css/datatables.css">
-
 <script src="/js/Controllers/Session.js"></script>
 <script src="/js/Controllers/Trip.js"></script>
 <script src="/js/Controllers/Booking.js"></script>
-<script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script src="/tabs/dashboard/js/script.js"></script>
 <script src="/tabs/dashboard/js/bookings.js"></script>

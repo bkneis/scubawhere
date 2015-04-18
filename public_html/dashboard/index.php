@@ -65,7 +65,7 @@ $PROTOCOL = 'http';
 		<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
 		<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
-
+		<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
 		<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 
@@ -96,11 +96,15 @@ $PROTOCOL = 'http';
 		<!--nprogress bar-->
 		<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
+		<script src="/common/js/jquery/jquery.datatables.min.js"></script>
+		<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
+
 		<!-- ScubaWhere Files -->
 		<script type="text/javascript">
-		// Set scubawhere namespace
-		window.sw = {};
-	</script>
+			// Set scubawhere namespace
+			window.sw = {};
+			window.facebook = {};
+		</script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/ui.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
@@ -129,6 +133,8 @@ $PROTOCOL = 'http';
 
 </head>
 <body>
+<script type="text/javascript" src="js/social-media.js"></script>
+<div id="fb-root"></div>
 	<div id="nav">
 		<div id="nav-wrapper">
 			<h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>

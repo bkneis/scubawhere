@@ -3,6 +3,7 @@ window.todayBookings;
 window.tourStart;
 var todaySession;
 var customerDetails;
+var socialMedia;
 window.currentStep;
 
 Handlebars.registerHelper('getTime', function(obj){
@@ -44,6 +45,29 @@ $(function () {
 		});
 	});
 
+	if(window.facebook.status == "connected") {
+		socialMedia = Handlebars.compile($('#social-media-template').html());
+		FB.api(
+        "/292265320876159/insights",
+        {
+          'period' : 'week'
+        },
+        function (response) {
+          if (response && !response.error) {
+            console.log(response); 
+            window.facebook.stats = [
+              {title : response.data[1].title, data : response.data[1].values[2].value},
+              {title : response.data[54].title, data : response.data[54].values[2].value},
+              {title : response.data[29].title, data : response.data[29].values[2].value}
+            ];
+            $('#social-media-stats').empty().append(socialMedia({facebook : window.facebook.stats}));
+          }
+        }
+    );
+	} else {
+		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
+	}
+
 	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
 		$("#wrapper").prepend(initWarning);
@@ -72,38 +96,6 @@ $(function () {
 							pageMssg("Please complete the unfinished steps");
 						}
 					});
-				//$(this).text("Continue tour");
-				/*var tourDash = introJs();
-				tourDash.setOptions({
-					steps: [
-					{
-						intro: "Welcome to scubawhereRMS! So we can get you all set up with our system, this wizard will take you through our system and ask that you fill in some information about your dive operation."
-					},
-					{
-						intro: "So let's get started. Click 'Done' to start the configuration."
-					}
-					],
-					showStepNumbers : false,
-					exitOnOverlayClick : false,
-					exitOnEsc : false,
-					skipLabel : "End"
-				});
-				tourDash.start().oncomplete(function() {
-					window.location.href = '#accommodations';
-					$("#guts").prepend($("#tour-nav-wizard").html());
-					window.tourStart = true;
-					window.currentStep = {
-						tab : "#accommodations",
-						position : 1
-					};
-					$(".tour-progress").on("click", function(event) {
-						if(window.currentStep.position >= $(this).attr('data-position')) {
-							window.location.href = $(this).attr('data-target');
-						} else {
-							pageMssg("Please complete the unfinished steps");
-						}
-					});
-				});*/
 			}
 
 		});
@@ -136,6 +128,7 @@ $(function () {
 
 }
 
+
 });
 
 function getCustomers(id) {
@@ -152,7 +145,11 @@ function getCustomers(id) {
 			"pageLength" : 10,
 			"language": {
 				"emptyTable": "There are no customers booked for this trip"
-			}
+			},
+		"dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+        }
 		});
 	});
 
