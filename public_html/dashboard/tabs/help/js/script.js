@@ -5,15 +5,15 @@
 var faq = [
 	{
 		question: "How do I schedule a trip?",
-		answer: "<p>Calendar > <a href="#scheduling" alt="Scheduling">Scheduling</a></p><p>Select a trip you wish to schedule, drag and drop the trip to the date you want to schedule the trip for.</p>"
+		answer: "<p>Calendar > <a href='#scheduling' alt='Scheduling'>Scheduling</a></p><p>Select a trip you wish to schedule, drag and drop the trip to the date you want to schedule the trip for.</p>"
 	},
 	{
 		question: "How do I timetable a trip?",
-		answer: "<p>Calendar > <a href="#scheduling" alt="Scheduling">Scheduling</a></p><p>Select a trip you wish to schedule, drag and drop the trip to the date you want to schedule the trip for.</p><p>Once the trip is on the calendar, double click on the trip you wish to schedule. Then you can create your trip timetable schedule. By default, any timetable will repeat over 1 year and 6 months unless you specify when the timetable should end.</p>"
+		answer: "<p>Calendar > <a href='#scheduling' alt='Scheduling'>Scheduling</a></p><p>Select a trip you wish to schedule, drag and drop the trip to the date you want to schedule the trip for.</p><p>Once the trip is on the calendar, double click on the trip you wish to schedule. Then you can create your trip timetable schedule. By default, any timetable will repeat over 1 year and 6 months unless you specify when the timetable should end.</p>"
 	},
 	{
 		question: "How do I create a Education Course?",
-		answer: "<p>First, you need to create the Education Class (Management > <a href="#classes" alt="Classes">Classes</a>).</p><p> Then you can build your Course (Management > <a href="#courses" alt="Courses">Courses</a>) by selecting which class is included and which trip the Open Water practicals conducted on. Set the Course price and then click ‘Save’.</p><p> Don’t forget to <a href="#scheduling" alt="Scheduling">schedule</a> your Classes and Trips!"
+		answer: "<p>First, you need to create the Education Class (Management > <a href='#classes' alt='Classes'>Classes</a>).</p><p> Then you can build your Course (Management > <a href='#courses' alt='Courses'>Courses</a>) by selecting which class is included and which trip the Open Water practicals conducted on. Set the Course price and then click ‘Save’.</p><p> Don’t forget to <a href='#scheduling' alt='Scheduling'>schedule</a> your Classes and Trips!"
 	},
 	{
 		question: "How do I cancel a Reservation?",
@@ -33,15 +33,15 @@ var faq = [
 	},
 	{
 		question: "Something is not working how I would expect it too...",
-		answer: "We’re really sorry about that! scubawhereRMS is in BETA development and sad bugs do occur. Please use the contact form on the <a href="#dashboard" alt="Dashboard">dashboard</a> to report the bug in as much detail as possible. We’ll be in contact with you if we need any further information."
+		answer: "We’re really sorry about that! scubawhereRMS is in BETA development and sad bugs do occur. Please use the contact form on the <a href='#dashboard' alt='Dashboard'>dashboard</a> to report the bug in as much detail as possible. We’ll be in contact with you if we need any further information."
 	},
 	{
 		question: "I’d like to make a suggestion",
-		answer: "Fantastic! Please make your suggestion via the feedback form on the <a href="#dashboard" alt="Dashboard">dashboard</a> - we’re keen to hear from you! "
+		answer: "Fantastic! Please make your suggestion via the feedback form on the <a href='#dashboard' alt='Dashboard'>dashboard</a> - we’re keen to hear from you! "
 	},
 	{
 		question: "I have more questions and would like to speak to someone",
-		answer: "Sure! You can contact us through the Contact Form on <a href="#dashboard" alt="Dashboard">dashboard</a>. You can also e-mail us at support@scubawhere.com or contact us via Skype under the alias 'scubawherethomas'."
+		answer: "Sure! You can contact us through the Contact Form on <a href='#dashboard' alt='Dashboard'>dashboard</a>. You can also e-mail us at support@scubawhere.com or contact us via Skype under the alias 'scubawherethomas'."
 	},
 ];
 
