@@ -32,6 +32,14 @@ class RegisterController extends Controller {
 		if(empty($terms))
 			return Response::json(['errors' => ['Please accept scubawhereRMS\' terms & conditions']], 412); // 412 Precondition Failed
 
+		// Validate the company data first, before pinging Google
+		$company = new Company($data);
+
+		if(!$company->validate())
+		{
+			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
 		try
 		{
 			if( !Input::get('country_id') ) throw new ModelNotFoundException();
@@ -74,23 +82,16 @@ class RegisterController extends Controller {
 			return Response::json( array('errors' => array('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
 		}
 
-		$company = new Company($data);
+		// Mass assigned insert
+		$company->save();
 
-		// Mass assigned insert with automatic validation
-		if($company->save())
-		{
-			$company->agencies()->sync( Input::get('agencies') );
+		$company->agencies()->sync( Input::get('agencies') );
 
-			$originalInput = Request::input();
-			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
-			Request::replace($request->input());
-			return Route::dispatch($request);
-			Request::replace($originalInput);
-		}
-		else
-		{
-			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+		$originalInput = Request::input();
+		$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
+		Request::replace($request->input());
+		return Route::dispatch($request);
+		Request::replace($originalInput);
 	}
 
 	public function getExists()
