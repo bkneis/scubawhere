@@ -4,7 +4,7 @@
   <div class="col-md-5">
     <div class="panel panel-default" id="todays-stats">
       <div class="panel-heading">
-        <h4 class="panel-title">Social Meida Stats</h4>
+        <h4 class="panel-title">Social Media Stats</h4>
       </div>
       <div style="min-height:250px;" class="panel-body">
         <div id="social-media-stats"></div>
