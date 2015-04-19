@@ -142,7 +142,7 @@ class Helper
 		\Request::replace($originalInput);
 
 		\Mail::send('emails.booking-summary', array('company' => \Auth::user(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')), function($message) use ($booking) {
-		    $message->to('jonnerz@gmail.com', $booking->lead_customer->firstname . ' ' . $booking->lead_customer->lastname)->subject('Booking Confirmation');
+		    $message->to($booking->lead_customer->email, $booking->lead_customer->firstname . ' ' . $booking->lead_customer->lastname)->subject('Booking Confirmation');
 		});
 	}
 }
