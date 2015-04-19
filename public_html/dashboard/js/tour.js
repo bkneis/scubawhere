@@ -370,7 +370,7 @@ var Tour = {
 			}
 
 			$("#tour-next-step").on("click", function() {
-				window.location.href = "#packages";
+				window.location.href = "#add-ons";
 				if(window.currentStep.position <= 8) {
 					window.currentStep = {
 						tab : "#add-ons",
