@@ -788,7 +788,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	params.customer_id = $('#session-customers').children('.active').first().data('id');
 
 	if(data.parentParent || data.parent === 'course') {
-		// Is a ticket or class in a course in a package
+		// Is a ticket or class in a course (and maybe even in a package)
 
 		// Check if course identifier is given and if so, check if the customer is the same
 		if(data.identifier) {
@@ -807,7 +807,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 		if(data.parentParent)
 			params.package_id = data.parentParentId;
-		else if(data.parent === 'package')
+		else if(data.parent === 'package') // Should not happen, since a package cannot be in a package (parentParent) and data.parent is checked to be 'course' above in the parent IF. But we'll leave it in for now as a failsafe
 			params.package_id = data.parentId;
 
 		if(data.packagefacade)
@@ -937,17 +937,64 @@ function submitAddDetail(params, data) {
 				return false;
 			}
 
-			var UID;
-			if(data.parentParent)
-				UID = data.parentParentUid;
-			else
-				UID = data.parentUid;
+			var packageUID;
+			if(data.parentParent) // Is a course in a package
+				packageUID = data.parentParentUid;
+			else // Is a package
+				packageUID = data.parentUid;
 
-			booking.selectedPackages[UID].packagefacade = packagefacade_id;
+			booking.selectedPackages[packageUID].packagefacade = packagefacade_id;
 		}
 
 		// Reduce selected quantity
+		var parentPointer = booking;
+		var itemPointer = null;
+		if(packageUID) {
+			// It's a top-level package
+			parentPointer = parentPointer.selectedPackages[packageUID];
+		}
+		if(data.parent === 'course') {
+			if(data.parentParent)
+				// It's a course in a package
+				parentPointer = parentPointer.courses[data.parentUid];
+			else
+				// It's a top-level course
+				parentPointer = parentPointer.selectedCourses[data.parentUid];
+		}
+		if(data.type === 'ticket') {
+			if(data.parent)
+				// It's a ticket in a course or package
+				itemPointer = _.find(parentPointer.tickets, function(ticket) {
+					return ticket.id === data.id;
+				});
+			else
+				// It's a top-level ticket
+				itemPointer = parentPointer.selectedTickets[data.id];
+		}
+		if(data.type === 'training') {
+				// It's a training in a course
+				itemPointer = parentPointer.training;
+		}
 
+		itemPointer.qty--;
+
+		// Check if quantity is now 0 and if so, remove item from parent
+		if(itemPointer.qty <= 0) {
+			if(data.type === 'ticket') {
+				if(data.parent)
+					parentPointer.tickets = _.reject(parentPointer.tickets, function(ticket) {
+						return ticket.qty === 0;
+					});
+				else
+					delete parentPointer.selectedTickets[data.id];
+			}
+			if(data.type === 'training') {
+				delete parentPointer.training;
+			}
+		}
+
+		// Check if parent still contains something unassigned, otherwise remove parent
+		// TODO ... need parentParentPointer... :$
 
 		drawSessionTicketsList();
 
