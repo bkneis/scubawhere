@@ -77,4 +77,26 @@ class Bookingdetail extends Ardent {
 	{
 		return $this->belongsTo('Packagefacade');
 	}
+
+	public function getPrice()
+	{
+		$limitBefore = in_array($this->booking->status, ['reserved', 'expired', 'confirmed']) ? $this->created_at : false;
+
+		if (count($this->packagefacade) == 0)
+		{
+			$this->ticket->calculatePrice($this->session->start, $limitBefore);
+			
+			$price = $this->ticket->decimal_price;
+
+			foreach($this->addons as $addon)
+			{
+				if(count($addon->packagefacade) == 0)
+				{
+					$price += $addon->decimal_price;
+				}
+			}
+		}
+
+		return number_format($price, 2, '.', '');
+	}
 }

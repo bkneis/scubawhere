@@ -112,6 +112,12 @@ class PaymentController extends Controller {
 				return Response::json( array('errors' => $booking->errors()->all()), 500 ); // 500 Internal Server Error
 		}
 
+		$lead = $booking->lead_customer()->first();
+
+		Mail::send('emails.transaction', array('payment' => $payment, 'siteUrl' => \Config::get('app.url')), function($message) use ($lead) {
+		    $message->to($lead->email, $lead->firstname . ' ' . $lead->lastname)->subject('Payment Recieved');
+		});
+
 		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment), 201 ); // 201 Created
 	}
 }
