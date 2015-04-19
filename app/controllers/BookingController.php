@@ -779,7 +779,7 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the ticket still fits into the package
-		if($ticket && $packagefacade)
+		if($ticket && $packagefacade && !$course)
 		{
 			// Check if the package still has space for the wanted ticket
 			$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
@@ -788,15 +788,34 @@ class BookingController extends Controller {
 				return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403 ); // Forbidden
 		}
 
+		// UNDER CONSTRUCTION
+
 		// Validate that the course still fits into the package
-		if($course && $packagefacade)
+		/*if($course && $packagefacade)
 		{
 			// Check if the package still has space for the wanted course
-			$bookedCoursesQuantity = $packagefacade->bookingdetails()->where('course_id', $course->id)->groupBy('customer_id')->count();
+			$bookedCourses = $packagefacade->bookingdetails()->where('course_id', $course->id)->groupBy('customer_id')->get();
+			$bookedCoursesQuantity = $bookedCourses->count();
 
 			if($bookedCoursesQuantity >= $package->courses()->where('id', $course->id)->first()->pivot->quantity)
-				return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
-		}
+			{
+				// Before we throw the error, we need to check if the new detail belongs to one of the existing courses
+				foreach($bookedCourses as $bookedCourse)
+				{
+					$existing_course_customers[] = $bookedCourse->customer_id;
+					Clockwork::info($bookedCourse);
+				}
+
+				Clockwork::info($bookedCoursesQuantity);
+
+				Clockwork::info($customer->id);
+				Clockwork::info($existing_course_customers);
+				Clockwork::info($bookedCourses);
+
+				if(!in_array($customer->id, $existing_course_customers))
+					return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
+			}
+		}*/
 
 		// Validate that the ticket still fits into the course
 		if($ticket && $course)
