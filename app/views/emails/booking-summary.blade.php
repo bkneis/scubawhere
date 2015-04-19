@@ -24,7 +24,7 @@
               <div style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"><!--[if mso]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{$siteUrl}}/#manage-bookings" style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%" strokecolor="#ffffff" fillcolor="#4a89dc">
                   <w:anchorlock/>
-                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">My Account</center>
+                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">View Booking</center>
                 </v:roundrect>
                 <![endif]--><a class="button-mobile" href="{{$siteUrl}}/#manage-bookings" style="background-color:#4a89dc;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">View Booking</a>
               </div>
@@ -125,11 +125,12 @@
                           </tr>
                           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                             <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
-                              <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Ticket/Package</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"> 
-                              @if (count($bookingdetail->package) > 0)
-                                {{{$bookingdetail->package->name}}}  | {{$company->currency->symbol}}{{{$bookingdetail->package->decimal_price}}}<br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                              <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Ticket</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"> 
+                              @if ($bookingdetail->packagefacade_id)
+                                {{{$bookingdetail->ticket->name}}}<br>
+                                <em>From "{{{$bookingdetail->package->name}}}" package</em>
                               @else
-                                {{{$bookingdetail->ticket->name}}}  | {{$company->currency->symbol}}{{{$bookingdetail->ticket->decimal_price}}}<br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                                {{{$bookingdetail->ticket->name}}}  | {{$company->currency->symbol}}{{{$bookingdetail->ticket->decimal_price}}}<br>
                               @endif
                             </td>
                           </tr>
@@ -147,7 +148,11 @@
                               <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
                                 <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Addons</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                                 @foreach ($bookingdetail->addons as $addon)
-                                  {{$addon->name}} | {{$company->currency->symbol}}{{$addon->decimal_price}}<br>
+                                  @if($addon->pivot->packagefacade_id)
+                                    {{$addon->name}} (Packaged)<br>
+                                  @else
+                                    {{$addon->name}} | {{$company->currency->symbol}}{{$addon->decimal_price}}<br>
+                                  @endif
                                 @endforeach
                               </td>
                             </tr>
@@ -156,14 +161,14 @@
                             <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                               <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
                                 <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Course</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                {{$bookingdetail->course->name}} | {{$company->currency->symbol}}{{$bookingdetail->course->decimal_price}}
+                                {{$bookingdetail->course->name}}
                               </td>
                             </tr>
                           @endif
                         </table>
                       </td>
                       <td class="item-col" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                        N/A
+                        {{$company->currency->symbol}}{{$bookingdetail->getPrice()}}
                       </td>
                     </tr>
                   @endforeach
@@ -223,7 +228,7 @@
               <div style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"><!--[if mso]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{$siteUrl}}/#manage-bookings" style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%" strokecolor="#ffffff" fillcolor="#4a89dc">
                   <w:anchorlock/>
-                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">More Details</center>
+                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">View Booking</center>
                 </v:roundrect>
               <![endif]--><a href="{{$siteUrl}}/#manage-bookings" style="background-color:#4a89dc;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">View Booking</a></div>
             </td>
