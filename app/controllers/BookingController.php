@@ -948,6 +948,8 @@ class BookingController extends Controller {
 			'addons'                => $addons ? $addons->lists('id') : false,
 			'decimal_price'         => $booking->decimal_price,
 
+			'boatroom_id'           => $departure ? $boatroom_id : false,
+
 			'package_decimal_price' => $package ? $package->decimal_price : false,
 			'course_decimal_price'  => !$package && $course ? $course->decimal_price : false,
 			'ticket_decimal_price'  => !$package && !$course && $ticket ? $ticket->decimal_price : false,

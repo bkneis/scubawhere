@@ -271,6 +271,9 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				detail.ticket.decimal_price = data.ticket_decimal_price;
 			}
 
+			if(data.boatroom_id)
+				detail.boatroom_id = data.boatroom_id;
+
 			// Add compulsory addons
 			_.each(data.addons, function(id) {
 				var addon = $.extend(true, {}, window.addons[id]);
