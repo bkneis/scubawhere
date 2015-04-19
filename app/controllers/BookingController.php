@@ -11,6 +11,7 @@ class BookingController extends Controller {
 			if( !Input::get('id') ) throw new ModelNotFoundException();
 			$booking = Auth::user()->bookings()->with(
 				'lead_customer',
+					'lead_customer.country',
 				'bookingdetails',
 					'bookingdetails.customer',
 						'bookingdetails.customer.country',
@@ -1645,6 +1646,8 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
+		Helper::sendBookingConfirmation($booking->id);
+
 		return array('status' => 'OK. Booking confirmed.');
 	}
 
@@ -1659,6 +1662,8 @@ class BookingController extends Controller {
 		{
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
+
+		$booking->lead_customer = $booking->lead_customer()->first();
 
 		$values = array(
 			"email"      => $booking->lead_customer->email,

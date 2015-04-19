@@ -128,4 +128,21 @@ class Helper
 		}
 		return $normalisedArray;
 	}
+
+	public static function sendBookingConfirmation($booking_id)
+	{	
+		$originalInput = \Request::input();
+
+		\Request::replace(array("id" => $booking_id, "_token" => \Session::token()));
+
+		$app = app();
+		$controller = $app->make('BookingController');
+		$booking = $controller->callAction('getIndex', []);
+
+		\Request::replace($originalInput);
+
+		\Mail::send('emails.booking-summary', array('company' => \Auth::user(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')), function($message) use ($booking) {
+		    $message->to('jonnerz@gmail.com', $booking->lead_customer->firstname . ' ' . $booking->lead_customer->lastname)->subject('Booking Confirmation');
+		});
+	}
 }
