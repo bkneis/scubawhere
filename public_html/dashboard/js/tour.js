@@ -390,9 +390,9 @@ var Tour = {
 			if(window.currentStep.position < 9) {
 				window.location.href = window.currentStep.tab;
 			} else {
-				$("#tour-button").empty();
-				$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
-				introJs().setOptions( {
+				$("#tour-next-step").show();
+				$("#tour-finish").hide();
+					introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
 					exitOnEsc : false
@@ -437,8 +437,8 @@ var Tour = {
 				window.location.href = window.currentStep.tab;
 				console.log(window.currentStep.tab);
 			} else {
-				$("#tour-next-step").show();
-				$("#tour-finish").hide();
+				$("#tour-button").empty();
+				$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
 				introJs().setOptions( {
 					showStepNumbers : false,
 					exitOnOverlayClick : false,
