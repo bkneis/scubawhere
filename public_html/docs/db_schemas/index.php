@@ -1,5 +1,16 @@
+<style>
+	body {
+		line-height: 1.5;
+	}
+</style>
+
+<h1>Database Schemas</h1>
+
+<p>
+	Newest file on top:
+</p>
+
 <?php
-$dir_open = opendir('.');
 
 $excluded_filenames = [
 	'.',
@@ -7,11 +18,12 @@ $excluded_filenames = [
 	'index.php'
 ];
 
-while(false !== ($filename = readdir($dir_open))) {
+$files = scandir('.', 1);
+
+foreach($files as $filename) {
     if(!in_array($filename, $excluded_filenames)) {
-        echo "<a href='./$filename'>$filename</a><br />";
+    	echo "<a href='./$filename'>$filename</a><br />";
     }
 }
 
-closedir($dir_open);
 ?>
