@@ -21,12 +21,6 @@ function validate(sectionNum){
 
 	if(sectionNum === 1)      error = validateEmail('email', $('[name="email"]').val());
 	else if(sectionNum === 2) error = validateEmail('business', $('[name="business_email"]').val());
-	else if(sectionNum === 3) {
-		if(!$('#our-terms').is(':checked')) {
-			alert('Please confim you have read and agreed to our terms and conditions');
-			error = true;
-		}
-	}
 
 	$( ".required", section ).each(function( index ) {
 		if(!($( this ).val())) {
