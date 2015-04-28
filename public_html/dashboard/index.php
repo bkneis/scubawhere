@@ -122,11 +122,6 @@ $PROTOCOL = 'http';
 				$('.username').text(window.company.name);
 			});
 		});
-
-		$(window).on('hashchange', function() {
-			window.scrollTo(0, 0);
-		});
-
 	</script>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=9">

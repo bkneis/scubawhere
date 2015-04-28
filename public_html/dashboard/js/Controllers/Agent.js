@@ -1,4 +1,3 @@
-
 var Agent = {
 
 	getAgent : function(params, handleData) {

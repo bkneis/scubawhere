@@ -80,6 +80,8 @@ $(function() {
         if(newHash === 'add-transaction')
             newTitle = '<a href="#manage-bookings">Manage Bookings</a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> Add Transaction';
         $("#breadcrumbs").html('<a href="#dashboard" class="breadcrumbs-home"><i class="fa fa-home fa-lg fa-fw"></i></a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> ' + newTitle);
+
+        window.scrollTo(0, 0);
     });
 
     // Trigger content loading on initial dashboard load
