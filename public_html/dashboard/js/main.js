@@ -103,6 +103,8 @@ $(function(){
 //************************************
 // FUNCTIONS
 //************************************
+var tokenRequestUnderway = false;
+var tokenRequestCallbacks = [];
 
 function getToken(callback) {
 	if(typeof window.token === 'string' && window.token.length > 0) {
@@ -110,12 +112,24 @@ function getToken(callback) {
 		return window.token;
 	}
 
+	tokenRequestCallbacks.push(callback);
+
+	if(tokenRequestUnderway) {
+		return false;
+	}
+
+	window.tokenRequestUnderway = true;
+
 	$.ajax({
 		url: "/api/token",
 		type: "GET",
 		success: function(data){
 			window.token = data;
-			if(typeof callback === 'function') callback(window.token);
+			window.tokenRequestUnderway = false;
+
+			for(var i = 0; i < tokenRequestCallbacks.length; i++) {
+				if(typeof tokenRequestCallbacks[i] === 'function') tokenRequestCallbacks[i](window.token);
+			}
 		}
 	});
 
