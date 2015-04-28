@@ -42,5 +42,19 @@ var Company = {
 			success: handleData,
 			error: errorFn
 		});
-	}
+	},
+
+	sendHeartbeat : function(params) {
+
+		params = $.extend({}, params, {
+			'route': window.location.hash,
+			'_token': window.token
+		});
+
+		$.ajax({
+			type: "POST",
+			url: "/api/company/heartbeat",
+			data: params
+		});
+	},
 };

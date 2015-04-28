@@ -37,6 +37,11 @@ $.ajaxSetup({
 	}
 });
 
+// Set up hearbeats to fire every minute
+window.setInterval(function() {
+       Company.sendHeartbeat({'h': 1});
+}, 60000);
+
 // Run on page load
 $(function(){
 

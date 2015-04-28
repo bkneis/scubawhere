@@ -82,6 +82,11 @@ $(function() {
         $("#breadcrumbs").html('<a href="#dashboard" class="breadcrumbs-home"><i class="fa fa-home fa-lg fa-fw"></i></a> <small><i class="fa fa-chevron-right fa-fw text-muted"></i></small> ' + newTitle);
 
         window.scrollTo(0, 0);
+
+        // Send navigation event
+        getToken(function() {
+            Company.sendHeartbeat({'n': 1});
+        });
     });
 
     // Trigger content loading on initial dashboard load

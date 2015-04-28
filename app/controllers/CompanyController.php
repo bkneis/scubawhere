@@ -204,7 +204,55 @@ class CompanyController extends Controller {
 			return Response::json(['errors' => ['A tab and issue is required.']], 406); // 406 Not Acceptable
 
 		Mail::send('emails.feedback', array('company' => Auth::user(), 'feedback' => $data), function($message) {
-		    $message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
+			$message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
 		});
+	}
+
+	public function postHeartbeat() {
+		## Set up file
+		$path = storage_path() . '/logs';
+
+		if (!file_exists($path))
+		{
+			// Directory doesn't exist, try to create it
+			if (!mkdir($path, 0700, true))
+				throw new \Exception('Directory "' . $path . '" cannot be created.');
+
+			// Create default .gitignore, to ignore stored log files
+			file_put_contents($path . '/.gitignore', "*.log\n");
+		}
+
+		if (!is_writable($path))
+			throw new \Exception('Path "' . $path . '" is not writable.');
+
+		$file = $path . '/heartbeats.log';
+
+		## Set up log line
+		$line = array();
+
+		// Add server timestamp
+		array_push($line, date('Y-m-d H:i:s'));
+
+		// Add user ID
+		array_push($line, Auth::user()->id);
+
+		// Add identifier of navigation event vs. automated heartbeat (or '-' if not specified)
+		if(Input::has('n'))
+		{
+			array_push($line, 'n');
+			array_push($line, Input::get('route', '-'));
+		}
+		elseif(Input::has('h'))
+		{
+			array_push($line, 'h');
+			array_push($line, Input::get('route', '-'));
+		}
+		else
+		{
+			array_push($line, '- -');
+		}
+
+		## Write log
+		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
 	}
 }
