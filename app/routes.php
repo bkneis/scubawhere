@@ -75,3 +75,5 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'notifications' => 'NotificationsController'
 	]);
 });
+
+Route::controller('admin', 'AdminController');
