@@ -252,6 +252,9 @@ class CompanyController extends Controller {
 			array_push($line, '- -');
 		}
 
+		// Add IP address
+		array_push($line, Request::getClientIp());
+
 		## Write log
 		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
 	}
