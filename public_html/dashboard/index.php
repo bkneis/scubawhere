@@ -229,7 +229,7 @@ $PROTOCOL = 'http';
 						<i class="fa fa-line-chart fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-usd"></i> -->
 						<!-- <i class="fa fa-file-text-o"></i> -->
-						<span>Financial Reports</span>
+						<span>Reports</span>
 					</a>
 				</li>
 
