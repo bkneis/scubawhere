@@ -54,7 +54,8 @@ var Company = {
 		$.ajax({
 			type: "POST",
 			url: "/api/company/heartbeat",
-			data: params
+			data: params,
+			global: false
 		});
 	},
 };
