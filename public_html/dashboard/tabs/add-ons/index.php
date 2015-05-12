@@ -52,7 +52,7 @@
 
 							<div class="form-row" id="addon-compulsory-div" data-step="3" data-position="left" data-intro="Additionally, you can set an addon to be compulsory for all bookings. For example, governmental dive taxes.">
 								<label class="field-label">Compulsory?</label>
-								<input id="addon-compulsory" type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}>
+								<input id="addon-compulsory" type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}> Automatically add this add-on to every trip during booking.
 							</div>
 
 
