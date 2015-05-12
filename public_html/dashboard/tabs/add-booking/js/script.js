@@ -798,8 +798,20 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 			var ownerId = data.identifier.split('-')[1];
 			if(ownerId != params.customer_id) {
-				pageMssg('This course is <b>already assigned</b> to ' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].name + ' and cannot be assigned to another customer.', 'danger');
+				pageMssg('This course is <b>already assigned</b> to <u>' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].lastname + '</u> and cannot be assigned to another customer.', 'danger', true);
 				return false;
+			}
+		}
+		else {
+			// Generate course identifier for next time
+			var identifier = booking.id + '-' + params.customer_id + '-' + data.parentId;
+
+			// Add identifier to the course
+			if(data.parentParent) {
+				booking.selectedPackages[data.parentParentUid].courses[data.parentUid].identifier = identifier;
+			}
+			else {
+				booking.selectedCourses[data.parentUid].identifier = identifier;
 			}
 		}
 
