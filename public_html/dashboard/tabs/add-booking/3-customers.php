@@ -123,7 +123,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="panel-footer">
+					<div class="panel-footer clearfix">
 						<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
 						<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
 						<button type="submit" class="btn btn-primary new-customer pull-right" style="margin-left:5px;">Create</button>
