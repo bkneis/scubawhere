@@ -556,7 +556,18 @@ class BookingController extends Controller {
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+				// When the packagefacade is not found via the booking, it may be the situation where a packaged detail has been assigned but then un-assigned, thus leaving the packagefacade in the DB, but making it unaccessible from the booking.
+				// We thus have to look for it via the company and supplied package_id
+				try
+				{
+					$packagefacade = Auth::user()
+						->packages()->findOrFail( Input::get('package_id') )
+						->packagefacades()->findOrFail( Input::get('packagefacade_id') );
+				}
+				catch(ModelNotFoundException $e)
+				{
+					return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+				}
 			}
 
 			$package = $packagefacade->package()->with('tickets', 'courses')->first();

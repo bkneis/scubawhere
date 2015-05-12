@@ -74,7 +74,7 @@ class Package extends Ardent {
 
 	public function packagefacades()
 	{
-		return $this->hasMany('Packagefacade')->withTimestamps();
+		return $this->hasMany('Packagefacade');
 	}
 
 	public function basePrices()
