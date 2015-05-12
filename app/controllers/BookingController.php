@@ -796,37 +796,23 @@ class BookingController extends Controller {
 			$bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->count();
 
 			if($bookedTicketsQuantity >= $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
-				return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403 ); // Forbidden
+				return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403 ); // 403 Forbidden
 		}
 
-		// UNDER CONSTRUCTION
-
-		// Validate that the course still fits into the package
-		/*if($course && $packagefacade)
+		// Validate that the course still fits into the package (failsafe for when client validation fails)
+		if($course && $packagefacade)
 		{
 			// Check if the package still has space for the wanted course
-			$bookedCourses = $packagefacade->bookingdetails()->where('course_id', $course->id)->groupBy('customer_id')->get();
-			$bookedCoursesQuantity = $bookedCourses->count();
+			$bookedCustomers = $packagefacade->bookingdetails()->where('course_id', $course->id)->lists('customer_id');
+			$bookedCoursesQuantity = count($bookedCustomers);
 
-			if($bookedCoursesQuantity >= $package->courses()->where('id', $course->id)->first()->pivot->quantity)
+			if($bookedCoursesQuantity >= $package->courses()->find($course->id)->pivot->quantity)
 			{
 				// Before we throw the error, we need to check if the new detail belongs to one of the existing courses
-				foreach($bookedCourses as $bookedCourse)
-				{
-					$existing_course_customers[] = $bookedCourse->customer_id;
-					Clockwork::info($bookedCourse);
-				}
-
-				Clockwork::info($bookedCoursesQuantity);
-
-				Clockwork::info($customer->id);
-				Clockwork::info($existing_course_customers);
-				Clockwork::info($bookedCourses);
-
-				if(!in_array($customer->id, $existing_course_customers))
-					return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
+				if(!in_array($customer->id, $bookedCustomers))
+					return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // 403 Forbidden
 			}
-		}*/
+		}
 
 		// Validate that the ticket still fits into the course
 		if($ticket && $course)
@@ -839,7 +825,7 @@ class BookingController extends Controller {
 				->count();
 
 			if($bookedTicketsQuantity >= $course->tickets()->where('id', $ticket->id)->first()->pivot->quantity)
-				return Response::json(['errors' => ['The ticket cannot be assigned because the course\'s limit for the ticket is reached.']], 403 ); // Forbidden
+				return Response::json(['errors' => ['The ticket cannot be assigned because the course\'s limit for the ticket is reached.']], 403 ); // 403 Forbidden
 		}
 
 		// Validate that the class still fits into the course
@@ -854,7 +840,7 @@ class BookingController extends Controller {
 				->count();
 
 			if($bookedTrainingsQuantity >= $course->training_quantity)
-				return Response::json(['errors' => ['The course cannot be assigned because the package\'s limit for the course is reached.']], 403 ); // Forbidden
+				return Response::json(['errors' => ['The class cannot be assigned because the course\'s limit for the class is reached.']], 403 ); // 403 Forbidden
 		}
 
 		// Check if we have to create a new packagefacade
