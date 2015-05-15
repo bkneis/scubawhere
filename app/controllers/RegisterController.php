@@ -58,14 +58,14 @@ class RegisterController extends Controller {
 
 		if((string) $latLng->status === "OK")
 		{
-			$data['latitude']  = $latLng->result->geometry->location->lat;
-			$data['longitude'] = $latLng->result->geometry->location->lng;
+			$data['latitude']  = (double) $latLng->result->geometry->location->lat;
+			$data['longitude'] = (double) $latLng->result->geometry->location->lng;
 
 			$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
 			$timezone = simplexml_load_file($timezone);
 
 			if((string) $timezone->status === "OK")
-				$data['timezone'] = $timezone->time_zone_id;
+				$data['timezone'] = (string) $timezone->time_zone_id;
 			else
 				return Response::json( array('errors' => array('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
 		}
@@ -79,7 +79,7 @@ class RegisterController extends Controller {
 		// Mass assigned insert with automatic validation
 		if($company->save())
 		{
-			$company->agencies()->sync( Input::get('agencies') );
+			$company->agencies()->sync( Input::get('agencies', []) );
 
 			$originalInput = Request::input();
 			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
