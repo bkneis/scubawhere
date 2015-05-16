@@ -1135,7 +1135,7 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 	params.quantity         = 1;
 	params.packagefacade_id = addon.data('packagefacadeId');
 
-	booking.addAddon(params, function success() {
+	booking.addAddon(params, function success(status) {
 		// Reduce qty
 		for(var i = 0; i < booking.selectedPackages[addon.data('packageUid')].addons.length; i++) {
 			if(booking.selectedPackages[addon.data('packageUid')].addons[i].id == params.addon_id) {
@@ -1149,12 +1149,15 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 
 		booking.store();
 
+		pageMssg(status, 'success');
+
 		drawBasket();
 
 		updatePackagedAddonsList();
 
 		// Rerender session-list (to show all previously removed sessions as well)
-
+		$("#addon-booking-details").html(addonBookingDetailsTemplate({details: booking.bookingdetails}));
+		$("#addon-booking-details").children().first().addClass('active');
 
 		btn.html('Add');
 	}, function error(xhr) {
@@ -1175,8 +1178,9 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.addon_id         = $(this).data('id');
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
-	booking.addAddon(params, function success() {
+	booking.addAddon(params, function success(status) {
 		booking.store();
+		pageMssg(status, 'success');
 		drawBasket();
 		btn.html('Add');
 	}, function error(xhr) {
@@ -1195,7 +1199,23 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	params.bookingdetail_id = $(this).data('bookingdetail-id');
 	params.addon_id         = $(this).data('id');
 
-	booking.removeAddon(params, function success() {
+	booking.removeAddon(params, function success(status, removedAddon) {
+		// If the addon was packaged, re-add it to the selected package (if it exists)
+		if(removedAddon.pivot.packagefacade_id) {
+			var relatedPackage = _.find(booking.selectedPackages, function(package) {
+				return package.packagefacade == removedAddon.pivot.packagefacade_id;
+			});
+
+			if(relatedPackage !== undefined) {
+				removedAddon.qty = 1;
+				relatedPackage.addons.push(removedAddon);
+
+			updatePackagedAddonsList();
+		}
+		}
+
+		pageMssg(status, 'success');
+
 		booking.store();
 		drawBasket();
 	}, function error(xhr) {

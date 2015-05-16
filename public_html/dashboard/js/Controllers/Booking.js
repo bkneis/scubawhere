@@ -432,9 +432,9 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 				return detail.id == params.bookingdetail_id;
 			});
 
-			var packaged = _.find(detail.addons, function(addon) {
+			var removedAddon = _.find(detail.addons, function(addon) {
 				return addon.id == params.addon_id;
-			}).pivot.packagefacade_id !== null;
+			});
 
 			detail.addons = _.reject(detail.addons, function(addon) {
 				return addon.id == params.addon_id;
@@ -442,10 +442,10 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
-			if(!packaged)
+			if(removedAddon.pivot.packagefacade_id !== null)
 				this.calculateSums();
 
-			successFn(data.status);
+			successFn(data.status, removedAddon);
 		},
 		error: errorFn
 	});
