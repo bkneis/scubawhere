@@ -25,7 +25,7 @@
 									<span class="input-group-addon"><i class="fa fa-money"></i></span>
 									<input type="text" class="form-control" id="discount" name="discount" value="00.00" />
 								</div>
-								<p style="margin-top: 5px;">Discounted price: <span id="discounted-price"></p>
+								<p style="margin-top: 5px;">Discounted price: <span id="discounted-price"></span></p>
 							</div>
 						</div>
 
@@ -57,7 +57,7 @@
 					<div class="panel-footer">
 						<div class="row">
 							<div class="col-xs-12">
-								<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save & Next</button>
+								<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save</button>
 								<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 							</div>
 						</div>
