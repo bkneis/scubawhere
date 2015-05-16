@@ -9,13 +9,13 @@
 	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Step 1: Select the booking detail</h2>
+				<h2 class="panel-title">Select the trip</h2>
 			</div>
 			<div class="panel-body">
 				<div class="list-group" id="addon-booking-details">
 				</div>
 			</div>
-			<script id="addon-booking-details-template" type="text/x-handlebars-template">
+			<script type="text/x-handlebars-template" id="addon-booking-details-template">
 				{{#each details}}{{#if session}}
 					<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
 						<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
@@ -35,9 +35,31 @@
 		</div>
 	</div>
 	<div class="col-sm-6">
+		<div id="packaged-addons-list-container">
+		</div>
+		<script type="text/x-handlebars-template" id="packaged-addons-list-template">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title">Packaged add-ons</h2>
+				</div>
+				<div class="panel-body">
+					<div class="list-group" id="packaged-addons-list">
+						{{#each packages}}
+							{{#each addons}}
+								<a href="javascript:void(0);" data-id="{{id}}" data-packagefacade-id="{{../packagefacade}}" data-package-uid="{{../UID}}" class="list-group-item list-group-radio">
+									{{{name}}} <span class="badge badge-default small">{{qty}}</span>
+								</a>
+							{{/each}}
+						{{/each}}
+					</div>
+					<button class="btn btn-primary pull-right add-packaged-addon">Add</button>
+				</div>
+			</div>
+		</script>
+
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Step 2: Select Addons</h2>
+				<h2 class="panel-title">Select Addons</h2>
 			</div>
 			<div class="panel-body">
 				<ul class="list-group" id="addons-list">
@@ -45,12 +67,12 @@
 				</ul>
 			</div>
 		</div>
-		<script id="addons-list-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="addons-list-template">
 			{{#each addons}}
 				{{#unless compulsory}}
 					<li data-id="{{id}}" class="list-group-item">
 						<h4 class="list-group-item-heading addon-name">{{{name}}}</h4>
-						<p>{{{description}}}</p>
+						{{!-- <p>{{{description}}}</p> --}}
 						<div class="row">
 							<div class="col-md-4">
 								<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>

@@ -1177,7 +1177,7 @@ class BookingController extends Controller {
 				})
 				->sum('addon_bookingdetail.quantity');
 
-			if(($bookedAddonsQuantity + $quantity) > $package->addons()->where('id', $ticket->id)->first()->pivot->quantity)
+			if(($bookedAddonsQuantity + $quantity) > $package->addons()->where('id', $addon->id)->first()->pivot->quantity)
 				return Response::json(['errors' => ['The addon cannot be assigned because the package\'s limit for the addon would be exceeded.']], 403 ); // Forbidden
 		}
 

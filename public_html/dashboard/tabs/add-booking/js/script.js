@@ -136,35 +136,35 @@ var bookingSummaryTemplate = Handlebars.compile($("#booking-summary-template").h
 window.promises.loadedAgents = $.Deferred();
 Agent.getAllAgents(function(data){
 	window.agents = _.indexBy(data, 'id');
-	$("#agents-list").html(agentTemplate({agents:window.agents}));
+	$("#agents-list").html(agentTemplate({agents: window.agents}));
 	window.promises.loadedAgents.resolve();
 });
 
 window.promises.loadedTickets = $.Deferred();
 Ticket.getAllTickets(function(data){
 	window.tickets = _.indexBy(data, 'id');
-	$("#tickets-list").html(ticketTemplate({tickets:window.tickets}));
+	$("#tickets-list").html(ticketTemplate({tickets: window.tickets}));
 	window.promises.loadedTickets.resolve();
 });
 
 window.promises.loadedPackages = $.Deferred();
 Package.getAllPackages(function(data){
 	window.packages = _.indexBy(data, 'id');
-	$("#package-list").html(packageTemplate({packages:window.packages}));
+	$("#package-list").html(packageTemplate({packages: window.packages}));
 	window.promises.loadedPackages.resolve();
 });
 
 window.promises.loadedCourses = $.Deferred();
 Course.getAll(function(data){
 	window.courses = _.indexBy(data, 'id');
-	$("#course-list").html(courseTemplate({courses:window.courses}));
+	$("#course-list").html(courseTemplate({courses: window.courses}));
 	window.promises.loadedCourses.resolve();
 });
 
 window.promises.loadedCustomers = $.Deferred();
 Customer.getAllCustomers(function(data){
 	window.customers = _.indexBy(data, 'id');
-	$("#existing-customers").html(customersTemplate({customers:window.customers}));
+	$("#existing-customers").html(customersTemplate({customers: window.customers}));
 	window.promises.loadedCustomers.resolve();
 });
 
@@ -185,7 +185,7 @@ else {
 window.promises.loadedTrips = $.Deferred();
 Trip.getAllTrips(function(data){
 	window.trips = _.indexBy(data, 'id');
-	$("#trips").html(tripTemplate({trips:window.trips}));
+	$("#trips").html(tripTemplate({trips: window.trips}));
 	window.promises.loadedTrips.resolve();
 });
 
@@ -202,14 +202,14 @@ Addon.getAllAddons(function(data){
 	_.each(window.addons, function(addon) {
 		addon.compulsory = parseInt(addon.compulsory);
 	});
-	$("#addons-list").html(addonsTemplate({addons:window.addons}));
+	$("#addons-list").html(addonsTemplate({addons: window.addons}));
 	window.promises.loadedAddons.resolve();
 });
 
 window.promises.loadedAccommodations = $.Deferred();
 Accommodation.getAll(function(data){
 	window.accommodations = _.indexBy(data, 'id');
-	$("#accommodations-list").html(accommodationsTemplate({accommodations:window.accommodations}));
+	$("#accommodations-list").html(accommodationsTemplate({accommodations: window.accommodations}));
 	window.promises.loadedAccommodations.resolve();
 });
 
@@ -1008,6 +1008,8 @@ function submitAddDetail(params, data) {
 		// Check if parent still contains something unassigned, otherwise remove parent
 		// TODO ... need parentParentPointer... :$
 
+		booking.store();
+
 		drawSessionTicketsList();
 
 		drawBasket(function() {
@@ -1045,6 +1047,8 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 
 		// redrawSessionsList(params);
 
+		booking.store();
+
 		drawSessionTicketsList();
 
 		drawBasket();
@@ -1078,13 +1082,88 @@ window.promises.loadedAddons.done(function() {
 */
 
 var addonBookingDetailsTemplate = Handlebars.compile($("#addon-booking-details-template").html());
+var packagedAddonsListTemplate = Handlebars.compile($("#packaged-addons-list-template").html());
 
 $('[data-target="#addon-tab"]').on('show.bs.tab', function () {
-	$("#addon-booking-details").html(addonBookingDetailsTemplate({details:booking.bookingdetails}));
+	$("#addon-booking-details").html(addonBookingDetailsTemplate({details: booking.bookingdetails}));
 	$("#addon-booking-details").children().first().addClass('active');
+
+	updatePackagedAddonsList();
 });
 
-var addonTotal = 0;
+function updatePackagedAddonsList() {
+	$("#packaged-addons-list-container").empty();
+
+	// Find all addons in selected packages to check if the list needs to be rendered
+	var packagedAddonsExist = _.find(booking.selectedPackages, function(package) {
+		return package.addons && package.addons.length > 0;
+	});
+
+	if(packagedAddonsExist !== undefined)
+		$("#packaged-addons-list-container").html(packagedAddonsListTemplate({packages: booking.selectedPackages}));
+}
+
+$('#addon-tab').on('click', '#packaged-addons-list-container .list-group-item', function() {
+	setTimeout(function() {
+		var addonPackagefacadeId = $('#packaged-addons-list-container .active').data('packagefacadeId');
+		// Filter booked trips and display the ones that are in the same package as the clicked addon
+		var eligableDetails = _.filter(booking.bookingdetails, function(detail) {
+			return (detail.packagefacade && detail.packagefacade.id === addonPackagefacadeId && detail.training_session === null)
+		});
+
+		$("#addon-booking-details").html(addonBookingDetailsTemplate({details: eligableDetails}));
+	}, 50); // Need to give the browser time to set the .active class on the clicked list-item first
+});
+
+$('#addon-tab').on('click', '.add-packaged-addon', function() {
+
+	// Check if both list items are selected
+	if( $('#addon-booking-details').children('.active').length < 1 || $('#packaged-addons-list').children('.active').length < 1 ) {
+		pageMssg('Please select both a packaged add-on and a trip to assign it to.', 'info');
+		return false;
+	}
+
+	var btn = $(this);
+	var addon = $('#packaged-addons-list .active').first();
+
+	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
+
+	var params = {};
+	params._token           = window.token;
+	params.bookingdetail_id = $('#addon-booking-details').children('.active').first().data('id');
+	params.addon_id         = addon.data('id');
+	params.quantity         = 1;
+	params.packagefacade_id = addon.data('packagefacadeId');
+
+	booking.addAddon(params, function success() {
+		// Reduce qty
+		for(var i = 0; i < booking.selectedPackages[addon.data('packageUid')].addons.length; i++) {
+			if(booking.selectedPackages[addon.data('packageUid')].addons[i].id == params.addon_id) {
+				booking.selectedPackages[addon.data('packageUid')].addons[i].qty--;
+
+				// Check if qty is now 0, and if so remove the addon from the array
+				if(booking.selectedPackages[addon.data('packageUid')].addons[i].qty === 0)
+					booking.selectedPackages[addon.data('packageUid')].addons.splice(i, 1);
+			}
+		}
+
+		booking.store();
+
+		drawBasket();
+
+		updatePackagedAddonsList();
+
+		// Rerender session-list (to show all previously removed sessions as well)
+
+
+		btn.html('Add');
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], 'danger');
+		btn.html('Add');
+	});
+});
+
 $('#addon-tab').on('click', '.add-addon', function() {
 	var btn = $(this);
 
@@ -1097,6 +1176,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
 	booking.addAddon(params, function success() {
+		booking.store();
 		drawBasket();
 		btn.html('Add');
 	}, function error(xhr) {
@@ -1116,6 +1196,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	params.addon_id         = $(this).data('id');
 
 	booking.removeAddon(params, function success() {
+		booking.store();
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
