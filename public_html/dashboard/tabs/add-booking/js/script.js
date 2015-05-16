@@ -792,10 +792,6 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 		// Check if course identifier is given and if so, check if the customer is the same
 		if(data.identifier) {
-			console.info('type compare');
-			console.log(data.identifier.split('-')[1]);
-			console.log(params.customer_id);
-
 			var ownerId = data.identifier.split('-')[1];
 			if(ownerId != params.customer_id) {
 				pageMssg('This course is <b>already assigned</b> to <u>' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].lastname + '</u> and cannot be assigned to another customer.', 'danger', true);
@@ -819,12 +815,12 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 		if(data.parentParent)
 			params.package_id = data.parentParentId;
-		else if(data.parent === 'package') // Should not happen, since a package cannot be in a package (parentParent) and data.parent is checked to be 'course' above in the parent IF. But we'll leave it in for now as a failsafe
-			params.package_id = data.parentId;
-
-		if(data.packagefacade)
-			params.packagefacade_id = data.packagefacade;
 	}
+	else if(data.parent === 'package')
+		params.package_id = data.parentId;
+
+	if(data.packagefacade)
+		params.packagefacade_id = data.packagefacade;
 
 	if(data.type === 'ticket') {
 		params.ticket_id  = data.id;
@@ -1009,6 +1005,8 @@ function submitAddDetail(params, data) {
 		// TODO ... need parentParentPointer... :$
 
 		booking.store();
+
+		btn.removeClass('waiting').html('Assign');
 
 		drawSessionTicketsList();
 
@@ -1210,8 +1208,8 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 				removedAddon.qty = 1;
 				relatedPackage.addons.push(removedAddon);
 
-			updatePackagedAddonsList();
-		}
+				updatePackagedAddonsList();
+			}
 		}
 
 		pageMssg(status, 'success');
