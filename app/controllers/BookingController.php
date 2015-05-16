@@ -1541,7 +1541,9 @@ class BookingController extends Controller {
 		if( empty($data['pick_up_location']) ) $data['pick_up_location'] = null;
 		if( empty($data['pick_up_date']) ) $data['pick_up_date'] = null;
 		if( empty($data['pick_up_time']) ) $data['pick_up_time'] = null;
-		if( empty($data['discount']) ) $data['discount'] = null;
+		if( empty($data['discount']) && $data['discount'] !== 0 && $data['discount'] !== "0") $data['discount'] = null;
+
+		$oldDiscount = $booking->discount;
 
 		if( !$booking->update($data) )
 		{
@@ -1549,7 +1551,7 @@ class BookingController extends Controller {
 		}
 
 		if(!empty($data['discount']))
-			$booking->updatePrice(true);
+			$booking->updatePrice(true, $oldDiscount);
 
 		return array('status' => 'OK. Booking information updated.', 'decimal_price' => $booking->decimal_price);
 	}
