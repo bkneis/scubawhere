@@ -1278,15 +1278,9 @@ var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-custom
 $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#accommodation-customers").children().first().addClass('active');
-});
 
-$('#accommodation-tab').on('click', '.accommodation-customer', function() {
-	var start = $(this).find('.session-start').data('date');
-
-	//Get day before and remove time.
-	var date = moment(start).subtract(1, 'days').format('YYYY-MM-DD');
-
-	//Update all accommodation start fields.
+	// Set all accommodations' start fields
+	var date = moment(booking.arrival_date).subtract(1, 'days').format('YYYY-MM-DD');
 	$('.accommodation-start').val(date);
 });
 
