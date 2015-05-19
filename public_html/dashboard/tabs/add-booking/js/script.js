@@ -1279,7 +1279,18 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#accommodation-customers").children().first().addClass('active');
 
+	// Find first bookingdetail departure date
+	var firstDepartureDate = _.first(
+		_.map(booking.bookingdetails, function(detail) {
+			if(detail.session !== null)
+				return detail.session.start;
+			else
+				return detail.training_session.start;
+		}).sort()
+	);
+
 	// Set all accommodations' start fields
+	var date = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
 	$('.accommodation-start').val(date);
 });
 
