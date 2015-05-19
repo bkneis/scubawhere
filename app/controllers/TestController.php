@@ -2,6 +2,7 @@
 
 class TestController extends Controller {
 
+	/*
 	public function getRegister()
 	{
 		return View::make('test.register');
@@ -42,4 +43,5 @@ class TestController extends Controller {
 	{
 		return Purifier::clean( Input::get('description') );
 	}
+	*/
 }
