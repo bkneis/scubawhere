@@ -203,7 +203,7 @@ function renderBookingList(bookings, display) {
 		booking.sums = {};
 		Booking.prototype.calculateSums.call(booking);
 		Booking.prototype.setStatus.call(booking);
-		console.log(booking);
+		// console.log(booking);
 		if(display != "all") {
 			if(booking.status == display) return booking;
 		} else return booking;
