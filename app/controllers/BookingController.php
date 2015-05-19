@@ -806,7 +806,7 @@ class BookingController extends Controller {
 			$bookedCustomers = $packagefacade->bookingdetails()->where('course_id', $course->id)->lists('customer_id');
 			$bookedCoursesQuantity = count($bookedCustomers);
 
-			if($bookedCoursesQuantity >= $package->courses()->find($course->id)->pivot->quantity)
+			if($bookedCoursesQuantity >= $package->courses()->where('id', $course->id)->first()->pivot->quantity)
 			{
 				// Before we throw the error, we need to check if the new detail belongs to one of the existing courses
 				if(!in_array($customer->id, $bookedCustomers))
