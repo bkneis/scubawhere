@@ -671,7 +671,7 @@ window.promises.loadedCustomers.done(function() {
 });
 
 $('#customer-tab').on('click', '.clear-form', function() {
-	$(this).parents('form')[0].reset();
+	$(this).closest('form')[0].reset();
 });
 
 $('#booking-summary').on('click', '.lead-customer', function() {
@@ -1298,8 +1298,8 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	params._token           = window.token;
 	params.accommodation_id = $(this).data('id');
 	params.customer_id      = $('#accommodation-customers').children('.active').first().data('id');
-	params.start            = $(this).parents('.accommodation-item').find('[name="start"]').val();
-	params.end              = $(this).parents('.accommodation-item').find('[name="end"]').val();
+	params.start            = $(this).closest('.accommodation-item').find('[name="start"]').val();
+	params.end              = $(this).closest('.accommodation-item').find('[name="end"]').val();
 
 	booking.addAccommodation(params, function success() {
 		drawBasket();
@@ -1537,10 +1537,10 @@ $(document).ready(function() {
 	$('#booking-summary').on('click', '.list-expand', function() {
 		if($(this).hasClass('fa-plus-square-o')) {
 			$(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideDown();
+			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideDown();
 		}else{
 			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-			$(this).parents('.list-group-expandable').children().not('list-group-heading').slideUp();
+			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideUp();
 		}
 	});
 
