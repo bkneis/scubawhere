@@ -1117,7 +1117,17 @@ $('#addon-tab').on('click', '#packaged-addons-list-container .list-group-item', 
 			return (detail.packagefacade && detail.packagefacade.id === addonPackagefacadeId && detail.training_session === null)
 		});
 
+		// Fetch currently selected detail ID
+		var selectedID = $("#addon-booking-details .list-group-item.active").first().data('id');
+
 		$("#addon-booking-details").html(addonBookingDetailsTemplate({details: eligableDetails}));
+
+		// Automatically select the first eligable detail
+		$("#addon-booking-details").children().first().addClass('active');
+
+		// Try to find the previously selected detail ID in the eligable details and re-select it
+		$("#addon-booking-details .list-group-item[data-id=" + selectedID + "]").first().click();
+
 	}, 50); // Need to give the browser time to set the .active class on the clicked list-item first
 });
 
