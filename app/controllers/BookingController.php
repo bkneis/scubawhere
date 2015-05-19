@@ -143,9 +143,9 @@ class BookingController extends Controller {
 				$limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
 				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
-
-				$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
 			}
+
+			$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
 		});
 
 		return $booking;
