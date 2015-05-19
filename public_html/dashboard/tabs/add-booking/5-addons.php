@@ -53,6 +53,7 @@
 						{{/each}}
 					</div>
 					<button class="btn btn-primary pull-right add-packaged-addon">Add</button>
+					<button class="btn btn-default pull-right clear-packaged-addon" onclick="setUpAddonsTab();">Clear selection</button>
 				</div>
 			</div>
 		</script>

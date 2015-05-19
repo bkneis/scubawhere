@@ -1091,11 +1091,15 @@ var addonBookingDetailsTemplate = Handlebars.compile($("#addon-booking-details-t
 var packagedAddonsListTemplate = Handlebars.compile($("#packaged-addons-list-template").html());
 
 $('[data-target="#addon-tab"]').on('show.bs.tab', function () {
+	setUpAddonsTab();
+});
+
+function setUpAddonsTab() {
 	$("#addon-booking-details").html(addonBookingDetailsTemplate({details: booking.bookingdetails}));
 	$("#addon-booking-details").children().first().addClass('active');
 
 	updatePackagedAddonsList();
-});
+}
 
 function updatePackagedAddonsList() {
 	$("#packaged-addons-list-container").empty();
