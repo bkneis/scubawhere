@@ -1006,7 +1006,7 @@ function submitAddDetail(params, data) {
 
 		booking.store();
 
-		btn.removeClass('waiting').html('Assign');
+		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
 
 		drawSessionTicketsList();
 
@@ -1017,8 +1017,7 @@ function submitAddDetail(params, data) {
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
-		var btn = $('#sessions-table .waiting');
-		btn.removeClass('waiting').html('Assign');
+		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
 	});
 }
 
