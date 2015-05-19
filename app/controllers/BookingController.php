@@ -958,15 +958,11 @@ class BookingController extends Controller {
 
 		$booking->updatePrice();
 
-		// Need to recalculate arrival date after adding a new detail
-		$arrival_date = $booking->getArrivalDateAttribute(true);
-
 		return array(
 			'status'                => 'OK. Booking details added.',
 			'id'                    => $bookingdetail->id,
 			'addons'                => $addons ? $addons->lists('id') : false,
 			'decimal_price'         => $booking->decimal_price,
-			'arrival_date'          => $arrival_date,
 
 			'boatroom_id'           => $departure ? $boatroom_id : false,
 
@@ -1028,13 +1024,9 @@ class BookingController extends Controller {
 		// Update booking price
 		$booking->updatePrice();
 
-		// Need to recalculate arrival date after removing a new detail
-		$arrival_date = $booking->getArrivalDateAttribute(true);
-
 		return array(
 			'status'        => 'OK. Bookingdetail removed.',
-			'decimal_price' => $booking->decimal_price,
-			'arrival_date'  => $arrival_date
+			'decimal_price' => $booking->decimal_price
 		); // 200 OK
 	}
 

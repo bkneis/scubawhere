@@ -1280,7 +1280,6 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").children().first().addClass('active');
 
 	// Set all accommodations' start fields
-	var date = moment(booking.arrival_date).subtract(1, 'days').format('YYYY-MM-DD');
 	$('.accommodation-start').val(date);
 });
 

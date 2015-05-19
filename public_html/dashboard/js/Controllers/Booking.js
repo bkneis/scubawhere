@@ -291,7 +291,6 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			}
 
 			this.decimal_price = data.decimal_price;
-			this.arrival_date  = data.arrival_date;
 
 			this.calculateSums();
 
@@ -325,7 +324,6 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
-			this.arrival_date  = data.arrival_date;
 
 			this.calculateSums();
 
