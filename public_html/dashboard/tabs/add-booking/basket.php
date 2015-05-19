@@ -208,8 +208,15 @@
 												{{#each addons}}
 													<p>
 														<i class="fa fa-cart-plus fa-fw"></i>
+
 														{{{name}}} |
-														{{#unless pivot.packagefacade_id}}{{decimal_price}}{{else}}<i class="fa fa-tags"></i>{{/unless}}
+
+														{{#unless pivot.packagefacade_id}}
+															{{currency}} {{decimal_price}}
+														{{else}}
+															<i class="fa fa-tags"></i>
+														{{/unless}}
+
 														<span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
 
 														{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}
