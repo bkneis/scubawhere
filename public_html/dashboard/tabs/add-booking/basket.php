@@ -248,8 +248,14 @@
 						</div>
 						<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate pivot.start}} - {{friendlyDate pivot.end}}</p>
-								<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
+								<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDateNoTime pivot.start}} - {{friendlyDateNoTime pivot.end}}</p>
+
+								{{#unless pivot.packagefacade_id}}
+									<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
+								{{else}}
+									<i class="fa fa-tags"></i> (packaged)
+								{{/unless}}
+
 							</div>
 						</div>
 					</div>

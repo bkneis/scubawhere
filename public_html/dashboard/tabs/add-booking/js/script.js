@@ -47,6 +47,10 @@ Handlebars.registerHelper("friendlyDate", function(date) {
 	return friendlyDate(date);
 });
 
+Handlebars.registerHelper("friendlyDateNoTime", function(date) {
+	return friendlyDateNoTime(date);
+});
+
 Handlebars.registerHelper("firstChar", function(s) {
 	return s[0];
 });
@@ -385,7 +389,6 @@ window.promises.loadedPackages.done(function() {
 
 		// Individualise potentially contained courses
 		if(package.courses) {
-			console.log(package.courses);
 			var courses = $.extend(true, {}, package.courses);
 			package.courses = {};
 
@@ -1104,7 +1107,7 @@ function setUpAddonsTab() {
 function updatePackagedAddonsList() {
 	$("#packaged-addons-list-container").empty();
 
-	// Find all addons in selected packages to check if the list needs to be rendered
+	// Find first addon in selected packages to check if the list needs to be rendered
 	var packagedAddonsExist = _.find(booking.selectedPackages, function(package) {
 		return package.addons && package.addons.length > 0;
 	});
@@ -1274,10 +1277,13 @@ window.promises.loadedAccommodations.done(function() {
 */
 
 var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
+var packagedAccommodationsListTemplate = Handlebars.compile($("#packaged-accommodations-list-template").html());
 
 $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#accommodation-customers").children().first().addClass('active');
+
+	updatePackagedAccommodationsList();
 
 	// Find first bookingdetail departure date
 	var firstDepartureDate = _.first(
@@ -1290,8 +1296,92 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	);
 
 	// Set all accommodations' start fields
-	var date = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-	$('.accommodation-start').val(date);
+	var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+	$('.accommodation-start').val(startDate);
+	$('#packaged-accommodations-list .accommodation-start').change();
+});
+
+$('#accommodation-tab').on('change', '#packaged-accommodations-list .accommodation-start', function() {
+	// Find the end date field
+	var self = $(this);
+	var endField = self.closest('.form-group').find('.accommodation-end').first();
+
+	var endDate = moment(self.val()).add(self.data('qty'), 'days');
+
+	endField.val(endDate.format('YYYY-MM-DD'));
+});
+
+$('#accommodation-tab').on('dp.show', '#accommodations-list .datepicker', function() {
+	updateDatePickerMinMaxDates($(this).closest('.form-group').find('.accommodation-start').first(), false);
+});
+
+$('#accommodation-tab').on('dp.show', '#packaged-accommodations-list .datepicker', function() {
+	updateDatePickerMinMaxDates($(this).closest('.form-group').find('.accommodation-start').first(), true);
+});
+
+function updateDatePickerMinMaxDates(startField, setMaxDate) {
+	var endField = startField.closest('.form-group').find('.accommodation-end').first();
+
+	startField.data('DateTimePicker').setMinDate(moment().subtract(1, 'days'));
+
+	endField.data('DateTimePicker').setMinDate(moment(startField.val()).add(1, 'days'));
+
+	if(setMaxDate) {
+		var endDate = moment(startField.val()).add(startField.data('qty'), 'days');
+		endField.data('DateTimePicker').setMaxDate(endDate);
+	}
+}
+
+function updatePackagedAccommodationsList() {
+	$("#packaged-accommodations-list-container").empty();
+
+	// Find first accommodation in selected packages to check if the list needs to be rendered
+	var packagedAccommodationsExist = _.find(booking.selectedPackages, function(package) {
+		return package.accommodations && package.accommodations.length > 0;
+	});
+
+	if(packagedAccommodationsExist !== undefined)
+		$("#packaged-accommodations-list-container").html(packagedAccommodationsListTemplate({packages: booking.selectedPackages}));
+}
+
+$('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
+	var btn = $(this);
+	btn.prepend('<i class="fa fa-cog fa-spin"></i>&nbsp;');
+
+	var params = {};
+	params._token           = window.token;
+	params.accommodation_id = $(this).data('id');
+	params.customer_id      = $('#accommodation-customers').children('.active').first().data('id');
+	params.start            = $(this).closest('.accommodation-item').find('[name="start"]').val();
+	params.end              = $(this).closest('.accommodation-item').find('[name="end"]').val();
+	params.packagefacade_id = btn.data('packagefacadeId');
+
+	booking.addAccommodation(params, function success(status) {
+		// Reduce qty
+		for(var i = 0; i < booking.selectedPackages[btn.data('packageUid')].accommodations.length; i++) {
+			if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].id == params.accommodation_id) {
+				booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty--;
+
+				// Check if qty is now 0, and if so remove the accommodation from the array
+				if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty === 0)
+					booking.selectedPackages[btn.data('packageUid')].accommodations.splice(i, 1);
+			}
+		}
+
+		booking.store();
+
+		pageMssg(status, 'success');
+
+		drawBasket();
+
+		updatePackagedAccommodationsList();
+
+		btn.html("Add");
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], 'danger');
+		btn.html("Add");
+	});
 });
 
 $('#accommodation-tab').on('click', '.add-accommodation', function() {
@@ -1305,8 +1395,11 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	params.start            = $(this).closest('.accommodation-item').find('[name="start"]').val();
 	params.end              = $(this).closest('.accommodation-item').find('[name="end"]').val();
 
-	booking.addAccommodation(params, function success() {
+	booking.addAccommodation(params, function success(status) {
+		booking.store();
+		pageMssg(status, 'success');
 		drawBasket();
+		btn.html("Add");
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -1326,7 +1419,9 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 	params.accommodation_id = accommodation_id;
 	params.customer_id      = customer_id;
 
-	booking.removeAccommodation(params, function success() {
+	booking.removeAccommodation(params, function success(status) {
+		booking.store();
+		pageMssg(status, 'success');
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -1625,6 +1720,11 @@ function listGroupRadio(selector, additionalClass) {
 function friendlyDate(date) {
 	// return moment(date).format('DD/MM/YYYY HH:mm');
 	return moment(date).format('DD MMM YYYY HH:mm');
+}
+
+function friendlyDateNoTime(date) {
+	// return moment(date).format('DD/MM/YYYY HH:mm');
+	return moment(date).format('DD MMM YYYY');
 }
 
 function addTransaction() {
