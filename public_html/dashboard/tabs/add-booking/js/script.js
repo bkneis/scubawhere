@@ -1219,18 +1219,30 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	params.bookingdetail_id = $(this).data('bookingdetail-id');
 	params.addon_id         = $(this).data('id');
 
-	booking.removeAddon(params, function success(status, removedAddon) {
+	booking.removeAddon(params, function success(status, removedAddons) {
 		// If the addon was packaged, re-add it to the selected package (if it exists)
-		if(removedAddon.pivot.packagefacade_id) {
-			var relatedPackage = _.find(booking.selectedPackages, function(package) {
-				return package.packagefacade == removedAddon.pivot.packagefacade_id;
-			});
+		_.each(removedAddons, function(removedAddon) {
+			if(removedAddon.pivot.packagefacade_id) {
+				var relatedPackage = _.find(booking.selectedPackages, function(package) {
+					return package.packagefacade == removedAddon.pivot.packagefacade_id;
+				});
 
-			if(relatedPackage !== undefined) {
-				removedAddon.qty = 1;
-				relatedPackage.addons.push(removedAddon);
+				if(relatedPackage !== undefined) {
+					// Check if the addon already exists in the package
+					var existingAddon = _.find(relatedPackage.addons, function(addon) {
+						return removedAddon.id == addon.id;
+					});
 
-				updatePackagedAddonsList();
+					if(existingAddon !== undefined) {
+						existingAddon.qty++;
+					}
+					else {
+						removedAddon.qty = removedAddon.pivot.quantity;
+						relatedPackage.addons.push(removedAddon);
+					}
+
+					updatePackagedAddonsList();
+				}
 			}
 		}
 

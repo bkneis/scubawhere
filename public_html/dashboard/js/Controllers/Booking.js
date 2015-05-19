@@ -432,7 +432,7 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 				return detail.id == params.bookingdetail_id;
 			});
 
-			var removedAddon = _.find(detail.addons, function(addon) {
+			var removedAddons = _.filter(detail.addons, function(addon) {
 				return addon.id == params.addon_id;
 			});
 
@@ -442,10 +442,13 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
-			if(removedAddon.pivot.packagefacade_id !== null)
+			var notPackaged = _.find(removedAddons, function(addon) {
+				return addon.pivot.packagefacade_id === null;
+			});
+			if(notPackaged !== undefined)
 				this.calculateSums();
 
-			successFn(data.status, removedAddon);
+			successFn(data.status, removedAddons);
 		},
 		error: errorFn
 	});
