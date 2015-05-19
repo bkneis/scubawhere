@@ -88,14 +88,17 @@ class Booking extends Ardent {
 		return $this->decimal_price - $feeSum;
 	}
 
-	public function getArrivalDateAttribute() {
+	public function getArrivalDateAttribute($withoutAccommodations = false) {
 		$earliestDeparture = $this->departures()->orderBy('sessions.start', 'ASC')->first(array('sessions.*'));
 		if(!empty($earliestDeparture))
 			$earliestDeparture = new DateTime($earliestDeparture->start);
 
-		$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
-		if(!empty($earliestAccommodation))
-			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start);
+		if(!$withoutAccommodations)
+		{
+			$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
+			if(!empty($earliestAccommodation))
+				$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start);
+		}
 
 		// This is ugly!
 		// TODO Make it more elegant
