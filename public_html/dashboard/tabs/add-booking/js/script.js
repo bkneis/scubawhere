@@ -365,7 +365,7 @@ window.promises.loadedTickets.done(function() {
 
 		drawBasket();
 
-		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.courses[id].name + ' removed from basket.', 'success');
+		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.tickets[id].name + ' removed from basket.', 'success');
 
 		// If on trips screen, redraw session-ticket list
 		if($('#session-tab').hasClass('active'))
@@ -427,7 +427,7 @@ window.promises.loadedPackages.done(function() {
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
 
-		pageMssg('<i class="fa fa-ticket"></i> ' + window.tickets[id].name + ' removed from basket.', 'success');
+		pageMssg('<i class="fa fa-ticket"></i> ' + window.packages[id].name + ' removed from basket.', 'success');
 	});
 });
 
@@ -468,7 +468,7 @@ window.promises.loadedCourses.done(function() {
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
 
-		pageMssg('<i class="fa fa-tags"></i> ' + window.packages[id].name + ' removed from basket.', 'success');
+		pageMssg('<i class="fa fa-tags"></i> ' + window.courses[id].name + ' removed from basket.', 'success');
 	});
 });
 
