@@ -762,11 +762,14 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 
 		if(data.parent === 'course')
 			params.course_id = data.parentId;
+
+		params.type = data.type;
+
+		redrawSessionsList(params);
 	}
-
-	params.type = data.type;
-
-	redrawSessionsList(params);
+	else {
+		redrawSessionsList('This is a string'); // Hack? :P
+	}
 });
 
 $('#session-tab').on('click', '.assign-session', function() {
@@ -778,7 +781,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 	var $selected = $('#session-tickets').find('.active').first();
 	var data = $selected.data();
 
-	if(!data.id) {
+	if(!data || !data.id) {
 		pageMssg('Please select a ticket or class.', 'warning');
 		btn.html('Assign');
 		return false;
@@ -1026,7 +1029,13 @@ function drawSessionTicketsList() {
 	$list.html(sessionTicketsTemplate({tickets:booking.selectedTickets}));
 	$list.append(sessionPackagesTemplate({packages:booking.selectedPackages}));
 	$list.append(sessionCoursesTemplate({courses:booking.selectedCourses}));
+
 	$list.find('.list-group-item').first().addClass('active').click();
+
+	// If the list is empty, submit the filter form anyway to show "the note"
+	if($list.find('.list-group-item').length < 1) {
+		$('#session-filters').submit();
+	}
 }
 
 $('#booking-summary').on('click', '.unassign-session', function() {
@@ -1521,6 +1530,15 @@ function redrawSessionsList(params) {
 
 	if(typeof(params) === 'undefined') params = "";
 
+	if(typeof(params) === 'string') {
+		// Render empty list with a note saying someting like "Your search did not match any trips."
+		// TODO Maybe make this note more related to the actual error?
+		$("#sessions-table tbody").html(sessionsTemplate({sessions: []}));
+		$("#sessions-table tbody").css('opacity', 1);
+		$('#session-filters [type=submit]').html('Filter');
+		return;
+	}
+
 	// First, make the list opaque so the user knows that it should not be clicked
 	$("#sessions-table tbody").css('opacity', 0.3);
 
@@ -1537,7 +1555,8 @@ function redrawSessionsList(params) {
 		else {
 			window.training_sessions = _.indexBy(data, 'id');
 		}
-			$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
+
+		$("#sessions-table tbody").html(sessionsTemplate({sessions:data}));
 		$("#sessions-table tbody").css('opacity', 1);
 
 		if(params.type === 'ticket') {
