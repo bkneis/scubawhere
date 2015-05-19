@@ -1118,7 +1118,7 @@ $('#addon-tab').on('click', '#packaged-addons-list-container .list-group-item', 
 		var addonPackagefacadeId = $('#packaged-addons-list-container .active').data('packagefacadeId');
 		// Filter booked trips and display the ones that are in the same package as the clicked addon
 		var eligableDetails = _.filter(booking.bookingdetails, function(detail) {
-			return (detail.packagefacade && detail.packagefacade.id === addonPackagefacadeId && detail.training_session === null)
+			return (detail.packagefacade && detail.packagefacade.id === addonPackagefacadeId && detail.training_session === null);
 		});
 
 		// Fetch currently selected detail ID
@@ -1244,7 +1244,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 					updatePackagedAddonsList();
 				}
 			}
-		}
+		});
 
 		pageMssg(status, 'success');
 
