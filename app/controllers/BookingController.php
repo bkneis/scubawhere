@@ -1510,9 +1510,8 @@ class BookingController extends Controller {
 
 		// Don't need to check if accommodation belongs to company because detaching wouldn't throw an error if it's not there in the first place.
 		$booking->accommodations()
-			->where('id', Input::get('accommodation_id') )
 			->wherePivot('customer_id', Input::get('customer_id'))
-			->detach();
+			->detach(Input::get('accommodation_id'));
 
 		// Update booking price
 		$booking->updatePrice();
