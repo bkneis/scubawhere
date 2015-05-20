@@ -7,7 +7,9 @@
         <h4 class="panel-title">Social Media Stats</h4>
       </div>
       <div style="min-height:250px;" class="panel-body">
-        <div id="social-media-stats"></div>
+        <!-- <div id="social-media-stats"></div> -->
+        <h5>Social Media integration is coming soon</h5>
+        Keep an eye on this space!
       </div>
     </div>
   </div>
@@ -121,11 +123,11 @@
     </div>
   </script>
 
-  <script type="text/x-handlebars-template" id="social-media-template">
+  <!-- <script type="text/x-handlebars-template" id="social-media-template">
       {{#each facebook}}
         <p><span style="font-weight:bold; font-size:22px">{{data}}</span> {{title}}</p>
       {{/each}}
-  </script>
+  </script> -->
 
   <script type="text/x-handlebars-template" id="setup-wizard">
     <div class="col-md-7">

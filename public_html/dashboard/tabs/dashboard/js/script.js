@@ -3,7 +3,7 @@ window.todayBookings;
 window.tourStart;
 var todaySession;
 var customerDetails;
-var socialMedia;
+// var socialMedia;
 window.currentStep;
 
 Handlebars.registerHelper('getTime', function(obj){
@@ -45,7 +45,7 @@ $(function () {
 		});
 	});
 
-	if(window.facebook.status == "connected") {
+	/* if(window.facebook.status == "connected") {
 		socialMedia = Handlebars.compile($('#social-media-template').html());
 		FB.api(
         "/292265320876159/insights",
@@ -54,7 +54,7 @@ $(function () {
         },
         function (response) {
           if (response && !response.error) {
-            console.log(response); 
+            console.log(response);
             window.facebook.stats = [
               {title : response.data[1].title, data : response.data[1].values[2].value},
               {title : response.data[54].title, data : response.data[54].values[2].value},
@@ -66,7 +66,7 @@ $(function () {
     );
 	} else {
 		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
-	}
+	} */
 
 	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
@@ -109,7 +109,7 @@ $(function () {
 	todaySession = Handlebars.compile($('#today-session-template').html());
 	Session.getToday(function success(data){
 		window.todaySessions = _.indexBy(data, 'id');
-		console.log(data);
+		// console.log(data);
 		$('#sessions-list').append( todaySession( {sessions : data} ) );
 		//getAllLocations(data);
 		for(var i =0; i < data.length; i++) {
