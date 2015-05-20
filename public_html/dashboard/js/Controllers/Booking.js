@@ -319,6 +319,11 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
+
+			var removedDetail = _.find(this.bookingdetails, function(detail) {
+				return detail.id == params.bookingdetail_id;
+			});
+
 			this.bookingdetails = _.reject(this.bookingdetails, function(detail) {
 				return detail.id == params.bookingdetail_id;
 			});
@@ -327,7 +332,7 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 
 			this.calculateSums();
 
-			successFn(data.status);
+			successFn(data.status, removedDetail);
 		},
 		error: errorFn
 	});

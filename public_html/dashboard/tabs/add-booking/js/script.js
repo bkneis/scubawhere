@@ -1047,10 +1047,9 @@ function drawSessionTicketsList() {
 			$(this).find('.accordion-heading').click();
 		});
 	}
-	else {
-		// If the list is empty, submit the filter form anyway to show "the note"
-		$('#session-filters').submit();
-	}
+
+	// If the list is empty, submit the filter form anyway to show "the note"
+	$('#session-filters').submit();
 }
 
 $('#booking-summary').on('click', '.unassign-session', function() {
@@ -1061,12 +1060,115 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 	params._token           = window.token;
 	params.bookingdetail_id = $(this).data('id');
 
-	booking.removeDetail(params, function success() {
-		// var params = $("#session-filters").serializeObject();
-		// if( $('#session-tickets .active').length !== 0 )
-		// 	params.ticket_id = $('#session-tickets .active').first().data('id');
+	booking.removeDetail(params, function success(status, detail) {
+		// Re-add a removed item to selectedTickets/selectedCourses/selectedPackages
+		do { // Enclose the whole procedure in a one-time do-while loop to be able to "break" out of it at any time.
+			if(!detail.packagefacade) {
+				// Not packaged
+				if(!detail.course && detail.ticket) {
+					// Is standalone ticket
+					if(booking.selectedTickets[detail.ticket.id]) {
+						booking.selectedTickets[detail.ticket.id].qty++;
+					}
+					else {
+						detail.ticket.qty = 1;
+						booking.selectedTickets[detail.ticket.id] = detail.ticket;
+					}
+				}
+				else {
+					// Is course
+					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
 
-		// redrawSessionsList(params);
+					var relatedCourse = _.find(booking.selectedCourses, function(course) {
+						return course.identifier === identifier;
+					});
+
+					if(relatedCourse === undefined) break;
+
+					if(detail.ticket) {
+						// Is ticket in course
+						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
+							return ticket.id == detail.ticket.id;
+						});
+
+						if(existingTicket !== undefined)
+							existingTicket.qty++;
+						else {
+							detail.ticket.qty = 1;
+							relatedCourse.tickets.push(detail.ticket);
+						}
+					}
+					else {
+						// Is class in course
+						if(relatedCourse.training) {
+							// training object exists
+							relatedCourse.training.qty++;
+						}
+						else {
+							detail.training_session.training.qty = 1;
+							relatedCourse.training = detail.training_session.training;
+						}
+					}
+				}
+			}
+			else {
+				// Is packaged
+				var relatedPackage = _.find(booking.selectedPackages, function(package) {
+					return package.packagefacade == detail.packagefacade.id;
+				});
+
+				if(relatedPackage === undefined) break;
+
+				if(!detail.course && detail.ticket) {
+					// Is packaged ticket
+					var existingTicket = _.find(relatedPackage.tickets, function(ticket) {
+						return ticket.id == detail.ticket.id;
+					});
+
+					if(existingTicket !== undefined)
+						existingTicket.qty++;
+					else {
+						detail.ticket.qty = 1;
+						relatedPackage.tickets.push(detail.ticket);
+					}
+				}
+				else {
+					// Is course
+					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
+
+					var relatedCourse = _.find(relatedPackage.courses, function(course) {
+						return course.identifier === identifier;
+					});
+
+					if(relatedCourse === undefined) break;
+
+					if(detail.ticket) {
+						// Is ticket in course in package
+						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
+							return ticket.id == detail.ticket.id;
+						});
+
+						if(existingTicket !== undefined)
+							existingTicket.qty++;
+						else {
+							detail.ticket.qty = 1;
+							relatedCourse.tickets.push(detail.ticket);
+						}
+					}
+					else {
+						// Is class in course in package
+						if(relatedCourse.training) {
+							// training object exists
+							relatedCourse.training.qty++;
+						}
+						else {
+							detail.training_session.training.qty = 1;
+							relatedCourse.training = detail.training_session.training;
+						}
+					}
+				}
+			}
+		} while(false);
 
 		booking.store();
 
