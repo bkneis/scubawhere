@@ -417,15 +417,29 @@ class Booking extends Ardent {
 		// Sum up all accommodations that are not part of a package
 		$accommodations = $this->accommodations;
 
-		$accommodations->each(function($accommodation) use (&$sum)
+		$accommodations->each(function($accommodation) use (&$sum, &$tickedOffPackagefacades)
 		{
+			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
+
 			if(empty($accommodation->pivot->packagefacade_id))
 			{
-				$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
-
-
 				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 				$sum += $accommodation->decimal_price;
+			}
+			elseif(!in_array($accommodation->pivot->packagefacade_id, $tickedOffPackagefacades)) {
+				// Add the packagefacadeID to the array so it is not summed/counted again in the next bookingdetails
+				$tickedOffPackagefacades[] = $accommodation->pivot->packagefacade_id;
+
+				$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $accommodation->pivot->packagefacade_id)->get();
+				$firstAccommodation = $accommodations->sortBy(function($accommodation)
+				{
+					return $accommodation->pivot->start;
+				})->first();
+
+				// Calculate the package price at this first departure datetime and sum it up
+				$packagefacade = Packagefacade::find($accommodation->pivot->packagefacade_id);
+				$packagefacade->package->calculatePrice($firstAccommodation->pivot->start, $limitBefore);
+				$sum += $packagefacade->package->decimal_price;
 			}
 		});
 
