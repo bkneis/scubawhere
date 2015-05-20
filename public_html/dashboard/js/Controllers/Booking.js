@@ -482,7 +482,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 				start: params.start,
 				end: params.end,
 				customer_id: params.customer_id,
-				packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
+				packagefacade_id: data.packagefacade_id ? data.packagefacade_id : null,
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
@@ -495,7 +495,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			if(!params.packagefacade_id)
 				this.calculateSums();
 
-			successFn(data.status);
+			successFn(data.status, data.packagefacade_id);
 		},
 		error: errorFn
 	});

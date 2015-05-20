@@ -1354,9 +1354,21 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 	params.customer_id      = $('#accommodation-customers').children('.active').first().data('id');
 	params.start            = $(this).closest('.accommodation-item').find('[name="start"]').val();
 	params.end              = $(this).closest('.accommodation-item').find('[name="end"]').val();
+	params.package_id       = booking.selectedPackages[btn.data('packageUid')].id;
 	params.packagefacade_id = btn.data('packagefacadeId');
 
-	booking.addAccommodation(params, function success(status) {
+	booking.addAccommodation(params, function success(status, packagefacade_id) {
+
+		if(packagefacade_id) {
+			// If a packagefacade_id already exists, validate that they are the same
+			if(params.packagefacade_id && params.packagefacade_id != packagefacade_id) {
+				pageMssg('<b>ERROR: UNDEFINED BEHAVIOR</b> Submitted and returned packagefacade_id do not match!', 'danger', true);
+				return false;
+			}
+
+			booking.selectedPackages[btn.data('packageUid')].packagefacade = packagefacade_id;
+		}
+
 		// Reduce qty
 		for(var i = 0; i < booking.selectedPackages[btn.data('packageUid')].accommodations.length; i++) {
 			if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].id == params.accommodation_id) {

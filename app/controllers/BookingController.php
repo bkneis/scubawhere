@@ -1171,6 +1171,10 @@ class BookingController extends Controller {
 			if(!$exists)
 				return Response::json(['errors' => ['This addon can not be booked as part of this package.']], 403); // 403 Forbidden
 
+			// Validate that the bookingdetail is in the same package as the addon
+			if($bookingdetail->packagefacade_id !== $packagefacade->id)
+				return Response::json(['errors' => ['This addon can not be booked for this trip, as the trip is not in the same package.']], 403); // 403 Forbidden
+
 			// Check if the package still has space for the wanted addon
 			$bookedAddonsQuantity = $addon->bookingdetails()
 				->wherePivot('packagefacade_id', $packagefacade->id)
@@ -1283,6 +1287,7 @@ class BookingController extends Controller {
 		 * start
 		 * end
 		 *
+		 * package_id (optional)
 		 * packagefacade_id (optional)
 		 */
 
@@ -1363,10 +1368,34 @@ class BookingController extends Controller {
 			}
 			catch(ModelNotFoundException $e)
 			{
-				return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+				// When the packagefacade is not found via the booking, it may be the situation where a packaged detail has been assigned but then un-assigned, thus leaving the packagefacade in the DB, but making it unaccessible from the booking.
+				// We thus have to look for it via the company and supplied package_id
+				try
+				{
+					$packagefacade = Auth::user()
+						->packages()->findOrFail( Input::get('package_id') )
+						->packagefacades()->findOrFail( Input::get('packagefacade_id') );
+				}
+				catch(ModelNotFoundException $e)
+				{
+					return Response::json( array('errors' => array('The packagefacade could not be found.')), 404 ); // 404 Not Found
+				}
 			}
 
 			$package = $packagefacade->package()->with('addons')->first();
+		}
+		elseif( Input::has('package_id') )
+		{
+			try
+			{
+				$package = Auth::user()->packages()->with('addons')->findOrFail( Input::get('package_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+			}
+
+			$packagefacade = false;
 		}
 		else
 		{
@@ -1417,6 +1446,13 @@ class BookingController extends Controller {
 		}
 		while( $current_date < $end_date );
 
+		// If packaged, check if packagefacade_id is provided and if not, create one
+		if($package && !$packagefacade)
+		{
+			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
+			$packagefacade->save();
+		}
+
 		$pivotData = array('customer_id' => $customer->id, 'start' => $start, 'end' => $end);
 		if($packagefacade)
 			$pivotData['packagefacade_id'] = $packagefacade->id;
@@ -1431,8 +1467,11 @@ class BookingController extends Controller {
 
 		return array(
 			'status'                      => 'OK. Accommodation added.',
+
 			'decimal_price'               => $booking->decimal_price,
-			'accommodation_decimal_price' => !$package ? $accommodation->decimal_price : null
+			'accommodation_decimal_price' => !$package ? $accommodation->decimal_price : false,
+
+			'packagefacade_id'            => $packagefacade ? $packagefacade->id : false
 		);
 	}
 
