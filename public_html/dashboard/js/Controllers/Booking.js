@@ -477,7 +477,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			var accommodation = window.accommodations[params.accommodation_id];
+			var accommodation = $.extend(true, {}, window.accommodations[params.accommodation_id]);
 			accommodation.pivot = {
 				start: params.start,
 				end: params.end,
@@ -522,9 +522,9 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			var packaged = _.find(this.accommodations, function(accommodation) {
+			var removedAccommodations = _.filter(this.accommodations, function(accommodation) {
 				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
-			}).pivot.packagefacade_id !== null;
+			});
 
 			this.accommodations = _.reject(this.accommodations, function(accommodation) {
 				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
@@ -532,10 +532,13 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 
 			this.decimal_price = data.decimal_price;
 
-			if(!packaged)
+			var notPackaged = _.find(removedAccommodations, function(accommodation) {
+				return accommodation.pivot.packagefacade_id === null;
+			});
+			if(notPackaged !== undefined)
 				this.calculateSums();
 
-			successFn(data.status);
+			successFn(data.status, removedAccommodations);
 		},
 		error: errorFn
 	});

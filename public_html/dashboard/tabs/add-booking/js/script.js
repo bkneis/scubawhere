@@ -771,7 +771,7 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 		redrawSessionsList(params);
 	}
 	else {
-		redrawSessionsList('This is a string'); // Hack? :P
+		redrawSessionsList('This string makes the session list show the "Your search did not match any trips." message.'); // Hack? :P
 	}
 });
 
@@ -1219,7 +1219,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 
 	var params = {};
 	params._token           = window.token;
-	params.bookingdetail_id = $(this).data('bookingdetail-id');
+	params.bookingdetail_id = $(this).data('bookingdetailId');
 	params.addon_id         = $(this).data('id');
 
 	booking.removeAddon(params, function success(status, removedAddons) {
@@ -1237,7 +1237,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 					});
 
 					if(existingAddon !== undefined) {
-						existingAddon.qty++;
+						existingAddon.qty += removedAddon.pivot.quantity;
 					}
 					else {
 						removedAddon.qty = removedAddon.pivot.quantity;
@@ -1340,8 +1340,23 @@ function updatePackagedAccommodationsList() {
 		return package.accommodations && package.accommodations.length > 0;
 	});
 
-	if(packagedAccommodationsExist !== undefined)
+	if(packagedAccommodationsExist !== undefined) {
 		$("#packaged-accommodations-list-container").html(packagedAccommodationsListTemplate({packages: booking.selectedPackages}));
+
+		// Find first bookingdetail departure date
+		var firstDepartureDate = _.first(
+			_.map(booking.bookingdetails, function(detail) {
+				if(detail.session !== null)
+					return detail.session.start;
+				else
+					return detail.training_session.start;
+			}).sort()
+		);
+
+		// Set all accommodations' start fields
+		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+		$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
+	}
 }
 
 $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
@@ -1424,14 +1439,43 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
 	var accommodation_id = $(this).data('id');
-	var customer_id      = $(this).data('customer-id');
+	var customer_id      = $(this).data('customerId');
 
 	var params = {};
 	params._token           = window.token;
 	params.accommodation_id = accommodation_id;
 	params.customer_id      = customer_id;
 
-	booking.removeAccommodation(params, function success(status) {
+	booking.removeAccommodation(params, function success(status, removedAccommodations) {
+		// If the accommodation was packaged, re-add it to the selected package (if it exists)
+		_.each(removedAccommodations, function(removedAccommodation) {
+			if(removedAccommodation.pivot.packagefacade_id) {
+				var relatedPackage = _.find(booking.selectedPackages, function(package) {
+					return package.packagefacade == removedAccommodation.pivot.packagefacade_id;
+				});
+
+				if(relatedPackage !== undefined) {
+					// Check if the accommodations already exists in the package
+					var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
+						return removedAccommodation.id == accommodations.id;
+					});
+
+					// Calculate how many nights got removed
+					var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
+
+					if(existingAccommodation !== undefined) {
+						existingAccommodation.qty += quantity;
+					}
+					else {
+						removedAccommodation.qty = quantity;
+						relatedPackage.accommodations.push(removedAccommodation);
+					}
+
+					updatePackagedAccommodationsList();
+				}
+			}
+		});
+
 		booking.store();
 		pageMssg(status, 'success');
 		drawBasket();
