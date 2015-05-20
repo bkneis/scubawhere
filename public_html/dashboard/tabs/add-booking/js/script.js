@@ -352,7 +352,7 @@ window.promises.loadedTickets.done(function() {
 
 		//Draw the basket
 		drawBasket();
-		pageMssg('<i class="fa fa-ticket"></i> ' + window.tickets[id].name + ' added to basket.', 'success');
+		pageMssg('<b>' + window.tickets[id].name + '</b> added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-ticket', function() {
@@ -369,7 +369,7 @@ window.promises.loadedTickets.done(function() {
 
 		drawBasket();
 
-		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.tickets[id].name + ' removed from basket.', 'success');
+		pageMssg('<b>' + window.tickets[id].name + '</b> removed from basket.', 'success');
 
 		// If on trips screen, redraw session-ticket list
 		if($('#session-tab').hasClass('active'))
@@ -408,11 +408,12 @@ window.promises.loadedPackages.done(function() {
 
 		drawBasket();
 
-		pageMssg('<i class="fa fa-tags"></i> ' + window.packages[id].name + ' added to basket.', 'success');
+		pageMssg('<b>' + window.packages[id].name + '</b> added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-package', function() {
 		var UID = $(this).data('uid');
+		var id  = booking.selectedPackages[UID].id;
 
 		if(!UID) {
 			pageMssg('<b>ERROR</b> Could not find package UID on click element!');
@@ -430,7 +431,7 @@ window.promises.loadedPackages.done(function() {
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
 
-		pageMssg('<i class="fa fa-ticket"></i> ' + window.packages[id].name + ' removed from basket.', 'success');
+		pageMssg('<b>' + window.packages[id].name + '</b> removed from basket.', 'success');
 	});
 });
 
@@ -449,11 +450,12 @@ window.promises.loadedCourses.done(function() {
 		//Draw the basket
 		drawBasket();
 
-		pageMssg('<i class="fa fa-graduation-cap"></i> ' + window.courses[id].name + ' added to basket.', 'success');
+		pageMssg('<b>' + window.courses[id].name + '</b> added to basket.', 'success');
 	});
 
 	$('#booking-summary').on('click', '.remove-course', function() {
 		var UID = $(this).data('uid');
+		var id  = booking.selectedCourses[UID].id;
 
 		if(!UID) {
 			pageMssg('<b>ERROR</b> Could not find course UID on click element!');
@@ -471,7 +473,7 @@ window.promises.loadedCourses.done(function() {
 		if($('#session-tab').hasClass('active'))
 			drawSessionTicketsList();
 
-		pageMssg('<i class="fa fa-tags"></i> ' + window.courses[id].name + ' removed from basket.', 'success');
+		pageMssg('<b>' + window.courses[id].name + '</b> removed from basket.', 'success');
 	});
 });
 
@@ -1046,7 +1048,7 @@ function drawSessionTicketsList() {
 		});
 	}
 	else {
-	// If the list is empty, submit the filter form anyway to show "the note"
+		// If the list is empty, submit the filter form anyway to show "the note"
 		$('#session-filters').submit();
 	}
 }
