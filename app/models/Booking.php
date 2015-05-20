@@ -93,22 +93,41 @@ class Booking extends Ardent {
 		if(!empty($earliestDeparture))
 			$earliestDeparture = new DateTime($earliestDeparture->start);
 
+		$earliestClass = $this->training_sessions()->orderBy('training_sessions.start', 'ASC')->first(array('training_sessions.*'));
+		if(!empty($earliestClass))
+			$earliestClass = new DateTime($earliestClass->start);
+
 		$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
 		if(!empty($earliestAccommodation))
 			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start);
 
 		// This is ugly!
 		// TODO Make it more elegant
-		if(empty($earliestDeparture) && empty($earliestAccommodation))
+		if(empty($earliestDeparture) && empty($earliestClass) && empty($earliestAccommodation))
 			return null;
 
-		if(empty($earliestDeparture))
+		if(empty($earliestDeparture) && empty($earliestClass))
 			return $earliestAccommodation->format('Y-m-d');
 
-		if(empty($earliestAccommodation))
+		if(empty($earliestAccommodation) && empty($earliestClass))
 			return $earliestDeparture->format('Y-m-d');
 
-		return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
+		if(empty($earliestDeparture) && empty($earliestAccommodation))
+			return $earliestClass->format('Y-m-d');
+
+		if(empty($earliestDeparture))
+			return $earliestAccommodation < $earliestClass ? $earliestAccommodation->format('Y-m-d') : $earliestClass->format('Y-m-d');
+
+		if(empty($earliestAccommodation))
+			return $earliestClass < $earliestDeparture ? $earliestClass->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
+
+		if(empty($earliestClass))
+			return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
+
+		// If all three dates are represented, compare all three after another
+		$tmp = $earliestAccommodation < $earliestDeparture ? $earliestAccommodation : $earliestDeparture;
+
+		return $tmp < $earliestClass ? $tmp->format('Y-m-d') : $earliestClass->format('Y-m-d');
 	}
 
 	public function getCreatedAtLocalAttribute() {
@@ -258,6 +277,11 @@ class Booking extends Ardent {
 	public function tickets()
 	{
 		return $this->belongsToMany('Ticket', 'booking_details');
+	}
+
+	public function training_sessions()
+	{
+		return $this->belongsToMany('TrainingSession', 'booking_details', 'booking_id', 'training_session_id')->withTimestamps();
 	}
 
 	public function payments()

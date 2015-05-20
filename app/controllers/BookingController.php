@@ -833,7 +833,6 @@ class BookingController extends Controller {
 		{
 			// Check if the course still has space for the wanted class
 			$bookedTrainingsQuantity = $course->bookingdetails()
-				->where('course_id', $course->id)
 				->where('customer_id', $customer->id)
 				->where('booking_id', $booking->id)
 				->whereNotNull('training_session_id')
