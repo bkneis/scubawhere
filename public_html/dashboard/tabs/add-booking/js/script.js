@@ -1033,10 +1033,20 @@ function drawSessionTicketsList() {
 	$list.append(sessionPackagesTemplate({packages:booking.selectedPackages}));
 	$list.append(sessionCoursesTemplate({courses:booking.selectedCourses}));
 
-	$list.find('.list-group-item').first().addClass('active').click();
+	var firstItem = $list.find('.list-group-item').first();
 
+	if(firstItem.length > 0) {
+		firstItem.addClass('active').click();
+
+		// Open the containers that contain the firstItem
+		var panels = firstItem.parentsUntil('.panel-default', '.panel');
+
+		panels.each(function() {
+			$(this).find('.accordion-heading').click();
+		});
+	}
+	else {
 	// If the list is empty, submit the filter form anyway to show "the note"
-	if($list.find('.list-group-item').length < 1) {
 		$('#session-filters').submit();
 	}
 }
@@ -1681,7 +1691,7 @@ $(document).ready(function() {
 		listGroupRadio($(this));
 	});
 
-	$('#booking-summary').on('click', '.accordian-heading', function() {
+	$('#booking-summary').on('click', '.accordion-heading', function() {
 		if($(this).find('.expand-icon').hasClass('fa-plus-square-o')) {
 			$(this).find('.expand-icon').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
 		}else{

@@ -49,7 +49,7 @@
 				<div class="panel panel-warning">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
+							<a class="accordion-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
 								<i class="fa fa-tags fa-fw"></i>&nbsp;
 								{{{name}}}
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
@@ -64,7 +64,7 @@
 										<div class="panel panel-info">
 											<div class="panel-heading" role="tab">
 												<h4 class="panel-title">
-													<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
+													<a class="accordion-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
 														<i class="fa fa-graduation-cap fa-fw"></i>&nbsp;
 														{{{name}}}
 														<i class="fa fa-plus-square-o expand-icon pull-right"></i>
@@ -122,7 +122,7 @@
 					<div class="panel panel-info">
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
-								<a class="accordian-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
+								<a class="accordion-heading" data-toggle="collapse" href="#booking-ticket-list-{{UID}}">
 									<i class="fa fa-graduation-cap fa-fw"></i>&nbsp;
 									{{{name}}}
 									<i class="fa fa-plus-square-o expand-icon pull-right"></i>

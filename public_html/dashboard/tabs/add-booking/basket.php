@@ -37,7 +37,7 @@
 				<div class="panel panel-warning">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
+							<a class="accordion-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
 								<i class="fa fa-tags fa-fw"></i>&nbsp; {{{name}}}
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 							</a>
@@ -91,7 +91,7 @@
 				<div class="panel panel-info">
 					<div class="panel-heading" role="tab">
 						<h4 class="panel-title">
-							<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
+							<a class="accordion-heading" data-toggle="collapse" href="#booking-summary-{{UID}}">
 								<i class="fa fa-graduation-cap fa-fw"></i>&nbsp; {{{name}}}
 								<i class="fa fa-plus-square-o expand-icon pull-right"></i>
 							</a>
@@ -145,7 +145,7 @@
 					<div class="panel panel-default">
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
-								<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-trips" href="#booking-summary-trips-{{id}}">
+								<a class="accordion-heading" data-toggle="collapse" data-parent="#booking-summary-trips" href="#booking-summary-trips-{{id}}">
 									{{#if session}}
 										<i class="fa fa-ship fa-fw visible-lg-inline-block"></i>
 									{{/if}}
@@ -198,7 +198,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab">
 											<h4 class="panel-title">
-												<a class="accordian-heading" data-toggle="collapse" href="#booking-summary-addons-{{../id}}">
+												<a class="accordion-heading" data-toggle="collapse" href="#booking-summary-addons-{{../id}}">
 													<i class="fa fa-cubes fa-fw"></i>&nbsp; Addons <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 												</a>
 											</h4>
@@ -241,7 +241,7 @@
 					<div class="panel panel-default">
 						<div class="panel-heading" role="tab">
 							<h4 class="panel-title">
-								<a class="accordian-heading" data-toggle="collapse" data-parent="#booking-summary-accommodation" href="#booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}">
+								<a class="accordion-heading" data-toggle="collapse" data-parent="#booking-summary-accommodation" href="#booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}">
 									<i class="fa fa-bed fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
