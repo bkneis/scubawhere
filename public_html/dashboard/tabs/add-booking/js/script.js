@@ -1396,14 +1396,19 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 			booking.selectedPackages[btn.data('packageUid')].packagefacade = packagefacade_id;
 		}
 
+		// Calculate how many nights where booked
+		var quantity = moment(params.end).diff(moment(params.start), 'days');
+
 		// Reduce qty
 		for(var i = 0; i < booking.selectedPackages[btn.data('packageUid')].accommodations.length; i++) {
 			if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].id == params.accommodation_id) {
-				booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty--;
+				booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty -= quantity;
 
 				// Check if qty is now 0, and if so remove the accommodation from the array
 				if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty === 0)
 					booking.selectedPackages[btn.data('packageUid')].accommodations.splice(i, 1);
+
+				break;
 			}
 		}
 
