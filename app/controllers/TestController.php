@@ -2,6 +2,12 @@
 
 class TestController extends Controller {
 
+	public function getTime()
+	{
+		phpinfo();
+		dd(date('Y-m-d H:i:s'));
+	}
+
 	/*
 	public function getRegister()
 	{
