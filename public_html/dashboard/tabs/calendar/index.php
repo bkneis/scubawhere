@@ -188,7 +188,7 @@
 					</tr>
 					<tr>
 						<td><strong>Number of students</strong></td>
-						<td>{{session.capacity.[0]}} out of {{session.capacity.[1]}}</td>
+						<td>{{session.capacity.[0]}}</td>
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>

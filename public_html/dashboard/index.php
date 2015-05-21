@@ -103,7 +103,7 @@ $PROTOCOL = 'http';
 		<script type="text/javascript">
 			// Set scubawhere namespace
 			window.sw = {};
-			// window.facebook = {};
+			window.facebook = {};
 		</script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/ui.js"></script>
@@ -141,8 +141,8 @@ $PROTOCOL = 'http';
 
 </head>
 <body>
-<!-- <script type="text/javascript" src="js/social-media.js"></script>
-<div id="fb-root"></div> -->
+<script type="text/javascript" src="js/social-media.js"></script>
+<div id="fb-root"></div>
 	<div id="nav">
 		<div id="nav-wrapper">
 			<h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>

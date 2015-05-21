@@ -30,6 +30,21 @@
     FB.getLoginStatus(function(response) {
       statusChangeCallback(response);
     });
+    FB.api(
+        "/292265320876159/insights",
+        {
+          'period' : 'week'
+        },
+        function (response) {
+          if (response && !response.error) {
+             window.facebook.stats = [
+              {title : response.data[1].title, data : response.data[1].values[2].value},
+              {title : response.data[54].title, data : response.data[54].values[2].value},
+              {title : response.data[29].title, data : response.data[29].values[2].value}
+            ];
+          }
+        }
+    );
   }
 
   window.fbAsyncInit = function() {
