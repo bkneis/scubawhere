@@ -1398,6 +1398,15 @@ class BookingController extends Controller {
 		if($start->diff($now)->format('%R%a') > 1 || $end->diff($now)->format('%R%a') > 1)
 			return Response::json(['errors' => ['The start date can only be a maximum of 1 day ago.']], 400); // 400 Bad Request
 
+		// Validate that the accommodation has not already been booked by the customer for the same day within the booking
+		$alreadyBooked = $booking->accommodations()
+			->wherePivot('customer_id', $customer->id)
+			->wherePivot('start', Input::get('start'))
+			->where('id', $accommodation->id)
+			->exists();
+		if($alreadyBooked)
+			return Response::json( array('errors' => array('Cannot add accommodation, because the customer is already booked on it for this start day.')), 403 ); // 403 Forbidden
+
 		if( Input::has('packagefacade_id') )
 		{
 			try
