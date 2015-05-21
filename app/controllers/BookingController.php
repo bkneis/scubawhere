@@ -1433,7 +1433,8 @@ class BookingController extends Controller {
 				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
 			}
 
-			$packagefacade = false;
+			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
+			$packagefacade->save();
 		}
 		else
 		{
@@ -1453,13 +1454,10 @@ class BookingController extends Controller {
 
 			// TODO Sum up all nights that have been booked in this package already
 			$alreadyBookedNights = 0;
-			/*$alreadyBookedNights = $accommodation->bookings()
+			$alreadyBookedNights = $booking->accommodations()
 				->wherePivot('packagefacade_id', $packagefacade->id)
-				->whereHas('booking', function($query) use ($booking)
-				{
-					$query->where('id', $booking->id);
-				})
-				->sum('addon_bookingdetail.quantity');*/
+				->where('id', $accommodation->id)
+				->sum(DB::raw('DATEDIFF(end, start)'));
 
 			if(($alreadyBookedNights + $numberOfNights) > $package->accommodations()->where('id', $accommodation->id)->first()->pivot->quantity)
 				return Response::json(['errors' => ['The accommodation cannot be booked because the package\'s limit for the accommodation would be exceeded.']], 403 ); // Forbidden
@@ -1483,13 +1481,6 @@ class BookingController extends Controller {
 			$current_date->add( new DateInterval('P1D') );
 		}
 		while( $current_date < $end_date );
-
-		// If packaged, check if packagefacade_id is provided and if not, create one
-		if($package && !$packagefacade)
-		{
-			$packagefacade = new Packagefacade( array('package_id' => $package->id) );
-			$packagefacade->save();
-		}
 
 		$pivotData = array('customer_id' => $customer->id, 'start' => $start, 'end' => $end);
 		if($packagefacade)
