@@ -126,6 +126,10 @@ Handlebars.registerHelper('UID', function() {
 	return this.UID;
 });
 
+Handlebars.registerHelper('real_decimal_price', function() {
+	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
@@ -1644,8 +1648,43 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 *************************
 */
 
+var extraInfoTemplate = Handlebars.compile($("#extra-info-template").html());
+
+Handlebars.registerHelper('discountPercentage', function() {
+
+})
+
 $('[data-target="#extra-tab"]').on('show.bs.tab', function () {
+	updateExtraInfoPanel();
+	$('#discount').change();
 });
+
+function updateExtraInfoPanel() {
+	$('#extra-info-container').html(extraInfoTemplate(booking));
+
+	$('#extra-info-container .datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+
+	$('#extra-info-container .timepicker').datetimepicker({
+		pickDate: false,
+		pickTime: true,
+		minuteStepping: 5,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+}
 
 $('#extra-tab').on('submit', '#extra-form', function(e) {
 	e.preventDefault();
