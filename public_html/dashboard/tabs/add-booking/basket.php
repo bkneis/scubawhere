@@ -182,7 +182,7 @@
 
 								{{#if session}}
 									<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
-									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}}</p>
+									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate session.start}} - {{tripFinish session.start session.trip.duration}}</p>
 									{{#unless packagefacade}}{{#unless course}}
 										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{ticket.decimal_price}}</p>
 									{{/unless}}{{/unless}}

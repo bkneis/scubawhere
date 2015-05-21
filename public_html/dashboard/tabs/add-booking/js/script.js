@@ -40,7 +40,15 @@ function generateFreeSpacesBar(capacity, id) {
 }
 
 Handlebars.registerHelper("tripFinish", function(start, duration) {
-	return friendlyDate( moment(start).add(duration, 'hours') );
+	startDate = friendlyDate(start);
+	endDate   = friendlyDate( moment(start).add(duration, 'hours') );
+
+	if(startDate.substr(0, 11) === endDate.substr(0, 11))
+		// Only return the time, if the date is the same
+		return endDate.substr(12);
+	else
+		// Only return the date and the Month (and time)
+		return endDate.substr(0, 6) + ' ' + endDate.substr(12);
 });
 
 Handlebars.registerHelper("friendlyDate", function(date) {
@@ -117,6 +125,10 @@ Handlebars.registerHelper('UID', function() {
 	this.UID = randomString();
 	return this.UID;
 });
+
+/* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
+	return (parseFloat(decimal_price) * quantity).toFixed(2);
+}); */
 
 // Load all initial handlebars templates
 
