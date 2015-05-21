@@ -122,6 +122,11 @@ $PROTOCOL = 'http';
 				$('.username').text(window.company.name);
 			});
 		});
+
+		$.get("/api/country/all", function success(data) {
+			window.countries = _.indexBy(data, 'id');
+		});
+		
 	</script>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=9">

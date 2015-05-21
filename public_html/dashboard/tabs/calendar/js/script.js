@@ -88,37 +88,37 @@ $(function() {
 							//console.log(eventObject);
 						},
 					});
-				});
-			});
-		});
-	});
+});
+});
+});
+});
 
-	$("#filter-types").on('click', '.filter-type', function(event){
-		event.preventDefault();
-		$("#filter-"+display).removeClass("btn-primary");
-		display = $(this).attr("display");
-		
-		if(display == "trips") {
-			filterSelect = Handlebars.compile($("#trip-filter-template").html());
-			$("#filter-settings").empty().append(filterSelect());
-		}
-		else if(display == "classes") {
-			$('#filter').empty();
-			filterSelect = Handlebars.compile($("#class-list-template").html());
-			$("#filter-settings").empty().append(filterSelect({classes : window.trainings}));
-		}
-		else {
-			$('#filter').empty();
-			filterSelect = Handlebars.compile($("#accom-list-template").html());
-			$("#filter-settings").empty().append(filterSelect({accoms : window.accommodations}));
-		}
-		filterByBoat = false;
-		filterByTrip = false;
-		filterByAccom = false;
-		filterByClass = false;
-		$('#calendar').fullCalendar( 'refetchEvents' );
-		$("#filter-"+display).addClass("btn-primary");
-	});
+$("#filter-types").on('click', '.filter-type', function(event){
+	event.preventDefault();
+	$("#filter-"+display).removeClass("btn-primary");
+	display = $(this).attr("display");
+
+	if(display == "trips") {
+		filterSelect = Handlebars.compile($("#trip-filter-template").html());
+		$("#filter-settings").empty().append(filterSelect());
+	}
+	else if(display == "classes") {
+		$('#filter').empty();
+		filterSelect = Handlebars.compile($("#class-list-template").html());
+		$("#filter-settings").empty().append(filterSelect({classes : window.trainings}));
+	}
+	else {
+		$('#filter').empty();
+		filterSelect = Handlebars.compile($("#accom-list-template").html());
+		$("#filter-settings").empty().append(filterSelect({accoms : window.accommodations}));
+	}
+	filterByBoat = false;
+	filterByTrip = false;
+	filterByAccom = false;
+	filterByClass = false;
+	$('#calendar').fullCalendar( 'refetchEvents' );
+	$("#filter-"+display).addClass("btn-primary");
+});
 
 	/*$('#filter-options').on('change', function(event) {
 		event.preventDefault();
@@ -134,8 +134,8 @@ $(function() {
 		}
 	});*/
 
-	$("#filter").on('change', '.filter', function(event){
-		event.preventDefault();
+$("#filter").on('change', '.filter', function(event){
+	event.preventDefault();
 	    	//console.log(this.options[this.selectedIndex].value);
 	    	console.log(filter);
 	    	if(this.id == "boats") {
@@ -157,56 +157,56 @@ $(function() {
 	    	$('#calendar').fullCalendar( 'refetchEvents' );
 	    });
 
-	$("#filter-settings").on('change', '.filter', function(event) {
-		event.preventDefault();
-		if(this.id == "accoms") {
-			var filter = $("#accoms option:selected").val();
-			console.log(filter);
-	    	if(filter == "all") filterByAccom = false;
-	    	else filterByAccom = true;
+$("#filter-settings").on('change', '.filter', function(event) {
+	event.preventDefault();
+	if(this.id == "accoms") {
+		var filter = $("#accoms option:selected").val();
+		console.log(filter);
+		if(filter == "all") filterByAccom = false;
+		else filterByAccom = true;
 	    	//filterByBoat = true;
 	    	accomFilter = this.options[this.selectedIndex].value;
-		}
-		else {
-			var filter = $("#classes option:selected").val();
+	    }
+	    else {
+	    	var filter = $("#classes option:selected").val();
 	    	if(filter == "all") filterByClass = false;
 	    	else filterByClass = true;
 	    	//filterByBoat = true;
 	    	classFilter = this.options[this.selectedIndex].value;
-		}
-		$('#calendar').fullCalendar( 'refetchEvents' );
+	    }
+	    $('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
-	$("#filters").on('click', '#remove-boats-filter', function(event){
-		event.preventDefault();
-		filterByBoat = false;
-		boatFilter = null;
-		$("div#filter-settings option[value=boat]").attr('disabled', false);
-		$(event.target).parent().remove();
-		$('#calendar').fullCalendar( 'refetchEvents' );
-	});
+$("#filters").on('click', '#remove-boats-filter', function(event){
+	event.preventDefault();
+	filterByBoat = false;
+	boatFilter = null;
+	$("div#filter-settings option[value=boat]").attr('disabled', false);
+	$(event.target).parent().remove();
+	$('#calendar').fullCalendar( 'refetchEvents' );
+});
 
-	$("#filters").on('click', '#remove-trips-filter', function(event){
-		event.preventDefault();
-		filterByTrip = false;
-		tripFilter = null;
-		$("div#filter-settings option[value=trip]").attr('disabled', false);
-		$(event.target).parent().remove();
-		$('#calendar').fullCalendar( 'refetchEvents' );
-	});
+$("#filters").on('click', '#remove-trips-filter', function(event){
+	event.preventDefault();
+	filterByTrip = false;
+	tripFilter = null;
+	$("div#filter-settings option[value=trip]").attr('disabled', false);
+	$(event.target).parent().remove();
+	$('#calendar').fullCalendar( 'refetchEvents' );
+});
 
-	$("#jump-to-date").on('change', '#jump-date', function(event){
-		event.preventDefault();
-		var date = $("#jump-date").val();
-		var jumpDate = $.fullCalendar.moment(date);
-		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-		$("#remove-jump").css('display', 'inline');
-	});
+$("#jump-to-date").on('change', '#jump-date', function(event){
+	event.preventDefault();
+	var date = $("#jump-date").val();
+	var jumpDate = $.fullCalendar.moment(date);
+	$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+	$("#remove-jump").css('display', 'inline');
+});
 
-	$("#jump-to-date").on('click', '#remove-jump', function(event){
-		event.preventDefault();
-		var date = new Date();
-		var d = date.getDate();
+$("#jump-to-date").on('click', '#remove-jump', function(event){
+	event.preventDefault();
+	var date = new Date();
+	var d = date.getDate();
 	    	var m = date.getMonth() + 1; // jan starts at 0
 	    	var y = date.getFullYear();
 	    	$("#jump-date").val('');
@@ -219,17 +219,17 @@ $(function() {
 		});
 
 
-	$('input.datepicker').datetimepicker({
-		pickDate: true,
-		pickTime: false,
-		icons: {
-			time: 'fa fa-clock-o',
-			date: 'fa fa-calendar',
-			up:   'fa fa-chevron-up',
-			down: 'fa fa-chevron-down'
-		},
-		clearBtn : true
-	});
+$('input.datepicker').datetimepicker({
+	pickDate: true,
+	pickTime: false,
+	icons: {
+		time: 'fa fa-clock-o',
+		date: 'fa fa-calendar',
+		up:   'fa fa-chevron-up',
+		down: 'fa fa-chevron-down'
+	},
+	clearBtn : true
+});
 
 });
 
@@ -257,6 +257,9 @@ function createCalendarEntry(eventObject) {
 
 function showModalWindow(eventObject) {
 	// Create the modal window from session-template
+
+	$('.reveal-modal').remove();
+
 	window.sw.sessionTemplateD = Handlebars.compile( $("#session-template").html() );
 
 	eventObject.boats = $.extend(true, {}, window.boats);
@@ -296,6 +299,8 @@ function showModalWindow(eventObject) {
 }
 
 function showModalWindowA(eventObject) {
+
+	$('.reveal-modal').remove();
 	// Create the modal window from session-template
 	window.sw.accommodationTemplateD = Handlebars.compile( $("#accommodation-template").html() );
 
@@ -318,6 +323,8 @@ function showModalWindowA(eventObject) {
 }
 
 function showModalWindowC(eventObject) {
+
+	$('.reveal-modal').remove();
 	// Create the modal window from session-template
 	window.sw.classTemplateD = Handlebars.compile( $("#class-template").html() );
 
@@ -342,6 +349,8 @@ function showModalWindowC(eventObject) {
 function showModalWindowM(id) {
 	// Create the modal window from session-template
 
+	$('.reveal-modal').remove();
+
 	var params = "id=" + id;
 	if(display == "trips") {
 		window.sw.manifestTemplateD = Handlebars.compile( $("#manifest-template").html() );
@@ -361,28 +370,31 @@ function showModalWindowM(id) {
 					$('#modal-' + data.id).remove();
 				}
 			});
-			$('#customer-data-table').dataTable({
+
+			var table = $('#customer-data-table').DataTable({
 				"paging":   false,
 				"ordering": false,
 				"info":     false,
 				"pageLength" : 10,
 				"searching" : false,
-				data : data.customers,
-				columns : [
-					/*{"render" : {
-						"firstname" : "firstname",
-						"lastname" : "lastname"}
-					},*/
-					{"data" : "email"},
-					{"data" : window.countries["country_id"]},
-					{"data" : "phone"}
+				columns: [
+				{ data: null, render: 'name' },
+				{ data: null, render: 'email' },
+				{ data: null, render: 'country' },
+				{ data: null, render: 'phone' }
 				]
 			});
+
+			for (var i = 0; i < data.customers.length; i++) {
+				table.row.add(new customerData(data.customers[i]));
+			};
+
+			table.draw();
 		});
-	}
-	else {
-		window.sw.manifestTemplateDC = Handlebars.compile( $("#class-manifest-template").html() );
-		Class.getAllCustomers(params, function sucess(data) {
+}
+else {
+	window.sw.manifestTemplateDC = Handlebars.compile( $("#class-manifest-template").html() );
+	Class.getAllCustomers(params, function sucess(data) {
 		//showModalWindowM(data);
 		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
 		//$("#customers-table").append(customer({customers : data.customers}));
@@ -398,22 +410,29 @@ function showModalWindowM(id) {
 					$('#modal-' + data.id).remove();
 				}
 			});
-			$('#customer-data-table').dataTable({
+			
+			var table = $('#customer-data-table').DataTable({
 				"paging":   false,
 				"ordering": false,
 				"info":     false,
 				"pageLength" : 10,
 				"searching" : false,
-				data : data.customers,
-				columns : [
-				{"data" : "firstname"},
-				{"data" : "email"},
-				{"data" : "country_id"},
-				{"data" : "phone"}
+				columns: [
+				{ data: null, render: 'name' },
+				{ data: null, render: 'email' },
+				{ data: null, render: 'country' },
+				{ data: null, render: 'phone' }
 				]
 			});
+
+			for (var i = 0; i < data.customers.length; i++) {
+				table.row.add(new customerData(data.customers[i]));
+			};
+
+			table.draw();
+			
 		});
-	}
+}
 
 }
 
@@ -646,4 +665,27 @@ function addTripFilter(value) {
 		$("#filter").append( tripsList({trips : window.trips}) );
 	}
 
+}
+
+function customerData(customer) {
+	this._name     = customer.firstname + ' ' + customer.lastname;
+	this._email    = customer.email;
+	this._phone    = customer.phone;
+	this._country  = window.countries[customer.country_id].name;
+
+	this.name = function () {
+		return this._name;
+	};
+
+	this.email = function () {
+		return this._email;
+	};
+
+	this.phone = function () {
+		return this._phone;
+	};
+
+	this.country = function () {
+		return this._country;
+	};
 }
