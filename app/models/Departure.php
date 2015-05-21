@@ -93,7 +93,9 @@ class Departure extends Ardent {
 
 	public function customers()
 	{
-		return $this->belongsToMany('Customer', 'booking_details', 'session_id', 'customer_id')->withTimestamps();
+		return $this->belongsToMany('Customer', 'booking_details', 'session_id', 'customer_id')
+			->withPivot('ticket_id', 'course_id')
+			->withTimestamps();
 	}
 
 	public function trip()

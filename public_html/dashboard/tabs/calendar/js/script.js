@@ -381,7 +381,8 @@ function showModalWindowM(id) {
 				{ data: null, render: 'name' },
 				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
-				{ data: null, render: 'phone' }
+				{ data: null, render: 'phone' },
+				{ data: null, render: 'ticket' }
 				]
 			});
 
@@ -421,7 +422,8 @@ else {
 				{ data: null, render: 'name' },
 				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
-				{ data: null, render: 'phone' }
+				{ data: null, render: 'phone' },
+				{ data: null, render: 'course' }
 				]
 			});
 
@@ -672,6 +674,12 @@ function customerData(customer) {
 	this._email    = customer.email;
 	this._phone    = customer.phone;
 	this._country  = window.countries[customer.country_id].name;
+	if(customer.pivot.ticket_id != null) {
+		this._ticket  = window.tickets[customer.pivot.ticket_id].name;
+	}
+	if(customer.pivot.course_id != null) {
+		this._course  = window.courses[customer.pivot.course_id].name;
+	}
 
 	this.name = function () {
 		return this._name;
@@ -687,5 +695,13 @@ function customerData(customer) {
 
 	this.country = function () {
 		return this._country;
+	};
+
+	this.ticket = function () {
+		return this._ticket;
+	};
+
+	this.course = function () {
+		return this._course;
 	};
 }

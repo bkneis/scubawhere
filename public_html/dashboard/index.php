@@ -126,6 +126,14 @@ $PROTOCOL = 'http';
 		$.get("/api/country/all", function success(data) {
 			window.countries = _.indexBy(data, 'id');
 		});
+
+		$.get("/api/ticket/all", function success(data) {
+			window.tickets = _.indexBy(data, 'id');
+		});
+
+		$.get("/api/course/all", function success(data) {
+			window.courses = _.indexBy(data, 'id');
+		});
 		
 	</script>
 

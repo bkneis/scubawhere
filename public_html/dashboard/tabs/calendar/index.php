@@ -188,7 +188,7 @@
 					</tr>
 					<tr>
 						<td><strong>Number of students</strong></td>
-						<td>{{session.capacity}}</td>
+						<td>{{session.capacity.[0]}} out of {{session.capacity.[1]}}</td>
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
@@ -208,6 +208,7 @@
 			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Ticket Purchased</th>
 			            </tr>
             		</thead>
             		<tbody id="customers-table">
@@ -227,6 +228,7 @@
 			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Course Purchased</th>
 			            </tr>
             		</thead>
             		<tbody id="customers-table">
