@@ -248,7 +248,7 @@
 						</div>
 						<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<a href="javascript:void(0);" class="remove-accommodation pull-right" title="Remove Accommodation" data-id="{{id}}" data-customer-id="{{pivot.customer_id}}"><i class="fa fa-times fa-lg"></i></a>
+								<a href="javascript:void(0);" class="remove-accommodation pull-right" title="Remove Accommodation" data-id="{{id}}" data-customer-id="{{pivot.customer_id}}" data-start="{{pivot.start}}"><i class="fa fa-times fa-lg"></i></a>
 
 								<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDateNoTime pivot.start}} - {{friendlyDateNoTime pivot.end}}</p>
 

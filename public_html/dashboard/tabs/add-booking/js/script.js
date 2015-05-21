@@ -1598,36 +1598,35 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 	params._token           = window.token;
 	params.accommodation_id = accommodation_id;
 	params.customer_id      = customer_id;
+	params.start            = $(this).data('start');
 
-	booking.removeAccommodation(params, function success(status, removedAccommodations) {
+	booking.removeAccommodation(params, function success(status, removedAccommodation) {
 		// If the accommodation was packaged, re-add it to the selected package (if it exists)
-		_.each(removedAccommodations, function(removedAccommodation) {
-			if(removedAccommodation.pivot.packagefacade_id) {
-				var relatedPackage = _.find(booking.selectedPackages, function(package) {
-					return package.packagefacade == removedAccommodation.pivot.packagefacade_id;
+		if(removedAccommodation.pivot.packagefacade_id) {
+			var relatedPackage = _.find(booking.selectedPackages, function(package) {
+				return package.packagefacade == removedAccommodation.pivot.packagefacade_id;
+			});
+
+			if(relatedPackage !== undefined) {
+				// Check if the accommodations already exists in the package
+				var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
+					return removedAccommodation.id == accommodations.id;
 				});
 
-				if(relatedPackage !== undefined) {
-					// Check if the accommodations already exists in the package
-					var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
-						return removedAccommodation.id == accommodations.id;
-					});
+				// Calculate how many nights got removed
+				var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
 
-					// Calculate how many nights got removed
-					var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
-
-					if(existingAccommodation !== undefined) {
-						existingAccommodation.qty += quantity;
-					}
-					else {
-						removedAccommodation.qty = quantity;
-						relatedPackage.accommodations.push(removedAccommodation);
-					}
-
-					updatePackagedAccommodationsList();
+				if(existingAccommodation !== undefined) {
+					existingAccommodation.qty += quantity;
 				}
+				else {
+					removedAccommodation.qty = quantity;
+					relatedPackage.accommodations.push(removedAccommodation);
+				}
+
+				updatePackagedAccommodationsList();
 			}
-		});
+		}
 
 		booking.store();
 		pageMssg(status, 'success');

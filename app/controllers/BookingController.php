@@ -1512,6 +1512,7 @@ class BookingController extends Controller {
 		 * booking_id
 		 * accommodation_id
 		 * customer_id
+		 * start (date)
 		 */
 
 		if( !Input::has('booking_id') )
@@ -1522,6 +1523,9 @@ class BookingController extends Controller {
 
 		if( !Input::has('customer_id') )
 			return Response::json( array('errors' => array('The customer could not be found.')), 404 ); // 404 Not Found
+
+		if( !Input::has('start') )
+			return Response::json( array('errors' => array('Please provide the start date of the accommodation booking.')), 400 ); // 400 Bad Request
 
 		try
 		{
@@ -1539,9 +1543,13 @@ class BookingController extends Controller {
 		}
 
 		// Don't need to check if accommodation belongs to company because detaching wouldn't throw an error if it's not there in the first place.
-		$booking->accommodations()
+		$affectedRows = $booking->accommodations()
 			->wherePivot('customer_id', Input::get('customer_id'))
+			->wherePivot('start', Input::get('start'))
 			->detach(Input::get('accommodation_id'));
+
+		if($affectedRows === 0)
+			return Response::json( array('errors' => array('The accommodation pivot model could not be found.')), 404 ); // 404 Not Found
 
 		// Update booking price
 		$booking->updatePrice();

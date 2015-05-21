@@ -543,23 +543,20 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			var removedAccommodations = _.filter(this.accommodations, function(accommodation) {
-				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
+			var removedAccommodation = _.find(this.accommodations, function(accommodation) {
+				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id && accommodation.pivot.start === params.start;
 			});
 
 			this.accommodations = _.reject(this.accommodations, function(accommodation) {
-				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id;
+				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id && accommodation.pivot.start === params.start;
 			});
 
 			this.decimal_price = data.decimal_price;
 
-			var notPackaged = _.find(removedAccommodations, function(accommodation) {
-				return accommodation.pivot.packagefacade_id === null;
-			});
-			if(notPackaged !== undefined)
+			if(removedAccommodation.pivot.packagefacade_id === null)
 				this.calculateSums();
 
-			successFn(data.status, removedAccommodations);
+			successFn(data.status, removedAccommodation);
 		},
 		error: errorFn
 	});
