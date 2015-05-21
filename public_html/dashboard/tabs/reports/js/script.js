@@ -118,23 +118,11 @@ $(function() {
 
 	getReport(report_type, createDataTable);
 
-	/*$('.reports-table').dataTable({
-		"paging":   false,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		"dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-        }
-	});*/
-
 });
 
 function createDataTable() {
 	$('.reports-table').dataTable({
-		"paging":   false,
+		"paging":   true,
 		"ordering": false,
 		"info":     false,
 		"pageLength" : 10,
@@ -378,7 +366,7 @@ function getReport(reportType, callback) {
 				});
 
 				renderDoughnutChart(pieStats, "revenue");
-				callback();
+				if(stats.total != 0) callback();
 			});
 			break;
 
@@ -412,7 +400,7 @@ function getReport(reportType, callback) {
 					console.log(stat.color);
 				});
 				renderDoughnutChart(pieStats, "demographics");
-				if(data.country_revenue != null) callback();
+				if(data.country_revenue.length != 0) callback();
 			});
 
 			break;
