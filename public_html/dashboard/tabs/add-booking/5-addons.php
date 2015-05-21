@@ -38,7 +38,7 @@
 		<div id="packaged-addons-list-container">
 		</div>
 		<script type="text/x-handlebars-template" id="packaged-addons-list-template">
-			<div class="panel panel-default">
+			<div class="panel panel-warning">
 				<div class="panel-heading">
 					<h2 class="panel-title">Packaged add-ons</h2>
 				</div>
