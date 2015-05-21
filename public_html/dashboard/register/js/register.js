@@ -93,7 +93,8 @@ $(function(){
 		$('.submit').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		var params = form.serializeObject();
-		params.terms = $('#terms').val();
+		//params.terms = $('#terms').val();
+		params.terms = CKEDITOR.instances.terms.getData();
 
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
@@ -188,4 +189,5 @@ $(function(){
 	CKEDITOR.config.height = 490;
 
 	editor = CKEDITOR.replace('terms');
+
 });
