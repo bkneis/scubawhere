@@ -128,7 +128,7 @@ class CronRunCommand extends Command {
 			/**
 			 * Delete all abandoned bookings older than 1h
 			 */
-			$before = date('Y-m-d H:i:s', time() - 1 * 60 * 60);
+			$before = date('Y-m-d H:i:s', time() - 2 * 60 * 60);
 			$affectedRows = Booking::where('status', null)
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
