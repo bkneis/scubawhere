@@ -4,7 +4,7 @@ Handlebars.registerHelper('currency', function() {
 
 Handlebars.registerHelper('sourceIcon', function() {
 	var icon = '',
-	    tooltip = '';
+	tooltip = '';
 
 	switch(this.source) {
 		case null:         icon = 'fa-user';     tooltip = 'Source: Agent';         break;
@@ -19,15 +19,15 @@ Handlebars.registerHelper('sourceIcon', function() {
 
 Handlebars.registerHelper('statusIcon', function() {
 	var icon    = '',
-	    color   = 'inherit',
-	    tooltip = '';
+	color   = 'inherit',
+	tooltip = '';
 
 	if(this.status === 'cancelled') {
 		icon    = 'fa-ban';
 		tooltip = 'Cancelled';
 
 		// if(this.sums.refundable > 0 {
-		if(this.sums.have > this.cancellation_fee) {
+			if(this.sums.have > this.cancellation_fee) {
 			// Refund necessary!
 			color   = '#d9534f';
 			tooltip = 'Cancelled, refund necessary';
@@ -119,7 +119,7 @@ Handlebars.registerHelper('addTransactionButton', function() {
 Handlebars.registerHelper('editButton', function() {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
 	/*if(this.status === 'cancelled')
-		return '';*/
+	return '';*/
 
 	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> View & Edit</button>');
 });
@@ -142,6 +142,7 @@ $(function() {
 		window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
 		renderBookingList(window.bookings, display);
+		
 	});
 
 	$('#booking-list').on('click', '.accordion-header', function() {
@@ -213,6 +214,7 @@ function renderBookingList(bookings, display) {
 
 	// Initiate tooltips
 	$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+
 }
 
 function editBooking(booking_id, self) {
@@ -288,13 +290,13 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 
 	switch(selectedRadio) {
 		case 'fee':
-			cancellation_fee = modal.find('[name=cancellation_fee]').val();
-			break;
+		cancellation_fee = modal.find('[name=cancellation_fee]').val();
+		break;
 		case 'percentage':
-			var bookingPrice = window.bookings[params.booking_id].decimal_price;
-			var percentage   = modal.find('[name=fee_percentage]').val() / 100;
-			cancellation_fee = bookingPrice * percentage;
-			break;
+		var bookingPrice = window.bookings[params.booking_id].decimal_price;
+		var percentage   = modal.find('[name=fee_percentage]').val() / 100;
+		cancellation_fee = bookingPrice * percentage;
+		break;
 	}
 
 	params.cancellation_fee = cancellation_fee;
@@ -320,3 +322,17 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 		btn.html('Cancel Booking');
 	});
 });
+
+function createDataTable() {
+	$('#bookings-table').dataTable({
+		"paging":   true,
+		"ordering": false,
+		"info":     false,
+		"pageLength" : 10,
+		"searching" : false,
+		"dom": 'T<"clear">lfrtip',
+		"tableTools": {
+			"sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+		}
+	});
+}

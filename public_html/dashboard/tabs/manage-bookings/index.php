@@ -56,7 +56,7 @@
 						<button id="filter-all" type="button" display="all" class="btn btn-default">All</button>
 					</div>
 					<div style="margin-bottom:10px"></div>
-					<table class="bluethead">
+					<table id="bookings-table" class="bluethead">
 						<thead>
 							<tr class="bg-primary">
 								<th></th> <!-- icons -->
