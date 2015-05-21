@@ -17,7 +17,7 @@ Route::get('/', function()
 	return Redirect::to('../');
 });
 
-Route::controller('test', 'TestController');
+// Route::controller('test', 'TestController');
 
 Route::controller('password', 'PasswordController');
 Route::controller('register', 'RegisterController');
