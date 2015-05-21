@@ -1,3 +1,5 @@
+<script type="text/javascript" src="js/social-media.js"></script>
+<div id="fb-root"></div>
 <div id="wrapper" class="clearfix">
 	<div id="company-form-container">
 		<script type="text/x-handlebars-template" id="company-form-template">
@@ -134,8 +136,7 @@
 								<h4 class="panel-title">Social Media Integration</h4>
 							</div>
 							<div class="panel-body">
-								<fb:login-button scope="public_profile,email,read_insights" onlogin="checkLoginState();">
-								</fb:login-button>
+								<div class="fb-login-button" scope="public_profile,email,read_insights" onlogin="checkLoginState();" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>
 							</div>
 						</div>
 					</div>
