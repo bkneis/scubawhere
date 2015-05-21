@@ -203,9 +203,9 @@ Boatroom.getAll(function(data){
 window.promises.loadedAddons = $.Deferred();
 Addon.getAllAddons(function(data){
 	window.addons = _.indexBy(data, 'id');
-	_.each(window.addons, function(addon) {
+	/* _.each(window.addons, function(addon) {
 		addon.compulsory = parseInt(addon.compulsory);
-	});
+	}); */
 	$("#addons-list").html(addonsTemplate({addons: window.addons}));
 	window.promises.loadedAddons.resolve();
 });
@@ -1061,6 +1061,9 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 	params.bookingdetail_id = $(this).data('id');
 
 	booking.removeDetail(params, function success(status, detail) {
+		// First, take care of attached addons that need to be re-added to a selectedPackage
+		if(detail.ticket) reAddPackagedAddons(detail.addons);
+
 		// Re-add a removed item to selectedTickets/selectedCourses/selectedPackages
 		do { // Enclose the whole procedure in a one-time do-while loop to be able to "break" out of it at any time.
 			if(!detail.packagefacade) {
@@ -1338,7 +1341,23 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 
 	booking.removeAddon(params, function success(status, removedAddons) {
 		// If the addon was packaged, re-add it to the selected package (if it exists)
+		reAddPackagedAddons(removedAddons);
+
+		pageMssg(status, 'success');
+
+		booking.store();
+		drawBasket();
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		pageMssg(data.errors[0], 'danger');
+		btn.html('Remove');
+	});
+});
+
+function reAddPackagedAddons(removedAddons) {
 		_.each(removedAddons, function(removedAddon) {
+		if(removedAddon.compulsory === 1) return;
+
 			if(removedAddon.pivot.packagefacade_id) {
 				var relatedPackage = _.find(booking.selectedPackages, function(package) {
 					return package.packagefacade == removedAddon.pivot.packagefacade_id;
@@ -1362,17 +1381,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 				}
 			}
 		});
-
-		pageMssg(status, 'success');
-
-		booking.store();
-		drawBasket();
-	}, function error(xhr) {
-		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
-		btn.html('Remove');
-	});
-});
+}
 
 window.promises.loadedAccommodations.done(function() {
 	$('#addon-tab').on('click', '.addon-finish', function() {
