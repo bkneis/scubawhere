@@ -1493,6 +1493,17 @@ function updatePackagedAccommodationsList() {
 		// Set all accommodations' start fields
 		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
 		$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
+
+		$('#packaged-accommodations-list .datepicker').datetimepicker({
+			pickDate: true,
+			pickTime: false,
+			icons: {
+				time: 'fa fa-clock-o',
+				date: 'fa fa-calendar',
+				up:   'fa fa-chevron-up',
+				down: 'fa fa-chevron-down'
+			},
+		});
 	}
 }
 
