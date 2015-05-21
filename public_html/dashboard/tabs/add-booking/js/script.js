@@ -1338,10 +1338,12 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	params._token           = window.token;
 	params.bookingdetail_id = $(this).data('bookingdetailId');
 	params.addon_id         = $(this).data('id');
+	if($(this).data('packagefacadeId'))
+		params.packagefacade_id = $(this).data('packagefacadeId');
 
-	booking.removeAddon(params, function success(status, removedAddons) {
+	booking.removeAddon(params, function success(status, removedAddon) {
 		// If the addon was packaged, re-add it to the selected package (if it exists)
-		reAddPackagedAddons(removedAddons);
+		reAddPackagedAddons([removedAddon]);
 
 		pageMssg(status, 'success');
 
@@ -1355,32 +1357,32 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 });
 
 function reAddPackagedAddons(removedAddons) {
-		_.each(removedAddons, function(removedAddon) {
+	_.each(removedAddons, function(removedAddon) {
 		if(removedAddon.compulsory === 1) return;
 
-			if(removedAddon.pivot.packagefacade_id) {
-				var relatedPackage = _.find(booking.selectedPackages, function(package) {
-					return package.packagefacade == removedAddon.pivot.packagefacade_id;
+		if(removedAddon.pivot.packagefacade_id) {
+			var relatedPackage = _.find(booking.selectedPackages, function(package) {
+				return package.packagefacade == removedAddon.pivot.packagefacade_id;
+			});
+
+			if(relatedPackage !== undefined) {
+				// Check if the addon already exists in the package
+				var existingAddon = _.find(relatedPackage.addons, function(addon) {
+					return removedAddon.id == addon.id;
 				});
 
-				if(relatedPackage !== undefined) {
-					// Check if the addon already exists in the package
-					var existingAddon = _.find(relatedPackage.addons, function(addon) {
-						return removedAddon.id == addon.id;
-					});
-
-					if(existingAddon !== undefined) {
-						existingAddon.qty += removedAddon.pivot.quantity;
-					}
-					else {
-						removedAddon.qty = removedAddon.pivot.quantity;
-						relatedPackage.addons.push(removedAddon);
-					}
-
-					updatePackagedAddonsList();
+				if(existingAddon !== undefined) {
+					existingAddon.qty += removedAddon.pivot.quantity;
 				}
+				else {
+					removedAddon.qty = removedAddon.pivot.quantity;
+					relatedPackage.addons.push(removedAddon);
+				}
+
+				updatePackagedAddonsList();
 			}
-		});
+		}
+	});
 }
 
 window.promises.loadedAccommodations.done(function() {

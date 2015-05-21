@@ -391,15 +391,27 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 		context: this,
 		success: function(data) {
 
-			var addon = $.extend(true, {}, window.addons[params.addon_id]);
-			addon.pivot = {
-				quantity: params.quantity,
-				packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
-			};
-
-			_.find(this.bookingdetails, function(detail) {
+			var relatedBookingdetail = _.find(this.bookingdetails, function(detail) {
 				return detail.id == params.bookingdetail_id;
-			}).addons.push( addon );
+			});
+
+			// Check if the addon already exists
+			var existingAddon = _.find(relatedBookingdetail.addons, function(addon) {
+				return addon.id == params.addon_id && addon.pivot.packagefacade_id == (params.packagefacade_id || null);
+			});
+
+			if(existingAddon !== undefined) {
+				// Increase quantity on existing addon
+				existingAddon.pivot.quantity += parseInt(params.quantity);
+			}
+			else {
+				var addon = $.extend(true, {}, window.addons[params.addon_id]);
+				addon.pivot = {
+					quantity: parseInt(params.quantity),
+					packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
+				};
+				relatedBookingdetail.addons.push( addon );
+			}
 
 			this.decimal_price = data.decimal_price;
 
@@ -437,23 +449,27 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 				return detail.id == params.bookingdetail_id;
 			});
 
-			var removedAddons = _.filter(detail.addons, function(addon) {
-				return addon.id == params.addon_id;
+			var removedAddon = _.find(detail.addons, function(addon) {
+				return addon.id == params.addon_id && addon.pivot.packagefacade_id == (params.packagefacade_id || null);
 			});
 
-			detail.addons = _.reject(detail.addons, function(addon) {
-				return addon.id == params.addon_id;
-			});
+			if(removedAddon.pivot.quantity > 1) {
+				// Reduce quantity by 1
+				removedAddon.pivot.quantity--;
+			}
+			else {
+				// Otherwise remove addon from the array
+				detail.addons = _.reject(detail.addons, function(addon) {
+					return addon.id == params.addon_id && addon.pivot.packagefacade_id == (params.packagefacade_id || null);
+				});
+			}
 
 			this.decimal_price = data.decimal_price;
 
-			var notPackaged = _.find(removedAddons, function(addon) {
-				return addon.pivot.packagefacade_id === null;
-			});
-			if(notPackaged !== undefined)
+			if(removedAddon.pivot.packagefacade_id === null)
 				this.calculateSums();
 
-			successFn(data.status, removedAddons);
+			successFn(data.status, removedAddon);
 		},
 		error: errorFn
 	});

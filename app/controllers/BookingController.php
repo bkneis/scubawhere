@@ -1191,17 +1191,32 @@ class BookingController extends Controller {
 		if( $validator->fails() )
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 
-		$pivotData = array('quantity' => $quantity);
+		$pivotData = [];
+
 		if($package)
 			$pivotData['packagefacade_id'] = $packagefacade->id;
 
-		$bookingdetail->addons()->attach( $addon->id, $pivotData );
+		// Check if the addon already exists on the pivot table
+		$existingAddon = $bookingdetail->addons()->wherePivot('packagefacade_id', $packagefacade ? $packagefacade->id : null)->where('id', $addon->id)->first();
+		if($existingAddon)
+		{
+			// The addon is already assigned to the bookingdetail
+			$pivotData['quantity'] = $existingAddon->pivot->quantity + $quantity;
+			$bookingdetail->addons()
+				->wherePivot('packagefacade_id', $packagefacade ? $packagefacade->id : null)
+				->updateExistingPivot($addon->id, $pivotData);
+		}
+		else
+		{
+			$pivotData['quantity'] = $quantity;
+			$bookingdetail->addons()->attach( $addon->id, $pivotData );
+		}
 
 		// Update booking price
 		if(!$package)
 			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
 
-		return array('status' => 'OK. Addon added.', 'decimal_price' => $booking->decimal_price);
+		return array('status' => 'OK. Addon(s) added.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postRemoveAddon()
@@ -1211,6 +1226,8 @@ class BookingController extends Controller {
 		 * booking_id
 		 * bookingdetail_id
 		 * addon_id
+		 *
+		 * packagefacade_id (optional)
 		 */
 
 		// Check if the booking belongs to the company
@@ -1251,11 +1268,14 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
 
+		$packagefacade_id = Input::get('packagefacade_id', null);
+
 		// Check if the addon belongs to the bookingdetail
 		try
 		{
-			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
-			$addon = $bookingdetail->addons()->findOrFail( Input::get('addon_id') );
+			if( !Input::has('addon_id') ) throw new ModelNotFoundException();
+			$addon = $bookingdetail->addons()->wherePivot('packagefacade_id', $packagefacade_id)->where('id', Input::get('addon_id'))->first();
+			if(!$addon) throw new ModelNotFoundException();
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1265,14 +1285,33 @@ class BookingController extends Controller {
 		if($addon->compulsory === 1 || $addon->compulsory === "1")
 			return Response::json( array('errors' => array('The addon is compulsory and cannot be removed.')), 403 ); // 403 Forbidden
 
-		// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
-		$bookingdetail->addons()->detach( $addon->id );
+
+		$pivotData = ['packagefacade_id' => $packagefacade_id];
+
+		Clockwork::info($addon);
+
+		// Check the quantity the addon
+		if($addon->pivot->quantity > 1)
+		{
+			Clockwork::info('More than 1');
+			// Just substract one from the quantity
+			$pivotData['quantity'] = --$addon->pivot->quantity;
+			$bookingdetail->addons()
+				->wherePivot('packagefacade_id', $packagefacade_id)
+				->updateExistingPivot($addon->id, $pivotData);
+		}
+		else
+		{
+			Clockwork::info('Only 1');
+			// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
+			$bookingdetail->addons()->wherePivot('packagefacade_id', $packagefacade_id)->detach( $addon->id );
+		}
 
 		// Update booking price
 		if(empty($addon->pivot->packagefacade_id))
 			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
 
-		return array('status' => 'OK. Addon(s) removed.', 'decimal_price' => $booking->decimal_price);
+		return array('status' => 'OK. One addon removed.', 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postAddAccommodation()
