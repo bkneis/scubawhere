@@ -104,7 +104,7 @@ Handlebars.registerHelper('addTransactionButton', function() {
 	}, 0);
 
 	var disabled = '';
-	if(this.decimal_price === '0.00' || sum == this.decimal_price)
+	if(this.decimal_price === '0.00')
 		disabled = 'disabled';
 
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default btn-sm" ' + disabled + '><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
