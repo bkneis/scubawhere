@@ -110,8 +110,6 @@ class CronRunCommand extends Command {
 			{
 				// Create a string containing as many ?,?... as there are IDs
 				$clause = implode(',', array_fill(0, count($ids_abandoned), '?'));
-				// This query deliberately does not set the `status` to null or 'saved'.
-				// This way, we still know which bookings where reserved but have expired.
 				DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_abandoned);
 			}
 
@@ -170,7 +168,7 @@ class CronRunCommand extends Command {
 
 	protected function everyFiveMinutes(callable $callback)
 	{
-		/* if((int) date('i', $this->timestamp) % 5 === 0) */ // call_user_func($callback);
+		/* if((int) date('i', $this->timestamp) % 5 === 0) */ call_user_func($callback);
 	}
 
 	protected function everyTenMinutes(callable $callback)
