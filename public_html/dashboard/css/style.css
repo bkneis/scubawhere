@@ -1057,6 +1057,9 @@ big {
 .nav-wizard>li:last-child>a:before {
 	background: transparent;
 }
+.nav-wizard>li.active:last-child>a:before {
+	background: transparent;
+}
 
 .nav-wizard>li>a:after {
     content: " ";
