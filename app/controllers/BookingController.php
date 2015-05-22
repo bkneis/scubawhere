@@ -1288,12 +1288,9 @@ class BookingController extends Controller {
 
 		$pivotData = ['packagefacade_id' => $packagefacade_id];
 
-		Clockwork::info($addon);
-
 		// Check the quantity the addon
 		if($addon->pivot->quantity > 1)
 		{
-			Clockwork::info('More than 1');
 			// Just substract one from the quantity
 			$pivotData['quantity'] = --$addon->pivot->quantity;
 			$bookingdetail->addons()
@@ -1302,7 +1299,6 @@ class BookingController extends Controller {
 		}
 		else
 		{
-			Clockwork::info('Only 1');
 			// Don't need to check if addon belongs to company because detaching wouldn't throw an error if it's not there in the first place.
 			$bookingdetail->addons()->wherePivot('packagefacade_id', $packagefacade_id)->detach( $addon->id );
 		}
@@ -1387,8 +1383,6 @@ class BookingController extends Controller {
 
 		$start = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
 		$end   = new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
-
-		// Clockwork::info($start->diff($end)->format('%R%a'));
 
 		if($start->diff($end)->format('%R%a') < 1)
 			return Response::json(['errors' => ['The end date must be after the start date.']], 400); // 400 Bad Request
