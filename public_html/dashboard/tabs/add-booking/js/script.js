@@ -1738,16 +1738,33 @@ $('#extra-tab').on('change', '#discount', function(e) {
 */
 
 
-var summaryBookingDetailsTemplate = Handlebars.compile($("#summary-booking-details-template").html());
-var summaryAccommodationsTemplate = Handlebars.compile($("#summary-accommodations-template").html());
-var summaryLeadTemplate           = Handlebars.compile($("#summary-lead-template").html());
-var summaryPriceTemplate          = Handlebars.compile($("#summary-price-template").html());
+// var summaryBookingDetailsTemplate = Handlebars.compile($("#summary-booking-details-template").html());
+// var summaryAccommodationsTemplate = Handlebars.compile($("#summary-accommodations-template").html());
+// var summaryLeadTemplate           = Handlebars.compile($("#summary-lead-template").html());
+// var summaryPriceTemplate          = Handlebars.compile($("#summary-price-template").html());
+
+var summaryTemplate = Handlebars.compile($('#summary-template').html());
 
 $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
-	$("#summary-booking-details").html(summaryBookingDetailsTemplate({bookingdetails:booking.bookingdetails}));
-	$("#summary-accommodations").html(summaryAccommodationsTemplate({accommodations:booking.accommodations}));
-	$("#summary-lead").html(summaryLeadTemplate(booking.lead_customer));
-	$("#summary-price").html(summaryPriceTemplate(booking));
+	// $("#summary-booking-details").html(summaryBookingDetailsTemplate({bookingdetails:booking.bookingdetails}));
+	// $("#summary-accommodations").html(summaryAccommodationsTemplate({accommodations:booking.accommodations}));
+	// $("#summary-lead").html(summaryLeadTemplate(booking.lead_customer));
+	// $("#summary-price").html(summaryPriceTemplate(booking));
+
+	// Sort bookingdetails by start date
+	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
+		if(detail.session)
+			return detail.session.start;
+		else
+			return detail.training_session.start;
+	});
+
+	// Sort accommodations by start date
+	booking.accommodations = _.sortBy(booking.accommodations, function(accom) {
+		return accom.pivot.start;
+	});
+
+	$('#summary-container').html(summaryTemplate(booking));
 });
 
 $('#summary-tab').on('click', '.save-booking', function() {
@@ -1859,6 +1876,10 @@ $(document).ready(function() {
 	});
 
 	$('.btn-next').on('click', function() {
+
+		// When the tab is the Extra Info tab, first save the info, before showing the next tab
+		// TODO
+
 	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
 	});
 
@@ -1868,7 +1889,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$(document).on('click', '.list-group-radio', function() {
+	$('#wrapper').on('click', '.list-group-radio', function() {
 		listGroupRadio($(this));
 	});
 
@@ -1980,6 +2001,19 @@ function addTransaction() {
 }
 
 function drawBasket(doneFn) {
+	// Sort bookingdetails by start date
+	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
+		if(detail.session)
+			return detail.session.start;
+		else
+			return detail.training_session.start;
+	});
+
+	// Sort accommodations by start date
+	booking.accommodations = _.sortBy(booking.accommodations, function(accom) {
+		return accom.pivot.start;
+	});
+
 	$('#booking-summary').html(bookingSummaryTemplate(booking)).promise().done(function(){
 	    if($.isFunction(doneFn)) doneFn();
 	});

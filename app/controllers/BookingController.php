@@ -58,14 +58,14 @@ class BookingController extends Controller {
 					})
 					->sortBy(function($detail)
 					{
-						if($detail->departure)
-							return $detail->departure->start;
+						if($detail->session)
+							return $detail->session->start;
 						else
 							return $detail->training_session->start;
 					})->first();
 
-					if($firstDetail->departure)
-						$start = $firstDetail->departure->start;
+					if($firstDetail->session)
+						$start = $firstDetail->session->start;
 					else
 						$start = $firstDetail->training_session->start;
 
@@ -110,14 +110,14 @@ class BookingController extends Controller {
 					})
 					->sortBy(function($detail)
 					{
-						if($detail->departure)
-							return $detail->departure->start;
+						if($detail->session)
+							return $detail->session->start;
 						else
 							return $detail->training_session->start;
 					})->first();
 
-					if($firstDetail->departure)
-						$start = $firstDetail->departure->start;
+					if($firstDetail->session)
+						$start = $firstDetail->session->start;
 					else
 						$start = $firstDetail->training_session->start;
 

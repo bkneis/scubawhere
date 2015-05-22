@@ -139,7 +139,7 @@
 	{{/notEmptyObj}}
 	{{#notEmptyObj bookingdetails}}
 		<li class="list-group-item">
-			<h5>Trips</h5>
+			<h5>Trips & Classes</h5>
 			<div class="panel-group" id="booking-summary-trips" role="tablist" aria-multiselectable="true">
 				{{#each bookingdetails}}
 					<div class="panel panel-default">
