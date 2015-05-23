@@ -322,17 +322,37 @@
 											</td>
 											<td class="item-col quantity" style="text-align: right; padding-right: 10px; border-top: 1px solid #cccccc;">
 												<span class="total-space">Subtotal</span><br />
-												{{#ifCond discount '!==' '0.00'}}<span class="total-space">Discount</span><br />{{/ifCond}}
+
+												{{#ifCond discount '!==' '0.00'}}
+													<span class="total-space">Discount</span><br />
+												{{/ifCond}}
+
 												{{!-- <span class="total-space">Tax</span><br /> --}}
-												{{!-- <span class="total-space">Shipping</span><br /> --}}
-												<span class="total-space" style="font-weight: bold; color: #4d4d4d">Total</span>
+
+												{{#if agent_id}}
+													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Gross</span><br />
+													<span class="total-space">{{commission_percentage agent_id}} Commission</span><br />
+													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Net</span>
+												{{else}}
+													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Total</span>
+												{{/if}}
 											</td>
 											<td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
 												<span class="total-space">{{real_decimal_price}}</span><br />
-												{{#ifCond discount '!==' '0.00'}}<span class="total-space">-{{discount}}</span><br />{{/ifCond}}
+
+												{{#ifCond discount '!==' '0.00'}}
+													<span class="total-space">-{{discount}}</span><br />
+												{{/ifCond}}
+
 												{{!-- <span class="total-space">$0.75</span><br /> --}}
-												{{!-- <span class="total-space"></span><br /> --}}
-												<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span>
+
+												{{#if agent_id}}
+													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span><br />
+													<span class="total-space">-{{commission_amount agent_id decimal_price}}</span><br />
+													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{commission_result agent_id decimal_price}}</span>
+												{{else}}
+													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span>
+												{{/if}}
 											</td>
 										</tr>
 									</table>

@@ -131,6 +131,18 @@ Handlebars.registerHelper('real_decimal_price', function() {
 	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
 });
 
+Handlebars.registerHelper('commission_percentage', function(agent_id) {
+	return parseFloat(window.agents[agent_id].commission) + "%";
+});
+
+Handlebars.registerHelper('commission_amount', function(agent_id, decimal_price) {
+	return ((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(decimal_price)).toFixed(2);
+});
+
+Handlebars.registerHelper('commission_result', function(agent_id, decimal_price) {
+	return (parseFloat(decimal_price) - (parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(decimal_price)).toFixed(2);
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
@@ -1799,12 +1811,14 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	booking.ticketsSummary  = ticketsSummary;
 	booking.addonsSummary   = addonsSummary;
 
-	$('#summary-container').html(summaryTemplate(booking));
+	window.promises.loadedAgents.done(function() {
+		$('#summary-container').html(summaryTemplate(booking));
 
-	booking.packagesSummary = null;
-	booking.coursesSummary  = null;
-	booking.ticketsSummary  = null;
-	booking.addonsSummary   = null;
+		booking.packagesSummary = null;
+		booking.coursesSummary  = null;
+		booking.ticketsSummary  = null;
+		booking.addonsSummary   = null;
+	});
 });
 
 $('#summary-tab').on('click', '.save-booking', function() {
