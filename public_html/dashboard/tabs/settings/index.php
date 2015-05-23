@@ -1,5 +1,4 @@
 <script type="text/javascript" src="js/social-media.js"></script>
-<div id="fb-root"></div>
 <div id="wrapper" class="clearfix">
 	<div id="company-form-container">
 		<script type="text/x-handlebars-template" id="company-form-template">

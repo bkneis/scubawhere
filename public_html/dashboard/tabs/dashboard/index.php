@@ -1,3 +1,5 @@
+<script type="text/javascript" src="js/social-media.js"></script>
+
 <div id="wrapper" class="clearfix">
 <div class="row" id="row1">
 

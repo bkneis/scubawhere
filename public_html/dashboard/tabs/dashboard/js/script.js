@@ -3,7 +3,6 @@ window.todayBookings;
 window.tourStart;
 var todaySession;
 var customerDetails;
-// var socialMedia;
 window.currentStep;
 
 Handlebars.registerHelper('getTime', function(obj){
@@ -45,28 +44,7 @@ $(function () {
 		});
 	});
 
-	if(window.facebook.status == "connected") {
-		socialMedia = Handlebars.compile($('#social-media-template').html());
-		FB.api(
-        "/292265320876159/insights",
-        {
-          'period' : 'week'
-        },
-        function (response) {
-          if (response && !response.error) {
-            console.log(response);
-            window.facebook.stats = [
-              {title : response.data[1].title, data : response.data[1].values[2].value},
-              {title : response.data[54].title, data : response.data[54].values[2].value},
-              {title : response.data[29].title, data : response.data[29].values[2].value}
-            ];
-            $('#social-media-stats').empty().append(socialMedia({facebook : window.facebook.stats}));
-          }
-        }
-    );
-	} else {
-		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
-	} 
+	displayFBStats();
 
 	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
@@ -153,5 +131,32 @@ function getCustomers(id) {
 		});
 	});
 
+}
+
+function displayFBStats() {
+
+	if(window.facebook.status == "connected") {
+		socialMedia = Handlebars.compile($('#social-media-template').html());
+		FB.api(
+        "/292265320876159/insights",
+        {
+          'period' : 'week'
+        },
+        function (response) {
+          if (response && !response.error) {
+            console.log(response);
+            window.facebook.stats = [
+              {title : response.data[1].title, data : response.data[1].values[2].value},
+              {title : response.data[54].title, data : response.data[54].values[2].value},
+              {title : response.data[29].title, data : response.data[29].values[2].value}
+            ];
+            $('#social-media-stats').empty().append(socialMedia({facebook : window.facebook.stats}));
+          }
+        }
+    );
+	} else {
+		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
+	}
+	
 }
 
