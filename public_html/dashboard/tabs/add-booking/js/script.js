@@ -143,6 +143,12 @@ Handlebars.registerHelper('commission_result', function(agent_id, decimal_price)
 	return (parseFloat(decimal_price) - (parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(decimal_price)).toFixed(2);
 });
 
+Handlebars.registerHelper('saveable', function() {
+	var notSaveable = ['reserved', 'expired', 'confirmed', 'on hold', 'cancelled'];
+	if(notSaveable.indexOf(this.status) !== -1)
+		return " disabled";
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
@@ -1853,9 +1859,7 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	event.preventDefault();
 
 	var params = $(this).serializeObject();
-	var reserved = params.reserved;
 
-	params.reserved = moment().add(reserved.substr(0, 2), 'hours').add(reserved.substr(3, 2), 'minutes').format('YYYY-MM-DD HH:mm:ss'); // MUST be SQL date format
 	params._token   = window.token;
 
 	booking.reserve(params, function success(status) {

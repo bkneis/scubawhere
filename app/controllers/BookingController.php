@@ -1653,6 +1653,10 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
 		$data = Input::only('reserved');
+
+		$local_now = Helper::localTime();
+		$data['reserved'] = $local_now->add(new DateInterval('PT'.$data['reserved'].'H'))->format('Y-m-d H:i:s');
+
 		$data['status'] = 'reserved';
 
 		if( !$booking->update($data) )
@@ -1742,7 +1746,7 @@ class BookingController extends Controller {
 		if(Helper::isPast($booking->arrival_date))
 			return Response::json( array('errors' => array('Cannot confirm booking because it already started.')), 403 ); // 403 Forbidden
 
-		if( !$booking->update( array('status' => 'confirmed') ) )
+		if( !$booking->update( array('status' => 'confirmed', 'reserved' => null) ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}

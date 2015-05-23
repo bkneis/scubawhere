@@ -150,7 +150,7 @@
 
 																		{{#if course}}
 																			<tr>
-																				<td style="padding-bottom: 0;">
+																				<td style="padding-bottom: 0; width: 90px;">
 																					<span style="color: #4d4d4d; font-weight:bold;">Course:</span>
 																				</td>
 																				<td style="padding-bottom: 0;">
@@ -161,7 +161,7 @@
 
 																		{{#if packagefacade}}
 																			<tr>
-																				<td style="padding-top: 0;">
+																				<td style="padding-top: 0; width: 90px;">
 																					<span style="color: #4d4d4d; font-weight:bold;">Package:</span>
 																				</td>
 																				<td style="padding-top: 0;">
@@ -353,6 +353,67 @@
 												{{else}}
 													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span>
 												{{/if}}
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</center>
+				</td>
+			</tr>
+
+			<tr>
+				<td align="center" valign="top" width="100%">
+					<center>
+						<table cellpadding="0" cellspacing="0" width="600" class="w320">
+							<tr>
+								<td class="item-table">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tr>
+											<td class="title-dark" width="50%">
+												 Options
+											</td>
+											<td class="title-dark" width="50%"></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle; border-right: 1px solid #ccc;">
+												<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save For Later</button>
+												{{#if agent_id}}
+													<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+												{{else}}
+													<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
+												{{/if}}
+											</td>
+											<td>
+												<h4 class="text-center">Reserve Booking</h4>
+												<form id="reserve-booking" class="form-horizontal">
+													<div class="form-group">
+														<div class="radio col-md-12">
+															<label>
+																<input type="radio" name="email" id="email-yes" value="1" checked>
+																Send confirmation email to customer
+															</label>
+														</div>
+														<div class="radio col-md-12">
+															<label>
+																<input type="radio" name="email" id="email-no" value="0">
+																Do not send email
+															</label>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="reserve-until" class="col-sm-6 control-label">Reserve for (hours)</label>
+														<div class="col-md-6">
+															<input id="reserve-until" name="reserved" class="form-control" type="number" value="24">
+														</div>
+													</div>
+													<div class="form-group">
+														<div class="col-md-12">
+															<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
+														</div>
+													</div>
+												</form>
 											</td>
 										</tr>
 									</table>
