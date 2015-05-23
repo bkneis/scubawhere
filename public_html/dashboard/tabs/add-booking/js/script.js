@@ -1764,7 +1764,48 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 		return accom.pivot.start;
 	});
 
+	// Generate booked items list (for the price table)
+	var packagesSummary = {};
+	var coursesSummary  = {};
+	var ticketsSummary  = [];
+	var addonsSummary   = {};
+
+	_.each(booking.bookingdetails, function(detail) {
+		if(detail.packagefacade_id !== null) {
+			if(!packagesSummary[detail.packagefacade_id])
+				packagesSummary[detail.packagefacade_id] = detail.packagefacade.package;
+		}
+		else if(detail.course_id !== null) {
+			if(!coursesSummary[detail.customer_id + '-' + detail.course_id])
+				coursesSummary[detail.customer_id + '-' + detail.course_id] = detail.course;
+		}
+		else if(detail.ticket_id !== null) {
+			ticketsSummary.push(detail.ticket);
+		}
+
+		_.each(detail.addons, function(addon) {
+			if(addon.pivot.packagefacade_id === null) {
+				if(addonsSummary[addon.id])
+					addonsSummary[addon.id].qtySummary += addon.pivot.quantity;
+				else {
+					addon.qtySummary = addon.pivot.quantity;
+					addonsSummary[addon.id] = addon;
+				}
+			}
+		});
+	});
+
+	booking.packagesSummary = packagesSummary;
+	booking.coursesSummary  = coursesSummary;
+	booking.ticketsSummary  = ticketsSummary;
+	booking.addonsSummary   = addonsSummary;
+
 	$('#summary-container').html(summaryTemplate(booking));
+
+	booking.packagesSummary = null;
+	booking.coursesSummary  = null;
+	booking.ticketsSummary  = null;
+	booking.addonsSummary   = null;
 });
 
 $('#summary-tab').on('click', '.save-booking', function() {

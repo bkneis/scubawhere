@@ -68,6 +68,7 @@
 					</center>
 				</td>
 			</tr>
+
 			<tr>
 				<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
 					<center>
@@ -78,10 +79,10 @@
 
 										{{#if bookingdetails}}
 											<tr>
-												<td class="title-dark" width="120">
+												<td class="title-dark">
 													 Trips & Classes
 												</td>
-												<td class="title-dark" width="340"></td>
+												<td class="title-dark" width="100"></td>
 												<td class="title-dark" width="100"></td>
 											</tr>
 
@@ -183,10 +184,10 @@
 
 										{{#if accommodations}}
 											<tr>
-												<td class="title-dark" width="120">
+												<td class="title-dark">
 													 Accommodations
 												</td>
-												<td class="title-dark" width="340"></td>
+												<td class="title-dark" width="100"></td>
 												<td class="title-dark" width="100"></td>
 											</tr>
 
@@ -223,11 +224,98 @@
 													</td>
 												</tr>
 											{{/each}}
-
-											<tr>
-												<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
-											</tr>
 										{{/if}}
+									</table>
+								</td>
+							</tr>
+						</table>
+					</center>
+				</td>
+			</tr>
+
+			<tr><td>&nbsp;</td><tr>
+
+			<tr>
+				<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+					<center>
+						<table cellpadding="0" cellspacing="0" width="600" class="w320">
+							<tr>
+								<td class="item-table">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tr>
+											<td class="title-dark">
+												 Price Breakdown
+											</td>
+											<td class="title-dark" width="100"></td>
+											<td class="title-dark" width="100"></td>
+										</tr>
+										{{#each packagesSummary}}
+											<tr>
+												<td class="inner-item-col">
+													<i class="fa fa-tags fa-fw"></i> {{{name}}}
+												</td>
+												<td class="inner-item-col" style="text-align: right;">
+													x1
+												</td>
+												<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+													{{currency}} {{decimal_price}}
+												</td>
+											</tr>
+										{{/each}}
+										{{#each coursesSummary}}
+											<tr>
+												<td class="inner-item-col">
+													<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
+												</td>
+												<td class="inner-item-col" style="text-align: right;">
+													x1
+												</td>
+												<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+													{{currency}} {{decimal_price}}
+												</td>
+											</tr>
+										{{/each}}
+										{{#each ticketsSummary}}
+											<tr>
+												<td class="inner-item-col">
+													<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+												</td>
+												<td class="inner-item-col" style="text-align: right;">
+													x1
+												</td>
+												<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+													{{currency}} {{decimal_price}}
+												</td>
+											</tr>
+										{{/each}}
+										{{#each addonsSummary}}
+											<tr>
+												<td class="inner-item-col">
+													<i class="fa fa-cart-plus fa-fw"></i> {{{name}}}
+												</td>
+												<td class="inner-item-col" style="text-align: right;">
+													x{{qtySummary}}
+												</td>
+												<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+													{{currency}} {{decimal_price}}
+												</td>
+											</tr>
+										{{/each}}
+										{{#each accommodations}}
+											{{#unless pivot.packagefacade_id}}
+												<tr>
+													<td class="inner-item-col">
+														<i class="fa fa-bed fa-fw"></i> {{{name}}}
+													</td>
+													<td class="inner-item-col" style="text-align: right;">
+														{{!-- x1 --}}
+													</td>
+													<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+														{{currency}} {{decimal_price}}
+													</td>
+												</tr>
+											{{/unless}}
+										{{/each}}
 
 										<tr>
 											<td class="item-col item" style="border-top: 1px solid #cccccc;">

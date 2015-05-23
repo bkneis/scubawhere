@@ -88,8 +88,9 @@
 		<script type="text/x-handlebars-template" id="accommodations-list-template">
 			{{#each accommodations}}
 				<li data-id="{{id}}" class="list-group-item accommodation-item">
+					<p class="lead mb5 pull-right"><span class="price">{{pricerange base_prices prices}}</span></p>
 					<h4 class="list-group-item-heading">{{{name}}}</h4>
-					<p>{{{description}}}</p>
+					{{!-- <p>{{{description}}}</p> --}}
 					<div class="row">
 						<div class="form-group">
 							<label for="" class="col-lg-1 control-label">From: </label>

@@ -76,7 +76,7 @@
 						{{!-- <p>{{{description}}}</p> --}}
 						<div class="row">
 							<div class="col-md-4">
-								<p class="lead mb5">£ <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
+								<p class="lead mb5">{{currency}} <span id="baseprice-{{id}}" class="price">{{decimal_price}}</span></p>
 							</div>
 							<div class="col-md-5 pull-right">
 								<div class="input-group">
