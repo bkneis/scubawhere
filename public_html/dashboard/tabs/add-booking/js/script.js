@@ -538,10 +538,13 @@ window.promises.loadedCustomers.done(function() {
 		booking.selectedCustomers[id] = window.customers[id];
 		booking.store();
 
+		pageMssg('Customer added to booking.', 'success');
+
 		drawBasket();
 
 		if( _.size(booking.selectedCustomers) === 1 ) {
 			booking.setLead({_token: window.token, customer_id: id}, function success(status) {
+				pageMssg(status, 'success');
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -571,7 +574,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 	});
 
 	if( details.length > 0 ) {
-		var question = confirm('This customer already has tickets assigned.\n\n Do you want to remove the customer anyway?');
+		var question = confirm('This customer already has tickets assigned.\n\n Do you want to remove the customer and the assigned trips anyway?');
 		if(!question)
 			return false;
 	}
@@ -585,6 +588,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 
 		booking.removeDetail(params, function success(status) {
 			drawBasket();
+			pageMssg(status, 'success');
 			// All good
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
@@ -594,6 +598,8 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 
 	delete booking.selectedCustomers[id];
 	booking.store();
+
+	pageMssg('Customer removed from booking.', 'success');
 
 	drawBasket();
 
@@ -607,6 +613,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				customer_id: _.find(booking.selectedCustomers, function(){return true;}).id // Returns the first selected customer
 			};
 			booking.setLead(params, function success(status) {
+				pageMssg(status, 'success');
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -619,6 +626,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				customer_id: null // unset lead_customer_id on the server
 			};
 			booking.setLead(params, function success(status) {
+				pageMssg(status, 'success');
 				// All good
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -695,6 +703,7 @@ window.promises.loadedCustomers.done(function() {
 				if( _.size(booking.selectedCustomers) === 1 ) {
 					booking.setLead({_token: window.token, customer_id: data.id}, function success(status) {
 						booking.store();
+						pageMssg(status, 'success');
 						drawBasket();
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
@@ -716,6 +725,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 
 $('#booking-summary').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
+		pageMssg(status, 'success');
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
