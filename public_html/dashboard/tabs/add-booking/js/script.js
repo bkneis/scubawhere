@@ -1363,6 +1363,12 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	params.addon_id         = $(this).data('id');
 	params.quantity         = $('.addon-qty[data-id="'+$(this).data('id')+'"]').val();
 
+	if(!params.bookingdetail_id) {
+		pageMssg('Please select a trip for the addon.', 'warning');
+		return false;
+		btn.html('Add');
+	}
+
 	booking.addAddon(params, function success(status) {
 		booking.store();
 		pageMssg(status, 'success');
