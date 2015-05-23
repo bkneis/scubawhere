@@ -332,9 +332,10 @@ function format ( d ) {
 
     var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
 
-    var booking = _.where(window.bookings, {id: d});
+    var booking = _.where(window.bookings, {id: d.parseInt()});
 
     console.log(booking);
+    console.log(d);
 
     return bookingDetailsTemplate({bookingDetails : booking});
 
@@ -366,6 +367,7 @@ function createDataTable() {
         else {
             // Open this row
             row.child( format($(this).attr('data-id')) ).show();
+            console.log($(this).attr('data-id'));
             tr.addClass('shown');
         }
     } );
