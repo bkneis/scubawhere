@@ -134,7 +134,7 @@ $PROTOCOL = 'http';
 		$.get("/api/course/all", function success(data) {
 			window.courses = _.indexBy(data, 'id');
 		});
-		
+
 	</script>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=9">

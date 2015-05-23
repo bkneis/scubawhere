@@ -5,7 +5,7 @@ use ScubaWhere\Helper;
 
 class NotificationsController extends Controller {
 
-	public function getAll($from = 0, $take = 20) {
+	public function getIndex($from = 0, $take = 20) {
 
 		$NOTIFICATIONS = [];
 
@@ -19,7 +19,7 @@ class NotificationsController extends Controller {
 
 		$overdue = [];
 		$expiring = [];
-		
+
 		foreach($bookings as $booking) {
 
 			$amountPaid = 0;
