@@ -127,6 +127,7 @@ Handlebars.registerHelper('UID', function() {
 });
 
 Handlebars.registerHelper('real_decimal_price', function() {
+	if(this.discount === undefined) this.discount = "0.00";
 	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
 });
 
@@ -1650,10 +1651,6 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 
 var extraInfoTemplate = Handlebars.compile($("#extra-info-template").html());
 
-Handlebars.registerHelper('discountPercentage', function() {
-
-})
-
 $('[data-target="#extra-tab"]').on('show.bs.tab', function () {
 	updateExtraInfoPanel();
 	$('#discount').change();
@@ -1721,6 +1718,8 @@ $('#extra-tab').on('change', '#discount-percentage', function(e) {
 $('#extra-tab').on('change', '#discount', function(e) {
 	$discount            = $(e.target);
 	$discount_percentage = $('#discount-percentage');
+
+	if($discount.val() === "") $discount.val('0.00');
 
 	var originalPrice = parseFloat(booking.decimal_price) + parseFloat(booking.discount);
 

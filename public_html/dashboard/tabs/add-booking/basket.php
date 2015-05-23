@@ -14,7 +14,7 @@
 		<h4 class="list-group-item-heading">Summary<span class="pull-right">{{currency}} {{decimal_price}}</h4>
 	</li>
 	<li class="list-group-item summary-references">
-		<p><strong>Booking Reference</strong> <span class="pull-right">{{reference}}</span></p>
+		<p class="clearfix"><strong>Booking Reference</strong> <span class="pull-right">{{reference}}</span></p>
 		{{#if agent_reference}}
 			<p><strong>Agent Reference</strong> <span class="pull-right"><small>{{agent_reference}}</small></span></p>
 		{{/if}}
