@@ -53,7 +53,8 @@ $PROTOCOL = 'http';
 		<title>scubawhereRMS | Dashboard</title>
 		<!-- favicon -->
 		<link rel="icon" type="image/ico" href="/common/favicon.ico" />
-
+	
+		<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
 		<!--Bootstrap CSS-->
 		<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
 
@@ -65,8 +66,9 @@ $PROTOCOL = 'http';
 		<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
 		<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
+		
+		<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 		<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
-		<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 		<!-- Third Party Libraries -->
@@ -97,6 +99,10 @@ $PROTOCOL = 'http';
 		<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
 		<script src="/common/js/jquery/jquery.datatables.min.js"></script>
+		
+
+		<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
+
 		<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
 
 		<!-- ScubaWhere Files -->

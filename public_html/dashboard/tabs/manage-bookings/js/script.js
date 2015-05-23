@@ -327,15 +327,15 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	});
 });
 
-function format ( d ) {
+function format ( id ) {
     // `d` is the original data object for the row
 
     var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
 
-    var booking = _.where(window.bookings, {id: parseInt(d)});
+    var booking = _.where(window.bookings, {id: parseInt(id)});
 
     console.log(booking);
-    console.log(d);
+    console.log(id);
 
     return bookingDetailsTemplate({bookingDetails : booking});
 
@@ -367,7 +367,6 @@ function createDataTable() {
         else {
             // Open this row
             row.child( format($(this).attr('data-id')) ).show();
-            console.log($(this).attr('data-id'));
             tr.addClass('shown');
         }
     } );

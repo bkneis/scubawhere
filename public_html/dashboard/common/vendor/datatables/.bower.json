@@ -2,8 +2,8 @@
   "name": "datatables",
   "version": "1.10.6",
   "main": [
-    "media/js/jquery.dataTables.js",
-    "media/css/jquery.dataTables.css",
+    "media/js/bootstrap.dataTables.js",
+    "media/css/bootstrap.dataTables.css",
     "media/images/sort_asc.png",
     "media/images/sort_asc_disabled.png",
     "media/images/sort_both.png",
