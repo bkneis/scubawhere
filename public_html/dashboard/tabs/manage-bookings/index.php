@@ -49,99 +49,52 @@
 				</div>
 				<div class="panel-body">
 					<div id="booking-types" class="btn-group col-md-offset-3" role="group">
-						<button id="filter-confirmed" type="button" display="confirmed" class="btn btn-default btn-primary">Confirmed</button>
-						<button id="filter-cancelled" type="button" display="cancelled" class="btn btn-default">Cancelled</button>
-						<button id="filter-reserved" type="button" display="reserved" class="btn btn-default">Reserved</button>
-						<button id="filter-saved" type="button" display="saved" class="btn btn-default">Saved</button>
-						<button id="filter-all" type="button" display="all" class="btn btn-default">All</button>
+						<button id="filter-confirmed" type="button" display="confirmed" class="btn btn-default btn-primary btn-switch">Confirmed</button>
+						<button id="filter-cancelled" type="button" display="cancelled" class="btn btn-default btn-switch">Cancelled</button>
+						<button id="filter-reserved" type="button" display="reserved" class="btn btn-default btn-switch">Reserved</button>
+						<button id="filter-saved" type="button" display="saved" class="btn btn-default btn-switch">Saved</button>
+						<button id="filter-all" type="button" display="all" class="btn btn-default btn-switch">All</button>
 					</div>
 					<div style="margin-bottom:10px"></div>
-					<table id="bookings-table" class="bluethead">
-						<thead>
-							<tr class="bg-primary">
-								<th></th> <!-- icons -->
-								<th>Ref</th>
-								<th>Arrival</th>
-								<th>Customer</th>
-								<th>Email</th>
-								<th>Phone</th>
-								<th></th>
-								<th>Total</th>
-							</tr>
-						</thead>
-						<tbody id="booking-list">
-							<tr><td colspan="9" style="text-align: center;"> </td></tr>
-							<tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
-						</tbody>
-					</table>
+					<div id="booking-table-div"></div>
 				</div>
 			</div>
 		</div>
 	</div><!-- .row -->
 
 	<script type="text/x-handlebars-template" id="booking-list-item-template">
-		{{#each bookings}}
-			<tr class="accordion-header" data-id={{id}}>
-				<td>{{sourceIcon}} {{statusIcon}}</td>
-				<td>{{reference}}</td>
-				<td>{{arrivalDate}}</td>
-				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{lead_customer.email}}</td>
-				<td>{{lead_customer.phone}}</td>
-				<td>{{lead_customer.country.abbreviation}}</td>
-				<td>{{price}}</td>
-			</tr>
-			<tr class="accordion-body accordion-{{id}}">
-				<td colspan="9" class="clearfix">
-					<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
-						{{#if payments}}
-							<h5 class="text-center">Transactions</h5>
-							<table style="width: 350px;" class="table">
-								<tr>
-									<th>Date</th>
-									<th>Amount</th>
-									<th>Via</th>
-								</tr>
-								{{#each payments}}
-									<tr>
-										<td>{{received_at}}</td>
-										<td>{{currency}} {{amount}}</td>
-										<td>{{paymentgateway.name}}</td>
-									</tr>
-								{{/each}}
-								{{#each refunds}}
-									<tr>
-										<td>{{received_at}}</td>
-										<td class="text-danger">{{currency}} -{{amount}}</td>
-										<td>{{paymentgateway.name}} (refund)</td>
-									</tr>
-								{{/each}}
-								<tr>
-									<td></td>
-									<td class="table-sum">{{currency}} {{sumPaid}}</td>
-									<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
-								</tr>
-							</table>
-						{{else}}
-							<h5 class="text-center text-muted">No transactions yet</h5>
-						{{/if}}
-					</div>
-
-					<div style="margin-bottom: 1em;">
-						{{addTransactionButton}}
-						{{editButton}}
-
-						<a href="mailto:{{lead_customer.email}}"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Contact customer</button></a>
-					</div>
-					<div>
-						{{cancelButton}}
-					</div>
-				</td>
-			</tr>
-			<tr class="accordion-spacer accordion-{{id}}"></tr>
-		{{else}}
-			<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
-		{{/each}}
+		<table id="bookings-table" class="bluethead">
+			<thead>
+				<tr class="bg-primary">
+					<th></th> <!-- icons -->
+					<th>Ref</th>
+					<th>Arrival</th>
+					<th>Customer</th>
+					<th>Email</th>
+					<th>Phone</th>
+					<th></th>
+					<th>Total</th>
+				</tr>
+			</thead>
+			<tbody id="booking-list">
+				
+				{{#each bookings}}
+				<tr class="accordion-header" data-id={{id}}>
+					<td>{{sourceIcon}} {{statusIcon}}</td>
+					<td>{{reference}}</td>
+					<td>{{arrivalDate}}</td>
+					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+					<td>{{lead_customer.email}}</td>
+					<td>{{lead_customer.phone}}</td>
+					<td>{{lead_customer.country.abbreviation}}</td>
+					<td>{{price}}</td>
+				</tr>
+				{{else}}
+				<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
+				{{/each}}
+				
+			</tbody>
+		</table>
 	</script>
 
 	<div id="modalWindows" style="height: 0;"></div>
@@ -185,6 +138,54 @@
 
 			<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="booking-details-template">
+		{{#each bookingDetails}}
+		<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
+			{{#if payments}}
+			<h5 class="text-center">Transactions</h5>
+			<table style="width: 350px;" class="table">
+				<tr>
+					<th>Date</th>
+					<th>Amount</th>
+					<th>Via</th>
+				</tr>
+				{{#each payments}}
+				<tr>
+					<td>{{received_at}}</td>
+					<td>{{currency}} {{amount}}</td>
+					<td>{{paymentgateway.name}}</td>
+				</tr>
+				{{/each}}
+				{{#each refunds}}
+				<tr>
+					<td>{{received_at}}</td>
+					<td class="text-danger">{{currency}} -{{amount}}</td>
+					<td>{{paymentgateway.name}} (refund)</td>
+				</tr>
+				{{/each}}
+				<tr>
+					<td></td>
+					<td class="table-sum">{{currency}} {{sumPaid}}</td>
+					<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
+				</tr>
+			</table>
+			{{else}}
+			<h5 class="text-center text-muted">No transactions yet</h5>
+			{{/if}}
+		</div>
+
+		<div style="margin-bottom: 1em;">
+			{{addTransactionButton id}}
+			{{editButton id}}
+
+			<a href="mailto:{{lead_customer.email}}"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Contact customer</button></a>
+		</div>
+		<div>
+			{{cancelButton}}
+		</div>
+		{{/each}}
 	</script>
 
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>

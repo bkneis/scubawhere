@@ -113,10 +113,10 @@ Handlebars.registerHelper("remainingPay", function() {
 	return new Handlebars.SafeString(html);
 });
 
-Handlebars.registerHelper('addTransactionButton', function() {
-	return new Handlebars.SafeString('<button onclick="addTransaction(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
+Handlebars.registerHelper('addTransactionButton', function(id) {
+	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
-Handlebars.registerHelper('editButton', function() {
+Handlebars.registerHelper('editButton', function(id) {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
 	/*if(this.status === 'cancelled')
 	return '';*/
@@ -186,7 +186,7 @@ $(function() {
 	});
 
 	$("#booking-types").on('click', ':button', function(){
-		$("#filter-"+display).removeClass("btn-primary");
+		$(".btn-switch").removeClass("btn-primary");
 		display = $(this).attr('display');
 		$("#filter-"+display).addClass("btn-primary");
 		renderBookingList(window.bookings, display);
@@ -210,10 +210,12 @@ function renderBookingList(bookings, display) {
 		} else return booking;
 	});
 
-	$('#booking-list').html( bookingListItem({bookings: results}) );
+	$('#booking-table-div').html( bookingListItem({bookings: results}) );
 
 	// Initiate tooltips
 	$('#booking-list').find('[data-toggle=tooltip]').tooltip();
+
+	if(results.length != 0) createDataTable();
 
 }
 
@@ -231,6 +233,8 @@ function editBooking(booking_id, self) {
 }
 
 function addTransaction(booking_id, self) {
+
+	console.log(booking_id);
 	// Set loading indicator
 	$(self).after('<span id="save-loader" class="loader"></span>');
 
@@ -323,8 +327,21 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	});
 });
 
+function format ( d ) {
+    // `d` is the original data object for the row
+
+    var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
+
+    var booking = _.where(window.bookings, {id: d});
+
+    console.log(booking);
+
+    return bookingDetailsTemplate({bookingDetails : booking});
+
+}
+
 function createDataTable() {
-	$('#bookings-table').dataTable({
+	var bookingTable = $('#bookings-table').DataTable({
 		"paging":   true,
 		"ordering": false,
 		"info":     false,
@@ -335,4 +352,21 @@ function createDataTable() {
 			"sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
 		}
 	});
+
+	// Add event listener for opening and closing details
+    $('#booking-list').on('click', 'tr', function () {
+        var tr = $(this).closest('tr');
+        var row = bookingTable.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format($(this).attr('data-id')) ).show();
+            tr.addClass('shown');
+        }
+    } );
 }
