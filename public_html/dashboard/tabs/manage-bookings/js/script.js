@@ -332,7 +332,7 @@ function format ( d ) {
 
     var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
 
-    var booking = _.where(window.bookings, {id: d.parseInt()});
+    var booking = _.where(window.bookings, {id: parseInt(d)});
 
     console.log(booking);
     console.log(d);
