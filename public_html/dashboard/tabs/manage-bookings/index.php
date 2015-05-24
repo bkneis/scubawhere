@@ -66,7 +66,7 @@
 		<table id="bookings-table" class="bluethead">
 			<thead>
 				<tr class="bg-primary">
-					<th></th> <!-- icons -->
+					<th style="width:30px;"></th> <!-- icons -->
 					<th>Ref</th>
 					<th>Arrival</th>
 					<th>Customer</th>
