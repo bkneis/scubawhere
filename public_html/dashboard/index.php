@@ -104,6 +104,7 @@ $PROTOCOL = 'http';
 		<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
 
 		<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
+		<!-- needed to add something to make a push-->
 
 		<!-- ScubaWhere Files -->
 		<script type="text/javascript">
