@@ -46,72 +46,70 @@ $PROTOCOL = 'http';
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
-	?><!DOCTYPE html>
-	<html>
-	<head>
+?><!DOCTYPE html>
+<html>
+<head>
 
-		<title>scubawhereRMS | Dashboard</title>
-		<!-- favicon -->
-		<link rel="icon" type="image/ico" href="/common/favicon.ico" />
-	
-		<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
-		<!--Bootstrap CSS-->
-		<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<title>scubawhereRMS | Dashboard</title>
 
-		<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.css' />
-		<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
-		<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
-		<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
-		<link rel="stylesheet" type="text/css" href="/common/css/select2.css" />
-		<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
-		<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
-		
-		<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
-		<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<!-- favicon -->
+	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
 
-		<!-- Third Party Libraries -->
-		<script src="/common/js/jquery/jquery.min.js"></script>
+	<!--Bootstrap CSS-->
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
 
-		<!--Bootstrap js-->
-		<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
+	<!-- scubawhere styles -->
+	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
-		<script type="text/javascript" src="/common/js/handlebars.min.js"></script>
+	<!-- Plugins -->
+	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.css' />
+	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/select2.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
 
-		<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
+	<!-- Third Party Libraries -->
+	<script src="/common/js/jquery/jquery.min.js"></script>
 
-		<script type="text/javascript" src="/common/js/moment.min.js"></script>
+	<!--Bootstrap js-->
+	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
-		<script type="text/javascript" src="/common/js/underscore-min.js"></script>
+	<!-- other -->
+	<script type="text/javascript" src="/common/js/handlebars.min.js"></script>
+	<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="/common/js/moment.min.js"></script>
+	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
 
-		<!--Datetimepicker-->
-		<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
+	<!--Datetimepicker-->
+	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
 
-		<!--Select 2-->
-		<script type="text/javascript" src="/common/js/select2.min.js"></script>
+	<!--Select 2-->
+	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
-		<!--intojs tour-->
-		<script type="text/javascript" src="/common/js/intro.js"></script>
+	<!--intojs tour-->
+	<script type="text/javascript" src="/common/js/intro.js"></script>
 
-		<!--nprogress bar-->
-		<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
+	<!--nprogress bar-->
+	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
-		<script src="/common/js/jquery/jquery.datatables.min.js"></script>
-		
+	<!-- Datatables -->
+	<script type="text/javascript" src="/common/js/jquery/jquery.datatables.min.js"></script>
+	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
+	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
 
-		<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
-
-		<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
-		<!-- needed to add something to make a push-->
-
-		<!-- ScubaWhere Files -->
-		<script type="text/javascript">
-			// Set scubawhere namespace
-			window.sw = {};
-			window.facebook = {};
-		</script>
+	<!-- scubawhere files -->
+	<script type="text/javascript">
+		// Set scubawhere namespace
+		window.sw = {};
+		window.facebook = {};
+	</script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/ui.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
@@ -130,18 +128,10 @@ $PROTOCOL = 'http';
 			});
 		});
 
-		$.get("/api/country/all", function success(data) {
-			window.countries = _.indexBy(data, 'id');
-		});
-
-		$.get("/api/ticket/all", function success(data) {
-			window.tickets = _.indexBy(data, 'id');
-		});
-
-		$.get("/api/course/all", function success(data) {
-			window.courses = _.indexBy(data, 'id');
-		});
-
+		/**
+		 * Nothing else should be in here, in the index.php!
+		 * Every other logic/code/whatever MUST go into their respective tab's script and onLoad function!
+		 */
 	</script>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=9">

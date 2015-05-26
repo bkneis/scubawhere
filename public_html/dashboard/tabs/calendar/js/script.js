@@ -1,15 +1,17 @@
-var filterByBoat = false;
-var filterByTrip = false;
-var filterByClass = false;
-var filterByAccom = false;
-var boatFilter;
-var tripFilter;
-var classFilter;
-var accomFilter;
-var boatsList;
-var tripsList;
-var filterSelect;
-var display = "trips";
+var calendarOptions = {
+	filterByBoat: false,
+	filterByTrip: false,
+	filterByClass: false,
+	filterByAccom: false,
+	boatFilter: null,
+	tripFilter: null,
+	classFilter: null,
+	accomFilter: null,
+	boatsListTemplate: null,
+	tripsListTemplate: null,
+	filterSelectTemplate: null,
+	calendarDisplay: "trips"
+};
 
 $(function() {
 
@@ -20,17 +22,17 @@ $(function() {
 
 	window.promises  = {};
 
-	boatsList = Handlebars.compile($("#boats-list-template").html());
-	tripsList = Handlebars.compile($("#trips-list-template").html());
+	calendarOptions.boatsListTemplate = Handlebars.compile($("#boats-list-template").html());
+	calendarOptions.tripsListTemplate = Handlebars.compile($("#trips-list-template").html());
 
-	filterSelect = Handlebars.compile($("#trip-filter-template").html());
-	$("#filter-settings").empty().append(filterSelect());
+	calendarOptions.filterSelectTemplate = Handlebars.compile($("#trip-filter-template").html());
+	$("#filter-settings").empty().append(calendarOptions.filterSelectTemplate());
 
 	// 1. Get trips
 	window.promises.loadedTrips = $.Deferred();
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
-		$("#trips-select").append( tripsList({trips : data}) );
+		$("#trips-select").append( calendarOptions.tripsListTemplate({trips : data}) );
 		window.promises.loadedTrips.resolve();
 	});
 
@@ -52,184 +54,206 @@ $(function() {
 		window.promises.loadedAccommodations.resolve();
 	});
 
+	window.promises.loadedCountries = $.Deferred();
+	$.get("/api/country/all", function success(data) {
+		window.countries = _.indexBy(data, 'id');
+		window.promises.loadedCountries.resolve();
+	});
+
+	window.promises.loadedCourses = $.Deferred();
+	Course.getAll(function(data) {
+		window.courses = _.indexBy(data, 'id');
+		window.promises.loadedCourses.resolve();
+	});
+
+	window.promises.loadedTickets = $.Deferred();
+	Ticket.getAllTickets(function(data) {
+		window.tickets = _.indexBy(data, 'id');
+		window.promises.loadedTickets.resolve();
+	});
+
 	/* Initialize the calendar
 	--------------------------*/
+	$.when(
+		window.promises.loadedTrips,
+		window.promises.loadedClasses,
+		window.promises.loadedBoats,
+		window.promises.loadedAccommodations
+	).done(function() {
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'basicDay basicWeek month',
+				center: 'title',
+			},
+			defaultView : 'basicWeek',
+			timezone: false,
+			height : 450,
+			firstDay: 1, // Set Monday as the first day of the week
+			events: function(start, end, timezone, callback) {
+				if(calendarOptions.calendarDisplay == "trips")
+					getTripEvents(start, end, timezone, callback);
+				if(calendarOptions.calendarDisplay == "accommodations")
+					getAccomEvents(start, end, timezone, callback);
+				if(calendarOptions.calendarDisplay == "classes")
+					getClassEvents(start, end, timezone, callback);
+			},
+			eventRender: function(event, element) {
+				// Intercept the event rendering to inject the non-html-escaped version of the title
+				// Needed for trip names with special characters in it (like ó, à, etc.)
+				element.find('.fc-title').html(event.title);
+			},
+			editable: false,
+			droppable: false, // This allows things to be dropped onto the calendar
+			eventClick: function(eventObject) {
+				if(calendarOptions.calendarDisplay == "trips")
+					showModalWindow(eventObject);
+				if(calendarOptions.calendarDisplay == "accommodations")
+					showModalWindowAccommodation(eventObject);
+				if(calendarOptions.calendarDisplay == "classes")
+					showModalWindowCourse(eventObject);
+				//console.log(calendarOptions.calendarDisplay);
+				//console.log(eventObject);
+			},
+		});
+	});
 
-	window.promises.loadedTrips.done(function() {
-		window.promises.loadedClasses.done(function() {
-			window.promises.loadedBoats.done(function() {
-				window.promises.loadedAccommodations.done(function() {
-					$('#calendar').fullCalendar({
-						header: {
-							left: 'basicDay basicWeek month',
-							center: 'title',
-						},
-						defaultView : 'basicWeek',
-						timezone: false,
-						height : 450,
-						firstDay: 1, // Set Monday as the first day of the week
-						events: function(start, end, timezone, callback) {
-							if(display == "trips") getTripEvents(start, end, timezone, callback);
-							if(display == "accommodations") getAccomEvents(start, end, timezone, callback);
-							if(display == "classes") getClassEvents(start, end, timezone, callback);
-						},
-						eventRender: function(event, element) {
-							// Intercept the event rendering to inject the non-html-escaped version of the title
-							// Needed for trip names with special characters in it (like ó, à, etc.)
-							element.find('.fc-title').html(event.title);
-						},
-						editable: false,
-						droppable: false, // This allows things to be dropped onto the calendar
-						eventClick: function(eventObject) {
-							if(display == "trips") showModalWindow(eventObject);
-							if(display == "accommodations") showModalWindowA(eventObject);
-							if(display == "classes") showModalWindowC(eventObject);
-							//console.log(display);
-							//console.log(eventObject);
-						},
-					});
-});
-});
-});
-});
+	$("#filter-types").on('click', '.filter-type', function(event){
+		event.preventDefault();
+		$("#filter-"+calendarOptions.calendarDisplay).removeClass("btn-primary");
+		calendarOptions.calendarDisplay = $(this).attr("display");
 
-$("#filter-types").on('click', '.filter-type', function(event){
-	event.preventDefault();
-	$("#filter-"+display).removeClass("btn-primary");
-	display = $(this).attr("display");
-
-	if(display == "trips") {
-		filterSelect = Handlebars.compile($("#trip-filter-template").html());
-		$("#filter-settings").empty().append(filterSelect());
-	}
-	else if(display == "classes") {
-		$('#filter').empty();
-		filterSelect = Handlebars.compile($("#class-list-template").html());
-		$("#filter-settings").empty().append(filterSelect({classes : window.trainings}));
-	}
-	else {
-		$('#filter').empty();
-		filterSelect = Handlebars.compile($("#accom-list-template").html());
-		$("#filter-settings").empty().append(filterSelect({accoms : window.accommodations}));
-	}
-	filterByBoat = false;
-	filterByTrip = false;
-	filterByAccom = false;
-	filterByClass = false;
-	$('#calendar').fullCalendar( 'refetchEvents' );
-	$("#filter-"+display).addClass("btn-primary");
-});
+		if(calendarOptions.calendarDisplay == "trips") {
+			calendarOptions.filterSelectTemplate = Handlebars.compile($("#trip-filter-template").html());
+			$("#filter-settings").empty().append(calendarOptions.filterSelectTemplate());
+		}
+		else if(calendarOptions.calendarDisplay == "classes") {
+			$('#filter').empty();
+			calendarOptions.filterSelectTemplate = Handlebars.compile($("#class-list-template").html());
+			$("#filter-settings").empty().append(calendarOptions.filterSelectTemplate({classes : window.trainings}));
+		}
+		else {
+			$('#filter').empty();
+			calendarOptions.filterSelectTemplate = Handlebars.compile($("#accom-list-template").html());
+			$("#filter-settings").empty().append(calendarOptions.filterSelectTemplate({accoms : window.accommodations}));
+		}
+		calendarOptions.filterByBoat = false;
+		calendarOptions.filterByTrip = false;
+		calendarOptions.filterByAccom = false;
+		calendarOptions.filterByClass = false;
+		$('#calendar').fullCalendar( 'refetchEvents' );
+		$("#filter-"+calendarOptions.calendarDisplay).addClass("btn-primary");
+	});
 
 	/*$('#filter-options').on('change', function(event) {
 		event.preventDefault();
 		if($("#filter-options").val() == 'boat') {
 			$("div#filter-settings option[value=boat]").attr('disabled', true);
 			$("#filter-options").val('all');
-			$("#filter").append( boatsList({boats : window.boats}) );
+			$("#filter").append( calendarOptions.boatsListTemplate({boats : window.boats}) );
 		}
 		else if($("#filter-options").val() == 'trip') {
 			$("div#filter-settings option[value=trip]").attr('disabled', true);
 			$("#filter-options").val('all');
-			$("#filter").append( tripsList({trips : window.trips}) );
+			$("#filter").append( calendarOptions.tripsListTemplate({trips : window.trips}) );
 		}
 	});*/
 
-$("#filter").on('change', '.filter', function(event){
-	event.preventDefault();
-	    	//console.log(this.options[this.selectedIndex].value);
-	    	console.log(filter);
-	    	if(this.id == "boats") {
-	    		var filter = $("#boats option:selected").val();
-	    		if(filter == "all") filterByBoat = false;
-	    		else filterByBoat = true;
-	    		//filterByBoat = true;
-	    		boatFilter = this.options[this.selectedIndex].value;
-	    		//console.log(boatFilter);
-	    	}
-	    	else if(this.id == "trips") {
-	    		var filter = $("#trips option:selected").val();
-	    		if(filter == "all") filterByTrip = false;
-	    		else filterByTrip = true;
-	    		filterByTrip = true;
-	    		tripFilter = this.options[this.selectedIndex].value;
-	    		console.log("trip filter =  ",tripFilter);
-	    	}
-	    	$('#calendar').fullCalendar( 'refetchEvents' );
-	    });
-
-$("#filter-settings").on('change', '.filter', function(event) {
-	event.preventDefault();
-	if(this.id == "accoms") {
-		var filter = $("#accoms option:selected").val();
+	$("#filter").on('change', '.filter', function(event){
+		event.preventDefault();
+		//console.log(this.options[this.selectedIndex].value);
 		console.log(filter);
-		if(filter == "all") filterByAccom = false;
-		else filterByAccom = true;
-	    	//filterByBoat = true;
-	    	accomFilter = this.options[this.selectedIndex].value;
-	    }
-	    else {
-	    	var filter = $("#classes option:selected").val();
-	    	if(filter == "all") filterByClass = false;
-	    	else filterByClass = true;
-	    	//filterByBoat = true;
-	    	classFilter = this.options[this.selectedIndex].value;
-	    }
-	    $('#calendar').fullCalendar( 'refetchEvents' );
+		if(this.id == "boats") {
+			var filter = $("#boats option:selected").val();
+			if(filter == "all") calendarOptions.filterByBoat = false;
+			else calendarOptions.filterByBoat = true;
+			//calendarOptions.filterByBoat = true;
+			calendarOptions.boatFilter = this.options[this.selectedIndex].value;
+			//console.log(calendarOptions.boatFilter);
+		}
+		else if(this.id == "trips") {
+			var filter = $("#trips option:selected").val();
+			if(filter == "all") calendarOptions.filterByTrip = false;
+			else calendarOptions.filterByTrip = true;
+			calendarOptions.filterByTrip = true;
+			calendarOptions.tripFilter = this.options[this.selectedIndex].value;
+			console.log("trip filter =  ",calendarOptions.tripFilter);
+		}
+		$('#calendar').fullCalendar( 'refetchEvents' );
 	});
 
-$("#filters").on('click', '#remove-boats-filter', function(event){
-	event.preventDefault();
-	filterByBoat = false;
-	boatFilter = null;
-	$("div#filter-settings option[value=boat]").attr('disabled', false);
-	$(event.target).parent().remove();
-	$('#calendar').fullCalendar( 'refetchEvents' );
-});
+	$("#filter-settings").on('change', '.filter', function(event) {
+		event.preventDefault();
+		if(this.id == "accoms") {
+			var filter = $("#accoms option:selected").val();
+			console.log(filter);
+			if(filter == "all") calendarOptions.filterByAccom = false;
+		else calendarOptions.filterByAccom = true;
+			//calendarOptions.filterByBoat = true;
+			calendarOptions.accomFilter = this.options[this.selectedIndex].value;
+		}
+		else {
+			var filter = $("#classes option:selected").val();
+			if(filter == "all") calendarOptions.filterByClass = false;
+			else calendarOptions.filterByClass = true;
+			//calendarOptions.filterByBoat = true;
+			calendarOptions.classFilter = this.options[this.selectedIndex].value;
+		}
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
-$("#filters").on('click', '#remove-trips-filter', function(event){
-	event.preventDefault();
-	filterByTrip = false;
-	tripFilter = null;
-	$("div#filter-settings option[value=trip]").attr('disabled', false);
-	$(event.target).parent().remove();
-	$('#calendar').fullCalendar( 'refetchEvents' );
-});
+	$("#filters").on('click', '#remove-boats-filter', function(event){
+		event.preventDefault();
+		calendarOptions.filterByBoat = false;
+		calendarOptions.boatFilter = null;
+		$("div#filter-settings option[value=boat]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
-$("#jump-to-date").on('change', '#jump-date', function(event){
-	event.preventDefault();
-	var date = $("#jump-date").val();
-	var jumpDate = $.fullCalendar.moment(date);
-	$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-	$("#remove-jump").css('display', 'inline');
-});
+	$("#filters").on('click', '#remove-trips-filter', function(event){
+		event.preventDefault();
+		calendarOptions.filterByTrip = false;
+		calendarOptions.tripFilter = null;
+		$("div#filter-settings option[value=trip]").attr('disabled', false);
+		$(event.target).parent().remove();
+		$('#calendar').fullCalendar( 'refetchEvents' );
+	});
 
-$("#jump-to-date").on('click', '#remove-jump', function(event){
-	event.preventDefault();
-	var date = new Date();
-	var d = date.getDate();
-	    	var m = date.getMonth() + 1; // jan starts at 0
-	    	var y = date.getFullYear();
-	    	$("#jump-date").val('');
-	    	var sDate = y+'-'+m+'-'+d;
-	    	var jumpDate = $("#calendar").fullCalendar.moment(sDate);
-			//var moment = $('#calendar').fullCalendar('getDate');
-			console.log(moment);
-			$("#calendar").fullCalendar( 'gotoDate', jumpDate );
-			$("#remove-jump").css('display', 'none');
-		});
+	$("#jump-to-date").on('change', '#jump-date', function(event){
+		event.preventDefault();
+		var date = $("#jump-date").val();
+		var jumpDate = $.fullCalendar.moment(date);
+		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+		$("#remove-jump").css('display', 'inline');
+	});
+
+	$("#jump-to-date").on('click', '#remove-jump', function(event){
+		event.preventDefault();
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth() + 1; // jan starts at 0
+		var y = date.getFullYear();
+		$("#jump-date").val('');
+		var sDate = y+'-'+m+'-'+d;
+		var jumpDate = $("#calendar").fullCalendar.moment(sDate);
+		//var moment = $('#calendar').fullCalendar('getDate');
+		console.log(moment);
+		$("#calendar").fullCalendar( 'gotoDate', jumpDate );
+		$("#remove-jump").css('display', 'none');
+	});
 
 
-$('input.datepicker').datetimepicker({
-	pickDate: true,
-	pickTime: false,
-	icons: {
-		time: 'fa fa-clock-o',
-		date: 'fa fa-calendar',
-		up:   'fa fa-chevron-up',
-		down: 'fa fa-chevron-down'
-	},
-	clearBtn : true
-});
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+		clearBtn : true
+	});
 
 });
 
@@ -257,9 +281,6 @@ function createCalendarEntry(eventObject) {
 
 function showModalWindow(eventObject) {
 	// Create the modal window from session-template
-
-	$('.reveal-modal').remove();
-
 	window.sw.sessionTemplateD = Handlebars.compile( $("#session-template").html() );
 
 	eventObject.boats = $.extend(true, {}, window.boats);
@@ -279,9 +300,9 @@ function showModalWindow(eventObject) {
 	.reveal({                                      // Open modal window | Options:
 		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 		animationSpeed: 300,                       // how fast animtions are
-		closeOnBackgroundClick: false,             // if you click background will modal close?
-		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
-		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
+		closeOnBackgroundClick: true,              // if you click background will modal close?
+		dismissModalClass: 'close-modal',          // the class of a button or element that will close an open modal
+		'eventObject': eventObject,                // Submit by reference to later get it as this.eventObject
 		onCloseModal: function() {
 			// Aborted action
 			// debugger;
@@ -298,10 +319,8 @@ function showModalWindow(eventObject) {
 	});
 }
 
-function showModalWindowA(eventObject) {
-
-	$('.reveal-modal').remove();
-	// Create the modal window from session-template
+function showModalWindowAccommodation(eventObject) {
+	// Create the modal window from accommodation-template
 	window.sw.accommodationTemplateD = Handlebars.compile( $("#accommodation-template").html() );
 
 	console.log(eventObject);
@@ -313,7 +332,7 @@ function showModalWindowA(eventObject) {
 	.reveal({                                      // Open modal window | Options:
 		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 		animationSpeed: 300,                       // how fast animtions are
-		closeOnBackgroundClick: false,             // if you click background will modal close?
+		closeOnBackgroundClick: true,              // if you click background will modal close?
 		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
 		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
 		onFinishModal: function() {
@@ -322,10 +341,8 @@ function showModalWindowA(eventObject) {
 	});
 }
 
-function showModalWindowC(eventObject) {
-
-	$('.reveal-modal').remove();
-	// Create the modal window from session-template
+function showModalWindowCourse(eventObject) {
+	// Create the modal window from class-template
 	window.sw.classTemplateD = Handlebars.compile( $("#class-template").html() );
 
 	console.log(eventObject);
@@ -337,7 +354,7 @@ function showModalWindowC(eventObject) {
 	.reveal({                                      // Open modal window | Options:
 		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 		animationSpeed: 300,                       // how fast animtions are
-		closeOnBackgroundClick: false,             // if you click background will modal close?
+		closeOnBackgroundClick: true,              // if you click background will modal close?
 		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
 		'eventObject': eventObject,                  // Submit by reference to later get it as this.eventObject
 		onFinishModal: function() {
@@ -346,25 +363,22 @@ function showModalWindowC(eventObject) {
 	});
 }
 
-function showModalWindowM(id) {
-	// Create the modal window from session-template
-
-	$('.reveal-modal').remove();
-
-	var params = "id=" + id;
-	if(display == "trips") {
+function showModalWindowManifest(id) {
+	// Create the modal window from manifest-template
+	var params = {id: id};
+	if(calendarOptions.calendarDisplay == "trips") {
 		window.sw.manifestTemplateD = Handlebars.compile( $("#manifest-template").html() );
-		Session.getAllCustomers(params, function sucess(data) {
-		//showModalWindowM(data);
-		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
-		//$("#customers-table").append(customer({customers : data.customers}));
-		$('#modalWindows')
+		Session.getAllCustomers(params, function success(data) {
+			//showModalWindowManifest(data);
+			//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+			//$("#customers-table").append(customer({customers : data.customers}));
+			$('#modalWindows')
 			.append( window.sw.manifestTemplateD(data) )        // Create the modal
 			.children('#modal-' + data.id)          // Directly find it and use it
 			.reveal({                                      // Open modal window | Options:
 				animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 				animationSpeed: 300,                       // how fast animtions are
-				closeOnBackgroundClick: false,             // if you click background will modal close?
+				closeOnBackgroundClick: true,             // if you click background will modal close?
 				dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
 				onFinishModal: function() {
 					$('#modal-' + data.id).remove();
@@ -386,32 +400,38 @@ function showModalWindowM(id) {
 				]
 			});
 
-			for (var i = 0; i < data.customers.length; i++) {
-				table.row.add(new customerData(data.customers[i]));
-			};
+			$.when(
+				window.promises.loadedCountries,
+				window.promises.loadedCourses,
+				window.promises.loadedTickets
+			).done(function() {
+				for (var i = 0; i < data.customers.length; i++) {
+					table.row.add(new customerData(data.customers[i]));
+				};
 
-			table.draw();
+				table.draw();
+			});
 		});
-}
-else {
-	window.sw.manifestTemplateDC = Handlebars.compile( $("#class-manifest-template").html() );
-	Class.getAllCustomers(params, function sucess(data) {
-		//showModalWindowM(data);
-		//var customer = Handlebars.compile( $("#customer-rows-template").html() );
-		//$("#customers-table").append(customer({customers : data.customers}));
-		$('#modalWindows')
+	}
+	else {
+		window.sw.manifestTemplateDC = Handlebars.compile( $("#class-manifest-template").html() );
+		Class.getAllCustomers(params, function success(data) {
+			//showModalWindowManifest(data);
+			//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+			//$("#customers-table").append(customer({customers : data.customers}));
+			$('#modalWindows')
 			.append( window.sw.manifestTemplateDC(data) )        // Create the modal
-			.children('#modal-' + data.id)          // Directly find it and use it
+			.children('#modal-' + data.id)                 // Directly find it and use it
 			.reveal({                                      // Open modal window | Options:
 				animation: 'fadeAndPop',                   // fade, fadeAndPop, none
 				animationSpeed: 300,                       // how fast animtions are
-				closeOnBackgroundClick: false,             // if you click background will modal close?
+				closeOnBackgroundClick: true,             // if you click background will modal close?
 				dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
 				onFinishModal: function() {
 					$('#modal-' + data.id).remove();
 				}
 			});
-			
+
 			var table = $('#customer-data-table').DataTable({
 				"paging":   false,
 				"ordering": false,
@@ -427,15 +447,19 @@ else {
 				]
 			});
 
-			for (var i = 0; i < data.customers.length; i++) {
-				table.row.add(new customerData(data.customers[i]));
-			};
+			$.when(
+				window.promises.loadedCountries,
+				window.promises.loadedCourses,
+				window.promises.loadedTickets
+			).done(function() {
+				for (var i = 0; i < data.customers.length; i++) {
+					table.row.add(new customerData(data.customers[i]));
+				};
 
-			table.draw();
-			
+				table.draw();
+			});
 		});
-}
-
+	}
 }
 
 Handlebars.registerHelper('date', function(datetime) {
@@ -478,7 +502,7 @@ function getTripEvents(start, end, timezone, callback) {
 		'before': end.format(),
 		'with_full': 1
 	};
-	if(filterByTrip) sessionFilters.trip_id = tripFilter;
+	if(calendarOptions.filterByTrip) sessionFilters.trip_id = calendarOptions.tripFilter;
 	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
 		window.sessions = _.indexBy(data, 'id');
@@ -489,8 +513,8 @@ function getTripEvents(start, end, timezone, callback) {
 
 		// Create eventObjects
 		_.each(window.sessions, function(value) {
-			if(filterByBoat) {
-				if(boatFilter == value.boat_id) {
+			if(calendarOptions.filterByBoat) {
+				if(calendarOptions.boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
 					var ticketsLeft = capacity - booked;
@@ -567,7 +591,7 @@ function getClassEvents(start, end, timezone, callback) {
 		'before': end.format(),
 		'with_full': 1
 	};
-	if(filterByClass) sessionFilters.training_id = classFilter;
+	if(calendarOptions.filterByClass) sessionFilters.training_id = calendarOptions.classFilter;
 	var events = [];
 
 	Class.filter(sessionFilters, function success(data) {
@@ -612,7 +636,7 @@ function getAccomEvents(start, end, timezone, callback) {
 		'before': end.format(),
 		'with_full': 1
 	};
-	if(filterByAccom) sessionFilters.accommodation_id = accomFilter;
+	if(calendarOptions.filterByAccom) sessionFilters.accommodation_id = calendarOptions.accomFilter;
 	Accommodation.filter(sessionFilters, function success(data) {
 
 		console.log(data);
@@ -645,26 +669,26 @@ function getAccomEvents(start, end, timezone, callback) {
 	});
 }
 
-function showManifest(id) { // use data tables to isnert data instead of handle bars
+/* function showManifest(id) { // use data tables to insert data instead of handle bars
 	var params = "id=" + id;
-	Session.getAllCustomers(params, function sucess(data) {
-		showModalWindowM(data);
+	Session.getAllCustomers(params, function success(data) {
+		showModalWindowManifest(data);
 		var customer = Handlebars.compile( $("#customer-rows-template").html() );
 		$("#customers-table").append(customer({customers : data.customers}));
 	});
-}
+} */
 
 function addTripFilter(value) {
 
 	if(value == 'boat') {
 		$("div#filter-settings option[value=boat]").attr('disabled', true);
 		$("#filter-options").val('all');
-		$("#filter").append( boatsList({boats : window.boats}) );
+		$("#filter").append( calendarOptions.boatsListTemplate({boats : window.boats}) );
 	}
 	else if(value == 'trip') {
 		$("div#filter-settings option[value=trip]").attr('disabled', true);
 		$("#filter-options").val('all');
-		$("#filter").append( tripsList({trips : window.trips}) );
+		$("#filter").append( calendarOptions.tripsListTemplate({trips : window.trips}) );
 	}
 
 }

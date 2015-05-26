@@ -40,7 +40,7 @@
 								<select id="accoms" class="filter">
 									<option value="all">Please Select ..</option>
 									{{#each accoms}}
-										<option value="{{id}}">{{name}}</option>
+										<option value="{{id}}">{{{name}}}</option>
 									{{/each}}
 								</select>
 							</div>
@@ -52,7 +52,7 @@
 								<select id="classes" class="filter">
 									<option value="all">Please Select ..</option>
 									{{#each classes}}
-										<option value="{{id}}">{{name}}</option>
+										<option value="{{id}}">{{{name}}}</option>
 									{{/each}}
 								</select>
 							</div>
@@ -65,7 +65,7 @@
 									<select class="filter" id="boats">
 										<option value="all"></option>
 										{{#each boats}}
-											<option value="{{id}}">{{name}}</option>
+											<option value="{{id}}">{{{name}}}</option>
 										{{/each}}
 									</select>
 									<button id="remove-boats-filter" class="btn-danger remove-room" style="height:100%;">&#215;</button>
@@ -80,7 +80,7 @@
 									<select class="filter" id="trips">
 										<option value="all"></option>
 										{{#each trips}}
-										<option value="{{id}}">{{name}}</option>
+										<option value="{{id}}">{{{name}}}</option>
 										{{/each}}
 									</select>
 									<button id="remove-trips-filter" style="height:100%;" class="btn-danger remove-room">&#215;</button>
@@ -98,8 +98,8 @@
 		</div>
 	</div><!-- .row -->
 
-	<div id="modalWindows" style="height: 0; visibility: hidden;">
-		<script id="session-template" type="text/x-handlebars-template">
+	<div id="modalWindows" style="height: 0;">
+		<script type="text/x-handlebars-template" id="session-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
 				<h3>{{{trip.name}}}</h3>
@@ -130,7 +130,7 @@
 					<tr>
 						<td><strong>Boat</strong></td>
 						<td>
-							{{session.boat.name}}
+							{{{session.boat.name}}}
 						</td>
 					</tr>
 					<tr>
@@ -138,18 +138,18 @@
 						<td>{{#unless ticketsLeft}}
 							<span class="soldout">SOLD OUT</span>
 							{{else}}
-							{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
+								{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
 							{{/unless}}
 						</td>
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">View trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}})">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="accommodation-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="accommodation-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
 				<h3>{{{title}}}</h3>
@@ -171,7 +171,7 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="class-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="class-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
 				<h3>{{{title}}}</h3>
@@ -192,15 +192,15 @@
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowM({{session.id}})">View trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}})">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="manifest-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="manifest-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
-				<h3>{{trip.name}} - Trip Manifest</h3>
+				<h3>{{{trip.name}}} - Trip Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
 					<thead>
               			<tr>
@@ -217,10 +217,10 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="class-manifest-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="class-manifest-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
-				<h3>{{training.name}} - Trip Manifest</h3>
+				<h3>{{{training.name}}} - Trip Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
 					<thead>
               			<tr>
@@ -237,11 +237,11 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
-		<script id="customer-rows-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="customer-rows-template">
   			{{#each customers}}
 	  			<tr>
 	                <th>{{{firstname}}} {{{lastname}}}</th>
-	                <th>{{{email}}}</th>
+	                <th>{{email}}</th>
 	                <th>{{country}}</th>
 	                <th>{{phone}}</th>
 	            </tr>
@@ -264,6 +264,8 @@
 	<script src="/js/Controllers/Session.js"></script>
 	<script src="/js/Controllers/Timetable.js"></script>
 	<script src="/js/Controllers/Accommodation.js"></script>
+	<script src="/js/Controllers/Ticket.js"></script>
+	<script src="/js/Controllers/Course.js"></script>
 
 	<script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>
