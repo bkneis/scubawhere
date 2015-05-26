@@ -1804,20 +1804,20 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	var addonsSummary   = {};
 
 	_.each(booking.bookingdetails, function(detail) {
-		if(detail.packagefacade_id !== null) {
-			if(!packagesSummary[detail.packagefacade_id])
-				packagesSummary[detail.packagefacade_id] = detail.packagefacade.package;
+		if(detail.packagefacade) { // This catches NULL and UNDEFINED
+			if(!packagesSummary[detail.packagefacade.id])
+				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
 		}
-		else if(detail.course_id !== null) {
-			if(!coursesSummary[detail.customer_id + '-' + detail.course_id])
-				coursesSummary[detail.customer_id + '-' + detail.course_id] = detail.course;
+		else if(detail.course) {
+			if(!coursesSummary[detail.customer.id + '-' + detail.course.id])
+				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
 		}
-		else if(detail.ticket_id !== null) {
+		else if(detail.ticket) {
 			ticketsSummary.push(detail.ticket);
 		}
 
 		_.each(detail.addons, function(addon) {
-			if(addon.pivot.packagefacade_id === null) {
+			if(!addon.pivot.packagefacade_id) {
 				if(addonsSummary[addon.id])
 					addonsSummary[addon.id].qtySummary += addon.pivot.quantity;
 				else {
