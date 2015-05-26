@@ -1746,7 +1746,10 @@ class BookingController extends Controller {
 		if(Helper::isPast($booking->arrival_date))
 			return Response::json( array('errors' => array('Cannot confirm booking because it already started.')), 403 ); // 403 Forbidden
 
-		if( !$booking->update( array('status' => 'confirmed', 'reserved' => null) ) )
+		if(!$booking->update([
+			'status' => 'confirmed',
+			'reserved' => null
+		]))
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
