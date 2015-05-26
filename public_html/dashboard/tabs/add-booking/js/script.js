@@ -33,6 +33,7 @@ function generateFreeSpacesBar(capacity, id) {
 	var html = '';
 	html += '<div data-id="' + id + '" class="percentage-bar-container ' + bgClasses + '">';
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage + '%">&nbsp;</div>';
+	html += '	<span class="percentage-occupied">' + capacity[0] + '</span>';
 	html += '	<span class="percentage-left">' + freeSpaces + '</span>';
 	html += '</div>';
 

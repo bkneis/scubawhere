@@ -306,6 +306,11 @@ tfoot > tr {
 		left: 3px;
 		top: 0;
 	}
+	.percentage-bar-container .percentage-occupied {
+		position: absolute;
+		left: 3px;
+		top: 0;
+	}
 	.percentage-bar-container .percentage-left {
 		position: absolute;
 		right: 3px;

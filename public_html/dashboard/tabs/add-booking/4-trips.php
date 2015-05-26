@@ -222,7 +222,7 @@
 									<th>Start</th>
 									<th>Finish</th>
 									<th>Trip</th>
-									<th>Free Spaces</th>
+									<th>Capacity</th>
 									<th>Boat</th>
 									<th>Actions</th>
 								</tr>
