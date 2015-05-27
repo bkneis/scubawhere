@@ -1232,7 +1232,7 @@ big {
 }
 
 #nprogress .spinner {
-	top: 70px;
+	top: 65px !important;
 }
 
 .notifications {
