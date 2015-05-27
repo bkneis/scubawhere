@@ -49,14 +49,19 @@ Handlebars.registerHelper('statusIcon', function() {
 
 		if(percentage === 1) tooltip = 'Confirmed, completely paid';
 		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
+
+		if(percentage > 1) {
+			icon = 'fa-exclamation';
+			color = '#d9534f';
+			tooltip = 'Confirmed, refund necessary';
+		}
 	}
 	else if(this.status === 'reserved') {
 		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
 
 		if(this.reserved == null) {
-			icon    = 'fa-exclamation';
-			tooltip = 'Expired reservation!';
+			tooltip = 'Reservation expired';
 			color   = '#d9534f';
 		}
 	}
@@ -142,7 +147,7 @@ $(function() {
 		window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
 		renderBookingList(window.bookings, display);
-		
+
 	});
 
 	$('#booking-list').on('click', '.accordion-header', function() {
@@ -358,7 +363,7 @@ function createDataTable() {
     $('#booking-list').on('click', 'tr', function () {
         var tr = $(this).closest('tr');
         var row = bookingTable.row( tr );
- 
+
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
