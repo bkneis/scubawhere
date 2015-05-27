@@ -149,11 +149,11 @@ Handlebars.registerHelper('commission_amount', function(agent_id, decimal_price)
 
 	this.real_decimal_price = parseFloat(decimal_price) - feeSum;
 
-	return ((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price)).toFixed(2);
+	return (decRound((parseFloat(window.agents[agent_id].commission) / 100) * this.real_decimal_price, 2)).toFixed(2);
 });
 
 Handlebars.registerHelper('commission_result', function(agent_id) {
-	return (parseFloat(this.real_decimal_price) - (parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price)).toFixed(2);
+	return (parseFloat(this.decimal_price) - decRound((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price), 2)).toFixed(2);
 });
 
 Handlebars.registerHelper('saveable', function() {

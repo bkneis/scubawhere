@@ -55,10 +55,16 @@ Handlebars.registerHelper('currency', function() {
 });
 
 Handlebars.registerHelper('getCommissionAmount', function() {
-	var price = this.real_decimal_price ? this.real_decimal_price : this.decimal_price;
+	var price = this.real_decimal_price || this.decimal_price;
 
-	return (price * this.agent.commission / 100).toFixed(2);
+	return (decRound(parseFloat(price) * parseFloat(this.agent.commission) / 100, 2)).toFixed(2);
 });
+
+Handlebars.registerHelper('getNetAmount', function() {
+	var price = this.real_decimal_price || this.decimal_price;
+
+	return (parseFloat(this.decimal_price) - decRound(parseFloat(price) * parseFloat(this.agent.commission) / 100, 2)).toFixed(2);
+})
 
 Handlebars.registerHelper('sourceName', function() {
 	switch(this.source) {

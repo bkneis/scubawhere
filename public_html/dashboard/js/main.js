@@ -270,3 +270,10 @@ Handlebars.registerHelper('unlessCond', function (v1, operator, v2, options) {
 		return options.inverse(this);
 	}
 });
+
+function decRound(number, places) {
+
+	if(places < 1) return Math.round(number);
+
+	return Math.round(number * Math.pow(10, places)) / Math.pow(10, places);
+}
