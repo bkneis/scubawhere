@@ -1639,6 +1639,9 @@ class BookingController extends Controller {
 
 	public function postReserve()
 	{
+		if(!Input::has('reserved'))
+			return Response::json(['errors' => ['Please specify the amount of hours to reserve the booking for.']], 406); // 406 Not Acceptable
+
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
@@ -1652,7 +1655,7 @@ class BookingController extends Controller {
 		if( in_array($booking->status, array('confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
-		$data = Input::only('reserved');
+		$data = abs(Input::only('reserved'));
 
 		$local_now = Helper::localTime();
 		$data['reserved'] = $local_now->add(new DateInterval('PT'.$data['reserved'].'H'))->format('Y-m-d H:i:s');
