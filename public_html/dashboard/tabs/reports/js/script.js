@@ -127,6 +127,10 @@ $(function() {
 });
 
 function createDataTable() {
+
+	// Check if table contains any data
+	if($('.reports-table tbody tr').first().children('td').length === 1) return false;
+
 	$('.reports-table').dataTable({
 		"paging":   true,
 		"ordering": false,
@@ -151,7 +155,7 @@ function getReport(reportType, callback) {
 	var dates = {
 		after : $("#start-date").val(),
 		before : $("#end-date").val()
-	}
+	};
 	$("#report-filters").empty();
 	switch(reportType) {
 		case("transactions") :
@@ -432,10 +436,14 @@ function renderDoughnutChart(data, type) {
 
 function filterReport(reportType, value)
 {
+	var params = {
+		after : $("#start-date").val(),
+		before : $("#end-date").val()
+	};
 	switch(reportType)
 	{
 		case('transactions') :
-			if(value == 0) getReport("transactions");
+			if(value == 0) getReport("transactions", createDataTable);
 			else
 			{
 				var results = [];
@@ -447,14 +455,16 @@ function filterReport(reportType, value)
 				report = Handlebars.compile($("#transactions-report-template").html());
 				$("#reports").empty().append( report({entries : results}) );
 				$("#transactions-summary").css('display', 'none');
+				createDataTable();
 			}
 
 			break;
 
 		case('agents') :
-			if(value == 0) getReport("agents");
+			if(value == 0) getReport("agents", createDataTable);
 			else
 			{
+				/*
 				var results = [];
 				_.each(window.agentBookings.bookings, function(booking) {
 					if(parseInt(booking.agent_id) == value) results.push(booking);
@@ -464,12 +474,22 @@ function filterReport(reportType, value)
 				var results2 = {bookings : results};
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
+				*/
+
+				params.agent_ids = [value];
+
+				Report.getAgentBookings(params, function success(data) {
+					// console.log(data);
+					report = Handlebars.compile($("#agents-report-template").html());
+					$("#reports").empty().append( report({entries : data}) );
+					createDataTable();
+				});
 			}
 
 			break;
 
 		case('booking-history') :
-			if(value == 0) getReport("booking-history");
+			if(value == 0) getReport("booking-history", createDataTable);
 			else
 			{
 				var results = [];
@@ -483,12 +503,13 @@ function filterReport(reportType, value)
 				var results2 = {bookings : results};
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
+				createDataTable();
 			}
 
 			break;
 
 		case('utilisation') :
-			if(value == 0) getReport("utilisation");
+			if(value == 0) getReport("utilisation", createDataTable);
 			else
 			{
 				var results = [];
@@ -502,12 +523,13 @@ function filterReport(reportType, value)
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
 				$("#utilisation-summary").css('display', 'none');
+				createDataTable();
 			}
 
 			break;
 
 		case('class-utilisation') :
-			if(value == 0) getReport("class-utilisation");
+			if(value == 0) getReport("class-utilisation", createDataTable);
 			else
 			{
 				var results = [];
@@ -521,12 +543,13 @@ function filterReport(reportType, value)
 				report = Handlebars.compile($("#class-utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
 				$("#class-utilisation-summary").css('display', 'none');
+				createDataTable();
 			}
 
 			break;
 
 		case('revenue') :
-			if(value == 0) getReport("revenue");
+			if(value == 0) getReport("revenue", createDataTable);
 			else
 			{
 				if(value == "Summary")
@@ -587,6 +610,7 @@ function filterReport(reportType, value)
 					$("#reports").empty().append( report({entries : results2}) );
 
 					renderDoughnutChart(pieStats, "revenue");
+					createDataTable();
 				}
 				else
 				{
@@ -614,6 +638,7 @@ function filterReport(reportType, value)
 					});
 
 					renderDoughnutChart(pieStats, "revenue");
+					createDataTable();
 				}
 			}
 			break;

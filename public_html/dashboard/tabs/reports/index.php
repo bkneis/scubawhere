@@ -46,31 +46,24 @@
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th style="color:#313131; width:25%">Date</th>
-				<th style="color:#313131; width:33%">Name</th>
-				<th style="color:#313131">Type</th>
-				<th style="color:#313131">Amount</th>
+				<th>Date</th>
+				<th>Name</th>
+				<th>Reference</th>
+				<th>Type</th>
+				<th>Amount</th>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each entries}}
-			{{#if refund}}
-			<tr style="color:#F00">
-				<td>{{received_at}}</td>
-				<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
-				<td>{{paymentgateway.name}} REFUND</td>
-				<td>- {{currency.symbol}} {{amount}}</td>
-			</tr>
+				<tr{{#if refund}} style="color: red;"{{/if}}>
+					<td>{{received_at}}</td>
+					<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
+					<td>{{booking.reference}}</td>
+					<td>{{paymentgateway.name}}{{#if refund}} REFUND{{/if}}</td>
+					<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
+				</tr>
 			{{else}}
-			<tr>
-				<td>{{received_at}}</td>
-				<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
-				<td>{{paymentgateway.name}}</td>
-				<td>{{currency.symbol}} {{amount}}</td>
-			</tr>
-			{{/if}}
-			{{else}}
-			<tr><td colspan="4" class="text-center">There are no transactions between these dates</td></tr>
+				<tr><td colspan="4" class="text-center">There are no transactions between these dates</td></tr>
 			{{/each}}
 		</tbody>
 
@@ -144,11 +137,14 @@
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th style="color:#313131">Date</th>
-				<th style="color:#313131">Name</th>
-				<th style="color:#313131">Agent name</th>
-				<th style="color:#313131">Total balance</th>
-				<th style="color:#313131">Commission</th>
+				<th>Date</th>
+				<th>Name</th>
+				<th>Reference</th>
+				<th>Agent Name</th>
+				<th>Agent Ref</th>
+				<th>Commission</th>
+				<th>Net</th>
+				<th>Gross</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -156,31 +152,25 @@
 				<tr>
 					<td>{{getDate created_at_local}}</td>
 					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+					<td>{{reference}}</td>
 					<td>{{{agent.name}}}</td>
+					<td>{{agent_reference}}</td>
+					<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>
+					<td>{{currency}} {{getNetAmount}}</td>
 					<td>{{currency}} {{decimal_price}}</td>
-					<td>{{agent.commission}}% ({{currency}} {{getCommissionAmount}})</td>
 				</tr>
 			{{else}}
 				<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
-	{{!--<table>
-		<thead style="font-weight: bold;">
-			<tr>
-				<td></td>
-				<td></td>
-				<td class="pull-right">Date range </td>
-				<td>
-					Total
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-					<div id="agents-percentage-total" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-					<span id="agents-total" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-		</thead>
-	</table>--}}
+
+	<div class="text-right" style="font-weight: bold;">
+		<p>&nbsp;</p>
+		<p>Total commission: {{currency}} {{entries.totals.commission}}</p>
+		<p>Total revenue: {{currency}} {{entries.totals.revenue}}</p>
+		<p>Total invoicable: {{currency}} {{entries.totals.invoicable}}</p>
+	</div>
 </script>
 <script type="text/x-handlebars-template" id="booking-history-report-template">
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
@@ -188,27 +178,32 @@
 			<tr>
 				<th style="color:#313131">Date</th>
 				<th style="color:#313131">Name</th>
-				<th style="color:#313131">Method of booking</th>
+				<th style="color:#313131">Reference</th>
+				<th style="color:#313131">Source</th>
 				<th style="color:#313131">Country</th>
-				<th style="color:#313131">Refrence</th>
-				<th style="color:#313131">Total cost</th>
+				<th style="color:#313131">Net Revenue</th>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each entries.bookings}}
-			<tr>
-				<td>{{getDate created_at_local}}</td>
-				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{sourceName}}</td>
-				<td>{{getCountry lead_customer.country_id}}</td>
-				<td>{{reference}}</td>
-				<td>{{currency}} {{decimal_price}}</td>
-			</tr>
+				<tr>
+					<td>{{getDate created_at_local}}</td>
+					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+					<td>{{reference}}</td>
+					<td>{{sourceName}}</td>
+					<td>{{getCountry lead_customer.country_id}}</td>
+					<td>{{currency}} {{#if agent}}{{getNetAmount}}{{else}}{{decimal_price}}{{/if}}</td>
+				</tr>
 			{{else}}
-			<tr><td colspan="6" class="text-center">There are no bookings between these dates</td></tr>
+				<tr><td colspan="6" class="text-center">There are no bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
+
+	<div class="text-right" style="font-weight: bold;">
+		<p>&nbsp;</p>
+		<p>Total revenue: {{currency}} {{entries.totals.revenue}}</p>
+	</div>
 </script>
 <script type="text/x-handlebars-template" id="utilisation-report-template">
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
