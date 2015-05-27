@@ -78,14 +78,14 @@ class Booking extends Ardent {
 		if(empty($this->bookingdetails))
 			$this->load('bookingdetails', 'bookingdetails.addons');
 
-		foreach ($this->bookingdetails as $detail) {
-			foreach ($detail->addons as $addon) {
+		foreach($this->bookingdetails as $detail) {
+			foreach($detail->addons as $addon) {
 				if($addon->compulsory === 1)
-					$feeSum += $addon->decimal_price;
+					$feeSum += floatval($addon->decimal_price) * $addon->pivot->quantity;
 			}
 		}
 
-		return $this->decimal_price - $feeSum;
+		return floatval($this->decimal_price) - $feeSum;
 	}
 
 	public function getArrivalDateAttribute() {
