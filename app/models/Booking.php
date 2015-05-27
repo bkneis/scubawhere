@@ -131,7 +131,7 @@ class Booking extends Ardent {
 	}
 
 	public function getCreatedAtLocalAttribute() {
-		$datetime = new DateTime( $this->created_at, new DateTimeZone('Europe/London') );
+		$datetime = new DateTime( $this->created_at, new DateTimeZone('UTC') );
 		$datetime->setTimezone( new DateTimeZone( Auth::user()->timezone ) );
 
 		return $datetime->format('Y-m-d H:i:s');
