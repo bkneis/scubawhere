@@ -127,7 +127,7 @@ Handlebars.registerHelper('UID', function() {
 	return this.UID;
 });
 
-Handlebars.registerHelper('real_decimal_price', function() {
+Handlebars.registerHelper('decimal_price_without_discount_applied', function() {
 	if(this.discount === undefined) this.discount = "0.00";
 	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
 });
@@ -137,17 +137,103 @@ Handlebars.registerHelper('commission_percentage', function(agent_id) {
 });
 
 Handlebars.registerHelper('commission_amount', function(agent_id, decimal_price) {
-	return ((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(decimal_price)).toFixed(2);
+
+	// Compulsory addons are EXEMPT from commission!
+	var feeSum = 0;
+	_.each(this.bookingdetails, function(detail) {
+		_.each(detail.addons, function(addon) {
+			if(addon.compulsory === 1 || addon.compulsory === '1')
+				feeSum += parseFloat(addon.decimal_price) * addon.pivot.quantity;
+		});
+	});
+
+	this.real_decimal_price = parseFloat(decimal_price) - feeSum;
+
+	return ((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price)).toFixed(2);
 });
 
-Handlebars.registerHelper('commission_result', function(agent_id, decimal_price) {
-	return (parseFloat(decimal_price) - (parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(decimal_price)).toFixed(2);
+Handlebars.registerHelper('commission_result', function(agent_id) {
+	return (parseFloat(this.real_decimal_price) - (parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price)).toFixed(2);
 });
 
 Handlebars.registerHelper('saveable', function() {
 	var notSaveable = ['reserved', 'expired', 'confirmed', 'on hold', 'cancelled'];
 	if(notSaveable.indexOf(this.status) !== -1)
 		return " disabled";
+});
+
+Handlebars.registerHelper('sourceIcon', function() {
+	var icon = '',
+	tooltip = '';
+
+	switch(this.source) {
+		case null:         icon = 'fa-user';     tooltip = 'Agent';         break;
+		case 'telephone':  icon = 'fa-phone';    tooltip = 'Telephone';     break;
+		case 'email':      icon = 'fa-envelope'; tooltip = 'Email';         break;
+		case 'facetoface': icon = 'fa-eye';      tooltip = 'Face-to-face';  break;
+		default:           icon = 'fa-question'; tooltip = 'Not specified';
+	}
+
+	return new Handlebars.SafeString('Source: <i class="fa ' + icon + ' fa-fw"></i> ' + tooltip);
+});
+
+Handlebars.registerHelper('statusIcon', function() {
+	var icon    = '',
+	color   = 'inherit',
+	tooltip = '';
+
+	if(this.status === 'cancelled') {
+		icon    = 'fa-ban';
+		tooltip = 'Cancelled';
+
+		// if(this.sums.refundable > 0 {
+			if(this.sums.have > this.cancellation_fee) {
+			// Refund necessary!
+			color   = '#d9534f';
+			tooltip = 'Cancelled, refund necessary';
+		}
+
+		if(this.sums.have < this.cancellation_fee) {
+			color   = '#f0ad4e';
+			tooltip = 'Cancelled, payment outstanding';
+		}
+	}
+	else if(this.status === 'confirmed') {
+		icon = 'fa-check';
+
+		var percentage = this.sums.have / this.decimal_price;
+
+		if(percentage === 1) color = '#5cb85c';
+		else if(percentage === 0) color = '#d9534f';
+		else color = '#f0ad4e';
+
+		if(percentage === 1) tooltip = 'Confirmed, completely paid';
+		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
+
+		if(percentage > 1) {
+			icon = 'fa-exclamation';
+			color = '#d9534f';
+			tooltip = 'Confirmed, refund necessary';
+		}
+	}
+	else if(this.status === 'reserved') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
+
+		if(this.reserved == null) {
+			tooltip = 'Reservation expired';
+			color   = '#d9534f';
+		}
+	}
+	else if(this.status === 'saved') {
+		icon    = 'fa-floppy-o';
+		tooltip = 'Saved';
+	}
+	else {
+		icon = 'fa-minus';
+	}
+
+	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';"></i> ' + tooltip);
 });
 
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {

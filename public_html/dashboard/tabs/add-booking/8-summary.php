@@ -49,7 +49,7 @@
 																<tr>
 																	<td class="mini-block">
 																		Booking Date<br />
-																		<span class="header-sm">{{friendlyDateNoTime created_at}}</span><br />
+																		<span class="header-sm">{{friendlyDateNoTime created_at_local}}</span><br />
 																		<br />
 																		Booking Reference<br />
 																		<span class="header-sm">{{reference}}</span>
@@ -176,13 +176,13 @@
 													</td>
 												</tr>
 											{{/each}}
-
-											<tr>
-												<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
-											</tr>
 										{{/if}}
 
 										{{#if accommodations}}
+											<tr>
+												<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
+											</tr>
+
 											<tr>
 												<td class="title-dark">
 													 Accommodations
@@ -338,7 +338,7 @@
 												{{/if}}
 											</td>
 											<td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
-												<span class="total-space">{{real_decimal_price}}</span><br />
+												<span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
 
 												{{#ifCond discount '!==' '0.00'}}
 													<span class="total-space">-{{discount}}</span><br />
@@ -354,6 +354,38 @@
 													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span>
 												{{/if}}
 											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</center>
+				</td>
+			</tr>
+
+			<tr><td>&nbsp;</td><tr>
+
+			<tr>
+				<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+					<center>
+						<table cellpadding="0" cellspacing="0" width="600" class="w320">
+							<tr>
+								<td class="item-table">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tr>
+											<td class="title-dark">
+												 Booking Status
+											</td>
+											<td class="title-dark" width="100"></td>
+											<td class="title-dark" width="100"></td>
+										</tr>
+										<tr>
+											<td class="inner-item-col">
+												<h4>{{statusIcon}}</h4>
+												<p>{{sourceIcon}}<p>
+											</td>
+											<td></td>
+											<td></td>
 										</tr>
 									</table>
 								</td>
