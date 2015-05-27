@@ -1685,7 +1685,7 @@ class BookingController extends Controller {
 		if( in_array($booking->status, array('reserved', 'expired', 'confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be saved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
-		if( !$booking->update( array('status' => 'saved') ) )
+		if( !$booking->update( array('status' => 'saved', 'reserved' => null) ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
@@ -1720,7 +1720,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
 
-		if( !$booking->update( array('status' => 'cancelled', 'cancellation_fee' => Input::get('cancellation_fee')) ) )
+		if( !$booking->update( array('status' => 'cancelled', 'reserved' => null, 'cancellation_fee' => Input::get('cancellation_fee')) ) )
 		{
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
