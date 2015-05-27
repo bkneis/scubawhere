@@ -346,3 +346,7 @@
 	line-height: 1px !important;
 	font-size: 1px !important;
 }
+
+.ticket-search {
+    padding-bottom: 25px;
+}

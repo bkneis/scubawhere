@@ -5,12 +5,20 @@
 		</div>
 	</div>
 </div>
+<div class="row ticket-search">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<div class="input-group-addon"><i class="fa fa-search"></i></div>
+			<input type="search" class="form-control" placeholder="Search..." id="ticket-search-box">
+		</div>
+	</div>
+</div>
 <div class="row" id="tickets-ticket-list">
 	<div class="col-sm-12">
 		<div class="row">
 			<div class="col-sm-12" id="tickets-list">
 				<span class="loader"></span>
-				<script id="tickets-list-template" type="text/x-handlebars-template">
+				<script type="text/x-handlebars-template" id="tickets-list-template">
 					{{#each tickets}}
 						<div class="col-sm-6 col-md-4">
 							<div class="panel panel-default">
@@ -29,7 +37,7 @@
 		<div class="row">
 			<div class="col-sm-12" id="package-list">
 				<span class="loader"></span>
-				<script id="package-list-template" type="text/x-handlebars-template">
+				<script type="text/x-handlebars-template" id="package-list-template">
 					{{#each packages}}
 						<div class="col-sm-6 col-md-4">
 							<div class="panel panel-default">
@@ -106,7 +114,7 @@
 		<div class="row">
 			<div class="col-sm-12" id="course-list">
 				<span class="loader"></span>
-				<script id="course-list-template" type="text/x-handlebars-template">
+				<script type="text/x-handlebars-template" id="course-list-template">
 					{{#each courses}}
 						<div class="col-sm-6 col-md-4">
 							<div class="panel panel-default">

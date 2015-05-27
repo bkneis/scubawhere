@@ -599,6 +599,33 @@ window.promises.loadedCourses.done(function() {
 	});
 });
 
+$.when(
+	window.promises.loadedTickets,
+	window.promises.loadedPackages,
+	window.promises.loadedCountries
+).done(function() {
+	$('#ticket-search-box').keyup(function(event) {
+		var regExp = new RegExp(event.target.value, 'i');
+
+		var tickets = _.filter(window.tickets, function(ticket) {
+			return ticket.name.search(regExp) > -1;
+		});
+
+		var packages = _.filter(window.packages, function(package) {
+			return package.name.search(regExp) > -1;
+		});
+
+		var courses = _.filter(window.courses, function(course) {
+			return course.name.search(regExp) > -1;
+		});
+
+		// Render lists
+		$("#tickets-list").html(ticketTemplate({tickets: tickets}));
+		$("#package-list").html(packageTemplate({packages: packages}));
+		$("#course-list").html(courseTemplate({courses: courses}));
+	});
+});
+
 /*
 *************************
 ******* Customers *******
