@@ -210,7 +210,7 @@ function getReport(reportType, callback) {
 					$("#transactions-bank-percentage"  ).css("width", ((Math.max(totalBank  , 0)/total) * 100) + "%");
 					$("#transactions-paypal-percentage").css("width", ((Math.max(totalPaypal, 0)/total) * 100) + "%");
 					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
-					if(newData.length != 0) callback();
+					if(newData.length != 0 && typeof callback === 'function') callback();
 				});
 			});
 			break;
@@ -228,7 +228,7 @@ function getReport(reportType, callback) {
 				window.agentBookings = data;
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-		 		if(data.bookings.length != 0) callback();
+		 		if(data.bookings.length != 0 && typeof callback === 'function') callback();
 			});
 			break;
 
@@ -243,7 +243,7 @@ function getReport(reportType, callback) {
 				window.bookings = data;
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-				if(data.bookings.length != 0) callback();
+				if(data.bookings.length != 0 && typeof callback === 'function') callback();
 			});
 			break;
 
@@ -263,7 +263,7 @@ function getReport(reportType, callback) {
 				$("#utilisation-total-capacity").text(data.utilisation_total.unassigned);
 				$("#utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
-				if(data.utilisation != null) callback();
+				if(data.utilisation != null && typeof callback === 'function') callback();
 			});
 
 			break;
@@ -284,7 +284,7 @@ function getReport(reportType, callback) {
 				$("#class-utilisation-total-capacity").text(data.utilisation_total.unassigned);
 				$("#class-utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#class-utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
-				if(data.utilisation != null) callback();
+				if(data.utilisation != null && typeof callback === 'function') callback();
 			});
 
 			break;
@@ -366,7 +366,7 @@ function getReport(reportType, callback) {
 				});
 
 				renderDoughnutChart(pieStats, "revenue");
-				if(stats.total != 0) callback();
+				if(stats.total != 0 && typeof callback === 'function') callback();
 			});
 			break;
 
@@ -400,7 +400,7 @@ function getReport(reportType, callback) {
 					console.log(stat.color);
 				});
 				renderDoughnutChart(pieStats, "demographics");
-				if(data.country_revenue.length != 0) callback();
+				if(data.country_revenue.length != 0 && typeof callback === 'function') callback();
 			});
 
 			break;
@@ -627,7 +627,7 @@ function assignColor(type) {
 		if(colorID == colors.length) colorID = 0;
 		id = colorID;
 		colorID++;
-	} 
+	}
 
 	return colors[id];
 
