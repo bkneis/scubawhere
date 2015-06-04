@@ -390,14 +390,20 @@ function showModalWindowManifest(id) {
 				"ordering": false,
 				"info":     false,
 				"pageLength" : 10,
-				"searching" : false,
+				"searching" : true,
 				columns: [
 				{ data: null, render: 'name' },
 				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
+				{ data: null, render: 'last_dive',
+				  default: "First Time"}, // find how to use default value for datatables
 				{ data: null, render: 'ticket' }
-				]
+				],
+				"dom": 'T<"clear">lfrtip',
+		        "tableTools": {
+		            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+		        }
 			});
 
 			$.when(
@@ -669,14 +675,6 @@ function getAccomEvents(start, end, timezone, callback) {
 	});
 }
 
-/* function showManifest(id) { // use data tables to insert data instead of handle bars
-	var params = "id=" + id;
-	Session.getAllCustomers(params, function success(data) {
-		showModalWindowManifest(data);
-		var customer = Handlebars.compile( $("#customer-rows-template").html() );
-		$("#customers-table").append(customer({customers : data.customers}));
-	});
-} */
 
 function addTripFilter(value) {
 

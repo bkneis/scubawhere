@@ -208,6 +208,7 @@
 			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Last Dive</th>
 			                <th style="color:#313131">Ticket Purchased</th>
 			            </tr>
             		</thead>
@@ -228,6 +229,7 @@
 			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Last Dive</th>
 			                <th style="color:#313131">Course Purchased</th>
 			            </tr>
             		</thead>
@@ -243,6 +245,7 @@
 	                <th>{{{firstname}}} {{{lastname}}}</th>
 	                <th>{{email}}</th>
 	                <th>{{country}}</th>
+	                <th>{{last_dive}}</th>
 	                <th>{{phone}}</th>
 	            </tr>
 	            {{else}} <tr><th colspan="4">No customers</th></tr>
