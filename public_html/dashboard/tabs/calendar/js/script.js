@@ -397,7 +397,7 @@ function showModalWindowManifest(id) {
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
 				{ data: null, render: 'last_dive',
-				  default: "First Time"}, // find how to use default value for datatables
+				  defaultContent: "First Dive"},
 				{ data: null, render: 'ticket' }
 				],
 				"dom": 'T<"clear">lfrtip',
