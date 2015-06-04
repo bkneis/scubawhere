@@ -15,7 +15,8 @@
       </div>
     </div>
   </div>
-
+  </div>
+  <div class="row" id="row2">
   <div class="col-md-5">
     <div class="panel panel-default" id="recent-bookings">
       <div class="panel-heading">
