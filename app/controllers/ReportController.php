@@ -274,7 +274,41 @@ class ReportController extends Controller {
 		];
 
 		###########################################
-		// Generate revenue by customer demographic
+
+		// Generate revenue by customer demographic (age)
+		$bookings = DB::table('bookings')
+			->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.status', 'confirmed')
+		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+			->get();
+
+		$ages = [];
+		$ages['16-25'] = 0;
+		$ages['26-35'] = 0;
+		$ages['36-50'] = 0;
+		$ages['50+'] = 0;
+
+		foreach($bookings as $booking) 
+		{
+			$dob = DB::table('customers')
+				->where('id', $booking->lead_customer_id)
+				->select('birthday')
+				->first();
+
+			if($dob->birthday != null) {
+			
+				$now = new DateTime( 'now',  new DateTimeZone( Auth::user()->timezone ) );
+				$bday = new DateTime( $dob->birthday,  new DateTimeZone( Auth::user()->timezone ) );
+				$age = $now->diff($bday)->y;
+
+				if($age > 16 && $age <= 25) $ages['16-25'] += $booking->price;
+				else if($age > 25 && $age <= 35) $ages['26-35'] += $booking->price;
+				else if($age > 35 && $age <= 50) $ages['36-50'] += $booking->price;
+				else if($age > 50) $ages['50+'] += $booking->price;
+			}
+			
+		}
+
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 		    ->join('countries', 'customers.country_id', '=', 'countries.id')
@@ -284,30 +318,6 @@ class ReportController extends Controller {
 		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
 		    ->groupBy('customers.country_id')
 		    ->get();
-
-		$bookings = DB::table('bookings')
-			->where('bookings.company_id', Auth::user()->id)
-		    ->where('bookings.status', 'confirmed')
-		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
-			->get();
-
-		$ages = [];
-
-		/*foreach($bookings as $booking) 
-		{
-			$customer = DB::table('customers')
-				->where('lead_customer_id', $booking->lead_customer_id)
-				->get();
-
-			$dob = $customer->birthday;
-
-			// $age  = localTime() - new DateTime( $dob,  new DateTimeZone( Auth::user()->timezone ) ) in years
-
-			if($age > 16 && $age <= 25) $ages['16-25'] += $booking->price;
-			else if($age > 25 && $age <= 35) $ages['26-35'] += $booking->price;
-			else if($age > 35 && $age <= 50) $ages['36-50'] += $booking->price;
-			else if($age > 50) $ages['50+'] += $booking->price;
-		}*/
 
 		$countries = [];
 
@@ -321,7 +331,7 @@ class ReportController extends Controller {
 		}
 
 		$RESULT['country_revenue'] = $countries;
-		//$RESULT['age_revenue'] = $ages;
+		$RESULT['age_revenue'] = $ages;
 
 		return $RESULT;
 	}
@@ -682,64 +692,6 @@ class ReportController extends Controller {
 
 		$timer += microtime(true);
 		$RESULT['execution_time'] = round($timer * 1000, 3);
-
-		return $RESULT;
-	}
-
-	public function getCustomeranalysis()
-	{
-		/**
-		 * Allowed input parameter
-		 * after  {date string}
-		 * before {date string}
-		 */
-
-		$after  = Input::get('after', null);
-		$before = Input::get('before', null);
-
-		if(empty($after) || empty($before))
-			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
-
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('Europe/London') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('Europe/London') );
-		$beforeUTC->add(new DateInterval('P1D'));
-
-		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
-
-
-		#################################
-		// Add request paramets to result
-		$RESULT['daterange'] = [
-			'after'    => Helper::sanitiseString($after),
-			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
-		];
-
-		###########################################
-		// Generate revenue by customer demographic
-		$sql = DB::table('bookings')
-		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
-		    ->join('countries', 'customers.country_id', '=', 'countries.id')
-		    ->where('bookings.company_id', Auth::user()->id)
-		    ->where('bookings.status', 'confirmed')
-		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
-		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
-		    ->groupBy('customers.country_id')
-		    ->get();
-
-		$countries = [];
-
-		foreach($sql as $object)
-		{
-			$name = $object->{'name'};
-
-			if(empty($countries[$name])) $countries[$name] = 0;
-
-			$countries[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
-		}
-
-		$RESULT['country_revenue'] = $countries;
 
 		return $RESULT;
 	}
