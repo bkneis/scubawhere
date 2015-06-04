@@ -258,4 +258,48 @@ class CompanyController extends Controller {
 		## Write log
 		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
 	}
+
+	public function getNotifications($from = 0, $take = 20) {
+
+		$NOTIFICATIONS = [];
+
+		if(!Auth::user()->initialised) $NOTIFICATIONS['init'] = 'Please start the tour!';
+
+		$bookings = Auth::user()->bookings()
+			->orderBy('id', 'DESC')
+			->skip($from)
+			->take($take)
+			->get();
+
+		$overdue = array();
+		$expiring = array();
+
+		foreach($bookings as $booking) {
+
+			$amountPaid = 0;
+			foreach($booking->payments as $payment) {
+				$amountPaid += $payment->amount;
+			}
+
+			$divingDate = new DateTime( $booking->arrival_date, new DateTimeZone( Auth::user()->timezone ) );
+
+			/* Get all bookings that have overdue payments */
+			if($booking->price > $amountPaid && $divingDate > new DateTime('now', new DateTimeZone( Auth::user()->timezone ))) {
+				array_push($overdue, array($booking->reference, $booking->price - $amountPaid));
+			}
+
+			/* Get all booking that expire within 30 minutes */
+			$reservedDate = new DateTime( $booking->reserved, new DateTimeZone( Auth::user()->timezone ) );
+			if( $reservedDate < new DateTime('+30 minutes', new DateTimeZone( Auth::user()->timezone ))
+					&&  $reservedDate > new DateTime('now', new DateTimeZone( Auth::user()->timezone ))) {
+				array_push($expiring, array($booking->reference, $booking->reserved));
+			}
+
+		}
+		
+		$NOTIFICATIONS['overdue'] = $overdue;
+		$NOTIFICATIONS['expiring'] = $expiring;
+
+		return $NOTIFICATIONS;
+	}
 }
