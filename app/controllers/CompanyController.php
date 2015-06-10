@@ -303,7 +303,7 @@ class CompanyController extends Controller {
 			$arrivalDate = new DateTime($booking->arrival_date, new DateTimeZone( Auth::user()->timezone ));
 
 			/* Get all bookings that have outstanding payments */
-			$amountDue = $booking->price / $currency->getSubunitToUnit() - $amountPaid
+			$amountDue = $booking->price / $currency->getSubunitToUnit() - $amountPaid;
 			if($amountDue > 0 && $arrivalDate > $localNow)
 			{
 				array_push($outstandingPayments, array($booking->reference, $amountDue));
