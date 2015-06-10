@@ -1,124 +1,125 @@
 <script type="text/javascript" src="js/social-media.js"></script>
 
 <div id="wrapper" class="clearfix">
-<div class="row" id="row1">
+  <div class="row" id="row1">
 
-  <div class="col-md-5">
-    <div class="panel panel-default" id="todays-stats">
-      <div class="panel-heading">
-        <h4 class="panel-title">Social Media Stats</h4>
-      </div>
-      <div style="min-height:250px;" class="panel-body">
-        <div id="social-media-stats"></div>
-        <!--<h5>Social Media integration is coming soon</h5>
-        Keep an eye on this space!-->
+    <div class="col-md-5">
+      <div class="panel panel-default" id="todays-stats">
+        <div class="panel-heading">
+          <h4 class="panel-title">Social Media Stats</h4>
+        </div>
+        <div style="min-height:250px;" class="panel-body">
+          <div id="social-media-stats"></div>
+          <!--<h5>Social Media integration is coming soon</h5>
+          Keep an eye on this space!-->
+        </div>
       </div>
     </div>
+
   </div>
-  </div>
+
   <div class="row" id="row2">
-  <div class="col-md-5">
-    <div class="panel panel-default" id="recent-bookings">
-      <div class="panel-heading">
-        <h4 class="panel-title">Recent Bookings</h4>
+    <div class="col-md-5">
+      <div class="panel panel-default" id="recent-bookings">
+        <div class="panel-heading">
+          <h4 class="panel-title">Recent Bookings</h4>
+        </div>
+        <div class="panel-body">
+          <table class="bluethead">
+            <thead>
+              <tr class="bg-primary">
+                <th>Ref</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th></th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="booking-list">
+              <tr><td colspan="9" style="text-align: center;"> </td></tr>
+              <tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="panel-body">
-        <table class="bluethead">
-          <thead>
-            <tr class="bg-primary">
-              <th>Ref</th>
-              <th>Customer</th>
-              <th>Phone</th>
-              <th></th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="booking-list">
-            <tr><td colspan="9" style="text-align: center;"> </td></tr>
-            <tr><td colspan="9" style="text-align: center;"><i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></td></tr>
-          </tbody>
-        </table>
+    </div>
+
+    <div class="col-md-7">
+      <div class="panel panel-default" id="feedback-div">
+        <div class="panel-heading">
+          <h4 class="panel-title">Feedback Form</h4>
+        </div>
+        <div class="panel-body">
+          <form id="feedback-form">
+
+            <div class="form-row">
+              <label class="field-label">Tab * : </label>
+              <select name="tab" style="width:100%">
+                <option value="">Please select an area of the RMS</option>
+                <option>General</option>
+                <optgroup label="Tabs">
+                  <option>Dashboard</option>
+                  <option>Add Booking</option>
+                  <option>Manage Bookings</option>
+                  <option>Calendar</option>
+                  <option>Scheduling</option>
+                  <option>Pick-Up Schedule</option>
+                  <option>Financial Reports</option>
+                  <option>Help & FAQ</option>
+                  <option>Settings</option>
+                </optgroup>
+                <optgroup label="Management Tabs">
+                  <option>Accommodations</option>
+                  <option>Add-Ons</option>
+                  <option>Agents</option>
+                  <option>Boats</option>
+                  <option>Classes</option>
+                  <option>Courses</option>
+                  <option>Locations</option>
+                  <option>Packages</option>
+                  <option>Tickets</option>
+                  <option>Trips</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Feature : </label>
+              <input style="width:100%" type="text" name="feature">
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Issue * : </label>
+              <textarea style="width:100%" name="issue" rows="3"></textarea>
+            </div>
+
+            <input type="hidden" name="_token">
+
+            <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
+
+          </form>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-7">
-    <div class="panel panel-default" id="feedback-div">
-      <div class="panel-heading">
-        <h4 class="panel-title">Feedback Form</h4>
-      </div>
-      <div class="panel-body">
-        <form id="feedback-form">
-
-          <div class="form-row">
-            <label class="field-label">Tab * : </label>
-            <select name="tab" style="width:100%">
-              <option value="">Please select an area of the RMS</option>
-              <option>General</option>
-              <optgroup label="Tabs">
-                <option>Dashboard</option>
-                <option>Add Booking</option>
-                <option>Manage Bookings</option>
-                <option>Calendar</option>
-                <option>Scheduling</option>
-                <option>Pick-Up Schedule</option>
-                <option>Financial Reports</option>
-                <option>Help & FAQ</option>
-                <option>Settings</option>
-              </optgroup>
-              <optgroup label="Management Tabs">
-                <option>Accommodations</option>
-                <option>Add-Ons</option>
-                <option>Agents</option>
-                <option>Boats</option>
-                <option>Classes</option>
-                <option>Courses</option>
-                <option>Locations</option>
-                <option>Packages</option>
-                <option>Tickets</option>
-                <option>Trips</option>
-              </optgroup>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <label class="field-label">Feature : </label>
-            <input style="width:100%" type="text" name="feature">
-          </div>
-
-          <div class="form-row">
-            <label class="field-label">Issue * : </label>
-            <textarea style="width:100%" name="issue" rows="3"></textarea>
-          </div>
-
-          <input type="hidden" name="_token">
-
-          <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
-
-        </form>
-      </div>
-    </div>
-  </div>
-  </div>
-</div><!-- #wrapper -->
-
-<script type="text/x-handlebars-template" id="todays-sessions-widget">
-      <div class="col-md-7">
-    <div class="panel panel-default" id="todays-sessions">
-      <div class="panel-heading">
-        <h4 class="panel-title">Todays Trips</h4>
-      </div>
-      <div style="min-height:250px;" class="panel-body">
-        <table class="bluethead">
-          <thead>
-            <tr class="bg-primary">
-              <th>Trip</th>
-              <th>Boat</th>
-              <th>Capacity</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody id="sessions-list">
+  <script type="text/x-handlebars-template" id="todays-sessions-widget">
+    <div class="col-md-7">
+      <div class="panel panel-default" id="todays-sessions">
+        <div class="panel-heading">
+          <h4 class="panel-title">Todays Trips</h4>
+        </div>
+        <div style="min-height:250px;" class="panel-body">
+          <table class="bluethead">
+            <thead>
+              <tr class="bg-primary">
+                <th>Trip</th>
+                <th>Boat</th>
+                <th>Capacity</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-list">
             </tbody>
           </table>
         </div>
@@ -127,10 +128,10 @@
   </script>
 
   <script type="text/x-handlebars-template" id="social-media-template">
-      {{#each facebook}}
-        <p><span style="font-weight:bold; font-size:22px">{{data}}</span> {{title}}</p>
-      {{/each}}
-  </script> 
+    {{#each facebook}}
+      <p><span style="font-weight:bold; font-size:22px">{{data}}</span> {{title}}</p>
+    {{/each}}
+  </script>
 
   <script type="text/x-handlebars-template" id="setup-wizard">
     <div class="col-md-7">
@@ -201,67 +202,67 @@
   </script>
 
   <script type="text/x-handlebars-template" id="tour-nav-wizard">
-  <div>
-    <div style="width:88%; margin-left:20px; float:left" class="">
-      <ul class="nav tnav-wizard" role="tablist">
-        <li id="accomli" role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
-          <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
-            <span class="step-description">Accommodations</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="2" data-target="#agents">
-          <a id="agent-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Agents</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="3" data-target="#locations">
-          <a id="location-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Locations</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="4" data-target="#boats">
-          <a id="boat-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Boats</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="5" data-target="#trips">
-          <a id="trip-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Trips</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="6" data-target="#tickets">
-          <a id="ticket-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Tickets</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="7" data-target="#classes">
-          <a id="class-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Classes</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="8" data-target="#courses">
-          <a id="course-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Courses</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="10" data-target="#add-ons">
-          <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Add ons</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
-          <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Packages</span>
-          </a>
-        </li>
-      </ul>
+    <div>
+      <div style="width:88%; margin-left:20px; float:left" class="">
+        <ul class="nav tnav-wizard" role="tablist">
+          <li id="accomli" role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
+            <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
+              <span class="step-description">Accommodations</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="2" data-target="#agents">
+            <a id="agent-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Agents</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="3" data-target="#locations">
+            <a id="location-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Locations</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="4" data-target="#boats">
+            <a id="boat-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Boats</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="5" data-target="#trips">
+            <a id="trip-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Trips</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="6" data-target="#tickets">
+            <a id="ticket-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Tickets</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="7" data-target="#classes">
+            <a id="class-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Classes</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="8" data-target="#courses">
+            <a id="course-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Courses</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="10" data-target="#add-ons">
+            <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Add ons</span>
+            </a>
+          </li>
+          <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
+            <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
+              <span class="step-description">Packages</span>
+            </a>
+          </li>
+        </ul>
       </div>
       <div class="" style="min-height:80px; width:10%; float:left" id="tour-button">
         <button id="tour-next-step" style="margin-top:20px" class="btn btn-success text-uppercase">Next Step</button>
         <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
       </div>
-      </div>
-    </script>
+    </div>
+  </script>
 
   <script type="text/x-handlebars-template" id="booking-list-item-template">
     {{#each bookings}}
@@ -311,8 +312,9 @@
     {{/each}}
   </script>
 
-<script src="/js/Controllers/Session.js"></script>
-<script src="/js/Controllers/Trip.js"></script>
-<script src="/js/Controllers/Booking.js"></script>
-<script src="/tabs/dashboard/js/script.js"></script>
-<script src="/tabs/dashboard/js/bookings.js"></script>
+  <script src="/js/Controllers/Session.js"></script>
+  <script src="/js/Controllers/Trip.js"></script>
+  <script src="/js/Controllers/Booking.js"></script>
+  <script src="/tabs/dashboard/js/script.js"></script>
+  <script src="/tabs/dashboard/js/bookings.js"></script>
+</div><!-- #wrapper -->
