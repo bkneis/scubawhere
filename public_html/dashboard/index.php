@@ -117,7 +117,7 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="js/tour.js"></script>
 
 	<script type="text/javascript" src="js/Controllers/Company.js"></script>
-	<script>
+	<script type="text/javascript">
 		// Load company info
 		Company.getCompany(function success(data) {
 			console.info('Company info loaded');
@@ -141,24 +141,25 @@ $PROTOCOL = 'http';
 	<div id="nav">
 		<div id="nav-wrapper">
 			<h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>
+
 			<button class="btn btn-default pull-right" id="logout">Logout</button>
+
 			<div class="nav-opt pull-right"><a href="#settings" class="username"></a></div>
-			<!--<div class="notifications pull-right">
-				<div id="notification-messages" class="messages">
-					<a href="#" class="message">Lorem ipsums</a>
-					<a href="#" class="message">Lorem ipsums</a>
-				</div>
-			</div>-->
+
+			<div class="notifications pull-right">
+				<i style="padding-left:8px; padding-top:8px; cursor:pointer" class="fa fa-bell fa-lg fa-fw"></i>
+				<div id="notification-messages" class="messages"></div>
+			</div>
 		</div>
 	</div>
 
-	<!--<script type="text/x-handlebars-template" id="notification-message-template">
-	{{#each notifications}}
-		<a href="#" class="message">{{message}}</a>
-	{{else}}
-		<a href="#" class="message">You have no notifications</a>
-	{{/each}}
-	</script>-->
+	<script type="text/x-handlebars-template" id="notification-message-template">
+		{{#each notifications}}
+			<a class="message">{{this}}</a>
+		{{else}}
+			<a class="message">You have no notifications</a>
+		{{/each}}
+	</script>
 
 	<!-- Container for page messages -->
 	<div id="pageMssg"></div>

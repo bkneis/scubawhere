@@ -29,7 +29,7 @@ var Company = {
 	},
 
 	getNotifications : function(handleData) {
-		$.get("/api/notifications", function(data){
+		$.get("/api/company/notifications", function(data){
 			handleData(data);
 		});
 	},

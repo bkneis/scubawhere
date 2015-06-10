@@ -68,9 +68,9 @@ $(function(){
 	});
 
 	Company.getNotifications(function sucess(data) {
-		//var notificationTemplate = Handlebars.compile( $("#notification-message-template").html() );
-		window.notifications = data; //_.indexBy('id', createNotifications(data)); // change to time
-		//$('#notification-messages').append(notificationTemplate({notifications : window.notifications}));
+		var notificationTemplate = Handlebars.compile( $("#notification-message-template").html() );
+		window.notifications = createNotifications(data);
+		$('#notification-messages').append(notificationTemplate({notifications : window.notifications}));
 	});
 
 	$(".notifications .messages").hide();
@@ -173,8 +173,23 @@ function reproColor(id) { // Stands for: reproducible color
 
 function createNotifications(data) {
 	// handle data from api call and create notification messages
-	return data;
+	var notifications = [];
+	// console.log(data);
 
+	// check if they have done the tour
+	if(data.init) notifications.push(data.init);
+
+	// check outstanding bookings
+	for(var i = 0; i < data.overdue.length; i++) {
+		notifications.push("Booking " + data.overdue[i][0] + " has " + window.company.currency.symbol + data.overdue[i][1] + " outstanding to pay");
+	}
+
+	// check bookings expiring within 30 minutes
+	for(var i = 0; i < data.expiring.length; i++) {
+		notifications.push("Booking " + data.expiring[i][0] + " is going to expire soon!");
+	}
+
+	return notifications;
 }
 
 function colorOpacity(hex, opa) {
