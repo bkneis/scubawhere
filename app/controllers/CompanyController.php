@@ -208,7 +208,8 @@ class CompanyController extends Controller {
 		});
 	}
 
-	public function postHeartbeat() {
+	public function postHeartbeat()
+	{
 		## Set up file
 		$path = storage_path() . '/logs';
 
@@ -259,45 +260,65 @@ class CompanyController extends Controller {
 		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
 	}
 
-	public function getNotifications($from = 0, $take = 20) {
+	public function getNotifications()
+	{
 
 		$NOTIFICATIONS = [];
 
-		if(!Auth::user()->initialised) $NOTIFICATIONS['init'] = 'Please start the tour!';
+		if(!Auth::user()->initialised)
+			$NOTIFICATIONS['init'] = 'Please start the tour!';
 
+		// TODO Possible performance problem because this query gets ALL counted bookings?
 		$bookings = Auth::user()->bookings()
+			->with('payments', 'refunds')
+			->whereIn('status', Booking::$counted);
 			->orderBy('id', 'DESC')
-			->skip($from)
-			->take($take)
 			->get();
 
-		$overdue = array();
+		// TODO What about agent bookings? Should they show up as well?
+
+		$outstandingPayments = array();
 		$expiring = array();
 
-		foreach($bookings as $booking) {
+		$localNow = Helper::localTime();
+		$localNow->setTime(0, 0, 0); // Set localNow datetime to the start of the day, so "today's" trips get returned as well.
 
+		$in24Hours = new DateTime('+24 hours', new DateTimeZone( Auth::user()->timezone );
+
+		foreach($bookings as $booking)
+		{
 			$amountPaid = 0;
-			foreach($booking->payments as $payment) {
+
+			foreach($booking->payments as $payment)
+			{
 				$amountPaid += $payment->amount;
 			}
-
-			$divingDate = new DateTime( $booking->arrival_date, new DateTimeZone( Auth::user()->timezone ) );
-
-			/* Get all bookings that have overdue payments */
-			if($booking->price > $amountPaid && $divingDate > new DateTime('now', new DateTimeZone( Auth::user()->timezone ))) {
-				array_push($overdue, array($booking->reference, $booking->price - $amountPaid));
+			foreach($booking->refunds as $refund)
+			{
+				$amountPaid -= $refund->amount;
 			}
 
-			/* Get all booking that expire within 30 minutes */
-			$reservedDate = new DateTime( $booking->reserved, new DateTimeZone( Auth::user()->timezone ) );
-			if( $reservedDate < new DateTime('+30 minutes', new DateTimeZone( Auth::user()->timezone ))
-					&&  $reservedDate > new DateTime('now', new DateTimeZone( Auth::user()->timezone ))) {
-				array_push($expiring, array($booking->reference, $booking->reserved));
+			$arrivalDate = new DateTime($booking->arrival_date, new DateTimeZone( Auth::user()->timezone ));
+
+			/* Get all bookings that have outstanding payments */
+			if($booking->price > $amountPaid && $arrivalDate > $localNow)
+			{
+				array_push($outstandingPayments, array($booking->reference, $booking->price - $amountPaid));
 			}
 
+			/* Get all booking that expire within the next 24 hours */
+			if($booking->reserved !== null)
+			{
+				$reservedDate = new DateTime($booking->reserved, new DateTimeZone( Auth::user()->timezone ));
+
+				if($reservedDate < $in24Hours && $reservedDate > $localNow)
+				{
+					array_push($expiring, array($booking->reference, $booking->reserved));
+				}
+			}
 		}
-		
-		$NOTIFICATIONS['overdue'] = $overdue;
+
+		$NOTIFICATIONS['overdue']  = $outstandingPayments;
 		$NOTIFICATIONS['expiring'] = $expiring;
 
 		return $NOTIFICATIONS;
