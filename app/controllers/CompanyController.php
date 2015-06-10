@@ -283,7 +283,7 @@ class CompanyController extends Controller {
 		$localNow = Helper::localTime();
 		$localNow->setTime(0, 0, 0); // Set localNow datetime to the start of the day, so "today's" trips get returned as well.
 
-		$in24Hours = new DateTime('+24 hours', new DateTimeZone( Auth::user()->timezone );
+		$in24Hours = new DateTime('+24 hours', new DateTimeZone( Auth::user()->timezone ));
 
 		foreach($bookings as $booking)
 		{
