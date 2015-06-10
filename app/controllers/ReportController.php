@@ -274,41 +274,46 @@ class ReportController extends Controller {
 		];
 
 		###########################################
-
-		// Generate revenue by customer demographic (age)
-		$bookings = DB::table('bookings')
+		// Generate revenue by customer age
+		$sql = DB::table('bookings')
+		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 			->where('bookings.company_id', Auth::user()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+		    ->select('bookings.price', 'bookings.created_at', 'customers.birthday')
 			->get();
 
 		$ages = [];
-		$ages['16-25'] = 0;
-		$ages['26-35'] = 0;
-		$ages['36-50'] = 0;
-		$ages['50+'] = 0;
+		$ages['0-15']    = 0;
+		$ages['16-25']   = 0;
+		$ages['26-35']   = 0;
+		$ages['36-50']   = 0;
+		$ages['50+']     = 0;
+		$ages['unknown'] = 0;
 
-		foreach($bookings as $booking) 
+		foreach($sql as $object)
 		{
-			$dob = DB::table('customers')
-				->where('id', $booking->lead_customer_id)
-				->select('birthday')
-				->first();
+			if($object->birthday != null) {
 
-			if($dob->birthday != null) {
-			
-				$now = new DateTime( 'now',  new DateTimeZone( Auth::user()->timezone ) );
-				$bday = new DateTime( $dob->birthday,  new DateTimeZone( Auth::user()->timezone ) );
-				$age = $now->diff($bday)->y;
+				$dateOfBooking = new DateTime($object->created_at);
+				$dateOfBooking->setTime(0, 0, 0);
 
-				if($age > 16 && $age <= 25) $ages['16-25'] += $booking->price;
-				else if($age > 25 && $age <= 35) $ages['26-35'] += $booking->price;
-				else if($age > 35 && $age <= 50) $ages['36-50'] += $booking->price;
-				else if($age > 50) $ages['50+'] += $booking->price;
+				$birthday = new DateTime($object->birthday);
+
+				$age = $dateOfBooking->diff($birthday)->y;
+
+				     if(             $age <= 15) $ages['0-15']  += $object->price;
+				else if($age > 16 && $age <= 25) $ages['16-25'] += $object->price;
+				else if($age > 25 && $age <= 35) $ages['26-35'] += $object->price;
+				else if($age > 35 && $age <= 50) $ages['36-50'] += $object->price;
+				else if($age > 50)               $ages['50+']   += $object->price;
 			}
-			
+			else
+				$ages['unknown'] += $object->price;
 		}
 
+		###########################################
+		// Generate revenue by customer country
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 		    ->join('countries', 'customers.country_id', '=', 'countries.id')
@@ -695,5 +700,4 @@ class ReportController extends Controller {
 
 		return $RESULT;
 	}
-
 }
