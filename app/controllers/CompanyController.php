@@ -271,7 +271,7 @@ class CompanyController extends Controller {
 		// TODO Possible performance problem because this query gets ALL counted bookings?
 		$bookings = Auth::user()->bookings()
 			->with('payments', 'refunds')
-			->whereIn('status', Booking::$counted);
+			->whereIn('status', Booking::$counted)
 			->orderBy('id', 'DESC')
 			->get();
 
