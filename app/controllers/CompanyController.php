@@ -265,6 +265,8 @@ class CompanyController extends Controller {
 
 		$NOTIFICATIONS = [];
 
+		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+
 		if(!Auth::user()->initialised)
 			$NOTIFICATIONS['init'] = 'Please start the tour!';
 
@@ -287,7 +289,7 @@ class CompanyController extends Controller {
 
 		foreach($bookings as $booking)
 		{
-			$amountPaid = 0;
+			$amountPaid = 0.0; // decimal
 
 			foreach($booking->payments as $payment)
 			{
@@ -301,9 +303,10 @@ class CompanyController extends Controller {
 			$arrivalDate = new DateTime($booking->arrival_date, new DateTimeZone( Auth::user()->timezone ));
 
 			/* Get all bookings that have outstanding payments */
-			if($booking->price > $amountPaid && $arrivalDate > $localNow)
+			$amountDue = $booking->price / $currency->getSubunitToUnit() - $amountPaid
+			if($amountDue > 0 && $arrivalDate > $localNow)
 			{
-				array_push($outstandingPayments, array($booking->reference, $booking->price - $amountPaid));
+				array_push($outstandingPayments, array($booking->reference, $amountDue));
 			}
 
 			/* Get all booking that expire within the next 24 hours */
