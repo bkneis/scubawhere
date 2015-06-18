@@ -237,7 +237,7 @@
 							{{#unless deleted_at}}
 								<tr>
 									<td class="session-start">{{friendlyDate start}}</td>
-									<td class="session-end">{{tripFinish start trip.duration}}</td>
+									<td class="session-end">{{tripFinish}}</td>
 									<td class="session-trip">{{#if trip}}{{{trip.name}}}{{else}}{{{training.name}}}{{/if}}</td>
 									<td>{{freeSpaces capacity}}</td>
 									<td>{{#if trip}}{{{boat.name}}}{{else}}-{{/if}}</td>

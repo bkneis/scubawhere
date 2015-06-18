@@ -923,6 +923,9 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 		}
 		else if(data.type === 'training') {
 			params.training_id = data.id;
+
+			if(data.parentParent === 'package')
+				params.package_id = data.parentParentId;
 		}
 		else {
 			pageMssg('ERROR Type could not be determined!', 'danger');

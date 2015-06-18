@@ -68,12 +68,13 @@ class TrainingSessionController extends Controller {
 		 * Valid input parameter
 		 * training_id
 		 * course_id
+		 * package_id (for available_for dates)
 		 * after
 		 * before
 		 * with_full
 		 */
 
-		$data = Input::only('after', 'before', 'training_id', 'course_id');
+		$data = Input::only('after', 'before', 'training_id', 'course_id', 'package_id');
 
 		$data['with_full'] = Input::get('with_full', true);
 
@@ -146,6 +147,29 @@ class TrainingSessionController extends Controller {
 		else
 			$course = false;
 
+		if( !empty( $options['package_id'] ) )
+		{
+			try
+			{
+				$package = Auth::user()->packages()->findOrFail( $options['package_id'] );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+			}
+		}
+		else
+			$package = false;
+
+		// Find if a available_for daterange restricts the result
+		$available_for_from = false;
+		$available_for_until = false;
+		if($package)
+		{
+			$available_for_from  = $package->available_for_from ?: false;
+			$available_for_until = $package->available_for_until ?: false;
+		}
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via training to
 		  ticket and then (conditionally) to course.
@@ -180,6 +204,17 @@ class TrainingSessionController extends Controller {
 			$options['after']->format('Y-m-d H:i:s'),
 			$options['before']->format('Y-m-d H:i:s')
 		))
+		// Filter by available_for dates
+		->where(function($query) use ($available_for_from)
+		{
+			if($available_for_from)
+				$query->where('start', '>=', $available_for_from);
+		})
+		->where(function($query) use ($available_for_until)
+		{
+			if($available_for_until)
+				$query->where('start', '<=', $available_for_until);
+		})
 		// ->with('training', 'training.tickets')
 		->orderBy('start', 'ASC')
 		// ->take(25)

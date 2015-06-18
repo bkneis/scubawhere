@@ -183,6 +183,41 @@ class DepartureController extends Controller {
 		else
 			$course = false;
 
+		// Find if a available_for daterange restricts the result
+		$available_for_from = false;
+		$available_for_until = false;
+		$ticket_available_for_from = false;
+		$ticket_available_for_until = false;
+		$package_available_for_from = false;
+		$package_available_for_until = false;
+		if($ticket)
+		{
+			$ticket_available_for_from  = $ticket->available_for_from ?: false;
+			$ticket_available_for_until = $ticket->available_for_until ?: false;
+		}
+		if($package)
+		{
+			$package_available_for_from  = $package->available_for_from ?: false;
+			$package_available_for_until = $package->available_for_until ?: false;
+		}
+		// ...
+		if($ticket_available_for_from && $package_available_for_from)
+			$available_for_from = $ticket_available_for_from >= $package_available_for_from ? $ticket_available_for_from : $package_available_for_from;
+		else if($ticket_available_for_from && !$package_available_for_from)
+			$available_for_from = $ticket_available_for_from;
+		else if($package_available_for_from)
+			$available_for_from = $package_available_for_from;
+
+		if($ticket_available_for_until && $package_available_for_until)
+			$available_for_until = $ticket_available_for_until <= $package_available_for_until ? $ticket_available_for_until : $package_available_for_until;
+		else if($ticket_available_for_until && !$package_available_for_until)
+			$available_for_until = $ticket_available_for_until;
+		else if($package_available_for_until)
+			$available_for_until = $package_available_for_until;
+
+		if($available_for_from)  $available_for_from  = $available_for_from  . ' 00:00:00';
+		if($available_for_until) $available_for_until = $available_for_until . ' 23:59:59';
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via trip to
 		  ticket and then (conditionally) to package.
@@ -256,6 +291,17 @@ class DepartureController extends Controller {
 			$options['after']->format('Y-m-d H:i:s'),
 			$options['before']->format('Y-m-d H:i:s')
 		))
+		// Filter by available_for dates
+		->where(function($query) use ($available_for_from)
+		{
+			if($available_for_from)
+				$query->where('start', '>=', $available_for_from);
+		})
+		->where(function($query) use ($available_for_until)
+		{
+			if($available_for_until)
+				$query->where('start', '<=', $available_for_until);
+		})
 		// ->with('trip', 'trip.tickets')
 		->orderBy('start', 'ASC')
 		// ->take(25)
