@@ -22,6 +22,12 @@ var Ticket = {
 		});
 	},
 
+	getOnlyAvailable : function(handleData){
+		$.get("/api/ticket/only-available", function(data){
+			handleData(data);
+		});
+	},
+
 	//Params
 	// trip_id
 	// name

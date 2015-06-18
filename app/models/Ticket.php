@@ -33,22 +33,26 @@ class Ticket extends Ardent {
 
 	public function setAvailableFromAttribute($value)
 	{
-		if($value === '') $this->attributes['available_from'] = null;
+		$value = trim($value);
+		$this->attributes['available_from'] = $value ?: null;
 	}
 
 	public function setAvailableUntilAttribute($value)
 	{
-		if($value === '') $this->attributes['available_until'] = null;
+		$value = trim($value);
+		$this->attributes['available_until'] = $value ?: null;
 	}
 
 	public function setAvailableForFromAttribute($value)
 	{
-		if($value === '') $this->attributes['available_for_from'] = null;
+		$value = trim($value);
+		$this->attributes['available_for_from'] = $value ?: null;
 	}
 
 	public function setAvailableForUntilAttribute($value)
 	{
-		if($value === '') $this->attributes['available_for_until'] = null;
+		$value = trim($value);
+		$this->attributes['available_for_until'] = $value ?: null;
 	}
 
 	public function calculatePrice($start, $limitBefore = false) {

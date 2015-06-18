@@ -55,6 +55,31 @@ class PackageController extends Controller {
 		)->get();
 	}
 
+	public function getOnlyAvailable() {
+		$now = Helper::localTime();
+		$now = $now->format('Y-m-d');
+
+		return Auth::user()->packages()
+			->where(function($query) use ($now)
+			{
+				$query->whereNull('available_from')->orWhere('available_from', '<=', $now);
+			})
+			->where(function($query) use ($now)
+			{
+				$query->whereNull('available_until')->orWhere('available_until', '>=', $now);
+			})
+			->with(
+			'tickets',
+			'courses',
+				'courses.training',
+				'courses.tickets',
+			'accommodations',
+			'addons',
+			'basePrices',
+			'prices'
+		)->get();
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until'); // Please NEVER use parent_id in the front-end!

@@ -8,7 +8,7 @@ class Package extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'parent_id');
+	protected $fillable = array('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
 	protected $hidden = array('parent_id');
 
@@ -33,22 +33,26 @@ class Package extends Ardent {
 
 	public function setAvailableFromAttribute($value)
 	{
-		if($value === '') $this->attributes['available_from'] = null;
+		$value = trim($value);
+		$this->attributes['available_from'] = $value ?: null;
 	}
 
 	public function setAvailableUntilAttribute($value)
 	{
-		if($value === '') $this->attributes['available_until'] = null;
+		$value = trim($value);
+		$this->attributes['available_until'] = $value ?: null;
 	}
 
 	public function setAvailableForFromAttribute($value)
 	{
-		if($value === '') $this->attributes['available_for_from'] = null;
+		$value = trim($value);
+		$this->attributes['available_for_from'] = $value ?: null;
 	}
 
 	public function setAvailableForUntilAttribute($value)
 	{
-		if($value === '') $this->attributes['available_for_until'] = null;
+		$value = trim($value);
+		$this->attributes['available_for_until'] = $value ?: null;
 	}
 
 	public function calculatePrice($start, $limitBefore = false) {

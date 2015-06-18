@@ -18,6 +18,12 @@ var Package = {
 		});
 	},
 
+	getOnlyAvailable : function(handleData) {
+		$.get("/api/package/only-available", function(data){
+			handleData(data);
+		});
+	},
+
 	createPackage : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",

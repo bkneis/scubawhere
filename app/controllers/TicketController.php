@@ -27,6 +27,22 @@ class TicketController extends Controller {
 		return Auth::user()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
 	}
 
+	public function getOnlyAvailable() {
+		$now = Helper::localTime();
+		$now = $now->format('Y-m-d');
+
+		return Auth::user()->tickets()
+			->where(function($query) use ($now)
+			{
+				$query->whereNull('available_from')->orWhere('available_from', '<=', $now);
+			})
+			->where(function($query) use ($now)
+			{
+				$query->whereNull('available_until')->orWhere('available_until', '>=', $now);
+			})
+			->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until'); // Please NEVER use parent_id in the front-end!

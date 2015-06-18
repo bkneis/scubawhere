@@ -267,14 +267,14 @@ Agent.getAllAgents(function(data){
 });
 
 window.promises.loadedTickets = $.Deferred();
-Ticket.getAllTickets(function(data){
+Ticket.getOnlyAvailable(function(data){
 	window.tickets = _.indexBy(data, 'id');
 	$("#tickets-list").html(ticketTemplate({tickets: window.tickets}));
 	window.promises.loadedTickets.resolve();
 });
 
 window.promises.loadedPackages = $.Deferred();
-Package.getAllPackages(function(data){
+Package.getOnlyAvailable(function(data){
 	window.packages = _.indexBy(data, 'id');
 	$("#package-list").html(packageTemplate({packages: window.packages}));
 	window.promises.loadedPackages.resolve();
