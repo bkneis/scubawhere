@@ -351,6 +351,7 @@ function renderEditForm(id) {
 
 		package.task   = 'update';
 		package.update = true;
+		package.hasAvailability = package.available_from || package.available_until || package.available_for_from || package.available_for_until;
 
 		_.each(package.base_prices, function(value) {
 			value.isBase   = true;

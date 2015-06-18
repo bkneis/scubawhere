@@ -13,9 +13,13 @@ class Package extends Ardent {
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
-		'name'        => 'required',
-		'description' => '',
-		'parent_id'   => 'integer|min:1'
+		'name'                => 'required',
+		'description'         => '',
+		'parent_id'           => 'integer|min:1',
+		'available_from'      => 'date',
+		'available_until'     => 'date',
+		'available_for_from'  => 'date',
+		'available_for_until' => 'date'
 	);
 
 	public function beforeSave()
@@ -25,6 +29,26 @@ class Package extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
+	}
+
+	public function setAvailableFromAttribute($value)
+	{
+		if($value === '') $this->attributes['available_from'] = null;
+	}
+
+	public function setAvailableUntilAttribute($value)
+	{
+		if($value === '') $this->attributes['available_until'] = null;
+	}
+
+	public function setAvailableForFromAttribute($value)
+	{
+		if($value === '') $this->attributes['available_for_from'] = null;
+	}
+
+	public function setAvailableForUntilAttribute($value)
+	{
+		if($value === '') $this->attributes['available_for_until'] = null;
 	}
 
 	public function calculatePrice($start, $limitBefore = false) {

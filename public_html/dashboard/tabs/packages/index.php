@@ -3,7 +3,7 @@
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="packages-list-div" data-step="7" data-position="right" data-intro="Once a package is saved, you will see it in your list. Click on a package to view/edit the details.">
+			<div class="panel panel-default" id="packages-list-div" data-step="8" data-position="right" data-intro="Once a package is saved, you will see it in your list. Click on a package to view/edit the details.">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Packages</h4>
 				</div>
@@ -109,6 +109,21 @@
 										{{/with}}
 									{{/each}}
 									<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
+								</div>
+							</div>
+
+							<div class="form-row" id="package-availability" data-step="7" data-position="top" data-intro="...">
+								<label style="display: block;">
+									<input id="package-availability-checkbox" type="checkbox" onclick="showMe('#availability-select', this)"{{#if hasAvailability}} checked{{/if}}><strong> Limit the package's availability?</strong>
+								</label>
+								<div class="dashed-border" id="availability-select"{{#unless hasAvailability}} style="display:none;"{{/unless}}>
+									<p>This package should only be available for selection between:</p>
+									From: <input type="text" class="datepicker" data-date-format="YYYY-MM-DD" name="available_from" value="{{available_from}}"> &nbsp; &nbsp; Until: <input type="text" class="datepicker" data-date-format="YYYY-MM-DD" name="available_until" value="{{available_until}}">
+
+									<p>&nbsp;</p>
+
+									<p>This package should only be available for trips that start between:</p>
+									From: <input type="text" class="datepicker" data-date-format="YYYY-MM-DD" name="available_for_from" value="{{available_for_from}}"> &nbsp; &nbsp; Until: <input type="text" class="datepicker" data-date-format="YYYY-MM-DD" name="available_for_until" value="{{available_for_until}}">
 								</div>
 							</div>
 

@@ -57,7 +57,7 @@ class PackageController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
+		$data = Input::only('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until'); // Please NEVER use parent_id in the front-end!
 
 		// Validate that tickets are supplied
 		$tickets = Input::get('tickets', []);
@@ -152,7 +152,7 @@ class PackageController extends Controller {
 
 	public function postEdit()
 	{
-		$data = Input::only('name', 'description');
+		$data = Input::only('name', 'description', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
 		try
 		{

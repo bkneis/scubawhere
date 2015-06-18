@@ -279,16 +279,18 @@ function renderEditForm(id) {
 	if(id) {
 		ticket = window.tickets[id];
 
-		ticket.task         = 'update';
-		ticket.update       = true;
-		ticket.trips        = _.indexBy(ticket.trips, 'id');
-		ticket.boats        = _.indexBy(ticket.boats, 'id');
-		ticket.boatrooms    = _.indexBy(ticket.boatrooms, 'id');
-		ticket.hasBoats     = Object.keys(ticket.boats).length > 0;
-		ticket.hasBoatrooms = Object.keys(ticket.boatrooms).length > 0;
+		ticket.task            = 'update';
+		ticket.update          = true;
+		ticket.trips           = _.indexBy(ticket.trips, 'id');
+		ticket.boats           = _.indexBy(ticket.boats, 'id');
+		ticket.boatrooms       = _.indexBy(ticket.boatrooms, 'id');
+		ticket.hasBoats        = Object.keys(ticket.boats).length > 0;
+		ticket.hasBoatrooms    = Object.keys(ticket.boatrooms).length > 0;
+		ticket.hasAvailability = ticket.available_from || ticket.available_until || ticket.available_for_from || ticket.available_for_until;
 
 		_.each(ticket.base_prices, function(value) {
 			value.isBase = true;
+
 			if(value.from == '0000-00-00')
 				value.isAlways = true;
 		});

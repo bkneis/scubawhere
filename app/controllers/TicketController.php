@@ -29,7 +29,7 @@ class TicketController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'parent_id'); // Please NEVER use parent_id in the front-end!
+		$data = Input::only('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until'); // Please NEVER use parent_id in the front-end!
 
 		$ticket = new Ticket($data);
 
@@ -141,7 +141,7 @@ class TicketController extends Controller {
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$data = Input::only('name', 'description');
+		$data = Input::only('name', 'description', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
 		// ####################### Prices #######################
 		if( Input::has('base_prices') )
