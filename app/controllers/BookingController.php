@@ -1757,7 +1757,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		Helper::sendBookingConfirmation($booking->id);
+		// Helper::sendBookingConfirmation($booking->id);
 
 		return array('status' => 'OK. Booking confirmed.');
 	}

@@ -115,9 +115,9 @@ class PaymentController extends Controller {
 
 		$lead = $booking->lead_customer()->first();
 
-		Mail::send('emails.transaction', array('payment' => $payment, 'siteUrl' => \Config::get('app.url')), function($message) use ($lead) {
+		/* Mail::send('emails.transaction', array('payment' => $payment, 'siteUrl' => \Config::get('app.url')), function($message) use ($lead) {
 		    $message->to($lead->email, $lead->firstname . ' ' . $lead->lastname)->subject('Payment Recieved');
-		});
+		}); */
 
 		return Response::json( array('status' => 'OK. Payment added', 'payment' => $payment), 201 ); // 201 Created
 	}
