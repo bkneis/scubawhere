@@ -40,9 +40,14 @@ function generateFreeSpacesBar(capacity, id) {
 	return new Handlebars.SafeString(html);
 }
 
-Handlebars.registerHelper("tripFinish", function(start, duration) {
-	startDate = friendlyDate(start);
-	endDate   = friendlyDate( moment(start).add(duration, 'hours') );
+Handlebars.registerHelper("tripFinish", function() {
+	var startDate = friendlyDate(this.start);
+
+	var duration = 0;
+	if(this.trip) duration = this.trip.duration;
+	if(this.training) duration = this.training.duration;
+
+	var endDate   = friendlyDate( moment(this.start).add(duration, 'hours') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
