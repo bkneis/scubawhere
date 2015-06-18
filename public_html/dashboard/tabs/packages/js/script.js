@@ -91,6 +91,8 @@ $(function(){
 
 		event.preventDefault();
 
+		$('.errors').remove();
+
 		// Show loading indicator
 		$('#add-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
@@ -115,7 +117,6 @@ $(function(){
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
-				$('.errors').remove();
 				$('#add-package-form').prepend(errorsHTML);
 				$('#add-package').before(errorsHTML);
 			}
@@ -133,6 +134,8 @@ $(function(){
 	$("#package-form-container").on('submit', '#update-package-form', function(event) {
 
 		event.preventDefault();
+
+		$('.errors').remove();
 
 		// Show loading indicator
 		$('#update-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -174,7 +177,6 @@ $(function(){
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
-				$('.errors').remove();
 				$('#update-package-form').prepend(errorsHTML);
 				$('#update-package').before(errorsHTML);
 			}

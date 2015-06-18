@@ -115,6 +115,8 @@ $(function () {
 
 		event.preventDefault();
 
+		$('.errors').remove();
+
 		// Show loading indicator
 		$('#add-ticket').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
@@ -139,7 +141,6 @@ $(function () {
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
-				$('.errors').remove();
 				$('#add-ticket-form').prepend(errorsHTML);
 				$('#add-ticket').before(errorsHTML);
 			}
@@ -158,6 +159,8 @@ $(function () {
 	$("#ticket-form-container").on('submit', '#update-ticket-form', function(event) {
 
 		event.preventDefault();
+
+		$('.errors').remove();
 
 		$('#update-ticket').prop('disabled', true).after('<div id="update-loader" class="loader"></div>');
 
@@ -198,7 +201,6 @@ $(function () {
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
-				$('.errors').remove();
 				$('#update-ticket-form').prepend(errorsHTML);
 				$('#update-ticket').before(errorsHTML);
 			}
