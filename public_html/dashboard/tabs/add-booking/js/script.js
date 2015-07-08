@@ -730,9 +730,14 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 
 	$('#edit-customer-modal').modal('show');
 
+	// Enable select2 dropdown for edit-form dropdown fields
+	$('#edit-customer-countries').find('#country_id').select2();
+	$('#edit-customer-agencies').find('#agency_id').select2();
+	$('#edit-customer-agencies').find('#certificate_id').select2();
+
 	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
 
-	//Set the country dropdown to the customers country (if they have one)
+	// Set the country dropdown to the customers country (if they have one)
 	$('#edit-customer-countries').find('#country_id').val(window.customers[id].country_id);
 
 	$('#edit-customer-agencies').find('#selected-certificates').empty();
