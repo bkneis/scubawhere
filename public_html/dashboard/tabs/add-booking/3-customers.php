@@ -164,6 +164,13 @@
 								</div>
 							</div>
 						</fieldset>
+
+						<div class="form-group">
+							<div class="col-md-3">
+								<label for="last_dive" class="control-label">Date of last dive</label>
+								<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD">
+							</div>
+						</div>
 					</div>
 					<div class="panel-footer clearfix">
 						<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
@@ -198,27 +205,35 @@
 							</div>
 						</div>
 					</fieldset>
+
 					<fieldset id="edit-customer-agencies">
-							<h4>Certificates</h4>
-							<div class="form-group" id="selected-certificates">
+						<h4>Certificates</h4>
+						<div class="form-group" id="selected-certificates">
+						</div>
+						<div class="form-group">
+							<div class="col-md-5">
+								<label for="agency_id" class="control-label">Agency</label>
+								<select id="agency_id" class="form-control select2">
+								</select>
 							</div>
-							<div class="form-group">
-								<div class="col-md-5">
-									<label for="agency_id" class="control-label">Agency</label>
-									<select id="agency_id" class="form-control select2">
-									</select>
-								</div>
-								<div class="col-md-5">
-									<label for="certificate_id" class="control-label">Certificate</label>
-									<select id="certificate_id" class="form-control select2">
-									</select>
-								</div>
-								<div class="col-md-2">
-									<label>&nbsp;</label><br>
-									<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
-								</div>
+							<div class="col-md-5">
+								<label for="certificate_id" class="control-label">Certificate</label>
+								<select id="certificate_id" class="form-control select2">
+								</select>
 							</div>
-						</fieldset>
+							<div class="col-md-2">
+								<label>&nbsp;</label><br>
+								<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+							</div>
+						</div>
+					</fieldset>
+
+					<div class="form-group">
+						<div class="col-md-3">
+							<label for="last_dive" class="control-label">Date of last dive</label>
+							<input type="text" name="last_dive" class="form-control datepicker last_dive" data-date-format="YYYY-MM-DD">
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>

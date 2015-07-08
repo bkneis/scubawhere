@@ -750,6 +750,9 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 			name: certificate.name,
 		}));
 	});
+
+	// Set the last_dive date
+	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
 });
 
 $('#booking-summary').on('click', '.remove-customer', function() {
