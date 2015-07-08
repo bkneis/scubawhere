@@ -668,3 +668,10 @@ label {
 .panel-title {
 	text-transform: capitalize;
 }
+
+.selected-certificate {
+	border: 1px solid #CCC;
+	padding: 0.5em 1em;
+	margin-left: 15px;
+	margin-bottom: 5px;
+}

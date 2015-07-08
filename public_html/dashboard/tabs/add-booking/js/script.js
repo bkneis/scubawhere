@@ -247,17 +247,20 @@ Handlebars.registerHelper('statusIcon', function() {
 
 // Load all initial handlebars templates
 
-var agentTemplate          = Handlebars.compile($("#agents-list-template").html());
-var ticketTemplate         = Handlebars.compile($("#tickets-list-template").html());
-var packageTemplate        = Handlebars.compile($("#package-list-template").html());
-var courseTemplate         = Handlebars.compile($("#course-list-template").html());
-var tripTemplate           = Handlebars.compile($("#trips-list-template").html());
-var addonsTemplate         = Handlebars.compile($("#addons-list-template").html());
-var accommodationsTemplate = Handlebars.compile($("#accommodations-list-template").html());
-var customersTemplate      = Handlebars.compile($("#customers-list-template").html());
-var countriesTemplate      = Handlebars.compile($("#countries-template").html());
-var boatroomModalTemplate  = Handlebars.compile($("#boatroom-select-modal-template").html());
-var bookingSummaryTemplate = Handlebars.compile($("#booking-summary-template").html());
+var agentTemplate               = Handlebars.compile($("#agents-list-template").html());
+var ticketTemplate              = Handlebars.compile($("#tickets-list-template").html());
+var packageTemplate             = Handlebars.compile($("#package-list-template").html());
+var courseTemplate              = Handlebars.compile($("#course-list-template").html());
+var tripTemplate                = Handlebars.compile($("#trips-list-template").html());
+var addonsTemplate              = Handlebars.compile($("#addons-list-template").html());
+var accommodationsTemplate      = Handlebars.compile($("#accommodations-list-template").html());
+var customersTemplate           = Handlebars.compile($("#customers-list-template").html());
+var countriesTemplate           = Handlebars.compile($("#countries-template").html());
+var agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
+var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
+var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
+var boatroomModalTemplate       = Handlebars.compile($("#boatroom-select-modal-template").html());
+var bookingSummaryTemplate      = Handlebars.compile($("#booking-summary-template").html());
 
 
 /**
@@ -311,6 +314,21 @@ else {
 	$("#add-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
 	$("#edit-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
 	window.promises.loadedCountries.resolve();
+}
+
+
+window.promises.loadedAgencies = $.Deferred();
+if(typeof window.agencies === 'undefined')
+	Agency.getAll(function(data){
+		window.agencies = _.indexBy(data, 'id');
+		$("#add-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+		$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+		window.promises.loadedAgencies.resolve();
+	});
+else {
+	$("#add-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+	window.promises.loadedAgencies.resolve();
 }
 
 window.promises.loadedTrips = $.Deferred();
@@ -607,7 +625,7 @@ window.promises.loadedCourses.done(function() {
 $.when(
 	window.promises.loadedTickets,
 	window.promises.loadedPackages,
-	window.promises.loadedCountries
+	window.promises.loadedCourses
 ).done(function() {
 	$('#ticket-search-box').keyup(function(event) {
 		var regExp = new RegExp(event.target.value, 'i');
@@ -638,8 +656,9 @@ $.when(
 */
 
 var selectedCustomerTemplate = Handlebars.compile($("#selected-customer-template").html());
+var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
 
-window.promises.loadedCustomers.done(function() {
+$.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(function() {
 	$('#customer-tab').on('change', '#existing-customers', function() {
 		var id = $('#existing-customers').val();
 
@@ -671,6 +690,39 @@ window.promises.loadedCustomers.done(function() {
 			});
 		}
 	});
+
+	$('#customer-tab').on('change', '#agency_id', function() {
+		var self = $(this);
+
+		if(self.val() === "") self.closest('fieldset').find('#certificate_id').empty();
+
+		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+
+		certificate_dropdown.html(certificatesTemplate({certificates: window.agencies[self.val()].certificates}));
+		certificate_dropdown.select2("val", "");
+	});
+
+	$('#customer-tab').on('click', '.add-certificate', function(event) {
+		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
+
+		var self = $(this);
+		var agency_dropdown      = self.closest('fieldset').find('#agency_id');
+		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+
+		if(agency_dropdown.val() === "" || certificate_dropdown.val() === "") return false;
+
+		self.closest('fieldset').find('#selected-certificates').append(selectedCertificateTemplate({
+			id: certificate_dropdown.val(),
+			abbreviation: window.agencies[agency_dropdown.val()].abbreviation,
+			name: _.find(window.agencies[agency_dropdown.val()].certificates, function(certificate) {
+				return certificate.id == certificate_dropdown.val();
+			}).name,
+		}));
+	});
+
+	$('#customer-tab').on('click', '.remove-certificate', function() {
+		$(this).parent().remove();
+	});
 });
 
 $('#customer-tab').on('click', '.edit-customer', function() {
@@ -678,11 +730,21 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 
 	$('#edit-customer-modal').modal('show');
 
-	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
 	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
 
 	//Set the country dropdown to the customers country (if they have one)
 	$('#edit-customer-countries').find('#country_id').val(window.customers[id].country_id);
+
+	$('#edit-customer-agencies').find('#selected-certificates').empty();
+
+	// Display all selected certificates
+	_.each(window.customers[id].certificates, function(certificate) {
+		$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
+			id: certificate.id,
+			abbreviation: certificate.agency.abbreviation,
+			name: certificate.name,
+		}));
+	});
 });
 
 $('#booking-summary').on('click', '.remove-customer', function() {
@@ -839,7 +901,13 @@ window.promises.loadedCustomers.done(function() {
 });
 
 $('#customer-tab').on('click', '.clear-form', function() {
-	$(this).closest('form')[0].reset();
+	var form = $(this).closest('form');
+	form[0].reset(); // reset() is a vanilla JS method, so we need the vanilla DOM node
+
+	// Reset certificate area
+	form.find('#selected-certificates').empty();
+	form.find('#agency_id').select2("val", "");
+	form.find('#certificate_id').select2("val", "");
 });
 
 $('#booking-summary').on('click', '.lead-customer', function() {
@@ -2023,6 +2091,8 @@ $(document).ready(function() {
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	$('#country_id').select2();
+	$('#agency_id').select2();
+	$('#certificate_id').select2();
 
 	$('#pick-up-location').typeahead({
 		items: 'all',

@@ -17,7 +17,7 @@
 					<select id="existing-customers" name="existing-customers" class="form-control select2">
 						<option selected="selected" value="">Search for a customer...</option>
 					</select>
-					<script id="customers-list-template" type="text/x-handlebars-template">
+					<script type="text/x-handlebars-template" id="customers-list-template">
 						<option selected="selected" value="">Search for a customer...</option>
 						{{#each customers}}
 							<option value="{{id}}">{{{firstname}}} {{{lastname}}}{{#if email}} - {{email}}{{/if}}</option>
@@ -27,7 +27,7 @@
 
 				<div id="selected-customer"></div>
 
-				<script id="selected-customer-template" type="text/x-handlebars-template">
+				<script type="text/x-handlebars-template" id="selected-customer-template">
 					<h4>Customer Details</h4>
 					<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
 						<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer pull-right" data-id="{{id}}">Edit</a>
@@ -112,14 +112,56 @@
 							<div class="form-group">
 								<div class="col-md-8">
 									<label for="country_id" class="control-label">Country <span class="text-danger">*</span></label>
-									<select id="country_id" name="country_id" class="form-control select2"></select>
+									<select id="country_id" name="country_id" class="form-control select2">
+									</select>
 								</div>
-								<script id="countries-template" type="text/x-handlebars-template">
+								<script type="text/x-handlebars-template" id="countries-template">
 									<option value="">Choose country...</option>
 									{{#each countries}}
 										<option value="{{id}}">{{{name}}}</option>
 									{{/each}}
 								</script>
+							</div>
+						</fieldset>
+
+						<fieldset id="add-customer-agencies">
+							<h4>Certificates</h4>
+							<div class="form-group" id="selected-certificates">
+							</div>
+							<script type="text/x-handlebars-template" id="selected-certificate-template">
+								<div class="pull-left selected-certificate">
+									<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+									{{abbreviation}} - {{{name}}}
+									<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
+								</div>
+							</script>
+							<div class="form-group">
+								<div class="col-md-5">
+									<label for="agency_id" class="control-label">Agency</label>
+									<select id="agency_id" class="form-control select2">
+									</select>
+									<script type="text/x-handlebars-template" id="agencies-template">
+										<option value="">Choose agency...</option>
+										{{#each agencies}}
+											<option value="{{id}}">{{abbreviation}} - {{{name}}}</option>
+										{{/each}}
+									</script>
+								</div>
+								<div class="col-md-5">
+									<label for="certificate_id" class="control-label">Certificate</label>
+									<select id="certificate_id" class="form-control select2">
+									</select>
+									<script type="text/x-handlebars-template" id="certificates-template">
+										<option value="">Choose certificate...</option>
+										{{#each certificates}}
+											<option value="{{id}}">{{{name}}}</option>
+										{{/each}}
+									</script>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label><br>
+									<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+								</div>
 							</div>
 						</fieldset>
 					</div>
@@ -143,22 +185,40 @@
 			</div>
 			<form id="edit-customer-form" class="form-horizontal" role="form">
 				<div class="modal-body">
-					<fieldset id="edit-customer-details"></fieldset>
+					<fieldset id="edit-customer-details">
+						<!-- This is where the Handlebars template will load into -->
+					</fieldset>
+
 					<fieldset id="edit-customer-countries">
 						<div class="form-group">
 							<div class="col-md-8">
 								<label for="country_id">Country <span class="text-danger">*</span></label></label>
 								<select id="country_id" name="country_id" class="form-control select2">
-									<option value="">Choose Country...</option>
 								</select>
-								<script id="countries-template" type="text/x-handlebars-template">
-									{{#each countries}}
-										<option value="{{id}}">{{{name}}}</option>
-									{{/each}}
-								</script>
 							</div>
 						</div>
 					</fieldset>
+					<fieldset id="edit-customer-agencies">
+							<h4>Certificates</h4>
+							<div class="form-group" id="selected-certificates">
+							</div>
+							<div class="form-group">
+								<div class="col-md-5">
+									<label for="agency_id" class="control-label">Agency</label>
+									<select id="agency_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-5">
+									<label for="certificate_id" class="control-label">Certificate</label>
+									<select id="certificate_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label><br>
+									<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+								</div>
+							</div>
+						</fieldset>
 				</div>
 				<div class="modal-footer">
 					<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
@@ -170,7 +230,7 @@
 		</div>
 	</div>
 </div>
-<script id="edit-customer-template" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="edit-customer-template">
 	<input type="hidden" name="id" value="{{id}}">
 	<div class="form-group">
 		<div class="col-md-6">

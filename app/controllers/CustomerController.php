@@ -8,7 +8,7 @@ class CustomerController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->customers()->findOrFail( Input::get('id') );
+			return Auth::user()->customers()->with('certificates', 'certificates.agency')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -18,7 +18,7 @@ class CustomerController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->customers()->get();
+		return Auth::user()->customers()->with('certificates', 'certificates.agency')->get();
 	}
 
 	public function postAdd()
@@ -52,12 +52,12 @@ class CustomerController extends Controller {
 
 		$customer = Auth::user()->customers()->save($customer);
 
-		$certificates = Input::get('certificates');
-		if( $certificates && !empty($certificates) && is_array($certificates) && is_numeric( $certificates[0] ) )
+		$certificates = Input::get('certificates', []);
+		if( $certificates && !empty($certificates) && is_array($certificates) && (count($certificates) === 0 || is_numeric($certificates[0])) )
 		{
 			try
 			{
-				$trip->certificates()->sync($certificates);
+				$customer->certificates()->sync($certificates);
 			}
 			catch(Exception $e)
 			{
@@ -102,12 +102,12 @@ class CustomerController extends Controller {
 			return Response::json( array('errors' => $customer->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$certificates = Input::get('certificates');
-		if( $certificates && !empty($certificates) && is_array($certificates) && is_numeric( $certificates[0] ) )
+		$certificates = Input::get('certificates', []);
+		if( $certificates && !empty($certificates) && is_array($certificates) && (count($certificates) === 0 || is_numeric($certificates[0])) )
 		{
 			try
 			{
-				$trip->certificates()->sync($certificates);
+				$customer->certificates()->sync($certificates);
 			}
 			catch(Exception $e)
 			{

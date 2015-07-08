@@ -131,6 +131,7 @@
 	<!--Controllers-->
 	<script src="/js/Controllers/Accommodation.js"></script>
 	<script src="/js/Controllers/Addon.js"></script>
+	<script src="/js/Controllers/Agency.js"></script>
 	<script src="/js/Controllers/Agent.js"></script>
 	<script src="/js/Controllers/Boatroom.js"></script>
 	<script src="/js/Controllers/Booking.js"></script>
