@@ -38,10 +38,10 @@
 		</div>
 	</div><!-- .row -->
 	<script type="text/x-handlebars-template" id="pick-up-schedule-template">
-		{{#each pickups.bookings}}
+		{{#each pickups}}
 			<tr>
 				<td>{{reference}}</td>
-				<td>{{lead_customer.firstname lead_customer.lastname}}</td>
+				<td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
 				<td>{{lead_customer.phone}}</td>
 				<td>{{number_of_customers}}</td>
 				<td>{{pick_up_location}}</td>
