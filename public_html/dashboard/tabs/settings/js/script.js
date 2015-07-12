@@ -9,6 +9,29 @@ $(function() {
 		renderEditForm();
 	});
 
+	$('#company-form-container').on('click', '#start-wizard', function(event) {
+		if(window.tourStart) {
+			window.location.href = window.currentStep.tab;
+		}
+		else {
+			window.currentStep = "#dashboard";
+			window.location.href = '#accommodations';
+				$("#guts").prepend($("#tour-nav-wizard").html());
+				window.tourStart = true;
+				window.currentStep = {
+					tab : "#accommodations",
+					position : 1
+				};
+				$(".tour-progress").on("click", function(event) {
+					if(window.currentStep.position >= $(this).attr('data-position')) {
+						window.location.href = $(this).attr('data-target');
+					} else {
+						pageMssg("Please complete the unfinished steps");
+					}
+				});
+		}
+	});
+
 	$('#company-form-container').on('submit', '#update-company-form', function(event) {
 
 		event.preventDefault();
@@ -74,6 +97,7 @@ $(function() {
 			}
 		});
 	});
+
 });
 
 function renderEditForm() {
