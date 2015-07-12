@@ -345,6 +345,17 @@
     //remove overlay layer from the page
     var overlayLayer = targetElement.querySelector('.introjs-overlay');
 
+    if(window.currentStep.tab == "#accommodations") {
+      window.currentStep.tab = "#agents";
+      window.currentStep.position++;
+      window.location.href = "#agents";
+    }
+    else if(window.currentStep.tab == "#agents") {
+      window.currentStep.tab = "#locations";
+      window.currentStep.position++;
+      window.location.href = "#locations";
+    }
+
     //return if intro already completed or skipped
     if (overlayLayer == null) {
       return;
