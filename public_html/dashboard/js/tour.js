@@ -149,12 +149,12 @@ var Tour = {
 
 							case "boat-form-container":
 							$("#boat-name").val("Barry's big boat");
-			        	//CKEDITOR.setData("Add a description of your boat here."); 
-			        	$("#boat-capacity").val(25);
+				        	//CKEDITOR.setData("Add a description of your boat here."); 
+				        	$("#boat-capacity").val(25);
 			        	break;
 
 			        	case "boat-cabins":
-			        	$("#room-types").append('<p> \
+			        	$("#room-types").append('<p id="cabin-option"> \
 			        		<select class="room-type-select"> \
 			        		<option value="{{id}}">Single Cabin</option> \
 			        		</select> Number of rooms: \
@@ -164,8 +164,9 @@ var Tour = {
 			        	break;
 
 			        	case "boats-list-div":
-			        	$("#no-boats").remove();
-			        	$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
+				        	$("#no-boats").remove();
+				        	$("#cabin-option").remove();
+				        	$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
 			        	break;
 			        }
 			    }).oncomplete(function() {
