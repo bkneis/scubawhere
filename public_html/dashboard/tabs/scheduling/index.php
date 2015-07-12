@@ -7,7 +7,7 @@
 				</div>
 				<div class="panel-body" id="trips">
 					<div class="yellow-helper">
-						Please drag a trip onto a day on the calendar to activate it.
+						Please drag a trip onto a day on the calendar to activate it. To view more details on a trip, or create a repeating timetable, click on the event in the calendar
 					</div>
 					<div id="filter-types" class="btn-group" role="group" style="margin-bottom:10px;">
 					  <button id="filter-trips" display="trips" type="button" class="btn btn-default btn-primary filter-type">Trips</button>

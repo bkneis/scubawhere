@@ -1,4 +1,10 @@
 var pickupList;
+
+Handlebars.registerHelper('hasPickups', function(pickups){
+	if(pickups.length > 0) return false;
+	else return true;
+});
+
 $(function() {
 
 	$('input.datepicker').datetimepicker({
@@ -16,32 +22,7 @@ $(function() {
 
 	$("#date-select").val(getToday());
 
-	var params = { date : $("#date-select").val() };
-	Report.getPickupSchedule(params, function success(data) {
-		console.log(data);
-		//$("#pickup-table").append( pickupList({ pickups : data }) );
-		$('.reports-table').DataTable({
-		"paging":   false,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		"data": data.bookings,
-    	"columns": [
-	        { data: 'reference' },
-	        { data: 'lead_customer.firstname' },
-	        { data: 'lead_customer.phone' },
-	        { data: 'number_of_customers' },
-	        { data: 'pick_up_location' },
-	        { data: 'pick_up_time' },
-	    ],
-		"language": {
-			"emptyTable": "There are no customers that need picking up today"
-		}
-	});
-	});
-
-	
+	loadPickups();
 
 	$('#date-select').on('change', function() {
 		loadPickups();
@@ -56,11 +37,11 @@ function getToday() {
 	var yyyy = today.getFullYear();
 
 	if(dd<10) {
-	    dd='0'+dd
+		dd='0'+dd
 	} 
 
 	if(mm<10) {
-	    mm='0'+mm
+		mm='0'+mm
 	} 
 
 	var date = yyyy+'-'+mm+'-'+dd;
@@ -71,6 +52,23 @@ function getToday() {
 function loadPickups() {
 	var params = { date : $("#date-select").val() };
 	Report.getPickupSchedule(params, function success(data) {
-		$("#pickup-table").empty().append( pickupList({ pickups : data }) );
+		console.log(data);
+		$("#pickup-table").empty().append( pickupList({ pickups : data.bookings }) );
 	});
+}
+
+function customerData(booking) {
+	this._ref = booking.reference;
+	this._name = booking.lead_customer.firstname + booking.lead_customer.lastname;
+	this._phone = booking.lead_customer.phone;
+	this._numCustomers = booking.number_of_customers;
+	this._location = booking.pick_up_location;
+	this._time = booking.pick_up_time;
+
+	this.ref = function() { return this._ref; }
+	this.name = function() { return this._name; }
+	this.phone = function() { return this._phone; }
+	this.numCustomers = function() { return this._numCustomers; }
+	this.location = function() { return this._location; }
+	this.time = function() { return this._time; }
 }
