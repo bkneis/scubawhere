@@ -34,7 +34,7 @@
 				</li>
 				<li role="presentation">
 					<a href="javascript:void(0)" role="tab" data-toggle="tab" data-target="#accommodation-tab">
-						<span class="step-number">7</span>
+						<span class="step-number">6</span>
 						<span class="step-description">Accommodation</span>
 					</a>
 				</li>
