@@ -10,7 +10,7 @@ var calendarOptions = {
 	boatsListTemplate: null,
 	tripsListTemplate: null,
 	filterSelectTemplate: null,
-	calendarDisplay: "trips"
+	calendarDisplay: "all"
 };
 
 $(function() {
@@ -90,6 +90,14 @@ $(function() {
 			height : 450,
 			firstDay: 1, // Set Monday as the first day of the week
 			events: function(start, end, timezone, callback) {
+				if(calendarOptions.calendarDisplay == "all") {
+					/*getTripEvents(start, end, timezone, callback);
+					getClassEvents(start, end, timezone, callback);
+					getAccomEvents(start, end, timezone, callback);*/
+					$("#filter-settings").empty();
+					getAllEvents(start, end, timezone, callback);
+					console.log('all');
+				}
 				if(calendarOptions.calendarDisplay == "trips")
 					getTripEvents(start, end, timezone, callback);
 				if(calendarOptions.calendarDisplay == "accommodations")
@@ -105,12 +113,19 @@ $(function() {
 			editable: false,
 			droppable: false, // This allows things to be dropped onto the calendar
 			eventClick: function(eventObject) {
-				if(calendarOptions.calendarDisplay == "trips")
+
+				if(eventObject.type == "trip")
+					showModalWindow(eventObject);
+				if(eventObject.type == "class")
+					showModalWindowCourse(eventObject);
+				if(eventObject.type == "accom")
+					showModalWindowAccommodation(eventObject);
+				/*if(calendarOptions.calendarDisplay == "trips")
 					showModalWindow(eventObject);
 				if(calendarOptions.calendarDisplay == "accommodations")
 					showModalWindowAccommodation(eventObject);
 				if(calendarOptions.calendarDisplay == "classes")
-					showModalWindowCourse(eventObject);
+					showModalWindowCourse(eventObject);*/
 				//console.log(calendarOptions.calendarDisplay);
 				//console.log(eventObject);
 			},
@@ -543,7 +558,7 @@ function getTripEvents(start, end, timezone, callback) {
 					if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
 
 					eventObject.session.start = $.fullCalendar.moment(value.start);
-
+					eventObject.type = "trip";
 					events.push( createCalendarEntry(eventObject) );
 				}
 			}
@@ -570,7 +585,7 @@ function getTripEvents(start, end, timezone, callback) {
 				if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
 
 				eventObject.session.start = $.fullCalendar.moment(value.start);
-
+				eventObject.type = "trip";
 				events.push( createCalendarEntry(eventObject) );
 
 			}
@@ -580,6 +595,157 @@ callback(events);
 
 		// Remove loading indictor
 		$('#fetch-events-loader').remove();
+	},
+	function error(xhr){
+		$('.loader').remove();
+	});
+
+}
+
+function getAllEvents(start, end, timezone, callback) {
+
+	// Start loading indicator
+	$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
+	//console.log(start.format(), end.format());
+	var sessionFilters = {
+		'after': start.format(),
+		'before': end.format(),
+		'with_full': 1
+	};
+
+	var events = [];
+	
+	Session.filter(sessionFilters, function success(data) {
+		//console.log(data);
+		window.sessions = _.indexBy(data, 'id');
+
+		console.log(window.sessions);
+
+		// Create eventObjects
+		_.each(window.sessions, function(value) {
+			if(calendarOptions.filterByBoat) {
+				if(calendarOptions.boatFilter == value.boat_id) {
+					var booked = value.capacity[0];
+					var capacity = value.capacity[1];
+					var ticketsLeft = capacity - booked;
+					var sameDay = true;
+					if(window.trips[value.trip_id].duration > 24) sameDay = false;
+					var eventObject = {
+						title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
+						allDay: false,
+						trip: window.trips[ value.trip_id ],
+						session: value,
+						isNew: false,
+						editable: false, // This uses a 'falsy' check on purpose
+						durationEditable: false,
+						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
+						ticketsLeft : ticketsLeft,
+						capacity : capacity,
+						sameDay : sameDay
+					};
+
+					if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
+
+					eventObject.session.start = $.fullCalendar.moment(value.start);
+					eventObject.type = "trip";
+					events.push( createCalendarEntry(eventObject) );
+				}
+			}
+			else {
+				var booked = value.capacity[0];
+				var capacity = value.capacity[1];
+				var ticketsLeft = capacity - booked;
+				var sameDay = true;
+				if(window.trips[value.trip_id].duration > 24) sameDay = false;
+				var eventObject = {
+					title: window.trips[ value.trip_id ].name + ' ' + calcUtil(booked, capacity) + '%', // use the element's text as the event title
+					allDay: false,
+					trip: window.trips[ value.trip_id ],
+					session: value,
+					isNew: false,
+					editable: false, // This uses a 'falsy' check on purpose
+					durationEditable: false,
+					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
+					ticketsLeft : ticketsLeft,
+					capacity : capacity,
+					sameDay : sameDay
+				};
+
+				if(ticketsLeft == 0) eventObject.title = window.trips[ value.trip_id ].name + " FULL";
+
+				eventObject.session.start = $.fullCalendar.moment(value.start);
+				eventObject.type = "trip";
+				events.push( createCalendarEntry(eventObject) );
+
+			}
+
+		});
+
+		Class.filter(sessionFilters, function success(data) {
+			window.trainingSessions = _.indexBy(data, 'id');
+			console.log(data);
+
+			// Create eventObjects
+			_.each(window.trainingSessions, function(value) {
+				var eventObject = {
+					title: window.trainings[ value.training_id ].name, // use the element's text as the event title
+					allDay: false,
+					trip: window.trainings[ value.training_id ],
+					session: value,
+					isNew: false,
+					editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
+					durationEditable: false,
+					className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+					isTrip : false
+				};
+
+				eventObject.session.start = $.fullCalendar.moment(value.start);
+				eventObject.type = "class";
+				events.push( createCalendarEntry(eventObject) );
+			});
+
+			Accommodation.filter(sessionFilters, function success(data) {
+
+				console.log(data);
+
+				_.each(data, function(value, key) {
+					var start = new moment(key);
+
+					_.each(value, function(util, id) {
+						var eventObject = {
+				            start: start, // change start to readable text instead of moment
+				            end : start,
+				            id : randomString(),
+				            title: window.accommodations[ id ].name,
+				            color : "#229930",
+				            booked : util[0],
+				            available : (util[1] - util[0])
+				        };
+				        if(eventObject.available == 0) eventObject.color = "#f00";
+				        eventObject.type = "accom";
+				        events.push( eventObject );
+				        //$('#calendar').renderEvent(eventObject);
+				    });
+				});
+
+				$('#fetch-events-loader').remove();
+
+				callback(events);
+			},
+			function error(xhr){
+				$('.loader').remove();
+			});
+
+			$('#fetch-events-loader').remove();
+
+		},
+		function error(xhr){
+			$('.loader').remove();
+		});
+
+		// Remove loading indictor
+		$('#fetch-events-loader').remove();
+
 	},
 	function error(xhr){
 		$('.loader').remove();
@@ -619,7 +785,7 @@ function getClassEvents(start, end, timezone, callback) {
 			};
 
 			eventObject.session.start = $.fullCalendar.moment(value.start);
-
+			eventObject.type = "class";
 			events.push( createCalendarEntry(eventObject) );
 		});
 
@@ -662,6 +828,7 @@ function getAccomEvents(start, end, timezone, callback) {
 		            available : (util[1] - util[0])
 		        };
 		        if(eventObject.available == 0) eventObject.color = "#f00";
+		        eventObject.type = "accom";
 		        events.push( eventObject );
 		        //$('#calendar').renderEvent(eventObject);
 		    });
