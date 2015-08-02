@@ -225,7 +225,7 @@
 </script>
 
 	<script type="text/x-handlebars-template" id="booking-summary-template">
-		<section align="center" class="container-for-gmail-android" width="100%" style="max-width: 800px;">
+		<section align="center" style="min-width: 600px; max-width: 800px;">
 		<article width="600" class="w320">
 			<div class="mini-container-right">
 					<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
