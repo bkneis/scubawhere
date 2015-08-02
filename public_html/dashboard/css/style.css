@@ -551,10 +551,11 @@ ul#sidenav > li > ul > li:hover {
 .form-row{
 	margin-bottom: 10px;
 	font-size: 13px;
+	width:100%;
 }
 
 .form-row .field-label{
-	width: 150px;
+	width:100%;
 	display: inline-block;
 }
 
