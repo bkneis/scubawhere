@@ -55,13 +55,14 @@ $(function() {
 
 	$.get("/api/country/all", function success(data) {
 		window.countries = _.indexBy(data, 'id');
-	});
 
-	Customer.getAllCustomers(function(data) {
+		Customer.getAllCustomers(function(data) {
 
-		console.log(data);
-		window.customers = _.indexBy(data, 'id');
-		renderCustomerList(window.customers);
+			console.log(data);
+			window.customers = _.indexBy(data, 'id');
+			renderCustomerList(window.customers);
+
+		});
 
 	});
 
