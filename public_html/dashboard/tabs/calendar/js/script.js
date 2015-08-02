@@ -464,8 +464,14 @@ function showModalWindowManifest(id) {
 				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
+				{ data: null, render: 'last_dive',
+				  defaultContent: "First Dive"},
 				{ data: null, render: 'course' }
-				]
+				],
+				"dom": 'T<"clear">lfrtip',
+		        "tableTools": {
+		            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
+		        }
 			});
 
 			$.when(
@@ -862,7 +868,7 @@ function customerData(customer) {
 	this._name     = customer.firstname + ' ' + customer.lastname;
 	this._email    = customer.email;
 	this._phone    = customer.phone;
-	this._country  = window.countries[customer.country_id].name;
+	this._country  = window.countries[customer.country_id].abbreviation;
 	if(customer.pivot.ticket_id != null) {
 		this._ticket  = window.tickets[customer.pivot.ticket_id].name;
 	}
