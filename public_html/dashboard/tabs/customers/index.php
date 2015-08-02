@@ -225,215 +225,180 @@
 </script>
 
 	<script type="text/x-handlebars-template" id="booking-summary-template">
-		<table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%" style="max-width: 800px;">
-			<tr>
-				<td align="center" valign="top" width="100%" class="content-padding">
-					<center>
-						<table cellspacing="0" cellpadding="0" width="600" class="w320">
-							<tr>
-								<td class="w320">
-									<table cellpadding="0" cellspacing="0" width="100%">
-										<tr>
-											<td class="mini-container-right">
-												<table cellpadding="0" cellspacing="0" width="100%">
+		<section align="center" class="container-for-gmail-android" width="100%" style="max-width: 800px;">
+		<article width="600" class="w320">
+			<div class="mini-container-right">
+					<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
+						<td class="mini-block">
+							Booking Date<br />
+							<span class="header-sm">{{friendlyDateNoTime created_at_local}}</span><br />
+							<br />
+							Booking Reference<br />
+							<span class="header-sm">{{reference}}</span><br />
+						</td>
+						<td class="mini-block">
+							Total Cost<br />
+							<span class="header-sm">{{currency}} {{decimal_price}}</span><br />
+							<br />
+							Source<br />
+							<span class="header-sm">{{sourceIcon}}</span>
+						</td>
+					</table>
+			</div>
+		</article>
+	</section>
+	<section align="center" valign="top" style="border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+		<article width="600" class="w320">
+			<div class="item-table">
+				<table class="w320" cellspacing="0" cellpadding="0" width="100%">
+				{{#if bookingdetails}}
+					<tr>
+						<td class="title-dark">
+							 Trips & Classes
+						</td>
+						<td class="title-dark" width="100"></td>
+						<td class="title-dark" width="100"></td>
+					</tr>
+
+					{{#each bookingdetails}}
+						<tr>
+							<td class="item-col" colspan="3">
+								<table cellspacing="0" cellpadding="0" width="100%">
+									<tr>
+										<td class="item-col-inner title" colspan="2">
+											<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
+												{{#if session}}
+													<i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}
+												{{else}}
+													<i class="fa fa-graduation-cap fa-fw"></i> {{{training_session.training.name}}}
+												{{/if}}
+											</span>
+											<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+												{{#if session}}
+													{{friendlyDate session.start}} - {{tripFinish session.start session.trip.duration}}
+												{{else}}
+													{{friendlyDate training_session.start}} - {{tripFinish training_session.start training_session.training.duration}}
+												{{/if}}
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td class="item-col-inner item" style="padding-left: 28px;">
+											<table cellspacing="0" cellpadding="0" width="100%">
+												<tr>
+													<td style="width: 90px;">
+														<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
+													</td>
+													<td>
+														{{{customer.firstname}}} {{{customer.lastname}}}
+													</td>
+												</tr>
+												{{#if session}}
 													<tr>
-														<td class="mini-block-padding">
-															<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
-																<tr>
-																	<td class="mini-block">
-																		Booking Date<br />
-																		<span class="header-sm">{{friendlyDateNoTime created_at_local}}</span><br />
-																		<br />
-																		Booking Reference<br />
-																		<span class="header-sm">{{reference}}</span><br />
-															
-																	</td>
-																	<td class="mini-block">
-																		Total Cost<br />
-																		<span class="header-sm">{{currency}} {{decimal_price}}</span><br />
-																		<br />
-																		Source<br />
-																		<span class="header-sm">{{sourceIcon}}</span>
-																	</td>
-																</tr>
-															</table>
+														<td>
+															<span style="color: #4d4d4d; font-weight:bold;">Ticket:</span>
+														</td>
+														<td>
+															{{{ticket.name}}}
 														</td>
 													</tr>
-												</table>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</center>
-				</td>
-			</tr>
+												{{/if}}
+											</table>
+										</td>
+										<td class="item-col-inner item">
+											<table cellspacing="0" cellpadding="0" width="100%">
+												{{#if addons}}
+													<tr>
+														<td style="width: 90px;">
+															<span style="color: #4d4d4d; font-weight:bold;">Addons:</span>
+														</td>
+														<td>
+															{{#each addons}}
+																{{{name}}} <small><span class="badge badge-default">{{pivot.quantity}}</span></small><br />
+															{{/each}}
+														</td>
+													</tr>
+												{{/if}}
 
-			<tr>
-				<td align="center" valign="top" style="background-color: #ffffff; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
-					<center>
-						<table cellpadding="0" cellspacing="0" width="600" class="w320">
-							<tr>
-								<td class="item-table">
-									<table class="w320" cellspacing="0" cellpadding="0" width="100%">
+												{{#if course}}
+													<tr>
+														<td style="padding-bottom: 0; width: 90px;">
+															<span style="color: #4d4d4d; font-weight:bold;">Course:</span>
+														</td>
+														<td style="padding-bottom: 0;">
+															<i class="fa fa-graduation-cap fa-fw"></i> {{{course.name}}}
+														</td>
+													</tr>
+												{{/if}}
 
-										{{#if bookingdetails}}
+												{{#if packagefacade}}
+													<tr>
+														<td style="padding-top: 0; width: 90px;">
+															<span style="color: #4d4d4d; font-weight:bold;">Package:</span>
+														</td>
+														<td style="padding-top: 0;">
+															<i class="fa fa-tags fa-fw"></i> {{{packagefacade.package.name}}}
+														</td>
+													</tr>
+												{{/if}}
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					{{/each}}
+				{{/if}}
+
+				{{#if accommodations}}
+					<tr>
+						<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
+					</tr>
+					<tr>
+						<td class="title-dark">
+							 Accommodations
+						</td>
+						<td class="title-dark" width="100"></td>
+						<td class="title-dark" width="100"></td>
+					</tr>
+					{{#each accommodations}}
+						<tr>
+							<td class="item-col item" colspan="3">
+								<table cellspacing="0" cellpadding="0" width="100%">
+									<tr>
+										<td class="item-col-inner title" colspan="2">
+											<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
+												<i class="fa fa-bed fa-fw"></i> {{{name}}}
+											</span>
+
+											<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+												{{friendlyDateNoTime pivot.start}} - {{friendlyDateNoTime pivot.end}}
+											</span>
+										</td>
+											</tr>
 											<tr>
-												<td class="title-dark">
-													 Trips & Classes
+												<td class="item-col-inner item" style="padding-left: 28px;">
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tr>
+															<td style="width: 90px;">
+																<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
+															</td>
+															<td>
+																{{{customer.firstname}}} {{{customer.lastname}}}
+															</td>
+														</tr>
+													</table>
 												</td>
-												<td class="title-dark" width="100"></td>
-												<td class="title-dark" width="100"></td>
 											</tr>
-
-											{{#each bookingdetails}}
-												<tr>
-													<td class="item-col" colspan="3">
-														<table cellspacing="0" cellpadding="0" width="100%">
-															<tr>
-																<td class="item-col-inner title" colspan="2">
-																	<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
-																		{{#if session}}
-																			<i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}
-																		{{else}}
-																			<i class="fa fa-graduation-cap fa-fw"></i> {{{training_session.training.name}}}
-																		{{/if}}
-																	</span>
-
-																	<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
-																		{{#if session}}
-																			{{friendlyDate session.start}} - {{tripFinish session.start session.trip.duration}}
-																		{{else}}
-																			{{friendlyDate training_session.start}} - {{tripFinish training_session.start training_session.training.duration}}
-																		{{/if}}
-																	</span>
-																</td>
-															</tr>
-															<tr>
-																<td class="item-col-inner item" style="padding-left: 28px;">
-																	<table cellspacing="0" cellpadding="0" width="100%">
-																		<tr>
-																			<td style="width: 90px;">
-																				<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
-																			</td>
-																			<td>
-																				{{{customer.firstname}}} {{{customer.lastname}}}
-																			</td>
-																		</tr>
-
-																		{{#if session}}
-																			<tr>
-																				<td>
-																					<span style="color: #4d4d4d; font-weight:bold;">Ticket:</span>
-																				</td>
-																				<td>
-																					{{{ticket.name}}}
-																				</td>
-																			</tr>
-																		{{/if}}
-																	</table>
-																</td>
-																<td class="item-col-inner item">
-																	<table cellspacing="0" cellpadding="0" width="100%">
-																		{{#if addons}}
-																			<tr>
-																				<td style="width: 90px;">
-																					<span style="color: #4d4d4d; font-weight:bold;">Addons:</span>
-																				</td>
-																				<td>
-																					{{#each addons}}
-																						{{{name}}} <small><span class="badge badge-default">{{pivot.quantity}}</span></small><br />
-																					{{/each}}
-																				</td>
-																			</tr>
-																		{{/if}}
-
-																		{{#if course}}
-																			<tr>
-																				<td style="padding-bottom: 0; width: 90px;">
-																					<span style="color: #4d4d4d; font-weight:bold;">Course:</span>
-																				</td>
-																				<td style="padding-bottom: 0;">
-																					<i class="fa fa-graduation-cap fa-fw"></i> {{{course.name}}}
-																				</td>
-																			</tr>
-																		{{/if}}
-
-																		{{#if packagefacade}}
-																			<tr>
-																				<td style="padding-top: 0; width: 90px;">
-																					<span style="color: #4d4d4d; font-weight:bold;">Package:</span>
-																				</td>
-																				<td style="padding-top: 0;">
-																					<i class="fa fa-tags fa-fw"></i> {{{packagefacade.package.name}}}
-																				</td>
-																			</tr>
-																		{{/if}}
-																	</table>
-																</td>
-															</tr>
-														</table>
-													</td>
-												</tr>
-											{{/each}}
-										{{/if}}
-
-										{{#if accommodations}}
-											<tr>
-												<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
-											</tr>
-
-											<tr>
-												<td class="title-dark">
-													 Accommodations
-												</td>
-												<td class="title-dark" width="100"></td>
-												<td class="title-dark" width="100"></td>
-											</tr>
-
-											{{#each accommodations}}
-												<tr>
-													<td class="item-col item" colspan="3">
-														<table cellspacing="0" cellpadding="0" width="100%">
-															<tr>
-																<td class="item-col-inner title" colspan="2">
-																	<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
-																		<i class="fa fa-bed fa-fw"></i> {{{name}}}
-																	</span>
-
-																	<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
-																		{{friendlyDateNoTime pivot.start}} - {{friendlyDateNoTime pivot.end}}
-																	</span>
-																</td>
-															</tr>
-															<tr>
-																<td class="item-col-inner item" style="padding-left: 28px;">
-																	<table cellspacing="0" cellpadding="0" width="100%">
-																		<tr>
-																			<td style="width: 90px;">
-																				<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
-																			</td>
-																			<td>
-																				{{{customer.firstname}}} {{{customer.lastname}}}
-																			</td>
-																		</tr>
-																	</table>
-																</td>
-															</tr>
-														</table>
-													</td>
-												</tr>
-											{{/each}}
-										{{/if}}
-									</table>
-								</td>
-							</tr>
-						</table>
-					</center>
-				</td>
-			</tr>
-		</table>
+										</table>
+									</td>
+								</tr>
+					{{/each}}
+				{{/if}}
+				</table>
+			</div>
+		</article>
+	</section>
 	</script>
 
 
