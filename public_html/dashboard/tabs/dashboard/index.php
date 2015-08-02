@@ -292,6 +292,13 @@
                 <td>{{paymentgateway.name}}</td>
               </tr>
               {{/each}}
+              {{#each refunds}}
+                <tr>
+                  <td>{{received_at}}</td>
+                  <td class="text-danger">{{currency}} -{{amount}}</td>
+                  <td>{{paymentgateway.name}} (refund)</td>
+                </tr>
+                {{/each}}
               <tr>
                 <td><strong>Total</strong></td>
                 <td class="table-sum">{{currency}} {{sumPaid}}</td>

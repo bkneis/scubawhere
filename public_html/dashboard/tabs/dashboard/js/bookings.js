@@ -67,13 +67,18 @@ Handlebars.registerHelper('arrivalDate', function() {
 	return moment(this.arrival_date).format('DD MMM YYYY'); // e.g. '14 Oct 2015'
 });
 
-Handlebars.registerHelper('sumPaid', function() {
+/*Handlebars.registerHelper('sumPaid', function() {
 	return _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
 	}, 0).toFixed(2);
+});*/
+
+Handlebars.registerHelper('sumPaid', function() {
+	console.log(this.sums.have);
+	return this.sums.have;
 });
 
-Handlebars.registerHelper("remainingPay", function() {
+/*Handlebars.registerHelper("remainingPay", function() {
 	var sum = _.reduce(this.payments, function(memo, payment) {
 		return memo + payment.amount * 1;
 	}, 0);
@@ -94,6 +99,32 @@ Handlebars.registerHelper("remainingPay", function() {
 	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
 	html += '	<span class="percentage-left">' + remainingPay + '</span>';
 	html += '</div>';
+
+	return new Handlebars.SafeString(html);
+});*/
+
+Handlebars.registerHelper("remainingPay", function() {
+	if(this.decimal_price === "0.00") return '';
+
+	var sum          = this.sums.have;
+	var remainingPay = this.sums.payable;
+	var percentage   = this.sums.have / this.decimal_price;
+
+	if(remainingPay == 0) remainingPay = '';
+	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
+
+	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
+	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
+	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
+
+	var html = '';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
+	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
+	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
+	html += '	<span class="percentage-left">' + remainingPay + '</span>';
+	html += '</div>';
+	html += '<div class="percentage-width-marker"></div>';
+	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + this.decimal_price  + '</div>';
 
 	return new Handlebars.SafeString(html);
 });
@@ -125,6 +156,13 @@ $(function() {
 	*/
 	Booking.getRecent(function(data) {
 		window.bookings = data;
+		var results = [];
+
+		var results = _.filter(data, function(booking) {
+			booking.sums = {};
+			Booking.prototype.calculateSums.call(booking);
+			Booking.prototype.setStatus.call(booking);
+		});
 		$('#booking-list').html( bookingListItem({bookings: data}) );
 
 		// Initiate tooltips
