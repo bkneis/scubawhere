@@ -42,7 +42,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'timezone'            => 'required',
 		'phone'               => 'required',
 		'contact'             => 'required',
-		'website'             => 'required', //active_url
+		'website'             => '', //active_url
 		'logo'                => '',
 		'photo'               => '',
 		'video'               => '',
