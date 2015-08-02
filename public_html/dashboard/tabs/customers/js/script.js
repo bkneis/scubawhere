@@ -173,6 +173,9 @@ function editDetails(id) {
 
 	$('#edit-customer-modal').modal('show');
 	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
+	var countriesTemplate = Handlebars.compile($("#countries-template").html());
+	$("#country_id").html(countriesTemplate({countries : window.countries}));
+	$('#country_id').val(window.customers[id].country_id);
 	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
 
 }
