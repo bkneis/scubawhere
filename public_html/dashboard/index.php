@@ -225,6 +225,22 @@ $PROTOCOL = 'http';
 					</ul>
 				</li>
 
+				<li>
+					<div>
+						<i class="fa fa-users fa-lg fa-fw"></i>
+						<span>CRM</span>
+						<span class="caret"></span>
+					</div>
+					<ul id="calendar-submenu">
+						<li>
+							<a href="#customers">My Customers</a>
+						</li>
+						<li>
+							<a href="#campaigns">My Campaigns</a>
+						</li>
+					</ul>
+				</li>
+
 				<?php /* <li>
 					<a href="#reviews">
 						<i class="fa fa-comments fa-lg fa-fw"></i>
