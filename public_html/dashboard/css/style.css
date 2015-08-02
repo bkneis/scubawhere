@@ -166,6 +166,13 @@ body{
 	z-index: 2000;
 }
 
+/*              TOM'S HACKS
+*******************************/
+.mini-container-right-hack {
+	width: 95%;
+	padding: 10px 14px 10px 15px;
+}
+
 /*				GENERIC STYLES
 *******************************/
 #page{
