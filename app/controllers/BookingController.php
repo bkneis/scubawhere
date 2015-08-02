@@ -272,6 +272,27 @@ class BookingController extends Controller {
 		return $bookings;
 	}
 
+	public function getCustomerbookings($from = 0, $take = 20) {
+
+		$customerID = Input::get('customer_id', null);
+
+		if(empty($customerID))
+			return Response::json(['errors' => ['The customer ID is not found']], 406);
+
+		$bookings = Auth::user()->bookings()
+			->where(function($query) use ($customerID)
+			{
+				$query->where('lead_customer_id', '=', $customerID);
+			})
+			->orderBy('id', 'DESC')
+			->skip($from)
+			->take($take)
+			->get();
+
+		return $bookings;
+
+	}
+
 	public function getFilterConfirmed()
 	{
 		/**

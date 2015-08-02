@@ -21,6 +21,49 @@ class CustomerController extends Controller {
 		return Auth::user()->customers()->with('certificates', 'certificates.agency')->get();
 	}
 
+	public function getFilter($from = 0, $take = 20)
+	{
+		/**
+		 * Allowed input parameter
+		 * firstname  {string}
+		 * lastname   {string}
+		 * email      {string}
+		 */
+
+		$firstname = Input::get('firstname', null);
+		$lastname = Input::get('lastname', null);
+		$email = Input::get('email', null);
+
+		if(empty($firstname) && empty($lastname) && empty($email))
+			return $this->getAll();
+
+		$customers = Auth::user()->customers()
+			->where(function($query) use ($firstname)
+			{
+				if(!empty($firstname))
+					//$query->where('firstname', 'LIKE', '%'.$firstname.'%');
+					$query->where('firstname', '=', $firstname);
+			})
+			->where(function($query) use ($lastname)
+			{
+				if(!empty($lastname))
+					//$query->where('lastname', 'LIKE', '%'.$lastname.'%');
+					$query->where('lastname', '=', $lastname);
+			})
+			->where(function($query) use ($email)
+			{
+				if(!empty($email))
+					//$query->where('email', 'LIKE', '%'.$email.'%');
+					$query->where('email', '=', $email);
+			})
+			->orderBy('id', 'DESC')
+			->skip($from)
+			->take($take)
+			->get();
+
+		return $customers;
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only(

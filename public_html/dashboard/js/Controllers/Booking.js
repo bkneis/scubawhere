@@ -88,6 +88,16 @@ Booking.filter = function(params, successFn, errorFn) {
 	});
 };
 
+Booking.getCustomerBookings = function(params, successFn, errorFn) {
+	$.ajax({
+		type: "GET",
+		url: "/api/booking/customerbookings",
+		data: params,
+		success: successFn,
+		error: errorFn
+	});
+};
+
 Booking.pickUpLocations = function(params, success) {
 	$.get("/api/booking/pick-up-locations", params, success);
 };

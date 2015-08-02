@@ -44,6 +44,16 @@ var Company = {
 		});
 	},
 
+	sendEmail : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/company/email",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	sendHeartbeat : function(params) {
 
 		params = $.extend({}, params, {

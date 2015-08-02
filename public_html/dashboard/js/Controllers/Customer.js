@@ -23,6 +23,16 @@ var Customer = {
 		});
 	},
 
+	filter : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "GET",
+			url: "/api/customer/filter",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+
 	updateCustomer : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
