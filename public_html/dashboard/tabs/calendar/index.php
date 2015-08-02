@@ -206,7 +206,6 @@
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
-			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
 			                <th style="color:#313131">Last Dive</th>
@@ -227,7 +226,6 @@
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
-			                <th style="color:#313131">Email</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
 			                <th style="color:#313131">Last Dive</th>

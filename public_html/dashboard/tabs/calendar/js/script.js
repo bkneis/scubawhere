@@ -408,7 +408,6 @@ function showModalWindowManifest(id) {
 				"searching" : true,
 				columns: [
 				{ data: null, render: 'name' },
-				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
 				{ data: null, render: 'last_dive',
@@ -461,7 +460,6 @@ function showModalWindowManifest(id) {
 				"searching" : false,
 				columns: [
 				{ data: null, render: 'name' },
-				{ data: null, render: 'email' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
 				{ data: null, render: 'last_dive',
@@ -866,7 +864,6 @@ function addTripFilter(value) {
 
 function customerData(customer) {
 	this._name     = customer.firstname + ' ' + customer.lastname;
-	this._email    = customer.email;
 	this._phone    = customer.phone;
 	this._country  = window.countries[customer.country_id].abbreviation;
 	if(customer.pivot.ticket_id != null) {
@@ -878,10 +875,6 @@ function customerData(customer) {
 
 	this.name = function () {
 		return this._name;
-	};
-
-	this.email = function () {
-		return this._email;
 	};
 
 	this.phone = function () {
