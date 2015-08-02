@@ -276,7 +276,7 @@
 						<table cellpadding="0" cellspacing="0" width="600" class="w320">
 							<tr>
 								<td class="item-table">
-									<table cellspacing="0" cellpadding="0" width="100%">
+									<table class="w320" cellspacing="0" cellpadding="0" width="100%">
 
 										{{#if bookingdetails}}
 											<tr>
