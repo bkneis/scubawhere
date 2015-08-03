@@ -116,7 +116,28 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="js/validate.js"></script>
 	<script type="text/javascript" src="js/tour.js"></script>
 
+	<!-- Load all front-end controllers -->
+	<script type="text/javascript" src="js/Controllers/Accommodation.js"></script>
+	<script type="text/javascript" src="js/Controllers/Addon.js"></script>
+	<script type="text/javascript" src="js/Controllers/Agency.js"></script>
+	<script type="text/javascript" src="js/Controllers/Agent.js"></script>
+	<script type="text/javascript" src="js/Controllers/Boat.js"></script>
+	<script type="text/javascript" src="js/Controllers/Boatroom.js"></script>
+	<script type="text/javascript" src="js/Controllers/Booking.js"></script>
+	<script type="text/javascript" src="js/Controllers/Class.js"></script>
 	<script type="text/javascript" src="js/Controllers/Company.js"></script>
+	<script type="text/javascript" src="js/Controllers/Course.js"></script>
+	<script type="text/javascript" src="js/Controllers/Customer.js"></script>
+	<script type="text/javascript" src="js/Controllers/Location.js"></script>
+	<script type="text/javascript" src="js/Controllers/Package.js"></script>
+	<script type="text/javascript" src="js/Controllers/Payment.js"></script>
+	<script type="text/javascript" src="js/Controllers/Refund.js"></script>
+	<script type="text/javascript" src="js/Controllers/Report.js"></script>
+	<script type="text/javascript" src="js/Controllers/Session.js"></script>
+	<script type="text/javascript" src="js/Controllers/Ticket.js"></script>
+	<script type="text/javascript" src="js/Controllers/Timetable.js"></script>
+	<script type="text/javascript" src="js/Controllers/Trip.js"></script>
+
 	<script type="text/javascript">
 		// Load company info
 		Company.getCompany(function success(data) {
