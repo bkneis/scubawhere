@@ -222,7 +222,7 @@
 		<script type="text/x-handlebars-template" id="class-manifest-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 
-				<h3>{{{training.name}}} - Trip Manifest</h3>
+				<h3>{{{training.name}}} - Class Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
 					<thead>
               			<tr>
