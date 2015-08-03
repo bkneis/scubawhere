@@ -110,8 +110,8 @@ $(function(){
 				completed = true;
 
 				// BRYAN | Add success message and the "please check you email" stuff ;)
-				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for trying out scubawhereRMS!</p><p><strong>Please check your email inbox for a confirmation mail and click the link provided.</p></center>');
-				$('#section4').append('<a class="btn btn-success btn-lg" onclick="redirectHome()";">Go back to scubawhere homepage</a>');
+				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS!</p><p><strong>Please check your email inbox for a confirmation email and click the link provided.</p></center>');
+				$('#section4').append('<a class="btn btn-success btn-lg" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
 				$('.errors').remove();
 				form.find('#save-loader').remove();
 			},
@@ -191,7 +191,3 @@ $(function(){
 	editor = CKEDITOR.replace('terms');
 
 });
-
-function redirectHome() {
-	window.location.href = "http://www.scubawhere.com/blog";
-}
