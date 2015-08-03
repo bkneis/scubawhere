@@ -76,6 +76,8 @@ $(function(){
 
 		event.preventDefault();
 
+		$('.errors').remove();
+
 		if(!$('#our-terms').is(':checked')) {
 			alert('Please confim you have read and agreed to our terms and conditions');
 			return false;
@@ -109,10 +111,8 @@ $(function(){
 				console.log(data.status);
 				completed = true;
 
-				// BRYAN | Add success message and the "please check you email" stuff ;)
 				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS!</p><p><strong>Please check your email inbox for a confirmation email and click the link provided.</p></center>');
 				$('#section4').append('<a class="btn btn-success btn-lg" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
-				$('.errors').remove();
 				form.find('#save-loader').remove();
 			},
 			error: function(xhr) {
@@ -120,7 +120,6 @@ $(function(){
 				var data = JSON.parse(xhr.responseText);
 				console.log(data);
 
-				// TODO Show validation errors
 				var html = '';
 				html += '<div class="alert alert-warning errors" style="color: #E82C0C;">';
 				html += '	<h4>There are a few problems with the form:</h4>';
