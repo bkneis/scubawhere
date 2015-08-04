@@ -13,7 +13,7 @@
 
 		<h1>New email from {{$company->name}}</h1>
 
-		<p>{{$message['message']}}</p>
+		<p>{{$data['message']}}</p>
 
 	</div>
 </body>
