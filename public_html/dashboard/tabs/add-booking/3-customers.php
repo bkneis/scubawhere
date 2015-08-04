@@ -133,7 +133,7 @@
 							<script type="text/x-handlebars-template" id="selected-certificate-template">
 								<div class="pull-left selected-certificate">
 									<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-									{{abbreviation}} - {{{name}}}
+									<strong>{{abbreviation}}</strong> - {{{name}}}
 									<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
 								</div>
 							</script>
