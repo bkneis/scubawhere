@@ -126,7 +126,9 @@
 
 						<fieldset id="add-customer-agencies">
 							<h4>Certificates</h4>
-							<div class="form-group" id="selected-certificates">
+							<div class="form-group">
+								<div class="col-md-12" id="selected-certificates">
+								</div>
 							</div>
 							<script type="text/x-handlebars-template" id="selected-certificate-template">
 								<div class="pull-left selected-certificate">
@@ -208,7 +210,9 @@
 
 					<fieldset id="edit-customer-agencies">
 						<h4>Certificates</h4>
-						<div class="form-group" id="selected-certificates">
+						<div class="form-group">
+							<div class="col-md-12" id="selected-certificates">
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-md-5">
