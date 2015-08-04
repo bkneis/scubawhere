@@ -64,6 +64,9 @@ class Customer extends Ardent {
 
 		if( isset($this->phone) )
 			$this->phone = Helper::sanitiseString($this->phone);
+
+		if(empty($this->last_dive))
+			$this->last_dive = null;
 	}
 
 	public function company()
