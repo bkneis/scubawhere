@@ -79,7 +79,11 @@ class CustomerController extends Controller {
 			'postcode',
 			'country_id',
 			'phone',
-			'last_dive'
+			'last_dive',
+			'number_of_dives',
+			'chest_size',
+			'shoe_size',
+			'height'
 		);
 
 		$customer = new Customer($data);
@@ -134,10 +138,13 @@ class CustomerController extends Controller {
 			'city',
 			'county',
 			'postcode',
-			// 'region_id',
 			'country_id',
 			'phone',
-			'last_dive'
+			'last_dive',
+			'number_of_dives',
+			'chest_size',
+			'shoe_size',
+			'height'
 		);
 
 		if( !$customer->update($data) )

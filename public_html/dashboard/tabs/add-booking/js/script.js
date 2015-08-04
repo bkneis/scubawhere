@@ -655,8 +655,9 @@ $.when(
 *************************
 */
 
-var selectedCustomerTemplate = Handlebars.compile($("#selected-customer-template").html());
-var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
+var selectedCustomerTemplate          = Handlebars.compile($("#selected-customer-template").html());
+var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
+var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 
 $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(function() {
 	$('#customer-tab').on('change', '#existing-customers', function() {
@@ -736,6 +737,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#edit-customer-agencies').find('#certificate_id').select2();
 
 	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
+	$("#customer-diving-information").html(customerDivingInformationTemplate(window.customers[id]));
 
 	// Set the country dropdown to the customers country (if they have one)
 	$('#edit-customer-countries').find('#country_id').val(window.customers[id].country_id);
@@ -749,6 +751,18 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 			abbreviation: certificate.agency.abbreviation,
 			name: certificate.name,
 		}));
+	});
+
+	// Activate datepickers
+	$('#edit-customer-modal input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	// Set the last_dive date
