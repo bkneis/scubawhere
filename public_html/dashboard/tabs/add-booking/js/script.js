@@ -1915,7 +1915,7 @@ function updateExtraInfoPanel() {
 	});
 }
 
-$('#extra-tab').on('submit', '#extra-form', function(e) {
+$('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	e.preventDefault();
 
 	var btn = $(this).find('[type="submit"]');
@@ -1929,6 +1929,8 @@ $('#extra-tab').on('submit', '#extra-form', function(e) {
 		btn.html('Save');
 
 		drawBasket();
+
+		if(typeof(data.callback) === 'function') data.callback();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -2152,7 +2154,16 @@ $(document).ready(function() {
 	$('.btn-next').on('click', function() {
 
 		// When the tab is the Extra Info tab, first save the info, before showing the next tab
-		// TODO
+		if(booking.currentTab == '#extra-tab') {
+			$('#extra-form').trigger('submit', {
+				callback: function() {
+					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+				}
+			});
+
+			// Break out of function to not trigger the next tab just yet
+			return false;
+		}
 
 	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
 	});
