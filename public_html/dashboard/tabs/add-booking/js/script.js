@@ -403,6 +403,17 @@ window.promises.loadedAccommodations.done(function() {
 	});
 });
 
+// Set up disabling and enabling of Prev and Next buttons
+$('a[role="tab"]').on('show.bs.tab', function (e) {
+	$('.btn-prev').prop('disabled', false);
+	$('.btn-next').prop('disabled', false);
+
+	var currentTab = e.target.getAttribute('data-target');
+
+	if(currentTab === '#ticket-tab')  $('.btn-prev').prop('disabled', true);
+	if(currentTab === '#summary-tab') $('.btn-next').prop('disabled', true);
+});
+
 /*
 *************************
 ******** Sources ********
@@ -943,7 +954,9 @@ $('#booking-summary').on('click', '.lead-customer', function() {
 });
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
-  if(!booking.lead_customer) {
+	$('[data-target="#session-tab"]').data('validated', true);
+
+	if(!booking.lead_customer) {
 		pageMssg("Please designate a lead customer.", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
@@ -963,8 +976,6 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
-
-	$('[data-target="#session-tab"]').data('validated', true);
 });
 
 /*

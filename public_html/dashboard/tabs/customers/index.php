@@ -81,7 +81,13 @@
 
 	<div id="modalWindows" style="height: 0;"></div>
 
-<div class="modal fade" id="edit-customer-modal">
+	<script id="countries-template" type="text/x-handlebars-template">
+		{{#each countries}}
+			<option value="{{id}}">{{{name}}}</option>
+		{{/each}}
+	</script>
+
+<!--<div class="modal fade" id="edit-customer-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -91,25 +97,119 @@
 			<form id="edit-customer-form" class="form-horizontal" role="form">
 				<div class="modal-body">
 					<fieldset id="edit-customer-details"></fieldset>
-					<fieldset id="edit-customer-countries">
-						<div class="form-group">
-							<div class="col-md-8">
-								<label for="country_id">Country <span class="text-danger">*</span></label></label>
-								<select id="country_id" name="country_id" class="form-control select2">
-									<option value="">Choose Country...</option>
-								</select>
-								<script id="countries-template" type="text/x-handlebars-template">
-									{{#each countries}}
-										<option value="{{id}}">{{{name}}}</option>
-									{{/each}}
-								</script>
-							</div>
+					</div>
 						</div>
 					</fieldset>
 				</div>
 				<div class="modal-footer">
 					<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
 					<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>-->
+
+<script type="text/x-handlebars-template" id="customer-diving-information-template">
+	<h5>Diving Information</h5>
+	<div class="form-group">
+		<div class="col-md-4">
+			<label for="last_dive" class="control-label">Date of last dive</label>
+			<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD" value="{{last_dive}}">
+		</div>
+		<div class="col-md-4">
+			<label for="number_of_dives" class="control-label">Number of dives</label>
+			<input type="number" min="0" step="1" name="number_of_dives" class="form-control" value="{{number_of_dives}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-4">
+			<label for="chest_size" class="control-label">Chest size</label>
+			<input type="text" name="chest_size" class="form-control" value="{{chest_size}}">
+		</div>
+		<div class="col-md-4">
+			<label for="shoe_size" class="control-label">Shoe size</label>
+			<input type="text" name="shoe_size" class="form-control" value="{{shoe_size}}">
+		</div>
+		<div class="col-md-4">
+			<label for="height" class="control-label">Height</label>
+			<input type="text" name="height" class="form-control" value="{{height}}">
+		</div>
+	</div>
+</script>
+
+<script type="text/x-handlebars-template" id="certificates-template">
+	<option value="">Choose certificate...</option>
+	{{#each certificates}}
+		<option value="{{id}}">{{{name}}}</option>
+	{{/each}}
+</script>
+
+<script type="text/x-handlebars-template" id="selected-certificate-template">
+	<div class="pull-left selected-certificate">
+		<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+		<strong>{{abbreviation}}</strong> - {{{name}}}
+		<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
+	</div>
+</script>
+
+<div class="modal fade" id="edit-customer-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Edit Customer</h4>
+			</div>
+			<form id="edit-customer-form" class="form-horizontal" role="form">
+				<div class="modal-body">
+					<fieldset id="edit-customer-details">
+						<!-- This is where the Handlebars template will load into -->
+					</fieldset>
+
+					<fieldset id="edit-customer-countries">
+						<div class="form-group">
+							<div class="col-md-8">
+								<label for="country_id">Country <span class="text-danger">*</span></label></label>
+								<select id="country_id" name="country_id" class="form-control select2">
+								</select>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset id="edit-customer-agencies">
+						<h5>Certificates</h5>
+						<div class="form-group" style="margin-bottom: 0;">
+							<div class="col-md-12" id="selected-certificates">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-5">
+								<label for="agency_id" class="control-label">Agency</label>
+								<select id="agency_id" class="form-control select2">
+								</select>
+							</div>
+							<div class="col-md-5">
+								<label for="certificate_id" class="control-label">Certificate</label>
+								<select id="certificate_id" class="form-control select2">
+								</select>
+							</div>
+							<div class="col-md-2">
+								<label>&nbsp;</label><br>
+								<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset id="customer-diving-information">
+						<!-- This is where a Handlebars template will load into -->
+					</fieldset>
+
+				</div>
+				<div class="modal-footer">
+					<p class="pull-left"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
+					<p class="pull-left"><span class="text-danger">*</span> Required for lead customer</p>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary">Save changes</button>
 				</div>
@@ -157,6 +257,13 @@
 	</div>
 </div>
 
+<script type="text/x-handlebars-template" id="agencies-template">
+	<option value="">Choose agency...</option>
+	{{#each agencies}}
+		<option value="{{id}}">{{abbreviation}} - {{{name}}}</option>
+	{{/each}}
+</script>
+
 <script id="email-customer-template" type="text/x-handlebars-template">
 	<div class="form-group">
 		<div class="col-md-12">
@@ -194,6 +301,12 @@
 		<div class="col-sm-6">
 			<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
 			<input type="text" name="phone" class="form-control" placeholder="02071234567" value="{{{phone}}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-6">
+			<label for="birthday" class="control-label">Date of birth</label>
+			<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years" value="{{birthday}}">
 		</div>
 	</div>
 	<div class="form-group">
@@ -404,6 +517,9 @@
 
 
 	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
+
+	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<script src="/tabs/customers/js/script.js"></script>
 </div>
