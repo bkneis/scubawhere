@@ -45,7 +45,7 @@
 				<td>{{lead_customer.phone}}</td>
 				<td>{{number_of_customers}}</td>
 				<td>{{pick_up_location}}</td>
-				<td>{{pick_up_time}}</td>
+				<td>{{trimSeconds pick_up_time}}</td>
 			</tr>
 		{{else}}
 			<tr><tdcolspan="6" class="text-center">There are no customers that need picking up today </td></tr>
