@@ -8,7 +8,7 @@ Handlebars.registerHelper('addTransactionButton', function(id) {
 
 Handlebars.registerHelper('getCountry', function(id) {
 	if(id == null) return "unknown";
-	else return window.countries[id].name; 
+	else return window.countries[id].name;
 });
 
 Handlebars.registerHelper("friendlyDate", function(date) {
@@ -142,7 +142,7 @@ $(function() {
 			var data = JSON.parse(xhr.responseText);
 			btn.html('Send');
 			pageMssg(data.error.message, 'danger');
-			
+
 		});
 
 	});
@@ -231,6 +231,14 @@ function editDetails(id) {
 		}));
 	});
 
+	_.each(window.customers[id].certificates, function(certificate) {
+		$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
+			id: certificate.id,
+			abbreviation: certificate.agency.abbreviation,
+			name: certificate.name,
+		}));
+	});
+
 	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
 		$(this).parent().remove();
 	});
@@ -279,7 +287,7 @@ function viewBookings(id) {
 
 function getBooking(id) {
 
-	
+
 	Booking.get(id, function sucess(data) {
 		console.log(data);
 		$("#customer-booking").html(summaryTable(data));
