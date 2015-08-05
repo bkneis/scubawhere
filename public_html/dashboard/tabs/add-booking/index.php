@@ -124,10 +124,6 @@
 	<!--Basil LocalStorage Wrapper-->
 	<script type="text/javascript" src="/common/vendor/basil.js/build/basil.min.js"></script>
 
-	<!--jQuery plugins-->
-	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
-
 	<!--My scripts-->
 	<script src="/tabs/add-booking/js/script.js"></script>
 

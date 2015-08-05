@@ -188,8 +188,5 @@
 		{{/each}}
 	</script>
 
-	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
-
 	<script src="/tabs/manage-bookings/js/script.js"></script>
 </div>
