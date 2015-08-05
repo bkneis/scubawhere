@@ -99,6 +99,26 @@
 
 	<div id="modalWindows" style="height: 0;"></div>
 
+	<div class="modal fade" id="email-customer-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Email Customer</h4>
+				</div>
+				<form id="email-customer-form" class="form-horizontal" role="form">
+					<div class="modal-body">
+						<fieldset id="email-customer-details"></fieldset>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Send Email</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 	<script type="text/x-handlebars-template" id="cancellation-fee-template">
 		<div id="modal-cancellation-fee" class="reveal-modal">
 			<h4>Do you incurr a cancellation fee?</h4>
@@ -138,6 +158,23 @@
 
 			<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 		</div>
+	</script>
+
+	<script id="email-customer-template" type="text/x-handlebars-template">
+		<div class="form-group">
+			<div class="col-md-12">
+				<label for="subject" class="control-label">Subject</label>
+				<input type="text" name="subject" class="form-control" placeholder="Subject">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<label for="message" class="control-label">Message</label>
+				<textarea rows="6" name="message" class="form-control" placeholder="Message"></textarea>
+			</div>
+		</div>
+		<input type="hidden" name="to" class="form-control" value="{{email}}">
+		<input type="hidden" name="customer_name" class="form-control" value="{{firstname}} {{lastname}}">
 	</script>
 
 	<script type="text/x-handlebars-template" id="booking-details-template">
@@ -180,7 +217,7 @@
 			{{addTransactionButton id}}
 			{{editButton id}}
 
-			<a href="mailto:{{lead_customer.email}}"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Contact customer</button></a>
+			<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
 		</div>
 		<div>
 			{{cancelButton}}

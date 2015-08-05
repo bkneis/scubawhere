@@ -143,6 +143,13 @@ $(function() {
 
 	var display;
 
+	Customer.getAllCustomers(function(data) {
+
+		console.log(data);
+		window.customers = _.indexBy(data, 'id');
+
+	});
+
 	Booking.getAll(function(data) {
 		window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
@@ -196,7 +203,41 @@ $(function() {
 		$("#filter-"+display).addClass("btn-primary");
 		renderBookingList(window.bookings, display);
 	});
+
+	$('#email-customer-modal').on('submit', '#email-customer-form', function(e) {
+		e.preventDefault();
+
+		var btn = $(this).find('button[type="submit"]');
+		btn.html('<i class="fa fa-cog fa-spin"></i> Sending...');
+
+		var params = $(this).serializeObject();
+		params._token = window.token;
+		console.log(params);
+
+		Company.sendEmail(params, function success(data){
+			pageMssg('Thank you, your email has been sent', true);
+			btn.html('Send');
+			$('#email-customer-modal').modal('hide');
+		},
+		function error(xhr) {
+			console.log(xhr);
+			var data = JSON.parse(xhr.responseText);
+			btn.html('Send');
+			pageMssg(data.error.message, 'danger');
+
+		});
+
+	});
+
 });
+
+function emailCustomer(id) {
+
+	$('#email-customer-modal').modal('show');
+	var emailCustomerTemplate = Handlebars.compile($("#email-customer-template").html());
+	$("#email-customer-details").html(emailCustomerTemplate(window.customers[id]));
+
+}
 
 var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 function renderBookingList(bookings, display) {
