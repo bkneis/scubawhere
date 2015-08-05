@@ -254,20 +254,8 @@
 
 	<script src="/common/js/fullcalendar.min.js"></script>
 
-	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
-
 	<script type="text/javascript" src="/common/js/jquery/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/common/js/jquery/jquery.collapsible.js"></script>
-
-	<script src="/js/Controllers/Trip.js"></script>
-	<script src="/js/Controllers/Class.js"></script>
-	<script src="/js/Controllers/Boat.js"></script>
-	<script src="/js/Controllers/Session.js"></script>
-	<script src="/js/Controllers/Timetable.js"></script>
-	<script src="/js/Controllers/Accommodation.js"></script>
-	<script src="/js/Controllers/Ticket.js"></script>
-	<script src="/js/Controllers/Course.js"></script>
 
 	<script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>

@@ -17,23 +17,31 @@ class Customer extends Ardent {
 		'postcode',
 		'country_id',
 		'phone',
-		'last_dive'
+		'last_dive',
+		'number_of_dives',
+		'chest_size',
+		'shoe_size',
+		'height'
 	);
 
 	public static $rules = array(
-		'email'          => 'email',
-		'firstname'      => 'required',
-		'lastname'       => 'required',
-		'birthday'       => 'date',
-		'gender'         => 'integer|between:1,3',
-		'address_1'      => '',
-		'address_2'      => '',
-		'city'           => '',
-		'county'         => '',
-		'postcode'       => '',
-		'country_id'     => 'sometimes|integer|exists:countries,id',
-		'phone'          => '',
-		'last_dive'      => 'date'
+		'email'           => 'email',
+		'firstname'       => 'required',
+		'lastname'        => 'required',
+		'birthday'        => 'date',
+		'gender'          => 'integer|between:1,3',
+		'address_1'       => '',
+		'address_2'       => '',
+		'city'            => '',
+		'county'          => '',
+		'postcode'        => '',
+		'country_id'      => 'sometimes|integer|exists:countries,id',
+		'phone'           => '',
+		'last_dive'       => 'date',
+		'number_of_dives' => 'integer|min: 0',
+		'chest_size'      => '',
+		'shoe_size'       => '',
+		'height'          => ''
 	);
 
 	public function beforeSave()
@@ -64,6 +72,21 @@ class Customer extends Ardent {
 
 		if( isset($this->phone) )
 			$this->phone = Helper::sanitiseString($this->phone);
+
+		if(empty($this->last_dive))
+			$this->last_dive = null;
+
+		if(empty($this->number_of_dives))
+			$this->number_of_dives = null;
+
+		if( isset($this->chest_size) )
+			$this->chest_size = Helper::sanitiseString($this->chest_size);
+
+		if( isset($this->shoe_size) )
+			$this->shoe_size = Helper::sanitiseString($this->shoe_size);
+
+		if( isset($this->height) )
+			$this->height = Helper::sanitiseString($this->height);
 	}
 
 	public function company()

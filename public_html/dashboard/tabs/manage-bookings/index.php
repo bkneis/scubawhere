@@ -77,7 +77,7 @@
 				</tr>
 			</thead>
 			<tbody id="booking-list">
-				
+
 				{{#each bookings}}
 				<tr class="accordion-header" data-id={{id}}>
 					<td>{{sourceIcon}} {{statusIcon}}</td>
@@ -92,7 +92,7 @@
 				{{else}}
 				<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
 				{{/each}}
-				
+
 			</tbody>
 		</table>
 	</script>
@@ -188,10 +188,5 @@
 		{{/each}}
 	</script>
 
-	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
-
-	<script src="/js/Controllers/Booking.js"></script>
-	<script src="/js/Controllers/Ticket.js"></script>
 	<script src="/tabs/manage-bookings/js/script.js"></script>
 </div>

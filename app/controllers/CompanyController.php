@@ -214,9 +214,9 @@ class CompanyController extends Controller {
 		if(empty($data['message'] && $data['subject']))
 			return Response::json(['errors' => ['A message and subject is required.']], 406); // 406 Not Acceptable
 
-		Mail::send('emails.customerEmail', array('company' => Auth::user(), 'message' => $data), function($message) {
-			//$message->to($data['to'], $data['customer_name'])->subject($data['subject']);
-			$message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
+		Mail::send('emails.customerEmail', array('company' => Auth::user(), 'data' => $data), function($message) use ($data) {
+			$message->to($data['to'], $data['customer_name'])->subject($data['subject']);
+			// $message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
 		});
 	}
 

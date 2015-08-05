@@ -138,7 +138,6 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Accommodation.js"></script>
 	<script src="/tabs/accommodations/js/script.js"></script>
 
 </div>

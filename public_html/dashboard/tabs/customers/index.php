@@ -53,7 +53,7 @@
 				</tr>
 			</thead>
 			<tbody id="customer-list">
-				
+
 				{{#each customers}}
 				<tr class="accordion-header" data-id={{id}}>
 					<td>{{{firstname}}} {{{lastname}}}</td>
@@ -65,7 +65,7 @@
 				{{else}}
 				<tr><td colspan="4" style="text-align: center;">You have no customers yet.</td></tr>
 				{{/each}}
-				
+
 			</tbody>
 		</table>
 	</script>
@@ -404,9 +404,6 @@
 
 
 	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
-
-	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<script src="/tabs/customers/js/script.js"></script>
 </div>

@@ -82,8 +82,6 @@
     {{/each}}
 </script>
 
-<script src="/js/Controllers/Trip.js"></script>
-<script src="/js/Controllers/Session.js"></script>
 <script src="/common/js/jquery/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="tabs/trip-manifest/js/script.js"></script>
 </div>

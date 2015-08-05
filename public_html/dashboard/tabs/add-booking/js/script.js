@@ -655,8 +655,9 @@ $.when(
 *************************
 */
 
-var selectedCustomerTemplate = Handlebars.compile($("#selected-customer-template").html());
-var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
+var selectedCustomerTemplate          = Handlebars.compile($("#selected-customer-template").html());
+var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
+var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 
 $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(function() {
 	$('#customer-tab').on('change', '#existing-customers', function() {
@@ -736,6 +737,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#edit-customer-agencies').find('#certificate_id').select2();
 
 	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
+	$("#customer-diving-information").html(customerDivingInformationTemplate(window.customers[id]));
 
 	// Set the country dropdown to the customers country (if they have one)
 	$('#edit-customer-countries').find('#country_id').val(window.customers[id].country_id);
@@ -749,6 +751,18 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 			abbreviation: certificate.agency.abbreviation,
 			name: certificate.name,
 		}));
+	});
+
+	// Activate datepickers
+	$('#edit-customer-modal input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
 	});
 
 	// Set the last_dive date
@@ -1915,7 +1929,7 @@ function updateExtraInfoPanel() {
 	});
 }
 
-$('#extra-tab').on('submit', '#extra-form', function(e) {
+$('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	e.preventDefault();
 
 	var btn = $(this).find('[type="submit"]');
@@ -1929,6 +1943,8 @@ $('#extra-tab').on('submit', '#extra-form', function(e) {
 		btn.html('Save');
 
 		drawBasket();
+
+		if(typeof(data) !== 'undefined' && typeof(data.callback) === 'function') data.callback();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
@@ -2152,7 +2168,16 @@ $(document).ready(function() {
 	$('.btn-next').on('click', function() {
 
 		// When the tab is the Extra Info tab, first save the info, before showing the next tab
-		// TODO
+		if(booking.currentTab == '#extra-tab') {
+			$('#extra-form').trigger('submit', {
+				callback: function() {
+					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+				}
+			});
+
+			// Break out of function to not trigger the next tab just yet
+			return false;
+		}
 
 	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
 	});

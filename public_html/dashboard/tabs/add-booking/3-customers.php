@@ -83,6 +83,12 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<div class="col-md-5">
+								<label for="birthday" class="control-label">Date of birth</label>
+								<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-md-12">
 								<label for="address_1" class="control-label">Address 1</label>
 								<input type="text" name="address_1" class="form-control" placeholder="Address 1">
@@ -125,13 +131,15 @@
 						</fieldset>
 
 						<fieldset id="add-customer-agencies">
-							<h4>Certificates</h4>
-							<div class="form-group" id="selected-certificates">
+							<h5>Certificates</h5>
+							<div class="form-group" style="margin-bottom: 0;">
+								<div class="col-md-12" id="selected-certificates">
+								</div>
 							</div>
 							<script type="text/x-handlebars-template" id="selected-certificate-template">
 								<div class="pull-left selected-certificate">
 									<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-									{{abbreviation}} - {{{name}}}
+									<strong>{{abbreviation}}</strong> - {{{name}}}
 									<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
 								</div>
 							</script>
@@ -165,16 +173,37 @@
 							</div>
 						</fieldset>
 
-						<div class="form-group">
-							<div class="col-md-3">
-								<label for="last_dive" class="control-label">Date of last dive</label>
-								<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD">
+						<fieldset>
+							<h5>Diving Information</h5>
+							<div class="form-group">
+								<div class="col-md-4">
+									<label for="last_dive" class="control-label">Date of last dive</label>
+									<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD">
+								</div>
+								<div class="col-md-4">
+									<label for="number_of_dives" class="control-label">Number of dives</label>
+									<input type="number" min="0" step="1" name="number_of_dives" class="form-control">
+								</div>
 							</div>
-						</div>
+							<div class="form-group">
+								<div class="col-md-4">
+									<label for="chest_size" class="control-label">Chest size</label>
+									<input type="text" name="chest_size" class="form-control">
+								</div>
+								<div class="col-md-4">
+									<label for="shoe_size" class="control-label">Shoe size</label>
+									<input type="text" name="shoe_size" class="form-control">
+								</div>
+								<div class="col-md-4">
+									<label for="height" class="control-label">Height</label>
+									<input type="text" name="height" class="form-control">
+								</div>
+							</div>
+						</fieldset>
 					</div>
 					<div class="panel-footer clearfix">
-						<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
-						<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
+						<p class="pull-left"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
+						<p class="pull-left"><span class="text-danger">*</span> Required for lead customer</p>
 						<button type="submit" class="btn btn-primary new-customer pull-right" style="margin-left:5px;">Create</button>
 						<a href="javascript:void(0);" class="btn btn-warning clear-form pull-right">Clear</a>
 					</div>
@@ -207,8 +236,10 @@
 					</fieldset>
 
 					<fieldset id="edit-customer-agencies">
-						<h4>Certificates</h4>
-						<div class="form-group" id="selected-certificates">
+						<h5>Certificates</h5>
+						<div class="form-group" style="margin-bottom: 0;">
+							<div class="col-md-12" id="selected-certificates">
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-md-5">
@@ -228,16 +259,14 @@
 						</div>
 					</fieldset>
 
-					<div class="form-group">
-						<div class="col-md-3">
-							<label for="last_dive" class="control-label">Date of last dive</label>
-							<input type="text" name="last_dive" class="form-control datepicker last_dive" data-date-format="YYYY-MM-DD">
-						</div>
-					</div>
+					<fieldset id="customer-diving-information">
+						<!-- This is where a Handlebars template will load into -->
+					</fieldset>
+
 				</div>
 				<div class="modal-footer">
-					<p class="pull-left text-muted"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
-					<p class="pull-left text-muted"><span class="text-danger">*</span> Required for lead customer</p>
+					<p class="pull-left"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
+					<p class="pull-left"><span class="text-danger">*</span> Required for lead customer</p>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary">Save changes</button>
 				</div>
@@ -268,6 +297,12 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<div class="col-md-6">
+			<label for="birthday" class="control-label">Date of birth</label>
+			<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years" value="{{birthday}}">
+		</div>
+	</div>
+	<div class="form-group">
 		<div class="col-md-12">
 			<label for="address_1" class="control-label">Address 1</label>
 			<input type="text" name="address_1" class="form-control" placeholder="Address 1" value="{{{address_1}}}">
@@ -291,6 +326,33 @@
 		<div class="col-md-4">
 			<label for="postcode" class="control-label">Postcode</label>
 			<input type="text" name="postcode" class="form-control" placeholder="Post Code" value="{{{postcode}}}">
+		</div>
+	</div>
+</script>
+<script type="text/x-handlebars-template" id="customer-diving-information-template">
+	<h5>Diving Information</h5>
+	<div class="form-group">
+		<div class="col-md-4">
+			<label for="last_dive" class="control-label">Date of last dive</label>
+			<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD" value="{{last_dive}}">
+		</div>
+		<div class="col-md-4">
+			<label for="number_of_dives" class="control-label">Number of dives</label>
+			<input type="number" min="0" step="1" name="number_of_dives" class="form-control" value="{{number_of_dives}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-4">
+			<label for="chest_size" class="control-label">Chest size</label>
+			<input type="text" name="chest_size" class="form-control" value="{{chest_size}}">
+		</div>
+		<div class="col-md-4">
+			<label for="shoe_size" class="control-label">Shoe size</label>
+			<input type="text" name="shoe_size" class="form-control" value="{{shoe_size}}">
+		</div>
+		<div class="col-md-4">
+			<label for="height" class="control-label">Height</label>
+			<input type="text" name="height" class="form-control" value="{{height}}">
 		</div>
 	</div>
 </script>

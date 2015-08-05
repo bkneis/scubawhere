@@ -30,6 +30,7 @@ return array(
     'AddIdColumnToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_10_13_141916_add_id_column_to_booking_details_table.php',
     'AddInitToCompanyTable' => $baseDir . '/app/database/migrations/2015_02_08_114910_add_init_to_company_table.php',
     'AddInnoDBRelationBetweenCurrenciesAndCountriesTables' => $baseDir . '/app/database/migrations/2014_10_31_163734_add_innoDB_relation_between_currencies_and_countries_tables.php',
+    'AddNewColumnsToCustomerTable' => $baseDir . '/app/database/migrations/2015_08_04_172429_add_new_columns_to_customer_table.php',
     'AddPackagefacadeIdToAddonBookingdetailAndAccommodationBookingTable' => $baseDir . '/app/database/migrations/2015_03_07_205924_add_packagefacade_id_to_addon_bookingdetail_and_accommodation_booking_table.php',
     'AddParentColumnToAddonsTable' => $baseDir . '/app/database/migrations/2014_11_21_233944_add_parent_column_to_addons_table.php',
     'AddParentIdColumnToTicketsPackagesAndAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_21_224408_add_parent_id_column_to_tickets_packages_and_accommodations_table.php',

@@ -74,7 +74,7 @@ $PROTOCOL = 'http';
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
 
-	<!-- Third Party Libraries -->
+	<!-- jQuery -->
 	<script src="/common/js/jquery/jquery.min.js"></script>
 
 	<!--Bootstrap js-->
@@ -86,6 +86,8 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
 	<script type="text/javascript" src="/common/js/moment.min.js"></script>
 	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
+	<script type="text/javascript" src="/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script type="text/javascript" src="/common/js/jquery/jquery.reveal.js"></script>
 
 	<!--Datetimepicker-->
 	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>

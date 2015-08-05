@@ -319,9 +319,6 @@
     {{/each}}
   </script>
 
-  <script src="/js/Controllers/Session.js"></script>
-  <script src="/js/Controllers/Trip.js"></script>
-  <script src="/js/Controllers/Booking.js"></script>
   <script src="/tabs/dashboard/js/script.js"></script>
   <script src="/tabs/dashboard/js/bookings.js"></script>
 </div><!-- #wrapper -->

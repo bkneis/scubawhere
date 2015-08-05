@@ -203,10 +203,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Ticket.js"></script>
-	<script src="/js/Controllers/Course.js"></script>
-	<script src="/js/Controllers/Accommodation.js"></script>
-	<script src="/js/Controllers/Addon.js"></script>
-	<script src="/js/Controllers/Package.js"></script>
 	<script src="/tabs/packages/js/script.js"></script>
 </div>

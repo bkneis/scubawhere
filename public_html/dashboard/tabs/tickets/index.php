@@ -196,9 +196,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Boat.js"></script>
-	<script src="/js/Controllers/Boatroom.js"></script>
-	<script src="/js/Controllers/Trip.js"></script>
-	<script src="/js/Controllers/Ticket.js"></script>
 	<script src="/tabs/tickets/js/script.js"></script>
 </div>
