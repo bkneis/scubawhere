@@ -943,6 +943,8 @@ $('#booking-summary').on('click', '.lead-customer', function() {
 });
 
 $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
+	$('[data-target="#session-tab"]').data('validated', true);
+
   if(!booking.lead_customer) {
 		pageMssg("Please designate a lead customer.", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
@@ -963,8 +965,6 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
-
-	$('[data-target="#session-tab"]').data('validated', true);
 });
 
 /*
