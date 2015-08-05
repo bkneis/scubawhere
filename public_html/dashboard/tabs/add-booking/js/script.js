@@ -1944,7 +1944,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 
 		drawBasket();
 
-		if(typeof(data.callback) === 'function') data.callback();
+		if(typeof(data) !== 'undefined' && typeof(data.callback) === 'function') data.callback();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
