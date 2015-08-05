@@ -241,6 +241,11 @@ Handlebars.registerHelper('statusIcon', function() {
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';"></i> ' + tooltip);
 });
 
+Handlebars.registerHelper('ticket-list-clearfix', function(index) {
+	if((index + 1) % 3 === 0)
+		return new Handlebars.SafeString('<div class="clearfix"></div>');
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
