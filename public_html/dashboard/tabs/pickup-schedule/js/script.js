@@ -5,6 +5,10 @@ Handlebars.registerHelper('hasPickups', function(pickups){
 	else return true;
 });
 
+Handlebars.registerHelper('trimSeconds', function(date){
+	return date.substring(0, date.length - 3);
+});
+
 $(function() {
 
 	$('input.datepicker').datetimepicker({
@@ -38,11 +42,11 @@ function getToday() {
 
 	if(dd<10) {
 		dd='0'+dd
-	} 
+	}
 
 	if(mm<10) {
 		mm='0'+mm
-	} 
+	}
 
 	var date = yyyy+'-'+mm+'-'+dd;
 

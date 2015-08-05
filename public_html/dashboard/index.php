@@ -250,7 +250,7 @@ $PROTOCOL = 'http';
 
 				<li>
 					<div>
-						<i class="fa fa-users fa-lg fa-fw"></i>
+						<i class="fa fa-paper-plane fa-lg fa-fw"></i>
 						<span>CRM</span>
 						<span class="caret"></span>
 					</div>

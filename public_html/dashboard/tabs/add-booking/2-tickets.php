@@ -30,6 +30,7 @@
 								</div>
 							</div>
 						</div>
+						{{ticket-list-clearfix @index}}
 					{{/each}}
 				</script>
 			</div>

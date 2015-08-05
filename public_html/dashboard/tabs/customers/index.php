@@ -72,8 +72,8 @@
 
 	<script type="text/x-handlebars-template" id="customer-buttons-template">
 		<div style="float:right; text-align:right">
-			<button onclick="emailCustomer({{customerID}})" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Email Customer</button>
-			<button onclick="editDetails({{customerID}})" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Edit / View Details</button>
+			<button onclick="emailCustomer({{customerID}})" class="btn btn-default"><i class="fa fa-envelope fa-fw"></i> Email Customer</button>
+			<button onclick="editDetails({{customerID}})" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit / View Details</button>
 			<button onclick="viewBookings({{customerID}})" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> View Bookings</button>
 		</div>
 	</script>
