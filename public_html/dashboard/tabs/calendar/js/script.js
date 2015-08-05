@@ -413,8 +413,7 @@ function showModalWindowManifest(id, type) {
 				{ data: null, render: 'shoe' },
 				{ data: null, render: 'chest' },
 				{ data: null, render: 'height' },
-				{ data: null, render: 'last_dive',
-				  defaultContent: "First Dive"},
+				{ data: null, render: 'lastDive'},
 				{ data: null, render: 'ticket' }
 				],
 				"dom": 'T<"clear">lfrtip',
@@ -468,8 +467,7 @@ function showModalWindowManifest(id, type) {
 				{ data: null, render: 'shoe' },
 				{ data: null, render: 'chest' },
 				{ data: null, render: 'height' },
-				{ data: null, render: 'last_dive',
-				  defaultContent: "First Dive"},
+				{ data: null, render: 'lastDive'},
 				{ data: null, render: 'course' }
 				],
 				"dom": 'T<"clear">lfrtip',
@@ -624,7 +622,7 @@ function getAllEvents(start, end, timezone, callback) {
 	};
 
 	var events = [];
-	
+
 	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
 		window.sessions = _.indexBy(data, 'id');
@@ -881,6 +879,10 @@ function customerData(customer) {
 	this._chest = customer.chest_size;
 	this._shoe = customer.shoe_size;
 	this._height = customer.height;
+	if(customer.last_dive == "" || customer.last_dive == null || customer.last_dive == undefined) {
+		this._lastDive = "First Dive";
+	}
+	else this._lastDive = customer.last_dive;
 
 	this.name = function () {
 		return this._name;
@@ -912,5 +914,9 @@ function customerData(customer) {
 
 	this.height = function () {
 		return this._height;
+	};
+
+	this.lastDive = function () {
+		return this._lastDive;
 	};
 }
