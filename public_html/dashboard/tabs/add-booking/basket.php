@@ -1,9 +1,9 @@
 <div class="row tab-nav">
 	<div class="col-xs-6">
-		<a href="javascript:void(0);" class="btn btn-primary btn-prev">Prev</a>
+		<button class="btn btn-primary btn-prev">Prev</button>
 	</div>
 	<div class="col-xs-6">
-		<a href="javascript:void(0);" class="btn btn-primary btn-next pull-right">Next</a>
+		<button class="btn btn-primary btn-next pull-right">Next</button>
 	</div>
 </div>
 
