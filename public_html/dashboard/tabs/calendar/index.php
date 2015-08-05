@@ -145,7 +145,7 @@
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}})">View trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}}, 'trip')">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
@@ -193,13 +193,13 @@
 					</tr>
 					<tr>
 						<td><strong>Customer Information</strong></td>
-						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}})">View trip manifest</a></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{session.id}}, 'class')">View trip manifest</a></td>
 				</table>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
 		<script type="text/x-handlebars-template" id="manifest-template">
-			<div id="modal-{{id}}" class="reveal-modal">
+			<div id="modal-{{id}}" class="reveal-modal xlarge">
 
 				<h3>{{{trip.name}}} - Trip Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
@@ -208,6 +208,9 @@
 			                <th style="color:#313131">Name</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Shoe Size</th>
+			                <th style="color:#313131">Chest size</th>
+			                <th style="color:#313131">Height</th>
 			                <th style="color:#313131">Last Dive</th>
 			                <th style="color:#313131">Ticket Purchased</th>
 			            </tr>
@@ -219,7 +222,7 @@
 			</div>
 		</script>
 		<script type="text/x-handlebars-template" id="class-manifest-template">
-			<div id="modal-{{id}}" class="reveal-modal">
+			<div id="modal-{{id}}" class="reveal-modal xlarge">
 
 				<h3>{{{training.name}}} - Class Manifest</h3>
 				<table style="margin-top: 2em;" id="customer-data-table">
@@ -228,6 +231,9 @@
 			                <th style="color:#313131">Name</th>
 			                <th style="color:#313131">Country</th>
 			                <th style="color:#313131">Phone Number</th>
+			                <th style="color:#313131">Shoe Size</th>
+			                <th style="color:#313131">Chest size</th>
+			                <th style="color:#313131">Height</th>
 			                <th style="color:#313131">Last Dive</th>
 			                <th style="color:#313131">Course Purchased</th>
 			            </tr>

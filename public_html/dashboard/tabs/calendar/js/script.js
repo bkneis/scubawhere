@@ -378,10 +378,10 @@ function showModalWindowCourse(eventObject) {
 	});
 }
 
-function showModalWindowManifest(id) {
+function showModalWindowManifest(id, type) {
 	// Create the modal window from manifest-template
 	var params = {id: id};
-	if(calendarOptions.calendarDisplay == "trips") {
+	if(type == 'trip') {
 		window.sw.manifestTemplateD = Handlebars.compile( $("#manifest-template").html() );
 		Session.getAllCustomers(params, function success(data) {
 			//showModalWindowManifest(data);
@@ -410,6 +410,9 @@ function showModalWindowManifest(id) {
 				{ data: null, render: 'name' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
+				{ data: null, render: 'shoe' },
+				{ data: null, render: 'chest' },
+				{ data: null, render: 'height' },
 				{ data: null, render: 'last_dive',
 				  defaultContent: "First Dive"},
 				{ data: null, render: 'ticket' }
@@ -462,6 +465,9 @@ function showModalWindowManifest(id) {
 				{ data: null, render: 'name' },
 				{ data: null, render: 'country' },
 				{ data: null, render: 'phone' },
+				{ data: null, render: 'shoe' },
+				{ data: null, render: 'chest' },
+				{ data: null, render: 'height' },
 				{ data: null, render: 'last_dive',
 				  defaultContent: "First Dive"},
 				{ data: null, render: 'course' }
@@ -872,6 +878,9 @@ function customerData(customer) {
 	if(customer.pivot.course_id != null) {
 		this._course  = window.courses[customer.pivot.course_id].name;
 	}
+	this._chest = customer.chest_size;
+	this._shoe = customer.shoe_size;
+	this._height = customer.height;
 
 	this.name = function () {
 		return this._name;
@@ -891,5 +900,17 @@ function customerData(customer) {
 
 	this.course = function () {
 		return this._course;
+	};
+
+	this.chest = function () {
+		return this._chest;
+	};
+
+	this.shoe = function () {
+		return this._shoe;
+	};
+
+	this.height = function () {
+		return this._height;
 	};
 }
