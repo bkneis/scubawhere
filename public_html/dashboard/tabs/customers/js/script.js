@@ -231,6 +231,7 @@ function editDetails(id) {
 		}));
 	});
 
+	$('#edit-customer-agencies').find('#selected-certificates').empty();
 	_.each(window.customers[id].certificates, function(certificate) {
 		$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
 			id: certificate.id,
