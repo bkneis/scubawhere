@@ -81,6 +81,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Addon.js"></script>
 	<script src="/tabs/add-ons/js/script.js"></script>
 </div>

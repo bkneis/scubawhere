@@ -219,8 +219,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Ticket.js"></script>
-	<script src="/js/Controllers/Course.js"></script>
-	<script src="/js/Controllers/Class.js"></script>
 	<script src="/tabs/courses/js/script.js"></script>
 </div>

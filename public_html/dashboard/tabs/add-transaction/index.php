@@ -211,7 +211,6 @@
 
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 
-	<script src="/js/Controllers/Payment.js"></script>
 	<!-- <script src="/js/Controllers/Refund.js"></script> Not needed, Payment.js is only needed for the paymentgateways. -->
 	<!-- <script src="/js/Controllers/Booking.js"></script> -->
 

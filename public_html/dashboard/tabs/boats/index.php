@@ -146,7 +146,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Boat.js"></script>
-	<script src="/js/Controllers/Boatroom.js"></script>
 	<script src="/tabs/boats/js/script.js"></script>
 </div>

@@ -128,20 +128,6 @@
 	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
 	<script src="/common/js/jquery/jquery.reveal.js"></script>
 
-	<!--Controllers-->
-	<script src="/js/Controllers/Accommodation.js"></script>
-	<script src="/js/Controllers/Addon.js"></script>
-	<script src="/js/Controllers/Agency.js"></script>
-	<script src="/js/Controllers/Agent.js"></script>
-	<script src="/js/Controllers/Boatroom.js"></script>
-	<script src="/js/Controllers/Booking.js"></script>
-	<script src="/js/Controllers/Class.js"></script>
-	<script src="/js/Controllers/Course.js"></script>
-	<script src="/js/Controllers/Customer.js"></script>
-	<script src="/js/Controllers/Package.js"></script>
-	<script src="/js/Controllers/Session.js"></script>
-	<script src="/js/Controllers/Ticket.js"></script>
-	<script src="/js/Controllers/Trip.js"></script>
 	<!--My scripts-->
 	<script src="/tabs/add-booking/js/script.js"></script>
 

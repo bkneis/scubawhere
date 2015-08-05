@@ -55,7 +55,7 @@
 							{{#if update}}
 								<input type="hidden" name="id" value="{{id}}">
 							{{/if}}
-							
+
 							<input type="hidden" name="_token">
 
 							<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-class" value="SAVE">
@@ -78,6 +78,5 @@
 		</div>
 	</script>
 
-	<script src="/js/Controllers/Class.js"></script>
 	<script src="/tabs/classes/js/script.js"></script>
 </div>
