@@ -1338,6 +1338,9 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 		// First, take care of attached addons that need to be re-added to a selectedPackage
 		if(detail.ticket) reAddPackagedAddons(detail.addons);
 
+		// Set up variable that is assigned in IF blocks, but is needed afterwards when checking for still assigned course items
+		var relatedCourse = undefined;
+
 		// Re-add a removed item to selectedTickets/selectedCourses/selectedPackages
 		do { // Enclose the whole procedure in a one-time do-while loop to be able to "break" out of it at any time.
 			if(!detail.packagefacade) {
@@ -1356,7 +1359,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					// Is course
 					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
 
-					var relatedCourse = _.find(booking.selectedCourses, function(course) {
+					relatedCourse = _.find(booking.selectedCourses, function(course) {
 						return course.identifier === identifier;
 					});
 
@@ -1413,7 +1416,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					// Is course
 					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
 
-					var relatedCourse = _.find(relatedPackage.courses, function(course) {
+					relatedCourse = _.find(relatedPackage.courses, function(course) {
 						return course.identifier === identifier;
 					});
 
@@ -1446,6 +1449,31 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 				}
 			}
 		} while(false);
+
+		// Check if, when a course, all tickets/training-sessions have been unassigned
+		// and if so, release the course so it can be assigned to other customers
+		if(detail.course) {
+			// Search for any remaining assigned tickets/classes with this identifier:
+			var identifier = [booking.id, detail.customer.id, detail.course.id].join('-');
+
+			var remainingItems = _.find(booking.bookingdetails, function(assignedDetail) {
+				if(assignedDetail.course) {
+					// Generate local identifier
+					detailIdentifier = [booking.id, assignedDetail.customer.id, assignedDetail.course.id].join('-');
+
+					return identifier === detailIdentifier;
+				}
+
+				return false;
+			});
+
+			if(remainingItems === undefined) {
+				// All tickets/classes of the course have been unassigned, so it's safe to release the selectedCourse
+				if(relatedCourse !== undefined) {
+					delete relatedCourse.identifier;
+				}
+			}
+		}
 
 		booking.store();
 
