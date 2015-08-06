@@ -1076,6 +1076,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			var ownerId = data.identifier.split('-')[1];
 			if(ownerId != params.customer_id) {
 				pageMssg('This course is <b>already assigned</b> to <u>' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].lastname + '</u> and cannot be assigned to another customer.', 'danger', true);
+				$('#sessions-table .waiting').removeClass('waiting').html('Assign');
 				return false;
 			}
 		}
