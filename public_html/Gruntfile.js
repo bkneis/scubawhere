@@ -63,8 +63,10 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['watch']);
+    // grunt.registerTask('default', ['watch']);
 
-    grunt.registerTask('dev', ['concat']);
-    grunt.registerTask('production', ['concat', 'uglify']);
+    // grunt.registerTask('dev', ['concat']);
+    // grunt.registerTask('production', ['concat', 'uglify']);
+
+    grunt.registerTask('default', ['concat', 'uglify']);
 };
