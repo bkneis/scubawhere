@@ -1,5 +1,5 @@
 'use strict';
- 
+
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -7,16 +7,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    
+
     grunt.initConfig({
         watch: {
             less: {
                files: ["dashboard/common/less/*.less", ],
-                tasks: ["less"] 
+                tasks: ["less"]
             },
             /*jshint: {
                files: "<%= jshint.files %>",
-                tasks: ["jshint"] 
+                tasks: ["jshint"]
             },*/
         },
         less: {
@@ -42,28 +42,29 @@ module.exports = function (grunt) {
         concat: {
             basic: {
                 src: [
-                    'dashboard/js/Controllers/*.js',
                     'dashboard/js/main.js',
-                    'dashboard/js/ui.js',
                     'dashboard/js/navigation.js',
-                    'dashboard/js/validate.js',
                     'dashboard/js/tour.js',
+                    'dashboard/js/ui.js',
+                    'dashboard/js/validate.js',
+
+                    'dashboard/js/Controllers/*.js',
 
                 ],
-                dest: 'dashboard/js/scubawhere.js'
+                dest: 'dashboard/js/app.js'
             }
         },
         uglify: {
             basic: {
                 files: {
-                    'dashboard/js/scubawhere.min.js': ['dashboard/js/scubawhere.js']
+                    'dashboard/js/app.min.js': ['dashboard/js/app.js']
                 }
             }
         }
     });
 
     grunt.registerTask('default', ['watch']);
-    
+
     grunt.registerTask('dev', ['concat']);
     grunt.registerTask('production', ['concat', 'uglify']);
 };
