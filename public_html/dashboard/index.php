@@ -113,10 +113,10 @@ $PROTOCOL = 'http';
 		window.facebook = {};
 	</script>
 	<script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript" src="js/ui.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
-	<script type="text/javascript" src="js/validate.js"></script>
 	<script type="text/javascript" src="js/tour.js"></script>
+	<script type="text/javascript" src="js/ui.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
 
 	<!-- Load all front-end controllers -->
 	<script type="text/javascript" src="js/Controllers/Accommodation.js"></script>
