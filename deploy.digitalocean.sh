@@ -7,3 +7,5 @@ git pull
 
 php artisan migrate --force
 php artisan optimize
+
+grunt --gruntfile ./public_html/Gruntfile.js
