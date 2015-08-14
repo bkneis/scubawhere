@@ -206,5 +206,7 @@
 
 	<script src="/common/js/fullcalendar.min.js"></script>
 
+	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
+
 	<script src="/tabs/scheduling/js/script.js"></script>
 </div>
