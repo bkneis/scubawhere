@@ -125,6 +125,10 @@ $(function() {
 				revertDuration: 0,
 				helper: "clone",
 				containment: "document",
+				appendTo: 'body',
+				scroll: true,
+				scrollSensitivity: 50, // Pixels from the edge of the screen that start scrolling, default: 20
+				scrollSpeed: 10, // Number of pixels that the page scrolls when in scroll-area, default: 20
 			});
 		});
 }
