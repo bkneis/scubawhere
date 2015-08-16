@@ -57,7 +57,7 @@
 									<input class="required"  type="text" id="email" name="email">
 								</div>
 								<div class="form-row">
-									<label for="agencies">Affilated Training Organisations:</label>
+									<label for="agencies">Affiliated Training Organisations:</label>
 									<div id="agencies" class="clearfix">
 										<div id="save-loader" class="loader"></div>
 									</div>
@@ -114,7 +114,7 @@
 												<input style="box-sizing: border-box; width: 90%;" class="required" type="text" id="business_phone_ext" name="business_phone_ext" placeholder="+44">
 											</td>
 											<td width="75%" style="padding: 0;">
-												<small>Phone Number</small>
+												<small>Business Phone Number</small>
 												<input style="box-sizing: border-box;" class="required" type="text" id="business_phone" name="business_phone" placeholder="1234567890">
 											</td>
 										</tr>
