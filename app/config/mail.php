@@ -15,7 +15,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'mailgun',
+	'driver' => 'mandrill',
 	// 'driver' => 'mail',
 
 	/*
@@ -29,7 +29,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.mailgun.org',
+	'host' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'hello@scubawhere.com', 'name' => 'Scubawhere.com'),
+	'from' => array('address' => 'hello@scubawhere.com', 'name' => 'scubawhere.com'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return array(
 	|
 	*/
 
-	'username' => 'postmaster@scubawhere.com',
+	'username' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return array(
 	|
 	*/
 
-	'password' => '8kgvgk-fs-q2',
+	'password' => '',
 
 	/*
 	|--------------------------------------------------------------------------
