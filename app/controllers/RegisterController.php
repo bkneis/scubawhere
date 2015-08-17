@@ -67,11 +67,11 @@ class RegisterController extends Controller {
 			if((string) $timezone->status === "OK")
 				$data['timezone'] = (string) $timezone->time_zone_id;
 			else
-				return Response::json( array('errors' => array('Sorry, we could not determine your timezone.')), 406 ); // 406 Not Acceptable
+				return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
 		}
 		else
 		{
-			return Response::json( array('errors' => array('Sorry, we could not find the specified address.')), 406 ); // 406 Not Acceptable
+			return Response::json( array('errors' => array('Sorry, Google could not find the specified address.')), 406 ); // 406 Not Acceptable
 		}
 
 		$company = new Company($data);

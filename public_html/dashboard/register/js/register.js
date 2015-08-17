@@ -79,7 +79,7 @@ $(function(){
 		$('.errors').remove();
 
 		if(!$('#our-terms').is(':checked')) {
-			alert('Please confim you have read and agreed to our terms and conditions');
+			alert('Please confirm you have read and agreed to scubawhereRMS Terms and Conditions');
 			return false;
 		}
 
@@ -111,7 +111,7 @@ $(function(){
 				console.log(data.status);
 				completed = true;
 
-				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS!</p><p><strong>Please check your email inbox for a confirmation email and click the link provided.</p></center>');
+				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS.</p><p><strong>Please check your email inbox for a link to create your password. Once complete, we will review your registration and be personally in contact with you shortly.</p></center>');
 				$('#section4').append('<a class="btn btn-success btn-lg" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
 				form.find('#save-loader').remove();
 			},

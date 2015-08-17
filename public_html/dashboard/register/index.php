@@ -46,18 +46,18 @@
 												<input style="box-sizing: border-box; width: 90%;" class="required" type="text" id="phone_ext" name="phone_ext" placeholder="+44">
 											</td>
 											<td width="75%" style="padding: 0;">
-												<small>Phone number</small>
+												<small>Phone Number</small>
 												<input style="box-sizing: border-box;" class="required" type="text" id="phone" name="phone" placeholder="1234567890">
 											</td>
 										</tr>
 									</table>
 								</div>
 								<div class="form-row">
-									<label for="email">Main Contact Email Address:</label>
+									<label for="email">Main Contact E-mail Address:</label>
 									<input class="required"  type="text" id="email" name="email">
 								</div>
 								<div class="form-row">
-									<label for="agencies">Accepted Training Organisations:</label>
+									<label for="agencies">Affiliated Training Organisations:</label>
 									<div id="agencies" class="clearfix">
 										<div id="save-loader" class="loader"></div>
 									</div>
@@ -73,7 +73,7 @@
 									<input type="text" id="website" name="website">
 								</div>
 								<div class="form-row">
-									<label for="description">Company Bio (optional):</label>
+									<label for="description">Company Biography (optional):</label>
 									<textarea style="width:102%" rows="5" id="description" name="description"></textarea>
 								</div>
 							</div>
@@ -96,11 +96,11 @@
 									<input class="required"  type="text" id="city" name="city">
 								</div>
 								<div class="form-row">
-									<label for="county">County / State (optional):</label>
+									<label for="county">County/ State (optional):</label>
 									<input type="text" id="county" name="county">
 								</div>
 								<div class="form-row">
-									<label for="postcode">Post Code / Zip Code:</label>
+									<label for="postcode">Post Code/ Zip Code:</label>
 									<input class="required"  type="text" id="postcode" name="postcode">
 								</div>
 							</div>
@@ -114,14 +114,14 @@
 												<input style="box-sizing: border-box; width: 90%;" class="required" type="text" id="business_phone_ext" name="business_phone_ext" placeholder="+44">
 											</td>
 											<td width="75%" style="padding: 0;">
-												<small>Phone number</small>
+												<small>Business Phone Number</small>
 												<input style="box-sizing: border-box;" class="required" type="text" id="business_phone" name="business_phone" placeholder="1234567890">
 											</td>
 										</tr>
 									</table>
 								</div>
 								<div class="form-row">
-									<label for="business_email">Business Email:</label>
+									<label for="business_email">Business E-mail:</label>
 									<input class="required"  type="text" id="business_email" name="business_email">
 								</div>
 								<div class="form-row">
@@ -129,17 +129,17 @@
 									<input type="text" id="registration_number" name="registration_number">
 								</div>
 								<div class="form-row">
-									<label for="vat_number">VAT Number (optional):</label>
+									<label for="vat_number">VAT/ GST Number (optional):</label>
 									<input type="text" id="vat_number" name="vat_number">
 								</div>
 								<div class="form-row">
-									<label for="country_id">Select your country:</label>
+									<label for="country_id">Select your Country:</label>
 									<select class="required" id="country_id" name="country_id" style="width: 100%;">
 										<option value="">Please select</option>
 									</select>
 								</div>
 								<div class="form-row">
-									<label for="currency_id">Select your currency:</label>
+									<label for="currency_id">Select your Currency:</label>
 									<select class="required" id="currency_id" name="currency_id" style="width: 100%;">
 										<option value="">Please select</option>
 									</select>
@@ -151,7 +151,7 @@
 					<section>
 						<div id="section3">
 							<div style="float:none; margin: 0 auto;" class="form-row">
-								<label for="terms">Copy and paste your terms and conditions here:</label>
+								<label for="terms">Copy and paste your Customer Booking Terms and Conditions below:</label>
 								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
 							</div>
 						</div>
@@ -162,13 +162,13 @@
 							<div class="form-row" style="text-align: center;">
 								<h3>Just one more thing...</h3>
 
-								<label for="username">Please enter your username:</label>
+								<label for="username">Please create your Username:</label>
 								<input style="margin: 0 auto; width:280px" class="required"  type="text" id="username" name="username">
 
 								<div style="margin-top:10px"></div>
 
 								<label for="our-terms">
-									<small>Please check the box if you have read and agreed to our <a href="/api/terms" target="_blank">terms and conditions</a>:</small>
+									<small>Please check the box if you have read and agreed to our <a href="/api/terms" target="_blank">Terms and Conditions</a>:</small>
 									<input type="checkbox" id="our-terms" name="our_terms" class="required" value="1">
 								</label>
 
