@@ -13,11 +13,9 @@ $(function(){
 
 	// Render initial addon list
 	addonList = Handlebars.compile( $("#addon-list-template").html() );
-	renderAddonList();
-
-	// Default view: show create addon form
 	addonForm = Handlebars.compile( $("#addon-form-template").html() );
-	renderEditForm();
+	loadAddons(); // Automatically renders the views when data is loaded
+
 	Tour.getAddonsTour();
 	$("#addon-form-container").on('submit', '#add-addon-form', function(event) {
 
@@ -30,12 +28,11 @@ $(function(){
 
 			pageMssg(data.status, true);
 
+			window.addons[data.model.id] = data.model;
+
 			$('form').data('hasChanged', false);
 
-			renderAddonList(function() {
-				renderEditForm(data.id);
-			});
-
+			renderViews(data.model.id);
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -73,16 +70,11 @@ $(function(){
 
 			pageMssg(data.status, true);
 
-			renderAddonList();
+			window.addons[data.model.id] = data.model;
 
 			$('form').data('hasChanged', false);
 
-			// Because the page is not re-rendered like with add-addon, we need to manually remove the error messages
-			$('.errors').remove();
-
-			$('#update-addon').prop('disabled', false);
-			$('#update-addon-form').find('#save-loader').remove();
-
+			renderViews(data.model.id);
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -123,16 +115,18 @@ $(function(){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
+			var id = $('#update-addon-form input[name=id]').val();
+
 			Addon.deleteAddon({
-				'id'    : $('#update-addon-form input[name=id]').val(),
+				'id'    : id,
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 
 				pageMssg(data.status, true);
 
-				renderAddonList();
+				delete window.addons[id];
 
-				renderEditForm();
+				renderViews()
 			}, function error(xhr){
 
 				pageMssg('Oops, something wasn\'t quite right');
@@ -145,36 +139,37 @@ $(function(){
 
 });
 
-function renderAddonList(callback) {
+function loadAddons() {
 
 	$('#addon-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
 	Addon.getAllAddons(function success(data) {
-
 		window.addons = _.indexBy(data, 'id');
-		$('#addon-list').remove();
-		$('#addon-list-container .loader').remove();
-
-		$("#addon-list-container").append( addonList({addons : data}) );
-
-		// (Re)Assign eventListener for addon clicks
-		$('#addon-list').on('click', 'li, strong', function(event) {
-
-			if( $(event.target).is('strong') )
-				event.target = event.target.parentNode;
-
-			renderEditForm( event.target.getAttribute('data-id') );
-		});
-
-		if( typeof callback === 'function')
-			callback();
+		renderViews();
 	});
+}
+
+function renderViews(id) {
+	$('#addon-list').remove();
+	$('#addon-list-container .loader').remove();
+
+	$("#addon-list-container").append( addonList({addons : window.addons}) );
+
+	// (Re)Assign eventListener for addon clicks
+	$('#addon-list').on('click', 'li, strong', function(event) {
+		if( $(event.target).is('strong') )
+			event.target = event.target.parentNode;
+
+		renderEditForm( event.target.getAttribute('data-id') );
+	});
+
+	renderEditForm(id);
 }
 
 function renderEditForm(id) {
 
 	if( unsavedChanges() ) {
-		var question = confirm("ATTENTION: All unsaved changes are lost!");
+		var question = confirm("ATTENTION: All unsaved changes will be lost!");
 		if( !question) {
 			return false;
 		}

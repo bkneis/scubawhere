@@ -56,7 +56,7 @@ class AddonController extends Controller {
 
 		$addon = Auth::user()->addons()->save($addon);
 
-		return Response::json( array('status' => 'OK. Addon created', 'id' => $addon->id), 201 ); // 201 Created
+		return Response::json( ['status' => 'OK. Addon created', 'model' => $addon], 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -114,7 +114,7 @@ class AddonController extends Controller {
 				return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
 			}
 
-			return Response::json( array('status' => 'OK. Addon updated.'), 200 ); // 200 OK
+			return Response::json( ['status' => 'OK. Addon updated.', 'model' => $addon], 200 ); // 200 OK
 		}
 	}
 

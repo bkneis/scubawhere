@@ -201,7 +201,7 @@ class AccommodationController extends Controller {
 			$accommodation->prices()->saveMany($prices);
 		}
 
-		return Response::json( array('status' => 'OK. Accommodation created', 'id' => $accommodation->id), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Accommodation created', 'model' => $accommodation->load('basePrices', 'prices')), 201 ); // 201 Created
 	}
 
 	public function postEdit()
@@ -289,7 +289,7 @@ class AccommodationController extends Controller {
 			$prices = $accommodation->prices()->saveMany($prices);
 		}
 
-		return array('status' => 'OK. Accommodation updated', 'base_prices' => $base_prices, 'prices' => $prices);
+		return array('status' => 'OK. Accommodation updated', 'model' => $accommodation->load('basePrices', 'prices'));
 	}
 
 	public function postDelete()

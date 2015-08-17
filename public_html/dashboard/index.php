@@ -263,9 +263,13 @@ $PROTOCOL = 'http';
 						<li>
 							<a href="#customers">My Customers</a>
 						</li>
-						<li>
-							<a href="#campaigns">My Campaigns</a>
-						</li>
+						<?php if(gethostname() === 'rms.scubawhere.com') { ?>
+							<!-- Additional CRM features will appear here -->
+						<?php } else { ?>
+							<li>
+								<a href="#campaigns">My Campaigns</a>
+							</li>
+						<?php } ?>
 					</ul>
 				</li>
 

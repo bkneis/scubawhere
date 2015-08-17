@@ -147,7 +147,7 @@
 					{{else}}
 						<div class="horizontal-seperator"><span>Options</span></div>
 						<div class="yellow-helper attention-placeholder">
-							<h3>You are editing a <u>timetabled</u> session</h3>
+							<h4>You are editing a <u>timetabled</u> session</h4>
 							Do you want to move/delete all future versions of this session, too?</p>
 							<p>
 								<label style="display: block; margin-bottom: 0.5em;">
@@ -205,6 +205,9 @@
 	</div>
 
 	<script src="/common/js/fullcalendar.min.js"></script>
+
+	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
+	<script src="/common/js/jquery/jquery.ui.touch-punch.min.js"></script>
 
 	<script src="/tabs/scheduling/js/script.js"></script>
 </div>

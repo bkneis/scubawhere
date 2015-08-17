@@ -50,11 +50,9 @@ $(function(){
 
 	// Render initial accommodation list
 	accommodationList = Handlebars.compile( $("#accommodation-list-template").html() );
-	renderAccommodationList();
-
-	// Default view: show create accommodation form
 	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
-	renderEditForm();
+	loadAccommodations(); // Automatically renders the views when data is loaded
+
 	Tour.getAcommodationsTour();
 
 	$("#accommodation-form-container").on('submit', '#add-accommodation-form', function(event) {
@@ -68,12 +66,11 @@ $(function(){
 
 			pageMssg(data.status, true);
 
+			window.accommodations[data.model.id] = data.model;
+
 			$('form').data('hasChanged', false);
 
-			renderAccommodationList(function() {
-				renderEditForm(data.id);
-			});
-
+			renderViews(data.model.id);
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -113,26 +110,9 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			renderAccommodationList();
+			window.accommodations[data.model.id] = data.model;
 
-			$('.new_price').remove();
-
-			if(data.base_prices) {
-				_.each(data.base_prices, function(price) {
-					price.isBase = true;
-					$('.add-base-price').before( priceInputTemplate(price) );
-				});
-			}
-
-			if(data.prices) {
-				_.each(data.prices, function(price) {
-					$('.add-price').before( priceInputTemplate(price) );
-				});
-			}
-
-			// Remove the loader
-			$('#update-accommodation').prop('disabled', false);
-			$('.loader').remove();
+			renderViews(data.model.id);
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
@@ -166,17 +146,19 @@ $(function(){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
+			var id = $('#update-accommodation-form input[name=id]').val();
+
 			Accommodation.delete({
-				'id'    : $('#update-accommodation-form input[name=id]').val(),
+				'id'    : id,
 				'_token': $('[name=_token]').val()
-			}, function success(data){
+			}, function success(data) {
 
 				pageMssg(data.status, true);
 
-				renderAccommodationList();
+				delete window.accommodations[id];
 
-				renderEditForm();
-			}, function error(xhr){
+				renderViews();
+			}, function error(xhr) {
 
 				var data = JSON.parse(xhr.responseText);
 				console.log(data);
@@ -236,30 +218,30 @@ $(function(){
 
 });
 
-function renderAccommodationList(callback) {
-
+function loadAccommodations() {
 	$('#accommodation-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
 	Accommodation.getAll(function success(data) {
-
 		window.accommodations = _.indexBy(data, 'id');
-		$('#accommodation-list').remove();
-		$('#accommodation-list-container .loader').remove();
-
-		$("#accommodation-list-container").append( accommodationList({accommodations : data}) );
-
-		// (Re)Assign eventListener for accommodation clicks
-		$('#accommodation-list').on('click', 'li, strong', function(event) {
-
-			if( $(event.target).is('strong') )
-				event.target = event.target.parentNode;
-
-			renderEditForm( event.target.getAttribute('data-id') );
-		});
-
-		if( typeof callback === 'function')
-			callback();
+		renderViews();
 	});
+}
+
+function renderViews(id) {
+	$('#accommodation-list').remove();
+	$('#accommodation-list-container .loader').remove();
+
+	$("#accommodation-list-container").append( accommodationList({accommodations : window.accommodations}) );
+
+	// (Re)Assign eventListener for accommodation clicks
+	$('#accommodation-list').on('click', 'li, strong', function(event) {
+		if( $(event.target).is('strong') )
+			event.target = event.target.parentNode;
+
+		renderEditForm( event.target.getAttribute('data-id') );
+	});
+
+	renderEditForm(id);
 }
 
 function renderEditForm(id) {
