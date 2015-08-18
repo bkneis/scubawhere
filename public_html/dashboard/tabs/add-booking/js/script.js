@@ -1082,7 +1082,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			}
 		}
 
-		params.course_id  = data.parentId;
+		params.course_id = data.parentId;
 
 		if(data.parentParent)
 			params.package_id = data.parentParentId;
@@ -1257,17 +1257,17 @@ function submitAddDetail(params, data) {
 			if(data.parent)
 				// It's a ticket in a course or package
 				itemPointer = _.find(parentPointer.tickets, function(ticket) {
-					return ticket.id === data.id;
+					return ticket.id == data.id;
 				});
 			else
 				// It's a top-level ticket
 				itemPointer = parentPointer.selectedTickets[data.id];
 		}
 		if(data.type === 'training') {
-				// It's a training in a course
-				itemPointer = _.find(parentPointer.trainings, function(training) {
-					return training.id === data.id;
-				});
+			// It's a training in a course
+			itemPointer = _.find(parentPointer.trainings, function(training) {
+				return training.id == data.id;
+			});
 		}
 
 		itemPointer.qty--;
