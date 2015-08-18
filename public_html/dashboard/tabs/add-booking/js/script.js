@@ -107,15 +107,11 @@ Handlebars.registerHelper("countryName", function(id) {
 	}
 });
 
-Handlebars.registerHelper('qty', function(training_quantity) {
+Handlebars.registerHelper('qty', function() {
 	if(this.qty)
 		return this.qty;
 	else if(this.pivot && this.pivot.quantity) {
 		this.qty = this.pivot.quantity;
-		return this.qty;
-	}
-	else if(training_quantity) {
-		this.qty = training_quantity;
 		return this.qty;
 	}
 	else alert('ERROR: Cannot determine qty!');
@@ -241,6 +237,14 @@ Handlebars.registerHelper('statusIcon', function() {
 Handlebars.registerHelper('ticket-list-clearfix', function(index) {
 	if((index + 1) % 3 === 0)
 		return new Handlebars.SafeString('<div class="clearfix"></div>');
+});
+
+Handlebars.registerHelper('numberOfNights', function(start, end) { // Requires date strings
+	var result = moment(end).diff(moment(start), 'days');
+
+	result += result > 1 ? ' nights' : ' night';
+
+	return result;
 });
 
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
@@ -1260,7 +1264,9 @@ function submitAddDetail(params, data) {
 		}
 		if(data.type === 'training') {
 				// It's a training in a course
-				itemPointer = parentPointer.training;
+				itemPointer = _.find(parentPointer.trainings, function(training) {
+					return training.id === data.id;
+				});
 		}
 
 		itemPointer.qty--;
@@ -1276,7 +1282,9 @@ function submitAddDetail(params, data) {
 					delete parentPointer.selectedTickets[data.id];
 			}
 			if(data.type === 'training') {
-				delete parentPointer.training;
+				parentPointer.trainings = _.reject(parentPointer.trainings, function(training) {
+					return training.qty === 0;
+				});
 			}
 		}
 
@@ -1377,13 +1385,15 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					}
 					else {
 						// Is class in course
-						if(relatedCourse.training) {
-							// training object exists
-							relatedCourse.training.qty++;
-						}
+						var existingTraining = _.find(relatedCourse.trainings, function(training) {
+							return training.id == detail.training_session.training.id;
+						});
+
+						if(existingTraining !== undefined)
+							existingTraining.qty++;
 						else {
 							detail.training_session.training.qty = 1;
-							relatedCourse.training = detail.training_session.training;
+							relatedCourse.trainings.push(detail.training_session.training);
 						}
 					}
 				}
@@ -1433,14 +1443,15 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 						}
 					}
 					else {
-						// Is class in course in package
-						if(relatedCourse.training) {
-							// training object exists
-							relatedCourse.training.qty++;
-						}
+						var existingTraining = _.find(relatedCourse.trainings, function(training) {
+							return training.id == detail.training_session.training.id;
+						});
+
+						if(existingTraining !== undefined)
+							existingTraining.qty++;
 						else {
 							detail.training_session.training.qty = 1;
-							relatedCourse.training = detail.training_session.training;
+							relatedCourse.trainings.push(detail.training_session.training);
 						}
 					}
 				}

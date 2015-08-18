@@ -134,13 +134,15 @@
 												</h5>
 											</div>
 											<div id="course-collapse-{{id}}" class="panel-collapse collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
-												{{#if training}}
+												{{#if trainings}}
 													<h5>Class</h5>
 													<ul class="list-group">
-														<li class="list-group-item package-ticket-item">
-														<span class="badge">{{training_quantity}}</span>
-															<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}}
-														</li>
+														{{#each trainings}}
+															<li class="list-group-item package-ticket-item">
+															<span class="badge">{{pivot.quantity}}</span>
+																<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
+															</li>
+														{{/each}}
 													</ul>
 												{{/if}}
 												{{#if tickets}}

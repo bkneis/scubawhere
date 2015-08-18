@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="course-list-template">
 						<ul id="course-list" class="entity-list">
 							{{#each courses}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{training_quantity}} classes | {{count tickets}} tickets</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{count trainings}} classes | {{count tickets}} tickets</li>
 							{{else}}
 								<p id="no-courses">No courses available.</p>
 							{{/each}}
@@ -49,8 +49,8 @@
 								<input id="course-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 							</div>
 
-							<div id="course-tickets" class="form-row" data-step="3" data-position="left" data-intro="Now, select the class that you want to include in the course.">
-								<strong>Select the class to be included in this course:</strong>
+							<div id="course-tickets" class="form-row class-list" data-step="3" data-position="left" data-intro="Now, select the classes that you want to include in the course.">
+								<strong>Select the classes to be included in this course:</strong>
 
 								{{#if update}}
 									{{> class_template}}
@@ -142,7 +142,8 @@
 			<p>
 				<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
 			</p>
-		{{else}}<p>-</p>
+		{{else}}
+			<p>-</p>
 		{{/each}}
 	</script>
 
@@ -150,24 +151,22 @@
 		<p>
 			<select id="class-select" class="class-select">
 				<option value="0">Select a class</option>
-				{{#each available_training}}
+				{{#each available_trainings}}
 					<option value="{{id}}">{{name}}</option>
 				{{/each}}
 			</select>
-			Number of sessions :
-			<input type="number" name="training_quantity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
-			<input type="hidden" type="number" name="training_id" id="training_id">
+			Number of sessions: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="trainings[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
 		</p>
 	</script>
 
 	<script type="text/x-handlebars-template" id="class-template">
-		<p>
-			{{#unless training}}
-				-
-			{{else}}
-				<big class="margin-right">{{{training.name}}}</big> Quantity: <big class="margin-right">{{training_quantity}}</big>
-			{{/unless}}
-		</p>
+		{{#each trainings}}
+			<p>
+				<big class="margin-right">{{{name}}}</big> Quantity: <big class="margin-right">{{pivot.quantity}}</big>
+			</p>
+		{{else}}
+			<p>-</p>
+		{{/each}}
 	</script>
 
 	<script type="text/x-handlebars-template" id="price-input-template">

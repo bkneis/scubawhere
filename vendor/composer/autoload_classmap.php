@@ -171,6 +171,7 @@ return array(
     'CreateCountriesTable' => $baseDir . '/app/database/migrations/2014_02_17_014835_create_countries_table.php',
     'CreateCoursePackageTable' => $baseDir . '/app/database/migrations/2015_03_06_181956_create_course_package_table.php',
     'CreateCourseTicketPivotTable' => $baseDir . '/app/database/migrations/2015_03_06_175435_create_course_ticket_pivot_table.php',
+    'CreateCourseTrainingPivotTable' => $baseDir . '/app/database/migrations/2015_08_18_162726_create_course_training_pivot_table.php',
     'CreateCoursesTable' => $baseDir . '/app/database/migrations/2015_03_06_173325_create_courses_table.php',
     'CreateCurrenciesTable' => $baseDir . '/app/database/migrations/2014_10_25_173618_create_currencies_table.php',
     'CreateCustomersTable' => $baseDir . '/app/database/migrations/2014_02_17_021744_create_customers_table.php',
