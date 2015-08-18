@@ -3,8 +3,6 @@ var packageForm,
     priceInputTemplate,
     entitySelectTemplate;
 
-window.promises = {};
-
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('multiply', function(a, b) {
 	return (a * b).toFixed(2);

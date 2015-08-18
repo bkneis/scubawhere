@@ -61,8 +61,8 @@ class Accommodation extends Ardent {
 		}
 		while( $current_date < $end );
 
-		$this->decimal_price         = number_format($totalPrice, 2, '.', ',');
-		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', ',');
+		$this->decimal_price         = number_format($totalPrice, 2, '.', '');
+		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
 	}
 
 	public function bookings()

@@ -110,6 +110,7 @@ $PROTOCOL = 'http';
 	<script type="text/javascript">
 		// Set scubawhere namespace
 		window.sw = {};
+		window.promises = {};
 		window.facebook = {};
 	</script>
 

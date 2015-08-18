@@ -1,6 +1,3 @@
-
-window.promises = {};
-
 window.promises.loadedToken = $.Deferred();
 getToken(function callback() {
 	window.promises.loadedToken.resolve();

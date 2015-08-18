@@ -2,8 +2,6 @@ var ticketForm,
     ticketList,
     priceInputTemplate;
 
-window.promises = {};
-
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(id) {
 	if(this.id == id)

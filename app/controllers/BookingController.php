@@ -707,7 +707,7 @@ class BookingController extends Controller {
 		{
 			$exists = $package->courses()->where('id', $course->id)->exists();
 			if(!$exists)
-				return Response::json(['error' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
+				return Response::json(['errors' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
 		}
 
 		// Check if the session's boat is allowed for the ticket
