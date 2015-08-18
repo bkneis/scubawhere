@@ -39,7 +39,8 @@ class CreateCourseTrainingPivotTable extends Migration {
 			];
 		});
 
-		DB::table('course_training')->insert($inserts);
+		if(!empty($inserts))
+			DB::table('course_training')->insert($inserts);
 
 		Schema::table('courses', function($table)
 		{
