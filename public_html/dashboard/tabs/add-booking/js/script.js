@@ -1081,18 +1081,6 @@ $('#session-tab').on('click', '.assign-session', function() {
 				return false;
 			}
 		}
-		else {
-			// Generate course identifier for next time
-			var identifier = booking.id + '-' + params.customer_id + '-' + data.parentId;
-
-			// Add identifier to the course
-			if(data.parentParent) {
-				booking.selectedPackages[data.parentParentUid].courses[data.parentUid].identifier = identifier;
-			}
-			else {
-				booking.selectedCourses[data.parentUid].identifier = identifier;
-			}
-		}
 
 		params.course_id  = data.parentId;
 
@@ -1235,6 +1223,19 @@ function submitAddDetail(params, data) {
 				packageUID = data.parentUid;
 
 			booking.selectedPackages[packageUID].packagefacade = packagefacade_id;
+		}
+
+		if(data.parent === 'course' && !data.identifier) {
+			// Generate course identifier
+			var identifier = booking.id + '-' + params.customer_id + '-' + data.parentId;
+
+			// Add identifier to the course
+			if(data.parentParent) {
+				booking.selectedPackages[data.parentParentUid].courses[data.parentUid].identifier = identifier;
+			}
+			else {
+				booking.selectedCourses[data.parentUid].identifier = identifier;
+			}
 		}
 
 		// Reduce selected quantity
