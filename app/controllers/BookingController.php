@@ -853,14 +853,17 @@ class BookingController extends Controller {
 		// Validate that the class still fits into the course
 		if($training_session && $course)
 		{
+			$training = $course->trainings()->where('id', $training_session->training_id)->first();
+
 			// Check if the course still has space for the wanted class
 			$bookedTrainingsQuantity = $course->bookingdetails()
 				->where('customer_id', $customer->id)
 				->where('booking_id', $booking->id)
-				->whereNotNull('training_session_id')
+				->whereHas('training_session', function($query) use ($training)
+				{
+					$query->where('training_id', $training->id);
+				})
 				->count();
-
-			$training = $course->trainings()->where('id', $training_session->training_id)->first();
 
 			if($bookedTrainingsQuantity >= $training->pivot->quantity)
 				return Response::json(['errors' => ['The class cannot be assigned because the course\'s limit for the class is reached.']], 403 ); // 403 Forbidden
