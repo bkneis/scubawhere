@@ -20,8 +20,6 @@ $(function() {
 	window.sessions = {};
 	window.accommodations = {};
 
-	window.promises  = {};
-
 	calendarOptions.boatsListTemplate = Handlebars.compile($("#boats-list-template").html());
 	calendarOptions.tripsListTemplate = Handlebars.compile($("#trips-list-template").html());
 
@@ -622,6 +620,9 @@ function getAllEvents(start, end, timezone, callback) {
 	};
 
 	var events = [];
+	window.promises.sessionFilterLoaded       = $.Deferred();
+	window.promises.classFilterLoaded         = $.Deferred();
+	window.promises.accommodationFilterLoaded = $.Deferred();
 
 	Session.filter(sessionFilters, function success(data) {
 		//console.log(data);
@@ -684,81 +685,87 @@ function getAllEvents(start, end, timezone, callback) {
 				eventObject.session.start = $.fullCalendar.moment(value.start);
 				eventObject.type = "trip";
 				events.push( createCalendarEntry(eventObject) );
-
 			}
-
 		});
 
-		Class.filter(sessionFilters, function success(data) {
-			window.trainingSessions = _.indexBy(data, 'id');
-			console.log(data);
-
-			// Create eventObjects
-			_.each(window.trainingSessions, function(value) {
-				var eventObject = {
-					title: window.trainings[ value.training_id ].name, // use the element's text as the event title
-					allDay: false,
-					trip: window.trainings[ value.training_id ],
-					session: value,
-					isNew: false,
-					editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
-					durationEditable: false,
-					className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
-					isTrip : false
-				};
-
-				eventObject.session.start = $.fullCalendar.moment(value.start);
-				eventObject.type = "class";
-				events.push( createCalendarEntry(eventObject) );
-			});
-
-			Accommodation.filter(sessionFilters, function success(data) {
-
-				console.log(data);
-
-				_.each(data, function(value, key) {
-					var start = new moment(key);
-
-					_.each(value, function(util, id) {
-						var eventObject = {
-				            start: start, // change start to readable text instead of moment
-				            end : start,
-				            id : randomString(),
-				            title: window.accommodations[ id ].name,
-				            color : "#229930",
-				            booked : util[0],
-				            available : (util[1] - util[0])
-				        };
-				        if(eventObject.available == 0) eventObject.color = "#f00";
-				        eventObject.type = "accom";
-				        events.push( eventObject );
-				        //$('#calendar').renderEvent(eventObject);
-				    });
-				});
-
-				$('#fetch-events-loader').remove();
-
-				callback(events);
-			},
-			function error(xhr){
-				$('.loader').remove();
-			});
-
-			$('#fetch-events-loader').remove();
-
-		},
-		function error(xhr){
-			$('.loader').remove();
-		});
-
-		// Remove loading indictor
-		$('#fetch-events-loader').remove();
-
+		window.promises.sessionFilterLoaded.resolve();
 	},
 	function error(xhr){
 		$('.loader').remove();
 	});
 
+	Class.filter(sessionFilters, function success(data) {
+		window.trainingSessions = _.indexBy(data, 'id');
+		console.log(data);
+
+		// Create eventObjects
+		_.each(window.trainingSessions, function(value) {
+			var eventObject = {
+				title: window.trainings[ value.training_id ].name, // use the element's text as the event title
+				allDay: false,
+				trip: window.trainings[ value.training_id ],
+				session: value,
+				isNew: false,
+				editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
+				durationEditable: false,
+				className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+				isTrip : false
+			};
+
+			eventObject.session.start = $.fullCalendar.moment(value.start);
+			eventObject.type = "class";
+			events.push( createCalendarEntry(eventObject) );
+		});
+
+		window.promises.classFilterLoaded.resolve();
+	},
+	function error(xhr){
+		$('.loader').remove();
+	});
+
+	Accommodation.filter(sessionFilters, function success(data) {
+
+		console.log(data);
+
+		_.each(data, function(value, key) {
+			var start = new moment(key);
+
+			_.each(value, function(util, id) {
+				var eventObject = {
+		            start: start, // change start to readable text instead of moment
+		            end : start,
+		            id : randomString(),
+		            title: window.accommodations[ id ].name,
+		            color : "#229930",
+		            booked : util[0],
+		            available : (util[1] - util[0])
+		        };
+		        if(eventObject.available == 0) eventObject.color = "#f00";
+		        eventObject.type = "accom";
+		        events.push( eventObject );
+		        //$('#calendar').renderEvent(eventObject);
+		    });
+		});
+
+		window.promises.accommodationFilterLoaded.resolve();
+	},
+	function error(xhr){
+		$('.loader').remove();
+	});
+
+
+
+	// Wait for the requests to load and then return events
+	$.when(
+		window.promises.sessionFilterLoaded,
+		window.promises.classFilterLoaded,
+		window.promises.accommodationFilterLoaded
+	).done(function() {
+		// Remove loading indictor
+		$('#fetch-events-loader').remove();
+
+		callback(events);
+	});
 }
 
 function getClassEvents(start, end, timezone, callback) {

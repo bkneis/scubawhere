@@ -14,8 +14,6 @@ class Course extends Ardent {
 		'name'              => 'required',
 		'description'       => '',
 		'capacity'          => 'integer|min:0',
-		'training_id'       => 'integer|min:1',
-		'training_quantity' => 'required_with:training_id|integer|min:1',
 	);
 
 	public function beforeSave()
@@ -78,8 +76,8 @@ class Course extends Ardent {
 		return $this->belongsToMany('Ticket')->withPivot('quantity')->withTimestamps();
 	}
 
-	public function training()
+	public function trainings()
 	{
-		return $this->belongsTo('Training');
+		return $this->belongsToMany('Training')->withPivot('quantity')->withTimestamps();
 	}
 }

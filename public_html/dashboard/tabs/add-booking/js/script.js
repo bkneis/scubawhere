@@ -1,6 +1,3 @@
-
-window.promises = {};
-
 window.promises.loadedToken = $.Deferred();
 getToken(function callback() {
 	window.promises.loadedToken.resolve();
@@ -110,15 +107,11 @@ Handlebars.registerHelper("countryName", function(id) {
 	}
 });
 
-Handlebars.registerHelper('qty', function(training_quantity) {
+Handlebars.registerHelper('qty', function() {
 	if(this.qty)
 		return this.qty;
 	else if(this.pivot && this.pivot.quantity) {
 		this.qty = this.pivot.quantity;
-		return this.qty;
-	}
-	else if(training_quantity) {
-		this.qty = training_quantity;
 		return this.qty;
 	}
 	else alert('ERROR: Cannot determine qty!');
@@ -244,6 +237,14 @@ Handlebars.registerHelper('statusIcon', function() {
 Handlebars.registerHelper('ticket-list-clearfix', function(index) {
 	if((index + 1) % 3 === 0)
 		return new Handlebars.SafeString('<div class="clearfix"></div>');
+});
+
+Handlebars.registerHelper('numberOfNights', function(start, end) { // Requires date strings
+	var result = moment(end).diff(moment(start), 'days');
+
+	result += result > 1 ? ' nights' : ' night';
+
+	return result;
 });
 
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
@@ -1080,20 +1081,8 @@ $('#session-tab').on('click', '.assign-session', function() {
 				return false;
 			}
 		}
-		else {
-			// Generate course identifier for next time
-			var identifier = booking.id + '-' + params.customer_id + '-' + data.parentId;
 
-			// Add identifier to the course
-			if(data.parentParent) {
-				booking.selectedPackages[data.parentParentUid].courses[data.parentUid].identifier = identifier;
-			}
-			else {
-				booking.selectedCourses[data.parentUid].identifier = identifier;
-			}
-		}
-
-		params.course_id  = data.parentId;
+		params.course_id = data.parentId;
 
 		if(data.parentParent)
 			params.package_id = data.parentParentId;
@@ -1236,6 +1225,19 @@ function submitAddDetail(params, data) {
 			booking.selectedPackages[packageUID].packagefacade = packagefacade_id;
 		}
 
+		if(data.parent === 'course' && !data.identifier) {
+			// Generate course identifier
+			var identifier = booking.id + '-' + params.customer_id + '-' + data.parentId;
+
+			// Add identifier to the course
+			if(data.parentParent) {
+				booking.selectedPackages[data.parentParentUid].courses[data.parentUid].identifier = identifier;
+			}
+			else {
+				booking.selectedCourses[data.parentUid].identifier = identifier;
+			}
+		}
+
 		// Reduce selected quantity
 		var parentPointer = booking;
 		var itemPointer = null;
@@ -1255,15 +1257,17 @@ function submitAddDetail(params, data) {
 			if(data.parent)
 				// It's a ticket in a course or package
 				itemPointer = _.find(parentPointer.tickets, function(ticket) {
-					return ticket.id === data.id;
+					return ticket.id == data.id;
 				});
 			else
 				// It's a top-level ticket
 				itemPointer = parentPointer.selectedTickets[data.id];
 		}
 		if(data.type === 'training') {
-				// It's a training in a course
-				itemPointer = parentPointer.training;
+			// It's a training in a course
+			itemPointer = _.find(parentPointer.trainings, function(training) {
+				return training.id == data.id;
+			});
 		}
 
 		itemPointer.qty--;
@@ -1279,7 +1283,9 @@ function submitAddDetail(params, data) {
 					delete parentPointer.selectedTickets[data.id];
 			}
 			if(data.type === 'training') {
-				delete parentPointer.training;
+				parentPointer.trainings = _.reject(parentPointer.trainings, function(training) {
+					return training.qty === 0;
+				});
 			}
 		}
 
@@ -1380,13 +1386,15 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					}
 					else {
 						// Is class in course
-						if(relatedCourse.training) {
-							// training object exists
-							relatedCourse.training.qty++;
-						}
+						var existingTraining = _.find(relatedCourse.trainings, function(training) {
+							return training.id == detail.training_session.training.id;
+						});
+
+						if(existingTraining !== undefined)
+							existingTraining.qty++;
 						else {
 							detail.training_session.training.qty = 1;
-							relatedCourse.training = detail.training_session.training;
+							relatedCourse.trainings.push(detail.training_session.training);
 						}
 					}
 				}
@@ -1436,14 +1444,15 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 						}
 					}
 					else {
-						// Is class in course in package
-						if(relatedCourse.training) {
-							// training object exists
-							relatedCourse.training.qty++;
-						}
+						var existingTraining = _.find(relatedCourse.trainings, function(training) {
+							return training.id == detail.training_session.training.id;
+						});
+
+						if(existingTraining !== undefined)
+							existingTraining.qty++;
 						else {
 							detail.training_session.training.qty = 1;
-							relatedCourse.training = detail.training_session.training;
+							relatedCourse.trainings.push(detail.training_session.training);
 						}
 					}
 				}

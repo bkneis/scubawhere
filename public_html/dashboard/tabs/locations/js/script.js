@@ -1,5 +1,4 @@
-var gmap = {},
-	promises = {};
+var gmap = {};
 
 window.sw.latitudeInput  = $('#newMarkerLatitude');
 window.sw.longitudeInput = $('#newMarkerLongitude');

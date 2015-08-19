@@ -100,13 +100,13 @@
 					<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 						<div class="panel-body">
 							<a href="javascript:void(0);" class="remove-course pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>
-							{{#if training}}
+							{{#if trainings}}
 								<strong>Class</strong>
-									{{#with training}}
+								{{#each trainings}}
 									<p>
-										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty ../training_quantity}}</span>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}} <span class="badge badge-default small">{{qty}}</span>
 									</p>
-								{{/with}}
+								{{/each}}
 							{{/if}}
 							{{#if tickets}}
 								<strong>Tickets</strong>

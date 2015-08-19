@@ -10,7 +10,7 @@ class CourseController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->courses()->withTrashed()->with('training', 'tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Auth::user()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,37 +20,23 @@ class CourseController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->courses()->with('training', 'tickets', 'basePrices', 'prices')->get();
+		return Auth::user()->courses()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->courses()->withTrashed()->with('training', 'tickets', 'basePrices', 'prices')->get();
+		return Auth::user()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'capacity', 'training_id', 'training_quantity');
-
-		if(!empty($data['training_id']))
-		{
-			try
-			{
-				if( !Input::get('training_id') ) throw new ModelNotFoundException();
-				$training = Auth::user()->trainings()->findOrFail( Input::get('training_id') );
-			}
-			catch(ModelNotFoundException $e)
-			{
-				return Response::json( array('errors' => array('The class could not be found.')), 404 ); // 404 Not Found
-			}
-		}
-		else
-			$training = $data['training_id'] = $data['training_quantity'] = null;
+		$data = Input::only('name', 'description', 'capacity');
 
 		// Check if tickets are supplied
-		$tickets = Input::get('tickets', []);
+		$tickets   = Input::get('tickets', []);
+		$trainings = Input::get('trainings', []);
 
-		if(empty($training) && empty($tickets))
+		if(empty($trainings) && empty($tickets))
 			return Response::json( array('errors' => array('Either a class or a ticket is required.')), 406 ); // 406 Not Acceptable */
 
 		// ####################### Prices #######################
@@ -100,6 +86,8 @@ class CourseController extends Controller {
 		// Input must be of type <input name="tickets[1][quantity]" value="2">
 		//                                ticket_id --^   quantity value --^
 		$course->tickets()->sync( $tickets );
+
+		$course->trainings()->sync( $trainings );
 
 		// Normalise base_prices array
 		$base_prices = Helper::normaliseArray($base_prices);

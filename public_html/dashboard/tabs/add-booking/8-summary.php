@@ -308,7 +308,7 @@
 														<i class="fa fa-bed fa-fw"></i> {{{name}}}
 													</td>
 													<td class="inner-item-col" style="text-align: right;">
-														{{!-- x1 --}}
+														{{numberOfNights pivot.start pivot.end}}
 													</td>
 													<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
 														{{currency}} {{decimal_price}}
@@ -347,11 +347,11 @@
 												{{!-- <span class="total-space">$0.75</span><br /> --}}
 
 												{{#if agent_id}}
-													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span><br />
+													<span class="total-space" style="font-weight: bold; color: #4d4d4d;">{{currency}} {{decimal_price}}</span><br />
 													<span class="total-space">-{{commission_amount agent_id decimal_price}}</span><br />
-													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{commission_result agent_id decimal_price}}</span>
+													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{commission_result agent_id decimal_price}}</span>
 												{{else}}
-													<span class="total-space" style="font-weight:bold; color: #4d4d4d">{{currency}} {{decimal_price}}</span>
+													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{decimal_price}}</span>
 												{{/if}}
 											</td>
 										</tr>

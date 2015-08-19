@@ -698,7 +698,8 @@ class BookingController extends Controller {
 		// Validate that the course can be booked for this training_session
 		if($training_session)
 		{
-			if($course->training_id !== $training_session->training_id)
+			$exists = $training_session->training->courses()->where('id', $course->id)->exists();
+			if(!$exists)
 				return Response::json( ['errors' => ['This course can not be booked for this class.']], 403 ); // 403 Forbidden
 		}
 
@@ -707,7 +708,7 @@ class BookingController extends Controller {
 		{
 			$exists = $package->courses()->where('id', $course->id)->exists();
 			if(!$exists)
-				return Response::json(['error' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
+				return Response::json(['errors' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
 		}
 
 		// Check if the session's boat is allowed for the ticket
@@ -852,14 +853,19 @@ class BookingController extends Controller {
 		// Validate that the class still fits into the course
 		if($training_session && $course)
 		{
+			$training = $course->trainings()->where('id', $training_session->training_id)->first();
+
 			// Check if the course still has space for the wanted class
 			$bookedTrainingsQuantity = $course->bookingdetails()
 				->where('customer_id', $customer->id)
 				->where('booking_id', $booking->id)
-				->whereNotNull('training_session_id')
+				->whereHas('training_session', function($query) use ($training)
+				{
+					$query->where('training_id', $training->id);
+				})
 				->count();
 
-			if($bookedTrainingsQuantity >= $course->training_quantity)
+			if($bookedTrainingsQuantity >= $training->pivot->quantity)
 				return Response::json(['errors' => ['The class cannot be assigned because the course\'s limit for the class is reached.']], 403 ); // 403 Forbidden
 		}
 

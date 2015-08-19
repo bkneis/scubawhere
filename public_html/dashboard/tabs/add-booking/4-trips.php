@@ -74,15 +74,15 @@
 											<div id="booking-ticket-list-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 												<div class="panel-body">
 													<div class="list-group">
-														{{#if training}}
-															{{#with training}}
+														{{#if trainings}}
+															{{#each trainings}}
 																<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-parent-uid="{{../UID}}" data-parent-parent="package" data-parent-parent-id="{{../../../id}}" data-parent-parent-uid="{{../../../UID}}" data-identifier="{{../identifier}}" data-packagefacade="{{../../../packagefacade}}" class="list-group-item btn btn-default">
 																	<input type="radio" name="selectables" />
 																	<i class="fa fa-graduation-cap fa-fw"></i>
 																	{{{name}}}
-																	<span class="badge badge-default small">{{qty ../training_quantity}}</span>
+																	<span class="badge badge-default small">{{qty}}</span>
 																</label>
-															{{/with}}
+															{{/each}}
 														{{/if}}
 														{{#if tickets}}
 															{{#each tickets}}
@@ -132,15 +132,15 @@
 						<div id="booking-ticket-list-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
 								<div class="list-group">
-									{{#if training}}
-										{{#with training}}
+									{{#if trainings}}
+										{{#each trainings}}
 											<label data-id="{{id}}" data-type="training" data-parent="course" data-parent-id="{{../id}}" data-parent-uid="{{../UID}}" data-identifier="{{../identifier}}" class="list-group-item btn btn-default">
 												<input type="radio" name="selectables" />
 												<i class="fa fa-graduation-cap fa-fw"></i>
 												{{{name}}}
-												<span class="badge badge-default small">{{qty ../training_quantity}}</span>
+												<span class="badge badge-default small">{{qty}}</span>
 											</label>
-										{{/with}}
+										{{/each}}
 									{{/if}}
 									{{#if tickets}}
 										{{#each tickets}}

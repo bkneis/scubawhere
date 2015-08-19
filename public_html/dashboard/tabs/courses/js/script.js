@@ -59,16 +59,30 @@ $(function(){
 		console.log(window.training);
 	});
 
-	// Default view: show create package form
+	window.promises.loadedTickets = $.Deferred();
 	Ticket.getAllTickets(function success(data) {
 		window.tickets = _.indexBy(data, 'id');
+		window.promises.loadedTickets.resolve();
+	});
 
-		courseForm = Handlebars.compile( $("#course-form-template").html() );
+	window.promises.loadedClasses = $.Deferred();
+	Class.getAll(function success(data) {
+		window.trainings = _.indexBy(data, 'id');
+		window.promises.loadedClasses.resolve();
+	});
+
+	$.when(
+		window.promises.loadedTickets,
+		window.promises.loadedClasses
+	).then(function() {
 		renderEditForm();
 		Tour.getCoursesTour();
 	});
 
+	courseForm = Handlebars.compile( $("#course-form-template").html() );
+
 	ticketSelectTemplate = Handlebars.compile( $("#ticket-select-template").html() );
+	classSelectTemplate  = Handlebars.compile( $("#class-select-template").html() );
 
 	$("#course-form-container").on('submit', '#add-course-form', function(event) {
 
@@ -176,10 +190,10 @@ $(function(){
 		});
 	});
 
-	$('#course-form-container').on('change', '.ticket-select', function(event) {
+	$('#course-form-container').on('change', '.class-select', function(event) {
 		var $self     = $(event.target);
 		var $quantity = $self.siblings('.quantity-input').first();
-		var $prices   = $self.siblings('.ticket-prices').first();
+		// var $prices   = $self.siblings('.class-prices').first();
 
 		var id = $self.val(), disabledInputs, numberOfDisabledInputs;
 
@@ -189,7 +203,45 @@ $(function(){
 			$quantity.attr('name', '');
 			$quantity.val('');
 
-			$prices.html( $prices.attr('data-default') );
+			// $prices.html( $prices.attr('data-default') );
+
+			// Check if more than one empty class-selects exist and if so, remove the extra one
+			disabledInputs         = $('.class-list').find('.quantity-input[disabled]');
+			numberOfDisabledInputs = disabledInputs.length;
+			if( numberOfDisabledInputs > 1) {
+				disabledInputs.last().parent().remove();
+			}
+		}
+		else {
+			$quantity.prop('disabled', false);
+			$quantity.attr('name', 'trainings[' + id + '][quantity]');
+			$quantity.val(1);
+
+			$quantity.trigger('change');
+
+			// Check if empty class-select exists and if not, create and append one
+			disabledInputs         = $('.class-list').find('.quantity-input[disabled]');
+			numberOfDisabledInputs = disabledInputs.length;
+			if( numberOfDisabledInputs === 0) {
+				$('.class-list').append( classSelectTemplate({available_trainings: window.trainings}) );
+			}
+		}
+	});
+
+	$('#course-form-container').on('change', '.ticket-select', function(event) {
+		var $self     = $(event.target);
+		var $quantity = $self.siblings('.quantity-input').first();
+		// var $prices   = $self.siblings('.ticket-prices').first();
+
+		var id = $self.val(), disabledInputs, numberOfDisabledInputs;
+
+		if(id == "0") {
+			// Reset
+			$quantity.prop('disabled', true);
+			$quantity.attr('name', '');
+			$quantity.val('');
+
+			// $prices.html( $prices.attr('data-default') );
 
 			// Check if more than one empty ticket-selects exist and if so, remove the extra one
 			disabledInputs         = $('.ticket-list').find('.quantity-input[disabled]');
@@ -214,21 +266,20 @@ $(function(){
 		}
 	});
 
+	/*
 	$('#course-form-container').on('change', '.quantity-input', function(event) {
 		var $quantity = $(event.target);
 		var $prices   = $quantity.siblings('.ticket-prices').first();
 		var $ticket   = $quantity.siblings('.ticket-select').first();
 		var id = $ticket.val();
-
-		/*
 		var html = '';
 		_.each(window.tickets[id].prices, function(p, index, list) {
 			html += '<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">' + p.fromDay + '/' + p.fromMonth + ' - ' + p.untilDay + '/' + p.untilMonth + ': ' + window.company.currency.symbol + ' ' + ($quantity.val() * p.decimal_price).toFixed(2) + '</span> ';
 		});
 
 		$prices.html(html);
-		*/
 	});
+	*/
 
 	$('#course-form-container').on('click', '.remove-course', function(event) {
     event.preventDefault();
@@ -272,7 +323,7 @@ $(function(){
 	});
 
 	$('#course-form-container').on('click', '.add-price', function(event) {
-		
+
 		event.preventDefault();
 		window.sw.default_price.id = randomString();
 		$(event.target).before( priceInputTemplate(window.sw.default_price) );
@@ -280,7 +331,7 @@ $(function(){
 	});
 
 	$('#course-form-container').on('click', '.remove-price', function(event) {
-		
+
 		event.preventDefault();
 		$(event.target).parent().remove();
 	});
@@ -352,9 +403,9 @@ function renderEditForm(id) {
 		};
 	}
 
-	course.available_tickets = window.tickets;
-	course.available_training = window.training;
-	course.default_price     = window.sw.default_price;
+	course.available_tickets   = window.tickets;
+	course.available_trainings = window.training;
+	course.default_price       = window.sw.default_price;
 
 	$('#course-form-container').empty().append( courseForm(course) );
 
