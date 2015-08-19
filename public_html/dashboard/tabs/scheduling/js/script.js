@@ -87,7 +87,6 @@ $(function() {
 				isNew   : true,
 				durationEditable: false,
 				startEditable: true,
-				eventType : "trip",
 				isTrip : true
 			};
 			if($(this).attr('data-type') == "trip") {
@@ -95,7 +94,8 @@ $(function() {
 					trip    : window.trips[ $(this).attr('data-id') ],
 					session : {
 						trip_id: $(this).attr('data-id'),
-					}
+					},
+					eventType : "trip"
 				});
 			}
 			else {
@@ -103,7 +103,8 @@ $(function() {
 					trip    : window.trainings[ $(this).attr('data-id') ],
 					session : {
 						training_id: $(this).attr('data-id'),
-					}
+					},
+					eventType : "class"
 				});
 			}
 
