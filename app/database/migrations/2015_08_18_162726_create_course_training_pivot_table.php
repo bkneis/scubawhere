@@ -30,13 +30,14 @@ class CreateCourseTrainingPivotTable extends Migration {
 		$inserts = [];
 		Course::all()->each(function($course) use (&$inserts)
 		{
-			$inserts[] = [
-				'course_id'   => $course->id,
-				'training_id' => $course->training_id,
-				'quantity'    => $course->training_quantity,
-				'created_at'  => $course->created_at,
-				'updated_at'  => $course->created_at // Here we use the created_at date on purpose, because e.g. the name of a course can be updated after creation, be we need the creation date of the training-assignment
-			];
+			if(!empty($course->training_id))
+				$inserts[] = [
+					'course_id'   => $course->id,
+					'training_id' => $course->training_id,
+					'quantity'    => $course->training_quantity,
+					'created_at'  => $course->created_at,
+					'updated_at'  => $course->created_at // Here we use the created_at date on purpose, because e.g. the name of a course can be updated after creation, be we need the creation date of the training-assignment
+				];
 		});
 
 		if(!empty($inserts))
