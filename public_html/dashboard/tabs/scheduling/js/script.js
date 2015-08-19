@@ -44,8 +44,6 @@ $(function() {
 	window.sessions  = {};
 	window.trainings = {};
 
-	window.promises  = {};
-
 	window.promises.loadedTrips = $.Deferred();
 	Trip.getAllTrips(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
@@ -67,12 +65,12 @@ $(function() {
 
 	getToken();
 
-	window.promises.loadedTrips.done(function() {
-		window.promises.loadedClasses.done(function() {
-			window.promises.loadedBoats.done(function() {
-				initDraggables();
-			});
-		});
+	$.when(
+		window.promises.loadedTrips,
+		window.promises.loadedClasses,
+		window.promises.loadedBoats
+	).done(function() {
+		initDraggables();
 	});
 
 	/* Initialize the external events
@@ -82,38 +80,32 @@ $(function() {
 
 			// Create an eventObject (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
 			// It doesn't need to have a start or end as that is assigned onDrop
+			var eventObject = {
+				title   : $.trim( $(this).text() ), // use the element's text as the event title
+				allDay  : false,
+				id      : randomString(),
+				isNew   : true,
+				durationEditable: false,
+				startEditable: true,
+				eventType : "trip",
+				isTrip : true
+			};
 			if($(this).attr('data-type') == "trip") {
-				var eventObject = {
-					title   : $.trim( $(this).text() ), // use the element's text as the event title
-					allDay  : false,
-					id      : randomString(),
+				$.extend(eventObject, {
 					trip    : window.trips[ $(this).attr('data-id') ],
 					session : {
 						trip_id: $(this).attr('data-id'),
-					},
-					isNew   : true,
-					durationEditable: false,
-					startEditable: true,
-					eventType : "trip",
-					isTrip : true
-				};
-			} else {
-				var eventObject = {
-					title   : $.trim( $(this).text() ), // use the element's text as the event title
-					allDay  : false,
-					id      : randomString(),
+					}
+				});
+			}
+			else {
+				$.extend(eventObject, {
 					trip    : window.trainings[ $(this).attr('data-id') ],
 					session : {
 						training_id: $(this).attr('data-id'),
-					},
-					isNew   : true,
-					durationEditable: false,
-					startEditable: true,
-					eventType : "class",
-					isTrip : false
-				};
+					}
+				});
 			}
-
 
 			// Store the eventObject in the DOM element so we can get it back later
 			$(this).data('eventObject', eventObject);
@@ -131,7 +123,7 @@ $(function() {
 				scrollSpeed: 10, // Number of pixels that the page scrolls when in scroll-area, default: 20
 			});
 		});
-}
+	}
 
 	/* Initialize the calendar
 	--------------------------*/
@@ -148,6 +140,8 @@ $(function() {
 			$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
 
 			var events = [];
+			window.promises.sessionFilterLoaded = $.Deferred();
+			window.promises.classFilterLoaded   = $.Deferred();
 
 			Class.filter({
 				'after': start.format(),
@@ -175,6 +169,7 @@ $(function() {
 					events.push( createCalendarEntry(eventObject) );
 				});
 
+				window.promises.classFilterLoaded.resolve();
 			});
 
 			Session.filter({
@@ -203,12 +198,18 @@ $(function() {
 					events.push( createCalendarEntry(eventObject) );
 				});
 
+				window.promises.sessionFilterLoaded.resolve();
+			});
 
-
-				callback(events);
-
+			// Wait for the requests to load and then return events
+			$.when(
+				window.promises.sessionFilterLoaded,
+				window.promises.classFilterLoaded
+			).done(function() {
 				// Remove loading indictor
 				$('#fetch-events-loader').remove();
+
+				callback(events);
 			});
 		},
 		eventRender: function(event, element) {
