@@ -86,8 +86,7 @@ $(function() {
 				id      : randomString(),
 				isNew   : true,
 				durationEditable: false,
-				startEditable: true,
-				isTrip : true
+				startEditable: true
 			};
 			if($(this).attr('data-type') == "trip") {
 				$.extend(eventObject, {
@@ -95,7 +94,8 @@ $(function() {
 					session : {
 						trip_id: $(this).attr('data-id'),
 					},
-					eventType : "trip"
+					eventType : "trip",
+					isTrip : true
 				});
 			}
 			else {
@@ -104,7 +104,8 @@ $(function() {
 					session : {
 						training_id: $(this).attr('data-id'),
 					},
-					eventType : "class"
+					eventType : "class",
+					isTrip : false
 				});
 			}
 
@@ -389,31 +390,31 @@ $('#modalWindows').on('change', '.starthours, .startminutes', function(event) {
 		if(eventObject.isTrip) {
 			Session.createSession(eventObject.session, function success(data) {
 
-			// Whenever the session is saved, it is not new anymore
-			eventObject.isNew = false;
+				// Whenever the session is saved, it is not new anymore
+				eventObject.isNew = false;
 
-			// Communicate success to user
-			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-loader').remove();
+				// Communicate success to user
+				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+				$('#save-loader').remove();
 
-			// Remake the moment-object
-			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
-			eventObject.session.id = data.id;
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+				eventObject.session.id = data.id;
 
-			// console.log(eventObject.session);
-			$('#calendar').fullCalendar('removeEvents', eventObject.id);
-			$('#calendar').fullCalendar('refetchEvents');
+				// console.log(eventObject.session);
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
+				$('#calendar').fullCalendar('refetchEvents');
 
-			// Close modal window
-			$('#modalWindows .close-reveal-modal').click();
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
 
-			pageMssg(data.status, true);
-		},
-		function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
+				pageMssg(data.status, true);
+			},
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
 
-			pageMssg(data.errors[0]);
+				pageMssg(data.errors[0]);
 
 				// Remake the moment-object
 				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
@@ -425,36 +426,35 @@ $('#modalWindows').on('change', '.starthours, .startminutes', function(event) {
 				// Trigger boatroomWarning
 				$('#modalWindows .boatSelect').change();
 			});
-}
-else {
+		}
+		else {
 
-	Class.createSession(eventObject.session, function success(data) {
+			Class.createSession(eventObject.session, function success(data) {
+				// Whenever the session is saved, it is not new anymore
+				eventObject.isNew = false;
 
-			// Whenever the session is saved, it is not new anymore
-			eventObject.isNew = false;
+				// Communicate success to user
+				$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
+				$('#save-loader').remove();
 
-			// Communicate success to user
-			$(event.target).attr('value', 'Success!').css('background-color', '#2ECC40');
-			$('#save-loader').remove();
+				// Remake the moment-object
+				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
+				eventObject.session.id = data.id;
 
-			// Remake the moment-object
-			eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
-			eventObject.session.id = data.id;
+				// console.log(eventObject.session);
+				$('#calendar').fullCalendar('removeEvents', eventObject.id);
+				$('#calendar').fullCalendar('refetchEvents');
 
-			// console.log(eventObject.session);
-			$('#calendar').fullCalendar('removeEvents', eventObject.id);
-			$('#calendar').fullCalendar('refetchEvents');
+				// Close modal window
+				$('#modalWindows .close-reveal-modal').click();
 
-			// Close modal window
-			$('#modalWindows .close-reveal-modal').click();
+				pageMssg(data.status, true);
+			},
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
 
-			pageMssg(data.status, true);
-		},
-		function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
-
-			pageMssg(data.errors[0]);
+				pageMssg(data.errors[0]);
 
 				// Remake the moment-object
 				eventObject.session.start = $.fullCalendar.moment(eventObject.session.start, 'YYYY-MM-DD HH:mm:ss');
@@ -466,10 +466,8 @@ else {
 				// Trigger boatroomWarning
 				$('#modalWindows .boatSelect').change();
 			});
-}
-
-
-});
+		}
+	});
 
 	// The UPDATE button
 	$('#modalWindows').on('click', '.update-session', function success(event) {
