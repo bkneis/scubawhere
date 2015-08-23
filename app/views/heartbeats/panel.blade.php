@@ -57,7 +57,7 @@
 		});
 
 		// Reduce list to 5 most recent
-		recent_users = _.last(recent_users, 5);
+		recent_users = _.last(recent_users, 25);
 
 		// Reverse list, so the most recent is first
 		recent_users.reverse();
