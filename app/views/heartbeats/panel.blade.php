@@ -72,7 +72,7 @@
 			if(heartbeat.ip === client_ip)
 				html += '<td><em>' + heartbeat.ip + '</em></td>';
 			else
-				html += '<td>' + heartbeat.ip + '</td>';
+				html += '<td><a href="http://www.ip-tracker.org/locator/ip-lookup.php?ip=' + heartbeat.ip + '" alt="Tracking IP Address">' + heartbeat.ip + '</a></td>';
 
 			html += 	'<td>' + heartbeat.date + ' ' + heartbeat.time + '</td>';
 			html += 	'<td><!-- action button --></td>';
