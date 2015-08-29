@@ -16,6 +16,7 @@ return array(
     'AddBoatroomIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_12_01_234755_add_boatroom_id_to_booking_details_table.php',
     'AddCancellationFeeToBookingTable' => $baseDir . '/app/database/migrations/2015_02_10_234000_add_cancellation_fee_to_booking_table.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
+    'AddCertificateIdToCoursesTable' => $baseDir . '/app/database/migrations/2015_08_29_090245_add_certificate_id_to_courses_table.php',
     'AddCompanyIdToAddonsTable' => $baseDir . '/app/database/migrations/2014_10_09_222929_add_company_id_to_addons_table.php',
     'AddCourseIdAndTrainingSessionIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2015_03_06_174025_add_course_id_and_training_session_id_to_booking_details_table.php',
     'AddCurrencyEverywhere' => $baseDir . '/app/database/migrations/2014_05_20_141758_add_currency_everywhere.php',

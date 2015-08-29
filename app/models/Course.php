@@ -8,12 +8,13 @@ class Course extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'capacity', 'training_id', 'training_quantity');
+	protected $fillable = array('name', 'description', 'capacity', 'certificate_id');
 
 	public static $rules = array(
-		'name'              => 'required',
-		'description'       => '',
-		'capacity'          => 'integer|min:0',
+		'name'           => 'required',
+		'description'    => '',
+		'capacity'       => 'integer|min:0',
+		'certificate_id' => 'integer|exists:certificates,id'
 	);
 
 	public function beforeSave()
