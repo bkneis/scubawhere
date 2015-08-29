@@ -7,7 +7,7 @@
 		"laravel/framework": "4.2.*",
 		"laravelbook/ardent": "dev-master",
 		"doctrine/dbal": "2.*",
-		"mews/purifier": "dev-master",
+		"mews/purifier": "1.*",
 		"philipbrown/money": "1.*",
 		"itsgoingd/clockwork": "1.*",
 		"guzzlehttp/guzzle": "~4.0",
