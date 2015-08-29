@@ -322,7 +322,6 @@ else {
 	window.promises.loadedCountries.resolve();
 }
 
-
 window.promises.loadedAgencies = $.Deferred();
 if(typeof window.agencies === 'undefined')
 	Agency.getAll(function(data){
