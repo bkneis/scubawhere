@@ -59,13 +59,13 @@ $(function() {
 	});
 
 	window.promises.loadedCourses = $.Deferred();
-	Course.getAll(function(data) {
+	Course.getAllWithTrashed(function(data) {
 		window.courses = _.indexBy(data, 'id');
 		window.promises.loadedCourses.resolve();
 	});
 
 	window.promises.loadedTickets = $.Deferred();
-	Ticket.getAllTickets(function(data) {
+	Ticket.getAllWithTrashed(function(data) {
 		window.tickets = _.indexBy(data, 'id');
 		window.promises.loadedTickets.resolve();
 	});
