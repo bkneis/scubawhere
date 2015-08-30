@@ -1,9 +1,13 @@
 @extends('heartbeats.template')
 
 @section('content')
+	<p>
+		Your IP: {{ $client_ip }}<br>
+		UTC time: {{ date("H:i") }}
+	</p>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">Most recent logged-in users <span class="pull-right">Your IP: {{ $client_ip }}</span></h3>
+			<h3 class="panel-title">Most recent logged-in users</h3>
 		</div>
 		<div class="panel-body">
 			<table class="table">
@@ -12,7 +16,7 @@
 						<th>ID</th>
 						<th>Operator</th>
 						<th>IP</th>
-						<th>Last heartbeat</th>
+						<th>Last heartbeat (UTC)</th>
 						<th><!-- action button --></th>
 					</tr>
 				</thead>
