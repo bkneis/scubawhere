@@ -25,15 +25,45 @@ class DepartureController extends Controller {
 	 */
 	public function getManifest()
 	{
+		// First, we get the departure/session for which the manifest is and check if it exists
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->with('trip', 'boat', 'customers')->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->with('trip', 'boat')->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
+
+		// Then, we get the associated customers through the bookingdetails, because we need to be able to filter by booking->status
+		$details = Auth::user()->bookingdetails()
+			->where('session_id', Input::get('id'))
+			->whereHas('booking', function($query)
+			{
+				$query->whereIn('status', Booking::$counted);
+			})
+			->with('customer')
+			->get();
+
+		// Now, we build an array of customers
+		$customers = [];
+		$details->each(function($detail) use (&$customers)
+		{
+			$customer = $detail->customer;
+
+			// The front-end expects the customer->pivot object to be filled, so we assign it the bookingdetail, which we conveniently already have.
+			$customer->pivot = $detail;
+
+			// Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
+			unset($customer->pivot->customer);
+
+			$customers[] = $customer;
+		});
+
+		// Assign and return
+		$departure->customers = $customers;
+		return $departure;
 	}
 
 	public function getAll()
@@ -183,7 +213,7 @@ class DepartureController extends Controller {
 		else
 			$course = false;
 
-		// Find if a available_for daterange restricts the result
+		// Find if a *_available_for daterange restricts the result
 		$available_for_from = false;
 		$available_for_until = false;
 		$ticket_available_for_from = false;

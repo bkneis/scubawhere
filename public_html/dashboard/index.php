@@ -63,7 +63,7 @@ $PROTOCOL = 'http';
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<!-- Plugins -->
-	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.css' />
+	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.min.css' />
 	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />

@@ -134,7 +134,7 @@ abstract class Ardent extends Model {
     protected static $externalValidator = false;
 
     /**
-     * A Translator instance, to be used by standalone Ardent instances.
+     * A Validation Factory instance, to be used by standalone Ardent instances with the Translator.
      *
      * @var \Illuminate\Validation\Factory
      */
@@ -166,11 +166,14 @@ abstract class Ardent extends Model {
      *
      * @see \Illuminate\Database\Eloquent\Model::hasOne
      * @see \Illuminate\Database\Eloquent\Model::hasMany
+     * @see \Illuminate\Database\Eloquent\Model::hasManyThrough
      * @see \Illuminate\Database\Eloquent\Model::belongsTo
      * @see \Illuminate\Database\Eloquent\Model::belongsToMany
      * @see \Illuminate\Database\Eloquent\Model::morphTo
      * @see \Illuminate\Database\Eloquent\Model::morphOne
      * @see \Illuminate\Database\Eloquent\Model::morphMany
+     * @see \Illuminate\Database\Eloquent\Model::morphToMany
+     * @see \Illuminate\Database\Eloquent\Model::morphedByMany
      *
      * @var array
      */
@@ -179,6 +182,8 @@ abstract class Ardent extends Model {
     const HAS_ONE = 'hasOne';
 
     const HAS_MANY = 'hasMany';
+
+    const HAS_MANY_THROUGH = 'hasManyThrough';
 
     const BELONGS_TO = 'belongsTo';
 
@@ -190,15 +195,20 @@ abstract class Ardent extends Model {
 
     const MORPH_MANY = 'morphMany';
 
+    const MORPH_TO_MANY = 'morphToMany';
+
+    const MORPHED_BY_MANY = 'morphedByMany';
+
     /**
      * Array of relations used to verify arguments used in the {@link $relationsData}
      *
      * @var array
      */
     protected static $relationTypes = array(
-        self::HAS_ONE, self::HAS_MANY,
+        self::HAS_ONE, self::HAS_MANY, self::HAS_MANY_THROUGH,
         self::BELONGS_TO, self::BELONGS_TO_MANY,
-        self::MORPH_TO, self::MORPH_ONE, self::MORPH_MANY
+        self::MORPH_TO, self::MORPH_ONE, self::MORPH_MANY,
+        self::MORPH_TO_MANY, self::MORPHED_BY_MANY
     );
 
     /**
@@ -208,7 +218,6 @@ abstract class Ardent extends Model {
      * @return \LaravelBook\Ardent\Ardent
      */
     public function __construct(array $attributes = array()) {
-
         parent::__construct($attributes);
         $this->validationErrors = new MessageBag;
     }
@@ -320,27 +329,44 @@ abstract class Ardent extends Model {
         switch ($relationType) {
             case self::HAS_ONE:
             case self::HAS_MANY:
+                $verifyArgs(['foreignKey', 'localKey']);
+                return $this->$relationType($relation[1], $relation['foreignKey'], $relation['localKey']);
+
+            case self::HAS_MANY_THROUGH:
+                $verifyArgs(['firstKey', 'secondKey'], ['through']);
+                return $this->$relationType($relation[1], $relation['through'], $relation['firstKey'], $relation['secondKey']);
+
             case self::BELONGS_TO:
-                $verifyArgs(array('foreignKey'));
-                return $this->$relationType($relation[1], $relation['foreignKey']);
+                $verifyArgs(['foreignKey', 'otherKey', 'relation']);
+                return $this->$relationType($relation[1], $relation['foreignKey'], $relation['otherKey'], $relation['relation']);
 
             case self::BELONGS_TO_MANY:
-                $verifyArgs(array('table', 'foreignKey', 'otherKey'));
-                $relationship = $this->$relationType($relation[1], $relation['table'], $relation['foreignKey'], $relation['otherKey']);
-                if(isset($relation['pivotKeys']) && is_array($relation['pivotKeys']))
+                $verifyArgs(['table', 'foreignKey', 'otherKey', 'relation']);
+                $relationship = $this->$relationType($relation[1], $relation['table'], $relation['foreignKey'], $relation['otherKey'], $relation['relation']);
+                if(isset($relation['pivotKeys']) && is_array($relation['pivotKeys'])) {
                     $relationship->withPivot($relation['pivotKeys']);
-                if(isset($relation['timestamps']) && $relation['timestamps']==true)
+                }
+                if(isset($relation['timestamps']) && $relation['timestamps']) {
                     $relationship->withTimestamps();
+                }
                 return $relationship;
 
             case self::MORPH_TO:
-                $verifyArgs(array('name', 'type', 'id'));
+                $verifyArgs(['name', 'type', 'id']);
                 return $this->$relationType($relation['name'], $relation['type'], $relation['id']);
 
             case self::MORPH_ONE:
             case self::MORPH_MANY:
-                $verifyArgs(array('type', 'id'), array('name'));
-                return $this->$relationType($relation[1], $relation['name'], $relation['type'], $relation['id']);
+                $verifyArgs(['type', 'id', 'localKey'], ['name']);
+                return $this->$relationType($relation[1], $relation['name'], $relation['type'], $relation['id'], $relation['localKey']);
+
+            case self::MORPH_TO_MANY:
+                $verifyArgs(['table', 'foreignKey', 'otherKey', 'inverse'], ['name']);
+                return $this->$relationType($relation[1], $relation['name'], $relation['table'], $relation['foreignKey'], $relation['otherKey'], $relation['inverse']);
+
+            case self::MORPHED_BY_MANY:
+                $verifyArgs(['table', 'foreignKey', 'otherKey'], ['name']);
+                return $this->$relationType($relation[1], $relation['name'], $relation['table'], $relation['foreignKey'], $relation['otherKey']);
         }
     }
 
@@ -372,13 +398,15 @@ abstract class Ardent extends Model {
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function belongsTo($related, $foreignKey = NULL, $otherKey = NULL, $relation = NULL) {
-		$backtrace = debug_backtrace(false);
-		$caller = ($backtrace[1]['function'] == 'handleRelationalArray')? $backtrace[3] : $backtrace[1];
 
 		// If no foreign key was supplied, we can use a backtrace to guess the proper
 		// foreign key name by using the name of the relationship function, which
 		// when combined with an "_id" should conventionally match the columns.
-		$relation = $caller['function'];
+		if (is_null($relation)) {
+			$backtrace = debug_backtrace(false);
+			$caller = ($backtrace[1]['function'] == 'handleRelationalArray')? $backtrace[3] : $backtrace[1];
+			$relation = $caller['function'];
+		}
 
 		if (is_null($foreignKey)) {
 			$foreignKey = snake_case($relation).'_id';
@@ -388,9 +416,9 @@ abstract class Ardent extends Model {
 		// for the related models and returns the relationship instance which will
 		// actually be responsible for retrieving and hydrating every relations.
 		$instance = new $related;
-
+		
 		$otherKey = $otherKey ?: $instance->getKeyName();
-
+		
 		$query = $instance->newQuery();
 
 		return new BelongsTo($query, $this, $foreignKey, $otherKey, $relation);
@@ -449,7 +477,7 @@ abstract class Ardent extends Model {
      * @param array $connection Connection info used by {@link \Illuminate\Database\Capsule\Manager::addConnection}.
      * Should contain driver, host, port, database, username, password, charset and collation.
      */
-    public static function configureAsExternal(array $connection) {
+    public static function configureAsExternal(array $connection, $lang = 'en') {
         $db = new DatabaseCapsule;
         $db->addConnection($connection);
         $db->setEventDispatcher(new Dispatcher(new Container));
@@ -457,14 +485,14 @@ abstract class Ardent extends Model {
 
         // Make this Capsule instance available globally via static methods
         $db->setAsGlobal();
-
+        
         $db->bootEloquent();
 
-        $translator = new Translator('en');
+        $translator = new Translator($lang);
         $translator->addLoader('file_loader', new PhpFileLoader());
         $translator->addResource('file_loader',
-            dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'en'.
-            DIRECTORY_SEPARATOR.'validation.php', 'en');
+            dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.
+            DIRECTORY_SEPARATOR.'validation.php', $lang);
 
         self::$externalValidator = true;
         self::$validationFactory = new ValidationFactory($translator);
@@ -531,7 +559,7 @@ abstract class Ardent extends Model {
 
 			if ($success) {
 				// if the model is valid, unset old errors
-				if ($this->validationErrors->count() > 0) {
+				if ($this->validationErrors === null || $this->validationErrors->count() > 0) {
 					$this->validationErrors = new MessageBag;
 				}
 			} else {
@@ -563,7 +591,7 @@ abstract class Ardent extends Model {
      * @param Closure $beforeSave
      * @param Closure $afterSave
      * @param bool    $force          Forces saving invalid data.
-
+     * 
      * @return bool
      * @see Ardent::save()
      * @see Ardent::forceSave()
@@ -770,7 +798,7 @@ abstract class Ardent extends Model {
      * @return array Rules with exclusions applied
      */
     protected function buildUniqueExclusionRules(array $rules = array()) {
-
+      
         if (!count($rules))
           $rules = static::$rules;
 
@@ -779,19 +807,19 @@ abstract class Ardent extends Model {
             $ruleset = (is_string($ruleset))? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-              if (strpos($rule, 'unique') === 0) {
+              if (strpos($rule, 'unique:') === 0) {
                 // Stop splitting at 4 so final param will hold optional where clause
-                $params = explode(',', $rule, 4);
+                $params = explode(',', $rule, 4); 
 
                 $uniqueRules = array();
-
+                
                 // Append table name if needed
                 $table = explode(':', $params[0]);
                 if (count($table) == 1)
-                  $uniqueRules[1] = $this->table;
+                  $uniqueRules[1] = $this->getTable();
                 else
                   $uniqueRules[1] = $table[1];
-
+               
                 // Append field name if needed
                 if (count($params) == 1)
                   $uniqueRules[2] = $field;
@@ -800,20 +828,20 @@ abstract class Ardent extends Model {
 
                 if (isset($this->primaryKey)) {
                   $uniqueRules[3] = $this->{$this->primaryKey};
-
+                  
                   // If optional where rules are passed, append them otherwise use primary key
                   $uniqueRules[4] = isset($params[3]) ? $params[3] : $this->primaryKey;
                 }
                 else {
                   $uniqueRules[3] = $this->id;
                 }
-
-                $rule = 'unique:' . implode(',', $uniqueRules);
+       
+                $rule = 'unique:' . implode(',', $uniqueRules);  
               } // end if strpos unique
-
+              
             } // end foreach ruleset
         }
-
+        
         return $rules;
     }
 
@@ -835,7 +863,7 @@ abstract class Ardent extends Model {
         Closure $afterSave = null
     ) {
         $rules = $this->buildUniqueExclusionRules($rules);
-
+        
         return $this->save($rules, $customMessages, $options, $beforeSave, $afterSave);
     }
 

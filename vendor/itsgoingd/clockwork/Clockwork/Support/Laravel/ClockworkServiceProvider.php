@@ -5,7 +5,6 @@ use Clockwork\DataSource\PhpDataSource;
 use Clockwork\DataSource\LaravelDataSource;
 use Clockwork\DataSource\EloquentDataSource;
 use Clockwork\DataSource\SwiftDataSource;
-use Clockwork\Storage\FileStorage;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -27,11 +26,13 @@ class ClockworkServiceProvider extends ServiceProvider
 			return; // Clockwork is disabled, don't register the route
 		}
 
-		$app = $this->app;
-		$this->app['router']->get('/__clockwork/{id}', function($id = null, $last = null) use($app)
-		{
-			return $app['clockwork.support']->getData($id, $last);
-		})->where('id', '[0-9\.]+');
+		if ($this->isLegacyLaravel()) {
+			$this->app['router']->get('/__clockwork/{id}', 'Clockwork\Support\Laravel\Controllers\LegacyController@getData')->where('id', '[0-9\.]+');
+		} elseif ($this->isOldLaravel()) {
+			$this->app['router']->get('/__clockwork/{id}', 'Clockwork\Support\Laravel\Controllers\OldController@getData')->where('id', '[0-9\.]+');
+		} else {
+			$this->app['router']->get('/__clockwork/{id}', 'Clockwork\Support\Laravel\Controllers\CurrentController@getData')->where('id', '[0-9\.]+');
+		}
 	}
 
 	public function register()
@@ -84,10 +85,7 @@ class ClockworkServiceProvider extends ServiceProvider
 				$clockwork->addDataSource($app[$name]);
 			}
 
-			$storage = new FileStorage($app['path.storage'] . '/clockwork');
-			$storage->filter = $app['clockwork.support']->getFilter();
-
-			$clockwork->setStorage($storage);
+			$clockwork->setStorage($app['clockwork.support']->getStorage());
 
 			return $clockwork;
 		});

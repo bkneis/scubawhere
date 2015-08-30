@@ -40,6 +40,20 @@
 							</div>
 
 							<div class="form-row">
+								<label class="field-label">For Certification</label>
+								<select name="certificate_id">
+									<option value="">-</option>
+									{{#each affiliated_agencies}}
+										<optgroup label="{{abbreviation}}">
+											{{#each certificates}}
+												<option value="{{id}}"{{selected ../../certificate_id}}>{{{name}}}</option>
+											{{/each}}
+										</optgroup>
+									{{/each}}
+								</select>
+							</div>
+
+							<div class="form-row">
 								<label class="field-label">Course Description</label>
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>

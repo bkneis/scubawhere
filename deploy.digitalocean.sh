@@ -8,4 +8,7 @@ git pull
 php artisan migrate --force
 php artisan optimize
 
+# Update composer
+php composer self-update
+
 grunt --gruntfile ./public_html/Gruntfile.js

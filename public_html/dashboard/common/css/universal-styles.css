@@ -195,6 +195,10 @@ select{
 	height: 33px;
 }
 
+input[name="name"] {
+	width: 500px;
+}
+
 .check-wrap {
 	width: 25px;
 	position: relative;

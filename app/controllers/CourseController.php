@@ -30,7 +30,9 @@ class CourseController extends Controller {
 
 	public function postAdd()
 	{
-		$data = Input::only('name', 'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'certificate_id');
+
+		if(empty($data['certificate_id'])) $data['certificate_id'] = null;
 
 		// Check if tickets are supplied
 		$tickets   = Input::get('tickets', []);
@@ -123,7 +125,9 @@ class CourseController extends Controller {
 
 	public function postEdit()
 	{
-		$data = Input::only('name', 'description', 'capacity');
+		$data = Input::only('name', 'description', 'capacity', 'certificate_id');
+
+		if(empty($data['certificate_id'])) $data['certificate_id'] = null;
 
 		try
 		{

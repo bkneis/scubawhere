@@ -54,11 +54,6 @@ $(function(){
 	courseList = Handlebars.compile( $("#course-list-template").html() );
 	renderCourseList();
 
-	Class.getAll(function success(data) {
-		window.training = _.indexBy(data, 'id');
-		console.log(window.training);
-	});
-
 	window.promises.loadedTickets = $.Deferred();
 	Ticket.getAllTickets(function success(data) {
 		window.tickets = _.indexBy(data, 'id');
@@ -71,9 +66,20 @@ $(function(){
 		window.promises.loadedClasses.resolve();
 	});
 
+	window.promises.loadedAgencies = $.Deferred();
+	if(typeof window.agencies === 'undefined')
+		Agency.getAll(function(data){
+			window.agencies = _.indexBy(data, 'id');
+			window.promises.loadedAgencies.resolve();
+		});
+	else {
+		window.promises.loadedAgencies.resolve();
+	}
+
 	$.when(
 		window.promises.loadedTickets,
-		window.promises.loadedClasses
+		window.promises.loadedClasses,
+		window.promises.loadedAgencies
 	).then(function() {
 		renderEditForm();
 		Tour.getCoursesTour();
@@ -345,7 +351,6 @@ function renderCourseList(callback) {
 	Course.getAll(function success(data) {
 
 		window.courses = _.indexBy(data, 'id');
-		console.log(window.courses);
 		$('#course-list').remove();
 		$('#course-list-container .loader').remove();
 
@@ -403,9 +408,14 @@ function renderEditForm(id) {
 		};
 	}
 
-	course.available_tickets   = window.tickets;
-	course.available_trainings = window.training;
-	course.default_price       = window.sw.default_price;
+	course.available_tickets      = window.tickets;
+	course.available_trainings    = window.trainings;
+	course.default_price          = window.sw.default_price;
+
+	var affiliatedAgencies = _.pluck(window.company.agencies, 'id');
+	course.affiliated_agencies = _.filter(window.agencies, function(agency) {
+		return _.contains(affiliatedAgencies, agency.id);
+	});
 
 	$('#course-form-container').empty().append( courseForm(course) );
 
