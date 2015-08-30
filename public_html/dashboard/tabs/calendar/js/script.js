@@ -887,7 +887,7 @@ function customerData(customer) {
 	this._shoe = customer.shoe_size;
 	this._height = customer.height;
 	if(customer.last_dive == "" || customer.last_dive == null || customer.last_dive == undefined) {
-		this._lastDive = "First Dive";
+		this._lastDive = "-";
 	}
 	else this._lastDive = customer.last_dive;
 
