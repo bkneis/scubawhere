@@ -12,6 +12,12 @@ var Course = {
 		});
 	},
 
+	getAllWithTrashed : function(handleData) {
+		$.get("/api/course/all-with-trashed", function(data){
+			handleData(data);
+		});
+	},
+
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",

@@ -12,6 +12,12 @@ var Class = {
 		});
 	},
 
+	getAllWithTrashed : function(handleData) {
+		$.get("/api/class/all-with-trashed", function(data){
+			handleData(data);
+		});
+	},
+
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
