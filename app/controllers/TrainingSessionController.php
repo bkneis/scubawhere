@@ -20,15 +20,45 @@ class TrainingSessionController extends Controller {
 
 	public function getManifest()
 	{
+		// First, we get the training session for which the manifest is and check if it exists
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->training_sessions()->with('training', 'customers')->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('id'))->with('training')->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The class could not be found.')), 404 ); // 404 Not Found
 		}
+
+		// Then, we get the associated customers through the bookingdetails, because we need to be able to filter by booking->status
+		$details = Auth::user()->bookingdetails()
+			->where('training_session_id', Input::get('id'))
+			->whereHas('booking', function($query)
+			{
+				$query->whereIn('status', Booking::$counted);
+			})
+			->with('customer')
+			->get();
+
+		// Now, we build an array of customers
+		$customers = [];
+		$details->each(function($detail) use (&$customers)
+		{
+			$customer = $detail->customer;
+
+			// The front-end expects the customer->pivot object to be filled, so we assign it the bookingdetail, which we conveniently already have.
+			$customer->pivot = $detail;
+
+			// Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
+			unset($customer->pivot->customer);
+
+			$customers[] = $customer;
+		});
+
+		// Assign and return
+		$training_session->customers = $customers;
+		return $training_session;
 	}
 
 	public function getAll()
