@@ -183,7 +183,7 @@ class DepartureController extends Controller {
 		else
 			$course = false;
 
-		// Find if a available_for daterange restricts the result
+		// Find if a *_available_for daterange restricts the result
 		$available_for_from = false;
 		$available_for_until = false;
 		$ticket_available_for_from = false;

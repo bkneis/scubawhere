@@ -226,7 +226,7 @@ class Booking extends Ardent {
 
 	public function customers()
 	{
-		return $this->belongsToMany('Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'packagefacade_id')->withTimestamps();
+		return $this->belongsToMany('Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id')->withTimestamps();
 	}
 
 	public function lead_customer()
