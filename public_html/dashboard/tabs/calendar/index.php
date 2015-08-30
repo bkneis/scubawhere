@@ -202,7 +202,7 @@
 			<div id="modal-{{id}}" class="reveal-modal xlarge">
 
 				<h3>{{{trip.name}}} - Trip Manifest</h3>
-				<table style="margin-top: 2em;" id="customer-data-table">
+				<table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
@@ -225,7 +225,7 @@
 			<div id="modal-{{id}}" class="reveal-modal xlarge">
 
 				<h3>{{{training.name}}} - Class Manifest</h3>
-				<table style="margin-top: 2em;" id="customer-data-table">
+				<table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
