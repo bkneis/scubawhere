@@ -54,18 +54,20 @@ class RegisterController extends Controller {
 		$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
 
 		$latLng = 'https://maps.googleapis.com/maps/api/geocode/xml?address='.$address.'&key='.$googleAPIKey;
-		$latLng = simplexml_load_file($latLng);
+		$latLng = file_get_contents($latLng);
+		$latLng = json_decode($latLng);
 
 		if((string) $latLng->status === "OK")
 		{
-			$data['latitude']  = (double) $latLng->result->geometry->location->lat;
-			$data['longitude'] = (double) $latLng->result->geometry->location->lng;
+			$data['latitude']  = (double) $latLng->results[0]->geometry->location->lat;
+			$data['longitude'] = (double) $latLng->results[0]->geometry->location->lng;
 
-			$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
-			$timezone = simplexml_load_file($timezone);
+			$timezone = 'https://maps.googleapis.com/maps/api/timezone/json?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
+			$timezone = file_get_contents($timezone);
+			$timezone = json_decode($timezone);
 
 			if((string) $timezone->status === "OK")
-				$data['timezone'] = (string) $timezone->time_zone_id;
+				$data['timezone'] = (string) $timezone->timeZoneId;
 			else
 				return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
 		}

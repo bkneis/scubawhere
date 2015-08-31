@@ -21,7 +21,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password');
 
 	public static $rules = array(
-		'username'            => 'required|alpha_dash|between:4,64|different:name|unique:companies,username',
+		'username'            => 'sometimes|required|alpha_dash|between:4,64|different:name|unique:companies,username',
 		'password'            => 'size:60',
 		'email'               => 'required|email|unique:companies,email',
 		'name'                => 'required',

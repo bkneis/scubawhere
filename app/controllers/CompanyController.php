@@ -17,7 +17,7 @@ class CompanyController extends Controller {
 
 	public function postUpdate()
 	{
-		$data = Input::only('username', 'contact', 'description', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website', 'terms');
+		$data = Input::only('contact', 'description', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website', 'terms');
 
 		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
@@ -34,19 +34,21 @@ class CompanyController extends Controller {
 
 			$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
 
-			$latLng = 'https://maps.googleapis.com/maps/api/geocode/xml?address='.$address.'&key='.$googleAPIKey;
-			$latLng = simplexml_load_file($latLng);
+			$latLng = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$googleAPIKey;
+			$latLng = file_get_contents($latLng);
+			$latLng = json_decode($latLng);
 
 			if((string) $latLng->status === "OK")
 			{
-				$data['latitude']  = $latLng->result->geometry->location->lat;
-				$data['longitude'] = $latLng->result->geometry->location->lng;
+				$data['latitude']  = (double) $latLng->results[0]->geometry->location->lat;
+				$data['longitude'] = (double) $latLng->results[0]->geometry->location->lng;
 
-				$timezone = 'https://maps.googleapis.com/maps/api/timezone/xml?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
-				$timezone = simplexml_load_file($timezone);
+				$timezone = 'https://maps.googleapis.com/maps/api/timezone/json?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
+				$timezone = file_get_contents($timezone);
+				$timezone = json_decode($timezone);
 
 				if((string) $timezone->status === "OK")
-					$data['timezone'] = $timezone->time_zone_id;
+					$data['timezone'] = (string) $timezone->timeZoneId;
 				else
 					return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
 			}
