@@ -58,9 +58,9 @@ Handlebars.registerHelper('statusIcon', function() {
 	}
 	else if(this.status === 'reserved') {
 		icon    = 'fa-clock-o';
-		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
+		tooltip = 'Reserved until ' + moment(this.reserved_until).format('DD MMM, HH:mm');
 
-		if(this.reserved == null) {
+		if(this.reserved_until == null) {
 			tooltip = 'Reservation expired';
 			color   = '#d9534f';
 		}
@@ -252,8 +252,10 @@ function renderBookingList(bookings, display) {
 		Booking.prototype.setStatus.call(booking);
 		// console.log(booking);
 		if(display != "all") {
-			if(booking.status == display) return booking;
-		} else return booking;
+			if(booking.status == display) return true;
+		}
+		else
+			return true;
 	});
 
 	$('#booking-table-div').html( bookingListItem({bookings: results}) );

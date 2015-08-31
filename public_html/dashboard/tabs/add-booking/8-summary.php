@@ -437,7 +437,7 @@
 													<div class="form-group">
 														<label for="reserve-until" class="col-sm-6 control-label">Reserve for (hours)</label>
 														<div class="col-md-6">
-															<input id="reserve-until" name="reserved" class="form-control" type="number" value="24">
+															<input id="reserve-until" name="reserved_until" class="form-control" type="number" value="24">
 														</div>
 													</div>
 													<div class="form-group">
@@ -588,7 +588,7 @@
 								<div class="form-group">
 									<label for="reserve-until" class="col-sm-6 control-label">For (hours)</label>
 									<div class="col-md-6">
-										<input id="reserve-until" name="reserved" class="form-control timepicker" placeholder="hh:mm" data-date-format="hh:mm">
+										<input id="reserve-until" name="reserved_until" class="form-control timepicker" placeholder="hh:mm" data-date-format="hh:mm">
 									</div>
 								</div>
 							</form>

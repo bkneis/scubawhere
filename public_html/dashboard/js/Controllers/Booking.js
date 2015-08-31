@@ -617,7 +617,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
  *
  * @param  {object} params    Must contain:
  * - _token
- * - reserved {string} The datetime until the booking should be reserved, in 'YYYY-MM-DD HH:MM:SS' format
+ * - reserved_until {string} The number of hours that the booking should be reserved for (from "now")
  *
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
@@ -633,8 +633,9 @@ Booking.prototype.reserve = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.reserved = params.reserved;
+			this.reserved_until = params.reserved_until;
 			this.status = 'reserved';
+			this.setStatus();
 
 			successFn(data.status);
 		},

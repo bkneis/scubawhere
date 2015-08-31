@@ -1877,6 +1877,7 @@ return array(
     'RemoveUnneededIdColumns' => $baseDir . '/app/database/migrations/2014_02_19_143751_remove_unneeded_id_columns.php',
     'RenameAccommodationsTableToBoatrooms' => $baseDir . '/app/database/migrations/2014_11_11_081111_rename_accommodations_table_to_boatrooms.php',
     'RenameAllAccommodationIdInstancesToBoatroomId' => $baseDir . '/app/database/migrations/2014_11_11_084413_rename_all_accommodation_id_instances_to_boatroom_id.php',
+    'RenameColumnReservedToReservedUntilOnBookingsTable' => $baseDir . '/app/database/migrations/2015_08_31_220623_rename_column_reserved_to_reserved_until_on_bookings_table.php',
     'RenameIndexesOnBoatBoatroomTable' => $baseDir . '/app/database/migrations/2014_11_16_191954_rename_indexes_on_boat_boatroom_table.php',
     'RenameInitToInitialisedOnCompaniesTable' => $baseDir . '/app/database/migrations/2015_02_15_180954_rename_init_to_initialised_on_companies_table.php',
     'RenameQuantityToCapacityOnAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_11_210332_rename_quantity_to_capacity_on_accommodations_table.php',

@@ -1666,7 +1666,7 @@ class BookingController extends Controller {
 
 	public function postReserve()
 	{
-		if(!Input::has('reserved'))
+		if(!Input::has('reserved_until'))
 			return Response::json(['errors' => ['Please specify the amount of hours to reserve the booking for.']], 406); // 406 Not Acceptable
 
 		try
@@ -1682,10 +1682,10 @@ class BookingController extends Controller {
 		if( in_array($booking->status, array('confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
-		$data = ['reserved' => abs(Input::get('reserved'))];
+		$data = ['reserved_until' => abs(Input::get('reserved_until'))];
 
 		$local_now = Helper::localTime();
-		$data['reserved'] = $local_now->add(new DateInterval('PT'.$data['reserved'].'H'))->format('Y-m-d H:i:s');
+		$data['reserved_until'] = $local_now->add(new DateInterval('PT'.$data['reserved_until'].'H'))->format('Y-m-d H:i:s');
 
 		$data['status'] = 'reserved';
 
