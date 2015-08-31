@@ -122,86 +122,6 @@ $(function() {
 		});
 	});
 
-	$('#email-customer-modal').on('submit', '#email-customer-form', function(e) {
-		e.preventDefault();
-
-		var btn = $(this).find('button[type="submit"]');
-		btn.html('<i class="fa fa-cog fa-spin"></i> Sending...');
-
-		var params = $(this).serializeObject();
-		params._token = window.token;
-		console.log(params);
-
-		Company.sendEmail(params, function success(data){
-			pageMssg('Thank you, your email has been sent', true);
-			btn.html('Send');
-			$('#email-customer-modal').modal('hide');
-		},
-		function error(xhr) {
-			console.log(xhr);
-			var data = JSON.parse(xhr.responseText);
-			btn.html('Send');
-			pageMssg(data.error.message, 'danger');
-
-		});
-
-	});
-
-});
-
-var customerListItem = Handlebars.compile( $('#customer-list-item-template').html() );
-function renderCustomerList(customers) {
-
-	$('#customer-table-div').html( customerListItem({customers: customers}) );
-
-	if(customers.length != 0) createDataTable();
-
-}
-
-function format ( id ) {
-    // `d` is the original data object for the row
-
-    var customerButtonsTemplate = Handlebars.compile($('#customer-buttons-template').html());
-
-    //var customer = _.where(window.customers, {id: parseInt(id)});
-
-    //console.log(customer);
-    console.log(id);
-
-    return customerButtonsTemplate({customerID : parseInt(id)});
-
-}
-
-function editDetails(id) {
-
-	$('#edit-customer-modal').modal('show');
-	var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
-	var countriesTemplate = Handlebars.compile($("#countries-template").html());
-	var agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
-	var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
-	var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
-	var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
-	$("#country_id").html(countriesTemplate({countries : window.countries}));
-	$('#country_id').val(window.customers[id].country_id);
-	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
-	$("#customer-diving-information").html(customerDivingInformationTemplate(window.customers[id]));
-	// Activate datepickers
-	$('#edit-customer-modal input.datepicker').datetimepicker({
-		pickDate: true,
-		pickTime: false,
-		icons: {
-			time: 'fa fa-clock-o',
-			date: 'fa fa-calendar',
-			up:   'fa fa-chevron-up',
-			down: 'fa fa-chevron-down'
-		},
-	});
-
-	// Set the last_dive date
-	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
-
-	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
-
 	$('#edit-customer-modal').on('change', '#agency_id', function() {
 		var self = $(this);
 
@@ -231,6 +151,90 @@ function editDetails(id) {
 		}));
 	});
 
+	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
+		$(this).parent().remove();
+	});
+
+	$('#email-customer-modal').on('submit', '#email-customer-form', function(e) {
+		e.preventDefault();
+
+		var btn = $(this).find('button[type="submit"]');
+		btn.html('<i class="fa fa-cog fa-spin"></i> Sending...');
+
+		var params = $(this).serializeObject();
+		params._token = window.token;
+		console.log(params);
+
+		Company.sendEmail(params, function success(data){
+			pageMssg('Thank you, your email has been sent', true);
+			btn.html('Send');
+			$('#email-customer-modal').modal('hide');
+		},
+		function error(xhr) {
+			console.log(xhr);
+			var data = JSON.parse(xhr.responseText);
+			btn.html('Send');
+			pageMssg(data.error.message, 'danger');
+
+		});
+	});
+
+});
+
+var customerListItem = Handlebars.compile( $('#customer-list-item-template').html() );
+function renderCustomerList(customers) {
+
+	$('#customer-table-div').html( customerListItem({customers: customers}) );
+
+	if(customers.length != 0) createDataTable();
+
+}
+
+function format ( id ) {
+    // `d` is the original data object for the row
+
+    var customerButtonsTemplate = Handlebars.compile($('#customer-buttons-template').html());
+
+    //var customer = _.where(window.customers, {id: parseInt(id)});
+
+    //console.log(customer);
+    console.log(id);
+
+    return customerButtonsTemplate({customerID : parseInt(id)});
+
+}
+
+var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
+var countriesTemplate                 = Handlebars.compile($("#countries-template").html());
+var agenciesTemplate                  = Handlebars.compile($("#agencies-template").html());
+var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
+var certificatesTemplate              = Handlebars.compile($("#certificates-template").html());
+var selectedCertificateTemplate       = Handlebars.compile($("#selected-certificate-template").html());
+
+function editDetails(id) {
+
+	$('#edit-customer-modal').modal('show');
+	$("#country_id").html(countriesTemplate({countries : window.countries}));
+	$('#country_id').val(window.customers[id].country_id);
+	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
+	$("#customer-diving-information").html(customerDivingInformationTemplate(window.customers[id]));
+	// Activate datepickers
+	$('#edit-customer-modal input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+	});
+
+	// Set the last_dive date
+	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
+
+	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+
 	$('#edit-customer-agencies').find('#selected-certificates').empty();
 	_.each(window.customers[id].certificates, function(certificate) {
 		$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
@@ -238,10 +242,6 @@ function editDetails(id) {
 			abbreviation: certificate.agency.abbreviation,
 			name: certificate.name,
 		}));
-	});
-
-	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
-		$(this).parent().remove();
 	});
 
 }
