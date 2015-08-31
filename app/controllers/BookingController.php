@@ -1682,7 +1682,7 @@ class BookingController extends Controller {
 		if( in_array($booking->status, array('confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
-		$data = abs(Input::only('reserved'));
+		$data = ['reserved' => abs(Input::get('reserved'))];
 
 		$local_now = Helper::localTime();
 		$data['reserved'] = $local_now->add(new DateInterval('PT'.$data['reserved'].'H'))->format('Y-m-d H:i:s');
