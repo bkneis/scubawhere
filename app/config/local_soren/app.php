@@ -11,6 +11,7 @@ return array(
 		'Clockwork\Support\Laravel\ClockworkServiceProvider',
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
+		'BackupManager\Laravel\Laravel4ServiceProvider',
 
 	)),
 

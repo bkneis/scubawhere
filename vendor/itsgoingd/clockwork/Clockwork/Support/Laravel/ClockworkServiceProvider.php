@@ -18,7 +18,6 @@ class ClockworkServiceProvider extends ServiceProvider
 			return; // Don't bother registering event listeners as we are not collecting data
 		}
 
-		$this->app['clockwork.laravel']->listenToEvents();
 		$this->app['clockwork.eloquent']->listenToEvents();
 		$this->app->make('clockwork.swift');
 
@@ -90,6 +89,15 @@ class ClockworkServiceProvider extends ServiceProvider
 			return $clockwork;
 		});
 
+		$this->app['clockwork.laravel']->listenToEvents();
+
+		// set up aliases for all Clockwork parts so they can be resolved by the IoC container
+		$this->app->alias('clockwork.support', 'Clockwork\Support\Laravel\ClockworkSupport');
+		$this->app->alias('clockwork.laravel', 'Clockwork\DataSource\LaravelDataSource');
+		$this->app->alias('clockwork.swift', 'Clockwork\DataSource\SwiftDataSource');
+		$this->app->alias('clockwork.eloquent', 'Clockwork\DataSource\EloquentDataSource');
+		$this->app->alias('clockwork', 'Clockwork\Clockwork');
+
 		$this->registerCommands();
 
 		if ($this->isLegacyLaravel()) {
@@ -109,9 +117,7 @@ class ClockworkServiceProvider extends ServiceProvider
 	public function registerCommands()
 	{
 		// Clean command
-		$this->app['command.clockwork.clean'] = $this->app->share(function($app){
-			return new ClockworkCleanCommand();
-		});
+		$this->app->bind('command.clockwork.clean', 'Clockwork\Support\Laravel\ClockworkCleanCommand');
 
 		$this->commands(
 			'command.clockwork.clean'

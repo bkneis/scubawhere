@@ -61,11 +61,11 @@ class CronRunCommand extends Command {
 	protected $messages = array();
 
 	/**
-	 * Specify the time of day that daily tasks get run
+	 * Specify the time of day that daily tasks get run (UTC)
 	 *
 	 * @var string [HH:MM]
 	 */
-	protected $runAt = '03:00';
+	protected $runAt = '00:00';
 
 	/**
 	 * Create a new command instance.
@@ -149,6 +149,12 @@ class CronRunCommand extends Command {
 		$this->hourly(function()
 		{
 			Artisan::call('auth:clear-reminders');
+		});
+
+		$this->daily(function()
+		{
+			$dateString = date('Y-m-d_H-i');
+			Artisan::call('db:backup --database=mysql --destination=local --destinationPath=' . $dateString . '/.sql --compression=gzip');
 		});
 
 		// DO NOT REMOVE!

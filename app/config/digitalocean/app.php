@@ -21,6 +21,7 @@ return array(
 	'providers' => append_config(array(
 
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
+		'BackupManager\Laravel\Laravel4ServiceProvider',
 
 	))
 );
