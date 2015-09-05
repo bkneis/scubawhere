@@ -109,12 +109,10 @@ class Booking extends Ardent {
 		$dates = array_filter($dates);
 		sort($dates);
 
-		$result = $dates[0];
-
-		if(!empty($result))
-			return $result->format('Y-m-d');
-		else
+		if(empty($dates) || empty($dates[0]))
 			return null;
+
+		return $dates[0]->format('Y-m-d');
 	}
 
 	public function getCreatedAtLocalAttribute() {
@@ -175,12 +173,15 @@ class Booking extends Ardent {
 		$dates = array_filter($dates);
 		sort($dates);
 
+		if(empty($dates))
+			return null;
+
 		$result = array_pop($dates);
 
-		if(!empty($result))
-			return $result->format('Y-m-d');
-		else
+		if(empty($result))
 			return null;
+
+		return $result->format('Y-m-d');
 	}
 
 	public function setDiscountAttribute($value)
