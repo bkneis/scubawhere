@@ -144,22 +144,14 @@ $(function() {
 	var display;
 
 	Customer.getAllCustomers(function(data) {
-
-		console.log(data);
 		window.customers = _.indexBy(data, 'id');
-
 	});
 
 	Booking.getAll(function(data) {
-		window.bookings = _.indexBy(data, 'id');
-		window.bookings = _.sortBy(window.bookings, function(booking) { return -booking.id; });
+		// window.bookings = _.indexBy(data, 'id');
+		window.bookings = _.sortBy(data, function(booking) { return -booking.id; });
 		renderBookingList(window.bookings, display);
 
-	});
-
-	$('#booking-list').on('click', '.accordion-header', function() {
-		$(this).toggleClass('expanded');
-		$('.accordion-' + this.getAttribute('data-id')).toggle();
 	});
 
 	$('input.datepicker').datetimepicker({
@@ -263,7 +255,7 @@ function renderBookingList(bookings, display) {
 	// Initiate tooltips
 	$('#booking-list').find('[data-toggle=tooltip]').tooltip();
 
-	if(results.length != 0) createDataTable();
+	if(results.length > 0) createDataTable();
 
 }
 
@@ -345,7 +337,9 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 		cancellation_fee = modal.find('[name=cancellation_fee]').val();
 		break;
 		case 'percentage':
-		var bookingPrice = window.bookings[params.booking_id].decimal_price;
+		var bookingPrice = _.find(window.bookings, function(booking) {
+			return parseInt(booking.id) === parseInt(params.booking_id);
+		}).decimal_price;
 		var percentage   = modal.find('[name=fee_percentage]').val() / 100;
 		cancellation_fee = bookingPrice * percentage;
 		break;
@@ -375,18 +369,14 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	});
 });
 
-function format ( id ) {
-    // `d` is the original data object for the row
+var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
+function generateBookingDetails(id) {
 
-    var bookingDetailsTemplate = Handlebars.compile($('#booking-details-template').html());
+	var booking = _.find(window.bookings, function(booking) {
+		return parseInt(booking.id) === parseInt(id);
+	});
 
-    var booking = _.where(window.bookings, {id: parseInt(id)});
-
-    console.log(booking);
-    console.log(id);
-
-    return bookingDetailsTemplate({bookingDetails : booking});
-
+	return bookingDetailsTemplate({bookingDetails : [booking]});
 }
 
 function createDataTable() {
@@ -403,7 +393,7 @@ function createDataTable() {
 	});
 
 	// Add event listener for opening and closing details
-    $('#booking-list').on('click', 'tr', function () {
+    $('#booking-list').on('click', '.accordion-header', function () {
         var tr = $(this).closest('tr');
         var row = bookingTable.row( tr );
 
@@ -414,8 +404,8 @@ function createDataTable() {
         }
         else {
             // Open this row
-            row.child( format($(this).attr('data-id')) ).show();
+            row.child( generateBookingDetails($(this).attr('data-id')) ).show();
             tr.addClass('shown');
         }
-    } );
+    });
 }
