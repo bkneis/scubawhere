@@ -229,7 +229,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	// Determine whether we need to inject a packagefacade_id into the request
 	if(typeof params.packagefacade_id === 'undefined' && typeof params.package_id !== 'undefined') {
-		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted. A new package will be assigned.');
+		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted. A new packagefacade will be assigned.');
 
 		/*var existingDetail = _.find(this.bookingdetails, function(detail) {
 			// First, test the customer_id

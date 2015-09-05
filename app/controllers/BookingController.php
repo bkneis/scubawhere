@@ -132,7 +132,12 @@ class BookingController extends Controller {
 			else
 			{
 				// Sum up the ticket
-				$detail->ticket->calculatePrice($detail->session->start, $limitBefore);
+				if($detail->departure)
+					$start = $detail->departure->start;
+				else
+					$start = $detail->created_at;
+
+				$detail->ticket->calculatePrice($start, $limitBefore);
 			}
 		});
 

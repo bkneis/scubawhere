@@ -16,7 +16,7 @@
 				</div>
 			</div>
 			<script type="text/x-handlebars-template" id="addon-booking-details-template">
-				{{#each details}}{{#if session}}
+				{{#each details}}{{#if ticket}}
 					<a href="javascript:void(0);" class="list-group-item list-group-radio" data-id="{{id}}">
 						<h4 class="list-group-item-heading"><span class="customer-name">{{{customer.firstname}}} {{{customer.lastname}}}</span></h4>
 						<p class="list-group-item-text"><strong>Ticket:</strong>
@@ -27,8 +27,8 @@
 							{{/if}}
 							<span class="ticket-name">{{{ticket.name}}}</span>
 						</p>
-						<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{{session.trip.name}}}</span></p>
-						<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{friendlyDate session.start}}</span></p>
+						<p class="list-group-item-text"><strong>Trip:</strong> <span class="trip-name">{{#if temporary}}-{{else}}{{{session.trip.name}}}{{/if}}</span></p>
+						<p class="list-group-item-text"><strong>Date:</strong> <span class="start-date">{{#if temporary}}No date set{{else}}{{friendlyDate session.start}} - {{tripFinish session.start session.trip.duration}}{{/if}}</span></p>
 					</a>
 				{{/if}}{{/each}}
 			</script>

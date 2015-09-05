@@ -1731,15 +1731,19 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 		_.map(booking.bookingdetails, function(detail) {
 			if(detail.session !== null)
 				return detail.session.start;
-			else
+			else if(detail.training_session)
 				return detail.training_session.start;
+			else
+				return '9999-12-31';
 		}).sort()
 	);
 
 	// Set all accommodations' start fields
-	var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-	$('.accommodation-start').val(startDate);
-	$('#packaged-accommodations-list .accommodation-start').change();
+	if(firstDepartureDate !== '9999-12-31') {
+		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+		$('.accommodation-start').val(startDate);
+		$('#packaged-accommodations-list .accommodation-start').change();
+	}
 });
 
 $('#accommodation-tab').on('change', '#packaged-accommodations-list .accommodation-start', function() {
@@ -1789,25 +1793,29 @@ function updatePackagedAccommodationsList() {
 			_.map(booking.bookingdetails, function(detail) {
 				if(detail.session !== null)
 					return detail.session.start;
-				else
+				else if(detail.training_session)
 					return detail.training_session.start;
+				else
+					return '9999-12-31';
 			}).sort()
 		);
 
 		// Set all accommodations' start fields
-		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-		$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
+		if(firstDepartureDate !== '9999-12-31') {
+			var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+			$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
 
-		$('#packaged-accommodations-list .datepicker').datetimepicker({
-			pickDate: true,
-			pickTime: false,
-			icons: {
-				time: 'fa fa-clock-o',
-				date: 'fa fa-calendar',
-				up:   'fa fa-chevron-up',
-				down: 'fa fa-chevron-down'
-			},
-		});
+			$('#packaged-accommodations-list .datepicker').datetimepicker({
+				pickDate: true,
+				pickTime: false,
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up:   'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				},
+			});
+		}
 	}
 }
 
@@ -2055,8 +2063,10 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
 		if(detail.session)
 			return detail.session.start;
-		else
+		else if(detail.training_session)
 			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
 	});
 
 	// Sort accommodations by start date
@@ -2357,8 +2367,10 @@ function drawBasket(doneFn) {
 	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
 		if(detail.session)
 			return detail.session.start;
-		else
+		else if(detail.training_session)
 			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
 	});
 
 	// Sort accommodations by start date
