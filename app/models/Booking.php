@@ -348,35 +348,47 @@ class Booking extends Ardent {
 					$tickedOffPackagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
-					$firstDetail = $bookingdetails->sortBy(function($detail)
-					{
-						if($detail->departure)
-							return $detail->departure->start;
-						else
-							return $detail->training_session->start;
-					})->first();
+					$detailStart = null;
+					$accommStart = null;
 
-					if($firstDetail->departure)
-						$start = $firstDetail->departure->start;
-					else
-						$start = $firstDetail->training_session->start;
+					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
+					if(!empty($bookingdetails))
+					{
+						$firstDetail = $bookingdetails->sortBy(function($detail)
+						{
+							if($detail->departure)
+								return $detail->departure->start;
+							elseif($detail->training_session)
+								return $detail->training_session->start;
+							else
+								return '9999-12-31 23:59:59';
+						})->first();
+
+						if($firstDetail->departure)
+							$detailStart = new DateTime($firstDetail->departure->start);
+						elseif($firstDetail->training_session)
+							$detailStart = new DateTime($firstDetail->training_session->start);
+					}
 
 					$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
-					$firstAccommodation = $accommodations->sortBy(function($accommodation)
+					if(!empty($accommodations))
 					{
-						return $accommodation->pivot->start;
-					})->first();
+						$firstAccommodation = $accommodations->sortBy(function($accommodation)
+						{
+							return $accommodation->pivot->start;
+						})->first();
 
-					if(!empty($firstAccommodation))
-					{
-						$detailStart = new DateTime($start);
 						$accommStart = new DateTime($firstAccommodation->pivot->start);
-
-						$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
-
-						$start = $start->format('Y-m-d H:i:s');
 					}
+
+					$dates = [$detailStart, $accommStart];
+					$dates = array_filter($dates);
+					sort($dates);
+
+					if(empty($dates) || empty($dates[0]))
+						$start = $detail->created_at;
+					else
+						$start = $dates[0]->format('Y-m-d H:i:s');
 
 					// Calculate the package price at this first departure datetime and sum it up
 					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
@@ -397,14 +409,18 @@ class Booking extends Ardent {
 					{
 						if($detail->departure)
 							return $detail->departure->start;
-						else
+						elseif($detail->training_session)
 							return $detail->training_session->start;
+						else
+							return '9999-12-31 23:59:59';
 					})->first();
 
 					if($firstDetail->departure)
 						$start = $firstDetail->departure->start;
-					else
+					elseif($firstDetail->training_session)
 						$start = $firstDetail->training_session->start;
+					else
+						$start = $detail->created_at;
 
 					// Calculate the package price at this first departure datetime and sum it up
 					$detail->course->calculatePrice($start, $limitBefore);
@@ -414,7 +430,12 @@ class Booking extends Ardent {
 			else
 			{
 				// Sum up the ticket
-				$detail->ticket->calculatePrice($detail->departure->start, $limitBefore);
+				if($detail->departure)
+					$start = $detail->departure->start;
+				else
+					$start = $detail->created_at;
+
+				$detail->ticket->calculatePrice($start, $limitBefore);
 				$sum += $detail->ticket->decimal_price;
 			}
 
@@ -426,7 +447,7 @@ class Booking extends Ardent {
 			});
 		});
 
-		// Sum up all accommodations that are not part of a package
+		// Sum up all accommodations
 		$accommodations = $this->accommodations;
 
 		$accommodations->each(function($accommodation) use (&$sum, &$tickedOffPackagefacades)
@@ -441,6 +462,9 @@ class Booking extends Ardent {
 			elseif(!in_array($accommodation->pivot->packagefacade_id, $tickedOffPackagefacades)) {
 				// Add the packagefacadeID to the array so it is not summed/counted again in the next bookingdetails
 				$tickedOffPackagefacades[] = $accommodation->pivot->packagefacade_id;
+
+				// Here it is enough that we only consider accommodations, because if a trip or class would have been
+				// booked for the package, the calculation would have been done above in the bookingdetail section.
 
 				$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $accommodation->pivot->packagefacade_id)->get();
 				$firstAccommodation = $accommodations->sortBy(function($accommodation)
