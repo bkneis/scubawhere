@@ -656,7 +656,6 @@ class BookingController extends Controller {
 				try
 				{
 					$training = $course->trainings()->where('id', $training_id)->firstOrFail();
-					Clockwork::info($training);
 				}
 				catch(ModelNotFoundException $e)
 				{
