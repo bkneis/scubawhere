@@ -1325,7 +1325,8 @@ function submitAddDetail(params, data) {
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.error) pageMssg('<b>' + data.error.message + '</b> in ' + data.error.file + ':' + data.error.line, 'danger', true);
+		else pageMssg(data.errors[0], 'danger');
 		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 	});
 }
