@@ -49,6 +49,9 @@ $(function(){
 	$(document).ajaxComplete(function(event, xhr, options) {
 		if(xhr.status >= 400) {
 			// pageMssg('<strong>' + xhr.status + ' ' + xhr.statusText + '</strong> - No separate error message? Contact the developer!', 'info');
+
+			var data = JSON.parse(xhr.responseText);
+			if(data.error) pageMssg('<b>' + data.error.message + '</b> in ' + data.error.file + ':' + data.error.line, 'danger', true);
 		}
 
 		if(xhr.status === 503) {
