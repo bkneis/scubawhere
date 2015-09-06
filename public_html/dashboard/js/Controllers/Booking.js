@@ -264,7 +264,8 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				session: params.session_id ? window.sessions[params.session_id] : null,
 				ticket: params.ticket_id ? $.extend(true, {}, window.tickets[params.ticket_id]) : null, // Need to clone the ticket object, because we are going to write its decimal_price for the session's date in it
 				course: params.course_id ? $.extend(true, {}, window.courses[params.course_id]) : null,
-				training_session: params.training_session_id ? window.training_sessions[params.training_session_id] : null,
+				training: params.training_id ? $.extend(true, {}, window.trainings[params.training_id]) : null,
+				training_session: params.training_session_id ? _.omit(window.training_sessions[params.training_session_id], 'training') : null,
 				addons: [], // Prepare the addons array to be able to just push to it later
 			};
 
@@ -284,6 +285,9 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 			if(data.boatroom_id)
 				detail.boatroom_id = data.boatroom_id;
+
+			if(params.temporary)
+				detail.temporary = params.temporary;
 
 			// Add compulsory addons
 			_.each(data.addons, function(id) {

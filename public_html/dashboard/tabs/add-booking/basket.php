@@ -151,7 +151,7 @@
 									{{else}}
 										<i class="fa fa-graduation-cap fa-fw visible-lg-inline-block"></i>
 									{{/if}}
-									&nbsp;{{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if session}}{{{session.trip.name}}}{{else}}{{#if training_session}}{{{training_session.training.name}}}{{else}}-{{/if}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
+									&nbsp;{{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{#if session}}{{{session.trip.name}}}{{else}}{{#if training_session}}{{{training.name}}}{{else}}-{{/if}}{{/if}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 								</a>
 							</h4>
 						</div>
@@ -178,6 +178,11 @@
 										<i class="fa fa-ticket fa-fw"></i> {{{ticket.name}}}
 									</p>
 								{{/if}}
+								{{#if training}}
+									<p>
+										<i class="fa fa-graduation-cap fa-fw"></i> {{{training.name}}}
+									</p>
+								{{/if}}
 
 								{{#if session}}
 									<p><i class="fa fa-ship fa-fw"></i> {{{session.trip.name}}}</p>
@@ -187,8 +192,7 @@
 									{{/unless}}{{/unless}}
 								{{/if}}
 								{{#if training_session}}
-									<p><i class="fa fa-graduation-cap fa-fw"></i> {{{training_session.training.name}}}</p>
-									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate training_session.start}} - {{tripFinish training_session.start training_session.training.duration}}</p>
+									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDate training_session.start}} - {{tripFinish training_session.start training.duration}}</p>
 									{{#unless packagefacade}}
 										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{course.decimal_price}}</p>
 									{{/unless}}

@@ -163,7 +163,7 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="sessions-panel">
 			<div class="panel-heading" style="padding-right: 5px;">
 				<button class="btn btn-sm btn-default pull-right assign-session" style="margin-top: -5px;" data-temporary="temporary">Add without date <i class="fa fa-fast-forward fa-fw"></i></button>
 				<h3 class="panel-title">Assign to Session</h3>

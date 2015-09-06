@@ -352,7 +352,7 @@ class Booking extends Ardent {
 					$accommStart = null;
 
 					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
-					if(!empty($bookingdetails))
+					if($bookingdetails->count() > 0)
 					{
 						$firstDetail = $bookingdetails->sortBy(function($detail)
 						{
@@ -371,7 +371,7 @@ class Booking extends Ardent {
 					}
 
 					$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
-					if(!empty($accommodations))
+					if($accommodations->count() > 0)
 					{
 						$firstAccommodation = $accommodations->sortBy(function($accommodation)
 						{

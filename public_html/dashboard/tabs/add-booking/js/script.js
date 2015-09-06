@@ -371,6 +371,12 @@ Accommodation.getAll(function(data){
 	window.promises.loadedAccommodations.resolve();
 });
 
+window.promises.loadedTrainings = $.Deferred();
+Class.getAll(function(data){
+	window.trainings = _.indexBy(data, 'id');
+	window.promises.loadedTrainings.resolve();
+});
+
 window.promises.loadedAccommodations.done(function() {
 	/*
 	* Datepicker
@@ -1056,6 +1062,7 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
+	var btnText = btn.html();
 
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 	btn.addClass('waiting');
@@ -1065,9 +1072,11 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 	if(!data || !data.id) {
 		pageMssg('Please select a ticket or class.', 'warning');
-		btn.html('Assign');
+		btn.html(btnText);
 		return false;
 	}
+
+	data.btnText = btnText;
 
 	var params = {};
 	params.customer_id = $('#session-customers').children('.active').first().data('id');
@@ -1080,7 +1089,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			var ownerId = data.identifier.split('-')[1];
 			if(ownerId != params.customer_id) {
 				pageMssg('This course is <b>already assigned</b> to <u>' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].lastname + '</u> and cannot be assigned to another customer.', 'danger', true);
-				$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+				$('#sessions-panel .waiting').removeClass('waiting').html('Assign');
 				return false;
 			}
 		}
@@ -1097,15 +1106,24 @@ $('#session-tab').on('click', '.assign-session', function() {
 		params.packagefacade_id = data.packagefacade;
 
 	if(data.type === 'ticket') {
-		params.ticket_id  = data.id;
+		params.ticket_id = data.id;
 		params.session_id = btn.data('id');
 	}
-	else
+	else {
+		params.training_id = data.id;
 		params.training_session_id = btn.data('id');
+	}
+
+	if(btn.data('temporary')) {
+		delete params.session_id;
+		delete params.training_session_id;
+
+		params.temporary = 1;
+	}
 
 	params._token = window.token;
 
-	if(data.type === 'ticket') {
+	if(!params.temporary && data.type === 'ticket') {
 		// Determine if we need to submit a boatroom_id
 		var session = window.sessions[params.session_id];
 		var trip    = window.trips[session.trip_id];
@@ -1160,7 +1178,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 				onFinishModal: function() {
 					// Aborted action
 					if(!window.sw.modalClosedBySelection) {
-						this.btn.html('Assign');            // Reset the button
+						this.btn.html(this.data.btnText);            // Reset the button
 					} else {
 						delete window.sw.modalClosedBySelection;
 					}
@@ -1297,7 +1315,7 @@ function submitAddDetail(params, data) {
 
 		booking.store();
 
-		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 
 		drawSessionTicketsList();
 
@@ -1308,7 +1326,7 @@ function submitAddDetail(params, data) {
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		pageMssg(data.errors[0], 'danger');
-		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 	});
 }
 
@@ -1390,14 +1408,14 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					else {
 						// Is class in course
 						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training_session.training.id;
+							return training.id == detail.training.id;
 						});
 
 						if(existingTraining !== undefined)
 							existingTraining.qty++;
 						else {
-							detail.training_session.training.qty = 1;
-							relatedCourse.trainings.push(detail.training_session.training);
+							detail.training.qty = 1;
+							relatedCourse.trainings.push(detail.training);
 						}
 					}
 				}

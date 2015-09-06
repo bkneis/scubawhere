@@ -96,7 +96,7 @@
 																		{{#if ticket}}
 																			<i class="fa fa-ship fa-fw"></i> {{#if temporary}}-{{else}}{{{session.trip.name}}}{{/if}}
 																		{{else}}
-																			<i class="fa fa-graduation-cap fa-fw"></i> {{#if temporary}}-{{{training_session.training.name}}}{{/if}}
+																			<i class="fa fa-graduation-cap fa-fw"></i> {{#if temporary}}-{{else}}{{{training.name}}}{{/if}}
 																		{{/if}}
 																	</span>
 
@@ -107,7 +107,7 @@
 																			{{#if session}}
 																				{{friendlyDate session.start}} - {{tripFinish session.start session.trip.duration}}
 																			{{else}}
-																				{{friendlyDate training_session.start}} - {{tripFinish training_session.start training_session.training.duration}}
+																				{{friendlyDate training_session.start}} - {{tripFinish training_session.start training.duration}}
 																			{{/if}}
 																		{{/if}}
 																	</span>
@@ -132,6 +132,17 @@
 																				</td>
 																				<td>
 																					{{{ticket.name}}}
+																				</td>
+																			</tr>
+																		{{/if}}
+
+																		{{#if training}}
+																			<tr>
+																				<td>
+																					<span style="color: #4d4d4d; font-weight:bold;">Class:</span>
+																				</td>
+																				<td>
+																					{{{training.name}}}
 																				</td>
 																			</tr>
 																		{{/if}}

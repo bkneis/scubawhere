@@ -14,7 +14,8 @@ class Bookingdetail extends Ardent {
 		'session_id'          => 'integer|min:1|required_without_all:training_session_id,temporary',
 		'boatroom_id'         => 'integer|min:1',
 		'packagefacade_id'    => 'integer|min:1',
-		'course_id'           => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
+		'course_id'           => 'integer|min:1|required_with:training_session_id,training_id|required_without:ticket_id',
+		'training_id'         => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
 		'training_session_id' => 'integer|min:1|required_without_all:session_id,temporary',
 		'temporary'           => 'boolean',
 	);
@@ -67,6 +68,11 @@ class Bookingdetail extends Ardent {
 	public function session()
 	{
 		return $this->belongsTo('Departure', 'session_id')->withTrashed();
+	}
+
+	public function training()
+	{
+		return $this->belongsTo('Training')->withTrashed();
 	}
 
 	public function training_session()
