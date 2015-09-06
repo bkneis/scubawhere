@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="addon-list-template">
 						<ul id="addon-list" class="entity-list">
 							{{#each addons}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency.symbol}} {{decimal_price}}</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency}} {{decimal_price}}</li>
 							{{else}}
 								<p id="no-addons">No addons available.</p>
 							{{/each}}
@@ -46,7 +46,7 @@
 
 							<div class="form-row">
 								<label class="field-label">Add-on Price</label>
-								<span class="currency">{{currency.symbol}}</span>
+								<span class="currency">{{currency}}</span>
 								<input id="addon-price" type="number" name="new_decimal_price" placeholder="0.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
 							</div>
 

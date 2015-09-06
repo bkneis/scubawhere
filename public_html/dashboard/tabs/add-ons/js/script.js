@@ -6,6 +6,13 @@ Handlebars.registerHelper('selected', function(selectObject) {
 		return '';
 });
 
+Handlebars.registerHelper('currency', function() {
+	if(typeof window.company !== 'undefined')
+		return window.company.currency.symbol;
+	else
+		return '???'; // TODO Set placeholder and try again in a second (similar to the 'countryName' helper)
+});
+
 var addonForm,
 	addonList;
 
@@ -186,7 +193,6 @@ function renderEditForm(id) {
 	else {
 		addon = {
 			task: 'add',
-			currency: window.company.currency,
 			/*name: 'TUI',
 			website: 'http://tui.com',
 			branch_name: 'Fishponds',
@@ -241,7 +247,6 @@ function clearForm() {
 
 	addon = {
 		task: 'add',
-		currency: window.company.currency,
 		/*name: 'TUI',
 		website: 'http://tui.com',
 		branch_name: 'Fishponds',
