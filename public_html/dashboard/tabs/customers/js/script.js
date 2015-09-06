@@ -51,6 +51,13 @@ Handlebars.registerHelper('checkNull', function(value) {
 	else return value;
 });
 
+var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
+	var countriesTemplate = Handlebars.compile($("#countries-template").html());
+	var agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
+	var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
+	var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
+	var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
+
 $(function() {
 
 	$.get("/api/country/all", function success(data) {
@@ -179,6 +186,11 @@ $(function() {
 		});
 	});
 
+	$('#search-customer-container').on('click', '#add-new-customer', function(event) {
+		event.preventDefault();
+		editDetails();
+	});
+
 });
 
 var customerListItem = Handlebars.compile( $('#customer-list-item-template').html() );
@@ -213,6 +225,99 @@ var selectedCertificateTemplate       = Handlebars.compile($("#selected-certific
 
 function editDetails(id) {
 
+	var customer;
+
+	if( id ) {
+		customer = window.customers[id];
+		customer.task = 'edit';
+		customer.update = true;
+	}
+	else {
+		customer = {
+			task : 'add',
+			update : false
+		};
+	}
+
+	$('#edit-customer-modal').modal('show');
+	$("#country_id").html(countriesTemplate({countries : window.countries}));
+	// Activate datepickers
+	$('#edit-customer-modal input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		}
+	});
+
+	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+
+	$('#edit-customer-modal').on('change', '#agency_id', function() {
+		var self = $(this);
+
+		if(self.val() === "") self.closest('fieldset').find('#certificate_id').empty();
+
+		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+
+		certificate_dropdown.html(certificatesTemplate({certificates: window.agencies[self.val()].certificates}));
+		certificate_dropdown.select2("val", "");
+	});
+
+	$('#edit-customer-modal').on('click', '.add-certificate', function(event) {
+		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
+
+		var self = $(this);
+		var agency_dropdown      = self.closest('fieldset').find('#agency_id');
+		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+
+		if(agency_dropdown.val() === "" || certificate_dropdown.val() === "") return false;
+
+		self.closest('fieldset').find('#selected-certificates').append(selectedCertificateTemplate({
+			id: certificate_dropdown.val(),
+			abbreviation: window.agencies[agency_dropdown.val()].abbreviation,
+			name: _.find(window.agencies[agency_dropdown.val()].certificates, function(certificate) {
+				return certificate.id == certificate_dropdown.val();
+			}).name,
+		}));
+	});
+
+	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
+		$(this).parent().remove();
+	});
+
+	if( id ) {
+
+		$('#country_id').val(customer.country_id);
+		$("#edit-customer-details").html(editCustomerTemplate(customer));
+		$("#customer-diving-information").html(customerDivingInformationTemplate(customer));
+
+		// Set the last_dive date
+		$('#edit-customer-modal').find('.last_dive').val(customer.last_dive);
+
+		$('#edit-customer-agencies').find('#selected-certificates').empty();
+		_.each(customer.certificates, function(certificate) {
+			$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
+				id: certificate.id,
+				abbreviation: certificate.agency.abbreviation,
+				name: certificate.name,
+			}));
+		});
+
+	}
+	else {
+
+		$("#edit-customer-details").html(editCustomerTemplate);
+		$("#customer-diving-information").html(customerDivingInformationTemplate);
+
+	}
+
+}
+
+/*function editDetails(id) {
+
 	$('#edit-customer-modal').modal('show');
 	$("#country_id").html(countriesTemplate({countries : window.countries}));
 	$('#country_id').val(window.customers[id].country_id);
@@ -244,7 +349,11 @@ function editDetails(id) {
 		}));
 	});
 
-}
+	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
+		$(this).parent().remove();
+	});
+
+}*/
 
 function emailCustomer(id) {
 
