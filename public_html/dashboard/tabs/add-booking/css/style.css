@@ -1,6 +1,9 @@
 
-.btn:link{
-    color: #FFFFFF!important;
+.btn:link {
+    color: #FFFFFF !important;
+}
+.btn-default:link {
+    color: #333333 !important;
 }
 
 .bootstrap-datetimepicker-widget .btn:link {
