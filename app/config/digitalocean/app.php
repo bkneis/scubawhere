@@ -23,5 +23,6 @@ return array(
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 		'BackupManager\Laravel\Laravel4ServiceProvider',
 
-	))
+	)),
+
 );

@@ -10,6 +10,6 @@ return array(
 
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 
-	))
+	)),
 
 );

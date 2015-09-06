@@ -154,7 +154,7 @@ class CronRunCommand extends Command {
 		$this->daily(function()
 		{
 			$dateString = date('Y-m-d_H-i');
-			Artisan::call('db:backup --database=mysql --destination=local --destinationPath=' . $dateString . '/.sql --compression=gzip');
+			Artisan::call('db:backup --database=mysql --destination=local --destinationPath=/' . $dateString . '.sql --compression=gzip');
 		});
 
 		// DO NOT REMOVE!
