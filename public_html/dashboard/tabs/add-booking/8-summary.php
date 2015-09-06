@@ -385,7 +385,7 @@
 										</tr>
 										<tr>
 											<td class="inner-item-col">
-												<h4>{{statusIcon}}</h4>
+												<h4 id="status">{{statusIcon}}</h4>
 												<p>{{sourceIcon}}<p>
 											</td>
 											<td></td>
