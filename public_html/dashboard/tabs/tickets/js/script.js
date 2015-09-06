@@ -377,3 +377,7 @@ function clearForm() {
 		$('form').data('hasChanged', true);
 	});
 }
+
+function changeParent(self) {
+	$(self).parent().toggleClass('checked');
+}

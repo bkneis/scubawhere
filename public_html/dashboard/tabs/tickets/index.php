@@ -74,14 +74,14 @@
 
 							<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
 								<h4>Please select the trips that this ticket should be eligable for:</h4>
+								<div id="ticket-selectList" class="form-row">
 								{{#each available_trips}}
-									<p style="margin-left: 4em;">
-										<label>
-											<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
+										<label class="ticket-select">
+											<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
 											{{{name}}}
 										</label>
-									</p>
 								{{/each}}
+								</div>
 							</div>
 
 							<div class="form-row" id="tickets-boats" data-step="4" data-position="top" data-intro="You can also limit the ticket to be used for specific boats.">
