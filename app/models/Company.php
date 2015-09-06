@@ -167,6 +167,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasManyThrough('Bookingdetail', 'Booking');
 	}
 
+	public function campaigns()
+	{
+		return $this->hasMany('CrmCampaign');
+	}
+
 	public function country()
 	{
 		return $this->belongsTo('Country');
@@ -180,6 +185,16 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	public function customers()
 	{
 		return $this->hasMany('Customer');
+	}
+
+	public function crmGroups()
+	{
+		return $this->hasMany('CrmGroup');
+	}
+
+	public function crmGroupRules()
+	{
+		return $this->hasMany('CrmGroupRule');
 	}
 
 	public function departures()
