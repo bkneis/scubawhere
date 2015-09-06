@@ -50,13 +50,13 @@
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '932692130114783',
-    cookie     : true,  // enable cookies to allow the server to access 
+    cookie     : true,  // enable cookies to allow the server to access
                         // the session
     xfbml      : true,  // parse social plugins on this page
     version    : 'v2.3' // use version 2.2
   });
 
-  // Now that we've initialized the JavaScript SDK, we call 
+  // Now that we've initialized the JavaScript SDK, we call
   // FB.getLoginStatus().  This function gets the state of the
   // person visiting this page and can return one of three states to
   // the callback you provide.  They can be:
@@ -91,6 +91,6 @@
       console.log('Successful login for: ' + response.name);
       /*document.getElementById('status').innerHTML =
       'Thanks for logging in, ' + response.name + '!';*/
-      displayFBStats();
+      //displayFBStats();
     });
   }
