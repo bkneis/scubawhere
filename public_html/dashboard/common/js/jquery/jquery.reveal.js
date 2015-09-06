@@ -17,6 +17,14 @@
 		$('#' + modalLocation).reveal($(this).data());
 	});
 
+	$.fn.hideModal = function(options){
+	  var self        = this,
+	      modal       = $(self),
+	      topMeasure  = parseInt(modal.css('top'));
+	  $('.reveal-modal-bg').css({'display' : 'none'});
+	  modal.css({'visibility' : 'hidden', 'top' : topMeasure});
+	}
+
 	$.fn.reveal = function (options) {
 		var defaults = {
 			animation: 'fadeAndPop',                 // fade, fadeAndPop, none
