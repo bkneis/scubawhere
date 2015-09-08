@@ -1,11 +1,23 @@
 var Trip = {
 	getAllTrips : function (handleData) {
 		$.get("/api/trip/all").done(function(data){
+
+			if(window.location.hostname === 'rms-test.scubawhere.com')
+				_.each(data, function(object) {
+					object.boat_required = parseInt(object.boat_required);
+				});
+
 			handleData(data);
 		});
 	},
 	getAllWithTrashed : function (handleData) {
 		$.get("/api/trip/all-with-trashed").done(function(data){
+
+			if(window.location.hostname === 'rms-test.scubawhere.com')
+				_.each(data, function(object) {
+					object.boat_required = parseInt(object.boat_required);
+				});
+
 			handleData(data);
 		});
 	},

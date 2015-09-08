@@ -357,9 +357,6 @@ Boatroom.getAll(function(data){
 window.promises.loadedAddons = $.Deferred();
 Addon.getAllAddons(function(data){
 	window.addons = _.indexBy(data, 'id');
-	_.each(window.addons, function(addon) {
-		addon.compulsory = parseInt(addon.compulsory);
-	});
 	$("#addons-list").html(addonsTemplate({addons: window.addons}));
 	window.promises.loadedAddons.resolve();
 });
