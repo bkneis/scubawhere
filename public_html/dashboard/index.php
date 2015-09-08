@@ -324,6 +324,9 @@ $PROTOCOL = 'http';
 							<a href="#locations">Locations</a>
 						</li>
 						<li>
+							<a href="#trips">Open Water Trips</a>
+						</li>
+						<li>
 							<a href="#packages">Packages</a>
 						</li>
 						<!--<li>
@@ -331,9 +334,6 @@ $PROTOCOL = 'http';
 						</li>-->
 						<li>
 							<a href="#tickets">Tickets</a>
-						</li>
-						<li>
-							<a href="#trips">Trips</a>
 						</li>
 					</ul>
 				</li>
