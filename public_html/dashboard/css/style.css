@@ -356,6 +356,7 @@ ul#sidenav {
 ul#sidenav > li {
 	padding: 0px;
 	cursor: pointer;
+	position: relative;
 }
 
 ul#sidenav > li:after {
@@ -1013,7 +1014,9 @@ big {
 .caret {
 	transition: transform 0.2s linear;
 	transform: rotate(-90deg);
-	margin-left: 20px !important;
+	position: absolute;
+	right: 1em;
+	top: 1.46em;
 }
 
 .popover .percentage-bar-container {
