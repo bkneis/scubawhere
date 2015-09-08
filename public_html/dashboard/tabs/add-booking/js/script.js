@@ -1310,6 +1310,8 @@ function submitAddDetail(params, data) {
 		// Check if parent still contains something unassigned, otherwise remove parent
 		// TODO ... need parentParentPointer... :$
 
+		pageMssg(status, 'success');
+
 		booking.store();
 
 		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
