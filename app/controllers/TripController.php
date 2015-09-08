@@ -53,6 +53,10 @@ class TripController extends Controller {
 		$data = Input::only('name', 'description', 'duration');
 
 		// Check optional fields
+		if( Input::has('boat_required') )
+		{
+			$data['boat_required'] = Input::get('boat_required'); // If not present in input array, defaults to TRUE
+		}
 		if( Input::has('photo') )
 		{
 			$data['photo'] = Input::get('photo');

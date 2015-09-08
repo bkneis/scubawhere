@@ -139,7 +139,7 @@
 						<td>{{#unless ticketsLeft}}
 							<span class="soldout">SOLD OUT</span>
 							{{else}}
-								{{ticketsLeft}} out of {{capacity}} | <a href="#add-booking">BOOK NOW</a>
+								{{capacityString}} | <a href="#add-booking">BOOK NOW</a>
 							{{/unless}}
 						</td>
 					</tr>
@@ -161,10 +161,11 @@
 					</tr>
 					<tr>
 						<td><strong>Rooms Available</strong></td>
-						<td>{{#unless available}}
-							<span class="soldout">SOLD OUT</span>
+						<td>
+							{{#unless available}}
+								<span class="soldout">SOLD OUT</span>
 							{{else}}
-							{{getRemaining available booked}} out of {{available}}</a>
+								{{getRemaining available booked}} out of {{available}}</a>
 							{{/unless}}
 						</td>
 					</tr>

@@ -513,6 +513,8 @@ Handlebars.registerHelper('isWeekday', function(day) {
 });
 
 function calcUtil(booked, capacity) {
+	if(!capacity) return 0;
+
 	var util = ((booked / capacity) * 100);
 	return Math.round(util).toString();
 }
@@ -542,7 +544,7 @@ function getTripEvents(start, end, timezone, callback) {
 				if(calendarOptions.boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
-					var ticketsLeft = capacity - booked;
+					var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 					var sameDay = true;
 					if(window.trips[value.trip_id].duration > 24) sameDay = false;
 					var eventObject = {
@@ -555,6 +557,7 @@ function getTripEvents(start, end, timezone, callback) {
 						durationEditable: false,
 						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 						ticketsLeft : ticketsLeft,
+						capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 						capacity : capacity,
 						sameDay : sameDay
 					};
@@ -569,7 +572,7 @@ function getTripEvents(start, end, timezone, callback) {
 			else {
 				var booked = value.capacity[0];
 				var capacity = value.capacity[1];
-				var ticketsLeft = capacity - booked;
+				var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 				var sameDay = true;
 				if(window.trips[value.trip_id].duration > 24) sameDay = false;
 				var eventObject = {
@@ -582,6 +585,7 @@ function getTripEvents(start, end, timezone, callback) {
 					durationEditable: false,
 					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 					ticketsLeft : ticketsLeft,
+					capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 					capacity : capacity,
 					sameDay : sameDay
 				};
@@ -634,7 +638,7 @@ function getAllEvents(start, end, timezone, callback) {
 				if(calendarOptions.boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
-					var ticketsLeft = capacity - booked;
+					var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 					var sameDay = true;
 					if(window.trips[value.trip_id].duration > 24) sameDay = false;
 					var eventObject = {
@@ -647,6 +651,7 @@ function getAllEvents(start, end, timezone, callback) {
 						durationEditable: false,
 						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 						ticketsLeft : ticketsLeft,
+						capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 						capacity : capacity,
 						sameDay : sameDay
 					};
@@ -661,7 +666,7 @@ function getAllEvents(start, end, timezone, callback) {
 			else {
 				var booked = value.capacity[0];
 				var capacity = value.capacity[1];
-				var ticketsLeft = capacity - booked;
+				var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 				var sameDay = true;
 				if(window.trips[value.trip_id].duration > 24) sameDay = false;
 				var eventObject = {
@@ -674,6 +679,7 @@ function getAllEvents(start, end, timezone, callback) {
 					durationEditable: false,
 					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 					ticketsLeft : ticketsLeft,
+					capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 					capacity : capacity,
 					sameDay : sameDay
 				};

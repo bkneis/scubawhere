@@ -565,15 +565,20 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail(array('sessions.*'));
+				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms', 'trip')->firstOrFail(array('sessions.*'));
 			}
 			catch(ModelNotFoundException $e)
 			{
 				return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 			}
+
+			$trip = $departure->trip;
 		}
 		else
+		{
 			$departure = false;
+			$trip = false;
+		}
 
 		if(Input::has('training_session_id'))
 		{
@@ -723,7 +728,7 @@ class BookingController extends Controller {
 		// Validate that the ticket can be booked for this session
 		if($departure)
 		{
-			$exists = $departure->trip->tickets()->where('id', $ticket->id)->exists();
+			$exists = $trip->tickets()->where('id', $ticket->id)->exists();
 			if(!$exists)
 				return Response::json( array('errors' => array('This ticket can not be booked for this trip.')), 403 ); // 403 Forbidden
 
@@ -752,18 +757,17 @@ class BookingController extends Controller {
 				return Response::json(['errors' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
 		}
 
-		// Check if the session's boat is allowed for the ticket
-		if($departure && $ticket->boats()->exists())
+		if($departure && $trip->boat_required)
 		{
-			$boatIDs = $ticket->boats()->lists('id');
-			if( !in_array($departure->boat_id, $boatIDs) )
-				return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
-		}
+			// Check if the session's boat is allowed for the ticket
+			if($ticket->boats()->exists())
+			{
+				$boatIDs = $ticket->boats()->lists('id');
+				if( !in_array($departure->boat_id, $boatIDs) )
+					return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
+			}
 
-		if($departure)
-		{
 			// Determine if we need a boatroom_id (only when the trip is overnight)
-			$trip             = $departure->trip;
 			$start            = new DateTime($departure->start);
 			$end              = clone $start;
 			$duration_hours   = floor($trip->duration);
@@ -924,7 +928,7 @@ class BookingController extends Controller {
 			'customer_id'         => $customer->id,
 			'ticket_id'           => $ticket           ? $ticket->id           : null,
 			'session_id'          => $departure        ? $departure->id        : null,
-			'boatroom_id'         => $departure        ? $boatroom_id          : null,
+			'boatroom_id'         => $departure && $trip->boat_required ? $boatroom_id : null,
 			'packagefacade_id'    => $package          ? $packagefacade->id    : null,
 			'course_id'           => $course           ? $course->id           : null,
 			'training_session_id' => $training_session ? $training_session->id : null
@@ -1062,7 +1066,7 @@ class BookingController extends Controller {
 			'addons'                => $addons ? $addons->lists('id') : false,
 			'decimal_price'         => $booking->decimal_price,
 
-			'boatroom_id'           => $departure ? $boatroom_id : false,
+			'boatroom_id'           => $departure && $trip->boat_required ? $boatroom_id : false,
 
 			'package_decimal_price' => $package ? $package->decimal_price : false,
 			'course_decimal_price'  => !$package && $course ? $course->decimal_price : false,

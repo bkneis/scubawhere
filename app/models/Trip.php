@@ -8,16 +8,17 @@ class Trip extends Ardent {
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = array('name', 'description', 'duration'/*, 'photo', 'video'*/);
+	protected $fillable = array('name', 'description', 'duration', 'boat_required'/*, 'photo', 'video'*/);
 
 	protected $appends = array('deletable');
 
 	public static $rules = array(
-		'name'        => 'required',
-		'description' => '',
-		'duration'    => 'required|numeric',
-		'photo'       => '',
-		'video'       => ''
+		'name'          => 'required',
+		'description'   => '',
+		'duration'      => 'required|numeric',
+		'boat_required' => 'boolean',
+		'photo'         => '',
+		'video'         => ''
 	);
 
 	public function beforeSave()

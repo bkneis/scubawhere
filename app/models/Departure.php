@@ -16,7 +16,7 @@ class Departure extends Ardent {
 
 	public static $rules = array(
 		'start'        => 'required|date',
-		'boat_id'      => 'required|integer',
+		'boat_id'      => 'integer|min:1',
 		'timetable_id' => 'integer|exists:timetables,id'
 	);
 
@@ -38,25 +38,28 @@ class Departure extends Ardent {
 		    	$query->whereIn('status', Booking::$counted);
 		    })->count();
 
-		$result[1] = $boat->capacity;
-
-		// Second, calculate the utilisation per boatroom
-		$result[2] = array();
-
-		$boat->boatrooms->each(function($boatroom) use (&$result)
+		if($this->boat_required)
 		{
-			$result[2][$boatroom->id] = array();
+			$result[1] = $boat->capacity;
 
-			$result[2][$boatroom->id][0] = $this->bookingdetails()
-			    ->whereHas('booking', function($query)
-			    {
-			    	$query->whereIn('status', Booking::$counted);
-			    })
-			    ->where('boatroom_id', $boatroom->id)
-			    ->count();
+			// Second, calculate the utilisation per boatroom
+			$result[2] = array();
 
-			$result[2][$boatroom->id][1] = $boatroom->pivot->capacity;
-		});
+			$boat->boatrooms->each(function($boatroom) use (&$result)
+			{
+				$result[2][$boatroom->id] = array();
+
+				$result[2][$boatroom->id][0] = $this->bookingdetails()
+				    ->whereHas('booking', function($query)
+				    {
+				    	$query->whereIn('status', Booking::$counted);
+				    })
+				    ->where('boatroom_id', $boatroom->id)
+				    ->count();
+
+				$result[2][$boatroom->id][1] = $boatroom->pivot->capacity;
+			});
+		}
 
 		return $result;
 	}

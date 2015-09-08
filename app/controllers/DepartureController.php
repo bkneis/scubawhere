@@ -406,19 +406,24 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Check if the boat_id exists and belongs to the logged in company
-		try
+		if($trip->boat_required)
 		{
-			if( !Input::has('boat_id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
+			// Check if the boat_id exists and belongs to the logged in company
+			try
+			{
+				if( !Input::has('boat_id') ) throw new ModelNotFoundException();
+				$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
+			}
 		}
 
 		$departure = new Departure($data);
 
+		if($trip->boat_required)
+		{
 			// Check if the boat is already being used during the submitted time
 			$tripStart = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
 			$tripEnd   = clone $tripStart;
@@ -442,6 +447,7 @@ class DepartureController extends Controller {
 			// Check if trip is overnight and if so, check if boat has boatrooms
 			if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
 				return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
+		}
 
 		if( !$departure->validate() )
 		{
