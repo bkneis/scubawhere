@@ -419,39 +419,29 @@ class DepartureController extends Controller {
 
 		$departure = new Departure($data);
 
-		// check if the boat is being used at this time
-		$todayDate = [];
-		$todayDate['after'] = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
-		$todayDate['after'] = $todayDate['after']->format('Y-m-d');
-		$todayDate['before'] = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
-		$todayDate['before'] = $todayDate['before']->setTime(23, 59)->format('Y-m-d H:i:s');
-		$departures = Auth::user()->departures()
-			->whereBetween('start', [$todayDate['after'], $todayDate['before']])
-			->where('boat_id', $departure->boat_id)
-			->get();
-		foreach ($departures as $dep) {
-			$trip_duration = Auth::user()->trips()->findOrFail($dep->trip_id)->duration + 0;
-			$trip_duration = $trip_duration * 60;
-			$durationString = 'PT' . $trip_duration . 'M';
-			$trip_duration2 = Auth::user()->trips()->findOrFail(Input::get('trip_id'))->duration + 0;
-			$trip_duration2 = $trip_duration2 * 60;
-			$durationString2 = 'PT' . $trip_duration2 . 'M';
-			$startTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime = $finishTime->add(new DateInterval($durationString));
-			$startTime2 = new DateTime($departure->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime2 = new DateTime($departure->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime2 = $finishTime2->add(new DateInterval($durationString2));
+			// Check if the boat is already being used during the submitted time
+			$tripStart = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
+			$tripEnd   = clone $tripStart;
 
-			if($startTime <= $finishTime2 && $finishTime >= $startTime2) {
-				return Response::json( array('errors' => array('The boat is being used at that time ')), 403);
-			}
+			$duration_hours   = floor($trip->duration);
+			$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+			$tripEnd->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
-		}
+			$tripStart = $tripStart->format('Y-m-d H:i:s');
+			$tripEnd   = $tripEnd->format('Y-m-d H:i:s');
 
-		// Check if trip is overnight and if so, check if boat has boatrooms
-		if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
+			$overlappingSessions = Auth::user()->departures()
+				->where('boat_id', $departure->boat_id)
+				->where('start', '<=', $tripEnd)
+				->where(DB::raw("ADDTIME(start, '$duration_hours:$duration_minutes:0')"), '>=', $tripStart)
+				->exists();
+
+			if($overlappingSessions)
+				return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
+
+			// Check if trip is overnight and if so, check if boat has boatrooms
+			if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
+				return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->validate() )
 		{
