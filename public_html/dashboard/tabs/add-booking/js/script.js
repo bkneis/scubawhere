@@ -491,7 +491,7 @@ window.promises.loadedToken.done(function() {
 			drawBasket();
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			$('.source-finish').html('Next');
 		});
 	});
@@ -710,7 +710,7 @@ $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(fun
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 	});
@@ -818,7 +818,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 			// All good
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 		});
 	});
 
@@ -843,7 +843,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 		else {
@@ -856,7 +856,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				// All good
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 	}
@@ -892,7 +892,7 @@ window.promises.loadedCustomers.done(function() {
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			btn.html('Save');
 		});
 	});
@@ -933,13 +933,13 @@ window.promises.loadedCustomers.done(function() {
 						drawBasket();
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
-						pageMssg(data.errors[0], 'danger');
+						if(data.errors) pageMssg(data.errors[0], 'danger');
 					});
 				}
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			btn.html('Add');
 		});
 	});
@@ -961,7 +961,7 @@ $('#booking-summary').on('click', '.lead-customer', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 });
 
@@ -1322,7 +1322,7 @@ function submitAddDetail(params, data) {
 
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 	});
 }
@@ -1509,7 +1509,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Unassign');
 	});
 
@@ -1631,7 +1631,7 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Add');
 	});
 });
@@ -1660,7 +1660,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Add');
 	});
 });
@@ -1686,7 +1686,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Remove');
 	});
 });
@@ -1890,7 +1890,7 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 		btn.html("Add");
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html("Add");
 	});
 });
@@ -1913,7 +1913,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 		btn.html("Add");
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html("Add");
 	});
 });
@@ -1964,7 +1964,7 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Remove');
 	});
 });
@@ -2027,7 +2027,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 		if(typeof(data) !== 'undefined' && typeof(data.callback) === 'function') data.callback();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Save');
 	});
 });
@@ -2151,7 +2151,7 @@ $('#summary-tab').on('click', '.save-booking', function() {
 		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 
 });
@@ -2168,7 +2168,7 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 
 });
@@ -2187,7 +2187,7 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], "danger");
+		if(data.errors) pageMssg(data.errors[0], "danger");
 	});
 
 });
