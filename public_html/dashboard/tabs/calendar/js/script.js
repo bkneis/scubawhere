@@ -887,25 +887,11 @@ function customerData(customer) {
 	if(customer.pivot.course_id != null) {
 		this._course  = window.courses[customer.pivot.course_id].name;
 	}
-	if(customer.chest_size == "" || customer.chest_size == null || customer.chest_size == undefined) {
-		this._chest = "--";
-	}
-	else this._chest = customer.chest_size;
 
-	if(customer.shoe_size == "" || customer.shoe_size == null || customer.shoe_size == undefined) {
-		this._shoe = "--";
-	}
-	else this._shoe = customer.shoe_size;
-
-	if(customer.height == "" || customer.height == null || customer.height == undefined) {
-		this._height = "--";
-	}
-	else this._height = customer.height;
-
-	if(customer.last_dive == "" || customer.last_dive == null || customer.last_dive == undefined) {
-		this._lastDive = "-";
-	}
-	else this._lastDive = customer.last_dive;
+	this._chest    = customer.chest_size || "--";
+	this._shoe     = customer.shoe_size  || "--";
+	this._height   = customer.height     || "--";
+	this._lastDive = customer.last_dive  || "--";
 
 	this.name = function () {
 		return this._name;
