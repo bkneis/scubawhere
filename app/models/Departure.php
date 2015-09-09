@@ -38,7 +38,7 @@ class Departure extends Ardent {
 		    	$query->whereIn('status', Booking::$counted);
 		    })->count();
 
-		if($this->boat_required)
+		if($this->trip->boat_required)
 		{
 			$result[1] = $boat->capacity;
 
