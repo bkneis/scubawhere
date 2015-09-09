@@ -173,9 +173,9 @@
 					<form role="form" id="session-filters">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="after">After:</label>
+								<label for="after">Show trips from:</label>
 								<div class="input-group">
-									<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
+									<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD"value="<?php echo date('Y-m-d'); ?>">
 									<span class="input-group-addon" onclick="$(this).siblings('input').val('');" style="cursor: pointer;">
 										<i class="fa fa-times" title="Clear date"></i>
 									</span>
@@ -183,6 +183,7 @@
 							</div>
 						</div>
 						<div class="col-sm-3">
+							<!--
 							<div class="form-group">
 								<label for="before">Before:</label>
 								<div class="input-group">
@@ -192,6 +193,7 @@
 									</span>
 								</div>
 							</div>
+							-->
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">

@@ -118,6 +118,7 @@ class DepartureController extends Controller {
 		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
+			/*
 			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
@@ -129,6 +130,10 @@ class DepartureController extends Controller {
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
 				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
 			}
+			*/
+
+			// If no end date is specified, delete the variable to not mess up the validator
+			unset($data['before']);
 		}
 		else
 		{
@@ -136,7 +141,7 @@ class DepartureController extends Controller {
 			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
 		}
 
-		if( $data['after'] > $data['before'] )
+		if( isset($data['before']) && $data['after'] > $data['before'] )
 		{
 			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
 		}
@@ -248,6 +253,9 @@ class DepartureController extends Controller {
 		if($available_for_from)  $available_for_from  = $available_for_from  . ' 00:00:00';
 		if($available_for_until) $available_for_until = $available_for_until . ' 23:59:59';
 
+		// Set the number of results to fetch
+		$take = isset($options['before']) ? 25 : 10;
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via trip to
 		  ticket and then (conditionally) to package.
@@ -317,10 +325,16 @@ class DepartureController extends Controller {
 			});
 		})
 		// Filter by dates
-		->whereBetween('start', array(
-			$options['after']->format('Y-m-d H:i:s'),
-			$options['before']->format('Y-m-d H:i:s')
-		))
+		->where(function($query) use ($options)
+		{
+			if(isset($options['before']))
+				$query->whereBetween('start', array(
+					$options['after']->format('Y-m-d H:i:s'),
+					$options['before']->format('Y-m-d H:i:s')
+				));
+			else
+				$query->where('start', '>=', $options['after']->format('Y-m-d H:i:s'));
+		})
 		// Filter by available_for dates
 		->where(function($query) use ($available_for_from)
 		{
@@ -334,7 +348,7 @@ class DepartureController extends Controller {
 		})
 		// ->with('trip', 'trip.tickets')
 		->orderBy('start', 'ASC')
-		// ->take(25)
+		->take($take)
 		->get();
 
 		// Conditionally filter by boat
@@ -343,7 +357,7 @@ class DepartureController extends Controller {
 			$boatIDs = $ticket->boats()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatIDs)
 			{
-				return in_array($departure->boat_id, $boatIDs);
+				return $departure->boat_id === null || in_array($departure->boat_id, $boatIDs);
 			});
 		}
 
@@ -353,7 +367,7 @@ class DepartureController extends Controller {
 			$boatroomIDs = $ticket->boatrooms()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatroomIDs)
 			{
-				return count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
+				return $departure->boat_id === null || count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
 			});
 		}
 
@@ -363,7 +377,7 @@ class DepartureController extends Controller {
 			$departures = $departures->filter(function($departure) use ($course)
 			{
 				$capacity = $departure->getCapacityAttribute();
-				if( $capacity[0] >= $capacity[1] )
+				if( $departure->boat_id !== null && $capacity[0] >= $capacity[1] )
 				{
 					// Session/Boat full/overbooked
 					return false;
