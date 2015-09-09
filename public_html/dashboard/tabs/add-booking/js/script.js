@@ -287,7 +287,10 @@ Agent.getAllAgents(function(data){
 window.promises.loadedTickets = $.Deferred();
 Ticket.getOnlyAvailable(function(data){
 	window.tickets = _.indexBy(data, 'id');
-	$("#tickets-list").html(ticketTemplate({tickets: window.tickets}));
+	var displayableTickets = _.filter(window.tickets, function(ticket) {
+		return !ticket.only_packaged;
+	});
+	$("#tickets-list").html(ticketTemplate({tickets: displayableTickets}));
 	window.promises.loadedTickets.resolve();
 });
 
@@ -654,7 +657,7 @@ $.when(
 		var regExp = new RegExp(event.target.value, 'i');
 
 		var tickets = _.filter(window.tickets, function(ticket) {
-			return ticket.name.search(regExp) > -1;
+			return !ticket.only_packaged && ticket.name.search(regExp) > -1;
 		});
 
 		var packages = _.filter(window.packages, function(package) {

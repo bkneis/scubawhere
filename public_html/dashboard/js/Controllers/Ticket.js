@@ -24,6 +24,9 @@ var Ticket = {
 
 	getOnlyAvailable : function(handleData){
 		$.get("/api/ticket/only-available", function(data){
+			_.each(data, function(object) {
+				object.only_packaged = parseInt(object.only_packaged);
+			});
 			handleData(data);
 		});
 	},
