@@ -150,6 +150,10 @@
     border-color: rgba(0, 0, 0, 0);
 }
 
+#tickets-ticket-list .panel-heading {
+    position: relative;
+}
+
 #session-tab .list-group {
     margin-bottom: 0;
 }
