@@ -5,28 +5,41 @@ var todaySession;
 var customerDetails;
 window.currentStep;
 
-Handlebars.registerHelper('getTime', function(obj){
-	return obj.substring(obj.length-3, 10);
-});
-
 Handlebars.registerHelper('tourStarted', function(){
 	if(window.tourStart) return true;
 	else return false;
 });
 
-Handlebars.registerHelper('getEnd', function(obj, duration){
-	console.log(obj);
-	var date = moment(obj);
-	date.add(duration, "hours");
-	console.log(date);
+function friendlyDate(date) {
+	// return moment(date).format('DD/MM/YYYY HH:mm');
+	return moment(date).format('DD MMM YYYY HH:mm');
+}
 
-	return date.format("HH:mm");
+Handlebars.registerHelper("friendlyDate", function(date) {
+	return friendlyDate(date);
+});
+
+Handlebars.registerHelper("tripFinish", function() {
+	var startDate = friendlyDate(this.start);
+
+	var duration = 0;
+	if(this.trip) duration = this.trip.duration;
+	if(this.training) duration = this.training.duration;
+
+	var endDate   = friendlyDate( moment(this.start).add(duration, 'hours') );
+
+	if(startDate.substr(0, 11) === endDate.substr(0, 11))
+		// Only return the time, if the date is the same
+		return endDate.substr(12);
+	else
+		// Only return the date and the Month (and time)
+		return endDate.substr(0, 6) + ' ' + endDate.substr(12);
 });
 
 Handlebars.registerHelper('getPer', function(capacity){
-	var booked = capacity[0];
-	var max = capacity[1];
-	return parseInt((booked / max) * 100) + '%';
+	if(!capacity[1]) return '-';
+
+	return capacity[0] + '/' + capacity[1] + ' - ' + parseInt((capacity[0] / capacity[1]) * 100) + '%';
 });
 
 $(function () {
@@ -85,7 +98,7 @@ $(function () {
 	$("#row1").prepend(todaysSessionsWidget);
 
 	todaySession = Handlebars.compile($('#today-session-template').html());
-	Session.getToday(function success(data){
+	Session.filter({after: moment().format('YYYY-MM-DD')}, function success(data){
 		window.todaySessions = _.indexBy(data, 'id');
 		// console.log(data);
 		$('#sessions-list').append( todaySession( {sessions : data} ) );
@@ -157,6 +170,6 @@ function displayFBStats() {
 	} else {
 		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
 	}
-	
+
 }
 
