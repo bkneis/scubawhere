@@ -1060,6 +1060,7 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
 	var btnText = btn.html();
+	btn.data('text', btnText);
 
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 	btn.addClass('waiting');
@@ -1323,9 +1324,10 @@ function submitAddDetail(params, data) {
 		});
 
 	}, function error(xhr) {
+		var btn = $('#sessions-panel .waiting');
+		btn.removeClass('waiting').html(btn.data('text'));
 		var data = JSON.parse(xhr.responseText);
 		if(data.errors) pageMssg(data.errors[0], 'danger');
-		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 	});
 }
 
