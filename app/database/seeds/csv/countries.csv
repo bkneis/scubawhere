@@ -1,194 +1,194 @@
-continent_id,currency_id,abbreviation,name
-3,2,AL,Albania
-1,34,DZ,Algeria
-3,38,AD,Andorra
-1,4,AO,Angola
-1,123,AI,Anguilla
-4,123,AG,Antigua And Barbuda
-6,5,AR,Argentina
-3,3,AM,Armenia
-1,7,AW,Aruba
-5,6,AU,Australia
-3,38,AT,Austria
-3,8,AZ,Azerbaijan
-4,18,BS,Bahamas
-2,12,BH,Bahrain
-4,10,BB,Barbados
-3,38,BE,Belgium
-3,21,BZ,Belize
-4,124,BJ,Benin
-1,14,BM,Bermuda
-2,19,BT,Bhutan
-6,16,BO,Bolivia
-3,9,BA,Bosnia-Herzegovina
-1,20,BW,Botswana
-6,17,BR,Brazil
-2,15,BN,Brunei Darussalam
-3,11,BG,Bulgaria
-1,124,BF,Burkina Faso
-1,13,BI,Burundi
-2,60,KH,Cambodia
-4,22,CA,Canada
-1,29,CV,Cape Verde
-4,64,KY,Cayman Islands
-1,122,TD,Chad
-6,25,CL,Chile
-2,26,C2,China
-6,27,CO,Colombia
-1,61,KM,Comoros
-1,23,CG,Congo
-5,84,CK,Cook Islands
-4,28,CR,Costa Rica
-3,49,HR,Croatia
-3,38,CY,Cyprus
-3,30,CZ,Czech Republic
-1,122,CD,Democratic Republic Of Congo
-3,32,DK,Denmark
-1,31,DJ,Djibouti
-4,123,DM,Dominica
-4,33,DO,Dominican Republic
-6,118,EC,Ecuador
-1,35,EG,Egypt
-4,106,SV,El Salvador
-1,36,ER,Eriteria
-3,38,EE,Estonia
-1,37,ET,Ethiopia
-6,129,FK,Falkland Islands (Malvinas)
-5,39,FJ,Fiji
-3,38,FI,Finland
-3,38,FR,France
-6,38,GF,French Guiana
-5,125,PF,French Polynesia
-1,122,GA,Gabon
-1,43,GM,Gambia
-3,41,GE,Georgia
-3,38,DE,Germany
-3,42,GI,Gibraltar
-3,38,GR,Greece
-4,32,GL,Greenland
-4,123,GD,Grenada
-4,38,GP,Guadeloupe
-5,118,GU,Guam
-4,45,GT,Guatemala
-1,44,GN,Guinea
-1,124,GW,Guinea Bissau
-6,46,GY,Guyana
-3,38,VA,Holy See (Vatican City State)
-4,48,HN,Honduras
-2,47,HK,Hong Kong
-3,50,HU,Hungary
-3,54,IS,Iceland
-2,53,IN,India
-2,51,ID,Indonesia
-3,38,IE,Ireland
-2,52,IL,Israel
-3,38,IT,Italy
-4,55,JM,Jamaica
-2,57,JP,Japan
-2,56,JO,Jordan
-2,65,KZ,Kazakhstan
-1,58,KE,Kenya
-5,6,KI,Kiribati
-2,62,KR,"Korea, Republic Of"
-2,63,KW,Kuwait
-2,59,KG,Kyrgyzstan
-2,66,LA,Laos
-3,38,LV,Latvia
-1,68,LS,Lesotho
-3,24,LI,Liechtenstein
-3,38,LT,Lithuania
-3,38,LU,Luxembourg
-1,70,MG,Madagascar
-1,75,MW,Malawi
-2,77,MY,Malaysia
-2,74,MV,Maldives
-1,124,ML,Mali
-3,38,MT,Malta
-5,118,MH,Marshall Islands
-4,38,MQ,Martinique
-1,72,MR,Mauritania
-1,73,MU,Mauritius
-1,38,YT,Mayotte
-4,76,MX,Mexico
-5,118,FM,"Micronesia, Federated States Of"
-2,71,MN,Mongolia
-4,123,MS,Montserrat
-1,69,MA,Morocco
-1,78,MZ,Mozambique
-1,79,NA,Namibia
-5,6,NR,Nauru
-2,83,NP,Nepal
-3,38,NL,Netherlands
-4,133,AN,Netherlands Antilles
-5,84,NC,New Caledonia
-5,84,NZ,New Zealand
-4,81,NI,Nicaragua
-1,80,NE,Niger
-1,84,NU,Niue
-5,6,NF,Norfolk Island
-3,82,NO,Norway
-2,85,OM,Oman
-5,118,PW,Palau
-4,86,PA,Panama
-5,88,PG,Papua New Guinea
-6,87,PE,Peru
-2,89,PH,Philippines
-5,84,PN,Pitcairn
-3,90,PL,Poland
-3,38,PT,Portugal
-2,91,QA,Qatar
-1,38,RE,Reunion
-3,92,RO,Romania
-2,94,RU,Russian Federation
-1,95,RW,Rwanda
-1,101,SH,Saint Helena
-4,123,KN,Saint Kitts And Nevis
-4,123,LC,Saint Lucia
-4,38,PM,Saint Pierre And Miquelon
-4,123,VC,Saint Vincent And The Grenadines
-5,130,WS,Samoa
-3,38,SM,San Marino
-1,105,ST,Sao Tome And Principe
-2,96,SA,Saudi Arabia
-1,124,SN,Senegal
-3,93,RS,Serbia
-1,98,SC,Seychelles
-1,102,SL,Sierra Leone
-2,100,SG,Singapore
-3,38,SK,Slovakia
-3,38,SI,Slovenia
-5,97,SB,Solomon Islands
-1,103,SO,Somalia
-1,127,ZA,South Africa
-3,38,ES,Spain
-2,67,LK,Sri Lanka
-6,104,SR,Suriname
-3,82,SJ,Svalbard And Jan Mayen
-1,107,SZ,Swaziland
-3,99,SE,Sweden
-3,24,CH,Switzerland
-2,132,TW,"Taiwan, Province Of China"
-2,109,TJ,Tajikistan
-1,115,TZ,"Tanzania, United Republic Of"
-2,108,TH,Thailand
-1,124,TG,Togo
-5,112,TO,Tonga
-4,114,TT,Trinidad And Tobago
-1,111,TN,Tunisia
-2,113,TR,Turkey
-2,110,TM,Turkmenistan
-4,118,TC,Turks And Caicos Islands
-5,6,TV,Tuvalu
-1,117,UG,Uganda
-3,116,UA,Ukraine
-2,1,AE,United Arab Emirates
-3,40,GB,United Kingdom
-4,118,US,United States
-6,119,UY,Uruguay
-5,131,VU,Vanuatu
-6,120,VE,Venezuela
-2,121,VN,Vietnam
-4,118,VG,"Virgin Islands, British"
-5,125,WF,Wallis And Futuna
-2,126,YE,Yemen
-1,128,ZM,Zambia
+continent_id;currency_id;abbreviation;name
+3;2;AL;Albania
+1;34;DZ;Algeria
+3;38;AD;Andorra
+1;4;AO;Angola
+1;123;AI;Anguilla
+4;123;AG;Antigua And Barbuda
+6;5;AR;Argentina
+3;3;AM;Armenia
+1;7;AW;Aruba
+5;6;AU;Australia
+3;38;AT;Austria
+3;8;AZ;Azerbaijan
+4;18;BS;Bahamas
+2;12;BH;Bahrain
+4;10;BB;Barbados
+3;38;BE;Belgium
+3;21;BZ;Belize
+4;124;BJ;Benin
+1;14;BM;Bermuda
+2;19;BT;Bhutan
+6;16;BO;Bolivia
+3;9;BA;Bosnia-Herzegovina
+1;20;BW;Botswana
+6;17;BR;Brazil
+2;15;BN;Brunei Darussalam
+3;11;BG;Bulgaria
+1;124;BF;Burkina Faso
+1;13;BI;Burundi
+2;60;KH;Cambodia
+4;22;CA;Canada
+1;29;CV;Cape Verde
+4;64;KY;Cayman Islands
+1;122;TD;Chad
+6;25;CL;Chile
+2;26;C2;China
+6;27;CO;Colombia
+1;61;KM;Comoros
+1;23;CG;Congo
+5;84;CK;Cook Islands
+4;28;CR;Costa Rica
+3;49;HR;Croatia
+3;38;CY;Cyprus
+3;30;CZ;Czech Republic
+1;122;CD;Democratic Republic Of Congo
+3;32;DK;Denmark
+1;31;DJ;Djibouti
+4;123;DM;Dominica
+4;33;DO;Dominican Republic
+6;118;EC;Ecuador
+1;35;EG;Egypt
+4;106;SV;El Salvador
+1;36;ER;Eriteria
+3;38;EE;Estonia
+1;37;ET;Ethiopia
+6;129;FK;Falkland Islands (Malvinas)
+5;39;FJ;Fiji
+3;38;FI;Finland
+3;38;FR;France
+6;38;GF;French Guiana
+5;125;PF;French Polynesia
+1;122;GA;Gabon
+1;43;GM;Gambia
+3;41;GE;Georgia
+3;38;DE;Germany
+3;42;GI;Gibraltar
+3;38;GR;Greece
+4;32;GL;Greenland
+4;123;GD;Grenada
+4;38;GP;Guadeloupe
+5;118;GU;Guam
+4;45;GT;Guatemala
+1;44;GN;Guinea
+1;124;GW;Guinea Bissau
+6;46;GY;Guyana
+3;38;VA;Holy See (Vatican City State)
+4;48;HN;Honduras
+2;47;HK;Hong Kong
+3;50;HU;Hungary
+3;54;IS;Iceland
+2;53;IN;India
+2;51;ID;Indonesia
+3;38;IE;Ireland
+2;52;IL;Israel
+3;38;IT;Italy
+4;55;JM;Jamaica
+2;57;JP;Japan
+2;56;JO;Jordan
+2;65;KZ;Kazakhstan
+1;58;KE;Kenya
+5;6;KI;Kiribati
+2;62;KR;"Korea, Republic Of"
+2;63;KW;Kuwait
+2;59;KG;Kyrgyzstan
+2;66;LA;Laos
+3;38;LV;Latvia
+1;68;LS;Lesotho
+3;24;LI;Liechtenstein
+3;38;LT;Lithuania
+3;38;LU;Luxembourg
+1;70;MG;Madagascar
+1;75;MW;Malawi
+2;77;MY;Malaysia
+2;74;MV;Maldives
+1;124;ML;Mali
+3;38;MT;Malta
+5;118;MH;Marshall Islands
+4;38;MQ;Martinique
+1;72;MR;Mauritania
+1;73;MU;Mauritius
+1;38;YT;Mayotte
+4;76;MX;Mexico
+5;118;FM;"Micronesia, Federated States Of"
+2;71;MN;Mongolia
+4;123;MS;Montserrat
+1;69;MA;Morocco
+1;78;MZ;Mozambique
+1;79;NA;Namibia
+5;6;NR;Nauru
+2;83;NP;Nepal
+3;38;NL;Netherlands
+4;133;AN;Netherlands Antilles
+5;84;NC;New Caledonia
+5;84;NZ;New Zealand
+4;81;NI;Nicaragua
+1;80;NE;Niger
+1;84;NU;Niue
+5;6;NF;Norfolk Island
+3;82;NO;Norway
+2;85;OM;Oman
+5;118;PW;Palau
+4;86;PA;Panama
+5;88;PG;Papua New Guinea
+6;87;PE;Peru
+2;89;PH;Philippines
+5;84;PN;Pitcairn
+3;90;PL;Poland
+3;38;PT;Portugal
+2;91;QA;Qatar
+1;38;RE;Reunion
+3;92;RO;Romania
+2;94;RU;Russian Federation
+1;95;RW;Rwanda
+1;101;SH;Saint Helena
+4;123;KN;Saint Kitts And Nevis
+4;123;LC;Saint Lucia
+4;38;PM;Saint Pierre And Miquelon
+4;123;VC;Saint Vincent And The Grenadines
+5;130;WS;Samoa
+3;38;SM;San Marino
+1;105;ST;Sao Tome And Principe
+2;96;SA;Saudi Arabia
+1;124;SN;Senegal
+3;93;RS;Serbia
+1;98;SC;Seychelles
+1;102;SL;Sierra Leone
+2;100;SG;Singapore
+3;38;SK;Slovakia
+3;38;SI;Slovenia
+5;97;SB;Solomon Islands
+1;103;SO;Somalia
+1;127;ZA;South Africa
+3;38;ES;Spain
+2;67;LK;Sri Lanka
+6;104;SR;Suriname
+3;82;SJ;Svalbard And Jan Mayen
+1;107;SZ;Swaziland
+3;99;SE;Sweden
+3;24;CH;Switzerland
+2;132;TW;"Taiwan, Province Of China"
+2;109;TJ;Tajikistan
+1;115;TZ;"Tanzania, United Republic Of"
+2;108;TH;Thailand
+1;124;TG;Togo
+5;112;TO;Tonga
+4;114;TT;Trinidad And Tobago
+1;111;TN;Tunisia
+2;113;TR;Turkey
+2;110;TM;Turkmenistan
+4;118;TC;Turks And Caicos Islands
+5;6;TV;Tuvalu
+1;117;UG;Uganda
+3;116;UA;Ukraine
+2;1;AE;United Arab Emirates
+3;40;GB;United Kingdom
+4;118;US;United States
+6;119;UY;Uruguay
+5;131;VU;Vanuatu
+6;120;VE;Venezuela
+2;121;VN;Vietnam
+4;118;VG;"Virgin Islands, British"
+5;125;WF;Wallis And Futuna
+2;126;YE;Yemen
+1;128;ZM;Zambia

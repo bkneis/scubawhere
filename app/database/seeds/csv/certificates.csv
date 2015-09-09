@@ -1,71 +1,362 @@
-agency_id,abbreviation,name,description
-1,,PADI Seal Team,
-1,,Bubblemaker,
-1,,Discover Scuba Diving,
-1,,PADI Scuba Diver,
-1,,Referred Open Water Diver,
-1,,Open Water Diver,
-1,,Adventure Diver,
-1,,Advanced Open Water Diver,
-1,,Rescue Diver,
-1,,Master Scuba Diver,
-1,,Divemaster,
-1,,Assistant Instructor,
-1,,Specialty Instructor,
-1,,Master Scuba Diver Trainer,
-1,,Master Scuba Diver Trainer,
-1,,IDC Staff Instructor,
-1,,Master Instructor,
-1,,Course Director,
-2,,Scuba Diver,
-2,,Open Water Diver,
-2,,Specialty Diver,
-2,,Advanced Open Water Diver,
-2,,Diver Stress & Rescue,
-2,,Master Diver,
-2,,Dive Guide,
-2,,Divemaster,
-2,,Dive Control Specialist,
-2,,Training Specialist,
-2,,Open Water Instructor,
-2,,Classified Open Water Instructor,
-2,,Specialty Instructor,
-2,,Advanced Open Water Instructor,
-2,,Divemaster Instructor,
-2,,Dive Control Specialist Instructor,
-2,,Master Instructor,
-2,,Instructor Trainer,
-2,,Instructor Certifier,
-3,,Ocean Diver,
-3,,Sports Diver,
-3,,Dive Leader,
-3,,Advanced Diver,
-3,,First Class Diver,
-3,,Assistant Diving Instructor,
-3,,Theory Instructor,
-3,,Assistant Open Water Instructor,
-3,,Practical Instructor,
-3,,Open Water Instructor,
-3,,Advanced Instructor,
-3,,Instructor Trainer,
-3,,National Instructor,
-4,,Diver *,
-4,,Diver **,
-4,,Diver ***,
-4,,Diver ****,
-4,,Instructor *,
-4,,Instructor **,
-4,,Instructor ***,
-5,,Recreational Courses,
-5,,Junior Scuba Diver,
-5,,Junior Advanced Scuba Diver,
-5,,Scuba Diver,
-5,,Experienced Scuba Diver,
-5,,Advanced Scuba Diver,
-5,,Master Scuba Diver,
-5,,Assistant Instructor,
-5,,Divemaster,
-5,,Instructor Prep Course,
-5,,Instructor,
-5,,Instructor Trainer,
-5,,Course Director,
+agency_id;abbreviation;name;description
+1;;Advanced Open Water Diver;
+1;;Advanced Rebreather Diver;
+1;;Adventure Diver;
+1;;Altitude Diver;
+1;;Assistant Instructor;
+1;;AWARE Coral Reef Conservation;
+1;;AWARE Fish Identification;
+1;;Boat Diver;
+1;;Bubblemaker;
+1;;Cavern Diver;
+1;;Course Director;
+1;;Deep Diver;
+1;;Digital Underwater Photographer;
+1;;Discover Rebreather;
+1;;Discover Scuba Diving;
+1;;Discover Tec Diving;
+1;;Divemaster;
+1;;Diver Propulsion Vehicle Diver;
+1;;Drift Diver;
+1;;Dry Suit Divers;
+1;;Emergency First Response Instructor;
+1;;Emergency First Response Provider;
+1;;Emergency Oxygen Provider;
+1;;Enriched Air Diver;
+1;;Equipment Specialist;
+1;;Ice Diver;
+1;;IDC Staff Instructor;
+1;;Master Instructor;
+1;;Master Scuba Diver;
+1;;Master Scuba Diver Trainer;
+1;;Master Scuba Diver Trainer;
+1;;Multilevel Diver;
+1;;Night Diver;
+1;;Open Water Diver;
+1;;PADI Scuba Diver;
+1;;PADI Seal Team;
+1;;PADI Skin Diver;
+1;;Peak Performance Buoyancy;
+1;;Project AWARE Specialist;
+1;;Public Safety Diver;
+1;;Rebreather Diver;
+1;;Referred Open Water Diver;
+1;;Rescue Diver;
+1;;Search and Recovery Diver;
+1;;Sidemount Diver;
+1;;Specialty Instructor;
+1;;Tec 100 CCR;
+1;;Tec 100 CCR Instructor;
+1;;Tec 40;
+1;;Tec 40 CCR;
+1;;Tec 40 CCR Instructor;
+1;;Tec 45;
+1;;Tec 50;
+1;;Tec 60 CCR;
+1;;Tec 60 CCR Instructor;
+1;;Tec Deep Instructor;
+1;;Tec Gas Blender;
+1;;Tec Gas Blender Instructor;
+1;;Tec Instructor;
+1;;Tec Sidemount;
+1;;Tec Sidemount Instructor;
+1;;Tec Trimix 65;
+1;;Tec Trimix Diver;
+1;;Tec Trimix Instructor;
+1;;Underwater Naturalist;
+1;;Underwater Navigator;
+1;;Underwater Videographer;
+1;;Wreck Diver;
+2;;Advanced Open Water Diver;
+2;;Advanced Open Water Instructor;
+2;;Classified Open Water Instructor;
+2;;Dive Control Specialist;
+2;;Dive Control Specialist Instructor;
+2;;Dive Guide;
+2;;Divemaster;
+2;;Divemaster Instructor;
+2;;Diver Stress & Rescue;
+2;;Instructor Certifier;
+2;;Instructor Trainer;
+2;;Master Diver;
+2;;Master Instructor;
+2;;Open Water Diver;
+2;;Open Water Instructor;
+2;;Scuba Diver;
+2;;Snorkel Instructor;
+2;;Specialty Diver;
+2;;Specialty Instructor;
+2;;Training Specialist;
+2;;TXR Advanced Decompression Procedures Diver;
+2;;TXR Advanced Decompression Procedures/Normoxic Trimix Diving Instructor;
+2;;TXR Cave Diver;
+2;;TXR Cave Diving Instructor;
+2;;TXR Full Cave Diver;
+2;;TXR Full Cave Diving Instructor;
+2;;TXR Gas Blender;
+2;;TXR Gas Blender Instructor;
+2;;TXR Hypoxic Trimix Diver;
+2;;TXR Hypoxic Trimix Diving Instructor;
+2;;TXR Instructor Trainer;
+2;;TXR Normoxic Trimix Diver;
+2;;TXR Technical Wreck Diver;
+2;;TXR Technical Wreck Diving Instructor;
+2;;XR Advanced Wreck Diver;
+2;;XR Advanced Wreck Diving Instructor;
+2;;XR Cavern Diver;
+2;;XR Cavern Diving Instructor;
+2;;XR Instructor;
+2;;XR Instructor Trainer;
+2;;XR Limited Trimix Diver;
+2;;XR Nitrox Diver;
+2;;XR Nitrox Instructor;
+2;;XR Nitrox Instructor Trainer;
+3;;Advanced Diver;
+3;;Advanced Instructor;
+3;;Assistant Diving Instructor;
+3;;Assistant Open Water Instructor;
+3;;Dive Leader;
+3;;First Class Diver;
+3;;Instructor Trainer;
+3;;National Instructor;
+3;;Ocean Diver;
+3;;Open Water Instructor;
+3;;Practical Instructor;
+3;;Sports Diver;
+3;;Theory Instructor;
+4;;Advanced Nitrox Diver;
+4;;Advanced Nitrox Instructor;
+4;;Advanced Semi-Closed Rebreather;
+4;;Advanced Semi-Closed Rebreather Diver;
+4;;Advanced Semi-Closed Rebreather Diver;
+4;;Advanced Trimix Diver;
+4;;Advanced Trimix Instructor;
+4;;Altitude Diver;
+4;;Apnoea Diver Level I;
+4;;Apnoea Diver Level II;
+4;;Apnoea Diver Level III;
+4;;Apnoea Instructor;
+4;;Cave Diver Level I (Cavern Diver);
+4;;Cave Diver Level II (Apprentice Cave Diver);
+4;;Cave Diver Level III (Full Cave Diver);
+4;;Cave Diving Instructor I (Cavern Diving Instructor);
+4;;Cave Diving Instructor II (Full Cave Diving Instructor);
+4;;Cave Diving Instructor III (Cave Diving Staff Instructor);
+4;;Children Diving Bronze Award;
+4;;Children Diving Dive Leader;
+4;;Children Diving Gold Award;
+4;;Children Diving Instructor;
+4;;Children Diving Instructor Trainer;
+4;;Children Diving Silver Award;
+4;;Closed Circuit Rebreather Diver;
+4;;Closed Circuit Rebreather Instructor;
+4;;Compressor Operator;
+4;;CPR & BLS;
+4;;Disabled Diver: Open Water Diving Environment Level I;
+4;;Disabled Diver: Open Water Diving Environment Level II;
+4;;Disabled Diver: Open Water Diving Environment Level III;
+4;;Diver *;
+4;;Diver **;
+4;;Diver ***;
+4;;Diver ****;
+4;;Drysuit Diver;
+4;;Enriched Air Nitrox Diver;
+4;;Extended Range Nitrox Diver;
+4;;Ice Diver;
+4;;Ice Diver Instructor;
+4;;Instructor *;
+4;;Instructor **;
+4;;Instructor ***;
+4;;Instructor for Disabled Divers;
+4;;Instructor Trainer for Disabled Divers;
+4;;Instructors Assistant for Disabled Divers;
+4;;Introductory SCUBA Experience;
+4;;Nitrox Gas Blender;
+4;;Nitrox Gas Blender Instructor;
+4;;Nitrox Instructor;
+4;;Nitrox Instructor Three Star;
+4;;Normoxic Trimix Diver;
+4;;One Star Snorkel Diver Instructor;
+4;;Overhead environment Scooter;
+4;;Overhead Environment Scooter Assistant;
+4;;Overhead Environment Scooter Instructor;
+4;;Oxygen Administration;
+4;;Recreational Scooter Assistant;
+4;;Recreational Scooter Diver;
+4;;Recreational Scooter Instructor;
+4;;Recreational Trimix Diver;
+4;;Rescue Diver;
+4;;Search and Recovery Diver;
+4;;Semi-Closed Rebreather Diver;
+4;;Semi-Closed Rebreather Instructor;
+4;;Technical Scooter Assistant;
+4;;Technical Scooter Diver;
+4;;Technical Scooter Instructor;
+4;;Trimix Diver;
+4;;Trimix Gas Blender;
+4;;Trimix Gas Blender Instructor;
+4;;Trimix Instructor;
+4;;Two Star Snorkel Diver Instructor;
+4;;Underwater Navigation;
+4;;Wreck Diver Level 1;
+4;;Wreck Diver Level 2;
+5;;Advanced Scuba Diver;
+5;;Assistant Instructor;
+5;;Cave Diver (Levels I, II, and III);
+5;;Cavern Diver;
+5;;CCR Mixed Gas Diver;
+5;;Closed Circuit Rebreather Diver;
+5;;Course Director;
+5;;Decompression Technique;
+5;;Divemaster;
+5;;Dry Suit Diver;
+5;;Enriched Air Nitrox (EAN) Diver;
+5;;Experienced Scuba Diver;
+5;;Heliair Diver;
+5;;Helitrox Diver;
+5;;Ice Diver;
+5;;Instructor;
+5;;Instructor Prep Course;
+5;;Instructor Trainer;
+5;;Introduction to Technical Diving;
+5;;Junior Advanced Scuba Diver;
+5;;Junior Scuba Diver;
+5;;Master Scuba Diver;
+5;;Mixed Gas Blender and O2 Service Technician;
+5;;Recreational Courses;
+5;;Scuba Diver;
+5;;Scuba Diver;
+5;;Scuba Rescue Diver;
+5;;Search and Recovery Diver;
+5;;Semi-closed Rebreather Diver;
+5;;Skin Diver;
+5;;Skin Diving Instructor;
+5;;Technical Nitrox Diver;
+5;;Technical Support Leader;
+5;;Technical Wreck Penetration Diver;
+5;;Training Assistant;
+5;;Tri-Mix Diver (Levels I & II);
+5;;Underwater Archaeologist;
+5;;Underwater Ecologist;
+5;;Underwater Environment;
+5;;Underwater Hunter and Collector;
+5;;Underwater Photographer;
+5;;Wreck Diver (External Survey);
+5;;Wreck Penetration Diver;
+6;;Advanced 35;
+6;;Advanced Wreck Diving;
+6;;Basic Wreck Specialty;
+6;;Boat Diving Specialty;
+6;;Classic Inspiration;
+6;;Classic KISS;
+6;;Compressor Operator;
+6;;Deep 40 Specialty;
+6;;Divemaster;
+6;;Drysuit Speciality;
+6;;Evolution/ Inspiration;
+6;;Explorer 30;
+6;;Junior Open Water;
+6;;Junior Scuba Diver;
+6;;Master Rescue Diver;
+6;;Mk6 SE7EN STD Rebreather;
+6;;Navigation Specialty;
+6;;Night and Limited Visibility Specialty;
+6;;Nitrox Speciality;
+6;;O2 Service and Gas Blender;
+6;;O2ptima Rebreather;
+6;;OC Deco 40m/ 132ft;
+6;;OC Deco 50m/ 164ft;
+6;;OC Instructor Deco 50m/ 164ft;
+6;;Open Water 20;
+6;;Open Water Instructor;
+6;;Photography Specialty;
+6;;RB Deco 40m/ 132ft;
+6;;RB Deco 50m/ 164ft;
+6;;RB Deco 65m/ 213ft;
+6;;RB Instructor Deco 50m/ 164ft;
+6;;RB Instructor Deco 65m/ 213ft;
+6;;Rebreather Level 1;
+6;;Rebreather Level 2;
+6;;Rebreather Level 3;
+6;;Rebreather Level 4;
+6;;Scuba Diver;
+6;;SE7EN Mk6 MI Rebreather;
+6;;Search and Recovery Specialty;
+6;;Sentinel Rebreather;
+6;;Side Mount Speciality;
+6;;Speciality Instructor;
+6;;Speciality Rebreather;
+6;;Sport Instructor;
+6;;Sport KISS;
+6;;Tech Diving;
+6;;Try Rebreather;
+6;;Try Scuba Diving;
+7;;Advanced Adventure Diver;
+7;;Advanced Buoyancy;
+7;;Altitude Diver;
+7;;Assistant Instructor;
+7;;Boat Diver;
+7;;Computer Diver;
+7;;Computer Nitrox Diver;
+7;;CPR1st Administrator Course;
+7;;CPROX Administrator Course;
+7;;Deep Diver;
+7;;Divemaster;
+7;;Diver Propulsion Vehicle;
+7;;Drift Diver;
+7;;Dry Suit Diver;
+7;;Equipment Specialist;
+7;;Full Face Mask Diver Specialty;
+7;;Future Buddies;
+7;;Ice Diver;
+7;;Inactive Diver Program;
+7;;Instructor Course;
+7;;Instructor Trainer;
+7;;IT Staff Instructor;
+7;;Marine Ecosystems Awareness;
+7;;Master Scuba Diver;
+7;;Night- Limited Visibility Diver;
+7;;Open Water Scuba Diver;
+7;;Rescue Diver;
+7;;Research Diver;
+7;;Scuba Discovery;
+7;;Search and Recovery;
+7;;Shore/Beach Diver;
+7;;Sidemount Diver;
+7;;Skin Diver;
+7;;Solo Diver;
+7;;Specialty Instructor;
+7;;Underwater Hunter & Collector;
+7;;Underwater Navigation;
+7;;Underwater Photography;
+7;;Underwater Video;
+7;;Visual Inspection Procedures;
+7;;Wreck Diver;
+8;;Advanced Gas Blender;
+8;;Advanced Mix Gas Closed Circuit Rebreather Diver;
+8;;Advanced Nitrox Diver;
+8;;Advanced Trimix Diver;
+8;;Advanced Wreck Diver;
+8;;Air Diluent Closed Circuit Rebreather Diver;
+8;;Air Diluent Closed Circuit Rebreather Diver;
+8;;Basic Air Diluent Decompression Rebreather Diver;
+8;;Cave DPV Diver;
+8;;Cave Surveying Diver;
+8;;Cavern Diver;
+8;;Decompression Procedures Diver;
+8;;Extended Range Diver;
+8;;Full Cave Diver;
+8;;Intro to Cave Diver;
+8;;Intro to Tech Diving;
+8;;Mixed Gas Closed Circuit Rebreather Diver;
+8;;Nitrox Diver;
+8;;Nitrox Gas Blender;
+8;;O2 Service Technician;
+8;;Overhead Environment Courses;
+8;;Semi-Closed Rebreather Diver;
+8;;Service Courses;
+8;;Sidemount Diver;
+8;;Stage Cave Diver;
+8;;Technical Divemaster;
+8;;Technical Diving Instructor Trainer;
+8;;Trimix Diver;

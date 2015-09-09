@@ -1,21 +1,21 @@
-name,description,for_type
-Altitude,,Location
-Cave,,Location
-Cavern Diving,,Location
-Certified Diving,,Trip
-Continued Education Courses,,Trip
-Day Trip,,Trip
-Deep,,Location
-Drift,,Location
-Fresh Water,,Location
-Ice,,Location
-Night,,Location
-Nitrox,,Trip
-Ocean,,Location
-Overnight,,Trip
-Reef,,Location
-Shore,,Location
-Starter Courses,,Trip
-Trimex,,Trip
-Wall,,Location
-Wreck,,Location
+name;description;for_type
+Altitude;;Location
+Cave;;Location
+Cavern Diving;;Location
+Certified Diving;;Trip
+Continued Education Courses;;Trip
+Day Trip;;Trip
+Deep;;Location
+Drift;;Location
+Fresh Water;;Location
+Ice;;Location
+Night;;Location
+Nitrox;;Trip
+Ocean;;Location
+Overnight;;Trip
+Reef;;Location
+Shore;;Location
+Starter Courses;;Trip
+Trimex;;Trip
+Wall;;Location
+Wreck;;Location

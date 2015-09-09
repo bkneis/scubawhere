@@ -3356,6 +3356,7 @@ return array(
     'ScheduleController' => $baseDir . '/app/controllers/ScheduleController.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
+    'SeedUpdatedAgencyAndCertificateDataSeptember2015' => $baseDir . '/app/database/migrations/2015_09_09_193042_seed_updated_agency_and_certificate_data_september_2015.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'SetCompanyLocationToProDiveCairns' => $baseDir . '/app/database/migrations/2014_10_26_233629_set_company_location_to_pro_dive_cairns.php',
     'SetReservedToNullForConfirmedBookings' => $baseDir . '/app/database/migrations/2015_05_26_183245_set_reserved_to_null_for_confirmed_bookings.php',
