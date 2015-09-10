@@ -82,7 +82,7 @@
 				</table>
 				<div class="form-group">
 					{{#if isTrip}}
-					{{#if boat_required}}
+					{{#if trip.boat_required}}
 						Boat for this session:&nbsp;
 						<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
 							{{#each boats}}
