@@ -118,6 +118,7 @@ class DepartureController extends Controller {
 		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
+			/*
 			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
@@ -129,6 +130,10 @@ class DepartureController extends Controller {
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
 				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
 			}
+			*/
+
+			// If no end date is specified, delete the variable to not mess up the validator
+			unset($data['before']);
 		}
 		else
 		{
@@ -136,7 +141,7 @@ class DepartureController extends Controller {
 			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
 		}
 
-		if( $data['after'] > $data['before'] )
+		if( isset($data['before']) && $data['after'] > $data['before'] )
 		{
 			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
 		}
@@ -248,6 +253,9 @@ class DepartureController extends Controller {
 		if($available_for_from)  $available_for_from  = $available_for_from  . ' 00:00:00';
 		if($available_for_until) $available_for_until = $available_for_until . ' 23:59:59';
 
+		// Set the number of results to fetch
+		$take = isset($options['before']) ? 25 : 10;
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via trip to
 		  ticket and then (conditionally) to package.
@@ -317,10 +325,16 @@ class DepartureController extends Controller {
 			});
 		})
 		// Filter by dates
-		->whereBetween('start', array(
-			$options['after']->format('Y-m-d H:i:s'),
-			$options['before']->format('Y-m-d H:i:s')
-		))
+		->where(function($query) use ($options)
+		{
+			if(isset($options['before']))
+				$query->whereBetween('start', array(
+					$options['after']->format('Y-m-d H:i:s'),
+					$options['before']->format('Y-m-d H:i:s')
+				));
+			else
+				$query->where('start', '>=', $options['after']->format('Y-m-d H:i:s'));
+		})
 		// Filter by available_for dates
 		->where(function($query) use ($available_for_from)
 		{
@@ -334,7 +348,7 @@ class DepartureController extends Controller {
 		})
 		// ->with('trip', 'trip.tickets')
 		->orderBy('start', 'ASC')
-		// ->take(25)
+		->take($take)
 		->get();
 
 		// Conditionally filter by boat
@@ -343,7 +357,7 @@ class DepartureController extends Controller {
 			$boatIDs = $ticket->boats()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatIDs)
 			{
-				return in_array($departure->boat_id, $boatIDs);
+				return $departure->boat_id === null || in_array($departure->boat_id, $boatIDs);
 			});
 		}
 
@@ -353,7 +367,7 @@ class DepartureController extends Controller {
 			$boatroomIDs = $ticket->boatrooms()->lists('id');
 			$departures = $departures->filter(function($departure) use ($boatroomIDs)
 			{
-				return count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
+				return $departure->boat_id === null || count( array_intersect($departure->boat->boatrooms()->lists('id'), $boatroomIDs) ) > 0;
 			});
 		}
 
@@ -363,7 +377,7 @@ class DepartureController extends Controller {
 			$departures = $departures->filter(function($departure) use ($course)
 			{
 				$capacity = $departure->getCapacityAttribute();
-				if( $capacity[0] >= $capacity[1] )
+				if( $departure->boat_id !== null && $capacity[0] >= $capacity[1] )
 				{
 					// Session/Boat full/overbooked
 					return false;
@@ -406,52 +420,48 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Check if the boat_id exists and belongs to the logged in company
-		try
+		if($trip->boat_required)
 		{
-			if( !Input::has('boat_id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
+			// Check if the boat_id exists and belongs to the logged in company
+			try
+			{
+				if( !Input::has('boat_id') ) throw new ModelNotFoundException();
+				$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Response::json( array('errors' => array('The boat could not be found.')), 404 ); // 404 Not Found
+			}
 		}
 
 		$departure = new Departure($data);
 
-		// check if the boat is being used at this time
-		$todayDate = [];
-		$todayDate['after'] = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
-		$todayDate['after'] = $todayDate['after']->format('Y-m-d');
-		$todayDate['before'] = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
-		$todayDate['before'] = $todayDate['before']->setTime(23, 59)->format('Y-m-d H:i:s');
-		$departures = Auth::user()->departures()
-			->whereBetween('start', [$todayDate['after'], $todayDate['before']])
-			->where('boat_id', $departure->boat_id)
-			->get();
-		foreach ($departures as $dep) {
-			$trip_duration = Auth::user()->trips()->findOrFail($dep->trip_id)->duration + 0;
-			$trip_duration = $trip_duration * 60;
-			$durationString = 'PT' . $trip_duration . 'M';
-			$trip_duration2 = Auth::user()->trips()->findOrFail(Input::get('trip_id'))->duration + 0;
-			$trip_duration2 = $trip_duration2 * 60;
-			$durationString2 = 'PT' . $trip_duration2 . 'M';
-			$startTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime = new DateTime($dep->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime = $finishTime->add(new DateInterval($durationString));
-			$startTime2 = new DateTime($departure->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime2 = new DateTime($departure->start, new DateTimeZone(Auth::user()->timezone));
-			$finishTime2 = $finishTime2->add(new DateInterval($durationString2));
+		if($trip->boat_required)
+		{
+			// Check if the boat is already being used during the submitted time
+			$tripStart = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
+			$tripEnd   = clone $tripStart;
 
-			if($startTime <= $finishTime2 && $finishTime >= $startTime2) {
-				return Response::json( array('errors' => array('The boat is being used at that time ')), 403);
-			}
+			$duration_hours   = floor($trip->duration);
+			$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+			$tripEnd->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
+			$tripStart = $tripStart->format('Y-m-d H:i:s');
+			$tripEnd   = $tripEnd->format('Y-m-d H:i:s');
+
+			$overlappingSessions = Auth::user()->departures()
+				->where('boat_id', $departure->boat_id)
+				->where('start', '<=', $tripEnd)
+				->where(DB::raw("ADDTIME(start, '$duration_hours:$duration_minutes:0')"), '>=', $tripStart)
+				->exists();
+
+			if($overlappingSessions)
+				return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
+
+			// Check if trip is overnight and if so, check if boat has boatrooms
+			if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
+				return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 		}
-
-		// Check if trip is overnight and if so, check if boat has boatrooms
-		if($departure->isOvernight($trip) && $boat->boatrooms()->count() === 0)
-			return Response::json( array('errors' => array('The boat cannot be used for this trip. It does not have cabins, which are required for overnight trips.')), 403 ); // 403 Forbidden
 
 		if( !$departure->validate() )
 		{

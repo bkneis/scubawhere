@@ -61,11 +61,11 @@ class CronRunCommand extends Command {
 	protected $messages = array();
 
 	/**
-	 * Specify the time of day that daily tasks get run
+	 * Specify the time of day that daily tasks get run (UTC)
 	 *
 	 * @var string [HH:MM]
 	 */
-	protected $runAt = '03:00';
+	protected $runAt = '00:00';
 
 	/**
 	 * Create a new command instance.
@@ -98,8 +98,8 @@ class CronRunCommand extends Command {
 
 			foreach($bookings as $booking)
 			{
-				$now = new DateTime('now', new DateTimeZone($booking->company->timezone));
-				$test = new DateTime($booking->reserved, new DateTimeZone($booking->company->timezone));
+				$now  = new DateTime('now', new DateTimeZone($booking->company->timezone));
+				$test = new DateTime($booking->reserved_until, new DateTimeZone($booking->company->timezone));
 				if($test < $now)
 				{
 					$booking->status === 'initialised' ? $ids_abandoned[] = $booking->id : $ids_expired[] = $booking->id;
@@ -151,6 +151,12 @@ class CronRunCommand extends Command {
 			Artisan::call('auth:clear-reminders');
 		});
 
+		$this->daily(function()
+		{
+			$dateString = date('Y-m-d_H-i');
+			Artisan::call('db:backup --database=mysql --destination=local --destinationPath=/' . $dateString . '.sql --compression=gzip');
+		});
+
 		// DO NOT REMOVE!
 		$this->finish();
 	}
@@ -159,7 +165,9 @@ class CronRunCommand extends Command {
 	{
 		// Write execution time and messages to the log
 		$executionTime = round(((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000), 3);
-		Log::info('Cron: execution time: ' . $executionTime . ' | ' . implode(', ', $this->messages));
+		$msg = 'Cron: execution time: ' . $executionTime . ' | ' . implode(', ', $this->messages);
+		Log::info($msg);
+		$this->info($msg);
 	}
 
 	/**

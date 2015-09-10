@@ -30,7 +30,7 @@
 				<script type="text/x-handlebars-template" id="selected-customer-template">
 					<h4>Customer Details</h4>
 					<li href="#" class="list-group-item" data-id="{{id}}" data-lead="{{lead}}" data-country-id="{{country_id}}">
-						<a href="javascript:void(0);" class="btn btn-primary btn-xs edit-customer pull-right" data-id="{{id}}">Edit</a>
+						<a href="javascript:void(0);" class="btn btn-default btn-xs edit-customer pull-right" data-id="{{id}}">Edit</a>
 						<h5 class="list-group-item-heading">{{{firstname}}} {{{lastname}}}</h5>
 						<p class="list-group-item-text">
 							<a href="mailto:{{email}}" class="customer-email">{{email}}</a><br>

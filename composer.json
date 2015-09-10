@@ -11,7 +11,8 @@
 		"philipbrown/money": "1.*",
 		"itsgoingd/clockwork": "1.*",
 		"guzzlehttp/guzzle": "~4.0",
-		"way/generators": "~2.0"
+		"way/generators": "~2.0",
+		"backup-manager/laravel": "^1.0"
 	},
 	"autoload": {
 		"classmap": [

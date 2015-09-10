@@ -47,41 +47,49 @@
 							</div>
 
 							<div class="form-row">
-								<p><strong>Set base prices for this ticket:</strong></p>
-								{{#each base_prices}}
-									{{> price_input}}
-								{{/each}}
-								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
+								<label>
+									<input type="checkbox" name="only_packaged" value="1" onchange="togglePrices(this)"{{#if update}} disabled="disabled"{{/if}}{{#if only_packaged}} checked="checked"{{/if}}> This ticket cannot be booked individually
+								</label>
 							</div>
 
-							<div class="form-row" id="tickets-seasonal">
-								<label>
-									<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
-									Add seasonal price changes?
-								</label>
-								<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
-									<h4>Seasonal price changes</h4>
-									{{#each prices}}
+							{{#unless only_packaged}}
+								<div class="form-row prices">
+									<p><strong>Set base prices for this ticket:</strong></p>
+									{{#each base_prices}}
 										{{> price_input}}
-									{{else}}
-										{{#with default_price}}
-											{{> price_input}}
-										{{/with}}
 									{{/each}}
-									<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
+									<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
 								</div>
-							</div>
+
+								<div class="form-row prices" id="tickets-seasonal">
+									<label>
+										<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+										Add seasonal price changes?
+									</label>
+									<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
+										<h4>Seasonal price changes</h4>
+										{{#each prices}}
+											{{> price_input}}
+										{{else}}
+											{{#with default_price}}
+												{{> price_input}}
+											{{/with}}
+										{{/each}}
+										<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
+									</div>
+								</div>
+							{{/unless}}
 
 							<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
 								<h4>Please select the trips that this ticket should be eligable for:</h4>
+								<div id="ticket-selectList" class="form-row">
 								{{#each available_trips}}
-									<p style="margin-left: 4em;">
-										<label>
-											<input type="checkbox" name="trips[]" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
+										<label class="ticket-select{{inArray id ../trips ' checked' ''}}">
+											<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
 											{{{name}}}
 										</label>
-									</p>
 								{{/each}}
+								</div>
 							</div>
 
 							<div class="form-row" id="tickets-boats" data-step="4" data-position="top" data-intro="You can also limit the ticket to be used for specific boats.">

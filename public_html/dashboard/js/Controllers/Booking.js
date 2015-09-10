@@ -229,7 +229,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 	// Determine whether we need to inject a packagefacade_id into the request
 	if(typeof params.packagefacade_id === 'undefined' && typeof params.package_id !== 'undefined') {
-		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted. A new package will be assigned.');
+		console.warn('WARNING: Potentially unexpected behaviour! - No packagefacade_id submitted. A new packagefacade will be assigned.');
 
 		/*var existingDetail = _.find(this.bookingdetails, function(detail) {
 			// First, test the customer_id
@@ -264,7 +264,8 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				session: params.session_id ? window.sessions[params.session_id] : null,
 				ticket: params.ticket_id ? $.extend(true, {}, window.tickets[params.ticket_id]) : null, // Need to clone the ticket object, because we are going to write its decimal_price for the session's date in it
 				course: params.course_id ? $.extend(true, {}, window.courses[params.course_id]) : null,
-				training_session: params.training_session_id ? window.training_sessions[params.training_session_id] : null,
+				training: params.training_id ? $.extend(true, {}, window.trainings[params.training_id]) : null,
+				training_session: params.training_session_id ? _.omit(window.training_sessions[params.training_session_id], 'training') : null,
 				addons: [], // Prepare the addons array to be able to just push to it later
 			};
 
@@ -284,6 +285,9 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 
 			if(data.boatroom_id)
 				detail.boatroom_id = data.boatroom_id;
+
+			if(params.temporary)
+				detail.temporary = params.temporary;
 
 			// Add compulsory addons
 			_.each(data.addons, function(id) {
@@ -617,7 +621,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
  *
  * @param  {object} params    Must contain:
  * - _token
- * - reserved {string} The datetime until the booking should be reserved, in 'YYYY-MM-DD HH:MM:SS' format
+ * - reserved_until {string} The number of hours that the booking should be reserved for (from "now")
  *
  * @param {function} successFn Recieves API data.status as first and only parameter
  * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
@@ -633,8 +637,9 @@ Booking.prototype.reserve = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.reserved = params.reserved;
+			this.reserved_until = data.reserved_until;
 			this.status = 'reserved';
+			this.setStatus();
 
 			successFn(data.status);
 		},

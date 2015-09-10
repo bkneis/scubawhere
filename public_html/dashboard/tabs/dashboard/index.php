@@ -107,7 +107,7 @@
     <div class="col-md-7">
       <div class="panel panel-default" id="todays-sessions">
         <div class="panel-heading">
-          <h4 class="panel-title">Todays Trips</h4>
+          <h4 class="panel-title">Upcoming Trips</h4>
         </div>
         <div style="min-height:250px;" class="panel-body">
           <table class="bluethead">
@@ -115,8 +115,8 @@
               <tr class="bg-primary">
                 <th>Trip</th>
                 <th>Boat</th>
-                <th>Capacity</th>
-                <th>Time</th>
+                <th>Utilisation</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody id="sessions-list">
@@ -167,7 +167,7 @@
         <td>{{trip.name}}</td>
         <td>{{boat.name}}</td>
         <td>{{getPer capacity}}</td>
-        <td>{{getTime start}} - {{getEnd start trip.duration}}</td>
+        <td>{{friendlyDate start}} - {{tripFinish start trip.duration}}</td>
       </tr>
       <tr class="accordion-body accordion-{{id}}">
         <td colspan="9" style="overflow: auto;">

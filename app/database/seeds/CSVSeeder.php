@@ -22,7 +22,7 @@ class CSVSeeder extends Seeder
 		//Clear anything out from the current table & reset any auto increments
 		DB::table($this->tableName)->truncate();
 		//Read the data from the .csv file
-		$data = $this->readCSV($this->csvFile, ',');
+		$data = $this->readCSV($this->csvFile, ';');
 		//Seed the table if data was returned
 		if ($data !== false) {
 			DB::table($this->tableName)->insert($data);
@@ -35,7 +35,7 @@ class CSVSeeder extends Seeder
 	 * @param string $deliminator separating fields
 	 * @return array if read is successful, bool false if not
 	 */
-	private function readCSV($csvFile, $deliminator = ",")
+	private function readCSV($csvFile, $deliminator = ";")
 	{
 		//Check the file exists & we can read it
 		if(!file_exists($csvFile) || !is_readable($csvFile)) {

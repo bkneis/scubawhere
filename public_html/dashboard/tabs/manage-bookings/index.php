@@ -79,18 +79,18 @@
 			<tbody id="booking-list">
 
 				{{#each bookings}}
-				<tr class="accordion-header" data-id={{id}}>
-					<td>{{sourceIcon}} {{statusIcon}}</td>
-					<td>{{reference}}</td>
-					<td>{{arrivalDate}}</td>
-					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-					<td>{{lead_customer.email}}</td>
-					<td>{{lead_customer.phone}}</td>
-					<td>{{lead_customer.country.abbreviation}}</td>
-					<td>{{price}}</td>
-				</tr>
+					<tr class="accordion-header" data-id={{id}}>
+						<td>{{sourceIcon}} {{statusIcon}}</td>
+						<td>{{reference}}</td>
+						<td>{{arrivalDate}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<td>{{lead_customer.email}}</td>
+						<td>{{lead_customer.phone}}</td>
+						<td>{{lead_customer.country.abbreviation}}</td>
+						<td>{{price}}</td>
+					</tr>
 				{{else}}
-				<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
+					<tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
 				{{/each}}
 
 			</tbody>
@@ -160,7 +160,7 @@
 		</div>
 	</script>
 
-	<script id="email-customer-template" type="text/x-handlebars-template">
+	<script type="text/x-handlebars-template" id="email-customer-template">
 		<div class="form-group">
 			<div class="col-md-12">
 				<label for="subject" class="control-label">Subject</label>
@@ -179,49 +179,49 @@
 
 	<script type="text/x-handlebars-template" id="booking-details-template">
 		{{#each bookingDetails}}
-		<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
-			{{#if payments}}
-			<h5 class="text-center">Transactions</h5>
-			<table style="width: 350px;" class="table">
-				<tr>
-					<th>Date</th>
-					<th>Amount</th>
-					<th>Via</th>
-				</tr>
-				{{#each payments}}
-				<tr>
-					<td>{{received_at}}</td>
-					<td>{{currency}} {{amount}}</td>
-					<td>{{paymentgateway.name}}</td>
-				</tr>
-				{{/each}}
-				{{#each refunds}}
-				<tr>
-					<td>{{received_at}}</td>
-					<td class="text-danger">{{currency}} -{{amount}}</td>
-					<td>{{paymentgateway.name}} (refund)</td>
-				</tr>
-				{{/each}}
-				<tr>
-					<td></td>
-					<td class="table-sum">{{currency}} {{sumPaid}}</td>
-					<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
-				</tr>
-			</table>
-			{{else}}
-			<h5 class="text-center text-muted">No transactions yet</h5>
-			{{/if}}
-		</div>
+			<div style="float: left; width: 360px; margin-right: 10px; border-right: 1px solid #C3D9F4; height: 100%;">
+				{{#if payments}}
+					<h5 class="text-center">Transactions</h5>
+					<table style="width: 350px;" class="table">
+						<tr>
+							<th>Date</th>
+							<th>Amount</th>
+							<th>Via</th>
+						</tr>
+						{{#each payments}}
+							<tr>
+								<td>{{received_at}}</td>
+								<td>{{currency}} {{amount}}</td>
+								<td>{{paymentgateway.name}}</td>
+							</tr>
+						{{/each}}
+						{{#each refunds}}
+							<tr>
+								<td>{{received_at}}</td>
+								<td class="text-danger">{{currency}} -{{amount}}</td>
+								<td>{{paymentgateway.name}} (refund)</td>
+							</tr>
+						{{/each}}
+						<tr>
+							<td></td>
+							<td class="table-sum">{{currency}} {{sumPaid}}</td>
+							<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
+						</tr>
+					</table>
+				{{else}}
+					<h5 class="text-center text-muted">No transactions yet</h5>
+				{{/if}}
+			</div>
 
-		<div style="margin-bottom: 1em;">
-			{{addTransactionButton id}}
-			{{editButton id}}
+			<div style="margin-bottom: 1em;">
+				{{addTransactionButton id}}
+				{{editButton id}}
 
-			<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
-		</div>
-		<div>
-			{{cancelButton}}
-		</div>
+				<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
+			</div>
+			<div>
+				{{cancelButton}}
+			</div>
 		{{/each}}
 	</script>
 

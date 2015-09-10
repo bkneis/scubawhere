@@ -44,6 +44,12 @@
 							</div>
 
 							<div class="form-row">
+								<label>
+									<input type="checkbox" name="boat_required" value="0"{{isBoatChecked}}{{#if update}} disabled{{/if}}> This is a shore-based dive and does not require a boat
+								</label>
+							</div>
+
+							<div class="form-row">
 								<label class="field-label">Trip Duration</label>
 								<input type="number" min="1" step="0.1" name="duration" id="tripDuration" rows="3" cols="10" value="{{duration}}" style="width: 70px;"> hours
 								<strong><span id="readableDuration" style="margin-left: 2em;">{{readable duration}}</span></strong>

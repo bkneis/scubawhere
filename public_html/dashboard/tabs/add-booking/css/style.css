@@ -1,6 +1,9 @@
 
-.btn:link{
-    color: #FFFFFF!important;
+.btn:link {
+    color: #FFFFFF !important;
+}
+.btn-default:link {
+    color: #333333 !important;
 }
 
 .bootstrap-datetimepicker-widget .btn:link {
@@ -145,6 +148,10 @@
 
 #tickets-ticket-list .panel {
     border-color: rgba(0, 0, 0, 0);
+}
+
+#tickets-ticket-list .panel-heading {
+    position: relative;
 }
 
 #session-tab .list-group {

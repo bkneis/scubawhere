@@ -17,10 +17,8 @@ var Session = {
 	/**
 	 * Filter sessions by certain parameters.
 	 *
-	 * Required:
-	 * - ticket_id
-	 *
 	 * Optional:
+	 * - ticket_id
 	 * - package_id
 	 * - trip_id
 	 * - after      (a datetime (in UTC) of the format 'YYYY-MM-DD hh:mm:ss')

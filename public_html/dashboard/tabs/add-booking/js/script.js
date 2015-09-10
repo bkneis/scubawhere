@@ -175,38 +175,38 @@ Handlebars.registerHelper('sourceIcon', function() {
 	return new Handlebars.SafeString('Source: <i class="fa ' + icon + ' fa-fw"></i> ' + tooltip);
 });
 
-Handlebars.registerHelper('statusIcon', function() {
+function statusIcon(booking) {
 	var icon    = '',
 	color   = 'inherit',
 	tooltip = '';
 
-	if(this.status === 'cancelled') {
+	if(booking.status === 'cancelled') {
 		icon    = 'fa-ban';
 		tooltip = 'Cancelled';
 
-		// if(this.sums.refundable > 0 {
-			if(this.sums.have > this.cancellation_fee) {
+		// if(booking.sums.refundable > 0 {
+			if(booking.sums.have > booking.cancellation_fee) {
 			// Refund necessary!
 			color   = '#d9534f';
 			tooltip = 'Cancelled, refund necessary';
 		}
 
-		if(this.sums.have < this.cancellation_fee) {
+		if(booking.sums.have < booking.cancellation_fee) {
 			color   = '#f0ad4e';
 			tooltip = 'Cancelled, payment outstanding';
 		}
 	}
-	else if(this.status === 'confirmed') {
+	else if(booking.status === 'confirmed') {
 		icon = 'fa-check';
 
-		var percentage = this.sums.have / this.decimal_price;
+		var percentage = booking.sums.have / booking.decimal_price;
 
 		if(percentage === 1) color = '#5cb85c';
 		else if(percentage === 0) color = '#d9534f';
 		else color = '#f0ad4e';
 
 		if(percentage === 1) tooltip = 'Confirmed, completely paid';
-		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
+		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + booking.sums.have + '/' + booking.decimal_price + ' paid';
 
 		if(percentage > 1) {
 			icon = 'fa-exclamation';
@@ -214,16 +214,16 @@ Handlebars.registerHelper('statusIcon', function() {
 			tooltip = 'Confirmed, refund necessary';
 		}
 	}
-	else if(this.status === 'reserved') {
+	else if(booking.status === 'reserved') {
 		icon    = 'fa-clock-o';
-		tooltip = 'Reserved until ' + moment(this.reserved).format('DD MMM, HH:mm');
+		tooltip = 'Reserved until ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
 
-		if(this.reserved == null) {
+		if(booking.reserved_until == null) {
 			tooltip = 'Reservation expired';
 			color   = '#d9534f';
 		}
 	}
-	else if(this.status === 'saved') {
+	else if(booking.status === 'saved') {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
@@ -232,6 +232,10 @@ Handlebars.registerHelper('statusIcon', function() {
 	}
 
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';"></i> ' + tooltip);
+}
+
+Handlebars.registerHelper('statusIcon', function() {
+	return statusIcon(this);
 });
 
 Handlebars.registerHelper('ticket-list-clearfix', function(index) {
@@ -283,7 +287,10 @@ Agent.getAllAgents(function(data){
 window.promises.loadedTickets = $.Deferred();
 Ticket.getOnlyAvailable(function(data){
 	window.tickets = _.indexBy(data, 'id');
-	$("#tickets-list").html(ticketTemplate({tickets: window.tickets}));
+	var displayableTickets = _.filter(window.tickets, function(ticket) {
+		return !ticket.only_packaged;
+	});
+	$("#tickets-list").html(ticketTemplate({tickets: displayableTickets}));
 	window.promises.loadedTickets.resolve();
 });
 
@@ -353,9 +360,6 @@ Boatroom.getAll(function(data){
 window.promises.loadedAddons = $.Deferred();
 Addon.getAllAddons(function(data){
 	window.addons = _.indexBy(data, 'id');
-	/* _.each(window.addons, function(addon) {
-		addon.compulsory = parseInt(addon.compulsory);
-	}); */
 	$("#addons-list").html(addonsTemplate({addons: window.addons}));
 	window.promises.loadedAddons.resolve();
 });
@@ -365,6 +369,12 @@ Accommodation.getAll(function(data){
 	window.accommodations = _.indexBy(data, 'id');
 	$("#accommodations-list").html(accommodationsTemplate({accommodations: window.accommodations}));
 	window.promises.loadedAccommodations.resolve();
+});
+
+window.promises.loadedTrainings = $.Deferred();
+Class.getAll(function(data){
+	window.trainings = _.indexBy(data, 'id');
+	window.promises.loadedTrainings.resolve();
 });
 
 window.promises.loadedAccommodations.done(function() {
@@ -484,7 +494,7 @@ window.promises.loadedToken.done(function() {
 			drawBasket();
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			$('.source-finish').html('Next');
 		});
 	});
@@ -647,7 +657,7 @@ $.when(
 		var regExp = new RegExp(event.target.value, 'i');
 
 		var tickets = _.filter(window.tickets, function(ticket) {
-			return ticket.name.search(regExp) > -1;
+			return !ticket.only_packaged && ticket.name.search(regExp) > -1;
 		});
 
 		var packages = _.filter(window.packages, function(package) {
@@ -703,7 +713,7 @@ $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(fun
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 	});
@@ -811,7 +821,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 			// All good
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 		});
 	});
 
@@ -836,7 +846,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				drawBasket();
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 		else {
@@ -849,7 +859,7 @@ $('#booking-summary').on('click', '.remove-customer', function() {
 				// All good
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
-				pageMssg(data.errors[0], 'danger');
+				if(data.errors) pageMssg(data.errors[0], 'danger');
 			});
 		}
 	}
@@ -885,7 +895,7 @@ window.promises.loadedCustomers.done(function() {
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			btn.html('Save');
 		});
 	});
@@ -926,13 +936,13 @@ window.promises.loadedCustomers.done(function() {
 						drawBasket();
 					}, function error(xhr) {
 						var data = JSON.parse(xhr.responseText);
-						pageMssg(data.errors[0], 'danger');
+						if(data.errors) pageMssg(data.errors[0], 'danger');
 					});
 				}
 			});
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+			if(data.errors) pageMssg(data.errors[0], 'danger');
 			btn.html('Add');
 		});
 	});
@@ -954,7 +964,7 @@ $('#booking-summary').on('click', '.lead-customer', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 });
 
@@ -1052,6 +1062,8 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 
 $('#session-tab').on('click', '.assign-session', function() {
 	var btn = $(this);
+	var btnText = btn.html();
+	btn.data('text', btnText);
 
 	btn.html('<i class="fa fa-cog fa-spin"></i> Assigning...');
 	btn.addClass('waiting');
@@ -1061,9 +1073,11 @@ $('#session-tab').on('click', '.assign-session', function() {
 
 	if(!data || !data.id) {
 		pageMssg('Please select a ticket or class.', 'warning');
-		btn.html('Assign');
+		btn.html(btnText);
 		return false;
 	}
+
+	data.btnText = btnText;
 
 	var params = {};
 	params.customer_id = $('#session-customers').children('.active').first().data('id');
@@ -1076,7 +1090,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 			var ownerId = data.identifier.split('-')[1];
 			if(ownerId != params.customer_id) {
 				pageMssg('This course is <b>already assigned</b> to <u>' + booking.selectedCustomers[ownerId].firstname + ' ' + booking.selectedCustomers[ownerId].lastname + '</u> and cannot be assigned to another customer.', 'danger', true);
-				$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+				$('#sessions-panel .waiting').removeClass('waiting').html('Assign');
 				return false;
 			}
 		}
@@ -1093,15 +1107,24 @@ $('#session-tab').on('click', '.assign-session', function() {
 		params.packagefacade_id = data.packagefacade;
 
 	if(data.type === 'ticket') {
-		params.ticket_id  = data.id;
+		params.ticket_id = data.id;
 		params.session_id = btn.data('id');
 	}
-	else
+	else {
+		params.training_id = data.id;
 		params.training_session_id = btn.data('id');
+	}
+
+	if(btn.data('temporary')) {
+		delete params.session_id;
+		delete params.training_session_id;
+
+		params.temporary = 1;
+	}
 
 	params._token = window.token;
 
-	if(data.type === 'ticket') {
+	if(!params.temporary && data.type === 'ticket') {
 		// Determine if we need to submit a boatroom_id
 		var session = window.sessions[params.session_id];
 		var trip    = window.trips[session.trip_id];
@@ -1156,7 +1179,7 @@ $('#session-tab').on('click', '.assign-session', function() {
 				onFinishModal: function() {
 					// Aborted action
 					if(!window.sw.modalClosedBySelection) {
-						this.btn.html('Assign');            // Reset the button
+						this.btn.html(this.data.btnText);            // Reset the button
 					} else {
 						delete window.sw.modalClosedBySelection;
 					}
@@ -1291,9 +1314,11 @@ function submitAddDetail(params, data) {
 		// Check if parent still contains something unassigned, otherwise remove parent
 		// TODO ... need parentParentPointer... :$
 
+		pageMssg(status, 'success');
+
 		booking.store();
 
-		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+		$('#sessions-panel .waiting').removeClass('waiting').html(data.btnText);
 
 		drawSessionTicketsList();
 
@@ -1302,9 +1327,10 @@ function submitAddDetail(params, data) {
 		});
 
 	}, function error(xhr) {
+		var btn = $('#sessions-panel .waiting');
+		btn.removeClass('waiting').html(btn.data('text'));
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
-		$('#sessions-table .waiting').removeClass('waiting').html('Assign');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 }
 
@@ -1386,14 +1412,14 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 					else {
 						// Is class in course
 						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training_session.training.id;
+							return training.id == detail.training.id;
 						});
 
 						if(existingTraining !== undefined)
 							existingTraining.qty++;
 						else {
-							detail.training_session.training.qty = 1;
-							relatedCourse.trainings.push(detail.training_session.training);
+							detail.training.qty = 1;
+							relatedCourse.trainings.push(detail.training);
 						}
 					}
 				}
@@ -1490,7 +1516,7 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Unassign');
 	});
 
@@ -1612,7 +1638,7 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Add');
 	});
 });
@@ -1641,7 +1667,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 		btn.html('Add');
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Add');
 	});
 });
@@ -1667,7 +1693,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Remove');
 	});
 });
@@ -1731,15 +1757,19 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 		_.map(booking.bookingdetails, function(detail) {
 			if(detail.session !== null)
 				return detail.session.start;
-			else
+			else if(detail.training_session)
 				return detail.training_session.start;
+			else
+				return '9999-12-31';
 		}).sort()
 	);
 
 	// Set all accommodations' start fields
-	var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-	$('.accommodation-start').val(startDate);
-	$('#packaged-accommodations-list .accommodation-start').change();
+	if(firstDepartureDate !== '9999-12-31') {
+		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+		$('.accommodation-start').val(startDate);
+		$('#packaged-accommodations-list .accommodation-start').change();
+	}
 });
 
 $('#accommodation-tab').on('change', '#packaged-accommodations-list .accommodation-start', function() {
@@ -1789,25 +1819,29 @@ function updatePackagedAccommodationsList() {
 			_.map(booking.bookingdetails, function(detail) {
 				if(detail.session !== null)
 					return detail.session.start;
-				else
+				else if(detail.training_session)
 					return detail.training_session.start;
+				else
+					return '9999-12-31';
 			}).sort()
 		);
 
 		// Set all accommodations' start fields
-		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-		$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
+		if(firstDepartureDate !== '9999-12-31') {
+			var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
+			$('#packaged-accommodations-list .accommodation-start').val(startDate).change();
 
-		$('#packaged-accommodations-list .datepicker').datetimepicker({
-			pickDate: true,
-			pickTime: false,
-			icons: {
-				time: 'fa fa-clock-o',
-				date: 'fa fa-calendar',
-				up:   'fa fa-chevron-up',
-				down: 'fa fa-chevron-down'
-			},
-		});
+			$('#packaged-accommodations-list .datepicker').datetimepicker({
+				pickDate: true,
+				pickTime: false,
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up:   'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				},
+			});
+		}
 	}
 }
 
@@ -1863,7 +1897,7 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 		btn.html("Add");
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html("Add");
 	});
 });
@@ -1886,7 +1920,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 		btn.html("Add");
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html("Add");
 	});
 });
@@ -1937,7 +1971,7 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 		drawBasket();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Remove');
 	});
 });
@@ -2000,7 +2034,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 		if(typeof(data) !== 'undefined' && typeof(data.callback) === 'function') data.callback();
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 		btn.html('Save');
 	});
 });
@@ -2055,8 +2089,10 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
 		if(detail.session)
 			return detail.session.start;
-		else
+		else if(detail.training_session)
 			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
 	});
 
 	// Sort accommodations by start date
@@ -2117,9 +2153,12 @@ $('#summary-tab').on('click', '.save-booking', function() {
 
 	booking.save(params, function success(status) {
 		pageMssg("Booking saved successfully!", "success");
+
+		// Update status on summary screen
+		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 
 });
@@ -2131,9 +2170,12 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 
 	booking.confirm(params, function success(status) {
 		pageMssg(status, "success");
+
+		// Update status on summary screen
+		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
+		if(data.errors) pageMssg(data.errors[0], 'danger');
 	});
 
 });
@@ -2147,9 +2189,12 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 
 	booking.reserve(params, function success(status) {
 		pageMssg("Booking reserved successfully!", "success");
+
+		// Update status on summary screen
+		$('#status').html(statusIcon(booking).string);
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], "danger");
+		if(data.errors) pageMssg(data.errors[0], "danger");
 	});
 
 });
@@ -2357,8 +2402,10 @@ function drawBasket(doneFn) {
 	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
 		if(detail.session)
 			return detail.session.start;
-		else
+		else if(detail.training_session)
 			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
 	});
 
 	// Sort accommodations by start date

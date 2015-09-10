@@ -153,7 +153,7 @@ class CustomerController extends Controller {
 		}
 
 		$certificates = Input::get('certificates', []);
-		if( $certificates && !empty($certificates) && is_array($certificates) && (count($certificates) === 0 || is_numeric($certificates[0])) )
+		if( is_array($certificates) && (count($certificates) === 0 || is_numeric($certificates[0])) )
 		{
 			try
 			{

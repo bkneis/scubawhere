@@ -11,4 +11,5 @@ php artisan optimize
 # Update composer
 php composer self-update
 
+# Run asset tasks (concatenation, minimisation)
 grunt --gruntfile ./public_html/Gruntfile.js

@@ -163,8 +163,9 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
+		<div class="panel panel-default" id="sessions-panel">
+			<div class="panel-heading" style="padding-right: 5px;">
+				<button class="btn btn-sm btn-default pull-right assign-session" style="margin-top: -5px;" data-temporary="temporary">Add without date <i class="fa fa-fast-forward fa-fw"></i></button>
 				<h3 class="panel-title">Assign to Session</h3>
 			</div>
 			<div class="panel-body">
@@ -172,9 +173,9 @@
 					<form role="form" id="session-filters">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="after">After:</label>
+								<label for="after">Show trips from:</label>
 								<div class="input-group">
-									<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD">
+									<input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="after" placeholder="YYYY-MM-DD"value="<?php echo date('Y-m-d'); ?>">
 									<span class="input-group-addon" onclick="$(this).siblings('input').val('');" style="cursor: pointer;">
 										<i class="fa fa-times" title="Clear date"></i>
 									</span>
@@ -182,6 +183,7 @@
 							</div>
 						</div>
 						<div class="col-sm-3">
+							<!--
 							<div class="form-group">
 								<label for="before">Before:</label>
 								<div class="input-group">
@@ -191,6 +193,7 @@
 									</span>
 								</div>
 							</div>
+							-->
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">

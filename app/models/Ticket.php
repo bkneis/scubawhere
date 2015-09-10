@@ -15,6 +15,7 @@ class Ticket extends Ardent {
 	public static $rules = array(
 		'name'                => 'required',
 		'description'         => '',
+		'only_packaged'       => 'boolean',
 		'parent_id'           => 'integer|min:1',
 		'available_from'      => 'date',
 		'available_until'     => 'date',

@@ -13,6 +13,10 @@ Handlebars.registerHelper('inArray', function(needle, haystack) {
 
 	return _.has(haystack, needle) ? ' checked' : '';
 });
+Handlebars.registerHelper('isBoatChecked', function() {
+	if(this.boat_required === 0)
+		return ' checked';
+});
 
 var tripForm,
 	tripList;

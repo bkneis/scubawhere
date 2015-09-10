@@ -13,7 +13,7 @@ class Booking extends Ardent {
 		// 'price',
 		'discount',
 		'status',
-		'reserved',
+		'reserved_until',
 		'cancellation_fee',
 		'pick_up_location',
 		'pick_up_date',
@@ -35,7 +35,7 @@ class Booking extends Ardent {
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
 		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled',
-		'reserved'         => 'date',
+		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
 		'pick_up_location' => 'required_with:pick_up_time',
 		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
@@ -89,45 +89,30 @@ class Booking extends Ardent {
 	}
 
 	public function getArrivalDateAttribute() {
-		$earliestDeparture = $this->departures()->orderBy('sessions.start', 'ASC')->first(array('sessions.*'));
-		if(!empty($earliestDeparture))
-			$earliestDeparture = new DateTime($earliestDeparture->start);
+		$earliestDeparture = null;
+		$earliestClass = null;
+		$earliestAccommodation = null;
 
-		$earliestClass = $this->training_sessions()->orderBy('training_sessions.start', 'ASC')->first(array('training_sessions.*'));
-		if(!empty($earliestClass))
-			$earliestClass = new DateTime($earliestClass->start);
+		$model = $this->departures()->orderBy('sessions.start', 'ASC')->first(array('sessions.*'));
+		if(!empty($model))
+			$earliestDeparture = new DateTime($model->start);
 
-		$earliestAccommodation = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
-		if(!empty($earliestAccommodation))
-			$earliestAccommodation = new DateTime($earliestAccommodation->pivot->start);
+		$model = $this->training_sessions()->orderBy('training_sessions.start', 'ASC')->first(array('training_sessions.*'));
+		if(!empty($model))
+			$earliestClass = new DateTime($model->start);
 
-		// This is ugly!
-		// TODO Make it more elegant
-		if(empty($earliestDeparture) && empty($earliestClass) && empty($earliestAccommodation))
+		$model = $this->accommodations()->orderBy('accommodation_booking.start', 'ASC')->first();
+		if(!empty($model))
+			$earliestAccommodation = new DateTime($model->pivot->start);
+
+		$dates = [$earliestDeparture, $earliestClass, $earliestAccommodation];
+		$dates = array_filter($dates);
+		sort($dates);
+
+		if(empty($dates) || empty($dates[0]))
 			return null;
 
-		if(empty($earliestDeparture) && empty($earliestClass))
-			return $earliestAccommodation->format('Y-m-d');
-
-		if(empty($earliestAccommodation) && empty($earliestClass))
-			return $earliestDeparture->format('Y-m-d');
-
-		if(empty($earliestDeparture) && empty($earliestAccommodation))
-			return $earliestClass->format('Y-m-d');
-
-		if(empty($earliestDeparture))
-			return $earliestAccommodation < $earliestClass ? $earliestAccommodation->format('Y-m-d') : $earliestClass->format('Y-m-d');
-
-		if(empty($earliestAccommodation))
-			return $earliestClass < $earliestDeparture ? $earliestClass->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
-
-		if(empty($earliestClass))
-			return $earliestAccommodation < $earliestDeparture ? $earliestAccommodation->format('Y-m-d') : $earliestDeparture->format('Y-m-d');
-
-		// If all three dates are represented, compare all three after another
-		$tmp = $earliestAccommodation < $earliestDeparture ? $earliestAccommodation : $earliestDeparture;
-
-		return $tmp < $earliestClass ? $tmp->format('Y-m-d') : $earliestClass->format('Y-m-d');
+		return $dates[0]->format('Y-m-d');
 	}
 
 	public function getCreatedAtLocalAttribute() {
@@ -138,38 +123,65 @@ class Booking extends Ardent {
 	}
 
 	public function getLastReturnDateAttribute() {
+		$lastTripReturn = null;
+		$lastClassReturn = null;
+		$lastAccommodationEnd = null;
+
 		$departures = $this->departures()->with('trip')->get();
-		$departures->sortByDesc(function($departure)
+		if(count($departures) > 0)
 		{
-			$trip             = $departure->trip;
-			$start            = new DateTime($trip->start);
-			$end              = clone $start;
-			$duration_hours   = floor($trip->duration);
-			$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
-			$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+			$departures->sortByDesc(function($departure)
+			{
+				$trip             = $departure->trip;
+				$start            = new DateTime($departure->start);
+				$end              = clone $start;
+				$duration_hours   = floor($trip->duration);
+				$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
+				$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
-			$departure->end = $end;
+				$departure->end = $end;
 
-			return $end->format('Y-m-d H:i:s');
-		});
-		$lastReturnDate = $departures->first()->end;
+				return $end->format('Y-m-d H:i:s');
+			});
+			$lastTripReturn = $departures->first()->end;
+		}
 
-		$lastAccommodationDate = $this->accommodations()->orderBy('accommodation_booking.end', 'DESC')->first();
-		if(!empty($lastAccommodationDate))
-			$lastAccommodationDate = new DateTime($lastAccommodationDate->pivot->start);
+		$training_sessions = $this->training_sessions()->with('training')->get();
+		if(count($training_sessions) > 0)
+		{
+			$training_sessions->sortByDesc(function($training_session)
+			{
+				$class            = $training_session->training;
+				$start            = new DateTime($training_session->start);
+				$end              = clone $start;
+				$duration_hours   = floor($class->duration);
+				$duration_minutes = round( ($class->duration - $duration_hours) * 60 );
+				$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
-		// This is ugly!
-		// TODO Make it more elegant
-		if(empty($lastReturnDate) && empty($lastAccommodationDate))
+				$training_session->end = $end;
+
+				return $end->format('Y-m-d H:i:s');
+			});
+			$lastClassReturn = $training_sessions->first()->end;
+		}
+
+		$model = $this->accommodations()->orderBy('accommodation_booking.end', 'DESC')->first();
+		if(!empty($model))
+			$lastAccommodationEnd = new DateTime($model->pivot->start);
+
+		$dates = [$lastTripReturn, $lastClassReturn, $lastAccommodationEnd];
+		$dates = array_filter($dates);
+		sort($dates);
+
+		if(empty($dates))
 			return null;
 
-		if(empty($lastReturnDate))
-			return $lastAccommodationDate->format('Y-m-d');
+		$result = array_pop($dates);
 
-		if(empty($lastAccommodationDate))
-			return $lastReturnDate->format('Y-m-d');
+		if(empty($result))
+			return null;
 
-		return $lastAccommodationDate > $lastReturnDate ? $lastAccommodationDate->format('Y-m-d') : $lastReturnDate->format('Y-m-d');
+		return $result->format('Y-m-d');
 	}
 
 	public function setDiscountAttribute($value)
@@ -336,35 +348,47 @@ class Booking extends Ardent {
 					$tickedOffPackagefacades[] = $detail->packagefacade_id;
 
 					// Find the first departure datetime that is booked in this package
-					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
-					$firstDetail = $bookingdetails->sortBy(function($detail)
-					{
-						if($detail->departure)
-							return $detail->departure->start;
-						else
-							return $detail->training_session->start;
-					})->first();
+					$detailStart = null;
+					$accommStart = null;
 
-					if($firstDetail->departure)
-						$start = $firstDetail->departure->start;
-					else
-						$start = $firstDetail->training_session->start;
+					$bookingdetails = $detail->packagefacade->bookingdetails()->with('departure', 'training_session')->get();
+					if($bookingdetails->count() > 0)
+					{
+						$firstDetail = $bookingdetails->sortBy(function($detail)
+						{
+							if($detail->departure)
+								return $detail->departure->start;
+							elseif($detail->training_session)
+								return $detail->training_session->start;
+							else
+								return '9999-12-31 23:59:59';
+						})->first();
+
+						if($firstDetail->departure)
+							$detailStart = new DateTime($firstDetail->departure->start);
+						elseif($firstDetail->training_session)
+							$detailStart = new DateTime($firstDetail->training_session->start);
+					}
 
 					$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
-					$firstAccommodation = $accommodations->sortBy(function($accommodation)
+					if($accommodations->count() > 0)
 					{
-						return $accommodation->pivot->start;
-					})->first();
+						$firstAccommodation = $accommodations->sortBy(function($accommodation)
+						{
+							return $accommodation->pivot->start;
+						})->first();
 
-					if(!empty($firstAccommodation))
-					{
-						$detailStart = new DateTime($start);
 						$accommStart = new DateTime($firstAccommodation->pivot->start);
-
-						$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
-
-						$start = $start->format('Y-m-d H:i:s');
 					}
+
+					$dates = [$detailStart, $accommStart];
+					$dates = array_filter($dates);
+					sort($dates);
+
+					if(empty($dates) || empty($dates[0]))
+						$start = $detail->created_at;
+					else
+						$start = $dates[0]->format('Y-m-d H:i:s');
 
 					// Calculate the package price at this first departure datetime and sum it up
 					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
@@ -385,14 +409,18 @@ class Booking extends Ardent {
 					{
 						if($detail->departure)
 							return $detail->departure->start;
-						else
+						elseif($detail->training_session)
 							return $detail->training_session->start;
+						else
+							return '9999-12-31 23:59:59';
 					})->first();
 
 					if($firstDetail->departure)
 						$start = $firstDetail->departure->start;
-					else
+					elseif($firstDetail->training_session)
 						$start = $firstDetail->training_session->start;
+					else
+						$start = $detail->created_at;
 
 					// Calculate the package price at this first departure datetime and sum it up
 					$detail->course->calculatePrice($start, $limitBefore);
@@ -402,7 +430,12 @@ class Booking extends Ardent {
 			else
 			{
 				// Sum up the ticket
-				$detail->ticket->calculatePrice($detail->departure->start, $limitBefore);
+				if($detail->departure)
+					$start = $detail->departure->start;
+				else
+					$start = $detail->created_at;
+
+				$detail->ticket->calculatePrice($start, $limitBefore);
 				$sum += $detail->ticket->decimal_price;
 			}
 
@@ -414,7 +447,7 @@ class Booking extends Ardent {
 			});
 		});
 
-		// Sum up all accommodations that are not part of a package
+		// Sum up all accommodations
 		$accommodations = $this->accommodations;
 
 		$accommodations->each(function($accommodation) use (&$sum, &$tickedOffPackagefacades)
@@ -429,6 +462,9 @@ class Booking extends Ardent {
 			elseif(!in_array($accommodation->pivot->packagefacade_id, $tickedOffPackagefacades)) {
 				// Add the packagefacadeID to the array so it is not summed/counted again in the next bookingdetails
 				$tickedOffPackagefacades[] = $accommodation->pivot->packagefacade_id;
+
+				// Here it is enough that we only consider accommodations, because if a trip or class would have been
+				// booked for the package, the calculation would have been done above in the bookingdetail section.
 
 				$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $accommodation->pivot->packagefacade_id)->get();
 				$firstAccommodation = $accommodations->sortBy(function($accommodation)

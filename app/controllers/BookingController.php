@@ -21,9 +21,9 @@ class BookingController extends Controller {
 					'bookingdetails.packagefacade',
 						'bookingdetails.packagefacade.package',
 							// 'bookingdetails.packagefacade.package.tickets',
-					'bookingdetails.training_session',
-						'bookingdetails.training_session.training',
 					'bookingdetails.course',
+					'bookingdetails.training',
+					'bookingdetails.training_session',
 					'bookingdetails.addons',
 				'accommodations',
 				'payments',
@@ -60,14 +60,18 @@ class BookingController extends Controller {
 					{
 						if($detail->session)
 							return $detail->session->start;
-						else
+						elseif($detail->training_session)
 							return $detail->training_session->start;
+						else
+							return '9999-12-31';
 					})->first();
 
 					if($firstDetail->session)
 						$start = $firstDetail->session->start;
-					else
+					elseif($firstDetail->training_session)
 						$start = $firstDetail->training_session->start;
+					else
+						$start = null;
 
 					$firstAccommodation = $booking->accommodations->filter(function($a) use ($detail)
 					{
@@ -80,15 +84,21 @@ class BookingController extends Controller {
 
 					if(!empty($firstAccommodation))
 					{
-						$detailStart = new DateTime($start);
-						$accommStart = new DateTime($firstAccommodation->pivot->start);
+						if($start !== null)
+						{
+							$detailStart = new DateTime($start);
+							$accommStart = new DateTime($firstAccommodation->pivot->start);
 
-						$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
+							$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
 
-						$start = $start->format('Y-m-d H:i:s');
+							$start = $start->format('Y-m-d H:i:s');
+						}
+						else
+							$start = $firstAccommodation->pivot->start;
 					}
 
 					// Calculate the package price at this first datetime and sum it up
+					if($start === null) $start = $firstDetail->created_at;
 					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
 
 					$pricedPackagefacades[$detail->packagefacade_id] = $detail->packagefacade->package->decimal_price;
@@ -112,14 +122,18 @@ class BookingController extends Controller {
 					{
 						if($detail->session)
 							return $detail->session->start;
-						else
+						elseif($detail->training_session)
 							return $detail->training_session->start;
+						else
+							return '9999-12-31';
 					})->first();
 
 					if($firstDetail->session)
 						$start = $firstDetail->session->start;
-					else
+					elseif($firstDetail->training_session)
 						$start = $firstDetail->training_session->start;
+					else
+						$start = $firstDetail->created_at;
 
 					// Calculate the package price at this first departure datetime and sum it up
 					$detail->course->calculatePrice($start, $limitBefore);
@@ -132,7 +146,12 @@ class BookingController extends Controller {
 			else
 			{
 				// Sum up the ticket
-				$detail->ticket->calculatePrice($detail->session->start, $limitBefore);
+				if($detail->departure)
+					$start = $detail->departure->start;
+				else
+					$start = $detail->created_at;
+
+				$detail->ticket->calculatePrice($start, $limitBefore);
 			}
 		});
 
@@ -500,6 +519,7 @@ class BookingController extends Controller {
 		 * session_id (or training_session_id)
 		 * boatroom_id (only sometimes required)
 		 * training_session_id
+		 * temporary
 		 *
 		 * package_id (optional)
 		 * packagefacade_id (optional)
@@ -545,15 +565,20 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms')->firstOrFail(array('sessions.*'));
+				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms', 'trip')->firstOrFail(array('sessions.*'));
 			}
 			catch(ModelNotFoundException $e)
 			{
 				return Response::json( array('errors' => array('The session could not be found.')), 404 ); // 404 Not Found
 			}
+
+			$trip = $departure->trip;
 		}
 		else
+		{
 			$departure = false;
+			$trip = false;
+		}
 
 		if(Input::has('training_session_id'))
 		{
@@ -622,9 +647,34 @@ class BookingController extends Controller {
 			{
 				return Response::json( array('errors' => array('The course could not be found.')), 404 ); // 404 Not Found
 			}
+
+			if(!$ticket)
+			{
+				$training_id = null;
+				if($training_session)
+					$training_id = $training_session->training_id;
+				elseif(Input::has('training_id'))
+					$training_id = Input::get('training_id');
+				else
+					return Response::json( array('errors' => array('training_id is required when adding a class without date.')), 400 ); // 400 Bad Request
+
+				try
+				{
+					$training = $course->trainings()->where('id', $training_id)->firstOrFail();
+				}
+				catch(ModelNotFoundException $e)
+				{
+					return Response::json( array('errors' => array('This class can not be booked in this course.')), 404 ); // 404 Not Found
+				}
+			}
+			else
+				$training = false;
 		}
 		else
+		{
 			$course = false;
+			$training = false;
+		}
 
 		// Validate that the booking is not cancelled or on hold
 		if(!$booking->isEditable())
@@ -635,7 +685,8 @@ class BookingController extends Controller {
 		// TODO Validate all input and their relations instead
 		// Validate that either a session or a training_session has been submitted
 		if(!$departure && !$training_session)
-			return Response::json(['errors' => ['Either the session_id or training_session_id is required!']], 406); // 406 Not Acceptable
+			if(!(Input::has('temporary') && Input::get('temporary') == 1))
+				return Response::json(['errors' => ['Either the session_id or training_session_id is required!']], 406); // 406 Not Acceptable
 
 		// Validate that the session start date has not already passed
 		if($departure && Helper::isPast($departure->start))
@@ -650,31 +701,34 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the customer is not already booked for this session or training_session on another booking
-		$check = Auth::user()->bookings()
-			->whereNotIn('id', array($booking->id))
-			->whereIn('status', Booking::$counted)
-			->whereHas('bookingdetails', function($query) use ($customer, $departure, $training_session)
-			{
-				$query
-					->where('customer_id', $customer->id)
-					->where(function($query) use ($departure, $training_session)
-					{
-						if($departure)
-							$query->where('session_id', $departure->id);
-						elseif($training_session)
-							$query->where('training_session_id', $training_session->id);
-					});
-			})->exists();
-		if( $check )
+		if($departure || $training_session)
 		{
-			$model = $departure ? 'trip' : 'class';
-			return Response::json( array('errors' => array('The customer is already booked on this '.$model.' in another booking!')), 403 ); // 403 Forbidden
+			$check = Auth::user()->bookings()
+				->whereNotIn('id', array($booking->id))
+				->whereIn('status', Booking::$counted)
+				->whereHas('bookingdetails', function($query) use ($customer, $departure, $training_session)
+				{
+					$query
+						->where('customer_id', $customer->id)
+						->where(function($query) use ($departure, $training_session)
+						{
+							if($departure)
+								$query->where('session_id', $departure->id);
+							elseif($training_session)
+								$query->where('training_session_id', $training_session->id);
+						});
+				})->exists();
+			if( $check )
+			{
+				$model = $departure ? 'trip' : 'class';
+				return Response::json( array('errors' => array('The customer is already booked on this '.$model.' in another booking!')), 403 ); // 403 Forbidden
+			}
 		}
 
 		// Validate that the ticket can be booked for this session
 		if($departure)
 		{
-			$exists = $departure->trip->tickets()->where('id', $ticket->id)->exists();
+			$exists = $trip->tickets()->where('id', $ticket->id)->exists();
 			if(!$exists)
 				return Response::json( array('errors' => array('This ticket can not be booked for this trip.')), 403 ); // 403 Forbidden
 
@@ -695,14 +749,6 @@ class BookingController extends Controller {
 			}
 		}
 
-		// Validate that the course can be booked for this training_session
-		if($training_session)
-		{
-			$exists = $training_session->training->courses()->where('id', $course->id)->exists();
-			if(!$exists)
-				return Response::json( ['errors' => ['This course can not be booked for this class.']], 403 ); // 403 Forbidden
-		}
-
 		// Validate that the course can be booked in the package
 		if($course && $package)
 		{
@@ -711,18 +757,17 @@ class BookingController extends Controller {
 				return Response::json(['errors' => ['This course can not be booked as part of this package.']], 403); // 403 Forbidden
 		}
 
-		// Check if the session's boat is allowed for the ticket
-		if($departure && $ticket->boats()->exists())
+		if($departure && $trip->boat_required)
 		{
-			$boatIDs = $ticket->boats()->lists('id');
-			if( !in_array($departure->boat_id, $boatIDs) )
-				return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
-		}
+			// Check if the session's boat is allowed for the ticket
+			if($ticket->boats()->exists())
+			{
+				$boatIDs = $ticket->boats()->lists('id');
+				if( !in_array($departure->boat_id, $boatIDs) )
+					return Response::json( array('errors' => array('This ticket is not eligable for this trip\'s boat.')), 403 ); // 403 Forbidden
+			}
 
-		if($departure)
-		{
 			// Determine if we need a boatroom_id (only when the trip is overnight)
-			$trip             = $departure->trip;
 			$start            = new DateTime($departure->start);
 			$end              = clone $start;
 			$duration_hours   = floor($trip->duration);
@@ -853,8 +898,6 @@ class BookingController extends Controller {
 		// Validate that the class still fits into the course
 		if($training_session && $course)
 		{
-			$training = $course->trainings()->where('id', $training_session->training_id)->first();
-
 			// Check if the course still has space for the wanted class
 			$bookedTrainingsQuantity = $course->bookingdetails()
 				->where('customer_id', $customer->id)
@@ -885,11 +928,26 @@ class BookingController extends Controller {
 			'customer_id'         => $customer->id,
 			'ticket_id'           => $ticket           ? $ticket->id           : null,
 			'session_id'          => $departure        ? $departure->id        : null,
-			'boatroom_id'         => $departure        ? $boatroom_id          : null,
+			'boatroom_id'         => $departure && $trip->boat_required ? $boatroom_id : null,
 			'packagefacade_id'    => $package          ? $packagefacade->id    : null,
 			'course_id'           => $course           ? $course->id           : null,
 			'training_session_id' => $training_session ? $training_session->id : null
 		) );
+
+		if(Input::has('temporary') && Input::get('temporary') == 1)
+		{
+			// Check if the temporary attribute is allowed
+			// (This check is impossible in the validator without extending the native Validator class,
+			// because the standard Validator::extend() method does not pass the other array elements.)
+			if(Input::has('session_id') || Input::has('training_session_id'))
+				return Response::json(['errors' => 'temporary is not allowed together with session_id, training_session_id'], 406); // 406 Not Acceptable
+
+			$bookingdetail->temporary = true;
+		}
+
+		if($training) {
+			$bookingdetail->training_id = $training->id;
+		}
 
 		if(!$bookingdetail->validate())
 			return Response::json(['errors' => $bookingdetail->errors()->all()], 406); // 406 Not Acceptable
@@ -900,7 +958,7 @@ class BookingController extends Controller {
 		if(empty($booking->lead_customer_id) && $booking->bookingdetails()->count() === 1)
 			$booking->update( array('lead_customer_id' => $customer->id) );
 
-		if($departure)
+		if($ticket)
 		{
 			// Add compulsory addons
 			$addons = Auth::user()->addons()->where('compulsory', true)->get();
@@ -923,14 +981,18 @@ class BookingController extends Controller {
 			{
 				if($detail->departure)
 					return $detail->departure->start;
-				else
+				elseif($detail->training_session)
 					return $detail->training_session->start;
+				else
+					return '9999-12-31';
 			})->first();
 
 			if($firstDetail->departure)
 				$start = $firstDetail->departure->start;
-			else
+			elseif($firstDetail->training_session)
 				$start = $firstDetail->training_session->start;
+			else
+				$start = null;
 
 			$firstAccommodation = $booking->accommodations()->wherePivot('packagefacade_id', $packagefacade->id)->get()
 			->sortBy(function($accommodation)
@@ -940,15 +1002,21 @@ class BookingController extends Controller {
 
 			if(!empty($firstAccommodation))
 			{
-				$detailStart = new DateTime($start);
-				$accommStart = new DateTime($firstAccommodation->pivot->start);
+				if($start !== null)
+				{
+					$detailStart = new DateTime($start);
+					$accommStart = new DateTime($firstAccommodation->pivot->start);
 
-				$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
+					$start = ($detailStart < $accommStart) ? $detailStart : $accommStart;
 
-				$start = $start->format('Y-m-d H:i:s');
+					$start = $start->format('Y-m-d H:i:s');
+				}
+				else
+					$start = $firstAccommodation->pivot->start;
 			}
 
 			// Calculate the package price at this first datetime and sum it up
+			if($start === null) $start = $firstDetail->created_at;
 			$package->calculatePrice($start);
 		}
 		elseif($course)
@@ -964,14 +1032,18 @@ class BookingController extends Controller {
 			{
 				if($detail->departure)
 					return $detail->departure->start;
-				else
+				elseif($detail->training_session)
 					return $detail->training_session->start;
+				else
+					return '9999-12-31';
 			})->first();
 
 			if($firstDetail->departure)
 				$start = $firstDetail->departure->start;
-			else
+			elseif($firstDetail->training_session)
 				$start = $firstDetail->training_session->start;
+			else
+				$start = $firstDetail->created_at;
 
 			// Calculate the package price at this first departure datetime and sum it up
 			$course->calculatePrice($start);
@@ -979,7 +1051,11 @@ class BookingController extends Controller {
 		else
 		{
 			if($departure)
-				$ticket->calculatePrice($departure->start);
+				$start = $departure->start;
+			else
+				$start = $bookingdetail->created_at;
+
+			$ticket->calculatePrice($start);
 		}
 
 		$booking->updatePrice();
@@ -990,7 +1066,7 @@ class BookingController extends Controller {
 			'addons'                => $addons ? $addons->lists('id') : false,
 			'decimal_price'         => $booking->decimal_price,
 
-			'boatroom_id'           => $departure ? $boatroom_id : false,
+			'boatroom_id'           => $departure && $trip->boat_required ? $boatroom_id : false,
 
 			'package_decimal_price' => $package ? $package->decimal_price : false,
 			'course_decimal_price'  => !$package && $course ? $course->decimal_price : false,
@@ -1037,12 +1113,15 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the session start date has not already passed
-		$start = !empty($bookingdetail->departure) ? $bookingdetail->departure->start : $bookingdetail->training_session->start;
+		if(!$bookingdetail->temporary)
+		{
+			$start = !empty($bookingdetail->departure) ? $bookingdetail->departure->start : $bookingdetail->training_session->start;
 
 			if(Helper::isPast($start))
 			{
 				return Response::json( array('errors' => array('Cannot remove details, because the trip/class has already departed/started!')), 403 ); // 403 Forbidden
 			}
+		}
 
 		// Execute delete
 		$bookingdetail->delete();
@@ -1152,7 +1231,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('bookingdetail_id') ) throw new ModelNotFoundException();
-			$bookingdetail = $booking->bookingdetails()->with('departure')->findOrFail( Input::get('bookingdetail_id') );
+			$bookingdetail = $booking->bookingdetails()->with('departure', 'ticket')->findOrFail( Input::get('bookingdetail_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1160,11 +1239,11 @@ class BookingController extends Controller {
 		}
 
 		// Validate that the bookingdetail is for a trip and not a class
-		if(empty($bookingdetail->departure))
+		if(empty($bookingdetail->ticket))
 			return Response::json(['errors' => ['Addons can only be added to trips, not classes.']], 403); // 403 Forbidden
 
 		// Check if trip departed more than 5 days ago
-		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
+		if($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -1285,12 +1364,8 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The bookingdetail could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// Validate that the bookingdetail is for a trip and not a class
-		if(empty($bookingdetail->departure))
-			return Response::json(['errors' => ['Addons can only be added to trips, not classes.']], 403); // 403 Forbidden
-
 		// Check if trip departed more than 5 days ago
-		if($this->moreThan5DaysAgo($bookingdetail->departure->start))
+		if($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start))
 		{
 			return Response::json( array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403 ); // 403 Forbidden
 		}
@@ -1666,7 +1741,7 @@ class BookingController extends Controller {
 
 	public function postReserve()
 	{
-		if(!Input::has('reserved'))
+		if(!Input::has('reserved_until'))
 			return Response::json(['errors' => ['Please specify the amount of hours to reserve the booking for.']], 406); // 406 Not Acceptable
 
 		try
@@ -1682,10 +1757,10 @@ class BookingController extends Controller {
 		if( in_array($booking->status, array('confirmed', 'on hold', 'cancelled')) )
 			return Response::json( array('errors' => array('The booking cannot be reserved, as it is ' . $booking->status . '.')), 403 ); // 403 Forbidden
 
-		$data = abs(Input::only('reserved'));
+		$data = ['reserved_until' => abs(Input::get('reserved_until'))];
 
 		$local_now = Helper::localTime();
-		$data['reserved'] = $local_now->add(new DateInterval('PT'.$data['reserved'].'H'))->format('Y-m-d H:i:s');
+		$data['reserved_until'] = $local_now->add(new DateInterval('PT'.$data['reserved_until'].'H'))->format('Y-m-d H:i:s');
 
 		$data['status'] = 'reserved';
 
@@ -1694,7 +1769,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return array('status' => 'OK. Booking reserved');
+		return array('status' => 'OK. Booking reserved', 'reserved_until' => $booking->reserved_until);
 	}
 
 	public function postSave()

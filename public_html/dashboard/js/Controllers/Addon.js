@@ -8,6 +8,12 @@ var Addon = {
 
 	getAllAddons : function(handleData) {
 		$.get("/api/addon/all", function(data){
+
+			if(window.location.hostname === 'rms-test.scubawhere.com')
+				_.each(data, function(object) {
+					object.compulsory = parseInt(object.compulsory);
+				});
+
 			handleData(data);
 		});
 	},

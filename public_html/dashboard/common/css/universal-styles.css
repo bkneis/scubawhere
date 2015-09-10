@@ -673,7 +673,10 @@ label {
 	text-transform: capitalize;
 }
 
-.selected-certificate {
+.selected-certificate,
+.selected-ticket,
+.selected-class,
+.selected-agency {
 	border: 1px solid #CCC;
 	padding: 0.5em 1em;
 	margin-right: 5px;

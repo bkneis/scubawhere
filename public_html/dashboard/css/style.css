@@ -356,6 +356,7 @@ ul#sidenav {
 ul#sidenav > li {
 	padding: 0px;
 	cursor: pointer;
+	position: relative;
 }
 
 ul#sidenav > li:after {
@@ -839,11 +840,15 @@ ul#sidenav > li > ul > li:hover {
 }
 
 #locationsList,
-#tagsList {
+#tagsList,
+#customer-selectList,
+#ticket-selectList {
 	overflow: auto;
 }
 .location,
-.tag {
+.tag,
+.customer-select,
+.ticket-select {
 	display: block;
 	border: 1px solid #c8c8c8;
 	float: left;
@@ -855,7 +860,9 @@ ul#sidenav > li > ul > li:hover {
 	margin: 0;
 }
 .location.checked,
-.tag.checked {
+.tag.checked,
+.customer-select.checked,
+.ticket-select.checked {
 	border-color: #27ae60;
 	background-color: #2ecc71;
 }
@@ -1013,7 +1020,12 @@ big {
 .caret {
 	transition: transform 0.2s linear;
 	transform: rotate(-90deg);
-	margin-left: 20px !important;
+	position: absolute;
+	right: 1em;
+	top: 1.46em;
+}
+#tickets-ticket-list .caret {
+	top: 1em;
 }
 
 .popover .percentage-bar-container {

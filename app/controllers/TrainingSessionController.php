@@ -112,6 +112,7 @@ class TrainingSessionController extends Controller {
 		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
+			/*
 			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
@@ -123,6 +124,8 @@ class TrainingSessionController extends Controller {
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
 				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
 			}
+			*/
+			unset($data['before']);
 		}
 		else
 		{
@@ -130,7 +133,7 @@ class TrainingSessionController extends Controller {
 			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
 		}
 
-		if( $data['after'] > $data['before'] )
+		if( isset($data['before']) && $data['after'] > $data['before'] )
 		{
 			return Response::json( array('errors' => array('The supplied \'after\' date is later than the given \'before\' date.')), 400 ); // 400 Bad Request
 		}
@@ -200,6 +203,9 @@ class TrainingSessionController extends Controller {
 			$available_for_until = $package->available_for_until ?: false;
 		}
 
+		// Set the number of results to fetch
+		$take = isset($options['before']) ? 25 : 10;
+
 		/*
 		  We need to navigate the relationship-tree from departure/session via training to
 		  ticket and then (conditionally) to course.
@@ -230,10 +236,16 @@ class TrainingSessionController extends Controller {
 			});
 		})
 		// Filter by dates
-		->whereBetween('start', array(
-			$options['after']->format('Y-m-d H:i:s'),
-			$options['before']->format('Y-m-d H:i:s')
-		))
+		->where(function($query) use ($options)
+		{
+			if(isset($options['before']))
+				$query->whereBetween('start', array(
+					$options['after']->format('Y-m-d H:i:s'),
+					$options['before']->format('Y-m-d H:i:s')
+				));
+			else
+				$query->where('start', '>=', $options['after']->format('Y-m-d H:i:s'));
+		})
 		// Filter by available_for dates
 		->where(function($query) use ($available_for_from)
 		{
@@ -247,7 +259,7 @@ class TrainingSessionController extends Controller {
 		})
 		// ->with('training', 'training.tickets')
 		->orderBy('start', 'ASC')
-		// ->take(25)
+		->take($take)
 		->get();
 
 		return $training_sessions;

@@ -81,111 +81,113 @@
 					</tr>
 				</table>
 				<div class="form-group">
-				{{#if isTrip}}
-					Boat for this session:&nbsp;
-					<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
-						{{#each boats}}
-							{{#if deleted_at}}
-								{{#if selected}}
+					{{#if isTrip}}
+					{{#if trip.boat_required}}
+						Boat for this session:&nbsp;
+						<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
+							{{#each boats}}
+								{{#if deleted_at}}
+									{{#if selected}}
+										<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
+									{{/if}}
+								{{else}}
 									<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
 								{{/if}}
-							{{else}}
-								<option value="{{id}}"{{#if selected}} selected{{/if}}>{{{name}}}</option>
-							{{/if}}
-						{{/each}}
-					</select>
-				</div>
-				{{/if}}
-				{{#unless isPast}}
-					{{#unless session.deleted_at}}
-					{{#unless isNew}}
-					{{#unlessCond session.timetable_id '||' session.schedule_id}}
-						<label>
-							<input type="checkbox" onchange="toggleTimetableForm();">
-							<h4 style="display: inline-block;">Create a repeating timetable</h4>
-						</label>
-						<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
-							<table class="table table-striped">
-								<thead>
-									<tr style="text-align: left;">
-										<th>Week #</th>
-										<th>Mon</th>
-										<th>Tue</th>
-										<th>Wed</th>
-										<th>Thu</th>
-										<th>Fri</th>
-										<th>Sat</th>
-										<th>Sun</th>
+							{{/each}}
+						</select>
+					{{/if}}
+					{{/if}}
+					{{#unless isPast}}
+						{{#unless session.deleted_at}}
+						{{#unless isNew}}
+						{{#unlessCond session.timetable_id '||' session.schedule_id}}
+							<label>
+								<input type="checkbox" onchange="toggleTimetableForm();">
+								<h4 style="display: inline-block;">Create a repeating timetable</h4>
+							</label>
+							<form class="create-timetable dashed-border" style="overflow: auto; display: none;">
+								<table class="table table-striped">
+									<thead>
+										<tr style="text-align: left;">
+											<th>Week #</th>
+											<th>Mon</th>
+											<th>Tue</th>
+											<th>Wed</th>
+											<th>Thu</th>
+											<th>Fri</th>
+											<th>Sat</th>
+											<th>Sun</th>
+										</tr>
+									</thead>
+									<tr>
+										<td>1</td>
+										<td><input type="checkbox" name="schedule[1][]" value="mon" {{isWeekday 1}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="tue" {{isWeekday 2}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="wed" {{isWeekday 3}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="thu" {{isWeekday 4}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="fri" {{isWeekday 5}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="sat" {{isWeekday 6}}></td>
+										<td><input type="checkbox" name="schedule[1][]" value="sun" {{isWeekday 0}}></td>
 									</tr>
-								</thead>
-								<tr>
-									<td>1</td>
-									<td><input type="checkbox" name="schedule[1][]" value="mon" {{isWeekday 1}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="tue" {{isWeekday 2}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="wed" {{isWeekday 3}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="thu" {{isWeekday 4}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="fri" {{isWeekday 5}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="sat" {{isWeekday 6}}></td>
-									<td><input type="checkbox" name="schedule[1][]" value="sun" {{isWeekday 0}}></td>
-								</tr>
-								{{timetableWeek 2}}
-							</table>
-							<input type="hidden" name="_token">
+									{{timetableWeek 2}}
+								</table>
+								<input type="hidden" name="_token">
 
-							{{#if isTrip}}
-								<input type="hidden" name="session_id" value="{{session.id}}">
-							{{else}}
-								<input type="hidden" name="training_session_id" value="{{session.id}}">
-							{{/if}}
-
-							Until:<br>
-							<input type="date" name="until" placeholder="YYYY-MM-DD" style="width: 175px;"><br>
-							<small>Default: for 1.5 years</small>
-
-							<button data-type="{{#if isTrip}}trips{{else}}classes{{/if}}" class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
-						</form>
-					{{else}}
-						<div class="horizontal-seperator"><span>Options</span></div>
-						<div class="yellow-helper attention-placeholder">
-							<h4>You are editing a <u>timetabled</u> session</h4>
-							Do you want to move/delete all future versions of this session, too?</p>
-							<p>
-								<label style="display: block; margin-bottom: 0.5em;">
-									<input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.<br>
-									<small style="display: block; margin: 0 2em; color: orange;">
-										For UPDATE, this will move all future versions regardless if they have been booked or not. For DELETE, this will <u>deactivate</u> all future versions that have been booked and delete the others.
-									</small>
-								</label>
-								<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
-							</p>
-						</div>
-					{{/unlessCond}}
-					{{/unless}}
-					{{/unless}}
-
-					<div style="margin-top: 1em; text-align: right">
-						{{#if isNew}}
-							<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-							<button class="submit-session btn btn-primary btn-lg">SAVE</button>
-						{{else}}
-							{{#unless isPast}}
-								{{#unless session.deleted_at}}
-									<button class="delete-session btn btn-danger pull-left">Delete</button>
-									<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
-									<button class="update-session btn btn-primary btn-lg">SAVE</button>
+								{{#if isTrip}}
+									<input type="hidden" name="session_id" value="{{session.id}}">
 								{{else}}
-									<button class="delete-session btn btn-danger pull-left">Delete</button>
-									<button class="restore-session btn btn-primary pull-left">Restore</button>
-									<input type="radio" name="handle_timetable" value="only_this" checked style="visibility: hidden;">
+									<input type="hidden" name="training_session_id" value="{{session.id}}">
+								{{/if}}
+
+								Until:<br>
+								<input type="date" name="until" placeholder="YYYY-MM-DD" style="width: 175px;"><br>
+								<small>Default: for 1.5 years</small>
+
+								<button data-type="{{#if isTrip}}trips{{else}}classes{{/if}}" class="btn btn-primary btn-lg create-timetable-button pull-right">Create timetable</button>
+							</form>
+						{{else}}
+							<div class="horizontal-seperator"><span>Options</span></div>
+							<div class="yellow-helper attention-placeholder">
+								<h4>You are editing a <u>timetabled</u> session</h4>
+								Do you want to move/delete all future versions of this session, too?</p>
+								<p>
+									<label style="display: block; margin-bottom: 0.5em;">
+										<input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.<br>
+										<small style="display: block; margin: 0 2em; color: orange;">
+											For UPDATE, this will move all future versions regardless if they have been booked or not. For DELETE, this will <u>deactivate</u> all future versions that have been booked and delete the others.
+										</small>
+									</label>
+									<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
+								</p>
+							</div>
+						{{/unlessCond}}
+						{{/unless}}
+						{{/unless}}
+
+						<div style="margin-top: 1em; text-align: right">
+							{{#if isNew}}
+								<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
+								<button class="submit-session btn btn-primary btn-lg">SAVE</button>
+							{{else}}
+								{{#unless isPast}}
+									{{#unless session.deleted_at}}
+										<button class="delete-session btn btn-danger pull-left">Delete</button>
+										<a class="close-modal" title="Abort" style="margin-right: 2em;">Cancel</a>
+										<button class="update-session btn btn-primary btn-lg">SAVE</button>
+									{{else}}
+										<button class="delete-session btn btn-danger pull-left">Delete</button>
+										<button class="restore-session btn btn-primary pull-left">Restore</button>
+										<input type="radio" name="handle_timetable" value="only_this" checked style="visibility: hidden;">
+									{{/unless}}
 								{{/unless}}
-							{{/unless}}
-						{{/if}}
-					</div>
-				{{else}}
-					<div style="margin-top: 1em; text-align: center; color: gray;">
-						Past sessions cannot be edited.
-					</div>
-				{{/unless}}
+							{{/if}}
+						</div>
+					{{else}}
+						<div style="margin-top: 1em; text-align: center; color: gray;">
+							Past sessions cannot be edited.
+						</div>
+					{{/unless}}
+				</div>
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>

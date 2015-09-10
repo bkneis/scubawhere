@@ -4,18 +4,20 @@ use LaravelBook\Ardent\Ardent;
 
 class Bookingdetail extends Ardent {
 
-	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id');
+	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id', 'temporary');
 
 	protected $table = 'booking_details';
 
 	public static $rules = array(
 		'customer_id'         => 'required|integer|min:1',
 		'ticket_id'           => 'integer|min:1|required_with:session_id|required_without:course_id',
-		'session_id'          => 'integer|min:1|required_with:ticket_id|required_without:training_session_id',
+		'session_id'          => 'integer|min:1|required_without_all:training_session_id,temporary',
 		'boatroom_id'         => 'integer|min:1',
 		'packagefacade_id'    => 'integer|min:1',
-		'course_id'           => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
-		'training_session_id' => 'integer|min:1|required_without:session_id'
+		'course_id'           => 'integer|min:1|required_with:training_session_id,training_id|required_without:ticket_id',
+		'training_id'         => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
+		'training_session_id' => 'integer|min:1|required_without_all:session_id,temporary',
+		'temporary'           => 'boolean',
 	);
 
 	public function beforeSave()
@@ -68,6 +70,11 @@ class Bookingdetail extends Ardent {
 		return $this->belongsTo('Departure', 'session_id')->withTrashed();
 	}
 
+	public function training()
+	{
+		return $this->belongsTo('Training')->withTrashed();
+	}
+
 	public function training_session()
 	{
 		return $this->belongsTo('TrainingSession')->withTrashed();
@@ -85,7 +92,7 @@ class Bookingdetail extends Ardent {
 		if (count($this->packagefacade) == 0)
 		{
 			$this->ticket->calculatePrice($this->session->start, $limitBefore);
-			
+
 			$price = $this->ticket->decimal_price;
 
 			foreach($this->addons as $addon)

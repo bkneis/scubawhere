@@ -83,9 +83,7 @@ $(function() {
 				left: 'basicDay basicWeek month',
 				center: 'title',
 			},
-			defaultView : 'basicWeek',
 			timezone: false,
-			height : 450,
 			firstDay: 1, // Set Monday as the first day of the week
 			events: function(start, end, timezone, callback) {
 				if(calendarOptions.calendarDisplay == "all") {
@@ -515,6 +513,8 @@ Handlebars.registerHelper('isWeekday', function(day) {
 });
 
 function calcUtil(booked, capacity) {
+	if(!capacity) return 0;
+
 	var util = ((booked / capacity) * 100);
 	return Math.round(util).toString();
 }
@@ -544,7 +544,7 @@ function getTripEvents(start, end, timezone, callback) {
 				if(calendarOptions.boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
-					var ticketsLeft = capacity - booked;
+					var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 					var sameDay = true;
 					if(window.trips[value.trip_id].duration > 24) sameDay = false;
 					var eventObject = {
@@ -557,6 +557,7 @@ function getTripEvents(start, end, timezone, callback) {
 						durationEditable: false,
 						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 						ticketsLeft : ticketsLeft,
+						capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 						capacity : capacity,
 						sameDay : sameDay
 					};
@@ -571,7 +572,7 @@ function getTripEvents(start, end, timezone, callback) {
 			else {
 				var booked = value.capacity[0];
 				var capacity = value.capacity[1];
-				var ticketsLeft = capacity - booked;
+				var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 				var sameDay = true;
 				if(window.trips[value.trip_id].duration > 24) sameDay = false;
 				var eventObject = {
@@ -584,6 +585,7 @@ function getTripEvents(start, end, timezone, callback) {
 					durationEditable: false,
 					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 					ticketsLeft : ticketsLeft,
+					capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 					capacity : capacity,
 					sameDay : sameDay
 				};
@@ -636,7 +638,7 @@ function getAllEvents(start, end, timezone, callback) {
 				if(calendarOptions.boatFilter == value.boat_id) {
 					var booked = value.capacity[0];
 					var capacity = value.capacity[1];
-					var ticketsLeft = capacity - booked;
+					var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 					var sameDay = true;
 					if(window.trips[value.trip_id].duration > 24) sameDay = false;
 					var eventObject = {
@@ -649,6 +651,7 @@ function getAllEvents(start, end, timezone, callback) {
 						durationEditable: false,
 						//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 						ticketsLeft : ticketsLeft,
+						capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 						capacity : capacity,
 						sameDay : sameDay
 					};
@@ -663,7 +666,7 @@ function getAllEvents(start, end, timezone, callback) {
 			else {
 				var booked = value.capacity[0];
 				var capacity = value.capacity[1];
-				var ticketsLeft = capacity - booked;
+				var ticketsLeft = capacity ? (capacity - booked) : '∞ (shore-based)';
 				var sameDay = true;
 				if(window.trips[value.trip_id].duration > 24) sameDay = false;
 				var eventObject = {
@@ -676,6 +679,7 @@ function getAllEvents(start, end, timezone, callback) {
 					durationEditable: false,
 					//className: value.timetable_id ? 'timetabled' : '',*/ // This uses a 'falsy' check on purpose
 					ticketsLeft : ticketsLeft,
+					capacityString : capacity ? (ticketsLeft + ' out of ' + capacity) : ticketsLeft,
 					capacity : capacity,
 					sameDay : sameDay
 				};
@@ -883,13 +887,11 @@ function customerData(customer) {
 	if(customer.pivot.course_id != null) {
 		this._course  = window.courses[customer.pivot.course_id].name;
 	}
-	this._chest = customer.chest_size;
-	this._shoe = customer.shoe_size;
-	this._height = customer.height;
-	if(customer.last_dive == "" || customer.last_dive == null || customer.last_dive == undefined) {
-		this._lastDive = "First Dive";
-	}
-	else this._lastDive = customer.last_dive;
+
+	this._chest    = customer.chest_size || "--";
+	this._shoe     = customer.shoe_size  || "--";
+	this._height   = customer.height     || "--";
+	this._lastDive = customer.last_dive  || "--";
 
 	this.name = function () {
 		return this._name;

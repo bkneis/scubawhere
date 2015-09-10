@@ -47,6 +47,8 @@ class TicketController extends Controller {
 	{
 		$data = Input::only('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until'); // Please NEVER use parent_id in the front-end!
 
+		$data['only_packaged'] = Input::get('only_packaged', false);
+
 		$ticket = new Ticket($data);
 
 		if( !$ticket->validate() )
@@ -59,34 +61,37 @@ class TicketController extends Controller {
 		if( !is_array($trips) || empty($trips) )
 			return Response::json( array( 'errors' => array('Please specify at least one eligable trip.')), 400 ); // 400 Bad Request
 
-		// ####################### Prices #######################
-		$base_prices = Input::get('base_prices');
-		if( !is_array($base_prices) )
-			return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
-
-		// Filter out empty and existing prices
-		$base_prices = Helper::cleanPriceArray($base_prices);
-
-		// Check if 'prices' input array is now empty
-		if( empty($base_prices) )
-			return Response::json( array( 'errors' => array('You must submit at least one base price!')), 400 ); // 400 Bad Request
-
-		if( Input::has('prices') )
+		if(!$ticket->only_packaged)
 		{
-			$prices = Input::get('prices');
-			if( !is_array($prices) )
-				return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
+			// ####################### Prices #######################
+			$base_prices = Input::get('base_prices');
+			if( !is_array($base_prices) )
+				return Response::json( array( 'errors' => array('The "base_prices" value must be of type array!')), 400 ); // 400 Bad Request
 
 			// Filter out empty and existing prices
-			$prices = Helper::cleanPriceArray($prices);
+			$base_prices = Helper::cleanPriceArray($base_prices);
 
 			// Check if 'prices' input array is now empty
-			if( empty($prices) )
+			if( empty($base_prices) )
+				return Response::json( array( 'errors' => array('You must submit at least one base price!')), 400 ); // 400 Bad Request
+
+			if( Input::has('prices') )
+			{
+				$prices = Input::get('prices');
+				if( !is_array($prices) )
+					return Response::json( array( 'errors' => array('The "prices" value must be of type array!')), 400 ); // 400 Bad Request
+
+				// Filter out empty and existing prices
+				$prices = Helper::cleanPriceArray($prices);
+
+				// Check if 'prices' input array is now empty
+				if( empty($prices) )
+					$prices = false;
+			}
+			else
 				$prices = false;
+			// ##################### End Prices #####################
 		}
-		else
-			$prices = false;
-		// ##################### End Prices #####################
 
 		// Required input has been validated, save the model
 		$ticket = Auth::user()->tickets()->save($ticket);
@@ -95,33 +100,36 @@ class TicketController extends Controller {
 		// TODO Validate existence and ownership of trip IDs
 		$ticket->trips()->sync( $trips );
 
-		// Normalise base_prices array
-		$base_prices = Helper::normaliseArray($base_prices);
-		// Create new base_prices
-		foreach($base_prices as &$base_price)
+		if(!$ticket->only_packaged)
 		{
-			$base_price = new Price($base_price);
-
-			if( !$base_price->validate() )
-				return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		$ticket->basePrices()->saveMany($base_prices);
-
-		if($prices)
-		{
-			// Normalise prices array
-			$prices = Helper::normaliseArray($prices);
-			// Create new prices
-			foreach($prices as &$price)
+			// Normalise base_prices array
+			$base_prices = Helper::normaliseArray($base_prices);
+			// Create new base_prices
+			foreach($base_prices as &$base_price)
 			{
-				$price = new Price($price);
+				$base_price = new Price($base_price);
 
-				if( !$price->validate() )
-					return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+				if( !$base_price->validate() )
+					return Response::json( array('errors' => $base_price->errors()->all()), 406 ); // 406 Not Acceptable
 			}
 
-			$ticket->prices()->saveMany($prices);
+			$ticket->basePrices()->saveMany($base_prices);
+
+			if($prices)
+			{
+				// Normalise prices array
+				$prices = Helper::normaliseArray($prices);
+				// Create new prices
+				foreach($prices as &$price)
+				{
+					$price = new Price($price);
+
+					if( !$price->validate() )
+						return Response::json( array('errors' => $price->errors()->all()), 406 ); // 406 Not Acceptable
+				}
+
+				$ticket->prices()->saveMany($prices);
+			}
 		}
 
 		// Ticket has been created, let's connect it to boats
