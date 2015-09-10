@@ -39,7 +39,6 @@ phpunit-soren.xml
 .ssh/
 COMMENT
 access-logs
-backup-*
 bootstrap/compiled.php
 composer
 cpbackup-exclude.conf
