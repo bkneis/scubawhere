@@ -216,9 +216,9 @@ function statusIcon(booking) {
 	}
 	else if(booking.status === 'reserved') {
 		icon    = 'fa-clock-o';
-		tooltip = 'Reserved until ' + moment(booking.reserved).format('DD MMM, HH:mm');
+		tooltip = 'Reserved until ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
 
-		if(booking.reserved == null) {
+		if(booking.reserved_until == null) {
 			tooltip = 'Reservation expired';
 			color   = '#d9534f';
 		}
