@@ -145,62 +145,64 @@ $(function() {
 			window.promises.sessionFilterLoaded = $.Deferred();
 			window.promises.classFilterLoaded   = $.Deferred();
 
-			Class.filter({
-				'after': start.format(),
-				'before': end.format(),
-				'with_full': 1
-			}, function success(data) {
-				window.trainingSessions = _.indexBy(data, 'id');
+			$.when(window.promises.loadedClasses, window.promises.loadedTrips).done(function() {
+				Class.filter({
+					'after': start.format(),
+					'before': end.format(),
+					'with_full': 1
+				}, function success(data) {
+					window.trainingSessions = _.indexBy(data, 'id');
 
-				// Create eventObjects
-				_.each(window.trainingSessions, function(value) {
-					var eventObject = {
-						title: window.trainings[ value.training_id ].name, // use the element's text as the event title
-						allDay: false,
-						trip: window.trainings[ value.training_id ], // actually is training, used for less repetive of handlebars
-						session: value,
-						isNew: false,
-						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
-						durationEditable: false,
-						className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
-						isTrip : false
-					};
+					// Create eventObjects
+					_.each(window.trainingSessions, function(value) {
+						var eventObject = {
+							title: window.trainings[ value.training_id ].name, // use the element's text as the event title
+							allDay: false,
+							trip: window.trainings[ value.training_id ], // actually is training, used for less repetive of handlebars
+							session: value,
+							isNew: false,
+							editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
+							durationEditable: false,
+							className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+							isTrip : false
+						};
 
-					eventObject.session.start = $.fullCalendar.moment(value.start);
+						eventObject.session.start = $.fullCalendar.moment(value.start);
 
-					events.push( createCalendarEntry(eventObject) );
+						events.push( createCalendarEntry(eventObject) );
+					});
+
+					window.promises.classFilterLoaded.resolve();
 				});
 
-				window.promises.classFilterLoaded.resolve();
-			});
+				Session.filter({
+					'after': start.format(),
+					'before': end.format(),
+					'with_full': 1
+				}, function success(data) {
+					window.sessions = _.indexBy(data, 'id');
 
-			Session.filter({
-				'after': start.format(),
-				'before': end.format(),
-				'with_full': 1
-			}, function success(data) {
-				window.sessions = _.indexBy(data, 'id');
+					// Create eventObjects
+					_.each(window.sessions, function(value) {
+						var eventObject = {
+							title: window.trips[ value.trip_id ].name, // use the element's text as the event title
+							allDay: false,
+							trip: window.trips[ value.trip_id ],
+							session: value,
+							isNew: false,
+							editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
+							durationEditable: false,
+							className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose
+							isTrip : true
+						};
 
-				// Create eventObjects
-				_.each(window.sessions, function(value) {
-					var eventObject = {
-						title: window.trips[ value.trip_id ].name, // use the element's text as the event title
-						allDay: false,
-						trip: window.trips[ value.trip_id ],
-						session: value,
-						isNew: false,
-						editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
-						durationEditable: false,
-						className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose
-						isTrip : true
-					};
+						eventObject.session.start = $.fullCalendar.moment(value.start);
 
-					eventObject.session.start = $.fullCalendar.moment(value.start);
+						events.push( createCalendarEntry(eventObject) );
+					});
 
-					events.push( createCalendarEntry(eventObject) );
+					window.promises.sessionFilterLoaded.resolve();
 				});
-
-				window.promises.sessionFilterLoaded.resolve();
 			});
 
 			// Wait for the requests to load and then return events
