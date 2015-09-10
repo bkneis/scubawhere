@@ -637,7 +637,7 @@ Booking.prototype.reserve = function(params, successFn, errorFn) {
 		context: this,
 		success: function(data) {
 
-			this.reserved_until = params.reserved_until;
+			this.reserved_until = data.reserved_until;
 			this.status = 'reserved';
 			this.setStatus();
 

@@ -1769,7 +1769,7 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return array('status' => 'OK. Booking reserved');
+		return array('status' => 'OK. Booking reserved', 'reserved_until' => $booking->reserved_until);
 	}
 
 	public function postSave()
