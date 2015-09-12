@@ -294,13 +294,17 @@ function showModalWindow(eventObject) {
 	// Create the modal window from session-template
 	window.sw.sessionTemplateD = Handlebars.compile( $("#session-template").html() );
 
-	eventObject.boats = $.extend(true, {}, window.boats);
 	// console.log(eventObject.session);
-	if(!eventObject.session.boat_id) {
-		// Set default
-		eventObject.session.boat_id = _.values(eventObject.boats)[0].id;
+	if(eventObject.trip.boat_required && _.size(window.boats) > 0) {
+		eventObject.boats = $.extend(true, {}, window.boats);
+
+		if(!eventObject.session.boat_id) {
+			// Set default
+			eventObject.session.boat_id = _.values(eventObject.boats)[0].id;
+		}
+
+		eventObject.boats[ eventObject.session.boat_id ].selected = true;
 	}
-	eventObject.boats[ eventObject.session.boat_id ].selected = true;
 
 	// console.log(eventObject);
 
