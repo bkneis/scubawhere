@@ -122,6 +122,18 @@
 				<td></td>
 				<td></td>
 				<td></td>
+				<td id="transactions-online">
+					Online
+					<div style="width:100%" class="percentage-bar-container bg-success border-success">
+						<div id="transactions-online-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+						<span id="transactions-totalOnline" class="percentage-left"></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
 				<td id="transactions-paypal">
 					Paypal
 					<div style="width:100%" class="percentage-bar-container bg-success border-success">
