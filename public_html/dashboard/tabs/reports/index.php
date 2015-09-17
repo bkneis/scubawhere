@@ -222,7 +222,7 @@
 				<td>
 
 					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>
+						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{assigned}}</div>
 						<span class="percentage-left">{{capacity}}</span>
 					</div>
 				</td>
@@ -238,8 +238,8 @@
 					<td id="utilisation-date-range" style="width:30%">Average</td>
 					<td>
 						<div style="width:100%" class="percentage-bar-container bg-success border-success">
-							<div id="utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>
-							<span id="utilisation-total-capacity" class="percentage-left"></span>
+							<div id="utilisation-average" class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil entries.utilisation_total.capacity entries.utilisation_total.assigned}}%;">{{entries.utilisation_total.assigned}}</div>
+							<span id="utilisation-total-capacity" class="percentage-left">{{entries.utilisation_total.capacity}}</span>
 						</div>
 					</td>
 				</thead>
@@ -261,7 +261,7 @@
 				<td>{{{name}}}</td>
 				<td>
 					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity unassigned}}%;">{{getRemaining capacity unassigned}}</div>
+						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{getRemaining capacity assigned}}</div>
 						<span class="percentage-left">{{capacity}}</span>
 					</div>
 				</td>
@@ -277,7 +277,7 @@
 					<td id="class-utilisation-date-range" style="width:30%">Average</td>
 					<td>
 						<div style="width:100%" class="percentage-bar-container bg-success border-success">
-							<div id="class-utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.unassigned}}</div>
+							<div id="class-utilisation-average" class="percentage-bar" style="background-color: #5cb85c;">{{getRemaining entries.utilisation_total.capacity entries.utilisation_total.assigned}}</div>
 							<span id="class-utilisation-total-capacity" class="percentage-left"></span>
 						</div>
 					</td>

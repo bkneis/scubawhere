@@ -26,8 +26,9 @@ var colors = [
 var colorID = 0;
 var democolorID = 0;
 
-Handlebars.registerHelper('getUtil', function(capacity, unassigned){
-	return Math.round((1 - unassigned/capacity) * 100);
+Handlebars.registerHelper('getUtil', function(capacity, assigned){
+	if(capacity === assigned) return 0;
+	return Math.round((assigned/capacity) * 100);
 });
 
 Handlebars.registerHelper('getDate', function(date){
@@ -38,8 +39,8 @@ Handlebars.registerHelper('getTransAmount', function(date){
 	//
 });
 
-Handlebars.registerHelper('getRemaining', function(capacity, unassigned){
-	return capacity - unassigned;
+Handlebars.registerHelper('getRemaining', function(capacity, assigned){
+	return capacity - assigned;
 });
 
 Handlebars.registerHelper('getStatID', function(country){
@@ -270,8 +271,6 @@ function getReport(reportType, callback) {
 				window.utlisations = data;
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-				$("#utilisation-total-capacity").text(data.utilisation_total.unassigned);
-				$("#utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				if(data.utilisation != null && typeof callback === 'function') callback();
 			});
