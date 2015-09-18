@@ -207,13 +207,14 @@
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
-			                <th style="color:#313131">Country</th>
-			                <th style="color:#313131">Phone Number</th>
-			                <th style="color:#313131">Shoe Size</th>
-			                <th style="color:#313131">Chest size</th>
+			                <th style="color:#313131"><span style="display: none;">Country</span></th>
+			                <th style="color:#313131">Phone</th>
+			                <th style="color:#313131">Shoes</th>
+			                <th style="color:#313131">Chest</th>
 			                <th style="color:#313131">Height</th>
 			                <th style="color:#313131">Last Dive</th>
-			                <th style="color:#313131">Ticket Purchased</th>
+			                <th style="color:#313131">Purchase</th>
+			                <th style="color:#313131"><span style="display: none;">Booking</span></th>
 			            </tr>
             		</thead>
             		<tbody id="customers-table">
@@ -230,13 +231,14 @@
 					<thead>
               			<tr>
 			                <th style="color:#313131">Name</th>
-			                <th style="color:#313131">Country</th>
-			                <th style="color:#313131">Phone Number</th>
-			                <th style="color:#313131">Shoe Size</th>
-			                <th style="color:#313131">Chest size</th>
+			                <th style="color:#313131"><span style="display: none;">Country</span></th>
+			                <th style="color:#313131">Phone</th>
+			                <th style="color:#313131">Shoes</th>
+			                <th style="color:#313131">Chest</th>
 			                <th style="color:#313131">Height</th>
 			                <th style="color:#313131">Last Dive</th>
-			                <th style="color:#313131">Course Purchased</th>
+			                <th style="color:#313131">Purchase</th>
+			                <th style="color:#313131"><span style="display: none;">Booking</span></th>
 			            </tr>
             		</thead>
             		<tbody id="customers-table">

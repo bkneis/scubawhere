@@ -413,8 +413,9 @@ function showModalWindowManifest(id, type) {
 				{ data: null, render: 'shoe' },
 				{ data: null, render: 'chest' },
 				{ data: null, render: 'height' },
-				{ data: null, render: 'lastDive'},
-				{ data: null, render: 'ticket' }
+				{ data: null, render: 'lastDive' },
+				{ data: null, render: 'ticket' },
+				{ data: null, render: 'reference' }
 				],
 				"dom": 'T<"clear">lfrtip',
 		        "tableTools": {
@@ -467,8 +468,9 @@ function showModalWindowManifest(id, type) {
 				{ data: null, render: 'shoe' },
 				{ data: null, render: 'chest' },
 				{ data: null, render: 'height' },
-				{ data: null, render: 'lastDive'},
-				{ data: null, render: 'course' }
+				{ data: null, render: 'lastDive' },
+				{ data: null, render: 'course' },
+				{ data: null, render: 'reference' }
 				],
 				"dom": 'T<"clear">lfrtip',
 		        "tableTools": {
@@ -892,17 +894,19 @@ function customerData(customer) {
 		this._course  = window.courses[customer.pivot.course_id].name;
 	}
 
-	this._chest    = customer.chest_size || "--";
-	this._shoe     = customer.shoe_size  || "--";
-	this._height   = customer.height     || "--";
-	this._lastDive = customer.last_dive  || "--";
+	this._chest      = customer.chest_size || "-";
+	this._shoe       = customer.shoe_size  || "-";
+	this._height     = customer.height     || "-";
+	this._lastDive   = customer.last_dive  || "-";
+	this._reference  = customer.pivot.reference;
+	this._booking_id = customer.pivot.booking_id;
 
 	this.name = function () {
 		return this._name;
 	};
 
 	this.phone = function () {
-		return this._phone;
+		return this._phone + '&nbsp;'; // The forced space at the end makes the phone number be recognised as a string in Excel (instead of a number, when exporting via DataTable's CSV/Excel export)
 	};
 
 	this.country = function () {
@@ -932,4 +936,21 @@ function customerData(customer) {
 	this.lastDive = function () {
 		return this._lastDive;
 	};
+
+	this.reference = function () {
+		return '<a href="javascript:void(0);" onclick="editBooking(' + this._booking_id + ', this);">' + this._reference + '</a>';
+	};
+}
+
+function editBooking(booking_id, self) {
+	// Set loading indicator
+	$(self).after('<span id="save-loader" class="loader"></span>');
+
+	// Load booking data and redirect to add-booking tab
+	Booking.get(booking_id, function success(object) {
+		window.booking = object;
+		window.clickedEdit = true;
+
+		window.location.hash = 'add-booking';
+	});
 }

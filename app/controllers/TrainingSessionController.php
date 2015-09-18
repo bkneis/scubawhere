@@ -38,7 +38,7 @@ class TrainingSessionController extends Controller {
 			{
 				$query->whereIn('status', Booking::$counted);
 			})
-			->with('customer')
+			->with('booking', 'customer')
 			->get();
 
 		// Now, we build an array of customers
@@ -50,8 +50,12 @@ class TrainingSessionController extends Controller {
 			// The front-end expects the customer->pivot object to be filled, so we assign it the bookingdetail, which we conveniently already have.
 			$customer->pivot = $detail;
 
+			// Also add the booking reference to display it in the manifest (the booking_id for linking is already in the pivot object)
+			$customer->pivot->reference = $detail->booking->reference;
+
 			// Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
 			unset($customer->pivot->customer);
+			unset($customer->pivot->booking);
 
 			$customers[] = $customer;
 		});
