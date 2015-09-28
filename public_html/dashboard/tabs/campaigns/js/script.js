@@ -8,15 +8,15 @@ var selectedCertificateTemplate;
 var selectedCustomerGroupTemplate;
 var createCampaignTemplate;
 var groupSelectTemplate;
+var campaignsGroupsTemplate;
+var selected_email_template;
 
 $(function() {
 
 	viewCampaignsTemplate = Handlebars.compile($("#campaigns-template").html());
 	customerGroupListTemplate = Handlebars.compile($("#group-list-template").html());
 	addCustomerGroupTemplate = Handlebars.compile($("#customer-group-form-template").html());
-	selectCustomersModal = Handlebars.compile($("#select-customers-modal").html());
 	groupSelectTemplate = Handlebars.compile($("#group-select-template").html());
-
 	agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
 	ticketsTemplate            = Handlebars.compile($("#tickets-template").html());
 	classesTemplate            = Handlebars.compile($("#classes-template").html());
@@ -28,6 +28,9 @@ $(function() {
 	selectedAgencyTemplate = Handlebars.compile($("#selected-agency-template").html());
 
 	createCampaignTemplate 		= Handlebars.compile($("#create-campaign-template").html());
+	campaignsGroupsTemplate = Handlebars.compile($("#view-campaigns-groups-template").html());
+
+	$('#campaign-container').append(campaignsGroupsTemplate());
 
 	Agency.getAll(function sucess(data) {
 		window.agencies = _.indexBy(data, 'id');
@@ -41,11 +44,6 @@ $(function() {
 				});
 			});
 		});
-	});
-
-	$("#add-customer-group").on('click', function(event) {
-		event.preventDefault();
-		renderGroupEditForm();
 	});
 
 	$('#campaign-form-container').on('click', '.remove-customer-group', function(event) {
@@ -109,15 +107,16 @@ $(function() {
 	$("#campaign-form-container").on('click', '#create-campaign', function(event) {
 		event.preventDefault();
 		renderCampaignForm();
-	})
+	});
 
 });
 
 function renderCampaignTable() {
 	$(".return-campaign").remove();
-	//Campaign.getAll(function sucess(data) {
-		$("#campaign-form-container").empty().append(viewCampaignsTemplate());
-	//});
+	Campaign.getAll(function sucess(data) {
+		console.log(data);
+		$("#campaign-form-container").empty().append(viewCampaignsTemplate({campaigns : data}));
+	});
 }
 
 function renderCampaignForm(id) {
@@ -136,12 +135,33 @@ function renderCampaignForm(id) {
 		};
 	}
 
-	$("#campaign-form-container").empty().append(createCampaignTemplate(campaign));
+	$("#campaign-container").empty().append(createCampaignTemplate(campaign));
+
+	$('#show-email-browser').on('click', function(event) {
+		event.preventDefault();
+		var html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
+		var script_pos = html_string.indexOf('<script type="text/javascript" src="js/medium-editor.js"></script>');
+		var html_compiled = html_string.substring(0, script_pos) + '</body></html>';
+
+		var find = 'contenteditable="true"';
+		var re = new RegExp(find, 'g');
+		html_compiled = html_compiled.replace(re, '');
+
+		find = 'data-medium-editor-element="true"';
+		re = new RegExp(find, 'g');
+		html_compiled = html_compiled.replace(re, '');
+
+		find = 'role="textbox"';
+		re = new RegExp(find, 'g');
+		html_compiled = html_compiled.replace(re, '');
+
+		var w = window.open('');
+		w.document.write(html_compiled);
+		w.document.close();
+	});
 
 	if(!id)
 		$('input[name=name]').focus();
-
-	CKEDITOR.replace( 'message' );
 
 	setToken('[name=_token]');
 
@@ -165,9 +185,26 @@ function renderCampaignForm(id) {
 		$(this).parent().remove();
 	});
 
+	$('#select-campaign-template').on('click', function(event) {
+		event.preventDefault();
+		$('#select-email-template-modal').modal('show');
+		$('.email-template-option').on('click', function() {
+			$('.email-template-option').css('border', 'none');
+			$(this).css('border', '3px solid #FF7163');
+			$('#email-template-option-preview').attr('src', $(this).attr('data-url'));
+			selected_email_template = $(this).attr('data-url');
+		});
+		$('#select-email-template').on('click', function() {
+			$('#email-template-editor').css('display', 'inline');
+			$('#show-email-browser').css('display', 'inline');
+			$('#email-template-editor').attr('src', selected_email_template);
+			$('#select-email-template-modal').modal('hide');
+		});
+	})
+
 	if( id ) {
 
-		$('#campaign-form-container').find('#selected-rules').empty();
+		$('#campaign-container').find('#selected-rules').empty();
 		_.each(window.groups[id].rules, function(rule) {
 			if(rule.certificate_id !== null || rule.certificate_id !== undefined){
 				$('#campaign-form-container').find('#selected-rules').append(selectedCertificateTemplate({
@@ -181,14 +218,16 @@ function renderCampaignForm(id) {
 	}
 	else {
 
-		$('#campaign-form-container').on('submit', '#create-campaign-form', function(event) {
+		$('#campaign-container').on('submit', '#create-campaign-form', function(event) {
 			event.preventDefault();
 			var params = $(this).serializeObject();
+			params.message = "Messages will be replaced with html of email";
 			for(var i = 0; i < params.groups.length; i++) {
 				params.groups[i] = parseInt(params.groups[i]);
 			}
 			Campaign.create(params, function success(data) {
 				console.log(data);
+				pageMssg(data.status, true);
 			},
 			function error(xhr) {
 				console.log(xhr.responseText);
@@ -197,12 +236,18 @@ function renderCampaignForm(id) {
 
 	}
 
-	$(".return-campaign").remove();
-	$("#customer-group-container").append('<button class="btn btn-primary return-campaign pull-right">Return to Campaigns');
-
-	$(".return-campaign").on('click', function(event) {
+	$(".return-campaigns").on('click', function(event) {
 		event.preventDefault();
-		renderCampaignTable();
+		Campaign.getAll(function sucess(data) {
+			console.log(data);
+			$('#campaign-container').empty().append(campaignsGroupsTemplate());
+			renderGroupList();
+			$("#campaign-form-container").empty().append(viewCampaignsTemplate({campaigns : data}));
+			$("#campaign-form-container").on('click', '#create-campaign', function(event) {
+				event.preventDefault();
+				renderCampaignForm();
+			});
+		});
 	});
 }
 
@@ -357,7 +402,7 @@ function renderGroupEditForm(id) {
 	});
 
 	$(".return-campaign").remove();
-	$("#customer-group-container").append('<button class="btn btn-primary return-campaign pull-right">Return to Campaigns');
+	$("#customer-group-container").append('<button class="btn btn-primary return-campaign pull-right">Return to Campaigns</button>');
 
 	$(".return-campaign").on('click', function(event) {
 		event.preventDefault();
@@ -392,5 +437,10 @@ function renderGroupList(callback) {
 
 		if( typeof callback === 'function')
 			callback();
+	});
+
+	$("#add-customer-group").on('click', function(event) {
+		event.preventDefault();
+		renderGroupEditForm();
 	});
 }
