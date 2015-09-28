@@ -46,12 +46,13 @@ class ReportController extends Controller {
 		$utilisation = []; $i = 1;
 		foreach($departures as $departure)
 		{
-			$max = $departure->capacity[1];
+			$max = isset($departure->capacity[1]) ? $departure->capacity[1] : 0;
 
 			$utilisation[$i] = [
 				'date'       => $departure->start,
 				'name'       => $departure->trip->name,
 				'tickets'    => [],
+				'assigned'   => 0,
 				'unassigned' => $max,
 				'capacity'   => $max,
 			];
@@ -60,19 +61,27 @@ class ReportController extends Controller {
 			{
 				if($detail->booking->status !== 'confirmed') continue;
 
+				$utilisation[$i]['assigned']++;
+
 				if(empty($utilisation[$i]['tickets'][$detail->ticket->name])) $utilisation[$i]['tickets'][$detail->ticket->name] = 0;
 
 				$utilisation[$i]['tickets'][$detail->ticket->name]++;
-				$utilisation[$i]['unassigned']--;
+
+				if($utilisation[$i]['unassigned'] > 0)
+					$utilisation[$i]['unassigned']--;
 			}
+
+			if($utilisation[$i]['capacity'] === 0)
+				$utilisation[$i]['capacity'] = $utilisation[$i]['assigned'];
 
 			$i++;
 		}
 
 		// Calculate total average
-		$total = ['tickets' => [], 'unassigned' => 0, 'capacity' => 0];
+		$total = ['tickets' => [], 'assigned' => 0, 'unassigned' => 0, 'capacity' => 0];
 		foreach ($utilisation as $trip)
 		{
+			$total['assigned']   += $trip['assigned'];
 			$total['unassigned'] += $trip['unassigned'];
 			$total['capacity']   += $trip['capacity'];
 
