@@ -5,8 +5,6 @@ use ScubaWhere\Helper;
 
 class CrmCampaign extends Ardent {
 
-	protected $table = 'company_campaigns';
-
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
 
 	public static $rules = array(

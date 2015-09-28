@@ -73,46 +73,19 @@ class CrmCampaignController extends Controller {
 			}
 		}
 
-		// SEARCH CUSTOMER EMAILS BY CERTIFICATION
-		/*$customers = Auth::user()->customers()->with('certificates')->get();
-		foreach ($customers as $customer) {
-			foreach ($customer->certificates as $certificate) {
-				if(in_array($certificate->id, $rules['certs'])) {
-					array_push($customer_emails, $customer->email);
-					break;
-				}
-			}
-		}*/
-
 		$certificates_customers = Auth::user()->customers()->whereHas('certificates', function($query) use ($rules){
-			$query->whereIn('id', $rules['certs']);
+			$query->whereIn('certificates.id', $rules['certs']);
 		})->lists('email');
 
-		array_merge($customer_emails, $certificates_customers);
+		$customer_emails = array_merge($customer_emails, $certificates_customers);
 
-
-
-		// SEARCH BOOKINGS FOR TICKET AND TRAINING ID FOR CUSTOMER ID
-		/*$bookings = Auth::user()->bookings()->with('bookingdetails')->get();
-		foreach ($bookings as $booking) {
-			foreach ($booking->bookingdetails as $detail) {
-				if(in_array($detail->training_id, $rules['classes']) || in_array($detail->ticket_id, $rules['tickets'])) {
-					$cust = Auth::user()->customers()->where('id', '=', $detail->customer_id)->first();
-					if(!in_array($cust->email, $customer_emails)) array_push($customer_emails, $cust->email);
-				}
-			}
-		}*/
-
-		//$bookings = Auth::user()->bookings()->with('bookingdetails')->whereHas('ticket_id')->get();
 		$booked_customers = Auth::user()->bookingdetails()->whereHas('booking', function($query) use($rules) {
 			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
 		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
 		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->lists('email');
 
-		array_merge($customer_emails, $booked_customers);
+		$customer_emails = array_merge($customer_emails, $booked_customers);
 		$customer_emails = array_unique($customer_emails);
-
-		// SEND EMAILS TO CUSTOMER EMAILS ARRAY HERE
 
 		$data['num_sent'] = sizeof($customer_emails);
 
@@ -123,17 +96,11 @@ class CrmCampaignController extends Controller {
 			return Response::json( array('errors' => $campaign->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		return Response::json( array('emails' => $customer_emails), 201 );
-
-		// HOW TO SAVE CAMPAIGN AND ASIGN PIVOT VALUES TO ATTACH CAMPAIGNS TO GROUPS-------------
 		$campaign = Auth::user()->campaigns()->save($campaign);
 
 		$campaign->groups()->sync($group_ids);
 
-		/*foreach ($group_ids as $group_id) {
-			$campaign->groups()->attach($group_id);
-		}*/
-		// --------------------------------------------------------------------------------------
+		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
 
 		return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customer_emails), 201 ); // 201 Created
 	}
