@@ -74,9 +74,9 @@
 
 							<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
 								<h4>Please select the trips that this ticket should be eligible for:</h4>
- 								<div id="ticket-selectList" class="form-row">
- 								{{#each available_trips}}
- 										<label class="ticket-select{{inArray id ../trips ' checked' ''}}">
+								<div id="ticket-selectList" class="form-row">
+								{{#each available_trips}}
+										<label class="ticket-select{{inArray id ../trips ' checked' ''}}">
 											<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
 											{{{name}}}
 										</label>
