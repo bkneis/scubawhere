@@ -16,8 +16,8 @@ class CrmCampaign extends Ardent {
 	public function beforeSave( $forced )
 	{
 
-		if( isset($this->name) )
-			$this->name = Helper::sanitiseString($this->name);
+		if( isset($this->subject) )
+			$this->subject = Helper::sanitiseString($this->subject);
 
 	}
 
