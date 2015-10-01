@@ -381,3 +381,7 @@ function clearForm() {
 function changeParent(self) {
 	$(self).parent().toggleClass('checked');
 }
+
+function togglePrices(self) {
+	$('.prices').toggle();
+}
