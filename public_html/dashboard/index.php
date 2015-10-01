@@ -144,6 +144,9 @@ $PROTOCOL = 'http';
 		<script type="text/javascript" src="js/Controllers/Ticket.js"></script>
 		<script type="text/javascript" src="js/Controllers/Timetable.js"></script>
 		<script type="text/javascript" src="js/Controllers/Trip.js"></script>
+		<script type="text/javascript" src="js/Controllers/CustomerGroup.js"></script>
+		<script type="text/javascript" src="js/Controllers/Campaign.js"></script>
+		<script type="text/javascript" src="js/Controllers/Certificate.js"></script>
 	<?php } ?>
 
 	<script type="text/javascript">

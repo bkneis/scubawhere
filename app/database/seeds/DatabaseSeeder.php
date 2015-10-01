@@ -10,6 +10,9 @@ class DatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Eloquent::unguard();
+        
+		// Disable foreign key checks
+		DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
 		$this->call('AgenciesTableSeeder');
 		$this->call('CertificatesTableSeeder');
@@ -18,6 +21,9 @@ class DatabaseSeeder extends Seeder {
 		$this->call('CurrenciesTableSeeder');
 		$this->call('PaymentgatewaysTableSeeder');
 		$this->call('TagsTableSeeder');
+        
+		// Disable foreign key checks
+		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}
 
 }
