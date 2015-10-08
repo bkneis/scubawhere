@@ -53,7 +53,7 @@ class RegisterController extends Controller {
 
 		$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
 
-		$latLng = 'https://maps.googleapis.com/maps/api/geocode/xml?address='.$address.'&key='.$googleAPIKey;
+		$latLng = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$googleAPIKey;
 		$latLng = file_get_contents($latLng);
 		$latLng = json_decode($latLng);
 
