@@ -1,11 +1,12 @@
 <div id="wrapper" class="clearfix">
 	<div class="row">
 		<div class="col-md-3">
-			<div class="panel panel-default">
+			<div class="panel panel-default" id="search-customer-container">
 				<div class="panel-heading">
 					<h4 class="panel-title">Search for a customer</h4>
 				</div>
 				<div class="panel-body">
+					<button id="add-new-customer" class="btn btn-success text-uppercase">&plus; New Customer</button>
 					<form id="find-customer-form">
 						<div class="form-row">
 							<label class="field-label">Customer's First Name</label>
@@ -264,7 +265,7 @@
 	{{/each}}
 </script>
 
-<script id="email-customer-template" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="email-customer-template">
 	<div class="form-group">
 		<div class="col-md-12">
 			<label for="subject" class="control-label">Subject</label>
@@ -281,7 +282,7 @@
 	<input type="hidden" name="customer_name" class="form-control" value="{{firstname}} {{lastname}}">
 </script>
 
-<script id="edit-customer-template" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="edit-customer-template">
 	<input type="hidden" name="id" value="{{id}}">
 	<div class="form-group">
 		<div class="col-md-6">
