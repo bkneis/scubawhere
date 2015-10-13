@@ -51,12 +51,12 @@ Handlebars.registerHelper('checkNull', function(value) {
 	else return value;
 });
 
-var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
-	var countriesTemplate = Handlebars.compile($("#countries-template").html());
-	var agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
-	var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
-	var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
-	var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
+var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
+var countriesTemplate                 = Handlebars.compile($("#countries-template").html());
+var agenciesTemplate                  = Handlebars.compile($("#agencies-template").html());
+var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
+var certificatesTemplate              = Handlebars.compile($("#certificates-template").html());
+var selectedCertificateTemplate       = Handlebars.compile($("#selected-certificate-template").html());
 
 $(function() {
 
@@ -67,7 +67,7 @@ $(function() {
 			window.agencies = _.indexBy(data, 'id');
 			Customer.getAllCustomers(function(data) {
 
-				console.log(data);
+				//console.log(data);
 				window.customers = _.indexBy(data, 'id');
 				renderCustomerList(window.customers);
 
@@ -90,7 +90,7 @@ $(function() {
 		var params = $(this).serializeObject();
 
 		Customer.filter(params, function success(data) {
-			console.log(data);
+			//console.log(data);
 			renderCustomerList(data);
 			btn.html('Find Customer');
 		}, function error(xhr) {
@@ -112,7 +112,7 @@ $(function() {
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
-		console.log(params);
+		//console.log(params);
 
 		Customer.updateCustomer(params, function success(data) {
 			pageMssg(data.status, 'success');
@@ -170,7 +170,7 @@ $(function() {
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
-		console.log(params);
+		//console.log(params);
 
 		Company.sendEmail(params, function success(data){
 			pageMssg('Thank you, your email has been sent', true);
@@ -178,7 +178,7 @@ $(function() {
 			$('#email-customer-modal').modal('hide');
 		},
 		function error(xhr) {
-			console.log(xhr);
+			//console.log(xhr);
 			var data = JSON.parse(xhr.responseText);
 			btn.html('Send');
 			pageMssg(data.error.message, 'danger');
@@ -210,7 +210,7 @@ function format ( id ) {
     //var customer = _.where(window.customers, {id: parseInt(id)});
 
     //console.log(customer);
-    console.log(id);
+    //console.log(id);
 
     return customerButtonsTemplate({customerID : parseInt(id)});
 
@@ -239,10 +239,37 @@ function editDetails(id) {
 		};
 	}
 
+	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+
+	if( id ) {
+		$('#country_id').val(customer.country_id);
+		$("#edit-customer-details").html(editCustomerTemplate(customer));
+		$("#customer-diving-information").html(customerDivingInformationTemplate(customer));
+
+		// Set the last_dive date
+		$('#edit-customer-modal').find('.last_dive').val(customer.last_dive);
+
+		$('#edit-customer-agencies').find('#selected-certificates').empty();
+		_.each(customer.certificates, function(certificate) {
+			$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
+				id: certificate.id,
+				abbreviation: certificate.agency.abbreviation,
+				name: certificate.name,
+			}));
+		});
+	}
+	else {
+		$("#edit-customer-details").html(editCustomerTemplate(customer));
+		$("#customer-diving-information").html(customerDivingInformationTemplate({}));
+	}
+
 	$('#edit-customer-modal').modal('show');
+
 	$("#country_id").html(countriesTemplate({countries : window.countries}));
+
 	// Activate datepickers
-	$('#edit-customer-modal input.datepicker').datetimepicker({
+	$('#edit-customer-modal .datepicker').datetimepicker({
+		// defaultDate: '1980-01-01',
 		pickDate: true,
 		pickTime: false,
 		icons: {
@@ -253,7 +280,18 @@ function editDetails(id) {
 		}
 	});
 
-	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
+	// Enable select2 dropdown for edit-form dropdown fields
+	$('#edit-customer-countries').find('#country_id').select2();
+	$('#edit-customer-agencies').find('#agency_id').select2();
+	$('#edit-customer-agencies').find('#certificate_id').select2();
+
+	// Set correct country
+	if( id && customer.country_id) {
+		$('#edit-customer-countries').find('#country_id').select2("val", customer.country_id);
+	}
+	else {
+		$('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
+	}
 
 	$('#edit-customer-modal').on('change', '#agency_id', function() {
 		var self = $(this);
@@ -287,73 +325,7 @@ function editDetails(id) {
 	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
 		$(this).parent().remove();
 	});
-
-	if( id ) {
-
-		$('#country_id').val(customer.country_id);
-		$("#edit-customer-details").html(editCustomerTemplate(customer));
-		$("#customer-diving-information").html(customerDivingInformationTemplate(customer));
-
-		// Set the last_dive date
-		$('#edit-customer-modal').find('.last_dive').val(customer.last_dive);
-
-		$('#edit-customer-agencies').find('#selected-certificates').empty();
-		_.each(customer.certificates, function(certificate) {
-			$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
-				id: certificate.id,
-				abbreviation: certificate.agency.abbreviation,
-				name: certificate.name,
-			}));
-		});
-
-	}
-	else {
-
-		$("#edit-customer-details").html(editCustomerTemplate);
-		$("#customer-diving-information").html(customerDivingInformationTemplate);
-
-	}
-
 }
-
-/*function editDetails(id) {
-
-	$('#edit-customer-modal').modal('show');
-	$("#country_id").html(countriesTemplate({countries : window.countries}));
-	$('#country_id').val(window.customers[id].country_id);
-	$("#edit-customer-details").html(editCustomerTemplate(window.customers[id]));
-	$("#customer-diving-information").html(customerDivingInformationTemplate(window.customers[id]));
-	// Activate datepickers
-	$('#edit-customer-modal input.datepicker').datetimepicker({
-		pickDate: true,
-		pickTime: false,
-		icons: {
-			time: 'fa fa-clock-o',
-			date: 'fa fa-calendar',
-			up:   'fa fa-chevron-up',
-			down: 'fa fa-chevron-down'
-		},
-	});
-
-	// Set the last_dive date
-	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
-
-	$("#edit-customer-agencies").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
-
-	$('#edit-customer-agencies').find('#selected-certificates').empty();
-	_.each(window.customers[id].certificates, function(certificate) {
-		$('#edit-customer-agencies').find('#selected-certificates').append(selectedCertificateTemplate({
-			id: certificate.id,
-			abbreviation: certificate.agency.abbreviation,
-			name: certificate.name,
-		}));
-	});
-
-	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
-		$(this).parent().remove();
-	});
-
-}*/
 
 function emailCustomer(id) {
 
@@ -371,17 +343,17 @@ function viewBookings(id) {
 		//console.log(data);
 		// add options to select box
 		for(var i in data) {
-			console.log(data[i]);
+			//console.log(data[i]);
 			$('#customer-bookings-ref').append('<option data-bookingID="'+data[i].id+'">'+data[i].reference+'</option>');
 		}
 		if(data[0] != null) {
 			Booking.get(data[0].id, function sucess(data) {
-				console.log(data);
+				//console.log(data);
 				$("#customer-booking").html(summaryTable(data));
 			});
 			$('#customer-bookings-ref').on('change', function() {
 				Booking.get($(this).find(':selected').attr('data-bookingID'), function sucess(data) {
-					console.log(data);
+					//console.log(data);
 					$("#customer-booking").html(summaryTable(data));
 				});
 			});
@@ -399,7 +371,7 @@ function getBooking(id) {
 
 
 	Booking.get(id, function sucess(data) {
-		console.log(data);
+		//console.log(data);
 		$("#customer-booking").html(summaryTable(data));
 	});
 }

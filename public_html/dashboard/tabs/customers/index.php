@@ -265,7 +265,7 @@
 	{{/each}}
 </script>
 
-<script id="email-customer-template" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="email-customer-template">
 	<div class="form-group">
 		<div class="col-md-12">
 			<label for="subject" class="control-label">Subject</label>
@@ -282,7 +282,7 @@
 	<input type="hidden" name="customer_name" class="form-control" value="{{firstname}} {{lastname}}">
 </script>
 
-<script id="edit-customer-template" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="edit-customer-template">
 	<input type="hidden" name="id" value="{{id}}">
 	<div class="form-group">
 		<div class="col-md-6">
