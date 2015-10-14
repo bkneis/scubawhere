@@ -107,13 +107,14 @@
     <div class="col-md-7">
       <div class="panel panel-default" id="todays-sessions">
         <div class="panel-heading">
-          <h4 class="panel-title">Upcoming Trips</h4>
+          <h4 class="panel-title">Upcoming Trips & Classes</h4>
         </div>
         <div style="min-height:250px;" class="panel-body">
           <table class="bluethead">
             <thead>
               <tr class="bg-primary">
-                <th>Trip</th>
+                <th></th>
+                <th>Session</th>
                 <th>Boat</th>
                 <th>Utilisation</th>
                 <th>Date</th>
@@ -163,9 +164,10 @@
 
   <script type="text/x-handlebars-template" id="today-session-template">
     {{#each sessions}}
-      <tr class="accordion-header" data-id="{{id}}" id="today-session-{{id}}">
-        <td>{{trip.name}}</td>
-        <td>{{boat.name}}</td>
+      <tr class="accordion-header" data-id="{{id}}" data-type="{{#if trip}}trip{{else}}class{{/if}}" id="today-session-{{id}}">
+        <td>{{#if trip}}<i class="fa fa-ship"></i>{{else}}<i class="fa fa-graduation-cap"></i>{{/if}}</td>
+        <td>{{#if trip}}{{{trip.name}}}{{else}}{{{training.name}}}{{/if}}</td>
+        <td>{{{boat.name}}}</td>
         <td>{{getPer capacity}}</td>
         <td>{{friendlyDate start}} - {{tripFinish start trip.duration}}</td>
       </tr>
@@ -186,14 +188,14 @@
         </td>
       </tr>
     {{else}}
-      <tr><td colspan="7" style="text-align: center;">You have no sessions today.</td></tr>
+      <tr><td colspan="7" style="text-align: center;">No upcoming trips or classes.</td></tr>
     {{/each}}
   </script>
 
   <script type="text/x-handlebars-template" id="customer-details-template">
     {{#each customers}}
       <tr>
-        <td>{{firstname}} {{lastname}}</td>
+        <td>{{{firstname}}} {{{lastname}}}</td>
         <td>{{email}}</td>
         <td>{{country}}</td>
         <td>{{phone}}</td>

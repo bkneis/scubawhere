@@ -1,4 +1,3 @@
-window.todaySessions;
 window.todayBookings;
 window.tourStart;
 var todaySession;
@@ -60,8 +59,9 @@ $(function () {
 	displayFBStats();
 
 	if(window.company.initialised != 1) {
-		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for trying out scubawhereRMS!</strong> Please use the setup wizard below to configure your system.</div>';
+		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for using scubawhereRMS!</strong> To get started, please use the setup wizard below to configure your system.</div>';
 		$("#wrapper").prepend(initWarning);
+
 		var setupWizard = $("#setup-wizard").html();
 		$("#row1").prepend(setupWizard);
 		if(window.tourStart) {
@@ -74,68 +74,79 @@ $(function () {
 			else {
 				window.currentStep = "#dashboard";
 				window.location.href = '#accommodations';
-					$("#guts").prepend($("#tour-nav-wizard").html());
-					window.tourStart = true;
-					window.currentStep = {
-						tab : "#accommodations",
-						position : 1
-					};
-					$(".tour-progress").on("click", function(event) {
-						if(window.currentStep.position >= $(this).attr('data-position')) {
-							window.location.href = $(this).attr('data-target');
-						} else {
-							pageMssg("Please complete the unfinished steps");
-						}
-					});
+				$("#guts").prepend($("#tour-nav-wizard").html());
+				window.tourStart = true;
+				window.currentStep = {
+					tab : "#accommodations",
+					position : 1
+				};
+				$(".tour-progress").on("click", function(event) {
+					if(window.currentStep.position >= $(this).attr('data-position')) {
+						window.location.href = $(this).attr('data-target');
+					} else {
+						pageMssg("Please complete the unfinished steps");
+					}
+				});
 			}
+		});
+	} else {
+		var nextSessionsWidget = $("#todays-sessions-widget").html();
+		$("#row1").prepend(nextSessionsWidget);
 
+		var nextSessionTemplates = Handlebars.compile($('#today-session-template').html());
+		Session.filter({after: moment().format('YYYY-MM-DD')}, function success(nextTrips) {
+			Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
+				var nextSessions = nextTrips.concat(nextClasses);
+				nextSessions = _.sortBy(nextSessions, 'start');
+
+				$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+			});
+		},
+		function error(xhr){
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0], 'danger');
 		});
 
-} else {
+		$('#sessions-list').on('click', '.accordion-header', function() {
+			self = $(this);
+			var id   = self.data('id');
+			var type = self.data('type');
 
-	var todaysSessionsWidget = $("#todays-sessions-widget").html();
+			if(!self.hasClass('manifest-loaded'))
+				getCustomers(id, type);
 
-	$("#row1").prepend(todaysSessionsWidget);
-
-	todaySession = Handlebars.compile($('#today-session-template').html());
-	Session.filter({after: moment().format('YYYY-MM-DD')}, function success(data){
-		window.todaySessions = _.indexBy(data, 'id');
-		// console.log(data);
-		$('#sessions-list').append( todaySession( {sessions : data} ) );
-		//getAllLocations(data);
-		for(var i =0; i < data.length; i++) {
-			getCustomers(data[i].id);
-		}
-	},
-	function error(xhr){
-		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0], 'danger');
-	});
-
-	$('#sessions-list').on('click', '.accordion-header', function() {
-		$(this).toggleClass('expanded');
-		$('.accordion-' + this.getAttribute('data-id')).toggle();
-	});
-
-}
-
-
+			self.toggleClass('expanded');
+			$('.accordion-' + id).toggle();
+		});
+	}
 });
 
-function getCustomers(id) {
+function getCustomers(id, type) {
 
-	customerDetails = Handlebars.compile($('#customer-details-template').html());
+	var customerDetailsTemplate = Handlebars.compile($('#customer-details-template').html());
 	var params = "id=" + id;
-	Session.getAllCustomers(params, function sucess(data){
-		console.log(data.customers);
-		$('#customer-table-'+id).append( customerDetails( {customers : data.customers} ) );
-		$('#customers-'+id).DataTable({
+
+	var Model;
+	switch(type) {
+		case 'trip':
+			Model = Session;
+			break;
+		case 'class':
+			Model = Class;
+			break;
+	}
+
+	Model.getAllCustomers(params, function sucess(data) {
+		//console.log(data.customers);
+		$('#sessions-list .accordion-header[data-id=' + id + '][data-type=' + type + ']').addClass('manifest-loaded');
+		$('#customer-table-' + id).append( customerDetailsTemplate( {customers : data.customers} ) );
+		$('#customers-' + id).DataTable({
 			"paging":   false,
 			"ordering": false,
 			"info":     false,
 			"pageLength" : 10,
 			"language": {
-				"emptyTable": "There are no customers booked for this trip"
+				"emptyTable": "There are no customers booked for this " + type
 			},
 		"dom": 'T<"clear">lfrtip',
         "tableTools": {
@@ -157,7 +168,7 @@ function displayFBStats() {
         },
         function (response) {
           if (response && !response.error) {
-            console.log(response);
+            //console.log(response);
             window.facebook.stats = [
               {title : response.data[1].title, data : response.data[1].values[2].value},
               {title : response.data[54].title, data : response.data[54].values[2].value},

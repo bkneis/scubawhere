@@ -45,12 +45,12 @@
 		var data      = {{ $data }};
 		var companies = {{ $companies }};
 
-
+		// Group results by company + IP
 		var recent_users = _.groupBy(data, function(heartbeat) {
 			return heartbeat.company_id + heartbeat.ip;
 		});
 
-		// Create new array from all respective last heartbeats
+		// For each user, reduce arrays to the most recent one
 		recent_users = _.map(recent_users, function(heartbeats) {
 			return _.last(heartbeats);
 		});
@@ -60,7 +60,7 @@
 			return heartbeat.date + ' ' + heartbeat.time;
 		});
 
-		// Reduce list to 5 most recent
+		// Reduce list to 25 most recent
 		recent_users = _.last(recent_users, 25);
 
 		// Reverse list, so the most recent is first
