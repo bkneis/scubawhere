@@ -74,7 +74,7 @@ Handlebars.registerHelper('arrivalDate', function() {
 });*/
 
 Handlebars.registerHelper('sumPaid', function() {
-	console.log(this.sums.have);
+	//console.log(this.sums.have);
 	return this.sums.have;
 });
 
