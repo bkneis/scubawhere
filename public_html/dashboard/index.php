@@ -25,13 +25,11 @@ $PROTOCOL = 'http';
 	// Check for the authentication cookie
 	if(!$_COOKIE["scubawhere_session"])
 	{
-		// die("Cookie not found");
-
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
 
-	// Check if company details can be recieved with Laravel
+	// Check if company details can be received with Laravel
 	$strCookie = 'scubawhere_session=' . $_COOKIE['scubawhere_session'] . '; path=/';
 	$ch = curl_init($BASE_URL . '/api/company');
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -40,8 +38,6 @@ $PROTOCOL = 'http';
 	curl_close( $ch );
 	$result = json_decode( $result );
 	if( empty($result->id) ) {
-		// die("cURL not able to access API");
-
 		// Not logged in
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
