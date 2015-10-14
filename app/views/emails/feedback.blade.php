@@ -11,11 +11,15 @@
 
 	<div>
 
-		<h1>New feedback from {{$company->name}}</h1>
+		<h1>RMS feedback from {{$company->name}}</h1>
 
 		<p>Involving: {{$feedback['tab']}}</p>
-		<p>Issue: {{$feedback['issue']}}</p>
-		@if ($feedback['feature'])<p>{{$feedback['feature']}}</p>@endif
+
+		@if ($feedback['feature'])
+			<p>Feature: {{$feedback['feature']}}</p>
+		@endif
+
+		<p>{{$feedback['issue']}}</p>
 
 	</div>
 </body>
