@@ -605,6 +605,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 			if(params.discount)         this.discount         = params.discount;
 			if(params.comment)          this.comment          = params.comment;
 
+			this.price         = data.price;
 			this.decimal_price = data.decimal_price;
 
 			this.calculateSums();

@@ -199,19 +199,25 @@ function statusIcon(booking) {
 	else if(booking.status === 'confirmed') {
 		icon = 'fa-check';
 
-		var percentage = booking.sums.have / booking.decimal_price;
+		if(booking.decimal_price === '0.00') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, free of charge';
+		}
+		else {
+			var percentage = booking.sums.have / booking.decimal_price;
 
-		if(percentage === 1) color = '#5cb85c';
-		else if(percentage === 0) color = '#d9534f';
-		else color = '#f0ad4e';
+			if(percentage === 1) color = '#5cb85c';
+			else if(percentage === 0) color = '#d9534f';
+			else color = '#f0ad4e';
 
-		if(percentage === 1) tooltip = 'Confirmed, completely paid';
-		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + booking.sums.have + '/' + booking.decimal_price + ' paid';
+			if(percentage === 1) tooltip = 'Confirmed, completely paid';
+			else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + booking.sums.have + '/' + booking.decimal_price + ' paid';
 
-		if(percentage > 1) {
-			icon = 'fa-exclamation';
-			color = '#d9534f';
-			tooltip = 'Confirmed, refund necessary';
+			if(percentage > 1) {
+				icon = 'fa-exclamation';
+				color = '#d9534f';
+				tooltip = 'Confirmed, refund necessary';
+			}
 		}
 	}
 	else if(booking.status === 'reserved') {

@@ -1736,7 +1736,7 @@ class BookingController extends Controller {
 		if(!empty($data['discount']))
 			$booking->updatePrice(true, $oldDiscount);
 
-		return array('status' => 'OK. Booking information updated.', 'decimal_price' => $booking->decimal_price);
+		return array('status' => 'OK. Booking information updated.', 'price' => $booking->price, 'decimal_price' => $booking->decimal_price);
 	}
 
 	public function postReserve()
@@ -1842,8 +1842,10 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
-		if($booking->agent_id === null)
+		if($booking->price != 0 && $booking->agent_id === null)
 			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent.')), 403 ); // 403 Forbidden
+		else if($booking->price != 0)
+			return Response::json( array('errors' => array('The confirmation method is only allowed for free-of-charge bookings.')), 403 ); // 403 Forbidden
 
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking cannot be confirmed, as it is cancelled.')), 409 ); // 409 Conflict

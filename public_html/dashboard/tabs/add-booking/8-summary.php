@@ -426,11 +426,15 @@
 										<tr>
 											<td style="vertical-align: middle; border-right: 1px solid #ccc;">
 												<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save For Later</button>
-												{{#if agent_id}}
+												{{#unless price}}
 													<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
 												{{else}}
-													<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
-												{{/if}}
+													{{#if agent_id}}
+														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+													{{else}}
+														<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
+													{{/if}}
+												{{/unless}}
 											</td>
 											<td>
 												<h4 class="text-center">Reserve Booking</h4>

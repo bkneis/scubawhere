@@ -41,19 +41,25 @@ Handlebars.registerHelper('statusIcon', function() {
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
 
-		var percentage = this.sums.have / this.decimal_price;
+		if(this.decimal_price === '0.00') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, free of charge';
+		}
+		else {
+			var percentage = this.sums.have / this.decimal_price;
 
-		if(percentage === 1) color = '#5cb85c';
-		else if(percentage === 0) color = '#d9534f';
-		else color = '#f0ad4e';
+			if(percentage === 1) color = '#5cb85c';
+			else if(percentage === 0) color = '#d9534f';
+			else color = '#f0ad4e';
 
-		if(percentage === 1) tooltip = 'Confirmed, completely paid';
-		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
+			if(percentage === 1) tooltip = 'Confirmed, completely paid';
+			else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
 
-		if(percentage > 1) {
-			icon = 'fa-exclamation';
-			color = '#d9534f';
-			tooltip = 'Confirmed, refund necessary';
+			if(percentage > 1) {
+				icon = 'fa-exclamation';
+				color = '#d9534f';
+				tooltip = 'Confirmed, refund necessary';
+			}
 		}
 	}
 	else if(this.status === 'reserved') {
