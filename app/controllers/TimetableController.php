@@ -53,7 +53,6 @@ class TimetableController extends Controller {
 		// Update the referenced session object's timetable ID
 		$departure->timetable()->associate( $timetable );
 		$departure->save();
-		// $departure->update( array('timetable_id' => $timetable->id) );
 
 		////////////////////////////////////////////
 		// CREATE THE SESSIONS FROM THE TIMETABLE //

@@ -14,7 +14,7 @@
 					  <button id="filter-classes" display="classes" type="button" class="btn btn-default filter-type">Classes</button>
 					</div>
 					<ul id="trip-class-list" style="padding-left: 0;">
-						<script id="trip-list" type="text/x-handlebars-template">
+						<script type="text/x-handlebars-template" id="trip-list">
 							{{#each trips}}
 								<li class="droppable-event">
 									<div data-type="trip" class='trip-event' data-id="{{id}}">
@@ -24,7 +24,7 @@
 								</li>
 							{{/each}}
 						</script>
-						<script id="class-list" type="text/x-handlebars-template">
+						<script type="text/x-handlebars-template" id="class-list">
 							{{#each classes}}
 								<li class="droppable-event">
 									<div data-type="class" class='trip-event' data-id="{{id}}">
@@ -45,15 +45,21 @@
 	</div>
 
 	<div id="modalWindows" style="height: 0;">
-		<script id="session-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="session-template">
 			<div id="modal-{{id}}" class="reveal-modal">
 				<p style="text-transform: uppercase; float: right; line-height: 2.8em;">
 					{{#if isNew}}
-						New session
+						New {{#if isTrip}}trip{{else}}class{{/if}}
 					{{else}}
-						{{#unless session.deleted_at}}
-							Update session
-						{{/unless}}
+						{{#if isTrip}}
+							{{#unless session.deleted_at}}
+								Update trip
+							{{/unless}}
+						{{else}}
+							{{#unless session.deleted_at}}
+								Update class
+							{{/unless}}
+						{{/if}}
 					{{/if}}
 				</p>
 				<h4>{{#if session.deleted_at}}<s>{{/if}}{{{trip.name}}}{{#if session.deleted_at}}</s>{{/if}}</h4>
@@ -148,8 +154,8 @@
 						{{else}}
 							<div class="horizontal-seperator"><span>Options</span></div>
 							<div class="yellow-helper attention-placeholder">
-								<h4>You are editing a <u>timetabled</u> session</h4>
-								Do you want to move/delete all future versions of this session, too?</p>
+								<h4>You are editing a <u>timetabled</u> {{#if isTrip}}trip{{else}}class{{/if}}</h4>
+								Do you want to move/delete all future versions of this {{#if isTrip}}trip{{else}}class{{/if}}, too?</p>
 								<p>
 									<label style="display: block; margin-bottom: 0.5em;">
 										<input type="radio" name="handle_timetable" value="following"> <strong>Yes</strong>, also move/delete all future versions.<br>
@@ -184,7 +190,7 @@
 						</div>
 					{{else}}
 						<div style="margin-top: 1em; text-align: center; color: gray;">
-							Past sessions cannot be edited.
+							Past {{#if isTrip}}trips{{else}}classes{{/if}} cannot be edited.
 						</div>
 					{{/unless}}
 				</div>
@@ -192,7 +198,7 @@
 			</div>
 		</script>
 
-		<script id="timetable-week-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="timetable-week-template">
 			<tr>
 				<td>{{week}} <input type="checkbox" name="schedule[{{week}}][]" value="no_side_effect" onchange="toggleWeek(this);" data-week="{{week}}"></td>
 				<td><input type="checkbox" name="schedule[{{week}}][]" value="mon" disabled class="day_selector"></td>
