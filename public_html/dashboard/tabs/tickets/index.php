@@ -84,7 +84,7 @@
 								<h4>Please select the trips that this ticket should be eligible for:</h4>
 								<div id="ticket-selectList" class="form-row">
 								{{#each available_trips}}
-										<label class="ticket-select{{inArray id ../trips ' checked' ''}}">
+										<label class="trip-select{{inArray id ../trips ' checked' ''}}">
 											<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
 											{{{name}}}
 										</label>

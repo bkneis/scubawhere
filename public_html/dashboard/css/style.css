@@ -848,7 +848,7 @@ ul#sidenav > li > ul > li:hover {
 .location,
 .tag,
 .customer-select,
-.ticket-select {
+.trip-select {
 	display: block;
 	border: 1px solid #c8c8c8;
 	float: left;
