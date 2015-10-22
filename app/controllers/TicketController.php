@@ -167,6 +167,12 @@ class TicketController extends Controller {
 
 		$data = Input::only('name', 'description', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
+		$data['only_packaged'] = Input::get('only_packaged', false); // When the checkbox is not checked, not even the key is submitted. So when no key is submitted, the checkbox is not set and thus FALSE.
+
+		// Check if only_packaged changed from TRUE to FALSE and if so, check that at least one price is submitted
+		if($ticket->only_packaged == true && $data['only_packaged'] == false && $ticket->basePrices->count() === 0 && !Input::has('base_price'))
+			return Response::json( array( 'errors' => array('At least one base price must be given.')), 406 ); // 406 Not Acceptable
+
 		// ####################### Prices #######################
 		if( Input::has('base_prices') )
 		{

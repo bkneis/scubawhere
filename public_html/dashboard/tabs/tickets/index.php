@@ -42,43 +42,41 @@
 							</div>
 
 							<div class="form-row">
+								<label>
+									<input type="checkbox" name="only_packaged" value="1" onchange="togglePrices(this)" {{#if only_packaged}} checked="checked"{{/if}}> Limit ticket to only be bookable in Courses or Packages
+								</label>
+							</div>
+
+							<div class="form-row">
 								<label class="field-label">Ticket Description</label>
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div class="form-row">
-								<label>
-									<input type="checkbox" name="only_packaged" value="1" onchange="togglePrices(this)"{{#if update}} disabled="disabled"{{/if}}{{#if only_packaged}} checked="checked"{{/if}}> This ticket cannot be booked individually
-								</label>
+							<div class="form-row prices"{{#if only_packaged}} style="display: none;"{{/if}}>
+								<p><strong>Set base prices for this ticket:</strong></p>
+								{{#each base_prices}}
+									{{> price_input}}
+								{{/each}}
+								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
 							</div>
 
-							{{#unless only_packaged}}
-								<div class="form-row prices">
-									<p><strong>Set base prices for this ticket:</strong></p>
-									{{#each base_prices}}
+							<div class="form-row prices"{{#if only_packaged}} style="display: none;"{{/if}} id="tickets-seasonal">
+								<label>
+									<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+									Add seasonal price changes?
+								</label>
+								<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
+									<h4>Seasonal price changes</h4>
+									{{#each prices}}
 										{{> price_input}}
-									{{/each}}
-									<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
-								</div>
-
-								<div class="form-row prices" id="tickets-seasonal">
-									<label>
-										<input id="seasonal-prices-checkbox" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
-										Add seasonal price changes?
-									</label>
-									<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
-										<h4>Seasonal price changes</h4>
-										{{#each prices}}
+									{{else}}
+										{{#with default_price}}
 											{{> price_input}}
-										{{else}}
-											{{#with default_price}}
-												{{> price_input}}
-											{{/with}}
-										{{/each}}
-										<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
-									</div>
+										{{/with}}
+									{{/each}}
+									<button class="btn btn-default btn-sm add-price"> &plus; Add another seasonal price</button>
 								</div>
-							{{/unless}}
+							</div>
 
 							<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
 								<h4>Please select the trips that this ticket should be eligible for:</h4>
