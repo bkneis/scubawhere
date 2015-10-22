@@ -197,11 +197,12 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
-			this.id = data.id;
+			this.id        = data.id;
 			this.reference = data.reference;
+			this.agent     = data.agent || null;
 
-			this.source = params.source || null;
-			this.agent_id = params.agent_id || null;
+			this.source          = params.source || null;
+			this.agent_id        = params.agent_id || null;
 			this.agent_reference = params.agent_reference || null;
 
 			successFn(data.status);

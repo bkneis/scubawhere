@@ -45,6 +45,10 @@ Handlebars.registerHelper('statusIcon', function() {
 			color = '#5cb85c';
 			tooltip = 'Confirmed, free of charge';
 		}
+		else if(this.agent && this.agent.terms === 'fullamount') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, agent takes full amount';
+		}
 		else {
 			var percentage = this.sums.have / this.decimal_price;
 
@@ -125,6 +129,9 @@ Handlebars.registerHelper("remainingPay", function() {
 });
 
 Handlebars.registerHelper('addTransactionButton', function(id) {
+	if(this.agent && this.agent.terms === 'fullamount')
+		return '';
+
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
 Handlebars.registerHelper('editButton', function(id) {

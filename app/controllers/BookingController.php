@@ -10,6 +10,7 @@ class BookingController extends Controller {
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
 			$booking = Auth::user()->bookings()->with(
+				'agent',
 				'lead_customer',
 					'lead_customer.country',
 				'bookingdetails',
@@ -174,6 +175,7 @@ class BookingController extends Controller {
 	{
 		return Auth::user()->bookings()
 			->with(
+				'agent',
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
@@ -191,6 +193,7 @@ class BookingController extends Controller {
 	{
 		return Auth::user()->bookings()
 			->with(
+				'agent',
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
@@ -245,6 +248,7 @@ class BookingController extends Controller {
 			$date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
 
 		$bookings = Auth::user()->bookings()->with(
+				'agent',
 				'lead_customer',
 					'lead_customer.country',
 				'payments',
@@ -480,7 +484,7 @@ class BookingController extends Controller {
 			try
 			{
 				if( empty($data['agent_id']) ) throw new ModelNotFoundException();
-				Auth::user()->agents()->findOrFail( $data['agent_id'] );
+				$agent = Auth::user()->agents()->findOrFail( $data['agent_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -490,6 +494,8 @@ class BookingController extends Controller {
 			// If a valid agent_id is supplied, discard source
 			$data['source'] = null;
 		}
+		else
+			$agent = null;
 
 		$data['price'] = 0;
 
@@ -506,7 +512,7 @@ class BookingController extends Controller {
 
 		$booking = Auth::user()->bookings()->save($booking);
 
-		return Response::json( array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference), 201 ); // 201 Created
+		return Response::json( array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference, 'agent' => $agent), 201 ); // 201 Created
 	}
 
 	public function postAddDetail()

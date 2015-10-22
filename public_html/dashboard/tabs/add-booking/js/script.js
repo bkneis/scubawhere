@@ -203,6 +203,10 @@ function statusIcon(booking) {
 			color = '#5cb85c';
 			tooltip = 'Confirmed, free of charge';
 		}
+		else if(booking.agent && booking.agent.terms === 'fullamount') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, agent takes full amount';
+		}
 		else {
 			var percentage = booking.sums.have / booking.decimal_price;
 
