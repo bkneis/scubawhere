@@ -163,7 +163,7 @@ $(function() {
 							isNew: false,
 							editable: value.timetable_id ? false : true, // This uses a 'falsy' check on purpose
 							durationEditable: false,
-							className: value.timetable_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
+							className: value.schedule_id ? 'timetabled' : '', // This uses a 'falsy' check on purpose,
 							isTrip : false
 						};
 
