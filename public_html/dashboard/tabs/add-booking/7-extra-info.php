@@ -46,7 +46,7 @@
 							<label for="pick-up-date" class="col-sm-4 control-label">Pick Up Date & Time</label>
 							<div class="col-md-8">
 								<input type="text" id="pick-up-date" name="pick_up_date" class="form-control pull-left datepicker" data-date-format="YYYY-MM-DD" style="width: 49%;" value="{{pick_up_date}}">
-								<input type="text" id="pick-up-time" name="pick_up_time" class="form-control timepicker" data-date-format="HH:mm" style="width: 49%;" value="{{pick_up_time}}">
+								<input type="text" id="pick-up-time" name="pick_up_time" class="form-control timepicker" data-date-format="HH:mm" style="width: 49%;" value="{{trimSeconds pick_up_time}}">
 							</div>
 						</div>
 

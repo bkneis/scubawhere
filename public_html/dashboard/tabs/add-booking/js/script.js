@@ -261,6 +261,10 @@ Handlebars.registerHelper('numberOfNights', function(start, end) { // Requires d
 	return result;
 });
 
+Handlebars.registerHelper('trimSeconds', function(date){
+	return date.substring(0, date.length - 3);
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */

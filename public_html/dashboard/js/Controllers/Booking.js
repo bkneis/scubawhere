@@ -602,6 +602,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			if(params.pick_up_location) this.pick_up_location = params.pick_up_location;
+			if(params.pick_up_date)     this.pick_up_date     = params.pick_up_date;
 			if(params.pick_up_time)     this.pick_up_time     = params.pick_up_time;
 			if(params.discount)         this.discount         = params.discount;
 			if(params.comment)          this.comment          = params.comment;
