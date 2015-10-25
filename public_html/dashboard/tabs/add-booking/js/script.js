@@ -261,7 +261,10 @@ Handlebars.registerHelper('numberOfNights', function(start, end) { // Requires d
 	return result;
 });
 
-Handlebars.registerHelper('trimSeconds', function(date){
+Handlebars.registerHelper('trimSeconds', function(date) {
+	if(!date)
+		return '';
+
 	return date.substring(0, date.length - 3);
 });
 
