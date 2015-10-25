@@ -193,7 +193,7 @@ class CompanyController extends Controller {
 
 		foreach($bookings as &$booking)
 		{
-			$booking->number_of_customers = $booking->customers()->distinct()->count();
+			$booking->setNumberOfCustomersAttribute();
 		}
 
 		return ['date' => $date, 'bookings' => $bookings];

@@ -296,6 +296,9 @@ function renderEditForm(id) {
 			if(value.from == '0000-00-00')
 				value.isAlways = true;
 		});
+
+		if(_.size(ticket.base_prices) === 0)
+			ticket.base_prices = [window.sw.default_first_base_price];
 	}
 	else {
 		ticket = {

@@ -16,7 +16,7 @@
           </tr>
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
             <td class="free-text" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 10px 60px 0 60px;width: 100% !important;">
-              Thank you for registering to ScubawhereRMS! Click the button below to login and get started.
+              Thank you for registering with ScubawhereRMS! Click the button below to login and get started.
             </td>
           </tr>
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">

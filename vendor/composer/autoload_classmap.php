@@ -44,6 +44,7 @@ return array(
     'AddRegisterDetailsToCompanies' => $baseDir . '/app/database/migrations/2014_11_03_123343_add_register_details_to_companies.php',
     'AddRememberTokenToCompaniesBecauseOfLaravelUpdate' => $baseDir . '/app/database/migrations/2014_05_08_171023_add_remember_token_to_companies_because_of_laravel_update.php',
     'AddSavedColumnToBookingsTable' => $baseDir . '/app/database/migrations/2014_11_23_172511_add_saved_column_to_bookings_table.php',
+    'AddSchedulesTable' => $baseDir . '/app/database/migrations/2015_10_19_105347_add_schedules_table.php',
     'AddSoftDeletionToBoatsTable' => $baseDir . '/app/database/migrations/2014_11_18_165840_add_soft_deletion_to_boats_table.php',
     'AddStatusFieldToBookingsTable' => $baseDir . '/app/database/migrations/2014_12_11_200307_add_status_field_to_bookings_table.php',
     'AddThaiBahtToCurrencies' => $baseDir . '/app/database/migrations/2015_03_26_132625_add_thai_baht_to_currencies.php',

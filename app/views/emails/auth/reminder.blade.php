@@ -15,18 +15,18 @@
     Thank you for signing up!
   </p>
   <p>
-    To activate your account and create a password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is valid for 12 hours.)
+    To create a password and activate your account, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'please click here') }}. (The link is valid for 12 hours.)
   </p>
 
 <?php } else { // Generate Password Reminder Email ?>
 
   <h2>Password Reminder</h2>
   <p>
-    To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'complete this form') }}. (The link is valid for 12 hours.)
+    To create your new password, {{ HTML::link('/password/reset?email=' . $user->email . '&token=' . $token, 'please click here') }}. (The link is valid for 12 hours.)
   </p>
   <p>
     If you did not initate a password reset, just ignore this email. Your current password is still valid.<br>
-    (It doesn't hurt to change your password every now and again, though.)
+    (However, it doesn't hurt to change your password every now and again.)
   </p>
 
 <?php } ?>

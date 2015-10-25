@@ -9,6 +9,8 @@ use ScubaWhere\Helper;
 class Company extends Ardent implements UserInterface, RemindableInterface {
 	use RemindableTrait;
 
+	private $currency;
+
 	protected $guarded = array('id', 'password', 'verified', 'views', 'remember_token', 'created_at', 'updated_at');
 
 	protected $appends = array('currency', 'country', 'agencies');
@@ -109,7 +111,10 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 
 	public function getCurrencyAttribute()
 	{
-		return $this->currency()->first();
+		if(!$this->currency)
+			$this->currency = $this->currency()->first();
+
+		return $this->currency;
 	}
 
 	public function getCountryAttribute()
@@ -220,6 +225,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	public function refunds()
 	{
 		return $this->hasManyThrough('Refund', 'Booking');
+	}
+
+	public function schedules()
+	{
+		return $this->hasMany('Schedule');
 	}
 
 	public function tickets()

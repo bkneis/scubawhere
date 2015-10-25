@@ -65,8 +65,8 @@ class TrainingSession extends Ardent {
 			->withTimestamps();
 	}
 
-	/* public function schedule()
+	public function schedule()
 	{
 		return $this->belongsTo('Schedule');
-	} */
+	}
 }

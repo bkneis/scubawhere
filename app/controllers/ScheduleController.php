@@ -3,6 +3,24 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ScheduleController extends Controller {
 
+	public function getIndex()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
+			return Auth::user()->schedules()->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The schedule could not be found.')), 404 ); // 404 Not Found
+		}
+	}
+
+	public function getAll()
+	{
+		return Auth::user()->schedules()->get();
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('schedule');
@@ -23,13 +41,18 @@ class ScheduleController extends Controller {
 		$data['schedule'] = json_encode( $schedule );
 		$data['weeks']    = $length;
 
-		// Generate new schedule_id
-		$schedule_id = TrainingSession::orderBy('schedule_id', 'DESC')->take(1)->lists('schedule_id');
-		if(count($schedule_id) === 0) $schedule_id = 1;
-		else $schedule_id = $schedule_id[0]++;
+		$scheduleModel = new Schedule($data);
+
+		if( !$scheduleModel->validate() )
+		{
+			return Response::json( array('errors' => $scheduleModel->errors()->all()), 406 ); // 406 Not Acceptable
+		}
+
+		$scheduleModel = Auth::user()->timetables()->save($scheduleModel);
 
 		// Update the referenced session object's timetable ID
-		$training_session->update( array('schedule_id' => $schedule_id) );
+		$training_session->schedule()->associate( $scheduleModel );
+		$training_session->save();
 
 		////////////////////////////////////////////////////
 		// CREATE THE TRAINING_SESSIONS FROM THE SCHEDULE //
@@ -118,7 +141,8 @@ class ScheduleController extends Controller {
 			$date = array(
 				'training_id'  => $training_session->training_id,
 				'start'        => $date,
-				'schedule_id'  => $schedule_id,
+
+				'schedule_id'  => $scheduleModel->id,
 				'created_at'   => $now,
 				'updated_at'   => $now
 			);
@@ -135,7 +159,7 @@ class ScheduleController extends Controller {
 
 		return Response::json( array(
 			'status'   => 'OK. Schedule and classes created',
-			'id'       => $schedule_id,
+			'id'       => $scheduleModel->id,
 			/*'sessions' => $timetable->departures()
 				->where('start', '>', strtotime('first day of this month'))
 				->where('start', '<', strtotime('last day of next month'))

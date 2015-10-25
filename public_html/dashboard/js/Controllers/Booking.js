@@ -197,11 +197,12 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
-			this.id = data.id;
+			this.id        = data.id;
 			this.reference = data.reference;
+			this.agent     = data.agent || null;
 
-			this.source = params.source || null;
-			this.agent_id = params.agent_id || null;
+			this.source          = params.source || null;
+			this.agent_id        = params.agent_id || null;
 			this.agent_reference = params.agent_reference || null;
 
 			successFn(data.status);
@@ -601,10 +602,12 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			if(params.pick_up_location) this.pick_up_location = params.pick_up_location;
+			if(params.pick_up_date)     this.pick_up_date     = params.pick_up_date;
 			if(params.pick_up_time)     this.pick_up_time     = params.pick_up_time;
 			if(params.discount)         this.discount         = params.discount;
 			if(params.comment)          this.comment          = params.comment;
 
+			this.price         = data.price;
 			this.decimal_price = data.decimal_price;
 
 			this.calculateSums();
