@@ -258,7 +258,7 @@ class DepartureController extends Controller {
 		if($available_for_until) $available_for_until = $available_for_until . ' 23:59:59';
 
 		// Set the number of results to fetch
-		$take = isset($options['before']) ? 25 : 10;
+		$take = isset($options['before']) ? PHP_INT_MAX : 10;
 
 		/*
 		  We need to navigate the relationship-tree from departure/session via trip to
