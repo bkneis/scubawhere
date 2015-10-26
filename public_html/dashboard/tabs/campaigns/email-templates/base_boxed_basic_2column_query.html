@@ -785,7 +785,10 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                         <tr>
                                             <td valign="top" class="headerContent">
-                                            	<img src="http://gallery.mailchimp.com/2425ea8ad3/images/header_placeholder_600px.png" style="max-width:600px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                            	<label for="file-input0">
+                                            		<img src="http://gallery.mailchimp.com/2425ea8ad3/images/header_placeholder_600px.png" style="max-width:600px;" />
+                                            	</label>
+                                            	<input id="file-input0" name="uploaded-image" data-image-id="upload-image-0" class="uploadable-file" style="display:none" type="file"/>
                                             </td>
                                         </tr>
                                     </table>
@@ -796,17 +799,20 @@
                             	<td align="center" valign="top">
                                 	<!-- BEGIN COLUMNS // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateColumns">
-                                    	<tr mc:repeatable>
+                                    	<tr>
                                         	<td align="center" valign="top" class="templateColumnContainer" style="padding-top:20px;">
                                             	<table border="0" cellpadding="20" cellspacing="0" width="100%">
                                                 	<tr>
                                                     	<td class="leftColumnContent">
-                                                        	<img src="http://gallery.mailchimp.com/27aac8a65e64c994c4416d6b8/images/header_placeholder_260px.png" style="max-width:260px;" class="columnImage" mc:label="left_column_image" mc:edit="left_column_image" />
+                                                    		<label for="file-input1">
+                                                        		<img id="upload-image-1" src="http://gallery.mailchimp.com/27aac8a65e64c994c4416d6b8/images/header_placeholder_260px.png" style="max-width:260px;" class="columnImage"/>
+                                                        	</label>
+                                                        	<input id="file-input1" name="uploaded-image" data-image-id="upload-image-1" class="uploadable-file" style="display:none" type="file"/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                     	<span class="editable">
-	                                                    	<td valign="top" class="leftColumnContent" mc:edit="left_column_content">
+	                                                    	<td valign="top" class="leftColumnContent">
 	                                                            <h3>Repeatable Content</h3>
 	                                                            <a href="http://kb.mailchimp.com/article/how-do-i-work-with-repeatable-content-blocks" target="_blank">Repeatable sections</a> are noted with plus and minus signs so that you can add and subtract content blocks.
 	                                                            <br />
@@ -821,11 +827,14 @@
                                             	<table border="0" cellpadding="20" cellspacing="0" width="100%">
                                                 	<tr>
                                                     	<td class="rightColumnContent">
-                                                        	<img src="http://gallery.mailchimp.com/27aac8a65e64c994c4416d6b8/images/header_placeholder_260px.png" style="max-width:260px;" class="columnImage" mc:label="right_column_image" mc:edit="right_column_image" />
+                                                    		<label for="file-input2">
+                                                        		<img id="upload-image-2" src="http://gallery.mailchimp.com/27aac8a65e64c994c4416d6b8/images/header_placeholder_260px.png" style="max-width:260px;" class="columnImage" />
+                                                        	</label>
+                                                        	<input id="file-input2" name="uploaded-image" data-image-id="upload-image-2" class="uploadable-file" style="display:none" type="file"/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                    	<td valign="top" class="rightColumnContent" mc:edit="right_column_content">
+                                                    	<td valign="top" class="rightColumnContent">
                                                     		<span class="editable">
 	                                                            <h3>Repeatable Content</h3>
 	                                                            <a href="http://kb.mailchimp.com/article/how-do-i-work-with-repeatable-content-blocks" target="_blank">Repeatable sections</a> are noted with plus and minus signs so that you can add and subtract content blocks.
@@ -847,9 +856,10 @@
                                 	<!-- BEGIN FOOTER // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                         <tr>
-                                            <td valign="top" class="footerContent" style="padding-top:0;" mc:edit="footer_content01">
+                                            <td valign="top" class="footerContent" style="padding-top:0;">
                                             	</br>
-                                                <em>Copyright &copy; 2014, All rights reserved.</em>
+                                                <em>Copyright &copy; 2015, All rights reserved.</em></br>
+												<em>Powered by : <a href="http://www.scubawhere.com" target="_blank">Scuba Where</a></em>
                                             </td>
                                         </tr>
                                     </table>
@@ -864,13 +874,73 @@
         </center>
     </body>
     <script type="text/javascript" src="js/medium-editor.js"></script>
-    <script id="medium-editor" type="text/javascript">
-    	var editor = new MediumEditor('.editable', {
-            buttonLabels: 'fontawesome',
-            imageDragging: false,
-            toolbar: {
-		        buttons: ['bold', 'italic', 'underline', 'anchor']
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.ui.widget.js"></script>
+	<script src="js/jquery.iframe-transport.js"></script>
+	<script src="js/jquery.fileupload.js"></script>
+	<script id="medium-editor" type="text/javascript">
+
+		// THIS JS WILL BE REMOVED WHEN EMAILED IS ONLY USED FOR EDITING PURPOSES
+
+		var tokenRequestUnderway = false;
+		var tokenRequestCallbacks = [];
+
+		function getToken(callback) {
+			if(typeof window.token === 'string' && window.token.length > 0) {
+				if(typeof callback === 'function') callback(window.token);
+				return window.token;
+			}
+
+			tokenRequestCallbacks.push(callback);
+
+			if(tokenRequestUnderway) {
+				return false;
+			}
+
+			window.tokenRequestUnderway = true;
+
+			$.ajax({
+				url: "/api/token",
+				type: "GET",
+				success: function(data){
+					window.token = data;
+					window.tokenRequestUnderway = false;
+
+					for(var i = 0; i < tokenRequestCallbacks.length; i++) {
+						if(typeof tokenRequestCallbacks[i] === 'function') tokenRequestCallbacks[i](window.token);
+					}
+				}
+			});
+
+			return false;
+		}
+
+		function setToken(element) {
+			getToken(function(token) {
+				$(element).val(token);
+				$('.uploadable-file').bind('fileuploadsubmit', function (e, data) {
+				    var token = $('[name=_token]');
+				    data.formData = {_token: token.val()};
+				});
+			});
+		}
+
+		setToken('[name=_token]');
+
+		var editor = new MediumEditor('.editable', {
+			buttonLabels: 'fontawesome',
+			imageDragging: false,
+			toolbar: {
+				buttons: ['bold', 'italic', 'underline', 'anchor']
+			}
+		});
+
+		$('.uploadable-file').fileupload({
+		    url: '/api/campaign/upload-image',
+		    done: function (e, data) {
+				$('#' + $(this).attr('data-image-id')).attr('src', data.result.filepath);
+				console.log('data', data.result);
 		    }
-        });
-    </script>
+		});
+	</script>
 </html>
