@@ -342,7 +342,7 @@ $PROTOCOL = 'http';
 				</li>
 
 				<li>
-					<a href="#help">
+					<a href="https://scubawhere.zendesk.com" target="_blank">
 						<i class="fa fa-question-circle fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Help & FAQ</span>
