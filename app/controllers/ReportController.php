@@ -344,8 +344,30 @@ class ReportController extends Controller {
 			$countries[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
 		}
 
+		###########################################
+		// Generate revenue by customer certificate
+		$sql = DB::table('bookings')
+		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
+		    ->join('certificate_customer', 'customer_id', '=', 'bookings.lead_customer_id')
+		    ->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.status', 'confirmed')
+		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+		    ->get();
+
+		$certificates = [];
+
+		/*foreach($sql as $object)
+		{
+			$name = $object->{'name'};
+
+			if(empty($certificates[$name])) $certificates[$name] = 0;
+
+			$certificates[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+		}*/
+
 		$RESULT['country_revenue'] = $countries;
 		$RESULT['age_revenue'] = $ages;
+		$RESULT['certificate_revenue'] = $sql;
 
 		return $RESULT;
 	}
