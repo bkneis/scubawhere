@@ -117,6 +117,8 @@ class CrmCampaignController extends Controller {
 		$customers = array_merge($customers, $booked_customers);
 		$customers = array_unique($customers);
 
+		return Response::json( array('customers' => $customers), 200 );
+
 		$data['num_sent'] = sizeof($customers['email']);
 
 		$campaign = new CrmCampaign($data);
