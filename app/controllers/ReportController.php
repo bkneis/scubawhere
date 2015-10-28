@@ -356,18 +356,19 @@ class ReportController extends Controller {
 
 		$certificates = [];
 
-		/*foreach($sql as $object)
+		foreach($sql as $object)
 		{
-			$name = $object->{'name'};
+			$cert = Certificate::find($object->{'certificate_id'});
+			$cert_name = $cert->name;
 
-			if(empty($certificates[$name])) $certificates[$name] = 0;
+			if(empty($certificates[$cert_name])) $certificates[$cert_name] = 0;
 
-			$certificates[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
-		}*/
+			$certificates[$cert_name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+		}
 
 		$RESULT['country_revenue'] = $countries;
 		$RESULT['age_revenue'] = $ages;
-		$RESULT['certificate_revenue'] = $sql;
+		$RESULT['certificate_revenue'] = $certificates;
 
 		return $RESULT;
 	}
