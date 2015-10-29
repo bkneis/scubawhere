@@ -287,9 +287,10 @@ var agenciesTemplate            = Handlebars.compile($("#agencies-template").htm
 var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
 var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
 var boatroomModalTemplate       = Handlebars.compile($("#boatroom-select-modal-template").html());
+var pickUpListPartial           = Handlebars.compile($('#pick-up-list-partial').html());
 var bookingSummaryTemplate      = Handlebars.compile($("#booking-summary-template").html());
 
-
+Handlebars.registerPartial('pick-up-list', pickUpListPartial);
 /**
  * Load all data in order of requirement
  */
@@ -2012,11 +2013,6 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 var extraInfoTemplate = Handlebars.compile($("#extra-info-template").html());
 
 $('[data-target="#extra-tab"]').on('show.bs.tab', function () {
-	updateExtraInfoPanel();
-	$('#discount').change();
-});
-
-function updateExtraInfoPanel() {
 	$('#extra-info-container').html(extraInfoTemplate(booking));
 
 	$('#extra-info-container .datepicker').datetimepicker({
@@ -2041,7 +2037,35 @@ function updateExtraInfoPanel() {
 			down: 'fa fa-chevron-down'
 		},
 	});
-}
+
+	$('#discount').change();
+
+	$('#pick-up-location-input').typeahead({
+		items: 'all',
+		minLength: 3,
+		delay: 250,
+		autoSelect: false,
+		source: function(query, process) {
+			console.log('typeahead started');
+			$('#pick-up-location-input').siblings().filter('.input-group-addon').html('<i class="fa fa-cog fa-spin"></i>');
+			Booking.pickUpLocations({ query: query }, function success(data) {
+				window.pick_up_locations = data;
+				var items = Object.keys(data);
+				items = _.map(items, function(item) {
+					return window.pick_up_locations[item].substr(0, 5) + ' ' + item;
+				});
+				process( items );
+				$('#pick-up-location-input').siblings().filter('.input-group-addon').html('<i class="fa fa-search"></i>');
+			});
+		},
+		updater: function(item) {
+			return item.substr(6);
+		},
+		afterSelect: function() {
+			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location-input').val() ].substr(0, 5) );
+		}
+	});
+});
 
 $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	e.preventDefault();
@@ -2090,6 +2114,50 @@ $('#extra-tab').on('change', '#discount', function(e) {
 	$discount_percentage.val( ($discount.val() / originalPrice * 100).toFixed(2) );
 
 	$('#discounted-price').html( window.company.currency.symbol + ' ' + (originalPrice - $discount.val()).toFixed(2) );
+});
+
+$('#extra-tab').on('submit', '#add-pick-up-form', function(e, data) {
+	e.preventDefault();
+
+	var btn = $(this).find('[type="submit"]');
+	btn.html('<i class="fa fa-cog fa-spin"></i> Adding...');
+
+	var params = $(this).serializeObject();
+	params._token = window.token;
+
+	booking.addPickUp(params, function success(status) {
+		pageMssg(status, 'success');
+		btn.html('Add');
+
+		// Rerender pick-up objects
+		$('#pick-up-list').empty().html(pickUpListPartial({'pick_ups': booking.pick_ups}));
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		if(data.errors) pageMssg(data.errors[0], 'danger');
+		btn.html('Add');
+	});
+});
+
+$('#extra-tab').on('click', '.removePickUp', function(e, data) {
+	var btn = $(this).find('[type="submit"]');
+	btn.html('<i class="fa fa-cog fa-spin"></i>');
+
+	params            = {};
+	params.booking_id = booking.id;
+	params.id         = this.getAttribute('data-id');
+	params._token     = window.token;
+
+	booking.removePickUp(params, function success(status) {
+		pageMssg(status, 'success');
+		btn.html('&times;');
+
+		// Rerender pick-up objects
+		$('#pick-up-list').empty().html(pickUpListPartial({'pick_ups': booking.pick_ups}));
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		if(data.errors) pageMssg(data.errors[0], 'danger');
+		btn.html('&times;');
+	});
 });
 
 /*
@@ -2243,31 +2311,6 @@ $(document).ready(function() {
 	$('#agency_id').select2();
 	$('#certificate_id').select2();
 
-	$('#pick-up-location').typeahead({
-		items: 'all',
-		minLength: 3,
-		delay: 250,
-		autoSelect: false,
-		source: function(query, process) {
-			$('#pick-up-location').siblings().filter('.input-group-addon').html('<i class="fa fa-cog fa-spin"></i>');
-			Booking.pickUpLocations({ query: query }, function success(data) {
-				window.pick_up_locations = data;
-				var items = Object.keys(data);
-				items = _.map(items, function(item) {
-					return window.pick_up_locations[item].substr(0, 5) + ' ' + item;
-				});
-				process( items );
-				$('#pick-up-location').siblings().filter('.input-group-addon').html('<i class="fa fa-search"></i>');
-			});
-		},
-		updater: function(item) {
-			return item.substr(6);
-		},
-		afterSelect: function() {
-			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location').val() ].substr(0, 5) );
-		}
-	});
-
 	//This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		booking.currentTab = $(e.target).data('target');
@@ -2336,7 +2379,6 @@ $(document).ready(function() {
 	});
 
 	$('.alert-container').remove();
-
 });
 
 var sessionsTemplate = Handlebars.compile($("#sessions-table-template").html());
