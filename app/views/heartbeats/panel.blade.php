@@ -37,7 +37,8 @@
 @stop
 
 @section('scripts')
-	<script src="/common/js/underscore-min.js"></script>
+	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
+	<script type="text/javascript" src="/common/js/moment.min.js"></script>
 	<script>
 		"use strict";
 
@@ -78,7 +79,7 @@
 			else
 				html += '<td><a href="http://www.ip-tracker.org/locator/ip-lookup.php?ip=' + heartbeat.ip + '" alt="Tracking IP Address">' + heartbeat.ip + '</a></td>';
 
-			html += 	'<td>' + heartbeat.date + ' ' + heartbeat.time + '</td>';
+			html += 	'<td>' + moment(heartbeat.date + ' ' + heartbeat.time).fromNow() + ' <small class="pull-right" style="color: grey; margin-top: 2px;">' + heartbeat.date + ' ' + heartbeat.time + '</small></td>';
 			html += 	'<td><!-- action button --></td>';
 			html += '</tr>';
 		});
