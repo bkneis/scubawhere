@@ -184,19 +184,21 @@ class CompanyController extends Controller {
 		$date = new DateTime($date);
 		$date = $date->format('Y-m-d');
 
-		$bookings = Auth::user()->bookings()->with('lead_customer')
-		    ->whereNotNull('pick_up_location')
-		    ->where('pick_up_date', $date)
-		    ->whereIn('status', Booking::$counted)
-		    ->orderBy('pick_up_time')
+		$pick_ups = Auth::user()->pick_ups()->with('booking', 'booking.lead_customer')
+		    ->where('date', $date)
+		    ->whereHas('booking', function($query)
+		    {
+		    	$query->whereIn('status', Booking::$counted);
+		    })
+		    ->orderBy('time')
 		    ->get();
 
-		foreach($bookings as &$booking)
+		foreach($pick_ups as &$pick_up)
 		{
-			$booking->setNumberOfCustomersAttribute();
+			$pick_up->booking->setNumberOfCustomersAttribute();
 		}
 
-		return ['date' => $date, 'bookings' => $bookings];
+		return ['date' => $date, 'pick_ups' => $pick_ups];
 	}
 
 	public function postFeedback() {
