@@ -15,9 +15,6 @@ class Booking extends Ardent {
 		'status',
 		'reserved_until',
 		'cancellation_fee',
-		'pick_up_location',
-		'pick_up_date',
-		'pick_up_time',
 		'comment'
 	);
 
@@ -37,9 +34,6 @@ class Booking extends Ardent {
 		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled',
 		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
-		'pick_up_location' => 'required_with:pick_up_time',
-		'pick_up_date'     => 'date|after:-1 day|required_with:pick_up_time',
-		'pick_up_time'     => 'time|required_with:pick_up_date',
 		'comment'          => ''
 	);
 
@@ -47,9 +41,6 @@ class Booking extends Ardent {
 	{
 		if( isset($this->agent_reference) )
 			$this->agent_reference = Helper::sanitiseString($this->agent_reference);
-
-		if( isset($this->pick_up_location) )
-			$this->pick_up_location = Helper::sanitiseString($this->pick_up_location);
 
 		if( isset($this->comments) )
 			$this->comments = Helper::sanitiseString($this->comments);
@@ -304,6 +295,11 @@ class Booking extends Ardent {
 	public function payments()
 	{
 		return $this->hasMany('Payment')/*->orderBy('created_at', 'DESC')*/;
+	}
+
+	public function pick_ups()
+	{
+		return $this->hasMany('PickUp')->orderBy('date');
 	}
 
 	public function refunds()

@@ -8,6 +8,7 @@ var Booking = function(data) {
 	this.accommodations = [];
 	this.payments       = [];
 	this.refunds        = [];
+	this.pick_ups       = [];
 
 	// User interface variables
 	this.currentTab        = null;
@@ -582,8 +583,6 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
  * Edits additional information about the booking
  * @param  {object} params    Can contain:
  * - _token
- * - pick_up_location {string}
- * - pick_up_time     {string} Must be formatted as 'YYYY-MM-DD HH:mm:ss'
  * - discount         {float}  The discount value gets substracted from the final booking price
  * - comment          {text}
  *
@@ -600,10 +599,6 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
-
-			if(params.pick_up_location) this.pick_up_location = params.pick_up_location;
-			if(params.pick_up_date)     this.pick_up_date     = params.pick_up_date;
-			if(params.pick_up_time)     this.pick_up_time     = params.pick_up_time;
 			if(params.discount)         this.discount         = params.discount;
 			if(params.comment)          this.comment          = params.comment;
 
@@ -611,6 +606,66 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 			this.decimal_price = data.decimal_price;
 
 			this.calculateSums();
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Adds a pick-up location and datetime to the booking
+ * @param  {object} params    Can contain:
+ * - _token
+ * - booking_id
+ * - location {string} The location of the pick-up
+ * - date     {date}   The date of the pick-up
+ * - time     {time}   The time of the pick-up
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.addPickUp = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/add-pick-up",
+		data: params,
+		context: this,
+		success: function(data) {
+			this.pick_ups.push(data.pick_up);
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Removes a pick-up location from the booking
+ * @param  {object} params    Can contain:
+ * - _token
+ * - booking_id
+ * - id           The ID of the pick-up object
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.removePickUp = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/remove-pick-up",
+		data: params,
+		context: this,
+		success: function(data) {
+			this.pick_ups = _.reject(this.pick_ups, function(pick_up) {
+				return pick_up.id == params.id;
+			});
 
 			successFn(data.status);
 		},

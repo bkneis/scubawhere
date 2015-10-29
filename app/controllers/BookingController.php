@@ -32,7 +32,8 @@ class BookingController extends Controller {
 					'payments.paymentgateway',
 				'refunds',
 					// 'refunds.currency',
-					'refunds.paymentgateway'
+					'refunds.paymentgateway',
+				'pick_ups'
 			)->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -1674,13 +1675,13 @@ class BookingController extends Controller {
 		if( strlen($query) < 3 )
 			return Response::json( array('errors' => 'Query string must be at least 3 characters long.'), 406 ); // 406 Not Acceptable
 
-		return Auth::user()->bookings()
-			->where('pick_up_location', 'LIKE', '%'.$query.'%')
-			->whereNotNull('pick_up_location')
-			->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime('-30 days')))
-			->groupBy('pick_up_location', 'pick_up_time')
-			->orderBy('pick_up_time', 'ASC')
-			->lists('pick_up_time', 'pick_up_location');
+		return Auth::user()->pick_ups()
+			->where('location', 'LIKE', '%'.$query.'%')
+			->whereNotNull('location')
+			->where('pick_ups.created_at', '>=', date('Y-m-d H:i:s', strtotime('-30 days')))
+			->groupBy('location', 'time')
+			->orderBy('time', 'ASC')
+			->lists('time', 'location');
 	}
 
 	public function postEditInfo()
@@ -1689,9 +1690,6 @@ class BookingController extends Controller {
 		 * Valid input parameters
 		 *
 		 * booking_id
-		 * pick_up_location
-		 * pick_up_date
-		 * pick_up_time
 		 * discount
 		 * comment
 		 */
@@ -1709,27 +1707,14 @@ class BookingController extends Controller {
 		// Validate that the booking is not cancelled or on hold
 		if($booking->status === "cancelled" || $booking->status === "on hold")
 		{
-			return Response::json( array('errors' => array('Cannot adit info, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('Cannot edit details, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 		}
 
 		$data = Input::only(
-			'pick_up_location', // Just text
-			'pick_up_date',     // Must be date
-			'pick_up_time',     // Must be time
 			'discount',         // Should be decimal
 			'comment'           // Text
 		);
 
-		if( !( empty($data['pick_up_date']) || empty($data['pick_up_time']) ) )
-		{
-			$datetime = new DateTime($data['pick_up_date'].' '.$data['pick_up_time'], new DateTimeZone( Auth::user()->timezone ));
-			$data['pick_up_date'] = $datetime->format('Y-m-d');
-			$data['pick_up_time'] = $datetime->format('H:i:s');
-		}
-
-		if( empty($data['pick_up_location']) ) $data['pick_up_location'] = null;
-		if( empty($data['pick_up_date']) ) $data['pick_up_date'] = null;
-		if( empty($data['pick_up_time']) ) $data['pick_up_time'] = null;
 		if( empty($data['discount']) && $data['discount'] !== 0 && $data['discount'] !== "0") $data['discount'] = null;
 
 		$oldDiscount = $booking->discount;
@@ -1743,6 +1728,77 @@ class BookingController extends Controller {
 			$booking->updatePrice(true, $oldDiscount);
 
 		return array('status' => 'OK. Booking information updated.', 'price' => $booking->price, 'decimal_price' => $booking->decimal_price);
+	}
+
+	public function postAddPickUp()
+	{
+		/**
+		 * Valid input parameters
+		 *
+		 * booking_id
+		 * location
+		 * date
+		 * time
+		 */
+
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Validate that the booking is not cancelled or on hold
+		if($booking->status === "cancelled" || $booking->status === "on hold")
+		{
+			return Response::json( array('errors' => array('Cannot add pick-up, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
+		}
+
+		$data = Input::only(
+			'location',
+			'date',
+			'time'
+		);
+
+		$datetime = new DateTime($data['date'].' '.$data['time']);
+		$data['date'] = $datetime->format('Y-m-d');
+		$data['time'] = $datetime->format('H:i:s');
+
+		$pick_up = new PickUp($data);
+
+		if(!$pick_up->validate())
+			return Response::json( array('errors' => $pick_up->errors()->all()), 406 ); // 406 Not Acceptable
+
+		$pick_up = $booking->pick_ups()->save($pick_up);
+
+		return ['status' => 'OK. Pick-up added.', 'pick_up' => $pick_up];
+	}
+
+	public function postRemovePickUp()
+	{
+		/**
+		 * Valid input parameters
+		 *
+		 * booking_id
+		 * id
+		 */
+
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		$booking->pick_ups()->find(Input::get('id'))->delete();
+
+		return ['status' => 'OK. Pick-up removed.'];
 	}
 
 	public function postReserve()
