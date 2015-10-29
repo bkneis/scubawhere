@@ -49,7 +49,7 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'photo'               => '',
 		'video'               => '',
 		'views'               => 'integer',
-		'terms'               => 'required'
+		//'terms'               => 'required'
 	);
 
 	public function beforeSave()
