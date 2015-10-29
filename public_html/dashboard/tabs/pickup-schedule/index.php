@@ -40,15 +40,15 @@
 	<script type="text/x-handlebars-template" id="pick-up-schedule-template">
 		{{#each pickups}}
 			<tr>
-				<td>{{reference}}</td>
-				<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-				<td>{{lead_customer.phone}}</td>
-				<td>{{number_of_customers}}</td>
-				<td>{{{pick_up_location}}}</td>
-				<td>{{trimSeconds pick_up_time}}</td>
+				<td>{{booking.reference}}</td>
+				<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
+				<td>{{booking.lead_customer.phone}}</td>
+				<td>{{booking.number_of_customers}}</td>
+				<td>{{{location}}}</td>
+				<td>{{trimSeconds time}}</td>
 			</tr>
 		{{else}}
-			<tr><tdcolspan="6" class="text-center">There are no customers that need picking up today </td></tr>
+			<tr><td colspan="6" class="text-center">There are no customers that need picking up today</td></tr>
 		{{/each}}
 	</script>
 

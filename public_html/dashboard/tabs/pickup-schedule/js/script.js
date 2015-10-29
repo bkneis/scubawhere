@@ -56,23 +56,22 @@ function getToday() {
 function loadPickups() {
 	var params = { date : $("#date-select").val() };
 	Report.getPickupSchedule(params, function success(data) {
-		console.log(data);
-		$("#pickup-table").empty().append( pickupList({ pickups : data.bookings }) );
+		$("#pickup-table").empty().append( pickupList({ pickups : data.pick_ups }) );
 	});
 }
 
 function customerData(booking) {
-	this._ref = booking.reference;
-	this._name = booking.lead_customer.firstname + booking.lead_customer.lastname;
-	this._phone = booking.lead_customer.phone;
+	this._ref          = booking.reference;
+	this._name         = booking.lead_customer.firstname + booking.lead_customer.lastname;
+	this._phone        = booking.lead_customer.phone;
 	this._numCustomers = booking.number_of_customers;
-	this._location = booking.pick_up_location;
-	this._time = booking.pick_up_time;
+	this._location     = booking.pick_up_location;
+	this._time         = booking.pick_up_time;
 
-	this.ref = function() { return this._ref; }
-	this.name = function() { return this._name; }
-	this.phone = function() { return this._phone; }
+	this.ref          = function() { return this._ref; }
+	this.name         = function() { return this._name; }
+	this.phone        = function() { return this._phone; }
 	this.numCustomers = function() { return this._numCustomers; }
-	this.location = function() { return this._location; }
-	this.time = function() { return this._time; }
+	this.location     = function() { return this._location; }
+	this.time         = function() { return this._time; }
 }
