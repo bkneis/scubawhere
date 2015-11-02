@@ -83,6 +83,26 @@ class RegisterController extends Controller {
 		{
 			$company->agencies()->sync( Input::get('agencies', []) );
 
+			// Send notification to Slack if production RMS
+			if(gethostname() === 'rms.scubawhere.com')
+			{
+				Slack::attach([
+					'color' => 'good',
+					'fields' => [
+					[
+						'title' => 'Name',
+						'value' => $company->name,
+						'short' => true
+					],
+					[
+						'title' => 'Contact',
+						'value' => $company->contact . ': ' . $company->business_email,
+						'short' => true
+					]
+					]
+				])->send('New RMS registration! :smiley:');
+			}
+
 			$originalInput = Request::input();
 			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
 			Request::replace($request->input());
