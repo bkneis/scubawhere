@@ -91,12 +91,12 @@ class RegisterController extends Controller {
 					'fields' => [
 					[
 						'title' => 'Name',
-						'value' => $company->name,
+						'value' => utf8_encode($company->name),
 						'short' => true
 					],
 					[
 						'title' => 'Contact',
-						'value' => $company->contact . ': ' . $company->business_email,
+						'value' => utf8_encode($company->contact) . ': ' . $company->business_email,
 						'short' => true
 					]
 					]
