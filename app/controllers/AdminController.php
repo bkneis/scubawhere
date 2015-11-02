@@ -39,6 +39,7 @@ class AdminController extends Controller {
 			else
 				break;
 		}
+
 		if($itemsDeleted)
 			file_put_contents(storage_path() . '/logs/heartbeats.log', implode("\n", $log)."\n", LOCK_EX);
 
