@@ -1014,12 +1014,12 @@
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/laravelbook/ardent.git",
-            "reference": "51b99b485a8c5447f2fb2124d9574a1ef82a9549"
+            "url": "https://github.com/laravel-ardent/ardent.git",
+            "reference": "3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/laravelbook/ardent/zipball/51b99b485a8c5447f2fb2124d9574a1ef82a9549",
+            "url": "https://api.github.com/repos/laravel-ardent/ardent/zipball/3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa",
             "reference": "51b99b485a8c5447f2fb2124d9574a1ef82a9549",
             "shasum": ""
         },
@@ -1312,12 +1312,12 @@
         "target-dir": "Symfony/Component/HttpFoundation",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpFoundation.git",
+            "url": "https://github.com/symfony/http-foundation.git",
             "reference": "08e783861dd9579bac4092814bbfb0cae6666b65"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/08e783861dd9579bac4092814bbfb0cae6666b65",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/08e783861dd9579bac4092814bbfb0cae6666b65",
             "reference": "08e783861dd9579bac4092814bbfb0cae6666b65",
             "shasum": ""
         },
@@ -1366,12 +1366,12 @@
         "version_normalized": "2.7.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher.git",
+            "url": "https://github.com/symfony/event-dispatcher.git",
             "reference": "9310b5f9a87ec2ea75d20fec0b0017c77c66dac3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/9310b5f9a87ec2ea75d20fec0b0017c77c66dac3",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9310b5f9a87ec2ea75d20fec0b0017c77c66dac3",
             "reference": "9310b5f9a87ec2ea75d20fec0b0017c77c66dac3",
             "shasum": ""
         },
@@ -1427,12 +1427,12 @@
         "target-dir": "Symfony/Component/Debug",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Debug.git",
+            "url": "https://github.com/symfony/debug.git",
             "reference": "ed3019589cdadf32c521d1e181f9d72955645c67"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Debug/zipball/ed3019589cdadf32c521d1e181f9d72955645c67",
+            "url": "https://api.github.com/repos/symfony/debug/zipball/ed3019589cdadf32c521d1e181f9d72955645c67",
             "reference": "ed3019589cdadf32c521d1e181f9d72955645c67",
             "shasum": ""
         },
@@ -1488,12 +1488,12 @@
         "target-dir": "Symfony/Component/HttpKernel",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpKernel.git",
+            "url": "https://github.com/symfony/http-kernel.git",
             "reference": "31652385d94eafc2103a98435d6d5bd7eea61736"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/31652385d94eafc2103a98435d6d5bd7eea61736",
+            "url": "https://api.github.com/repos/symfony/http-kernel/zipball/31652385d94eafc2103a98435d6d5bd7eea61736",
             "reference": "31652385d94eafc2103a98435d6d5bd7eea61736",
             "shasum": ""
         },
@@ -1613,12 +1613,12 @@
         "target-dir": "Symfony/Component/DomCrawler",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/DomCrawler.git",
+            "url": "https://github.com/symfony/dom-crawler.git",
             "reference": "3860edcf7ff7e173cfe2151f0d425e610e77cc35"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/DomCrawler/zipball/3860edcf7ff7e173cfe2151f0d425e610e77cc35",
+            "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/3860edcf7ff7e173cfe2151f0d425e610e77cc35",
             "reference": "3860edcf7ff7e173cfe2151f0d425e610e77cc35",
             "shasum": ""
         },
@@ -1668,12 +1668,12 @@
         "target-dir": "Symfony/Component/CssSelector",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/CssSelector.git",
+            "url": "https://github.com/symfony/css-selector.git",
             "reference": "d45b306421462295e76b94bcf76b963867450327"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/CssSelector/zipball/d45b306421462295e76b94bcf76b963867450327",
+            "url": "https://api.github.com/repos/symfony/css-selector/zipball/d45b306421462295e76b94bcf76b963867450327",
             "reference": "d45b306421462295e76b94bcf76b963867450327",
             "shasum": ""
         },
@@ -1721,12 +1721,12 @@
         "target-dir": "Symfony/Component/Console",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Console.git",
+            "url": "https://github.com/symfony/console.git",
             "reference": "a43e750b4c74f3bdfca77c79c343033d35a6cd6e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Console/zipball/a43e750b4c74f3bdfca77c79c343033d35a6cd6e",
+            "url": "https://api.github.com/repos/symfony/console/zipball/a43e750b4c74f3bdfca77c79c343033d35a6cd6e",
             "reference": "a43e750b4c74f3bdfca77c79c343033d35a6cd6e",
             "shasum": ""
         },
@@ -1778,12 +1778,12 @@
         "target-dir": "Symfony/Component/BrowserKit",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/BrowserKit.git",
+            "url": "https://github.com/symfony/browser-kit.git",
             "reference": "b2b78b850a32251cbbd9915ab61453302e7ecd72"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/BrowserKit/zipball/b2b78b850a32251cbbd9915ab61453302e7ecd72",
+            "url": "https://api.github.com/repos/symfony/browser-kit/zipball/b2b78b850a32251cbbd9915ab61453302e7ecd72",
             "reference": "b2b78b850a32251cbbd9915ab61453302e7ecd72",
             "shasum": ""
         },
@@ -2096,12 +2096,12 @@
         "version_normalized": "2.7.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Filesystem.git",
+            "url": "https://github.com/symfony/filesystem.git",
             "reference": "2d7b2ddaf3f548f4292df49a99d19c853d43f0b8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Filesystem/zipball/2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
+            "url": "https://api.github.com/repos/symfony/filesystem/zipball/2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
             "reference": "2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
             "shasum": ""
         },
@@ -2969,5 +2969,56 @@
             }
         ],
         "description": "Database backup manager seamlessly integrated with Laravel 4 or 5 with user-definable procedures and support for S3, Dropbox, FTP, SFTP, and more."
+    },
+    {
+        "name": "maknz/slack",
+        "version": "1.7.0",
+        "version_normalized": "1.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/maknz/slack.git",
+            "reference": "7f21fefc70c76b304adc1b3a780c8740dfcfb595"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/maknz/slack/zipball/7f21fefc70c76b304adc1b3a780c8740dfcfb595",
+            "reference": "7f21fefc70c76b304adc1b3a780c8740dfcfb595",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "guzzlehttp/guzzle": "~6.0|~5.0|~4.0",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "0.9.*",
+            "phpunit/phpunit": "4.2.*"
+        },
+        "suggest": {
+            "illuminate/support": "Required for Laravel support"
+        },
+        "time": "2015-06-03 03:35:16",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Maknz\\Slack\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-2-Clause"
+        ],
+        "authors": [
+            {
+                "name": "maknz",
+                "email": "github@mak.geek.nz"
+            }
+        ],
+        "description": "A simple PHP package for sending messages to Slack, with a focus on ease of use and elegant syntax. Includes Laravel support out of the box.",
+        "keywords": [
+            "laravel",
+            "slack"
+        ]
     }
 ]
