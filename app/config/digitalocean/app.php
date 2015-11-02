@@ -22,6 +22,13 @@ return array(
 
 		'Sisou\Ezmonitor\EzmonitorServiceProvider',
 		'BackupManager\Laravel\Laravel4ServiceProvider',
+		'Maknz\Slack\SlackServiceProvider',
+
+	)),
+
+	'aliases' => append_config(array(
+
+		'Slack' => 'Maknz\Slack\Facades\Slack',
 
 	)),
 
