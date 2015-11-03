@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class BoatController extends Controller {
 
@@ -10,7 +11,7 @@ class BoatController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->boats()->with('boatrooms')->findOrFail( Input::get('id') );
+			return Context::get()->boats()->with('boatrooms')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,12 +21,12 @@ class BoatController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->boats()->with('boatrooms')->get();
+		return Context::get()->boats()->with('boatrooms')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->boats()->withTrashed()->with('boatrooms')->get();
+		return Context::get()->boats()->withTrashed()->with('boatrooms')->get();
 	}
 
 	public function postAdd()
@@ -43,7 +44,7 @@ class BoatController extends Controller {
 			return Response::json( array('errors' => $boat->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$boat = Auth::user()->boats()->save($boat);
+		$boat = Context::get()->boats()->save($boat);
 
 		// Boat has been created, let's connect it with its boatrooms
 		// Input must be of type <input name="boatrooms[1][capacity]" value="20">
@@ -64,7 +65,7 @@ class BoatController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->findOrFail( Input::get('id') );
+			$boat = Context::get()->boats()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -153,7 +154,7 @@ class BoatController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->findOrFail( Input::get('id') );
+			$boat = Context::get()->boats()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -170,7 +171,7 @@ class BoatController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->onlyTrashed()->findOrFail( Input::get('id') );
+			$boat = Context::get()->boats()->onlyTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -188,7 +189,7 @@ class BoatController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boat = Auth::user()->boats()->findOrFail( Input::get('id') );
+			$boat = Context::get()->boats()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -221,7 +222,7 @@ class BoatController extends Controller {
 			// Need to recreate the Boat object, because otherwise it will try to execute the forceDelete SQL query
 			// TODO Is there a better way?
 			// Edit: No, not really, since the ->forcing property is private to the Eloquent object and thus not changeable from the outside.
-			$boat = Auth::user()->boats()->find( Input::get('id') );
+			$boat = Context::get()->boats()->find( Input::get('id') );
 			$boat->delete(); // Soft delete
 		}
 

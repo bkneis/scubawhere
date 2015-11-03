@@ -19,6 +19,11 @@ App::before(function($request)
 	});*/
 });
 
+Route::matched(function($route, $request)
+{
+	if(!Auth::guest())
+		ScubaWhere\Context::set(Auth::user()->company);
+});
 
 App::after(function($request, $response)
 {

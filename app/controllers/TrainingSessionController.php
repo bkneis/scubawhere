@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class TrainingSessionController extends Controller {
 
@@ -10,7 +11,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->training_sessions()->withTrashed()->with('training')->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			return Context::get()->training_sessions()->withTrashed()->with('training')->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -24,7 +25,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('id'))->with('training')->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->where('training_sessions.id', Input::get('id'))->with('training')->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -32,7 +33,7 @@ class TrainingSessionController extends Controller {
 		}
 
 		// Then, we get the associated customers through the bookingdetails, because we need to be able to filter by booking->status
-		$details = Auth::user()->bookingdetails()
+		$details = Context::get()->bookingdetails()
 			->where('training_session_id', Input::get('id'))
 			->whereHas('booking', function($query)
 			{
@@ -67,7 +68,7 @@ class TrainingSessionController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->training_sessions()->withTrashed()->get();
+		return Context::get()->training_sessions()->withTrashed()->get();
 	}
 
 	public function getToday()
@@ -113,11 +114,11 @@ class TrainingSessionController extends Controller {
 		$data['with_full'] = Input::get('with_full', true);
 
 		// Transform parameter strings into DateTime objects
-		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
+		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Context::get()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
 			/*
-			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
+			if( $data['after'] > new DateTime('now', new DateTimeZone( Context::get()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
 				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
@@ -126,7 +127,7 @@ class TrainingSessionController extends Controller {
 			else
 			{
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
-				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
+				$data['before'] = new DateTime('+1 month', new DateTimeZone( Context::get()->timezone ));
 			}
 			*/
 			unset($data['before']);
@@ -134,7 +135,7 @@ class TrainingSessionController extends Controller {
 		else
 		{
 			// If a 'before' date is submitted, simply use it
-			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
+			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Context::get()->timezone ) );
 		}
 
 		if( isset($data['before']) && $data['after'] > $data['before'] )
@@ -160,7 +161,7 @@ class TrainingSessionController extends Controller {
 		{
 			try
 			{
-				$training = Auth::user()->trainings()->findOrFail( $options['training_id'] );
+				$training = Context::get()->trainings()->findOrFail( $options['training_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -174,7 +175,7 @@ class TrainingSessionController extends Controller {
 		{
 			try
 			{
-				$course = Auth::user()->courses()->findOrFail( $options['course_id'] );
+				$course = Context::get()->courses()->findOrFail( $options['course_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -188,7 +189,7 @@ class TrainingSessionController extends Controller {
 		{
 			try
 			{
-				$package = Auth::user()->packages()->findOrFail( $options['package_id'] );
+				$package = Context::get()->packages()->findOrFail( $options['package_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -215,7 +216,7 @@ class TrainingSessionController extends Controller {
 		  ticket and then (conditionally) to course.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-		$training_sessions = Auth::user()->training_sessions()->withTrashed()->with(/*'bookings', */'training')
+		$training_sessions = Context::get()->training_sessions()->withTrashed()->with(/*'bookings', */'training')
 		->whereHas('training', function($query) use ($training, $course)
 		{
 			$query
@@ -280,7 +281,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::has('training_id') ) throw new ModelNotFoundException();
-			$training = Auth::user()->trainings()->findOrFail( Input::get('training_id') );
+			$training = Context::get()->trainings()->findOrFail( Input::get('training_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -305,7 +306,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -390,7 +391,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -412,7 +413,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->onlyTrashed()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->onlyTrashed()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -433,7 +434,7 @@ class TrainingSessionController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->withTrashed()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->withTrashed()->where('training_sessions.id', Input::get('id'))->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -452,7 +453,7 @@ class TrainingSessionController extends Controller {
 				case 'following':
 
 					// Get all affected training_sessions
-					$training_sessions = Auth::user()->training_sessions()
+					$training_sessions = Context::get()->training_sessions()
 						->where('start', '>=', $training_session->start)
 						->where('schedule_id', $training_session->schedule_id)
 						->with('bookingdetails')

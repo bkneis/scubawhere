@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class CourseController extends Controller {
 
@@ -10,7 +11,7 @@ class CourseController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Context::get()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,12 +21,12 @@ class CourseController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->courses()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
+		return Context::get()->courses()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
+		return Context::get()->courses()->withTrashed()->with('trainings', 'tickets', 'basePrices', 'prices')->get();
 	}
 
 	public function postAdd()
@@ -77,7 +78,7 @@ class CourseController extends Controller {
 			return Response::json( array('errors' => $course->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$course = Auth::user()->courses()->save($course);
+		$course = Context::get()->courses()->save($course);
 
 		// Course has been created, let's connect it with its tickets
 		// TODO Validate input
@@ -132,7 +133,7 @@ class CourseController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$course = Auth::user()->courses()->findOrFail( Input::get('id') );
+			$course = Context::get()->courses()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -218,7 +219,7 @@ class CourseController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$course = Auth::user()->courses()->findOrFail( Input::get('id') );
+			$course = Context::get()->courses()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -238,7 +239,7 @@ class CourseController extends Controller {
 		catch(QueryException $e)
 		{
 			// SoftDelete instead
-			$course = Auth::user()->courses()->findOrFail( Input::get('id') );
+			$course = Context::get()->courses()->findOrFail( Input::get('id') );
 			$course->delete();
 		}
 

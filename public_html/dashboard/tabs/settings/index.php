@@ -30,10 +30,10 @@
 									<input class="form-control" type="text" id="phone" name="phone" value="{{phone}}">
 								</div>
 
-								<div class="form-row">
+								<!--<div class="form-row">
 									<label class="field-label">Contact email address : </label>
 									<input type="text" name="email" value="{{email}}" class="form-control"></input>
-								</div>
+								</div>-->
 
 								<div class="form-row" style="overflow:auto;">
 									<label>Accepted Diving Instuitions</label>

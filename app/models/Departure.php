@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
+use ScubaWhere\Context;
 
 class Departure extends Ardent {
 	use SoftDeletingTrait;
@@ -74,7 +75,7 @@ class Departure extends Ardent {
 		if(empty($trip))
 			$trip = $this->trip;
 
-		$start = new DateTime($this->start, new DateTimeZone( Auth::user()->timezone ));
+		$start = new DateTime($this->start, new DateTimeZone( Context::get()->timezone ));
 		$end   = clone $start;
 
 		$duration_hours   = floor($trip->duration);
