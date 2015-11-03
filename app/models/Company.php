@@ -28,7 +28,6 @@ class Company extends Ardent {
 		'latitude'            => 'required|numeric|between:-90,90',
 		'longitude'           => 'required|numeric|between:-180,180',
 		'timezone'            => 'required',
-		'phone'               => 'required',
 		'contact'             => 'required',
 		'website'             => '', //active_url
 		'logo'                => '',

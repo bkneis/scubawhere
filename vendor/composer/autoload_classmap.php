@@ -2866,6 +2866,7 @@ return array(
     'Monolog\\Processor\\WebProcessor' => $vendorDir . '/monolog/monolog/src/Monolog/Processor/WebProcessor.php',
     'Monolog\\Registry' => $vendorDir . '/monolog/monolog/src/Monolog/Registry.php',
     'MoveIsLeadColumnFromBookingDetailsToBookingsTable' => $baseDir . '/app/database/migrations/2014_11_24_135928_move_is_lead_column_from_booking_details_to_bookings_table.php',
+    'MovePhoneFieldFromCompaniesTableToUsersTable' => $baseDir . '/app/database/migrations/2015_11_03_144634_move_phone_field_from_companies_table_to_users_table.php',
     'Net_SCP' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SCP.php',
     'Net_SFTP' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SFTP.php',
     'Net_SFTP_Stream' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SFTP/Stream.php',
