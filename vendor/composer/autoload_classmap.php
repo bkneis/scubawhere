@@ -3377,6 +3377,7 @@ return array(
     'ReseedCurrenciesAndCountriesDataAndUpdateForeignKeys' => $baseDir . '/app/database/migrations/2015_03_26_111738_reseed_currencies_and_countries_data_and_update_foreign_keys.php',
     'Schedule' => $baseDir . '/app/models/Schedule.php',
     'ScheduleController' => $baseDir . '/app/controllers/ScheduleController.php',
+    'ScubaWhere\\Context' => $baseDir . '/app/lib/scubawhere/Context.php',
     'ScubaWhere\\Helper' => $baseDir . '/app/lib/scubawhere/Helper.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
     'SeedUpdatedAgencyAndCertificateDataSeptember2015' => $baseDir . '/app/database/migrations/2015_09_09_193042_seed_updated_agency_and_certificate_data_september_2015.php',
