@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration {
 			$table->string('username', 128);
 			$table->string('password', 60);
 			$table->string('email', 128);
+			$table->string('phone', 128);
 			$table->integer('company_id')->unsigned();
 
 			$table->timestamps();

@@ -20,7 +20,7 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 				'username'   => $company->username,
 				'password'   => $company->password,
 				'email'      => $company->email,
-				'phone'      => $company->phone, // Just to pass validation (User model was updated to require a phone number after this migration)
+				'phone'      => $company->phone,
 				'company_id' => $company->id,
 			];
 
@@ -35,13 +35,7 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 				die('Validation error!');
 			}
 
-			$user->phone = null;
-
-			if(!$user->save())
-			{
-				print_r($user->errors()->all());
-				die('DB writing error!');
-			}
+			$user->save();
 		});
 	}
 

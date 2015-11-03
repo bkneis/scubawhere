@@ -12,23 +12,7 @@ class MovePhoneFieldFromCompaniesTableToUsersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('users', function($table)
-		{
-			$table->string('phone', 128)->after('email');
-		});
-
-		$users = User::with('company')->get();
-
-		$users->each(function($user)
-		{
-			$user->phone = $user->company->phone;
-			$user->updateUniques();
-		});
-
-		Schema::table('companies', function($table)
-		{
-			$table->dropColumn('phone');
-		});
+		// Legacy
 	}
 
 	/**
@@ -38,23 +22,7 @@ class MovePhoneFieldFromCompaniesTableToUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('companies', function($table)
-		{
-			$table->string('phone', 128)->after('timezone');
-		});
-
-		$companies = Company::all();
-
-		$companies->each(function($company)
-		{
-			$company->phone = $company->users()->whereNotNull('phone')->first()->phone;
-			$company->updateUniques();
-		});
-
-		Schema::table('users', function($table)
-		{
-			$table->dropColumn('phone');
-		});
+		// Legacy
 	}
 
 }
