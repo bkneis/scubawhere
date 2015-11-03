@@ -27,7 +27,8 @@ class AuthenticationController extends Controller {
 			}
 
 			// Update the updated_at timestamp in the table at each login
-			$user->touch();
+			if(!$user->touch())
+				$user->updateUniques();
 
 			return Response::json( array('status' => 'Login successfull. Welcome!'), 202 ); // 202 Accepted
 		}
