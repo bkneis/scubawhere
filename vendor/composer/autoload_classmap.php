@@ -3367,6 +3367,7 @@ return array(
     'RemoveUniqueIndexFromEmailInCustomerTable' => $baseDir . '/app/database/migrations/2014_07_16_152245_remove_unique_index_from_email_in_customer_table.php',
     'RemoveUnneededColumnsFromCustomers' => $baseDir . '/app/database/migrations/2014_05_24_203935_remove_unneeded_columns_from_customers.php',
     'RemoveUnneededIdColumns' => $baseDir . '/app/database/migrations/2014_02_19_143751_remove_unneeded_id_columns.php',
+    'RemoveUserDataFromCompaniesTable' => $baseDir . '/app/database/migrations/2015_11_03_132048_remove_user_data_from_companies_table.php',
     'RenameAccommodationsTableToBoatrooms' => $baseDir . '/app/database/migrations/2014_11_11_081111_rename_accommodations_table_to_boatrooms.php',
     'RenameAllAccommodationIdInstancesToBoatroomId' => $baseDir . '/app/database/migrations/2014_11_11_084413_rename_all_accommodation_id_instances_to_boatroom_id.php',
     'RenameColumnReservedToReservedUntilOnBookingsTable' => $baseDir . '/app/database/migrations/2015_08_31_220623_rename_column_reserved_to_reserved_until_on_bookings_table.php',
