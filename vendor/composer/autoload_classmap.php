@@ -1178,6 +1178,7 @@ return array(
     'Continent' => $baseDir . '/app/models/Continent.php',
     'ContinentModelTest' => $baseDir . '/app/tests/unit/models/ContinentModelTest.php',
     'ContinentsTableSeeder' => $baseDir . '/app/database/seeds/ContinentsTableSeeder.php',
+    'CopyUserDataFromCompaniesTableToUsersTable' => $baseDir . '/app/database/migrations/2015_11_03_122632_copy_user_data_from_companies_table_to_users_table.php',
     'CountriesTableSeeder' => $baseDir . '/app/database/seeds/CountriesTableSeeder.php',
     'Country' => $baseDir . '/app/models/Country.php',
     'CountryController' => $baseDir . '/app/controllers/CountryController.php',
