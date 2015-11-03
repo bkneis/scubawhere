@@ -37,7 +37,11 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 
 			$user->phone = null;
 
-			$user->save();
+			if(!$user->save())
+			{
+				print_r($user->errors()->all());
+				die('DB writing error!');
+			}
 		});
 	}
 
