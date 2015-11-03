@@ -1,4 +1,5 @@
 <?php
+use ScubaWhere\Context;
 
 class AuthenticationController extends Controller {
 
