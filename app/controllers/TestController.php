@@ -16,7 +16,7 @@ class TestController extends Controller {
 
 	public function getLogin()
 	{
-		if(Auth::check()) return "You are allready logged in!";
+		if(Auth::check()) return "You are already logged in!";
 
 		return View::make('test.login');
 	}

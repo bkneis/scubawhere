@@ -1,6 +1,6 @@
 <?php
-
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class ReportController extends Controller {
 
@@ -30,13 +30,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 
 		#############################
 		// Generate utilisation report
-		$departures = Auth::user()->departures()->whereBetween('start', [$after, $before])->with(
+		$departures = Context::get()->departures()->whereBetween('start', [$after, $before])->with(
 			'trip',
 			'bookingdetails',
 				'bookingdetails.booking',
@@ -125,13 +125,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 
 		#############################
 		// Generate utilisation report
-		$trainings = Auth::user()->training_sessions()->whereBetween('start', [$after, $before])->with(
+		$trainings = Context::get()->training_sessions()->whereBetween('start', [$after, $before])->with(
 			'training',
 			'bookingdetails',
 				'bookingdetails.booking',
@@ -199,12 +199,12 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 
 
 		#################################
@@ -212,13 +212,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		########################################
 		// Generate frequency of booking sources
 		$sql = "SELECT source, COUNT(*) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
-		$sql = DB::select($sql, [Auth::user()->id, $afterUTC, $beforeUTC]);
+		$sql = DB::select($sql, [Context::get()->id, $afterUTC, $beforeUTC]);
 
 		$sources = [];
 
@@ -234,7 +234,7 @@ class ReportController extends Controller {
 		######################################
 		// Generate revenue per booking source
 		$sql = "SELECT source, SUM(price), SUM(discount) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
-		$sql = DB::select($sql, [Auth::user()->id, $afterUTC, $beforeUTC]);
+		$sql = DB::select($sql, [Context::get()->id, $afterUTC, $beforeUTC]);
 
 		$sources = [];
 
@@ -266,12 +266,12 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 
 
 		#################################
@@ -279,14 +279,14 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		###########################################
 		// Generate revenue by customer age
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
-			->where('bookings.company_id', Auth::user()->id)
+			->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
 		    ->select('bookings.price', 'bookings.created_at', 'customers.birthday')
@@ -326,7 +326,7 @@ class ReportController extends Controller {
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 		    ->join('countries', 'customers.country_id', '=', 'countries.id')
-		    ->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
 		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
@@ -349,7 +349,7 @@ class ReportController extends Controller {
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 		    ->join('certificate_customer', 'customer_id', '=', 'bookings.lead_customer_id')
-		    ->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
 		    ->get();
@@ -387,8 +387,8 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
@@ -398,7 +398,7 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		$timer = -microtime(true);
@@ -418,7 +418,7 @@ class ReportController extends Controller {
 		 */
 		/*$realDiscountPercentage = [];
 
-		$bookings = Booking::where('company_id', Auth::user()->id)
+		$bookings = Booking::where('company_id', Context::get()->id)
 		    ->whereIn('status', ['confirmed'])
 		    ->whereBetween('created_at', [$afterUTC, $beforeUTC])
 		    ->whereHas('bookingdetails', function($query)
@@ -470,7 +470,7 @@ class ReportController extends Controller {
 		    ->whereHas('booking', function($query) use ($afterUTC, $beforeUTC)
 		    {
 		    	$query
-		    	    ->where('company_id', Auth::user()->id)
+		    	    ->where('company_id', Context::get()->id)
 		    	    ->whereIn('status', ['confirmed'])
 		    	    ->whereBetween('created_at', [$afterUTC, $beforeUTC]);
 		    })->get();
@@ -682,7 +682,7 @@ class ReportController extends Controller {
 		$accommodations = Accommodation::whereHas('bookings', function($query) use ($afterUTC, $beforeUTC)
 		{
 			$query
-			    ->where('company_id', Auth::user()->id)
+			    ->where('company_id', Context::get()->id)
 			    ->whereIn('status', ['confirmed'])
 			    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC]);
 		})->get();

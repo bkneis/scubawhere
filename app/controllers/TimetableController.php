@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Context;
 
 class TimetableController extends Controller {
 
@@ -8,7 +9,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->timetables()->findOrFail( Input::get('id') );
+			return Context::get()->timetables()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -18,7 +19,7 @@ class TimetableController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->timetables()->get();
+		return Context::get()->timetables()->get();
 	}
 
 	public function postAdd()
@@ -28,7 +29,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('session_id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -48,7 +49,7 @@ class TimetableController extends Controller {
 			return Response::json( array('errors' => $timetable->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$timetable = Auth::user()->timetables()->save($timetable);
+		$timetable = Context::get()->timetables()->save($timetable);
 
 		// Update the referenced session object's timetable ID
 		$departure->timetable()->associate( $timetable );
@@ -178,7 +179,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -195,7 +196,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{

@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class CrmGroupController extends Controller {
 
@@ -10,7 +11,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->customerGroups()->findOrFail( Input::get('id') );
+			return Context::get()->customerGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -21,12 +22,12 @@ class CrmGroupController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->crmGroups()->with('rules')->get(); // with('rules')
+		return Context::get()->crmGroups()->with('rules')->get(); // with('rules')
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->crmGroups()->with('rules')->withTrashed()->get();
+		return Context::get()->crmGroups()->with('rules')->withTrashed()->get();
 	}
 
 	public function postAdd()
@@ -43,7 +44,7 @@ class CrmGroupController extends Controller {
 			return Response::json( array('errors' => $group->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$group = Auth::user()->crmGroups()->save($group);
+		$group = Context::get()->crmGroups()->save($group);
 
 		// ADD RULES FOR CERTIFICATES
 		$certificates = Input::get('certificates', []);
@@ -110,7 +111,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$group = Auth::user()->crmGroups()->findOrFail( Input::get('id') );
+			$group = Context::get()->crmGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -150,7 +151,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$group = Auth::user()->crmGroups()->findOrFail( Input::get('id') );
+			$group = Context::get()->crmGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -164,7 +165,7 @@ class CrmGroupController extends Controller {
 		catch(QueryException $e)
 		{
 
-			$group = Auth::user()->crmGroups()->find( Input::get('id') );
+			$group = Context::get()->crmGroups()->find( Input::get('id') );
 			$group->delete();
 		}
 

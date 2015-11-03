@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class AccommodationController extends Controller {
 
@@ -10,7 +11,7 @@ class AccommodationController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->accommodations()->withTrashed()->with('basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Context::get()->accommodations()->withTrashed()->with('basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,12 +21,12 @@ class AccommodationController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->accommodations()->with('basePrices', 'prices')->get();
+		return Context::get()->accommodations()->with('basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->accommodations()->withTrashed()->with('basePrices', 'prices')->get();
+		return Context::get()->accommodations()->withTrashed()->with('basePrices', 'prices')->get();
 	}
 
 	public function getFilter()
@@ -40,10 +41,10 @@ class AccommodationController extends Controller {
 		$data = Input::only('after', 'before', 'accommodation_id');
 
 		// Transform parameter strings into DateTime objects
-		$data['after']  = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
+		$data['after']  = new DateTime( $data['after'], new DateTimeZone( Context::get()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
-			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
+			if( $data['after'] > new DateTime('now', new DateTimeZone( Context::get()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
 				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
@@ -52,13 +53,13 @@ class AccommodationController extends Controller {
 			else
 			{
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
-				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
+				$data['before'] = new DateTime('+1 month', new DateTimeZone( Context::get()->timezone ));
 			}
 		}
 		else
 		{
 			// If a 'before' date is submitted, simply use it
-			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
+			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Context::get()->timezone ) );
 		}
 
 		if( $data['after'] > $data['before'] )
@@ -80,7 +81,7 @@ class AccommodationController extends Controller {
 		{
 			try
 			{
-				$accommodation = Auth::user()->accommodations()->findOrFail( $data['accommodation_id'] );
+				$accommodation = Context::get()->accommodations()->findOrFail( $data['accommodation_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -93,7 +94,7 @@ class AccommodationController extends Controller {
 		$current_date = clone $data['after'];
 		$result = array();
 
-		$accommodations = Auth::user()->accommodations()->where(function($query) use ($accommodation)
+		$accommodations = Context::get()->accommodations()->where(function($query) use ($accommodation)
 		{
 			if( $accommodation )
 				$query->where('id', $accommodation->id);
@@ -170,7 +171,7 @@ class AccommodationController extends Controller {
 			return Response::json( array('errors' => $accommodation->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$accommodation = Auth::user()->accommodations()->save($accommodation);
+		$accommodation = Context::get()->accommodations()->save($accommodation);
 
 		// Normalise base_prices array
 		$base_prices = Helper::normaliseArray($base_prices);
@@ -209,7 +210,7 @@ class AccommodationController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
+			$accommodation = Context::get()->accommodations()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -297,7 +298,7 @@ class AccommodationController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('id') );
+			$accommodation = Context::get()->accommodations()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -317,7 +318,7 @@ class AccommodationController extends Controller {
 		catch(QueryException $e)
 		{
 			// SoftDelete instead
-			$accommodation = Auth::user()->accommodations()->find( Input::get('id') );
+			$accommodation = Context::get()->accommodations()->find( Input::get('id') );
 			$accommodation->delete();
 		}
 

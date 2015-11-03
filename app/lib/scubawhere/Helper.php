@@ -19,7 +19,7 @@ class Helper
 
 	public static function localTime()
 	{
-		return new \DateTime( 'now', new \DateTimeZone( \Auth::user()->timezone ) );
+		return new \DateTime( 'now', new \DateTimeZone( Context::get()->timezone ) );
 	}
 
 	/**
@@ -30,7 +30,7 @@ class Helper
 	public static function isPast($datestring) {
 		$local_time = self::localTime();
 
-		$test_date = new \DateTime($datestring, new \DateTimeZone( \Auth::user()->timezone ));
+		$test_date = new \DateTime($datestring, new \DateTimeZone( Context::get()->timezone ));
 
 		if($test_date < $local_time )
 			return true;
@@ -130,7 +130,7 @@ class Helper
 	}
 
 	public static function sendBookingConfirmation($booking_id)
-	{	
+	{
 		$originalInput = \Request::input();
 
 		\Request::replace(array("id" => $booking_id, "_token" => \Session::token()));
@@ -141,7 +141,7 @@ class Helper
 
 		\Request::replace($originalInput);
 
-		\Mail::send('emails.booking-summary', array('company' => \Auth::user(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')), function($message) use ($booking) {
+		\Mail::send('emails.booking-summary', array('company' => Context::get(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')), function($message) use ($booking) {
 		    $message->to($booking->lead_customer->email, $booking->lead_customer->firstname . ' ' . $booking->lead_customer->lastname)->subject('Booking Confirmation');
 		});
 	}

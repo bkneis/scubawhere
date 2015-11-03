@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class BookingController extends Controller {
 
@@ -9,7 +10,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->with(
+			$booking = Context::get()->bookings()->with(
 				'agent',
 				'lead_customer',
 					'lead_customer.country',
@@ -174,7 +175,7 @@ class BookingController extends Controller {
 
 	public function getAll($from = 0, $take = 20)
 	{
-		return Auth::user()->bookings()
+		return Context::get()->bookings()
 			->with(
 				'agent',
 				'lead_customer',
@@ -192,7 +193,7 @@ class BookingController extends Controller {
 
 	public function getRecent()
 	{
-		return Auth::user()->bookings()
+		return Context::get()->bookings()
 			->with(
 				'agent',
 				'lead_customer',
@@ -246,9 +247,9 @@ class BookingController extends Controller {
 			return $this->getAll();
 
 		if(!empty($date))
-			$date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
+			$date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
 
-		$bookings = Auth::user()->bookings()->with(
+		$bookings = Context::get()->bookings()->with(
 				'agent',
 				'lead_customer',
 					'lead_customer.country',
@@ -303,7 +304,7 @@ class BookingController extends Controller {
 		if(empty($customerID))
 			return Response::json(['errors' => ['The customer ID is not found']], 406);
 
-		$bookings = Auth::user()->bookings()
+		$bookings = Context::get()->bookings()
 			->where(function($query) use ($customerID)
 			{
 				$query->where('lead_customer_id', '=', $customerID);
@@ -331,11 +332,11 @@ class BookingController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
-		$bookings = Auth::user()->bookings()
+		$bookings = Context::get()->bookings()
 			->with(
 				'agent',
 				'lead_customer',
@@ -383,11 +384,11 @@ class BookingController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
-		$bookings = Auth::user()->bookings()
+		$bookings = Context::get()->bookings()
 			->with(
 				'lead_customer',
 				'payments',
@@ -431,11 +432,11 @@ class BookingController extends Controller {
 		if(!empty($agent_ids) && !is_array($agent_ids))
 			return Response::json(['errors' => ['The parameter "agent_ids" must be an array!']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
-		$bookings = Auth::user()->bookings()
+		$bookings = Context::get()->bookings()
 			->with(
 				'agent',
 				'lead_customer',
@@ -485,7 +486,7 @@ class BookingController extends Controller {
 			try
 			{
 				if( empty($data['agent_id']) ) throw new ModelNotFoundException();
-				$agent = Auth::user()->agents()->findOrFail( $data['agent_id'] );
+				$agent = Context::get()->agents()->findOrFail( $data['agent_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -511,7 +512,7 @@ class BookingController extends Controller {
 		if( !$booking->validate() )
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 
-		$booking = Auth::user()->bookings()->save($booking);
+		$booking = Context::get()->bookings()->save($booking);
 
 		return Response::json( array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference, 'agent' => $agent), 201 ); // 201 Created
 	}
@@ -537,7 +538,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -547,7 +548,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('customer_id') ) throw new ModelNotFoundException();
-			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+			$customer = Context::get()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -558,7 +559,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$ticket = Auth::user()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
+				$ticket = Context::get()->tickets()->with('boats', 'boatrooms')->findOrFail( Input::get('ticket_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -572,7 +573,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$departure = Auth::user()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms', 'trip')->firstOrFail(array('sessions.*'));
+				$departure = Context::get()->departures()->where('sessions.id', Input::get('session_id'))->with('boat', 'boat.boatrooms', 'trip')->firstOrFail(array('sessions.*'));
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -591,7 +592,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('training_session_id'))->firstOrFail(array('training_sessions.*'));
+				$training_session = Context::get()->training_sessions()->where('training_sessions.id', Input::get('training_session_id'))->firstOrFail(array('training_sessions.*'));
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -613,7 +614,7 @@ class BookingController extends Controller {
 				// We thus have to look for it via the company and supplied package_id
 				try
 				{
-					$packagefacade = Auth::user()
+					$packagefacade = Context::get()
 						->packages()->findOrFail( Input::get('package_id') )
 						->packagefacades()->findOrFail( Input::get('packagefacade_id') );
 				}
@@ -629,7 +630,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$package = Auth::user()->packages()->with('tickets', 'courses')->findOrFail( Input::get('package_id') );
+				$package = Context::get()->packages()->with('tickets', 'courses')->findOrFail( Input::get('package_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -648,7 +649,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$course = Auth::user()->courses()->findOrFail( Input::get('course_id') );
+				$course = Context::get()->courses()->findOrFail( Input::get('course_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -710,7 +711,7 @@ class BookingController extends Controller {
 		// Validate that the customer is not already booked for this session or training_session on another booking
 		if($departure || $training_session)
 		{
-			$check = Auth::user()->bookings()
+			$check = Context::get()->bookings()
 				->whereNotIn('id', array($booking->id))
 				->whereIn('status', Booking::$counted)
 				->whereHas('bookingdetails', function($query) use ($customer, $departure, $training_session)
@@ -968,7 +969,7 @@ class BookingController extends Controller {
 		if($ticket)
 		{
 			// Add compulsory addons
-			$addons = Auth::user()->addons()->where('compulsory', true)->get();
+			$addons = Context::get()->addons()->where('compulsory', true)->get();
 			if($addons->count() > 0) {
 				$addons->each(function($addon) use ($bookingdetail)
 				{
@@ -1095,7 +1096,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1154,7 +1155,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1175,7 +1176,7 @@ class BookingController extends Controller {
 			try
 			{
 				if( !Input::has('customer_id') ) throw new ModelNotFoundException();
-				$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+				$customer = Context::get()->customers()->findOrFail( Input::get('customer_id') );
 				$customer_id = $customer->id;
 			}
 			catch(ModelNotFoundException $e)
@@ -1206,7 +1207,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('addon_id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->findOrFail( Input::get('addon_id') );
+			$addon = Context::get()->addons()->findOrFail( Input::get('addon_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1221,7 +1222,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1347,7 +1348,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1438,7 +1439,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1455,7 +1456,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('accommodation_id') ) throw new ModelNotFoundException();
-			$accommodation = Auth::user()->accommodations()->findOrFail( Input::get('accommodation_id') );
+			$accommodation = Context::get()->accommodations()->findOrFail( Input::get('accommodation_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1466,7 +1467,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('customer_id') ) throw new ModelNotFoundException();
-			$customer = Auth::user()->customers()->findOrFail( Input::get('customer_id') );
+			$customer = Context::get()->customers()->findOrFail( Input::get('customer_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1490,8 +1491,8 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $validator->messages()->all()), 400 ); // 400 Bad Request
 		}
 
-		$start = new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
-		$end   = new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
+		$start = new DateTime($start, new DateTimeZone( Context::get()->timezone ));
+		$end   = new DateTime($end,   new DateTimeZone( Context::get()->timezone ));
 
 		if($start->diff($end)->format('%R%a') < 1)
 			return Response::json(['errors' => ['The end date must be after the start date.']], 400); // 400 Bad Request
@@ -1522,7 +1523,7 @@ class BookingController extends Controller {
 				// We thus have to look for it via the company and supplied package_id
 				try
 				{
-					$packagefacade = Auth::user()
+					$packagefacade = Context::get()
 						->packages()->findOrFail( Input::get('package_id') )
 						->packagefacades()->findOrFail( Input::get('packagefacade_id') );
 				}
@@ -1538,7 +1539,7 @@ class BookingController extends Controller {
 		{
 			try
 			{
-				$package = Auth::user()->packages()->with('addons')->findOrFail( Input::get('package_id') );
+				$package = Context::get()->packages()->with('addons')->findOrFail( Input::get('package_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -1641,7 +1642,7 @@ class BookingController extends Controller {
 
 		try
 		{
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1675,7 +1676,7 @@ class BookingController extends Controller {
 		if( strlen($query) < 3 )
 			return Response::json( array('errors' => 'Query string must be at least 3 characters long.'), 406 ); // 406 Not Acceptable
 
-		return Auth::user()->pick_ups()
+		return Context::get()->pick_ups()
 			->where('location', 'LIKE', '%'.$query.'%')
 			->whereNotNull('location')
 			->where('pick_ups.created_at', '>=', date('Y-m-d H:i:s', strtotime('-30 days')))
@@ -1697,7 +1698,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1744,7 +1745,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1789,7 +1790,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1809,7 +1810,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1839,7 +1840,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1862,7 +1863,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1897,7 +1898,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1933,7 +1934,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1970,7 +1971,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1985,7 +1986,7 @@ class BookingController extends Controller {
 		try
 		{
 			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -1997,7 +1998,7 @@ class BookingController extends Controller {
 
 	private function moreThan5DaysAgo($date) {
 		$local_time = Helper::localTime();
-		$test_date = new DateTime($date, new DateTimeZone( Auth::user()->timezone ));
+		$test_date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
 
 		if($local_time->diff($test_date)->format('%R%a') < -5)
 			return true;

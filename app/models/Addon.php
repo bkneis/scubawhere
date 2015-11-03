@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 use PhilipBrown\Money\Currency;
 
 class Addon extends Ardent {
@@ -40,7 +41,7 @@ class Addon extends Ardent {
 
 		if( isset($this->new_decimal_price) )
 		{
-			$currency = new Currency( Auth::user()->currency->code );
+			$currency = new Currency( Context::get()->currency->code );
 			$this->price = (int) round( $this->new_decimal_price * $currency->getSubunitToUnit() );
 			unset($this->new_decimal_price);
 		}
@@ -51,7 +52,7 @@ class Addon extends Ardent {
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number
@@ -73,7 +74,7 @@ class Addon extends Ardent {
 
 	public function getCurrencyAttribute()
 	{
-		return Auth::user()->currency;
+		return Context::get()->currency;
 	}
 
 	/* public function bookings()

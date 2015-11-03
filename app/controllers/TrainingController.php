@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use ScubaWhere\Context;
 
 class TrainingController extends Controller {
 
@@ -9,7 +10,7 @@ class TrainingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->trainings()->withTrashed()->findOrFail( Input::get('id') );
+			return Context::get()->trainings()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -19,12 +20,12 @@ class TrainingController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->trainings()->get();
+		return Context::get()->trainings()->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->trainings()->withTrashed()->get();
+		return Context::get()->trainings()->withTrashed()->get();
 	}
 
 	public function postAdd()
@@ -40,7 +41,7 @@ class TrainingController extends Controller {
 		}
 
 		// Input has been validated, save the model
-		$training = Auth::user()->trainings()->save($training);
+		$training = Context::get()->trainings()->save($training);
 
 		// When no problems occur, we return a success response
 		return Response::json( array('status' => 'OK. Class created', 'id' => $training->id), 201 ); // 201 Created
@@ -53,7 +54,7 @@ class TrainingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training = Auth::user()->trainings()->findOrFail( Input::get('id') );
+			$training = Context::get()->trainings()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -75,7 +76,7 @@ class TrainingController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$training = Auth::user()->trainings()->findOrFail( Input::get('id') );
+			$training = Context::get()->trainings()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
