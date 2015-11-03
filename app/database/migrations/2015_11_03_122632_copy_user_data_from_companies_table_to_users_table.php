@@ -20,6 +20,7 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 				'username'   => $company->username,
 				'password'   => $company->password,
 				'email'      => $company->email,
+				'phone'      => $company->phone,
 				'company_id' => $company->id,
 			];
 
