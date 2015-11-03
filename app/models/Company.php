@@ -246,4 +246,9 @@ class Company extends Ardent {
 	{
 		return $this->hasMany('Trip');
 	}
+
+	public function users()
+	{
+		return $this->hasMany('User');
+	}
 }
