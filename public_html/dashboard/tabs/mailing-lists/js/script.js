@@ -154,9 +154,9 @@ function renderGroupEditForm(id) {
     $('#add-certificates').on('change', '#agency_id', function() {
         var self = $(this);
 
-        if (self.val() === "") self.closest('fieldset').find('#certificate_id').empty();
+        var certificate_dropdown = self.closest('.form-row').find('#certificate_id');
 
-        var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+        if (self.val() === "") certificate_dropdown.empty();
 
         certificate_dropdown.html(certificatesTemplate({
             certificates: window.agencies[self.val()].certificates
@@ -167,8 +167,8 @@ function renderGroupEditForm(id) {
     $('#add-certificates').on('click', '.add-certificate', function(event) {
         event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
         var self = $(this);
-        var agency_dropdown = self.closest('fieldset').find('#agency_id');
-        var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
+        var agency_dropdown = self.closest('.form-row').find('#agency_id');
+        var certificate_dropdown = self.closest('.form-row').find('#certificate_id');
 
         if (agency_dropdown.val() === "" || certificate_dropdown.val() === "") return false;
 
@@ -191,7 +191,7 @@ function renderGroupEditForm(id) {
     $('#add-tickets').on('click', '.add-ticket', function(event) {
         event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
         var self = $(this);
-        var ticket_dropdown = self.closest('fieldset').find('#ticket_id');
+        var ticket_dropdown = self.closest('.form-row').find('#ticket_id');
 
         if (ticket_dropdown.val() === "") return false;
 
@@ -204,7 +204,7 @@ function renderGroupEditForm(id) {
     $('#add-classes').on('click', '.add-class', function(event) {
         event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
         var self = $(this);
-        var class_dropdown = self.closest('fieldset').find('#class_id');
+        var class_dropdown = self.closest('.form-row').find('#class_id');
 
         if (class_dropdown.val() === "") return false;
 

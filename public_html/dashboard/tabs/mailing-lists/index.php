@@ -26,86 +26,84 @@
 			<div class="panel panel-default" id="group-form-container">
 				<script type="text/x-handlebars-template" id="customer-group-form-template">
 					<div class="panel-heading">
-								<h4 class="panel-title">{{task}} mailing list</h4>
+						<h4 class="panel-title">{{task}} mailing list</h4>
 					</div>
 					<div class="panel-body">
-								<form id="{{task}}-group-form" accept-charset="utf-8">
-											<div class="form-row">
-														<label class="field-label">Group name</label>
-														<input id="group-name" type="text" name="name" value="{{{name}}}">
-														{{#if update}}
-														<span class="btn btn-danger pull-right remove-customer-group">Remove</span>
-														{{/if}}
-											</div>
-											<div class="form-row">
-														<label class="field-label">Group description</label>
-														<textarea id="group-description" name="description" style="height: 243px;">{{{description}}}</textarea>
-											</div>
-											<h5>How to group your customers</h5>
-											<p>Select the common attributes you wish to group your customers, either by certification, agency, trip bought or class bought :</p>
-											<div class="form-group" style="margin-bottom: 0;">
-														<div class="col-md-12" id="selected-rules">
-														</div>
-											</div>
-											<fieldset id="add-certificates">
-														<div class="form-group">
-																	<div class="col-md-5">
-																				<label for="agency_id" class="control-label">Agency</label>
-																				<select id="agency_id" class="form-control select2">
-																				</select>
-																	</div>
-																	<div class="col-md-5">
-																				<label for="certificate_id" class="control-label">Certificate</label>
-																				<select id="certificate_id" class="form-control select2">
-																				</select>
-																	</div>
-																	<div class="col-md-2">
-																				<label>&nbsp;</label><br>
-																				<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
-																	</div>
-														</div>
-											</fieldset>
-											<fieldset id="add-tickets">
-														<div class="form-group" style="margin-bottom: 0;">
-																	<div class="col-md-12" id="selected-trips">
-																	</div>
-														</div>
-														<div class="form-group">
-																	<div class="col-md-10">
-																				<label for="ticket_id" class="control-label">Tickets</label>
-																				<select id="ticket_id" class="form-control select2">
-																				</select>
-																	</div>
-																	<div class="col-md-2">
-																				<label>&nbsp;</label><br>
-																				<button class="btn btn-success add-ticket" style="width: 100%;">Add</button>
-																	</div>
-														</div>
-											</fieldset>
-											<fieldset id="add-classes">
-														<div class="form-group" style="margin-bottom: 0;">
-																	<div class="col-md-12" id="selected-classes">
-																	</div>
-														</div>
-														<div class="form-group">
-																	<div class="col-md-10">
-																				<label for="class_id" class="control-label">Classes</label>
-																				<select id="class_id" class="form-control select2">
-																				</select>
-																	</div>
-																	<div class="col-md-2">
-																				<label>&nbsp;</label><br>
-																				<button class="btn btn-success add-class" style="width: 100%;">Add</button>
-																	</div>
-														</div>
-											</fieldset>
-											<div style="padding-bottom:20px;"></div>
-											{{#if update}}
-											<input type="hidden" name="id" value="{{id}}">
-											{{/if}}
-											<input type="hidden" name="_token">
-											<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
-								</form>
+						<form id="{{task}}-group-form" accept-charset="utf-8">
+							<div class="form-row">
+								<label class="field-label">Group name</label>
+								<input id="group-name" type="text" name="name" value="{{{name}}}">
+								{{#if update}}
+									<span class="btn btn-danger pull-right remove-customer-group">Remove</span>
+								{{/if}}
+							</div>
+
+							<div class="form-row">
+								<label class="field-label">Group description</label>
+								<textarea id="group-description" name="description" style="height: 243px;">{{{description}}}</textarea>
+							</div>
+
+							<div class="form-row">
+								<h5>How to group your customers</h5>
+								<p>Select the common attributes you wish to group your customers, either by certification, agency, trip bought or class bought :</p>
+							</div>
+
+							<div class="form-row" style="margin-bottom: 0;">
+								<div class="col-md-12" id="selected-rules">
+								</div>
+							</div>
+
+							<div class="form-row" id="add-certificates">
+								<div class="col-md-5">
+									<label for="agency_id" class="control-label">Agency</label>
+									<select id="agency_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-5">
+									<label for="certificate_id" class="control-label">Certificate</label>
+									<select id="certificate_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label><br>
+									<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+								</div>
+							</div>
+
+							<div class="form-row" id="add-tickets">
+								<div class="col-md-10">
+									<label for="ticket_id" class="control-label">Tickets</label>
+									<select id="ticket_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label><br>
+									<button class="btn btn-success add-ticket" style="width: 100%;">Add</button>
+								</div>
+							</div>
+
+							<div class="form-row" id="add-classes">
+								<div class="col-md-10">
+									<label for="class_id" class="control-label">Classes</label>
+									<select id="class_id" class="form-control select2">
+									</select>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label><br>
+									<button class="btn btn-success add-class" style="width: 100%;">Add</button>
+								</div>
+							</div>
+
+							<div style="padding-bottom:20px;">
+							</div>
+
+							{{#if update}}
+								<input type="hidden" name="id" value="{{id}}">
+							{{/if}}
+
+							<input type="hidden" name="_token">
+							<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
+						</form>
 					</div>
 				</script>
 			</div>
@@ -149,37 +147,37 @@
 	</script>
 	<script type="text/x-handlebars-template" id="selected-certificate-template">
 		<div class="pull-left selected-certificate">
-					<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-					<strong>{{abbreviation}}</strong> - {{{name}}}
-					<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
+			<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+			<strong>{{abbreviation}}</strong> - {{{name}}}
+			<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="selected-agency-template">
 		<div class="pull-left selected-agency">
-					<input type="checkbox" name="agencies[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-					<strong>Agency</strong> - {{{abbreviation}}}
-					<i class="fa fa-times remove-agency" style="cursor: pointer;"></i>
+			<input type="checkbox" name="agencies[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+			<strong>Agency</strong> - {{{abbreviation}}}
+			<i class="fa fa-times remove-agency" style="cursor: pointer;"></i>
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="selected-ticket-template">
 		<div class="pull-left selected-ticket">
-					<input type="checkbox" name="tickets[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-					<strong>Ticket</strong> - {{{name}}}
-					<i class="fa fa-times remove-ticket" style="cursor: pointer;"></i>
+			<input type="checkbox" name="tickets[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+			<strong>Ticket</strong> - {{{name}}}
+			<i class="fa fa-times remove-ticket" style="cursor: pointer;"></i>
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="selected-class-template">
 		<div class="pull-left selected-class">
-					<input type="checkbox" name="classes[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-					<strong>Class</strong> - {{{name}}}
-					<i class="fa fa-times remove-class" style="cursor: pointer;"></i>
+			<input type="checkbox" name="classes[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+			<strong>Class</strong> - {{{name}}}
+			<i class="fa fa-times remove-class" style="cursor: pointer;"></i>
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="selected-group-template">
 		<div class="pull-left selected-certificate">
-					<input type="checkbox" name="groups[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
-					<strong>{{{name}}}</strong>
-					<i class="fa fa-times remove-group" style="cursor: pointer;"></i>
+			<input type="checkbox" name="groups[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+			<strong>{{{name}}}</strong>
+			<i class="fa fa-times remove-group" style="cursor: pointer;"></i>
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="group-select-template">
