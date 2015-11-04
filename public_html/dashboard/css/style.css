@@ -172,6 +172,9 @@ body{
 	width: 95%;
 	padding: 10px 14px 10px 15px;
 }
+fieldset#add-certificates {
+min-width: none;
+}
 
 /*				GENERIC STYLES
 *******************************/
