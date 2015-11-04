@@ -173,7 +173,7 @@ body{
 	padding: 10px 14px 10px 15px;
 }
 fieldset#add-certificates {
-min-width: none;
+min-width: auto;
 }
 
 /*				GENERIC STYLES
