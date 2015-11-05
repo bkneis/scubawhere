@@ -338,9 +338,9 @@
 											<td class="item-col quantity" style="text-align: right; padding-right: 10px; border-top: 1px solid #cccccc;">
 												<span class="total-space">Subtotal</span><br />
 
-												{{#ifCond discount '!==' '0.00'}}
+												{{#compare discount '!==' '0.00'}}
 													<span class="total-space">Discount</span><br />
-												{{/ifCond}}
+												{{/compare}}
 
 												{{!-- <span class="total-space">Tax</span><br /> --}}
 
@@ -355,9 +355,9 @@
 											<td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
 												<span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
 
-												{{#ifCond discount '!==' '0.00'}}
+												{{#compare discount '!==' '0.00'}}
 													<span class="total-space">-{{discount}}</span><br />
-												{{/ifCond}}
+												{{/compare}}
 
 												{{!-- <span class="total-space">$0.75</span><br /> --}}
 
