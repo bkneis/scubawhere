@@ -134,12 +134,13 @@ Handlebars.registerHelper('addTransactionButton', function(id) {
 
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
+Handlebars.registerHelper('viewButton', function(id) {
+	// The edit button should always be available, because it also works as an info button, to see the booking details
+	return new Handlebars.SafeString('<button onclick="viewBooking(' + this.id + ', this);" class="btn btn-default btn-info"><i class="fa fa-eye fa-fw"></i> View</button>');
+});
 Handlebars.registerHelper('editButton', function(id) {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
-	/*if(this.status === 'cancelled')
-	return '';*/
-
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> View & Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default btn-warning"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
 });
 Handlebars.registerHelper('cancelButton', function() {
 	var disabled = '';
@@ -272,14 +273,29 @@ function renderBookingList(bookings, display) {
 
 }
 
+function viewBooking(booking_id, self) {
+	// Set loading indicator
+	$(self).after('<span id="save-loader" class="loader"></span>');
+
+	// Load booking data and redirect to add-booking tab
+	Booking.get(booking_id, function success(object) {
+		window.booking      = object;
+		window.booking.mode = 'view';
+		window.clickedEdit  = true;
+
+		window.location.hash = 'add-booking';
+	});
+}
+
 function editBooking(booking_id, self) {
 	// Set loading indicator
 	$(self).after('<span id="save-loader" class="loader"></span>');
 
 	// Load booking data and redirect to add-booking tab
 	Booking.get(booking_id, function success(object) {
-		window.booking = object;
-		window.clickedEdit = true;
+		window.booking      = object;
+		window.booking.mode = 'edit';
+		window.clickedEdit  = true;
 
 		window.location.hash = 'add-booking';
 	});

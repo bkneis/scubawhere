@@ -215,6 +215,7 @@
 
 			<div style="margin-bottom: 1em;">
 				{{addTransactionButton id}}
+				{{viewButton id}}
 				{{editButton id}}
 
 				<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
