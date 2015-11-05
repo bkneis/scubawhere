@@ -1906,9 +1906,7 @@ class BookingController extends Controller {
 		}
 
 		if($booking->price != 0 && $booking->agent_id === null)
-			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent.')), 403 ); // 403 Forbidden
-		else if($booking->price != 0)
-			return Response::json( array('errors' => array('The confirmation method is only allowed for free-of-charge bookings.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent or free-of-charge bookings.')), 403 ); // 403 Forbidden
 
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking cannot be confirmed, as it is cancelled.')), 409 ); // 409 Conflict
