@@ -88,8 +88,11 @@
 						<div role="tabpanel" class="tab-pane fade" id="summary-tab">
 							<?php require('8-summary.php'); ?>
 						</div>
+
 					</div>
+
 				</div>
+
 				<div class="col-md-3" id="booking-summary-column">
 					<?php require('basket.php'); ?>
 				</div>
@@ -98,7 +101,7 @@
 	</div><!-- .row -->
 
 	<div id="modalWindows" style="height: 0;">
-		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="boatroom-select-modal-template">
 			<div id="modal-boatroom-select" class="reveal-modal">
 				<h4>Please select a cabin</h4>
 

@@ -3,7 +3,7 @@ var Booking = function(data) {
 	// Defaults for new booking
 	this.decimal_price  = "0.00";
 	this.discount       = "0.00";
-	this.lead_customer  = false;
+	this.lead_customer  = null;
 	this.bookingdetails = [];
 	this.accommodations = [];
 	this.payments       = [];
