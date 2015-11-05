@@ -11,12 +11,14 @@ var Booking = function(data) {
 	this.pick_ups       = [];
 
 	// User interface variables
-	this.currentTab        = null;
 	this.selectedTickets   = {};
 	this.selectedPackages  = {};
 	this.selectedCourses   = {};
 	this.selectedCustomers = {};
 	this.sums              = {};
+
+	this.currentTab        = null;
+	this.mode              = 'edit';
 
 	if(data !== undefined) {
 		$.extend(this, data);
@@ -154,7 +156,7 @@ Booking.prototype.store = function() {
 		selectedCustomers : this.selectedCustomers,
 		selectedPackages  : this.selectedPackages,
 		selectedCourses   : this.selectedCourses,
-		currentTab        : this.currentTab,
+		// currentTab        : this.currentTab,
 	});
 
 	return true;
@@ -176,7 +178,7 @@ Booking.prototype.loadStorage = function() {
 		this.selectedCustomers = storedObject.selectedCustomers;
 		this.selectedPackages  = storedObject.selectedPackages;
 		this.selectedCourses   = storedObject.selectedCourses ;
-		this.currentTab        = storedObject.currentTab;
+		// this.currentTab        = storedObject.currentTab;
 	}
 };
 

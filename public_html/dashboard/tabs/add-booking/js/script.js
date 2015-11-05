@@ -437,15 +437,40 @@ window.promises.loadedAccommodations.done(function() {
 });
 
 // Set up disabling and enabling of Prev and Next buttons
-$('a[role="tab"]').on('show.bs.tab', function (e) {
+function setUpPrevNextButtons() {
+	$('.btn-prev').on('click', function() {
+		$('.nav-wizard li').filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+	});
+
+	$('.btn-next').on('click', function() {
+
+		// When the tab is the Extra Info tab, first save the info, before showing the next tab
+		if(booking.currentTab == '#extra-tab') {
+			$('#extra-form').trigger('submit', {
+				callback: function() {
+					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+				}
+			});
+
+			// Break out of function to not trigger the next tab just yet
+			return false;
+		}
+
+		$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+	});
+
+	handlePrevNextButtons();
+}
+function handlePrevNextButtons() {
 	$('.btn-prev').prop('disabled', false);
 	$('.btn-next').prop('disabled', false);
 
-	var currentTab = e.target.getAttribute('data-target');
+	if(booking.currentTab === '#ticket-tab' || booking.mode === 'view')
+		$('.btn-prev').prop('disabled', true);
 
-	if(currentTab === '#ticket-tab')  $('.btn-prev').prop('disabled', true);
-	if(currentTab === '#summary-tab') $('.btn-next').prop('disabled', true);
-});
+	if(booking.currentTab === '#summary-tab')
+		$('.btn-next').prop('disabled', true);
+}
 
 /*
 *************************
@@ -1351,7 +1376,7 @@ function submitAddDetail(params, data) {
 		drawSessionTicketsList();
 
 		drawBasket(function() {
-			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
+			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); // When basket has been refreshed, expand latest bookingdetail
 		});
 
 	}, function error(xhr) {
@@ -2311,7 +2336,7 @@ $(document).ready(function() {
 	$('#agency_id').select2();
 	$('#certificate_id').select2();
 
-	//This function runs whenever a new step has loaded
+	// This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		booking.currentTab = $(e.target).data('target');
 		booking.store();
@@ -2327,31 +2352,12 @@ $(document).ready(function() {
 			$('#booking-summary-column').show();
 		}
 
-	});
-
-	$('.btn-prev').on('click', function() {
-	    $('.nav-wizard li').filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
-	});
-
-	$('.btn-next').on('click', function() {
-
-		// When the tab is the Extra Info tab, first save the info, before showing the next tab
-		if(booking.currentTab == '#extra-tab') {
-			$('#extra-form').trigger('submit', {
-				callback: function() {
-					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-				}
-			});
-
-			// Break out of function to not trigger the next tab just yet
-			return false;
-		}
-
-	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+		handlePrevNextButtons();
 	});
 
 	$('a[data-toggle="tab"]').on('click', function () {
-		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
+		var $self = $(this);
+		if((!$self.hasClass('done') && !$self.hasClass('selected')) || (booking.mode === 'view' && $self.attr('data-target') !== '#summary-tab')) {
 			return false;
 		}
 	});
@@ -2482,8 +2488,9 @@ function drawBasket(doneFn) {
 		return accom.pivot.start;
 	});
 
-	$('#booking-summary').html(bookingSummaryTemplate(booking)).promise().done(function(){
+	$('#booking-summary-column').html(bookingSummaryTemplate(booking)).promise().done(function(){
 	    if($.isFunction(doneFn)) doneFn();
+	    setUpPrevNextButtons();
 	});
 }
 
@@ -2493,6 +2500,15 @@ Booking.initiateStorage();
 if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && clickedEdit === true) {
 	window.clickedEdit = false;
 	booking.loadStorage();
+
+	if(booking.mode === 'view') {
+		booking.currentTab = '#summary-tab';
+
+		// Visually disable navigation
+		$('.nav-wizard > li').not(':last').addClass('disabled');
+	}
+	else
+		booking.currentTab = '#ticket-tab'
 
 	if(Object.keys(booking.selectedCustomers).length === 0) {
 		// Load selectedCustomers from bookingdetails
@@ -2553,6 +2569,11 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	}
 	*/
 
+	/**
+	 * The system has been changed to a separation between viewing a booking and editing a booking.
+	 * As a result, fixed starting tabs have been set for both modes and as such the starting tab does
+	 * not need to be calculated anymore.
+
 	if(booking.currentTab === null) {
 		booking.currentTab = '#ticket-tab';
 		// if(Object.keys(booking.selectedTickets).length > 0) booking.currentTab = '#customer-tab';
@@ -2561,6 +2582,7 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 
 		booking.store();
 	}
+	*/
 
 	$('[data-target="'+booking.currentTab+'"]').tab('show');
 	drawBasket();
