@@ -1,4 +1,26 @@
 <div id="wrapper" class="clearfix">
+	<div id="booking-toolbar"></div>
+	<script type="text/x-handlebars-template" id="toolbar-template">
+		{{#compare booking.mode 'view'}}
+			<div class="alert-info clearfix">
+				<div class="alert pull-right">
+					<i class="fa fa-lg fa-fw fa-eye"></i> Currently in <strong>Viewing Mode</strong>
+					<button class="btn btn-warning edit-booking pull-right">Edit booking</button>
+				</div>
+			</div>
+		{{else}}
+			{{#compare booking.status 'temporary'}}
+				<div class="alert-warning clearfix">
+					<div class="alert pull-right">
+						<i class="fa fa-lg fa-fw fa-pencil"></i> Currently in <strong>Editing Mode</strong>
+						<button class="btn btn-success apply-booking pull-right">Apply changes</button>
+						<button class="btn btn-default abandon-booking pull-right" style="margin-right: 5px;">Discard changes</button>
+					</div>
+				</div>
+			{{/compare}}
+		{{/compare}}
+	</script>
+
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="nav nav-wizard" role="tablist">

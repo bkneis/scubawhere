@@ -293,6 +293,7 @@ var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-te
 var boatroomModalTemplate       = Handlebars.compile($("#boatroom-select-modal-template").html());
 var pickUpListPartial           = Handlebars.compile($('#pick-up-list-partial').html());
 var bookingSummaryTemplate      = Handlebars.compile($("#booking-summary-template").html());
+var toolbarTemplate             = Handlebars.compile($("#toolbar-template").html());
 
 Handlebars.registerPartial('pick-up-list', pickUpListPartial);
 /**
@@ -2356,7 +2357,66 @@ $(document).ready(function() {
 			$('#booking-summary-column').show();
 		}
 
+		if(booking) {
+			$('#booking-toolbar').html(toolbarTemplate({'booking': booking}));
+		}
+
 		handlePrevNextButtons();
+	});
+
+	// Toolbar click handlers
+	$('#booking-toolbar').on('click', '.edit-booking', function() {
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
+
+		// Load booking data and redirect to add-booking tab
+		Booking.startEditing(booking.id, function success(object) {
+			window.booking      = object;
+			window.booking.mode = 'edit';
+			window.clickedEdit  = true;
+
+			// Reload page with new data
+			$(window).trigger('hashchange');
+		}, function error(xhr) {
+			// Let the .ajaxComplete function in main.js handle the Laravel error
+			btn.html('Edit booking');
+		});
+	});
+
+	$('#booking-toolbar').on('click', '.abandon-booking', function() {
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
+
+		if(confirm('Really discard all changes to this booking?'))
+			booking.cancel({_token: window.token}, function success(status) {
+				pageMssg('Ok, all changes have been discarded.', 'success');
+
+				window.location.hash = '#manage-bookings';
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Discard changes');
+			});
+		else
+			btn.html('Discard changes');
+	});
+
+	$('#booking-toolbar').on('click', '.apply-booking', function() {
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
+
+		booking.applyChanges({_token: window.token}, function success(status) {
+			pageMssg(status, 'success');
+
+			window.booking.mode = 'view';
+			window.clickedEdit  = true;
+
+			$(window).trigger('hashchange');
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			if(data.errors) pageMssg(data.errors[0], 'danger');
+			btn.html('Apply changes');
+		});
 	});
 
 	$('a[data-toggle="tab"]').on('click', function () {
@@ -2505,14 +2565,15 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	window.clickedEdit = false;
 	booking.loadStorage();
 
-	if(booking.mode === 'view') {
+	if(booking.mode === 'edit') {
+		booking.currentTab = '#ticket-tab';
+	}
+	else {
 		booking.currentTab = '#summary-tab';
 
-		// Visually disable navigation
+		// Visually disable navigation (the functionality is disabled already because of the booking.mode)
 		$('.nav-wizard > li').not(':last').addClass('disabled');
 	}
-	else
-		booking.currentTab = '#ticket-tab'
 
 	if(Object.keys(booking.selectedCustomers).length === 0) {
 		// Load selectedCustomers from bookingdetails

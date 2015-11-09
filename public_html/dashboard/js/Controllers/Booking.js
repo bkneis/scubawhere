@@ -48,6 +48,25 @@ Booking.get = function(id, successFn) {
 	});
 };
 
+/**
+ * Takes the ID of the booking to edit and calls the success callback with a Booking object (dublicate of the booking to edit) as its only parameter
+ *
+ * @param {integer} id The ID of the booking to edit
+ * @param {function} successFn Recieves new Booking object as first and only parameter
+ */
+Booking.startEditing = function(id, successFn, errorFn) {
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/start-editing",
+		data: {booking_id: id, _token: window.token},
+		context: this,
+		success: function(data) {
+			successFn( new Booking(data) );
+		},
+		error: errorFn
+	});
+};
+
 /*
  * Calls success callback with unaltered JSON data
  */
@@ -761,6 +780,41 @@ Booking.prototype.confirm = function(params, successFn, errorFn) {
 
 			this.status = 'confirmed';
 			this.setStatus();
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
+ * Apply changes made during the editing to the booking (and parent booking)
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.applyChanges = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/apply-changes",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.reference = data.booking_reference;
+			this.status    = data.booking_status;
+			this.setStatus();
+
+			this.payments = data.payments;
+			this.refunds  = data.refunds;
+
+			this.calculateSums();
 
 			successFn(data.status);
 		},

@@ -2067,6 +2067,46 @@ class BookingController extends Controller {
 		return Route::dispatch($request);
 	}
 
+	public function postApplyChanges()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
+
+			$parent = Context::get()->bookings()->findOrFail( $booking->parent_id );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Move existing payments and refunds over to new booking's ID
+		DB::table('payments')->where('booking_id', $parent->id)->update(['booking_id' => $booking->id]);
+		DB::table('refunds' )->where('booking_id', $parent->id)->update(['booking_id' => $booking->id]);
+
+		// Update status to original status
+		$booking->status = $parent->status;
+		// Clear parent_id
+		$booking->parent_id = null;
+		// Save new booking to apply null for parent_id (otherwise the dublicate booking will get deleted when the parent gets deleted, because of the foreign key restraints)
+		$booking->updateUniques();
+
+		// Delete old booking record
+		$parent->delete();
+
+		// Remove appended underscore from reference and update new booking (reference can't be updated earlier, because of UNIQUE rule on reference column)
+		$booking->reference = substr($booking->reference, 0, -1);
+		$booking->updateUniques();
+
+		return ['status' => 'OK. Changes applied.',
+			'booking_status'    => $booking->status,
+			'booking_reference' => $booking->reference,
+			'payments'          => $booking->payments,
+			'refunds'           => $booking->refunds
+		];
+	}
+
 	private function moreThan5DaysAgo($date) {
 		$local_time = Helper::localTime();
 		$test_date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
