@@ -48,12 +48,21 @@
 					<h4 class="panel-title">Bookings</h4>
 				</div>
 				<div class="panel-body">
-					<div id="booking-types" class="btn-group col-md-offset-3" role="group">
-						<button id="filter-confirmed" type="button" display="confirmed" class="btn btn-default btn-primary btn-switch">Confirmed</button>
-						<button id="filter-cancelled" type="button" display="cancelled" class="btn btn-default btn-switch">Cancelled</button>
-						<button id="filter-reserved" type="button" display="reserved" class="btn btn-default btn-switch">Reserved</button>
-						<button id="filter-saved" type="button" display="saved" class="btn btn-default btn-switch">Saved</button>
-						<button id="filter-all" type="button" display="all" class="btn btn-default btn-switch">All</button>
+					<div class="text-center">
+						<div id="booking-types" class="btn-group" role="group">
+							<button id="filter-confirmed" type="button" display="confirmed" class="btn btn-default btn-switch btn-primary">
+								<i class="fa fa-check fa-fw"></i> Confirmed</button>
+							<button id="filter-cancelled" type="button" display="cancelled" class="btn btn-default btn-switch">
+								<i class="fa fa-ban fa-fw"></i> Cancelled</button>
+							<button id="filter-reserved"  type="button" display="reserved"  class="btn btn-default btn-switch">
+								<i class="fa fa-clock-o fa-fw"></i> Reserved</button>
+							<button id="filter-saved"     type="button" display="saved"     class="btn btn-default btn-switch">
+								<i class="fa fa-floppy-o fa-fw"></i> Saved</button>
+							<button id="filter-temporary" type="button" display="temporary" class="btn btn-default btn-switch">
+								<i class="fa fa-pencil fa-fw"></i> Edits</button>
+							<button id="filter-all"       type="button" display="all"       class="btn btn-default btn-switch">
+								<i class="fa fa-globe fa-fw"></i> All</button>
+						</div>
 					</div>
 					<div style="margin-bottom:10px"></div>
 					<div id="booking-table-div"></div>
@@ -121,40 +130,51 @@
 
 	<script type="text/x-handlebars-template" id="cancellation-fee-template">
 		<div id="modal-cancellation-fee" class="reveal-modal">
-			<h4>Do you incurr a cancellation fee?</h4>
+			{{#compare status '!==' 'temporary'}}
+				<h4>Do you incurr a cancellation fee?</h4>
 
-			<form class="form cancellation-form">
-				<div class="form-group">
-					<label>
-						<input type="radio" name="thisorthat" value="fee">
-						Yes:
-						<div class="input-group">
-							<span class="input-group-addon">{{currency}}</span>
-							<input type="text" class="form-control" name="cancellation_fee" placeholder="00.00">
-						</div>
-					</label>
-				</div>
-				<div class="form-group">
-					<label>
-						<input type="radio" name="thisorthat" value="percentage">
-						Yes, a percentage:
-						<div class="input-group">
-							<span class="input-group-addon">%</span>
-							<input type="text" class="form-control" name="fee_percentage" placeholder="00.0">
-						</div>
-					</label>
-				</div>
-				<div class="form-group">
-					<label>
-						<input type="radio" name="thisorthat" value="no" checked>
-						No cancellation fee
-					</label>
-				</div>
-				<div class="form-group">
-					<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
-					<button class="btn btn-primary pull-right cancel-booking">Cancel Booking</button>
-				</div>
-			</form>
+				<form class="form cancellation-form">
+					<div class="form-group">
+						<label>
+							<input type="radio" name="thisorthat" value="fee">
+							Yes:
+							<div class="input-group">
+								<span class="input-group-addon">{{currency}}</span>
+								<input type="text" class="form-control" name="cancellation_fee" placeholder="00.00">
+							</div>
+						</label>
+					</div>
+					<div class="form-group">
+						<label>
+							<input type="radio" name="thisorthat" value="percentage">
+							Yes, a percentage:
+							<div class="input-group">
+								<span class="input-group-addon">%</span>
+								<input type="text" class="form-control" name="fee_percentage" placeholder="00.0">
+							</div>
+						</label>
+					</div>
+					<div class="form-group">
+						<label>
+							<input type="radio" name="thisorthat" value="no" checked>
+							No cancellation fee
+						</label>
+					</div>
+					<div class="form-group">
+						<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
+						<button class="btn btn-primary pull-right cancel-booking">Cancel Booking</button>
+					</div>
+				</form>
+			{{else}}
+				<h4>Really discard all changes?</h4>
+
+				<form class="form cancellation-form">
+					<div class="form-group">
+						<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
+						<button class="btn btn-primary pull-right cancel-booking">Discard changes</button>
+					</div>
+				</form>
+			{{/compare}}
 
 			<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 		</div>

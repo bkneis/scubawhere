@@ -148,18 +148,20 @@ Handlebars.registerHelper('editButton', function(id) {
 });
 Handlebars.registerHelper('cancelButton', function() {
 	var disabled = '';
+	var btnText  = 'Cancel';
 
 	if(this.status === 'cancelled')
 		disabled = ' disabled';
 
-	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> Cancel</button>');
+	if(this.status === 'temporary')
+		btnText = 'Discard';
+
+	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', \'' + this.status + '\', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> ' + btnText + '</button>');
 });
 
 //var display;
 
 $(function() {
-
-	var display;
 
 	Customer.getAllCustomers(function(data) {
 		window.customers = _.indexBy(data, 'id');
@@ -168,7 +170,7 @@ $(function() {
 	Booking.getAll(function(data) {
 		// window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(data, function(booking) { return -booking.id; });
-		renderBookingList(window.bookings, display);
+		renderBookingList(window.bookings);
 
 	});
 
@@ -193,24 +195,22 @@ $(function() {
 
 		Booking.filter(params, function success(data) {
 			// Doesn't need sorting, because the server sorts DESC
-			renderBookingList(data, display);
+			renderBookingList(data);
 
 			btn.html('Find Booking');
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0]);
+			if(data.errors) pageMssg(data.errors[0]);
 			btn.html('Find Booking');
 		});
 	});
 
 	$('#find-booking-form').on('reset', function(event) {
-		renderBookingList(window.bookings, display);
+		renderBookingList(window.bookings);
 	});
 
 	$("#booking-types").on('click', ':button', function(){
-		$(".btn-switch").removeClass("btn-primary");
-		display = $(this).attr('display');
-		$("#filter-"+display).addClass("btn-primary");
+		var display = $(this).attr('display');
 		renderBookingList(window.bookings, display);
 	});
 
@@ -252,7 +252,10 @@ function emailCustomer(id) {
 var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 function renderBookingList(bookings, display) {
 
-	if(!display) var display = "confirmed";
+	if(!display) display = "confirmed";
+
+	$(".btn-switch").removeClass("btn-primary");
+	$("#filter-"+display).addClass("btn-primary");
 
 	var results = [];
 
@@ -262,7 +265,7 @@ function renderBookingList(bookings, display) {
 		Booking.prototype.setStatus.call(booking);
 		// console.log(booking);
 		if(display != "all") {
-			if(booking.status == display) return true;
+			if(booking.status === display) return true;
 		}
 		else
 			return true;
@@ -296,12 +299,16 @@ function editBooking(booking_id, self) {
 	$(self).after('<span id="save-loader" class="loader"></span>');
 
 	// Load booking data and redirect to add-booking tab
-	Booking.get(booking_id, function success(object) {
+	Booking.startEditing(booking_id, function success(object) {
 		window.booking      = object;
 		window.booking.mode = 'edit';
 		window.clickedEdit  = true;
 
 		window.location.hash = 'add-booking';
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		if(data.errors) pageMssg(data.errors[0]);
+		$('.loader').remove();
 	});
 }
 
@@ -322,7 +329,7 @@ function addTransaction(booking_id, self) {
 
 var cancellationFeeTemplate  = Handlebars.compile($("#cancellation-fee-template").html());
 
-function cancelBooking(booking_id, self) {
+function cancelBooking(booking_id, booking_status, self) {
 
 	// Set loading indicator
 	var btn = $(self);
@@ -334,8 +341,8 @@ function cancelBooking(booking_id, self) {
 	};
 
 	$('#modalWindows')
-	.append( cancellationFeeTemplate() )     // Create the modal
-	.children('#modal-cancellation-fee')             // Directly find it and use it
+	.append( cancellationFeeTemplate({'status': booking_status}) ) // Create the modal
+	.children('#modal-cancellation-fee')            // Directly find it and use it
 	.data('params', params)                         // Assign the eventObject to the modal DOM element
 	.reveal({                                       // Open modal window | Options:
 		animation: 'fadeAndPop',                    // fade, fadeAndPop, none
@@ -397,7 +404,7 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	},
 	function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0]);
+		if(data.errors) pageMssg(data.errors[0]);
 		btn.html('Cancel Booking');
 	});
 });
