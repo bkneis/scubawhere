@@ -272,6 +272,13 @@ Handlebars.registerHelper('trimSeconds', function(date) {
 	return date.substring(0, date.length - 3);
 });
 
+Handlebars.registerHelper('reference', function() {
+	if(this.status === 'temporary')
+		return this.reference.substr(0, this.reference.length - 1);
+
+	return this.reference;
+})
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
