@@ -194,6 +194,7 @@ class BookingController extends Controller {
 	public function getRecent()
 	{
 		return Context::get()->bookings()
+			->where('status', '!=', 'temporary')
 			->with(
 				'agent',
 				'lead_customer',
@@ -249,7 +250,8 @@ class BookingController extends Controller {
 		if(!empty($date))
 			$date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
 
-		$bookings = Context::get()->bookings()->with(
+		$bookings = Context::get()->bookings()
+			->with(
 				'agent',
 				'lead_customer',
 					'lead_customer.country',
@@ -1871,7 +1873,7 @@ class BookingController extends Controller {
 		}
 
 		// Bookings that have not been reserved, confirmed, cancelled or are on hold can be safely deleted
-		if($booking->status === null || in_array($booking->status, ['saved', 'initialised', 'expired']))
+		if($booking->status === null || in_array($booking->status, ['saved', 'initialised', 'expired', 'temporary']))
 		{
 			$booking->delete();
 			return array('status' => 'OK. Booking cancelled.');

@@ -79,6 +79,10 @@ Handlebars.registerHelper('statusIcon', function() {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
+	else if(this.status === 'temporary') {
+		icon    = 'fa-pencil';
+		tooltip = 'In editing mode';
+	}
 
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
 });

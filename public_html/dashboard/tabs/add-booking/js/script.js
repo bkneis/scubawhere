@@ -237,6 +237,10 @@ function statusIcon(booking) {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
 	}
+	else if(booking.status === 'temporary') {
+		icon    = 'fa-pencil';
+		tooltip = 'In editing mode';
+	}
 	else {
 		icon = 'fa-minus';
 	}
