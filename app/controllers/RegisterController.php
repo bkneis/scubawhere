@@ -119,11 +119,11 @@ class RegisterController extends Controller {
 			])->send('New RMS registration! :smiley:');
 		}
 
-		$originalInput = Request::input();
+		// $originalInput = Request::input();
 		$request = Request::create('password/remind', 'POST', array('email' => $user->email, 'welcome' => 1));
 		Request::replace($request->input());
 		return Route::dispatch($request);
-		Request::replace($originalInput);
+		// Request::replace($originalInput);
 	}
 
 	public function getExists()

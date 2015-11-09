@@ -18,7 +18,7 @@ var Booking = function(data) {
 	this.sums              = {};
 
 	this.currentTab        = null;
-	this.mode              = 'edit';
+	this.mode              = 'view';
 
 	if(data !== undefined) {
 		$.extend(this, data);
@@ -39,7 +39,7 @@ var Booking = function(data) {
 /**
  * Takes the required booking's ID and calls the success callback with a Booking object as its only parameter
  *
- * @param {integer} id The ID of te required session
+ * @param {integer} id The ID of the wanted booking
  * @param {function} successFn Recieves new Booking object as first and only parameter
  */
 Booking.get = function(id, successFn) {
@@ -207,6 +207,8 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 			this.source          = params.source || null;
 			this.agent_id        = params.agent_id || null;
 			this.agent_reference = params.agent_reference || null;
+
+			this.mode = 'edit';
 
 			successFn(data.status);
 		},

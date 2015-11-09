@@ -280,7 +280,7 @@ function viewBooking(booking_id, self) {
 	// Load booking data and redirect to add-booking tab
 	Booking.get(booking_id, function success(object) {
 		window.booking      = object;
-		window.booking.mode = 'view';
+		// window.booking.mode = 'view'; // Should be default behavior
 		window.clickedEdit  = true;
 
 		window.location.hash = 'add-booking';
