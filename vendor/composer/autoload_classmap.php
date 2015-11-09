@@ -39,6 +39,7 @@ return array(
     'AddPackagefacadeIdToAddonBookingdetailAndAccommodationBookingTable' => $baseDir . '/app/database/migrations/2015_03_07_205924_add_packagefacade_id_to_addon_bookingdetail_and_accommodation_booking_table.php',
     'AddParentColumnToAddonsTable' => $baseDir . '/app/database/migrations/2014_11_21_233944_add_parent_column_to_addons_table.php',
     'AddParentIdColumnToTicketsPackagesAndAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_21_224408_add_parent_id_column_to_tickets_packages_and_accommodations_table.php',
+    'AddParentIdToBookingsTable' => $baseDir . '/app/database/migrations/2015_11_07_123530_add_parent_id_to_bookings_table.php',
     'AddPickUpDateFieldToBookingsTable' => $baseDir . '/app/database/migrations/2014_11_27_114937_add_pick_up_date_field_to_bookings_table.php',
     'AddPickUpsTable' => $baseDir . '/app/database/migrations/2015_10_29_130004_add_pick_ups_table.php',
     'AddQuantityColumnToAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_14_010948_add_quantity_column_to_addon_bookingdetail_pivot_table.php',

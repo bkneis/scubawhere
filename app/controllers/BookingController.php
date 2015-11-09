@@ -1994,6 +1994,77 @@ class BookingController extends Controller {
 		return $booking->refunds()->with('paymentgateway')->get();
 	}
 
+	public function postStartEditing()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Dublicate bookings table entry to get new bookingID
+		$old_booking = DB::table('bookings')->find($booking->id);
+
+		unset($old_booking->id);
+		$old_booking->status    = 'temporary';
+		$old_booking->parent_id = $booking->id;
+		$old_booking->reference .= '_'; // Append underscore to booking reference so that it goes with the UNIQUE rule on the reference column
+
+		$new_booking_id = DB::table('bookings')->insertGetId((array) $old_booking);
+
+		// Dublicate entries in booking_details, addon_bookingdetail, accommodation_booking and pick_ups
+		$details = DB::table('booking_details')->where('booking_id', $booking->id)->get();
+		$detail_dict = [];
+		foreach($details as $detail)
+		{
+			$temp = $detail->id;
+
+			unset($detail->id);
+			$detail->booking_id = $new_booking_id;
+
+			$new_detail_id = DB::table('booking_details')->insertGetId((array) $detail);
+
+			$detail_dict[$temp] = $new_detail_id;
+		}
+
+		$addons = DB::table('addon_bookingdetail')->whereIn('bookingdetail_id', array_keys($detail_dict))->get();
+		foreach($addons as &$addon)
+		{
+			$addon->bookingdetail_id = $detail_dict[$addon->bookingdetail_id];
+
+			$addon = (array) $addon;
+		}
+		DB::table('addon_bookingdetail')->insert($addons);
+
+		$accommodations = DB::table('accommodation_booking')->where('booking_id', $booking->id)->get();
+		foreach($accommodations as &$accommodation)
+		{
+			$accommodation->booking_id = $new_booking_id;
+
+			$accommodation = (array) $accommodation;
+		}
+		DB::table('accommodation_booking')->insert($accommodations);
+
+		$pickups = DB::table('pick_ups')->where('booking_id', $booking->id)->get();
+		foreach($pickups as &$pickup)
+		{
+			unset($pickup->id);
+			$pickup->booking_id = $new_booking_id;
+
+			$pickup = (array) $pickup;
+		}
+		DB::table('pick_ups')->insert($pickups);
+
+		// Fetch and return the dublicated booking
+		$request = Request::create('booking', 'GET', array('id' => $new_booking_id));
+		Request::replace($request->input());
+		return Route::dispatch($request);
+	}
+
 	private function moreThan5DaysAgo($date) {
 		$local_time = Helper::localTime();
 		$test_date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
