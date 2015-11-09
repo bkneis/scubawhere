@@ -2008,6 +2008,17 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
 		}
 
+		if($booking->status === 'temporary')
+		{
+			// Return the dublicated booking
+			Request::replace(['id' => $booking->id]);
+			return $this->getIndex();
+		}
+
+		// Check if a dublicate is already in the DB
+		if(DB::table('bookings')->where('reference', $booking->reference . '_')->exists())
+			return Response::json(['errors' => ['This booking is already being edited. Cancel the edit and then try again.']], 412); // 412 Precondition Failed
+
 		// Dublicate bookings table entry to get new bookingID
 		$old_booking = DB::table('bookings')->find($booking->id);
 
@@ -2015,6 +2026,7 @@ class BookingController extends Controller {
 		$old_booking->status    = 'temporary';
 		$old_booking->parent_id = $booking->id;
 		$old_booking->reference .= '_'; // Append underscore to booking reference so that it goes with the UNIQUE rule on the reference column
+		$old_booking->updated_at = date('Y-m-d H:i:s');
 
 		$new_booking_id = DB::table('bookings')->insertGetId((array) $old_booking);
 
@@ -2040,7 +2052,8 @@ class BookingController extends Controller {
 
 			$addon = (array) $addon;
 		}
-		DB::table('addon_bookingdetail')->insert($addons);
+		if(!empty($addons))
+			DB::table('addon_bookingdetail')->insert($addons);
 
 		$accommodations = DB::table('accommodation_booking')->where('booking_id', $booking->id)->get();
 		foreach($accommodations as &$accommodation)
@@ -2049,7 +2062,8 @@ class BookingController extends Controller {
 
 			$accommodation = (array) $accommodation;
 		}
-		DB::table('accommodation_booking')->insert($accommodations);
+		if(!empty($accommodations))
+			DB::table('accommodation_booking')->insert($accommodations);
 
 		$pickups = DB::table('pick_ups')->where('booking_id', $booking->id)->get();
 		foreach($pickups as &$pickup)
@@ -2059,12 +2073,12 @@ class BookingController extends Controller {
 
 			$pickup = (array) $pickup;
 		}
-		DB::table('pick_ups')->insert($pickups);
+		if(!empty($pickups))
+			DB::table('pick_ups')->insert($pickups);
 
 		// Fetch and return the dublicated booking
-		$request = Request::create('booking', 'GET', array('id' => $new_booking_id));
-		Request::replace($request->input());
-		return Route::dispatch($request);
+		Request::replace(['id' => $new_booking_id]);
+		return $this->getIndex();
 	}
 
 	public function postApplyChanges()
