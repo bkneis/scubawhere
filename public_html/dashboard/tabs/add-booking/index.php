@@ -21,7 +21,7 @@
 		{{/compare}}
 	</script>
 
-	<div class="row">
+	<div class="row" id="margin-bottom-needed">
 		<div class="col-md-12">
 			<ul class="nav nav-wizard" role="tablist">
 				<li role="presentation" class="active">

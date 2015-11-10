@@ -2366,6 +2366,9 @@ $(document).ready(function() {
 
 		if(booking) {
 			$('#booking-toolbar').html(toolbarTemplate({'booking': booking}));
+
+			if(booking.status === 'temporary' || booking.mode === 'view')
+				$('#margin-bottom-needed').css('margin-bottom', '50px');
 		}
 
 		handlePrevNextButtons();

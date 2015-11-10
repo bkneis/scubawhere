@@ -475,8 +475,6 @@
 						</center>
 					</td>
 				</tr>
-			{{else}}
-				<tr><td>&nbsp;</td></tr>
 			{{/compare}}
 		</table>
 	</script>
