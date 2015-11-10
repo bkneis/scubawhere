@@ -136,6 +136,9 @@ Handlebars.registerHelper('addTransactionButton', function(id) {
 	if(this.agent && this.agent.terms === 'fullamount')
 		return '';
 
+	if(this.status === 'temporary')
+		return '';
+
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
 Handlebars.registerHelper('viewButton', function(id) {
