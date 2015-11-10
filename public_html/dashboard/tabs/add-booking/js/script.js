@@ -581,7 +581,7 @@ window.promises.loadedTickets.done(function() {
 		pageMssg('<b>' + window.tickets[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-ticket', function() {
+	$('#booking-summary-column').on('click', '.remove-ticket', function() {
 		var id = $(this).data('id');
 
 		//Lower quantity, if last ticket, remove from selected tickets.
@@ -637,7 +637,7 @@ window.promises.loadedPackages.done(function() {
 		pageMssg('<b>' + window.packages[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-package', function() {
+	$('#booking-summary-column').on('click', '.remove-package', function() {
 		var UID = $(this).data('uid');
 		var id  = booking.selectedPackages[UID].id;
 
@@ -679,7 +679,7 @@ window.promises.loadedCourses.done(function() {
 		pageMssg('<b>' + window.courses[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-course', function() {
+	$('#booking-summary-column').on('click', '.remove-course', function() {
 		var UID = $(this).data('uid');
 		var id  = booking.selectedCourses[UID].id;
 
@@ -859,7 +859,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
 });
 
-$('#booking-summary').on('click', '.remove-customer', function() {
+$('#booking-summary-column').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
 
 	var details = _.filter(booking.bookingdetails, function(detail) {
@@ -1023,7 +1023,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 	form.find('#country_id').select2("val", "");
 });
 
-$('#booking-summary').on('click', '.lead-customer', function() {
+$('#booking-summary-column').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
 		pageMssg(status, 'success');
 		drawBasket();
@@ -1422,7 +1422,7 @@ function drawSessionTicketsList() {
 	$('#session-filters').submit();
 }
 
-$('#booking-summary').on('click', '.unassign-session', function() {
+$('#booking-summary-column').on('click', '.unassign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Unassigning...');
 
@@ -1737,7 +1737,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	});
 });
 
-$('#booking-summary').on('click', '.remove-addon', function() {
+$('#booking-summary-column').on('click', '.remove-addon', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
@@ -1990,7 +1990,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	});
 });
 
-$('#booking-summary').on('click', '.remove-accommodation', function() {
+$('#booking-summary-column').on('click', '.remove-accommodation', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
@@ -2435,24 +2435,6 @@ $(document).ready(function() {
 
 	$('#wrapper').on('click', '.list-group-radio', function() {
 		listGroupRadio($(this));
-	});
-
-	$('#booking-summary').on('click', '.accordion-heading', function() {
-		if($(this).find('.expand-icon').hasClass('fa-plus-square-o')) {
-			$(this).find('.expand-icon').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-		}else{
-			$(this).find('.expand-icon').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-		}
-	});
-
-	$('#booking-summary').on('click', '.list-expand', function() {
-		if($(this).hasClass('fa-plus-square-o')) {
-			$(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideDown();
-		}else{
-			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideUp();
-		}
 	});
 
 	$('.alert-container').remove();
