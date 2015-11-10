@@ -1022,8 +1022,21 @@ Booking.prototype.setStatus = function() {
 		case 'cancelled': this.cancelled = true; break;
 		default: break;
 	}
-}
+};
 
+Booking.prototype.checkUnassigned = function() {
+	if(_.size(this.selectedTickets)) return true;
+
+	if(_.size(this.selectedCourses) && _.find(this.selectedCourses, function(course) {return course.tickets.length || course.trainings.length})) return true;
+
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return package.tickets.length})) return true;
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return _.size(package.courses) && _.find(package.courses, function(course) {return course.tickets.length || course.trainings.length})})) return true;
+
+	// Next, check for leftover addons or accommodations in selectedPackages
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return package.addons.length || package.accommodations.length})) return true;
+
+	return false;
+};
 
 /*
  ********************************

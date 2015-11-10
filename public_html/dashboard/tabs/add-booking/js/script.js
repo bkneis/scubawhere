@@ -2296,6 +2296,10 @@ $('#summary-tab').on('click', '.save-booking', function() {
 });
 
 $('#summary-tab').on('click', '.confirm-booking', function() {
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
 
 	var params = {};
 	params._token = window.token;
@@ -2314,6 +2318,11 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 
 $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	event.preventDefault();
+
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
 
 	var params = $(this).serializeObject();
 
@@ -2412,6 +2421,11 @@ $(document).ready(function() {
 	});
 
 	$('#booking-toolbar').on('click', '.apply-booking', function() {
+		if(booking.checkUnassigned()) {
+			pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+			return false;
+		}
+
 		var btn = $(this);
 		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
 
@@ -2524,6 +2538,11 @@ function friendlyDateNoTime(date) {
 }
 
 function addTransaction() {
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
+
 	window.clickedEdit = true;
 	window.location.hash = 'add-transaction';
 }
