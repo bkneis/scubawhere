@@ -25,7 +25,7 @@
 				{{#each selectedTickets}}
 					<p>
 						<i class="fa fa-ticket fa-fw"></i>&nbsp; {{{name}}} <span class="badge badge-default small">{{qty}}</span>
-						<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
+						{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-ticket pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 					</p>
 				{{/each}}
 			</li>
@@ -45,7 +45,7 @@
 						</div>
 						<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<a href="javascript:void(0);" class="remove-package pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>
+								{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-package pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 								{{#if courses}}
 									<strong>Courses</strong>
 									{{#each courses}}
@@ -99,7 +99,7 @@
 						</div>
 						<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
-								<a href="javascript:void(0);" class="remove-course pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>
+								{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-course pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 								{{#if trainings}}
 									<strong>Class</strong>
 									{{#each trainings}}
@@ -130,9 +130,9 @@
 					    {{#isLead this}}
 							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-warning">LEAD</span></small>
 						{{else}}
-							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>
+							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}}{{#compare ../mode 'edit'}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>{{/compare}}
 						{{/isLead}}
-						<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>
+						{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 					</p>
 				{{/each}}
 			</li>
@@ -159,9 +159,9 @@
 								<div class="panel-body">
 									<p>
 										<strong>{{{customer.firstname}}} {{{customer.lastname}}}</strong>
-										<a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}">
+										{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="unassign-session pull-right" title="Unassign Session" data-id="{{id}}">
 											<i class="fa fa-times fa-lg"></i>
-										</a>
+										</a>{{/compare}}
 									</p>
 									{{#if packagefacade}}
 										<p class="bg-warning">
@@ -228,7 +228,7 @@
 
 															<span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
 
-															{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}" data-packagefacade-id="{{pivot.packagefacade_id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}
+															{{#compare ../mode 'edit'}}{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}" data-packagefacade-id="{{pivot.packagefacade_id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}{{/compare}}
 														</p>
 													{{/each}}
 												</div>
@@ -257,7 +257,7 @@
 							</div>
 							<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}" class="panel-collapse collapse" role="tabpanel">
 								<div class="panel-body">
-									<a href="javascript:void(0);" class="remove-accommodation pull-right" title="Remove Accommodation" data-id="{{id}}" data-customer-id="{{pivot.customer_id}}" data-start="{{pivot.start}}"><i class="fa fa-times fa-lg"></i></a>
+									{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-accommodation pull-right" title="Remove Accommodation" data-id="{{id}}" data-customer-id="{{pivot.customer_id}}" data-start="{{pivot.start}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 
 									<p><i class="fa fa-calendar fa-fw"></i> {{friendlyDateNoTime pivot.start}} - {{friendlyDateNoTime pivot.end}}</p>
 
