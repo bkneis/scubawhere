@@ -277,7 +277,11 @@ Handlebars.registerHelper('reference', function() {
 		return this.reference.substr(0, this.reference.length - 1);
 
 	return this.reference;
-})
+});
+
+Handlebars.registerHelper('fullPrice', function() {
+	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
+});
 
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
