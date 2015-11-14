@@ -1330,20 +1330,24 @@ function submitAddDetail(params, data) {
 		}
 
 		// Reduce selected quantity
-		var parentPointer = booking;
-		var itemPointer = null;
+		var parentPointer       = booking;
+		var parentParentPointer = booking;
 		if(packageUID) {
 			// It's a top-level package
 			parentPointer = parentPointer.selectedPackages[packageUID];
 		}
 		if(data.parent === 'course') {
-			if(data.parentParent)
+			if(data.parentParent) {
 				// It's a course in a package
-				parentPointer = parentPointer.courses[data.parentUid];
+				parentParentPointer = parentPointer;
+				parentPointer       = parentPointer.courses[data.parentUid];
+			}
 			else
 				// It's a top-level course
 				parentPointer = parentPointer.selectedCourses[data.parentUid];
 		}
+
+		var itemPointer = null;
 		if(data.type === 'ticket') {
 			if(data.parent)
 				// It's a ticket in a course or package
@@ -1381,7 +1385,33 @@ function submitAddDetail(params, data) {
 		}
 
 		// Check if parent still contains something unassigned, otherwise remove parent
-		// TODO ... need parentParentPointer... :$
+		if(parentPointer.reference === undefined) {
+			// Is package or course
+
+			if(parentParentPointer.reference !== undefined) {
+				// Is top-level
+				if(packageUID) {
+					// Check if package is empty yet
+					if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+						delete booking.selectedPackages[parentPointer.UID];
+				}
+				else {
+					if(parentPointer.tickets.length === 0 && parentPointer.trainings.length === 0)
+						delete booking.selectedCourses[parentPointer.UID];
+				}
+			}
+			else {
+				// Is nested course in package
+
+				// Check if course is empty
+				if(parentPointer.tickets.length === 0 && parentPointer.trainings.length === 0)
+					delete parentParentPointer.courses[parentPointer.UID];
+
+				// Now check if package is empty
+				if(parentParentPointer.accommodations.length === 0 && parentParentPointer.addons.length === 0 && parentParentPointer.tickets.length === 0 && _.size(parentParentPointer.courses) === 0)
+					delete booking.selectedPackages[parentParentPointer.UID];
+			}
+		}
 
 		pageMssg(status, 'success');
 
@@ -1436,74 +1466,42 @@ $('#booking-summary-column').on('click', '.unassign-session', function() {
 
 	booking.removeDetail(params, function success(status, detail) {
 		// First, take care of attached addons that need to be re-added to a selectedPackage
-		if(detail.ticket) reAddPackagedAddons(detail.addons);
+		if(detail.ticket) reAddPackagedAddons(detail.addons, detail.packagefacade.package);
 
 		// Set up variable that is assigned in IF blocks, but is needed afterwards when checking for still assigned course items
 		var relatedCourse = undefined;
 
 		// Re-add a removed item to selectedTickets/selectedCourses/selectedPackages
-		do { // Enclose the whole procedure in a one-time do-while loop to be able to "break" out of it at any time.
-			if(!detail.packagefacade) {
-				// Not packaged
-				if(!detail.course && detail.ticket) {
-					// Is standalone ticket
-					if(booking.selectedTickets[detail.ticket.id]) {
-						booking.selectedTickets[detail.ticket.id].qty++;
-					}
-					else {
-						detail.ticket.qty = 1;
-						booking.selectedTickets[detail.ticket.id] = detail.ticket;
-					}
+		if(!detail.packagefacade) {
+			// Not packaged
+			if(!detail.course && detail.ticket) {
+				// Is standalone ticket
+				if(booking.selectedTickets[detail.ticket.id]) {
+					booking.selectedTickets[detail.ticket.id].qty++;
 				}
 				else {
-					// Is course
-					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
-
-					relatedCourse = _.find(booking.selectedCourses, function(course) {
-						return course.identifier === identifier;
-					});
-
-					if(relatedCourse === undefined) break;
-
-					if(detail.ticket) {
-						// Is ticket in course
-						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
-							return ticket.id == detail.ticket.id;
-						});
-
-						if(existingTicket !== undefined)
-							existingTicket.qty++;
-						else {
-							detail.ticket.qty = 1;
-							relatedCourse.tickets.push(detail.ticket);
-						}
-					}
-					else {
-						// Is class in course
-						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training.id;
-						});
-
-						if(existingTraining !== undefined)
-							existingTraining.qty++;
-						else {
-							detail.training.qty = 1;
-							relatedCourse.trainings.push(detail.training);
-						}
-					}
+					detail.ticket.qty = 1;
+					booking.selectedTickets[detail.ticket.id] = detail.ticket;
 				}
 			}
 			else {
-				// Is packaged
-				var relatedPackage = _.find(booking.selectedPackages, function(package) {
-					return package.packagefacade == detail.packagefacade.id;
+				// Is course
+				var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
+
+				relatedCourse = _.find(booking.selectedCourses, function(course) {
+					return course.identifier === identifier;
 				});
 
-				if(relatedPackage === undefined) break;
+				if(relatedCourse === undefined) {
+					relatedCourse = generateEmptyCourse(identifier);
 
-				if(!detail.course && detail.ticket) {
-					// Is packaged ticket
-					var existingTicket = _.find(relatedPackage.tickets, function(ticket) {
+					// Append to booking.selectedPackages
+					booking.selectedCourses[relatedCourse.UID] = relatedCourse;
+				}
+
+				if(detail.ticket) {
+					// Is ticket in course
+					var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
 						return ticket.id == detail.ticket.id;
 					});
 
@@ -1511,47 +1509,92 @@ $('#booking-summary-column').on('click', '.unassign-session', function() {
 						existingTicket.qty++;
 					else {
 						detail.ticket.qty = 1;
-						relatedPackage.tickets.push(detail.ticket);
+						relatedCourse.tickets.push(detail.ticket);
 					}
 				}
 				else {
-					// Is course
-					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
-
-					relatedCourse = _.find(relatedPackage.courses, function(course) {
-						return course.identifier === identifier;
+					// Is class in course
+					var existingTraining = _.find(relatedCourse.trainings, function(training) {
+						return training.id == detail.training.id;
 					});
 
-					if(relatedCourse === undefined) break;
-
-					if(detail.ticket) {
-						// Is ticket in course in package
-						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
-							return ticket.id == detail.ticket.id;
-						});
-
-						if(existingTicket !== undefined)
-							existingTicket.qty++;
-						else {
-							detail.ticket.qty = 1;
-							relatedCourse.tickets.push(detail.ticket);
-						}
-					}
+					if(existingTraining !== undefined)
+						existingTraining.qty++;
 					else {
-						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training_session.training.id;
-						});
-
-						if(existingTraining !== undefined)
-							existingTraining.qty++;
-						else {
-							detail.training_session.training.qty = 1;
-							relatedCourse.trainings.push(detail.training_session.training);
-						}
+						detail.training.qty = 1;
+						relatedCourse.trainings.push(detail.training);
 					}
 				}
 			}
-		} while(false);
+		}
+		else {
+			// Is packaged
+			var relatedPackage = _.find(booking.selectedPackages, function(package) {
+				return package.packagefacade == detail.packagefacade.id;
+			});
+
+			if(relatedPackage === undefined) {
+				relatedPackage = generateEmptyPackage(detail.packagefacade.id, detail.packagefacade.package);
+
+				// Append to booking.selectedPackages
+				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
+			}
+
+			if(!detail.course && detail.ticket) {
+				// Is packaged ticket
+				var existingTicket = _.find(relatedPackage.tickets, function(ticket) {
+					return ticket.id == detail.ticket.id;
+				});
+
+				if(existingTicket !== undefined)
+					existingTicket.qty++;
+				else {
+					detail.ticket.qty = 1;
+					relatedPackage.tickets.push(detail.ticket);
+				}
+			}
+			else {
+				// Is course
+				var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
+
+				relatedCourse = _.find(relatedPackage.courses, function(course) {
+					return course.identifier === identifier;
+				});
+
+				if(relatedCourse === undefined) {
+					relatedCourse = generateEmptyCourse(identifier);
+
+					// Append to booking.selectedPackages
+					relatedPackage.courses[relatedCourse.UID] = relatedCourse;
+				}
+
+				if(detail.ticket) {
+					// Is ticket in course in package
+					var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
+						return ticket.id == detail.ticket.id;
+					});
+
+					if(existingTicket !== undefined)
+						existingTicket.qty++;
+					else {
+						detail.ticket.qty = 1;
+						relatedCourse.tickets.push(detail.ticket);
+					}
+				}
+				else {
+					var existingTraining = _.find(relatedCourse.trainings, function(training) {
+						return training.id == detail.training.id;
+					});
+
+					if(existingTraining !== undefined)
+						existingTraining.qty++;
+					else {
+						detail.training_session.training.qty = 1;
+						relatedCourse.trainings.push(detail.training_session.training);
+					}
+				}
+			}
+		}
 
 		// Check if, when a course, all tickets/training-sessions have been unassigned
 		// and if so, release the course so it can be assigned to other customers
@@ -1682,15 +1725,21 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 
 	booking.addAddon(params, function success(status) {
 		// Reduce qty
-		for(var i = 0; i < booking.selectedPackages[addon.data('packageUid')].addons.length; i++) {
-			if(booking.selectedPackages[addon.data('packageUid')].addons[i].id == params.addon_id) {
-				booking.selectedPackages[addon.data('packageUid')].addons[i].qty--;
+		var parentPointer = booking.selectedPackages[addon.data('packageUid')];
+
+		for(var i = 0; i < parentPointer.addons.length; i++) {
+			if(parentPointer.addons[i].id == params.addon_id) {
+				parentPointer.addons[i].qty--;
 
 				// Check if qty is now 0, and if so remove the addon from the array
-				if(booking.selectedPackages[addon.data('packageUid')].addons[i].qty === 0)
-					booking.selectedPackages[addon.data('packageUid')].addons.splice(i, 1);
+				if(parentPointer.addons[i].qty === 0)
+					parentPointer.addons.splice(i, 1);
 			}
 		}
+
+		// Check if package is empty yet
+		if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+			delete booking.selectedPackages[parentPointer.UID];
 
 		booking.store();
 
@@ -1743,7 +1792,7 @@ $('#addon-tab').on('click', '.add-addon', function() {
 
 $('#booking-summary-column').on('click', '.remove-addon', function() {
 	var btn = $(this);
-	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
+	btn.html('<i class="fa fa-cog fa-lg fa-spin"></i>');
 
 	var params = {};
 	params._token           = window.token;
@@ -1754,7 +1803,7 @@ $('#booking-summary-column').on('click', '.remove-addon', function() {
 
 	booking.removeAddon(params, function success(status, removedAddon) {
 		// If the addon was packaged, re-add it to the selected package (if it exists)
-		reAddPackagedAddons([removedAddon]);
+		reAddPackagedAddons([removedAddon], null, params.bookingdetail_id);
 
 		pageMssg(status, 'success');
 
@@ -1763,11 +1812,11 @@ $('#booking-summary-column').on('click', '.remove-addon', function() {
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		if(data.errors) pageMssg(data.errors[0], 'danger');
-		btn.html('Remove');
+		btn.html('<i class="fa fa-times fa-lg"></i>');
 	});
 });
 
-function reAddPackagedAddons(removedAddons) {
+function reAddPackagedAddons(removedAddons, package, bookingdetail_id) {
 	_.each(removedAddons, function(removedAddon) {
 		if(removedAddon.compulsory === 1) return;
 
@@ -1776,24 +1825,63 @@ function reAddPackagedAddons(removedAddons) {
 				return package.packagefacade == removedAddon.pivot.packagefacade_id;
 			});
 
-			if(relatedPackage !== undefined) {
-				// Check if the addon already exists in the package
-				var existingAddon = _.find(relatedPackage.addons, function(addon) {
-					return removedAddon.id == addon.id;
-				});
-
-				if(existingAddon !== undefined) {
-					existingAddon.qty += removedAddon.pivot.quantity;
+			if(relatedPackage === undefined) {
+				// When package is passed, just use generateEmptyPackage()
+				// This is the case when a bookingdetail is removed that included addons
+				if(package) {
+					relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, package);
 				}
 				else {
-					removedAddon.qty = removedAddon.pivot.quantity;
-					relatedPackage.addons.push(removedAddon);
+					// Find bookingdetail and get package from it
+					// This is the case when just the addon is removed
+					relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, _.find(booking.bookingdetails, function(detail) {
+						return detail.id == bookingdetail_id;
+					}).packagefacade.package);
 				}
+				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
+			}
 
-				updatePackagedAddonsList();
+			// Check if the addon already exists in the package
+			var existingAddon = _.find(relatedPackage.addons, function(addon) {
+				return removedAddon.id == addon.id;
+			});
+
+			if(existingAddon !== undefined) {
+				existingAddon.qty += removedAddon.pivot.quantity;
+			}
+			else {
+				removedAddon.qty = removedAddon.pivot.quantity;
+				relatedPackage.addons.push(removedAddon);
 			}
 		}
 	});
+
+	updatePackagedAddonsList();
+}
+
+function generateEmptyPackage(packagefacade_id, package) {
+	package = $.extend(true, {}, package);
+
+	// Add packagefacade_id to the package object
+	package.packagefacade = packagefacade_id;
+	package.UID           = randomString();
+	package               = $.extend(package, {accommodations: [], addons: [], courses: {}, tickets: []});
+
+	return package;
+}
+
+function generateEmptyCourse(identifier) {
+	var course_id = identifier.split('-')[2];
+
+	// Clone course object from window.courses and empty course of all tickets & classes
+	var course = $.extend(true, {}, window.courses[course_id]);
+
+	// Generate UID and return (don't append to booking.selectedCourses, as the course may be needed to be injected as a child of a package)
+	course.identifier = identifier;
+	course.UID        = randomString();
+	course            = $.extend(course, {tickets: [], trainings: []});
+
+	return course;
 }
 
 window.promises.loadedAccommodations.done(function() {
@@ -1943,17 +2031,23 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 		var quantity = moment(params.end).diff(moment(params.start), 'days');
 
 		// Reduce qty
-		for(var i = 0; i < booking.selectedPackages[btn.data('packageUid')].accommodations.length; i++) {
-			if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].id == params.accommodation_id) {
-				booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty -= quantity;
+		var parentPointer = booking.selectedPackages[btn.data('packageUid')];
+
+		for(var i = 0; i < parentPointer.accommodations.length; i++) {
+			if(parentPointer.accommodations[i].id == params.accommodation_id) {
+				parentPointer.accommodations[i].qty -= quantity;
 
 				// Check if qty is now 0, and if so remove the accommodation from the array
-				if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty === 0)
-					booking.selectedPackages[btn.data('packageUid')].accommodations.splice(i, 1);
+				if(parentPointer.accommodations[i].qty === 0)
+					parentPointer.accommodations.splice(i, 1);
 
 				break;
 			}
 		}
+
+		// Check if package is empty yet
+		if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+			delete booking.selectedPackages[parentPointer.UID];
 
 		booking.store();
 
@@ -2008,31 +2102,36 @@ $('#booking-summary-column').on('click', '.remove-accommodation', function() {
 	params.start            = $(this).data('start');
 
 	booking.removeAccommodation(params, function success(status, removedAccommodation) {
-		// If the accommodation was packaged, re-add it to the selected package (if it exists)
+		// If the accommodation was packaged, re-add it to the selected package
 		if(removedAccommodation.pivot.packagefacade_id) {
 			var relatedPackage = _.find(booking.selectedPackages, function(package) {
 				return package.packagefacade == removedAccommodation.pivot.packagefacade_id;
 			});
 
-			if(relatedPackage !== undefined) {
-				// Check if the accommodations already exists in the package
-				var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
-					return removedAccommodation.id == accommodations.id;
-				});
+			if(relatedPackage === undefined) {
+				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id);
 
-				// Calculate how many nights got removed
-				var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
-
-				if(existingAccommodation !== undefined) {
-					existingAccommodation.qty += quantity;
-				}
-				else {
-					removedAccommodation.qty = quantity;
-					relatedPackage.accommodations.push(removedAccommodation);
-				}
-
-				updatePackagedAccommodationsList();
+				// Append to booking.selectedPackages
+				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
 			}
+
+			// Check if the accommodations already exists in the package
+			var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
+				return removedAccommodation.id == accommodations.id;
+			});
+
+			// Calculate how many nights got removed
+			var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
+
+			if(existingAccommodation !== undefined) {
+				existingAccommodation.qty += quantity;
+			}
+			else {
+				removedAccommodation.qty = quantity;
+				relatedPackage.accommodations.push(removedAccommodation);
+			}
+
+			updatePackagedAccommodationsList();
 		}
 
 		booking.store();
@@ -2413,6 +2512,9 @@ $(document).ready(function() {
 		if(confirm('Really discard all changes to this booking?'))
 			booking.cancel({_token: window.token}, function success(status) {
 				pageMssg('Ok, all changes have been discarded.', 'success');
+
+				// Remove local data
+				booking.clearStorage();
 
 				window.location.hash = '#manage-bookings';
 			}, function error(xhr) {

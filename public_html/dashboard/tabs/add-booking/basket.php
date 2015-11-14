@@ -223,12 +223,12 @@
 															{{#unless pivot.packagefacade_id}}
 																{{currency}} {{decimal_price}}
 															{{else}}
-																<i class="fa fa-tags"></i>
+																<i class="fa fa-tags" title="Belongs to a package"></i>
 															{{/unless}}
 
 															<span class="badge badge-default"><small>{{pivot.quantity}}</small></span>
 
-															{{#compare ../mode 'edit'}}{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{../../id}}" data-packagefacade-id="{{pivot.packagefacade_id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}{{/compare}}
+															{{#compare ../../../mode 'edit'}}{{#unless compulsory}}<a class="remove-addon pull-right" href="javascript:void(0);" title="Remove Addon" data-id="{{id}}" data-bookingdetail-id="{{pivot.bookingdetail_id}}" data-packagefacade-id="{{pivot.packagefacade_id}}"><i class="fa fa-times fa-lg"></i></a>{{else}} <small>(compulsory)</small>{{/unless}}{{/compare}}
 														</p>
 													{{/each}}
 												</div>

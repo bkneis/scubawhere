@@ -202,6 +202,15 @@ Booking.prototype.loadStorage = function() {
 };
 
 /**
+ * Remove saved UI state from LocalStorage for this booking
+ */
+Booking.prototype.clearStorage = function() {
+	if(typeof window.basil === 'undefined') Booking.initiateStorage();
+
+	window.basil.remove('booking_' + this.id);
+};
+
+/**
  * Initate a booking with either the 'source' of the booking or the 'agent_id'.
  * Source must be one of (telephone, email, facetoface).
  *
@@ -299,6 +308,15 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 					id: data.packagefacade_id,
 					package: $.extend(true, {}, window.packages[params.package_id]),
 				};
+
+				// Clean up package object
+				delete detail.packagefacade.package.accommodations;
+				delete detail.packagefacade.package.addons;
+				delete detail.packagefacade.package.courses;
+				delete detail.packagefacade.package.tickets;
+				delete detail.packagefacade.package.base_prices;
+				delete detail.packagefacade.package.prices;
+
 				detail.packagefacade.package.decimal_price = data.package_decimal_price;
 			}
 			else if(params.course_id) {
@@ -448,7 +466,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 				var addon = $.extend(true, {}, window.addons[params.addon_id]);
 				addon.pivot = {
 					quantity: parseInt(params.quantity),
-					packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
+					packagefacade_id: params.packagefacade_id || null,
 				};
 				relatedBookingdetail.addons.push( addon );
 			}
