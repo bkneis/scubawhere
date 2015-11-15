@@ -186,6 +186,11 @@ class Company extends Ardent {
 	{
 		return $this->hasMany('CrmGroupRule');
 	}
+    
+    public function crmLinks()
+    {
+        return $this->hasMany('CrmLink');
+    }
 
 	public function departures()
 	{
@@ -220,6 +225,11 @@ class Company extends Ardent {
 	public function schedules()
 	{
 		return $this->hasMany('Schedule');
+	}
+    
+    public function templates()
+	{
+		return $this->hasMany('CrmTemplate');
 	}
 
 	public function tickets()
