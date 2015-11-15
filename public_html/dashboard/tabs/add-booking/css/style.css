@@ -357,3 +357,20 @@
 .ticket-search {
     padding-bottom: 25px;
 }
+
+#booking-toolbar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+}
+
+#booking-toolbar .alert {
+    width: 500px;
+    margin-bottom: -8px;
+}
+
+#booking-toolbar button {
+    margin-top: -8px;
+}

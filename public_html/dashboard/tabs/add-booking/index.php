@@ -1,5 +1,27 @@
 <div id="wrapper" class="clearfix">
-	<div class="row">
+	<div id="booking-toolbar"></div>
+	<script type="text/x-handlebars-template" id="toolbar-template">
+		{{#compare booking.mode 'view'}}
+			<div class="alert-info clearfix">
+				<div class="alert pull-right">
+					<i class="fa fa-lg fa-fw fa-eye"></i> Currently in <strong>Viewing Mode</strong>
+					<button class="btn btn-warning edit-booking pull-right">Edit booking</button>
+				</div>
+			</div>
+		{{else}}
+			{{#compare booking.status 'temporary'}}
+				<div class="alert-warning clearfix">
+					<div class="alert pull-right">
+						<i class="fa fa-lg fa-fw fa-pencil"></i> Currently in <strong>Editing Mode</strong>
+						<button class="btn btn-success apply-booking pull-right">Apply changes</button>
+						<button class="btn btn-default abandon-booking pull-right" style="margin-right: 5px;">Discard changes</button>
+					</div>
+				</div>
+			{{/compare}}
+		{{/compare}}
+	</script>
+
+	<div class="row" id="margin-bottom-needed">
 		<div class="col-md-12">
 			<ul class="nav nav-wizard" role="tablist">
 				<li role="presentation" class="active">
@@ -88,8 +110,11 @@
 						<div role="tabpanel" class="tab-pane fade" id="summary-tab">
 							<?php require('8-summary.php'); ?>
 						</div>
+
 					</div>
+
 				</div>
+
 				<div class="col-md-3" id="booking-summary-column">
 					<?php require('basket.php'); ?>
 				</div>
@@ -98,7 +123,7 @@
 	</div><!-- .row -->
 
 	<div id="modalWindows" style="height: 0;">
-		<script id="boatroom-select-modal-template" type="text/x-handlebars-template">
+		<script type="text/x-handlebars-template" id="boatroom-select-modal-template">
 			<div id="modal-boatroom-select" class="reveal-modal">
 				<h4>Please select a cabin</h4>
 

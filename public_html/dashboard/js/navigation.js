@@ -44,22 +44,34 @@ $(function() {
             'scheduling',
             'pickup-schedule'
         ];
+        var submenuCRM = [
+            'customers',
+            'mailing-lists',
+            'campaigns'
+        ];
         var submenuManagement = [
             'accommodations',
             'add-ons',
             'agents',
+            'boats',
             'classes',
             'courses',
-            'boats',
             'locations',
+            'trips',
             'packages',
-            'activate-trip',
-            'tickets',
-            'trips'
+            'tickets'
         ];
 
-        if(submenuCalendar.indexOf(newHash) !== -1)   $('#calendar-submenu').css('display', 'block');
-        if(submenuManagement.indexOf(newHash) !== -1) $('#management-submenu').css('display', 'block');
+        var submenuToOpen;
+
+        if(  submenuCalendar.indexOf(newHash) !== -1) submenuToOpen = 'calendar-submenu';
+        if(       submenuCRM.indexOf(newHash) !== -1) submenuToOpen = 'crm-submenu';
+        if(submenuManagement.indexOf(newHash) !== -1) submenuToOpen = 'management-submenu';
+
+        if(submenuToOpen) {
+            $('#' + submenuToOpen).css('display', 'block');
+            $('#' + submenuToOpen).siblings('div').children('.caret').css('transform', 'rotate(0deg)');
+        }
 
         // Blend out old content and display new content
         $mainContent.find('#wrapper').fadeOut(200, function() {
@@ -95,18 +107,21 @@ $(function() {
 
 /* ACCORDION NAVIGATION */
 $(function(){
-    //function fires if any of the nav-items tags are clicked
-    $( "#sidenav > li > div" ).click(function(){
-        //show child list if not already shown
-        if ($(this).parent().children().is( ":hidden" ) ) {
-            $( $( this ).parent().children( "ul" ) ).slideDown( "fast" );
-            //set arrow to up
-            $( $(this).children( ".caret" ) ).css('transform', 'rotate(0deg)');
-        } else {
-            //list already on show so slide it back up
-            $( $( this ).parent().children( "ul" ) ).slideUp( "fast" );
-            //set arrow to down
-            $( $( this ).children( ".caret" ) ).css('transform', 'rotate(-90deg)');
+    // Function fires if any of the nav-items tags are clicked
+    $( "#sidenav > li > div" ).click(function() {
+        var $self = $(this);
+
+        // Show child list if not already shown
+        if($self.siblings('ul').is(':hidden')) {
+            $self.siblings('ul').slideDown( "fast" );
+            // Set arrow to down
+            $self.children('.caret').css('transform', 'rotate(0deg)');
+        }
+        else {
+            // List already on show so slide it back up
+            $self.siblings('ul').slideUp( "fast" );
+            // Set arrow to right
+            $self.children('.caret').css('transform', 'rotate(-90deg)');
         }
     });
 });

@@ -259,16 +259,16 @@ $PROTOCOL = 'http';
 						<span>CRM</span>
 						<span class="caret"></span>
 					</div>
-					<ul id="calendar-submenu">
+					<ul id="crm-submenu">
 						<li>
 							<a href="#customers">My Customers</a>
-						</li>
-						<li>
-							<a href="#mailing-lists">My Mailing Lists</a>
 						</li>
 						<?php if(gethostname() === 'rms.scubawhere.com') { ?>
 							<!-- Additional CRM features will appear here -->
 						<?php } else { ?>
+							<li>
+								<a href="#mailing-lists">My Mailing Lists</a>
+							</li>
 							<li>
 								<a href="#campaigns">My Campaigns</a>
 							</li>

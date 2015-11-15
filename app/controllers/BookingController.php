@@ -194,6 +194,7 @@ class BookingController extends Controller {
 	public function getRecent()
 	{
 		return Context::get()->bookings()
+			->where('status', '!=', 'temporary')
 			->with(
 				'agent',
 				'lead_customer',
@@ -249,7 +250,8 @@ class BookingController extends Controller {
 		if(!empty($date))
 			$date = new DateTime($date, new DateTimeZone( Context::get()->timezone ));
 
-		$bookings = Context::get()->bookings()->with(
+		$bookings = Context::get()->bookings()
+			->with(
 				'agent',
 				'lead_customer',
 					'lead_customer.country',
@@ -1871,7 +1873,7 @@ class BookingController extends Controller {
 		}
 
 		// Bookings that have not been reserved, confirmed, cancelled or are on hold can be safely deleted
-		if($booking->status === null || in_array($booking->status, ['saved', 'initialised', 'expired']))
+		if($booking->status === null || in_array($booking->status, ['saved', 'initialised', 'expired', 'temporary']))
 		{
 			$booking->delete();
 			return array('status' => 'OK. Booking cancelled.');
@@ -1906,9 +1908,7 @@ class BookingController extends Controller {
 		}
 
 		if($booking->price != 0 && $booking->agent_id === null)
-			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent.')), 403 ); // 403 Forbidden
-		else if($booking->price != 0)
-			return Response::json( array('errors' => array('The confirmation method is only allowed for free-of-charge bookings.')), 403 ); // 403 Forbidden
+			return Response::json( array('errors' => array('The confirmation method is only allowed for bookings by a travel agent or free-of-charge bookings.')), 403 ); // 403 Forbidden
 
 		if($booking->status === 'cancelled')
 			return Response::json( array('errors' => array('The booking cannot be confirmed, as it is cancelled.')), 409 ); // 409 Conflict
@@ -1994,6 +1994,131 @@ class BookingController extends Controller {
 		}
 
 		return $booking->refunds()->with('paymentgateway')->get();
+	}
+
+	public function postStartEditing()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		if($booking->status === 'temporary')
+		{
+			// Return the dublicated booking
+			Request::replace(['id' => $booking->id]);
+			return $this->getIndex();
+		}
+
+		// Check if a dublicate is already in the DB
+		if(DB::table('bookings')->where('reference', $booking->reference . '_')->exists())
+			return Response::json(['errors' => ['This booking is already being edited. Cancel the edit and then try again.']], 412); // 412 Precondition Failed
+
+		// Dublicate bookings table entry to get new bookingID
+		$old_booking = DB::table('bookings')->find($booking->id);
+
+		unset($old_booking->id);
+		$old_booking->status    = 'temporary';
+		$old_booking->parent_id = $booking->id;
+		$old_booking->reference .= '_'; // Append underscore to booking reference so that it goes with the UNIQUE rule on the reference column
+		$old_booking->updated_at = date('Y-m-d H:i:s');
+
+		$new_booking_id = DB::table('bookings')->insertGetId((array) $old_booking);
+
+		// Dublicate entries in booking_details, addon_bookingdetail, accommodation_booking and pick_ups
+		$details = DB::table('booking_details')->where('booking_id', $booking->id)->get();
+		$detail_dict = [];
+		foreach($details as $detail)
+		{
+			$temp = $detail->id;
+
+			unset($detail->id);
+			$detail->booking_id = $new_booking_id;
+
+			$new_detail_id = DB::table('booking_details')->insertGetId((array) $detail);
+
+			$detail_dict[$temp] = $new_detail_id;
+		}
+
+		$addons = DB::table('addon_bookingdetail')->whereIn('bookingdetail_id', array_keys($detail_dict))->get();
+		foreach($addons as &$addon)
+		{
+			$addon->bookingdetail_id = $detail_dict[$addon->bookingdetail_id];
+
+			$addon = (array) $addon;
+		}
+		if(!empty($addons))
+			DB::table('addon_bookingdetail')->insert($addons);
+
+		$accommodations = DB::table('accommodation_booking')->where('booking_id', $booking->id)->get();
+		foreach($accommodations as &$accommodation)
+		{
+			$accommodation->booking_id = $new_booking_id;
+
+			$accommodation = (array) $accommodation;
+		}
+		if(!empty($accommodations))
+			DB::table('accommodation_booking')->insert($accommodations);
+
+		$pickups = DB::table('pick_ups')->where('booking_id', $booking->id)->get();
+		foreach($pickups as &$pickup)
+		{
+			unset($pickup->id);
+			$pickup->booking_id = $new_booking_id;
+
+			$pickup = (array) $pickup;
+		}
+		if(!empty($pickups))
+			DB::table('pick_ups')->insert($pickups);
+
+		// Fetch and return the dublicated booking
+		Request::replace(['id' => $new_booking_id]);
+		return $this->getIndex();
+	}
+
+	public function postApplyChanges()
+	{
+		try
+		{
+			if( !Input::get('booking_id') ) throw new ModelNotFoundException();
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
+
+			$parent = Context::get()->bookings()->findOrFail( $booking->parent_id );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The booking could not be found.')), 404 ); // 404 Not Found
+		}
+
+		// Move existing payments and refunds over to new booking's ID
+		DB::table('payments')->where('booking_id', $parent->id)->update(['booking_id' => $booking->id]);
+		DB::table('refunds' )->where('booking_id', $parent->id)->update(['booking_id' => $booking->id]);
+
+		// Update status to original status
+		$booking->status = $parent->status;
+		// Clear parent_id
+		$booking->parent_id = null;
+		// Save new booking to apply null for parent_id (otherwise the dublicate booking will get deleted when the parent gets deleted, because of the foreign key restraints)
+		$booking->updateUniques();
+
+		// Delete old booking record
+		$parent->delete();
+
+		// Remove appended underscore from reference and update new booking (reference can't be updated earlier, because of UNIQUE rule on reference column)
+		$booking->reference = substr($booking->reference, 0, -1);
+		$booking->updateUniques();
+
+		return ['status' => 'OK. Changes applied.',
+			'booking_status'    => $booking->status,
+			'booking_reference' => $booking->reference,
+			'payments'          => $booking->payments,
+			'refunds'           => $booking->refunds
+		];
 	}
 
 	private function moreThan5DaysAgo($date) {

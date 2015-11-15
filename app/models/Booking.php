@@ -32,7 +32,7 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled',
+		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled,temporary',
 		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
 		'comment'          => ''
