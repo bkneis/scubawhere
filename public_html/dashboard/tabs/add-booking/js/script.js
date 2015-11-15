@@ -1466,7 +1466,8 @@ $('#booking-summary-column').on('click', '.unassign-session', function() {
 
 	booking.removeDetail(params, function success(status, detail) {
 		// First, take care of attached addons that need to be re-added to a selectedPackage
-		if(detail.ticket) reAddPackagedAddons(detail.addons, detail.packagefacade.package);
+		if(detail.ticket && detail.addons && detail.packagefacade)
+			reAddPackagedAddons(detail.addons, detail.packagefacade.package);
 
 		// Set up variable that is assigned in IF blocks, but is needed afterwards when checking for still assigned course items
 		var relatedCourse = undefined;
@@ -1820,39 +1821,39 @@ function reAddPackagedAddons(removedAddons, package, bookingdetail_id) {
 	_.each(removedAddons, function(removedAddon) {
 		if(removedAddon.compulsory === 1) return;
 
-		if(removedAddon.pivot.packagefacade_id) {
-			var relatedPackage = _.find(booking.selectedPackages, function(package) {
-				return package.packagefacade == removedAddon.pivot.packagefacade_id;
-			});
+		if(!removedAddon.pivot.packagefacade_id) return;
 
-			if(relatedPackage === undefined) {
-				// When package is passed, just use generateEmptyPackage()
-				// This is the case when a bookingdetail is removed that included addons
-				if(package) {
-					relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, package);
-				}
-				else {
-					// Find bookingdetail and get package from it
-					// This is the case when just the addon is removed
-					relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, _.find(booking.bookingdetails, function(detail) {
-						return detail.id == bookingdetail_id;
-					}).packagefacade.package);
-				}
-				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
-			}
+		var relatedPackage = _.find(booking.selectedPackages, function(package) {
+			return package.packagefacade == removedAddon.pivot.packagefacade_id;
+		});
 
-			// Check if the addon already exists in the package
-			var existingAddon = _.find(relatedPackage.addons, function(addon) {
-				return removedAddon.id == addon.id;
-			});
-
-			if(existingAddon !== undefined) {
-				existingAddon.qty += removedAddon.pivot.quantity;
+		if(relatedPackage === undefined) {
+			// When package is passed, just use generateEmptyPackage()
+			// This is the case when a bookingdetail is removed that included addons
+			if(package) {
+				relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, package);
 			}
 			else {
-				removedAddon.qty = removedAddon.pivot.quantity;
-				relatedPackage.addons.push(removedAddon);
+				// Find bookingdetail and get package from it
+				// This is the case when just the addon is removed
+				relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, _.find(booking.bookingdetails, function(detail) {
+					return detail.id == bookingdetail_id;
+				}).packagefacade.package);
 			}
+			booking.selectedPackages[relatedPackage.UID] = relatedPackage;
+		}
+
+		// Check if the addon already exists in the package
+		var existingAddon = _.find(relatedPackage.addons, function(addon) {
+			return removedAddon.id == addon.id;
+		});
+
+		if(existingAddon !== undefined) {
+			existingAddon.qty += removedAddon.pivot.quantity;
+		}
+		else {
+			removedAddon.qty = removedAddon.pivot.quantity;
+			relatedPackage.addons.push(removedAddon);
 		}
 	});
 
