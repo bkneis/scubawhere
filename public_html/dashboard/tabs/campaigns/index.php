@@ -63,8 +63,8 @@
                         <thead>
                             <tr class="bg-primary">
                                 <th style="width:10%">Date</th>
-                                <th style="width:40%">Subject</th>
-                                <th style="width:40%">Groups sent to</th>
+                                <th style="width:30%">Subject</th>
+                                <th style="width:20%">Groups sent to</th>
                                 <th style="width:10%">Actions</th>
                             </tr>
                         </thead>

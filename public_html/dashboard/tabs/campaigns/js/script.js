@@ -86,6 +86,7 @@ function renderCampaignTable() {
                     new_params._token = window.token;
                     sendCampaign(new_params);
                     renderCampaignTable();
+                    $('#resend-email-modal').modal('hide');
                 });
             });
         });
