@@ -151,9 +151,13 @@ function getLinkAnalytics (customer_id, data) {
     var customer_clicks = 0;
     for(var i = 0; i < (data.length - 1); i++)
     {
+        customer_clicks = 0;
         for(var j in data[i].analytics)
         {
-            if(data[i].analytics[j].customer_id == customer_id) customer_clicks = data[i].analytics[j].count;
+            if(data[i].analytics[j].customer_id == customer_id) {
+                customer_clicks = data[i].analytics[j].count;
+                break;
+            }
         }
         accordian += '<tr><p><a target="_blank" href="'+data[i].link+'">'+data[i].link+'</a> : '+customer_clicks+' clicks</p></tr>'
     }
