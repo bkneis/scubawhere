@@ -480,20 +480,21 @@ class ReportController extends Controller {
 
 		foreach($bookingdetails as $detail)
 		{
-			if(!empty($detail->ticket_id) && !empty($detail->session_id) && empty($detail->packagefacade_id) && empty($detail->course_id))
+			if(!empty($detail->ticket_id)/* && !empty($detail->session_id)*/ && empty($detail->packagefacade_id) && empty($detail->course_id))
 			{
 				### -------------------------------- ###
 				### This is a directly booked ticket ###
 				### -------------------------------- ###
 
-				$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+				if($detail->departure)
+					$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+				else
+					$detail->ticket->calculatePrice($detail->created_at, $detail->created_at);
 
 				$revenue = $detail->ticket->decimal_price;
 				$model   = 'tickets';
 				$name    = $detail->ticket->name;
 				$id      = $detail->ticket->id;
-
-
 			}
 			elseif(empty($detail->packagefacade_id) && !empty($detail->course_id))
 			{
@@ -519,11 +520,13 @@ class ReportController extends Controller {
 					{
 						if(!empty($d->departure))
 							return $d->departure->start;
-						else
+						elseif(!empty($d->training_session))
 							return $d->training_session->start;
+						else
+							return $d->created_at;
 					})->first();
 
-					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : $firstDetail->training_session->start;
+					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : !empty($firstDetail->training_session) ? $firstDetail->training_session->start : $firstDetail->created_at;
 
 					// Calculate the course price at this first departure/training_session datetime
 					$detail->course->calculatePrice($start, $detail->created_at);
@@ -553,14 +556,18 @@ class ReportController extends Controller {
 					{
 						if($detail->departure)
 							return $detail->departure->start;
-						else
+						elseif(!empty($detail->training_session))
 							return $detail->training_session->start;
+						else
+							return $detail->created_at;
 					})->first();
 
 					if($firstDetail->departure)
 						$start = $firstDetail->departure->start;
-					else
+					elseif(!empty($firstDetail->training_session))
 						$start = $firstDetail->training_session->start;
+					else
+						$start = $firstDetail->created_at;
 
 					$accommodations = $detail->booking->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
 					$firstAccommodation = $accommodations->sortBy(function($accommodation)
