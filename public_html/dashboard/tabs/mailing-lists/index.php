@@ -119,9 +119,12 @@
                     <table id="group-customers-table" class="bluethead">
                         <thead>
                             <tr class="bg-primary">
-                                <th style="width:50%">Customer Name</th>
-                                <th style="width:50%">Customer Email</th>
+                                <th style="width:35%">Customer Name</th>
+                                <th style="width:35%">Customer Email</th>
                                 <th>Customer ID</th>
+                                <th style="width:10%">Emails Opened</th>
+                                <th style="width:10%">Emails Sent</th>
+                                <th style="width:10%">Click Rate</th>
                             </tr>
                         </thead>
                         <tbody class="sw-blue-table">

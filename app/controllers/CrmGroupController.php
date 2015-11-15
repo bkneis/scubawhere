@@ -30,6 +30,38 @@ class CrmGroupController extends Controller {
 		return Context::get()->crmGroups()->with('rules')->withTrashed()->get();
 	}
     
+    public function getCustomeranalytics()
+    {
+        $group_id = Input::only('id');
+    
+        $customers = [];
+        $campaigns = Context::get()->campaigns()->with('groups')->get();
+        foreach($campaigns as $obj)
+        {
+            foreach($obj->groups as $group)
+            {
+                if($group->id == (int)$group_id) 
+                {
+                    $tokens = CrmToken::with('customer')->where('campaign_id', '=', $obj->id)->get();
+                    foreach($tokens as $token)
+                    {
+                        if(array_key_exists($token->customer->id, $customers))
+                        {
+                            if($token->opened > 0) $customers[$token->customer->id]['emails_opened'] += 1;
+                        }
+                        else
+                        {
+                            $customers[$token->customer->id] = $token->customer;
+                            $customers[$token->customer->id]['emails_opened'] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return Response::json(array('customers' => $customers, 'num_sent' => sizeof($campaigns)), 200);
+    }
+    
     public function getCustomers()
     {
         $group_id = Input::only('id');

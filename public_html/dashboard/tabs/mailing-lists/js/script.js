@@ -229,8 +229,8 @@ function renderGroupEditForm(id) {
         event.preventDefault();
         $('#view-group-customers-modal').modal('show');
         var params = {};
-        params.id = $(this).attr('data-id');
-        CustomerGroup.getCustomers(params, function success(data) {
+        params.id = parseInt($(this).attr('data-id'));
+        CustomerGroup.getCustomerAnalysis(params, function success(data) {
             console.log(data);
             groupCustomersTable.clear();
             for(var i in data.customers)
@@ -238,7 +238,10 @@ function renderGroupEditForm(id) {
                   groupCustomersTable.row.add([
                       data.customers[i].firstname + data.customers[i].lastname,
                       data.customers[i].email,
-                      data.customers[i].id
+                      data.customers[i].id,
+                      data.customers[i].emails_opened,
+                      data.num_sent,
+                      parseInt((data.customers[i].emails_opened / data.num_sent) * 100) + '%'
                   ]);
             }
             groupCustomersTable.draw();
