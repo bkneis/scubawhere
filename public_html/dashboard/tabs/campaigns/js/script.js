@@ -107,7 +107,7 @@ function showEmailAnalytics(id) {
         var opened_date;
         for(i in data.analytics) {
             if(data.analytics[i].opened_time > 0) {
-                opened_date = new Date(parseInt(data.analytics[i].opened_time)).toUTCString();
+                opened_date = new Date(parseInt(data.analytics[i].opened_time) * 1000).toUTCString();
                 opened_date = opened_date.slice(0, opened_date.length - 3);
             }
             else opened_date = 'Not opened yet';
