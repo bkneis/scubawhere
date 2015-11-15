@@ -130,8 +130,6 @@ function renderGroupEditForm(id) {
     if (!id)
         $('input[name=name]').focus();
 
-    CKEDITOR.replace('description');
-
     setToken('[name=_token]');
 
     // Set up change monitoring
@@ -255,6 +253,8 @@ function renderGroupEditForm(id) {
     $('#group-form-container').on('click', '.remove-class', function() {
         $(this).parent().remove();
     });
+    
+    CKEDITOR.replace('description');
 
 }
 
@@ -274,6 +274,11 @@ function renderGroupList(callback) {
         $("#customer-group-list").empty().append(customerGroupListTemplate({
             groups: data
         }));
+        
+        $("#add-customer-group").on('click', function(event) {
+            event.preventDefault();
+            renderGroupEditForm();
+        });
 
         // (Re)Assign eventListener for addon clicks
         $('#customer-group-list').on('click', 'li, strong', function(event) {
@@ -288,8 +293,4 @@ function renderGroupList(callback) {
             callback();
     });
 
-    $("#add-customer-group").on('click', function(event) {
-        event.preventDefault();
-        renderGroupEditForm();
-    });
 }

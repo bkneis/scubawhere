@@ -9,7 +9,7 @@
 				</div>
 				<div class="panel-body" id="customer-group-list">
 					<script type="text/x-handlebars-template" id="group-list-template">
-						<button id="add-customer-group" class="btn btn-success text-uppercase">&plus; Add Mailing List</button>
+                        <button id="add-customer-group" class="btn btn-success text-uppercase">&plus; Add Mailing List</button>
 						<ul id="group-list" class="entity-list">
 							{{#each groups}}
 								<li data-id="{{id}}"><strong>{{{name}}}</strong></li>
@@ -102,7 +102,7 @@
 							{{/if}}
 
 							<input type="hidden" name="_token">
-							<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
+							<input type="submit" style="margin-top:10px" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
 						</form>
 					</div>
 				</script>
