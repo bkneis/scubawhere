@@ -1323,5 +1323,20 @@ big {
 	padding-bottom: 10px;
 }
 
+.email-action {
+    margin-right: 5px;
+}
+
+.sw-blue-table > tr {
+	cursor: pointer;
+	background-color: #e7eef8;
+	border: 1px solid #C3D9F4;
+}
+
+.sw-blue-table > tr:hover {
+	background-color: #C3D9F4;
+}
+
+
 
 
