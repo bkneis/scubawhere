@@ -10,6 +10,7 @@ var createCampaignTemplate;
 var groupSelectTemplate;
 var campaignsGroupsTemplate;
 var selected_email_template;
+var groupCustomersTable;
 
 $(function() {
 
@@ -99,6 +100,18 @@ $(function() {
                 pageMssg(xhr.responseText);
                 console.log(xhr);
             });
+    });
+    
+    groupCustomersTable = $('#group-customers-table').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "columnDefs" : [
+            {
+                "targets" : [2],
+                "visible" : false
+            }        
+        ]
     });
 
 });
@@ -210,6 +223,25 @@ function renderGroupEditForm(id) {
             id: class_dropdown.val(),
             name: window.trainings[class_dropdown.val()].name,
         }));
+    });
+    
+    $('#view-lists-customers').on('click', function(event) {
+        event.preventDefault();
+        $('#view-group-customers-modal').modal('show');
+        var params = {};
+        params.id = $(this).attr('data-id');
+        CustomerGroup.getCustomers(params, function success(data) {
+            console.log(data);
+            for(var i in data.customers)
+            {
+                  groupCustomersTable.row.add([
+                      data.customers[i].firstname + data.customers[i].lastname,
+                      data.customers[i].email,
+                      data.customers[i].id
+                  ]);
+            }
+            groupCustomersTable.draw();
+        });
     });
 
     if (id) {

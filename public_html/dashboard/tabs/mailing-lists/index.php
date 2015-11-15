@@ -96,7 +96,7 @@
                             
                             {{#if update}}
 								<input type="hidden" name="id" value="{{id}}">
-                                <button id="view-lists-customers" style="margin-top:20px; margin-left:15px;" class="btn btn-primary">View customers on this mailing list</button>
+                                <button id="view-lists-customers" data-id="{{id}}" style="margin-top:20px; margin-left:15px;" class="btn btn-primary">View customers on this mailing list</button>
 							{{/if}}
 
 							<input type="hidden" name="_token">
@@ -107,6 +107,31 @@
 			</div>
 		</div>
 	</div><!-- .row -->
+    
+    <div class="modal fade" id="view-group-customers-modal">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Customers</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="group-customers-table" class="bluethead">
+                        <thead>
+                            <tr class="bg-primary">
+                                <th style="width:50%">Customer Name</th>
+                                <th style="width:50%">Customer Email</th>
+                                <th>Customer ID</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sw-blue-table">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 	<script type="text/x-handlebars-template" id="errors-template">
 		<div class="yellow-helper errors" style="color: #E82C0C;">

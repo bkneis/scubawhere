@@ -36,6 +36,10 @@ var CustomerGroup = {
 			success: handleData,
 			error: errorFn
 		});
-	}
+	},
+    
+    getCustomers: function(params, handleData) {
+        $.get("/api/customer-group/customers", params, handleData);
+    }
 
 };
