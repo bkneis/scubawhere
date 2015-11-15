@@ -26,7 +26,7 @@
 					<h4 class="panel-title">Available Cabins</h4>
 				</div>
 				<div class="panel-body" id="boatroom-list-container">
-					<button id="change-to-add-boatroom" class="btn btn-success text-uppercase" data-step="3" data-position="right" data-intro="To 'add cabin', click here. Then enter a name and description.">&plus; Add Cabin</button>
+					<button class="btn btn-success text-uppercase change-to-add-boatroom" data-step="3" data-position="right" data-intro="To 'add cabin', click here. Then enter a name and description.">&plus; Add Cabin</button>
 					<script type="text/x-handlebars-template" id="boatroom-list-template">
 						<ul id="boatroom-list" class="entity-list">
 							{{#each boatrooms}}
@@ -70,7 +70,7 @@
 										{{> boatroom_show}}
 									{{/each}}
 								</div>
-								<button id="add-room" class="btn btn-success text-uppercase"> &plus; Add room</button>
+								<button id="add-room" class="btn btn-success text-uppercase"> &plus; Add cabin</button>
 							</div>
 							{{#if update}}
 								<input type="hidden" name="id" value="{{id}}">

@@ -82,10 +82,18 @@
 								<h4>Please select the trips that this ticket should be eligible for:</h4>
 								<div id="ticket-selectList" class="form-row">
 								{{#each available_trips}}
-										<label class="trip-select{{inArray id ../trips ' checked' ''}}">
-											<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
-											{{{name}}}
-										</label>
+									<label class="trip-select{{inArray id ../trips ' checked' ''}}">
+										<input type="checkbox" name="trips[]" onchange="changeParent(this)" value="{{id}}"{{inArray id ../trips ' checked' ''}}>
+										{{{name}}}
+									</label>
+								{{else}}
+									<div class="alert alert-danger clearfix">
+										<i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i>
+										<p class="pull-left">
+											<strong>No trips available!</strong><br>
+											Please go to <a href="#trips">Trips (Open Water)</a> to define open water trips.
+										</p>
+									</div>
 								{{/each}}
 								</div>
 							</div>
