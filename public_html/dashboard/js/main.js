@@ -278,6 +278,10 @@ Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options
 
 });
 
+Handlebars.registerHelper("notEmptyObj", function (item, options) {
+	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
+});
+
 function decRound(number, places) {
 
 	if(places < 1) return Math.round(number);

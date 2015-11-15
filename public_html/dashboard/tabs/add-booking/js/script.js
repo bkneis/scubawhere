@@ -70,10 +70,6 @@ Handlebars.registerHelper("isLead", function (customer, options) {
 	return (booking.lead_customer && booking.lead_customer.id == customer.id) ? options.fn(customer) : options.inverse(customer);
 });
 
-Handlebars.registerHelper("notEmptyObj", function (item, options) {
-	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
-});
-
 Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
 	    max = 0;
