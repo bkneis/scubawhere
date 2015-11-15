@@ -232,6 +232,7 @@ function renderGroupEditForm(id) {
         params.id = $(this).attr('data-id');
         CustomerGroup.getCustomers(params, function success(data) {
             console.log(data);
+            groupCustomersTable.clear();
             for(var i in data.customers)
             {
                   groupCustomersTable.row.add([
