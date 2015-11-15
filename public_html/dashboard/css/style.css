@@ -381,7 +381,7 @@ ul#sidenav div {
 }
 
 ul#sidenav ul a {
-	padding: 10px 30px;
+	padding: 10px 0 10px 30px;
 }
 
 ul#sidenav a span,
