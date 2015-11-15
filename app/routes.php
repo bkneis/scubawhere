@@ -37,11 +37,14 @@ Route::get('terms', function()
 Route::post('login', 'AuthenticationController@postLogin');
 Route::get('logout', 'AuthenticationController@getLogout');
 
+//Route::get('get_crm_image', 'CrmTrackingController@getScubaImage');
+
 // These controllers need to be unauthorized, because they are required in registration
 Route::controllers([
 	'agency'   => 'AgencyController',
 	'country'  => 'CountryController',
-	'currency' => 'CurrencyController'
+	'currency' => 'CurrencyController',
+    'crm_tracking' => 'CrmTrackingController'
 ]);
 
 Route::group(array('before' => 'auth|auth.basic|csrf'), function()
@@ -59,6 +62,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'boatroom'       => 'BoatroomController',
 		'booking'        => 'BookingController',
 		'campaign'       => 'CrmCampaignController',
+        'campaign_template' => 'CrmTemplateController',
 		'certificate'    => 'CertificateController',
 		'class'          => 'TrainingController',
 		'class-session'  => 'TrainingSessionController',
