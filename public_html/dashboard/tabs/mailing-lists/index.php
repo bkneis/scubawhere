@@ -93,16 +93,14 @@
 									<button class="btn btn-success add-class" style="width: 100%;">Add</button>
 								</div>
 							</div>
-
-							<div style="padding-bottom:20px;">
-							</div>
-
-							{{#if update}}
+                            
+                            {{#if update}}
 								<input type="hidden" name="id" value="{{id}}">
+                                <button id="view-lists-customers" style="margin-top:20px; margin-left:15px;" class="btn btn-primary">View customers on this mailing list</button>
 							{{/if}}
 
 							<input type="hidden" name="_token">
-							<input type="submit" style="margin-top:10px" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
+							<input type="submit" style="margin-top:20px" class="btn btn-primary btn-lg text-uppercase pull-right" value="SAVE">
 						</form>
 					</div>
 				</script>
