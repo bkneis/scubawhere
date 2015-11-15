@@ -8,18 +8,29 @@ var selectedCertificateTemplate;
 var selectedCustomerGroupTemplate;
 var createCampaignTemplate;
 var groupSelectTemplate;
-var campaignsGroupsTemplate;
 var selected_email_template;
+var optionListTemplate;
+var campaignAnalyticsTable;
 
-$(function() {
+$(function () {
 
     viewCampaignsTemplate = Handlebars.compile($("#campaigns-template").html());
     groupSelectTemplate = Handlebars.compile($("#group-select-template").html());
     selectedCustomerGroupTemplate = Handlebars.compile($("#selected-group-template").html());
     createCampaignTemplate = Handlebars.compile($("#create-campaign-template").html());
-    campaignsGroupsTemplate = Handlebars.compile($("#view-campaigns-groups-template").html());
-
-    $('#campaign-container').append(campaignsGroupsTemplate());
+    optionListTemplate = Handlebars.compile($("#layout-options-list-template").html());
+    
+    campaignAnalyticsTable = $('#campaign-analytics-table').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "columnDefs" : [
+            {
+                "targets" : [3],
+                "visible" : false
+            }        
+        ]
+    });
 
     Agency.getAll(function sucess(data) {
         window.agencies = _.indexBy(data, 'id');
@@ -30,11 +41,11 @@ $(function() {
                 Class.getAll(function success(data) {
                     window.trainings = _.indexBy(data, 'id');
                     CustomerGroup.getAll(function success(data) {
-                        window.groups = _.indexBy(data, 'id');
+                        window.groups = _.indexBy(data, 'id'); 
                         renderCampaignTable();
                     },
                     function error(xhr) {
-
+                        console.log(xhr);
                     });
                 });
             });
@@ -46,14 +57,113 @@ $(function() {
 function renderCampaignTable() {
     Campaign.getAll(function sucess(data) {
         console.log(data);
-        $("#campaign-form-container").empty().append(viewCampaignsTemplate({
+        $("#campaign-container").empty().append(viewCampaignsTemplate({
             campaigns: data
         }));
+        $('.view-email-campaign').on('click', function() {
+            showEmailBrowser($(this).attr('data-html'));
+        });
+        $('.view-email-analytics').on('click', function() {
+            showEmailAnalytics($(this).attr('data-campaign-id'));
+        });
+        $('.resend-email-campaign').on('click', function() {
+            var params = {};
+            params.id = $(this).attr('data-campaign-id');
+            Campaign.get(params, function success(data) {
+                $('#resend-email-modal').modal('show');
+                console.log(data);
+                var new_params= {};
+                new_params.email_html = data.email_html;
+                new_params.groups = [];
+                for(i in data.groups)
+                {
+                   new_params.groups.push(data.groups[i].id);   
+                }
+                $('#btn-resend-campaign').on('click', function(event) {
+                    event.preventDefault();
+                    new_params.subject = $('#resend-email-subject').val();
+                    new_params.name = $('#resend-campaign-name').val();
+                    new_params._token = window.token;
+                    sendCampaign(new_params);
+                    renderCampaignTable();
+                });
+            });
+        });
     });
-    $("#campaign-form-container").on('click', '#create-campaign', function(event) {
+    $("#campaign-container").on('click', '#create-campaign', function(event) {
         event.preventDefault();
         renderCampaignForm();
     });
+}
+
+function showEmailAnalytics(id) {
+    $('#show-email-analytics-modal').modal('show');
+    var params = {};
+    params.id = id;
+    Campaign.getAnalytics(params, function success(data) {
+        console.log('analytics', data);
+        campaignAnalyticsTable.clear();
+        var opened_date;
+        for(i in data.analytics) {
+            if(data.analytics[i].opened_time > 0) {
+                opened_date = new Date(parseInt(data.analytics[i].opened_time)).toUTCString();
+                opened_date = opened_date.slice(0, opened_date.length - 3);
+            }
+            else opened_date = 'Not opened yet';
+            campaignAnalyticsTable.row.add([
+                data.analytics[i].customer.firstname + ' ' + data.analytics[i].customer.lastname,
+                data.analytics[i].customer.email,
+                data.analytics[i].opened,
+                data.analytics[i].customer.id,
+                opened_date
+            ]);
+        }
+        campaignAnalyticsTable.draw(); // how to order ???
+        $('#total-emails-seen').html(data.total_seen + ' emails viewed');
+        $('#total-emails-sent').html(data.total_sent + ' emails sent');
+        
+        $('#campaign-analytics-table tr').on('click', function () {
+            console.log('clicke');
+            var tr = $(this).closest('tr');
+            var row = campaignAnalyticsTable.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
+                tr.addClass('shown');
+            }
+        });
+    },
+    function error(xhr) {
+        console.log(xhr);
+        pageMssg(xhr.responseText, false);
+    });
+}
+
+function getLinkAnalytics (customer_id, data) {
+    var accordian = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;"><tr><p><strong>Link Analytics</strong></p></tr>';
+    var customer_clicks = 0;
+    for(var i = 0; i < (data.length - 1); i++)
+    {
+        for(var j in data[i].analytics)
+        {
+            if(data[i].analytics[j].customer_id == customer_id) customer_clicks = data[i].analytics[j].count;
+        }
+        accordian += '<tr><p><a target="_blank" href="'+data[i].link+'">'+data[i].link+'</a> : '+customer_clicks+' clicks</p></tr>'
+    }
+    accordian += '</table>';
+    return accordian;
+}
+
+function showEmailBrowser(html) {
+    var w = window.open('');
+    w.document.write(html);
+    w.document.close();
 }
 
 function renderCampaignForm(id) {
@@ -75,10 +185,7 @@ function renderCampaignForm(id) {
 
     $('#show-email-browser').on('click', function(event) {
         event.preventDefault();
-
-        var w = window.open('');
-        w.document.write(processEmailHtml());
-        w.document.close();
+        showEmailBrowser(processEmailHtml());
     });
 
     if (!id)
@@ -107,32 +214,87 @@ function renderCampaignForm(id) {
     $('#add-customer-group-to-campaign').on('click', '.remove-group', function() {
         $(this).parent().remove();
     });
+    
+    $('#save-as-template').on('click', function(event) {
+        event.preventDefault();
+        $('#save-email-template-modal').modal('show');
+        $('#btn-save-template').on('click', function(event) {
+            event.preventDefault();
+            var params = {};
+            params.html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
+            params.name = $('#template-name').val();
+            params._token = window.token;
+            Campaign.createTemplate(params, function success(data) {
+                console.log(data);
+                pageMssg(data.status, true);
+                $('#template-name').val('');
+                $('#save-email-template-modal').modal('hide');
+                renderCampaignTable();
+            },
+            function error(xhr) {
+                console.log(xhr);
+                pageMssg(xhr.responseText, false);
+            });
+        });
+    });
 
     $('#select-campaign-template').on('click', function(event) {
         event.preventDefault();
         $('#select-email-template-modal').modal('show');
+        var email_template_html = '';
+        var email_preview_frame = document.getElementById('email-template-option-preview');
+        var email_editor_frame = document.getElementById('email-template-editor');
+        var using_layout = true;
+        var layout_html_string = '';
+        
+        $('.option-button').on('click', function() {
+            $('.email-options-list').css('display', 'none');
+            $('#' + $(this).attr('display')).css('display', 'block');
+            $('.option-button').removeClass('btn-primary');
+            $(this).addClass('btn-primary');
+            Campaign.getAllTemplates(function success(data) {
+                console.log(data);
+                $('#layout-options-list').empty().append(optionListTemplate({layout:data}));
+                $('.email-layout-option').on('click', function() {
+                    layout_html_string = $(this).attr('data-html');
+                    email_template_html = processEmailHtml(layout_html_string);
+                    email_preview_frame.contentWindow.document.open();
+                    email_preview_frame.contentWindow.document.write(email_template_html);
+                    email_preview_frame.contentWindow.document.close();
+                });
+            });
+        });
+    
         $('.email-template-option').on('click', function() {
             $('.email-template-option').css('border', 'none');
             $(this).css('border', '3px solid #FF7163');
             $.get($(this).attr('data-url'), function(response) {
-                var email_preview_frame = document.getElementById('email-template-option-preview');
+                email_template_html = processEmailHtml(response);
                 email_preview_frame.contentWindow.document.open();
-                email_preview_frame.contentWindow.document.write(processEmailHtml(response));
+                email_preview_frame.contentWindow.document.write(email_template_html);
                 email_preview_frame.contentWindow.document.close();
+                using_layout = false;
             });
             selected_email_template = $(this).attr('data-url');
         });
+        
         $('#select-email-template').on('click', function() {
+            $('#save-as-template').removeAttr('disabled');
+            $('#email-editor-tips').css('display', 'none');
             $('#email-template-editor').css('display', 'inline');
             $('#show-email-browser').css('display', 'inline');
-            $('#email-template-editor').attr('src', selected_email_template);
+            if(using_layout) {
+                email_editor_frame.contentWindow.document.open();
+                email_editor_frame.contentWindow.document.write(layout_html_string);
+                email_editor_frame.contentWindow.document.close();
+            }
+            else $('#email-template-editor').attr('src', selected_email_template);
             $('#select-email-template-modal').modal('hide');
         });
     });
 
     $('.return-campaigns').on('click', function(event) {
         event.preventDefault();
-        $('#campaign-container').empty().append(campaignsGroupsTemplate());
         renderCampaignTable();
     });
 
@@ -154,29 +316,37 @@ function renderCampaignForm(id) {
         $('#send-email-campaign').on('submit', '#create-campaign-form', function(event) {
             event.preventDefault();
             var params = $(this).serializeObject();
-            params.html_string = processEmailHtml();
+            params.email_html = processEmailHtml();
             for (var i = 0; i < params.groups.length; i++) {
                 params.groups[i] = parseInt(params.groups[i]);
             }
-            Campaign.create(params, function success(data) {
-                    console.log(data);
-                    pageMssg(data.status, true);
-                },
-                function error(xhr) {
-                    console.log(xhr.responseText);
-                });
+            sendCampaign(params);
         });
 
     }
 }
 
-function processEmailHtml(html_string) {
+function sendCampaign(params)
+{
+    Campaign.create(params, function success(data) {
+        console.log(data);
+        pageMssg(data.status, true);
+        renderCampaignTable();
+    },
+    function error(xhr) {
+        console.log(xhr);
+        pageMssg(xhr.responseText, false);
+    });
+}
+
+function processEmailHtml(html_string) 
+{
 
     if(!html_string) {
         var html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
     }
 
-    var script_pos = html_string.indexOf('<script type="text/javascript" src="js/medium-editor.js"></script>');
+    var script_pos = html_string.indexOf('<script type="text/javascript" src="/tabs/campaigns/email-templates/js/medium-editor.js"></script>');
     var html_compiled = html_string.substring(0, script_pos) + '</body></html>';
 
     var find = 'contenteditable="true"';
