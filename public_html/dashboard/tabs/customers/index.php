@@ -6,7 +6,7 @@
 					<h4 class="panel-title">Search for a customer</h4>
 				</div>
 				<div class="panel-body">
-					<button id="add-new-customer" class="btn btn-success text-uppercase">&plus; New Customer</button>
+					<!--<button id="add-new-customer" class="btn btn-success text-uppercase">&plus; New Customer</button>-->
 					<form id="find-customer-form">
 						<div class="form-row">
 							<label class="field-label">Customer's First Name</label>
