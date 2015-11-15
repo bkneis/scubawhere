@@ -9,7 +9,7 @@ class CrmCampaign extends Ardent {
 
 	public static $rules = array(
 		'subject'        => 'required',
-		'message' 		 => 'required',
+		'email_html' 	 => 'required',
 		'num_sent'		 => ''
 	);
 
@@ -30,5 +30,15 @@ class CrmCampaign extends Ardent {
 	{
 		return $this->belongsToMany('CrmGroup');
 	}
+    
+    public function tokens() 
+    {
+        return $this->hasMany('CrmToken', 'campaign_id');
+    }
+    
+    public function crmLinks()
+    {
+        return $this->hasMany('CrmLink', 'campaign_id');
+    }
 
 }
