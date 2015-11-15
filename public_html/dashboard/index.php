@@ -224,13 +224,6 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<!--<li>
-					<a href="#calendar">
-						<i class="fa fa-calendar fa-lg fa-fw"></i>
-						<span>Calendar</span>
-					</a>
-				</li>-->
-
 				<li>
 					<div>
 						<!-- <i class="fa fa-briefcase"></i> -->
@@ -276,14 +269,6 @@ $PROTOCOL = 'http';
 					</ul>
 				</li>
 
-				<?php /* <li>
-					<a href="#reviews">
-						<i class="fa fa-comments fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-users"></i> -->
-						<span>Reviews</span>
-					</a>
-				</li> */ ?>
-
 				<li>
 					<a href="#reports">
 						<!-- <i class="fa fa-university"></i> -->
@@ -326,16 +311,13 @@ $PROTOCOL = 'http';
 							<a href="#locations">Locations</a>
 						</li>
 						<li>
-							<a href="#trips">Open Water Trips</a>
-						</li>
-						<li>
 							<a href="#packages">Packages</a>
 						</li>
-						<!--<li>
-							<a href="#activate-trip">Scheduling</a>
-						</li>-->
 						<li>
 							<a href="#tickets">Tickets</a>
+						</li>
+						<li>
+							<a href="#trips">Trips (Open Water)</a>
 						</li>
 					</ul>
 				</li>
