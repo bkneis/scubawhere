@@ -63,6 +63,7 @@
                         <thead>
                             <tr class="bg-primary">
                                 <th style="width:10%">Date</th>
+                                <th style="width:30%">Name</th>
                                 <th style="width:30%">Subject</th>
                                 <th style="width:20%">Groups sent to</th>
                                 <th style="width:10%">Actions</th>
@@ -72,6 +73,7 @@
                             {{#each campaigns}}
                             <tr>
                                 <td>{{sent_at}}</td>
+                                <td>{{name}}</td>
                                 <td>{{subject}}</td>
                                 <td>
                                     {{#each groups}}

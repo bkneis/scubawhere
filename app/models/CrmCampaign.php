@@ -10,7 +10,8 @@ class CrmCampaign extends Ardent {
 	public static $rules = array(
 		'subject'        => 'required',
 		'email_html' 	 => 'required',
-		'num_sent'		 => ''
+		'num_sent'		 => '',
+        'name'           => 'required'
 	);
 
 	public function beforeSave( $forced )

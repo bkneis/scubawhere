@@ -79,7 +79,8 @@ class CrmCampaignController extends Controller {
 	{
 		$data = Input::only(
 			'subject',
-			'email_html'
+			'email_html',
+            'name'
 		);
 
 		$data['sent_at'] = Helper::localTime();
