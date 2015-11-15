@@ -229,6 +229,10 @@
                             <p><i class="fa fa-eye fa-3x"></i></p>
                             <p id="total-emails-seen" class="text-center">Total Viewed</p>
                         </a>
+                        <a role="button" class="btn btn-default">
+                            <p><i class="fa fa-pie-chart fa-3x"></i></p>
+                            <p id="average-click-rate" class="text-center">Avg Click Rate</p>
+                        </a>
                     </div>
                     <table id="campaign-analytics-table" class="bluethead">
                         <thead>

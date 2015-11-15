@@ -122,6 +122,7 @@ function showEmailAnalytics(id) {
         campaignAnalyticsTable.draw(); // how to order ???
         $('#total-emails-seen').html(data.total_seen + ' emails viewed');
         $('#total-emails-sent').html(data.total_sent + ' emails sent');
+        $('#average-click-rate').html(parseInt(((data.total_seen / data.total_sent) * 100)) + ' %' + ' Avg click rate');
         
         $('#campaign-analytics-table tr').on('click', function () {
             console.log('clicke');
