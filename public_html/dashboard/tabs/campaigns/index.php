@@ -86,7 +86,7 @@
                             </tr>
                             {{else}}
                             <tr>
-                                <td>You have no campaigns yet</td>
+                                <td rowspan="4">You have no campaigns yet</td>
                             </tr>
                             {{/each}}
                         </tbody>
