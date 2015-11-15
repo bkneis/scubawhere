@@ -1684,7 +1684,7 @@ class BookingController extends Controller {
 			->where('pick_ups.created_at', '>=', date('Y-m-d H:i:s', strtotime('-30 days')))
 			->groupBy('location', 'time')
 			->orderBy('time', 'ASC')
-			->lists('time', 'location');
+			->lists('time', 'location'); // Produces [location => time] array
 	}
 
 	public function postEditInfo()

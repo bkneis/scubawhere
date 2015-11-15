@@ -337,7 +337,7 @@ class ReportController extends Controller {
 
 		foreach($sql as $object)
 		{
-			$name = $object->{'name'};
+			$name = $object->name;
 
 			if(empty($countries[$name])) $countries[$name] = 0;
 
@@ -352,22 +352,25 @@ class ReportController extends Controller {
 		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+		    ->select('certificate_customer.certificate_id', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
+		    ->groupBy('certificate_customer.certificate_id')
 		    ->get();
 
 		$certificates = [];
 
+		$cert_list = Certificate::lists('name', 'id'); // Produces [id => name] array
+
 		foreach($sql as $object)
 		{
-			$cert = Certificate::find($object->{'certificate_id'});
-			$cert_name = $cert->name;
+			$cert_name = $cert_list[$object->certificate_id];
 
 			if(empty($certificates[$cert_name])) $certificates[$cert_name] = 0;
 
 			$certificates[$cert_name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
 		}
 
-		$RESULT['country_revenue'] = $countries;
-		$RESULT['age_revenue'] = $ages;
+		$RESULT['age_revenue']         = $ages;
+		$RESULT['country_revenue']     = $countries;
 		$RESULT['certificate_revenue'] = $certificates;
 
 		return $RESULT;
