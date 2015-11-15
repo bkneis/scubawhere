@@ -233,7 +233,7 @@ class ReportController extends Controller {
 
 		######################################
 		// Generate revenue per booking source
-		$sql = "SELECT source, SUM(price), SUM(discount) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
+		$sql = "SELECT source, SUM(price) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
 		$sql = DB::select($sql, [Context::get()->id, $afterUTC, $beforeUTC]);
 
 		$sources = [];
@@ -244,7 +244,7 @@ class ReportController extends Controller {
 
 			if(empty($sources[$name])) $sources[$name] = 0;
 
-			$sources[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+			$sources[$name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
 		}
 
 		$RESULT['source_revenue'] = $sources;
@@ -329,7 +329,7 @@ class ReportController extends Controller {
 		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
-		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
+		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'))
 		    ->groupBy('customers.country_id')
 		    ->get();
 
@@ -341,7 +341,7 @@ class ReportController extends Controller {
 
 			if(empty($countries[$name])) $countries[$name] = 0;
 
-			$countries[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+			$countries[$name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
 		}
 
 		###########################################
@@ -352,7 +352,7 @@ class ReportController extends Controller {
 		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
-		    ->select('certificate_customer.certificate_id', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
+		    ->select('certificate_customer.certificate_id', DB::raw('SUM(price)'))
 		    ->groupBy('certificate_customer.certificate_id')
 		    ->get();
 
@@ -366,7 +366,7 @@ class ReportController extends Controller {
 
 			if(empty($certificates[$cert_name])) $certificates[$cert_name] = 0;
 
-			$certificates[$cert_name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+			$certificates[$cert_name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
 		}
 
 		$RESULT['age_revenue']         = $ages;
