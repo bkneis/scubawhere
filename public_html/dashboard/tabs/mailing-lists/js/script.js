@@ -290,6 +290,10 @@ function renderGroupEditForm(id) {
         $(this).parent().remove();
     });
     
+    $('#group-form-container').on('click', '.remove-agency', function() {
+        $(this).parent().remove();
+    });
+    
     CKEDITOR.replace('description');
 
 }
