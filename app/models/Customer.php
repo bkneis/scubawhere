@@ -28,7 +28,7 @@ class Customer extends Ardent {
 		'email'           => 'email',
 		'firstname'       => 'required',
 		'lastname'        => 'required',
-		'birthday'        => 'date',
+		'birthday'        => 'sometimes|date',
 		'gender'          => 'integer|between:1,3',
 		'address_1'       => '',
 		'address_2'       => '',
@@ -51,6 +51,9 @@ class Customer extends Ardent {
 
 		if( isset($this->lastname) )
 			$this->lastname = Helper::sanitiseString($this->lastname);
+
+		if( isset($this->birthday) )
+			if(empty($this->birthday)) $this->birthday = null;
 
 		if( isset($this->address_1) )
 			$this->address_1 = Helper::sanitiseString($this->address_1);

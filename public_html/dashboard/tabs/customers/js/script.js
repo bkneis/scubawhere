@@ -114,19 +114,41 @@ $(function() {
 		params._token = window.token;
 		//console.log(params);
 
-		Customer.updateCustomer(params, function success(data) {
-			pageMssg(data.status, 'success');
-			btn.html('Save');
-			$('#edit-customer-modal').modal('hide');
-			Customer.getCustomer("id="+params.id, function(data) {
-				window.customers[params.id] = data;
-				renderCustomerList(window.customers);
+		if(params.mode === 'edit') {
+			delete params.mode;
+
+			Customer.updateCustomer(params, function success(data) {
+				pageMssg(data.status, 'success');
+				btn.html('Save');
+				$('#edit-customer-modal').modal('hide');
+				Customer.getCustomer("id="+params.id, function(data) {
+					window.customers[params.id] = data;
+					renderCustomerList(window.customers);
+				});
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Save');
 			});
-		}, function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
-			btn.html('Save');
-		});
+		}
+		else if(params.mode === 'add') {
+			delete params.mode;
+			delete params.id;
+
+			Customer.createCustomer(params, function success(data) {
+				pageMssg(data.status, 'success');
+				btn.html('Save');
+				$('#edit-customer-modal').modal('hide');
+				Customer.getCustomer("id="+data.id, function(data) {
+					window.customers[data.id] = data;
+					renderCustomerList(window.customers);
+				});
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Save');
+			});
+		}
 	});
 
 	$('#edit-customer-modal').on('change', '#agency_id', function() {
