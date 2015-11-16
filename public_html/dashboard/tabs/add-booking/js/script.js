@@ -44,7 +44,7 @@ Handlebars.registerHelper("tripFinish", function() {
 	if(this.trip) duration = this.trip.duration;
 	if(this.training) duration = this.training.duration;
 
-	var endDate   = friendlyDate( moment(this.start).add(duration, 'hours') );
+	var endDate = friendlyDate( moment(this.start).add(parseFloat(duration), 'hours') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
