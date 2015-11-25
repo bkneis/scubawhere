@@ -52,7 +52,7 @@ Handlebars.registerHelper("tripFinish", function() {
 	}
 
 
-	var endDate = friendlyDate( moment(this.start).add(parseFloat(duration), 'hours').format(YYYY-MM-DD HH:mm:ss) );
+	var endDate = friendlyDate( moment(this.start).add(parseFloat(duration), 'hours').format('YYYY-MM-DD HH:mm:ss') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
