@@ -25,7 +25,7 @@ var Booking = function(data) {
 
 		// Parsing of boolean strings in bookingdetails
 		_.each(this.bookingdetails, function(detail) {
-			this.temporary = parseInt(this.temporary);
+			detail.temporary = parseInt(detail.temporary);
 		});
 
 		this.setStatus();
