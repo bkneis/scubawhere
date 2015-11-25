@@ -23,6 +23,11 @@ var Booking = function(data) {
 	if(data !== undefined) {
 		$.extend(this, data);
 
+		// Parsing of boolean strings in bookingdetails
+		_.each(this.bookingdetails, function(detail) {
+			this.temporary = parseInt(this.temporary);
+		});
+
 		this.setStatus();
 	}
 
