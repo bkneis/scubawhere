@@ -37,22 +37,10 @@ function generateFreeSpacesBar(capacity, id) {
 	return new Handlebars.SafeString(html);
 }
 
-Handlebars.registerHelper("tripFinish", function() {
-	var startDate = friendlyDate(this.start);
-	console.log(this.start);
+Handlebars.registerHelper("tripFinish", function(start, duration) {
+	var startDate = friendlyDate(start);
 
-	var duration = 0;
-	if(this.trip) {
-		duration = this.trip.duration;
-		console.log(this.trip.duration);
-	}
-	if(this.training) {
-		duration = this.training.duration;
-		console.log(this.training.duration);
-	}
-
-
-	var endDate = friendlyDate( moment(this.start).add(parseFloat(duration), 'hours').format('YYYY-MM-DD HH:mm:ss') );
+	var endDate = friendlyDate( moment(start).add(parseFloat(duration), 'hours') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
@@ -2505,7 +2493,8 @@ $(document).ready(function() {
 			// Reload page with new data
 			$(window).trigger('hashchange');
 		}, function error(xhr) {
-			// Let the .ajaxComplete function in main.js handle the Laravel error
+			var data = JSON.parse(xhr.responseText);
+			if(data.errors) pageMssg(data.errors[0]);
 			btn.html('Edit booking');
 		});
 	});
