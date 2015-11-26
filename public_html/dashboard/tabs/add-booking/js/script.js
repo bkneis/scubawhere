@@ -2223,7 +2223,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	});
 });
 
-$('#extra-tab').on('change', '#discount-percentage', function(e) {
+$('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
 	$discount_percentage = $(e.target);
 
