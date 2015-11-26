@@ -1488,7 +1488,7 @@ $('#booking-summary-column').on('click', '.unassign-session', function() {
 				if(relatedCourse === undefined) {
 					relatedCourse = generateEmptyCourse(identifier);
 
-					// Append to booking.selectedPackages
+					// Append to booking.selectedCourses
 					booking.selectedCourses[relatedCourse.UID] = relatedCourse;
 				}
 
@@ -2102,7 +2102,7 @@ $('#booking-summary-column').on('click', '.remove-accommodation', function() {
 			});
 
 			if(relatedPackage === undefined) {
-				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id);
+				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id, removedAccommodation.package);
 
 				// Append to booking.selectedPackages
 				booking.selectedPackages[relatedPackage.UID] = relatedPackage;

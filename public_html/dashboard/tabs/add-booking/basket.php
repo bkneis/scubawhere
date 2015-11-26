@@ -264,7 +264,7 @@
 									{{#unless pivot.packagefacade_id}}
 										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
 									{{else}}
-										<i class="fa fa-tags"></i> (packaged)
+										<p class="bg-warning"><i class="fa fa-tags"></i> {{package.name}}</p>
 									{{/unless}}
 
 								</div>
