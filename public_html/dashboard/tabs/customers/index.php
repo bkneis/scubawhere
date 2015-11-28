@@ -6,7 +6,10 @@
 					<h4 class="panel-title">Search for a customer</h4>
 				</div>
 				<div class="panel-body">
-					<!--<button id="add-new-customer" class="btn btn-success text-uppercase">&plus; New Customer</button>-->
+					<div class="form-row">
+						<button id="add-new-customer" class="btn btn-success text-uppercase">&plus; New Customer</button>
+					</div>
+
 					<form id="find-customer-form">
 						<div class="form-row">
 							<label class="field-label">Customer's First Name</label>
@@ -212,7 +215,7 @@
 					<p class="pull-left"><span class="text-danger">**</span> Required for all customers &nbsp; &nbsp; &nbsp;</p>
 					<p class="pull-left"><span class="text-danger">*</span> Required for lead customer</p>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Save changes</button>
+					<button type="submit" class="btn btn-primary">Save</button>
 				</div>
 			</form>
 		</div>
@@ -284,6 +287,7 @@
 
 <script type="text/x-handlebars-template" id="edit-customer-template">
 	<input type="hidden" name="id" value="{{id}}">
+	<input type="hidden" name="mode" value="{{task}}">
 	<div class="form-group">
 		<div class="col-md-6">
 			<label for="firstname" class="control-label">First Name <span class="text-danger">**</span></label>

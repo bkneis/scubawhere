@@ -12,6 +12,9 @@
 
 		<li class="list-group-item active">
 			<h4 class="list-group-item-heading">Summary<span class="pull-right">{{currency}} {{decimal_price}}</h4>
+			{{#compare discount '!==' '0.00'}}
+				<strong>Discount (included)</strong> <span class="pull-right">{{currency}} {{discount}}</span>
+			{{/compare}}
 		</li>
 		<li class="list-group-item summary-references">
 			<p class="clearfix"><strong>Booking Reference</strong> <span class="pull-right">{{reference}}</span></p>
@@ -46,14 +49,14 @@
 						<div id="booking-summary-{{UID}}" class="panel-collapse collapse" role="tabpanel">
 							<div class="panel-body">
 								{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-package pull-right" data-uid="{{UID}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
-								{{#if courses}}
+								{{#notEmptyObj courses}}
 									<strong>Courses</strong>
 									{{#each courses}}
 										<p>
 											<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
 										</p>
 									{{/each}}
-								{{/if}}
+								{{/notEmptyObj}}
 								{{#if tickets}}
 									<strong>Tickets</strong>
 									{{#each tickets}}
@@ -264,7 +267,7 @@
 									{{#unless pivot.packagefacade_id}}
 										<p><i class="fa fa-money fa-fw"></i> {{currency}} {{decimal_price}}</p>
 									{{else}}
-										<i class="fa fa-tags"></i> (packaged)
+										<p class="bg-warning"><i class="fa fa-tags"></i> {{package.name}}</p>
 									{{/unless}}
 
 								</div>

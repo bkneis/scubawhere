@@ -23,6 +23,11 @@ var Booking = function(data) {
 	if(data !== undefined) {
 		$.extend(this, data);
 
+		// Parsing of boolean strings in bookingdetails
+		_.each(this.bookingdetails, function(detail) {
+			detail.temporary = parseInt(detail.temporary);
+		});
+
 		this.setStatus();
 	}
 
@@ -565,6 +570,10 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
+
+			if(params.package_id)
+				accommodation.package = window.packages[params.package_id];
+
 			accommodation.decimal_price = data.accommodation_decimal_price;
 
 			this.accommodations.push( accommodation );

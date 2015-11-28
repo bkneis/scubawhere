@@ -168,6 +168,7 @@ class BookingController extends Controller {
 			}
 
 			$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
+			$accommodation->package  = Packagefacade::find($accommodation->pivot->packagefacade_id)->package;
 		});
 
 		return $booking;

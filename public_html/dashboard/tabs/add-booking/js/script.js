@@ -37,14 +37,10 @@ function generateFreeSpacesBar(capacity, id) {
 	return new Handlebars.SafeString(html);
 }
 
-Handlebars.registerHelper("tripFinish", function() {
-	var startDate = friendlyDate(this.start);
+Handlebars.registerHelper("tripFinish", function(start, duration) {
+	var startDate = friendlyDate(start);
 
-	var duration = 0;
-	if(this.trip) duration = this.trip.duration;
-	if(this.training) duration = this.training.duration;
-
-	var endDate   = friendlyDate( moment(this.start).add(duration, 'hours') );
+	var endDate = friendlyDate( moment(start).add(parseFloat(duration), 'hours') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
@@ -1492,7 +1488,7 @@ $('#booking-summary-column').on('click', '.unassign-session', function() {
 				if(relatedCourse === undefined) {
 					relatedCourse = generateEmptyCourse(identifier);
 
-					// Append to booking.selectedPackages
+					// Append to booking.selectedCourses
 					booking.selectedCourses[relatedCourse.UID] = relatedCourse;
 				}
 
@@ -2106,7 +2102,7 @@ $('#booking-summary-column').on('click', '.remove-accommodation', function() {
 			});
 
 			if(relatedPackage === undefined) {
-				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id);
+				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id, removedAccommodation.package);
 
 				// Append to booking.selectedPackages
 				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
@@ -2227,7 +2223,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	});
 });
 
-$('#extra-tab').on('change', '#discount-percentage', function(e) {
+$('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
 	$discount_percentage = $(e.target);
 
@@ -2497,7 +2493,8 @@ $(document).ready(function() {
 			// Reload page with new data
 			$(window).trigger('hashchange');
 		}, function error(xhr) {
-			// Let the .ajaxComplete function in main.js handle the Laravel error
+			var data = JSON.parse(xhr.responseText);
+			if(data.errors) pageMssg(data.errors[0]);
 			btn.html('Edit booking');
 		});
 	});
