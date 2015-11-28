@@ -254,6 +254,7 @@ function renderCampaignForm(id) {
         var layout_html_string = '';
         
         $('.option-button').on('click', function() {
+            $('.email-template-option').css('border', 'none');
             $('.email-options-list').css('display', 'none');
             $('#' + $(this).attr('display')).css('display', 'block');
             $('.option-button').removeClass('btn-primary');

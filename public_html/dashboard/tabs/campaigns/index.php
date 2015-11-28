@@ -57,7 +57,8 @@
                         <h4 class="panel-title">My Campaigns</h4>
             </div>
             <div class="panel-body">
-                    <button id="create-campaign" class="btn btn-success text-uppercase pull-right">&plus; New Campaign</button>
+                    <a href="/email-editor" style="color:#FFF" class="btn btn-success text-uppercase pull-right">&plus; New Campaign</a>
+                    <!--<button id="create-campaign" class="btn btn-success text-uppercase pull-right">&plus; New Campaign</button>-->
                     <div style="height:50px;"></div>
                     <table id="email-campaigns-table" class="bluethead">
                         <thead>
