@@ -42,7 +42,8 @@ $PROTOCOL = 'http';
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html>
 <head>
 
