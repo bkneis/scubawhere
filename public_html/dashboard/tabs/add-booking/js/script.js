@@ -2350,9 +2350,9 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 		_.each(detail.addons, function(addon) {
 			if(!addon.pivot.packagefacade_id) {
 				if(addonsSummary[addon.id])
-					addonsSummary[addon.id].qtySummary += addon.pivot.quantity;
+					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
 				else {
-					addon.qtySummary = addon.pivot.quantity;
+					addon.qtySummary = parseInt(addon.pivot.quantity);
 					addonsSummary[addon.id] = addon;
 				}
 			}
