@@ -75,6 +75,10 @@ Handlebars.registerHelper('statusIcon', function() {
 		tooltip = 'Reservation expired on ' + moment(this.reserved_until).format('DD MMM, HH:mm');
 		color   = '#d9534f';
 	}
+	else if(this.status === 'initialised') {
+		icon    = 'fa-star-o';
+		tooltip = 'New';
+	}
 	else if(this.status === 'saved') {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';

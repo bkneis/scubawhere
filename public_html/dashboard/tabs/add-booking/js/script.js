@@ -220,10 +220,14 @@ function statusIcon(booking) {
 		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
 	}
-	else if(this.status === 'expired') {
+	else if(booking.status === 'expired') {
 		icon    = 'fa-clock-o';
-		tooltip = 'Reservation expired on ' + moment(this.reserved_until).format('DD MMM, HH:mm');
+		tooltip = 'Reservation expired on ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
 		color   = '#d9534f';
+	}
+	else if(booking.status === 'initialised') {
+		icon    = 'fa-star-o';
+		tooltip = 'New';
 	}
 	else if(booking.status === 'saved') {
 		icon    = 'fa-floppy-o';
