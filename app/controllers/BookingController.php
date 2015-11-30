@@ -166,9 +166,12 @@ class BookingController extends Controller {
 
 				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
 			}
+			else
+			{
+				$accommodation->package = Packagefacade::find($accommodation->pivot->packagefacade_id)->package;
+			}
 
 			$accommodation->customer = Customer::find($accommodation->pivot->customer_id);
-			$accommodation->package  = Packagefacade::find($accommodation->pivot->packagefacade_id)->package;
 		});
 
 		return $booking;
