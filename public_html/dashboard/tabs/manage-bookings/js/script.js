@@ -69,11 +69,11 @@ Handlebars.registerHelper('statusIcon', function() {
 	else if(this.status === 'reserved') {
 		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved_until).format('DD MMM, HH:mm');
-
-		if(this.reserved_until == null) {
-			tooltip = 'Reservation expired';
-			color   = '#d9534f';
-		}
+	}
+	else if(this.status === 'expired') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reservation expired on ' + moment(this.reserved_until).format('DD MMM, HH:mm');
+		color   = '#d9534f';
 	}
 	else if(this.status === 'saved') {
 		icon    = 'fa-floppy-o';
