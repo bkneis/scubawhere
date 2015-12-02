@@ -70,7 +70,7 @@
 			</tr>
 
 			<tr>
-				<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+				<td align="center" valign="top" width="100%" style="background-color: #ffffff; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
 					<center>
 						<table cellpadding="0" cellspacing="0" width="600" class="w320">
 							<tr>

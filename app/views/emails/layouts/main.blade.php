@@ -1,28 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-<head style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-  <meta name="viewport" content="width=device-width, initial-scale=1" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   @yield('title')
 
-  <style type="text/css" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+  <style type="text/css">
+
+    @import  url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
     /* Take care of image borders and formatting, client hacks */
     img { max-width: 600px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}
     a img { border: none; }
     table { border-collapse: collapse !important;}
-    #outlook a { padding:0; }
-    .ReadMsgBody { width: 100%; }
-    .ExternalClass { width: 100%; }
-    .backgroundTable { margin: 0 auto; padding: 0; width: 100% !important; }
     table td { border-collapse: collapse; }
-    .ExternalClass * { line-height: 115%; }
     .container-for-gmail-android { min-width: 600px; }
 
-
-    /* General styling */
-    * {
-      font-family: Helvetica, Arial, sans-serif;
+    html {
+      top: 0px;
+      left: 0px;
+      margin: 0px;
+      padding: 0px;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
     body {
@@ -31,15 +32,15 @@
       width: 100% !important;
       margin: 0 !important;
       height: 100%;
-      color: #676767;
-    }
-
-    td {
-      font-family: Helvetica, Arial, sans-serif;
+      color: #333333;
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 14px;
-      color: #777777;
-      text-align: center;
       line-height: 21px;
+      line-height: 1.42857143;
+      background-color: #eeeeee;
+      top: 0px;
+      left: 0px;
+      padding: 0px;
     }
 
     a {
@@ -55,18 +56,12 @@
       text-align: right;
     }
 
-    .header-lg,
-    .header-md,
     .header-sm {
       font-size: 32px;
       font-weight: 700;
       line-height: normal;
       padding: 35px 0 0;
       color: #4d4d4d;
-    }
-
-    .header-md {
-      font-size: 24px;
     }
 
     .header-sm {
@@ -92,16 +87,6 @@
       padding-bottom: 8px;
     }
 
-    .free-text {
-      width: 100% !important;
-      padding: 10px 60px 0 60px;
-    }
-
-    .button {
-      padding: 30px 0;
-    }
-
-
     .mini-block {
       border: 1px solid #e5e5e5;
       border-radius: 5px;
@@ -121,19 +106,7 @@
       padding: 10px 14px 10px 15px;
     }
 
-    .product {
-      text-align: left;
-      vertical-align: top;
-      width: 175px;
-    }
-
-    .total-space {
-      padding-bottom: 8px;
-      display: inline-block;
-    }
-
     .item-table {
-      padding: 50px 20px;
       width: 560px;
     }
 
@@ -145,16 +118,6 @@
     .title {
       padding-bottom: 10px;
       width: 300px;
-    }
-
-    .mobile-hide-img {
-      text-align: left;
-      width: 125px;
-    }
-
-    .mobile-hide-img img {
-      border: 1px solid #e6e6e6;
-      border-radius: 4px;
     }
 
     .title-dark {
@@ -178,53 +141,15 @@
       vertical-align: top;
     }
 
-    .item-col-last {
-      padding-top: 20px;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .force-width-gmail {
-      min-width:600px;
-      height: 0px !important;
-      line-height: 1px !important;
-      font-size: 1px !important;
-    }
-
-  </style>
-
-  <style type="text/css" media="screen" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
-  </style>
-
-  <style type="text/css" media="screen" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    @media screen {
-      /* Thanks Outlook 2013! http://goo.gl/XLxpyl */
-      * {
-        font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
-      }
-    }
-  </style>
-
-  <style type="text/css" media="only screen and (max-width: 480px)" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
     /* Mobile styles */
-    @media only screen and (max-width: 480px) {
-
-      table[class*="container-for-gmail-android"] {
+    @media  only screen and (max-width: 480px) {table[class*="container-for-gmail-android"] {
         min-width: 290px !important;
         width: 100% !important;
-      }
-
-      img[class="force-width-gmail"] {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
       }
 
       table[class="w320"] {
         width: 320px !important;
       }
-
 
       td[class*="mobile-header-padding-left"] {
         width: 160px !important;
@@ -236,45 +161,13 @@
         padding-right: 0 !important;
       }
 
-      td[class="header-lg"] {
-        font-size: 24px !important;
-        padding-bottom: 5px !important;
-      }
-
       td[class="content-padding"] {
         padding: 5px 0 5px !important;
-      }
-
-       td[class="button"] {
-        padding: 5px 5px 30px !important;
-      }
-
-      td[class*="free-text"] {
-        padding: 10px 18px 30px !important;
-      }
-
-      td[class~="mobile-hide-img"] {
-        display: none !important;
-        height: 0 !important;
-        width: 0 !important;
-        line-height: 0 !important;
       }
 
       td[class~="item"] {
         width: 140px !important;
         vertical-align: top !important;
-      }
-
-      td[class~="quantity"] {
-        width: 50px !important;
-      }
-
-      td[class~="price"] {
-        width: 90px !important;
-      }
-
-      td[class="item-table"] {
-        padding: 30px 20px !important;
       }
 
       td[class="mini-container-left"],
@@ -284,55 +177,282 @@
         width: 290px !important;
       }
     }
+
+    @font-face {
+      font-family: 'Open Sans';
+      src: url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.eot");
+      src: url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.woff2") format('woff2'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.woff") format('woff'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.ttf") format('truetype'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.svg#open_sansbold") format('svg');
+      font-weight: bold;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Open Sans';
+      src: url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.eot");
+      src: url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.woff2") format('woff2'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.woff") format('woff'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.ttf") format('truetype'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.svg#open_sansregular") format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+    /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+    a {
+      background-color: transparent;
+    }
+    a:active,
+    a:hover {
+      outline: 0;
+    }
+    strong {
+      font-weight: bold;
+    }
+    small {
+      font-size: 80%;
+    }
+    img {
+      border: 0;
+    }
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+    td {
+      padding: 0;
+    }
+    /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
+    @media  print {*,
+      *:before,
+      *:after {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      a,
+      a:visited {
+        text-decoration: underline;
+      }
+      a[href]:after {
+        content: " (" attr(href) ")";
+      }
+      tr,
+      img {
+        page-break-inside: avoid;
+      }
+      img {
+        max-width: 100% !important;
+      }}
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    a {
+      color: #337ab7;
+      text-decoration: none;
+    }
+    a:hover,
+    a:focus {
+      color: #23527c;
+      text-decoration: underline;
+    }
+    a:focus {
+      outline: thin dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px;
+    }
+    img {
+      vertical-align: middle;
+    }
+
+    small {
+      font-size: 85%;
+    }
+
+    table {
+      background-color: transparent;
+    }
+    table td[class*="col-"] {
+      position: static;
+      float: none;
+      display: table-cell;
+    }
+
+    .badge {
+      display: inline-block;
+      min-width: 10px;
+      padding: 3px 7px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 1;
+      vertical-align: baseline;
+      white-space: nowrap;
+      text-align: center;
+      background-color: #777777;
+      border-radius: 10px;
+    }
+    .badge:empty {
+      display: none;
+    }
+
+    @-webkit-keyframes progress-bar-stripes {
+      from {
+        background-position: 40px 0;
+      }
+      to {
+        background-position: 0 0;
+      }
+    }
+    @keyframes  progress-bar-stripes {
+      from {
+        background-position: 40px 0;
+      }
+      to {
+        background-position: 0 0;
+      }
+    }
+
+    .pull-right {
+      float: right !important;
+    }
+    .pull-left {
+      float: left !important;
+    }
+    @-ms-viewport {
+      width: device-width;
+    }
+    @-webkit-keyframes load8 {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @-moz-keyframes load8 {
+      0% {
+        -moz-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @-ms-keyframes load8 {
+      0% {
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @-o-keyframes load8 {
+      0% {
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes  load8 {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /*        ELEMENT STYLES
+    *******************************/
+    *:disabled {
+      opacity: 0.5;
+    }
+
+    a:link,
+    a:visited,
+    a:active,
+    a:hover{
+      color: #4a9cff;
+      text-decoration: none;
+    }
+
+    a:hover{ text-decoration: underline; }
+
+    table{ width: 100%; }
+
+    /* default */
+    table td {
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    @-webkit-keyframes border-blink {
+      50% { border-color: transparent; }
+    }
+    @-moz-keyframes border-blink {
+      50% { border-color: transparent; }
+    }
+    @-ms-keyframes border-blink {
+      50% { border-color: transparent; }
+    }
+    @keyframes  border-blink {
+      50% { border-color: transparent; }
+    }
+
+    /* ###################### */
+    /* ### SUMMARY SCREEN ### */
+    /* ###################### */
+
+    /* Take care of image borders and formatting, client hacks */
+    .container-for-gmail-android {
+        min-width: 600px;
+    }
   </style>
+
 </head>
 
-<body bgcolor="#f7f7f7" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;-webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;height: 100%;color: #676767;width: 100% !important;margin: 0 !important;">
-<table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;min-width: 600px;border-collapse: collapse !important;">
-  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    <td align="left" valign="top" width="100%" style="background: repeat-x url(http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg) #ffffff;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-      <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff" background="http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg" style="background-color: transparent;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td width="100%" height="80" valign="top" style="text-align: center;vertical-align: middle;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;line-height: 21px;border-collapse: collapse;">
-            <!--[if gte mso 9]>
-            <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;height:80px; v-text-anchor:middle;">
-              <v:fill type="tile" src="http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg" color="#ffffff" />
-              <v:textbox inset="0,0,0,0">
-            <![endif]-->
-              <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                <table cellpadding="0" cellspacing="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                    <td class="pull-left mobile-header-padding-left" style="vertical-align: middle;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 290px;padding-left: 10px;padding-bottom: 8px;">
-                      <a href="" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img width="252" height="36" src="https://rms.scubawhere.com/img/scubawhere_logo.png" alt="logo" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
-                    </td>
-                    <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;text-align: right;line-height: 21px;border-collapse: collapse;width: 290px;padding-left: 10px;">
-                      <a href="" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img width="36" height="36" src="https://rms.scubawhere.com/img/twitter.png" alt="twitter" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
-                      <a href="" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img width="36" height="36" src="https://rms.scubawhere.com/img/facebook.png" alt="facebook" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
-                      <a href="" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img width="36" height="36" src="https://rms.scubawhere.com/img/google.png" alt="google" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
-                      <a href="" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img width="36" height="36" src="https://rms.scubawhere.com/img/rss.png" alt="rss" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
-                    </td>
-                  </tr>
-                </table>
-              </center>
-              <!--[if gte mso 9]>
-              </v:textbox>
-            </v:rect>
-            <![endif]-->
+<body bgcolor="#f7f7f7">
+<table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%">
+  <tr>
+    <td align="left" valign="top" width="100%" style="background-color: #fff;">
+      <center>
+        <table cellpadding="0" cellspacing="0" width="600" height="60" class="w320">
+          <tr>
+            <td class="mobile-header-padding-left">
+              <a href="http://scubawhere.com"><img width="252" height="36" src="https://rms.scubawhere.com/img/scubawhere_logo.png" alt="logo"></a>
+            </td>
+            <td class="mobile-header-padding-right">
+              <a href="https://twitter.com/scubawhere"><img width="36" height="36" src="https://rms.scubawhere.com/img/twitter.png" alt="twitter"></a>
+              <a href="https://facebook.com/scubawhere"><img width="36" height="36" src="https://rms.scubawhere.com/img/facebook.png" alt="facebook"></a>
+              <a href="https://plus.google.com/+scubawhere-com"><img width="36" height="36" src="https://rms.scubawhere.com/img/google.png" alt="google"></a>
             </td>
           </tr>
         </table>
       </center>
     </td>
   </tr>
+
   @yield('content')
-  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    <td align="center" valign="top" width="100%" style="background-color: #f7f7f7;height: 100px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-      <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-        <table cellspacing="0" cellpadding="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td style="padding: 25px 0 25px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-              <strong style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">scubawhere Limited</strong>
+
+  <tr>
+    <td align="center" valign="top" width="100%">
+      <center>
+        <table cellspacing="0" cellpadding="0" width="600" class="w320">
+          <tr>
+            <td align="center">
+              <strong>scubawhere Limited</strong>
             </td>
           </tr>
         </table>
