@@ -207,7 +207,7 @@
     <!-- Handlebars templates -->
     <script type="text/x-handlebars-template" id="layout-options-list-template">
         {{#each layout}}
-        <li class="email-layout-option" data-html="{{html_string}}">{{name}}</li>
+            <li class="email-layout-option" data-html="{{html_string}}">{{name}}</li>
         {{/each}}
     </script>
 
