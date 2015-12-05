@@ -232,7 +232,7 @@
                         </a>
                         <a role="button" class="btn btn-default">
                             <p><i class="fa fa-pie-chart fa-3x"></i></p>
-                            <p id="average-click-rate" class="text-center">Avg Click Rate</p>
+                            <p id="average-click-rate" class="text-center">Avg Opened Rate</p>
                         </a>
                     </div>
                     <table id="campaign-analytics-table" class="bluethead">
