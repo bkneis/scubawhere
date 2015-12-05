@@ -266,6 +266,9 @@ $PROTOCOL = 'http';
 							<li>
 								<a href="#campaigns">My Campaigns</a>
 							</li>
+                            <!--<li>
+								<a href="#automated-emails">Automated Emails</a>
+							</li>-->
 						<?php } ?>
 					</ul>
 				</li>
