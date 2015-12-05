@@ -126,4 +126,9 @@ class Customer extends Ardent {
 	{
 		return $this->belongsTo('Country');
 	}
+    
+    public function tokens()
+    {
+        return $this->hasMany('CrmToken');
+    }
 }
