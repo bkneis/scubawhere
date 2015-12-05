@@ -233,15 +233,15 @@ function renderGroupEditForm(id) {
         CustomerGroup.getCustomerAnalysis(params, function success(data) {
             console.log(data);
             groupCustomersTable.clear();
-            for(var i in data.customers)
+            for(var i in data)
             {
                   groupCustomersTable.row.add([
-                      data.customers[i].firstname + data.customers[i].lastname,
-                      data.customers[i].email,
-                      data.customers[i].id,
-                      data.customers[i].emails_opened,
-                      data.num_sent,
-                      parseInt((data.customers[i].emails_opened / data.num_sent) * 100) + '%'
+                      data[i].firstname + data[i].lastname,
+                      data[i].email,
+                      data[i].id,
+                      data[i].num_read,
+                      data[i].num_sent,
+                      parseInt(data[i].opened_rate) + '%'
                   ]);
             }
             groupCustomersTable.draw();
