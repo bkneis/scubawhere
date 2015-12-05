@@ -34,6 +34,10 @@ var Campaign = {
     
     getAnalytics : function(id, handleData) {
         $.get("/api/campaign/analytics", id, handleData);
+    },
+    
+    getAutomationRules : function(handleData) {
+        $.get("/api/campaign/automationRules", handleData);
     }
 
 };
