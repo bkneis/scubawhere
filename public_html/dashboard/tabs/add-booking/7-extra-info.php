@@ -75,6 +75,13 @@
 						</div>
 					</div>
 
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Number of people</label>
+						<div class="col-md-8">
+							<input type="number" name="quantity" id="numberOfPeopleToPickUp" class="form-control" min="1" step="1" style="width: 60px;">
+						</div>
+					</div>
+
 					<div class="form-group" style="margin-bottom: 0;">
 						<div class="col-md-12">
 							<input type="submit" value="Add" class="btn btn-primary pull-right" style="margin-left:5px;">
@@ -90,7 +97,8 @@
 			<div class="row" style="line-height: 2.5;">
 				<div class="col-md-2 col-md-offset-2" style="border-bottom: 1px solid lightgrey">{{friendlyDateNoTime date}}</div>
 				<div class="col-md-1" style="border-bottom: 1px solid lightgrey">{{trimSeconds time}}</div>
-				<div class="col-md-5" style="border-bottom: 1px solid lightgrey">{{location}}</div>
+				<div class="col-md-4" style="border-bottom: 1px solid lightgrey">{{location}}</div>
+				<div class="col-md-1" style="border-bottom: 1px solid lightgrey">x{{quantity}}</div>
 				<div class="col-md-1"><button class="btn btn-sm btn-danger removePickUp" data-id="{{id}}">&times;</button></div>
 			</div>
 		{{else}}

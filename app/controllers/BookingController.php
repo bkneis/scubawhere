@@ -1767,8 +1767,12 @@ class BookingController extends Controller {
 		$data = Input::only(
 			'location',
 			'date',
-			'time'
+			'time',
+			'quantity'
 		);
+
+		if(empty($data['date']) || empty($data['time']))
+			return Response::json(['errors' => ['Please submit both a date and a time for the pick-up.']], 406); // 406 Not Acceptable
 
 		$datetime = new DateTime($data['date'].' '.$data['time']);
 		$data['date'] = $datetime->format('Y-m-d');

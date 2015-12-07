@@ -2202,6 +2202,9 @@ $('[data-target="#extra-tab"]').on('show.bs.tab', function () {
 			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location-input').val() ].substr(0, 5) );
 		}
 	});
+
+	// Auto-fill numberOfPeopleToPickUp field
+	$('#numberOfPeopleToPickUp').val(_.size(booking.selectedCustomers));
 });
 
 $('#extra-tab').on('submit', '#extra-form', function(e, data) {

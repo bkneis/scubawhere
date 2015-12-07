@@ -47,6 +47,7 @@ return array(
     'AddPickUpDateFieldToBookingsTable' => $baseDir . '/app/database/migrations/2014_11_27_114937_add_pick_up_date_field_to_bookings_table.php',
     'AddPickUpsTable' => $baseDir . '/app/database/migrations/2015_10_29_130004_add_pick_ups_table.php',
     'AddQuantityColumnToAddonBookingdetailPivotTable' => $baseDir . '/app/database/migrations/2014_10_14_010948_add_quantity_column_to_addon_bookingdetail_pivot_table.php',
+    'AddQuantityFieldToPickUpsTable' => $baseDir . '/app/database/migrations/2015_12_07_152924_add_quantity_field_to_pick_ups_table.php',
     'AddRecievedAtColumnToPaymentsTable' => $baseDir . '/app/database/migrations/2014_12_01_003730_add_recieved_at_column_to_payments_table.php',
     'AddRegisterDetailsToCompanies' => $baseDir . '/app/database/migrations/2014_11_03_123343_add_register_details_to_companies.php',
     'AddRememberTokenToCompaniesBecauseOfLaravelUpdate' => $baseDir . '/app/database/migrations/2014_05_08_171023_add_remember_token_to_companies_because_of_laravel_update.php',

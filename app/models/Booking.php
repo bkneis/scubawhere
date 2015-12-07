@@ -214,10 +214,12 @@ class Booking extends Ardent {
 		);
 	}
 
+	/*
 	public function setNumberOfCustomersAttribute()
 	{
 		$this->attributes['number_of_customers'] = count(DB::table('booking_details')->where('booking_id', $this->id)->distinct()->select(['customer_id'])->get());
 	}
+	*/
 
 	public function decimal_price()
 	{

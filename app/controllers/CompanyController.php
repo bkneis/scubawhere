@@ -194,10 +194,12 @@ class CompanyController extends Controller {
 		    ->orderBy('time')
 		    ->get();
 
+		/*
 		foreach($pick_ups as &$pick_up)
 		{
 			$pick_up->booking->setNumberOfCustomersAttribute();
 		}
+		*/
 
 		return ['date' => $date, 'pick_ups' => $pick_ups];
 	}

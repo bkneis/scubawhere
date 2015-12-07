@@ -43,7 +43,7 @@
 				<td>{{booking.reference}}</td>
 				<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
 				<td>{{booking.lead_customer.phone}}</td>
-				<td>{{booking.number_of_customers}}</td>
+				<td>{{quantity}}</td>
 				<td>{{{location}}}</td>
 				<td>{{trimSeconds time}}</td>
 			</tr>
