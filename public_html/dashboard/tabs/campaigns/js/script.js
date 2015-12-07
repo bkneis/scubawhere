@@ -19,7 +19,7 @@ $(function () {
     selectedCustomerGroupTemplate = Handlebars.compile($("#selected-group-template").html());
     createCampaignTemplate = Handlebars.compile($("#create-campaign-template").html());
     optionListTemplate = Handlebars.compile($("#layout-options-list-template").html());
-    
+
     campaignAnalyticsTable = $('#campaign-analytics-table').DataTable({
         "paging":   false,
         "ordering": false,
@@ -28,7 +28,7 @@ $(function () {
             {
                 "targets" : [3],
                 "visible" : false
-            }        
+            }
         ]
     });
 
@@ -41,7 +41,7 @@ $(function () {
                 Class.getAll(function success(data) {
                     window.trainings = _.indexBy(data, 'id');
                     CustomerGroup.getAll(function success(data) {
-                        window.groups = _.indexBy(data, 'id'); 
+                        window.groups = _.indexBy(data, 'id');
                         renderCampaignTable();
                     },
                     function error(xhr) {
@@ -77,7 +77,7 @@ function renderCampaignTable() {
                 new_params.groups = [];
                 for(i in data.groups)
                 {
-                   new_params.groups.push(data.groups[i].id);   
+                   new_params.groups.push(data.groups[i].id);
                 }
                 $('#btn-resend-campaign').on('click', function(event) {
                     event.preventDefault();
@@ -122,8 +122,8 @@ function showEmailAnalytics(id) {
         campaignAnalyticsTable.draw(); // how to order ???
         $('#total-emails-seen').html(data.total_seen + ' emails viewed');
         $('#total-emails-sent').html(data.total_sent + ' emails sent');
-        $('#average-click-rate').html(parseInt(((data.total_seen / data.total_sent) * 100)) + ' %' + ' Avg click rate');
-        
+        $('#average-click-rate').html(parseInt(((data.total_seen / data.total_sent) * 100)) + ' %' + ' Avg Opened Rate');
+
         $('#campaign-analytics-table tr').on('click', function () {
             console.log('clicke');
             var tr = $(this).closest('tr');
@@ -220,7 +220,7 @@ function renderCampaignForm(id) {
     $('#add-customer-group-to-campaign').on('click', '.remove-group', function() {
         $(this).parent().remove();
     });
-    
+
     $('#save-as-template').on('click', function(event) {
         event.preventDefault();
         $('#save-email-template-modal').modal('show');
@@ -252,7 +252,7 @@ function renderCampaignForm(id) {
         var email_editor_frame = document.getElementById('email-template-editor');
         var using_layout = true;
         var layout_html_string = '';
-        
+
         $('.option-button').on('click', function() {
             $('.email-template-option').css('border', 'none');
             $('.email-options-list').css('display', 'none');
@@ -271,7 +271,7 @@ function renderCampaignForm(id) {
                 });
             });
         });
-    
+
         $('.email-template-option').on('click', function() {
             $('.email-template-option').css('border', 'none');
             $(this).css('border', '3px solid #FF7163');
@@ -284,7 +284,7 @@ function renderCampaignForm(id) {
             });
             selected_email_template = $(this).attr('data-url');
         });
-        
+
         $('#select-email-template').on('click', function() {
             $('#save-as-template').removeAttr('disabled');
             $('#email-editor-tips').css('display', 'none');
@@ -346,7 +346,7 @@ function sendCampaign(params)
     });
 }
 
-function processEmailHtml(html_string) 
+function processEmailHtml(html_string)
 {
 
     if(!html_string) {
