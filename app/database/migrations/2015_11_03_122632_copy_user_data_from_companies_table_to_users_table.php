@@ -12,6 +12,8 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 	 */
 	public function up()
 	{
+		DB::unprepared("ALTER TABLE `users` CHANGE `password` `password` VARCHAR(60) NULL DEFAULT NULL;");
+
 		$companies = Company::all();
 
 		$companies->each(function($company)
@@ -47,6 +49,8 @@ class CopyUserDataFromCompaniesTableToUsersTable extends Migration {
 	public function down()
 	{
 		DB::table('users')->truncate();
+
+		DB::unprepared("ALTER TABLE `users` CHANGE `password` `password` VARCHAR(60) NOT NULL;");
 	}
 
 }
