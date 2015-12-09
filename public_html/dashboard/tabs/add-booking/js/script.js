@@ -2693,7 +2693,7 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 		$('.nav-wizard > li').not(':last').addClass('disabled');
 	}
 
-	if(Object.keys(booking.selectedCustomers).length === 0) {
+	// if(Object.keys(booking.selectedCustomers).length === 0) {
 		// Load selectedCustomers from bookingdetails
 		_.each(booking.bookingdetails, function(detail) {
 			if(typeof booking.selectedCustomers[detail.customer.id] === 'undefined') {
@@ -2706,8 +2706,8 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 			booking.currentTab = '#customer-tab';
 		}*/
 
-		booking.store();
-	}
+	// 	booking.store();
+	// }
 
 	/**
 	 * The system has been changed to remove selected tickets/packages/courses from the list when they are assigned.
