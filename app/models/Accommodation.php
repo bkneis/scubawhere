@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class Accommodation extends Ardent {
 	use SoftDeletingTrait;
@@ -29,8 +30,8 @@ class Accommodation extends Ardent {
 	}
 
 	public function calculatePrice($start, $end, $limitBefore = false) {
-		$current_date = gettype($start) === "object" ? $start : new DateTime($start, new DateTimeZone( Auth::user()->timezone ));
-		$end          = gettype($end)   === "object" ? $end :   new DateTime($end,   new DateTimeZone( Auth::user()->timezone ));
+		$current_date = gettype($start) === "object" ? $start : new DateTime($start, new DateTimeZone( Context::get()->timezone ));
+		$end          = gettype($end)   === "object" ? $end :   new DateTime($end,   new DateTimeZone( Context::get()->timezone ));
 
 		$totalPrice = 0;
 		$numberOfDays = 0;

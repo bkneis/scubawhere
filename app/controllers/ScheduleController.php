@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Context;
 
 class ScheduleController extends Controller {
 
@@ -8,7 +9,7 @@ class ScheduleController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->schedules()->findOrFail( Input::get('id') );
+			return Context::get()->schedules()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -18,7 +19,7 @@ class ScheduleController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->schedules()->get();
+		return Context::get()->schedules()->get();
 	}
 
 	public function postAdd()
@@ -28,7 +29,7 @@ class ScheduleController extends Controller {
 		try
 		{
 			if( !Input::get('training_session_id') ) throw new ModelNotFoundException();
-			$training_session = Auth::user()->training_sessions()->where('training_sessions.id', Input::get('training_session_id') )->firstOrFail(array('training_sessions.*'));
+			$training_session = Context::get()->training_sessions()->where('training_sessions.id', Input::get('training_session_id') )->firstOrFail(array('training_sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -48,7 +49,7 @@ class ScheduleController extends Controller {
 			return Response::json( array('errors' => $scheduleModel->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$scheduleModel = Auth::user()->timetables()->save($scheduleModel);
+		$scheduleModel = Context::get()->timetables()->save($scheduleModel);
 
 		// Update the referenced session object's timetable ID
 		$training_session->schedule()->associate( $scheduleModel );

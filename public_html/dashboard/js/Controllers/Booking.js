@@ -3,7 +3,7 @@ var Booking = function(data) {
 	// Defaults for new booking
 	this.decimal_price  = "0.00";
 	this.discount       = "0.00";
-	this.lead_customer  = false;
+	this.lead_customer  = null;
 	this.bookingdetails = [];
 	this.accommodations = [];
 	this.payments       = [];
@@ -11,15 +11,22 @@ var Booking = function(data) {
 	this.pick_ups       = [];
 
 	// User interface variables
-	this.currentTab        = null;
 	this.selectedTickets   = {};
 	this.selectedPackages  = {};
 	this.selectedCourses   = {};
 	this.selectedCustomers = {};
 	this.sums              = {};
 
+	this.currentTab        = null;
+	this.mode              = 'view';
+
 	if(data !== undefined) {
 		$.extend(this, data);
+
+		// Parsing of boolean strings in bookingdetails
+		_.each(this.bookingdetails, function(detail) {
+			detail.temporary = parseInt(detail.temporary);
+		});
 
 		this.setStatus();
 	}
@@ -37,12 +44,31 @@ var Booking = function(data) {
 /**
  * Takes the required booking's ID and calls the success callback with a Booking object as its only parameter
  *
- * @param {integer} id The ID of te required session
+ * @param {integer} id The ID of the wanted booking
  * @param {function} successFn Recieves new Booking object as first and only parameter
  */
 Booking.get = function(id, successFn) {
 	$.get("/api/booking", {id: id}, function(data) {
 		successFn( new Booking(data) );
+	});
+};
+
+/**
+ * Takes the ID of the booking to edit and calls the success callback with a Booking object (dublicate of the booking to edit) as its only parameter
+ *
+ * @param {integer} id The ID of the booking to edit
+ * @param {function} successFn Recieves new Booking object as first and only parameter
+ */
+Booking.startEditing = function(id, successFn, errorFn) {
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/start-editing",
+		data: {booking_id: id, _token: window.token},
+		context: this,
+		success: function(data) {
+			successFn( new Booking(data) );
+		},
+		error: errorFn
 	});
 };
 
@@ -154,7 +180,7 @@ Booking.prototype.store = function() {
 		selectedCustomers : this.selectedCustomers,
 		selectedPackages  : this.selectedPackages,
 		selectedCourses   : this.selectedCourses,
-		currentTab        : this.currentTab,
+		// currentTab        : this.currentTab,
 	});
 
 	return true;
@@ -176,8 +202,17 @@ Booking.prototype.loadStorage = function() {
 		this.selectedCustomers = storedObject.selectedCustomers;
 		this.selectedPackages  = storedObject.selectedPackages;
 		this.selectedCourses   = storedObject.selectedCourses ;
-		this.currentTab        = storedObject.currentTab;
+		// this.currentTab        = storedObject.currentTab;
 	}
+};
+
+/**
+ * Remove saved UI state from LocalStorage for this booking
+ */
+Booking.prototype.clearStorage = function() {
+	if(typeof window.basil === 'undefined') Booking.initiateStorage();
+
+	window.basil.remove('booking_' + this.id);
 };
 
 /**
@@ -205,6 +240,8 @@ Booking.prototype.initiate = function(params, successFn, errorFn) {
 			this.source          = params.source || null;
 			this.agent_id        = params.agent_id || null;
 			this.agent_reference = params.agent_reference || null;
+
+			this.mode = 'edit';
 
 			successFn(data.status);
 		},
@@ -276,6 +313,15 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 					id: data.packagefacade_id,
 					package: $.extend(true, {}, window.packages[params.package_id]),
 				};
+
+				// Clean up package object
+				delete detail.packagefacade.package.accommodations;
+				delete detail.packagefacade.package.addons;
+				delete detail.packagefacade.package.courses;
+				delete detail.packagefacade.package.tickets;
+				delete detail.packagefacade.package.base_prices;
+				delete detail.packagefacade.package.prices;
+
 				detail.packagefacade.package.decimal_price = data.package_decimal_price;
 			}
 			else if(params.course_id) {
@@ -425,7 +471,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 				var addon = $.extend(true, {}, window.addons[params.addon_id]);
 				addon.pivot = {
 					quantity: parseInt(params.quantity),
-					packagefacade_id: params.packagefacade_id ? params.packagefacade_id : null,
+					packagefacade_id: params.packagefacade_id || null,
 				};
 				relatedBookingdetail.addons.push( addon );
 			}
@@ -524,6 +570,10 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
+
+			if(params.package_id)
+				accommodation.package = window.packages[params.package_id];
+
 			accommodation.decimal_price = data.accommodation_decimal_price;
 
 			this.accommodations.push( accommodation );
@@ -765,6 +815,41 @@ Booking.prototype.confirm = function(params, successFn, errorFn) {
 };
 
 /**
+ * Apply changes made during the editing to the booking (and parent booking)
+ *
+ * @param  {object} params    Must contain:
+ * - _token
+ *
+ * @param {function} successFn Recieves API data.status as first and only parameter
+ * @param {function} errorFn   Recieves xhr object as first parameter. xhr.responseText contains the API response in plaintext
+ */
+Booking.prototype.applyChanges = function(params, successFn, errorFn) {
+
+	params.booking_id = this.id;
+
+	$.ajax({
+		type: "POST",
+		url: "/api/booking/apply-changes",
+		data: params,
+		context: this,
+		success: function(data) {
+
+			this.reference = data.booking_reference;
+			this.status    = data.booking_status;
+			this.setStatus();
+
+			this.payments = data.payments;
+			this.refunds  = data.refunds;
+
+			this.calculateSums();
+
+			successFn(data.status);
+		},
+		error: errorFn
+	});
+};
+
+/**
  * Cancels the booking.
  * Cancelled bookings DO NOT count towards sessions' utilisation
  *
@@ -964,8 +1049,21 @@ Booking.prototype.setStatus = function() {
 		case 'cancelled': this.cancelled = true; break;
 		default: break;
 	}
-}
+};
 
+Booking.prototype.checkUnassigned = function() {
+	if(_.size(this.selectedTickets)) return true;
+
+	if(_.size(this.selectedCourses) && _.find(this.selectedCourses, function(course) {return course.tickets.length || course.trainings.length})) return true;
+
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return package.tickets.length})) return true;
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return _.size(package.courses) && _.find(package.courses, function(course) {return course.tickets.length || course.trainings.length})})) return true;
+
+	// Next, check for leftover addons or accommodations in selectedPackages
+	if(_.size(this.selectedPackages) && _.find(this.selectedPackages, function(package) {return package.addons.length || package.accommodations.length})) return true;
+
+	return false;
+};
 
 /*
  ********************************

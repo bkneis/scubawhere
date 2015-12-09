@@ -69,15 +69,23 @@ Handlebars.registerHelper('statusIcon', function() {
 	else if(this.status === 'reserved') {
 		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(this.reserved_until).format('DD MMM, HH:mm');
-
-		if(this.reserved_until == null) {
-			tooltip = 'Reservation expired';
-			color   = '#d9534f';
-		}
+	}
+	else if(this.status === 'expired') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reservation expired on ' + moment(this.reserved_until).format('DD MMM, HH:mm');
+		color   = '#d9534f';
+	}
+	else if(this.status === 'initialised') {
+		icon    = 'fa-star-o';
+		tooltip = 'New';
 	}
 	else if(this.status === 'saved') {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
+	}
+	else if(this.status === 'temporary') {
+		icon    = 'fa-pencil';
+		tooltip = 'In editing mode';
 	}
 
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
@@ -132,29 +140,35 @@ Handlebars.registerHelper('addTransactionButton', function(id) {
 	if(this.agent && this.agent.terms === 'fullamount')
 		return '';
 
+	if(this.status === 'temporary')
+		return '';
+
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
+});
+Handlebars.registerHelper('viewButton', function(id) {
+	// The edit button should always be available, because it also works as an info button, to see the booking details
+	return new Handlebars.SafeString('<button onclick="viewBooking(' + this.id + ', this);" class="btn btn-default btn-info"><i class="fa fa-eye fa-fw"></i> View</button>');
 });
 Handlebars.registerHelper('editButton', function(id) {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
-	/*if(this.status === 'cancelled')
-	return '';*/
-
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> View & Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default btn-warning"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
 });
 Handlebars.registerHelper('cancelButton', function() {
 	var disabled = '';
+	var btnText  = 'Cancel';
 
 	if(this.status === 'cancelled')
 		disabled = ' disabled';
 
-	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> Cancel</button>');
+	if(this.status === 'temporary')
+		btnText = 'Discard';
+
+	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', \'' + this.status + '\', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> ' + btnText + '</button>');
 });
 
 //var display;
 
 $(function() {
-
-	var display;
 
 	Customer.getAllCustomers(function(data) {
 		window.customers = _.indexBy(data, 'id');
@@ -163,7 +177,7 @@ $(function() {
 	Booking.getAll(function(data) {
 		// window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(data, function(booking) { return -booking.id; });
-		renderBookingList(window.bookings, display);
+		renderBookingList(window.bookings);
 
 	});
 
@@ -188,24 +202,22 @@ $(function() {
 
 		Booking.filter(params, function success(data) {
 			// Doesn't need sorting, because the server sorts DESC
-			renderBookingList(data, display);
+			renderBookingList(data);
 
 			btn.html('Find Booking');
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0]);
+			if(data.errors) pageMssg(data.errors[0]);
 			btn.html('Find Booking');
 		});
 	});
 
 	$('#find-booking-form').on('reset', function(event) {
-		renderBookingList(window.bookings, display);
+		renderBookingList(window.bookings);
 	});
 
 	$("#booking-types").on('click', ':button', function(){
-		$(".btn-switch").removeClass("btn-primary");
-		display = $(this).attr('display');
-		$("#filter-"+display).addClass("btn-primary");
+		var display = $(this).attr('display');
 		renderBookingList(window.bookings, display);
 	});
 
@@ -247,7 +259,10 @@ function emailCustomer(id) {
 var bookingListItem = Handlebars.compile( $('#booking-list-item-template').html() );
 function renderBookingList(bookings, display) {
 
-	if(!display) var display = "confirmed";
+	if(!display) display = "confirmed";
+
+	$(".btn-switch").removeClass("btn-primary");
+	$("#filter-"+display).addClass("btn-primary");
 
 	var results = [];
 
@@ -257,7 +272,7 @@ function renderBookingList(bookings, display) {
 		Booking.prototype.setStatus.call(booking);
 		// console.log(booking);
 		if(display != "all") {
-			if(booking.status == display) return true;
+			if(booking.status === display) return true;
 		}
 		else
 			return true;
@@ -272,16 +287,35 @@ function renderBookingList(bookings, display) {
 
 }
 
-function editBooking(booking_id, self) {
+function viewBooking(booking_id, self) {
 	// Set loading indicator
 	$(self).after('<span id="save-loader" class="loader"></span>');
 
 	// Load booking data and redirect to add-booking tab
 	Booking.get(booking_id, function success(object) {
-		window.booking = object;
-		window.clickedEdit = true;
+		window.booking      = object;
+		// window.booking.mode = 'view'; // Should be default behavior
+		window.clickedEdit  = true;
 
 		window.location.hash = 'add-booking';
+	});
+}
+
+function editBooking(booking_id, self) {
+	// Set loading indicator
+	$(self).after('<span id="save-loader" class="loader"></span>');
+
+	// Load booking data and redirect to add-booking tab
+	Booking.startEditing(booking_id, function success(object) {
+		window.booking      = object;
+		window.booking.mode = 'edit';
+		window.clickedEdit  = true;
+
+		window.location.hash = 'add-booking';
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		if(data.errors) pageMssg(data.errors[0]);
+		$('.loader').remove();
 	});
 }
 
@@ -302,7 +336,7 @@ function addTransaction(booking_id, self) {
 
 var cancellationFeeTemplate  = Handlebars.compile($("#cancellation-fee-template").html());
 
-function cancelBooking(booking_id, self) {
+function cancelBooking(booking_id, booking_status, self) {
 
 	// Set loading indicator
 	var btn = $(self);
@@ -314,8 +348,8 @@ function cancelBooking(booking_id, self) {
 	};
 
 	$('#modalWindows')
-	.append( cancellationFeeTemplate() )     // Create the modal
-	.children('#modal-cancellation-fee')             // Directly find it and use it
+	.append( cancellationFeeTemplate({'status': booking_status}) ) // Create the modal
+	.children('#modal-cancellation-fee')            // Directly find it and use it
 	.data('params', params)                         // Assign the eventObject to the modal DOM element
 	.reveal({                                       // Open modal window | Options:
 		animation: 'fadeAndPop',                    // fade, fadeAndPop, none
@@ -377,7 +411,7 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	},
 	function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
-		pageMssg(data.errors[0]);
+		if(data.errors) pageMssg(data.errors[0]);
 		btn.html('Cancel Booking');
 	});
 });

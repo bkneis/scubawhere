@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use ScubaWhere\Context;
 
 class AddonController extends Controller {
 
@@ -9,7 +10,7 @@ class AddonController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->addons()->withTrashed()->findOrFail( Input::get('id') );
+			return Context::get()->addons()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -19,17 +20,17 @@ class AddonController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->addons()->get();
+		return Context::get()->addons()->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->addons()->withTrashed()->get();
+		return Context::get()->addons()->withTrashed()->get();
 	}
 
 	public function getCompulsory()
 	{
-		return Auth::user()->addons()->where('compulsory', true)->get();
+		return Context::get()->addons()->where('compulsory', true)->get();
 	}
 
 	public function postAdd()
@@ -54,7 +55,7 @@ class AddonController extends Controller {
 			return Response::json( array('errors' => $addon->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$addon = Auth::user()->addons()->save($addon);
+		$addon = Context::get()->addons()->save($addon);
 
 		return Response::json( ['status' => 'OK. Addon created', 'model' => $addon], 201 ); // 201 Created
 	}
@@ -64,7 +65,7 @@ class AddonController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
+			$addon = Context::get()->addons()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -123,7 +124,7 @@ class AddonController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$addon = Auth::user()->addons()->findOrFail( Input::get('id') );
+			$addon = Context::get()->addons()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -140,7 +141,7 @@ class AddonController extends Controller {
 		catch(QueryException $e)
 		{
 
-			$addon = Auth::user()->addons()->find( Input::get('id') );
+			$addon = Context::get()->addons()->find( Input::get('id') );
 			$addon->delete();
 		}
 

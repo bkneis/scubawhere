@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class PaymentController extends Controller {
 
@@ -10,7 +11,7 @@ class PaymentController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->payments()->with('currency', 'paymentgateway')->findOrFail( Input::get('id') );
+			return Context::get()->payments()->with('currency', 'paymentgateway')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,7 +21,7 @@ class PaymentController extends Controller {
 
 	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->payments()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
+		return Context::get()->payments()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
 	}
 
 	public function getFilter()
@@ -31,7 +32,7 @@ class PaymentController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		return Auth::user()->payments()->with(
+		return Context::get()->payments()->with(
 			// 'currency',
 			'paymentgateway',
 			'booking',
@@ -49,7 +50,7 @@ class PaymentController extends Controller {
 		try
 		{
 			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -71,7 +72,7 @@ class PaymentController extends Controller {
 			return Response::json( array('errors' => array('Cannot add payment, because the booking is '.$booking->status.'.')), 403 ); // 403 Forbidden
 
 		// For now, just use the company's currency
-		$data['currency_id']       = Auth::user()->currency->id;
+		$data['currency_id']       = Context::get()->currency->id;
 
 		// This needs to be defined AFTER $data['currency_id']!
 		$data['amount']            = Input::get('amount');
@@ -87,7 +88,7 @@ class PaymentController extends Controller {
 		$payed    = $booking->payments()->sum('amount');
 		$refunded = $booking->refunds()->sum('amount');
 		$payable  = $booking->price - ($payed - $refunded);
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 		$payable  = number_format(
 			$payable / $currency->getSubunitToUnit(), // number
 			strlen( $currency->getSubunitToUnit() ) - 1, // decimals

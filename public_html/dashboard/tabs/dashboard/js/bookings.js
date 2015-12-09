@@ -18,43 +18,74 @@ Handlebars.registerHelper('sourceIcon', function() {
 });
 
 Handlebars.registerHelper('statusIcon', function() {
-	var icon = '',
-	    color = 'inherit',
-	    tooltip = '';
+	var icon    = '',
+	color   = 'inherit',
+	tooltip = '';
 
 	if(this.status === 'cancelled') {
-		icon = 'fa-ban';
+		icon    = 'fa-ban';
 		tooltip = 'Cancelled';
+
+		// if(this.sums.refundable > 0 {
+			if(this.sums.have > this.cancellation_fee) {
+			// Refund necessary!
+			color   = '#d9534f';
+			tooltip = 'Cancelled, refund necessary';
+		}
+
+		if(this.sums.have < this.cancellation_fee) {
+			color   = '#f0ad4e';
+			tooltip = 'Cancelled, payment outstanding';
+		}
 	}
 	else if(this.status === 'confirmed') {
 		icon = 'fa-check';
 
-		var sum = _.reduce(this.payments, function(memo, payment) {
-			return memo + payment.amount * 1;
-		}, 0);
+		if(this.decimal_price === '0.00') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, free of charge';
+		}
+		else if(this.agent && this.agent.terms === 'fullamount') {
+			color = '#5cb85c';
+			tooltip = 'Confirmed, agent takes full amount';
+		}
+		else {
+			var percentage = this.sums.have / this.decimal_price;
 
-		var percentage = sum / this.decimal_price;
+			if(percentage === 1) color = '#5cb85c';
+			else if(percentage === 0) color = '#d9534f';
+			else color = '#f0ad4e';
 
-		if(percentage === 1) color = '#5cb85c';
-		else if(percentage === 0) color = '#d9534f';
-		else color = '#f0ad4e';
+			if(percentage === 1) tooltip = 'Confirmed, completely paid';
+			else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + this.sums.have + '/' + this.decimal_price + ' paid';
 
-		if(percentage === 1) tooltip = 'Confirmed, completely paid';
-		else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + sum.toFixed(2) + '/' + this.decimal_price + ' paid';
-	}
-	else if(this.status === 'reserved') {
-		icon = 'fa-clock-o';
-		tooltip = 'Reserved until ' + moment(this.reserved).format('MMM Do, HH:mm');
-
-		if(this.reserved == null) {
-			icon = 'fa-exclamation';
-			tooltip = 'Expired reservation!';
-			color = '#d9534f';
+			if(percentage > 1) {
+				icon = 'fa-exclamation';
+				color = '#d9534f';
+				tooltip = 'Confirmed, refund necessary';
+			}
 		}
 	}
+	else if(this.status === 'reserved') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reserved until ' + moment(this.reserved_until).format('DD MMM, HH:mm');
+	}
+	else if(this.status === 'expired') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reservation expired on ' + moment(this.reserved_until).format('DD MMM, HH:mm');
+		color   = '#d9534f';
+	}
+	else if(this.status === 'initialised') {
+		icon    = 'fa-star-o';
+		tooltip = 'New';
+	}
 	else if(this.status === 'saved') {
-		icon = 'fa-floppy-o';
+		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
+	}
+	else if(this.status === 'temporary') {
+		icon    = 'fa-pencil';
+		tooltip = 'In editing mode';
 	}
 
 	return new Handlebars.SafeString('<i class="fa ' + icon + ' fa-fw fa-lg" style="color: ' + color + ';" data-toggle="tooltip" data-placement="top" title="' + tooltip + '"></i>');
@@ -144,7 +175,7 @@ Handlebars.registerHelper('editButton', function() {
 	/*if(this.status === 'confirmed')
 		return '';*/
 
-	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default btn-sm"><i class="fa fa-pencil fa-fw"></i> Edit</button>');
+	return new Handlebars.SafeString('<button onclick="editBooking(' + this.id + ', this);" class="btn btn-default btn-sm"><i class="fa fa-eye fa-fw"></i> View</button>');
 });
 
 $(function() {

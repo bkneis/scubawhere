@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class DepartureController extends Controller {
 
@@ -10,7 +11,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			return Context::get()->departures()->withTrashed()->with('trip', 'boat')->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -29,7 +30,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->with('trip', 'boat')->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->with('trip', 'boat')->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -37,7 +38,7 @@ class DepartureController extends Controller {
 		}
 
 		// Then, we get the associated customers through the bookingdetails, because we need to be able to filter by booking->status
-		$details = Auth::user()->bookingdetails()
+		$details = Context::get()->bookingdetails()
 			->where('session_id', Input::get('id'))
 			->whereHas('booking', function($query)
 			{
@@ -72,7 +73,7 @@ class DepartureController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->departures()->withTrashed()->get();
+		return Context::get()->departures()->withTrashed()->get();
 	}
 
 	public function getToday()
@@ -119,11 +120,11 @@ class DepartureController extends Controller {
 		$data['with_full'] = Input::get('with_full', true);
 
 		// Transform parameter strings into DateTime objects
-		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Auth::user()->timezone ) ); // Defaults to NOW, when parameter is NULL
+		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Context::get()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
 			/*
-			if( $data['after'] > new DateTime('now', new DateTimeZone( Auth::user()->timezone )) )
+			if( $data['after'] > new DateTime('now', new DateTimeZone( Context::get()->timezone )) )
 			{
 				// If the submitted `after` date lies in the future, move the `before` date to return 1 month of results
 				$data['before'] = clone $data['after']; // Shallow copies without reference to cloned object
@@ -132,7 +133,7 @@ class DepartureController extends Controller {
 			else
 			{
 				// If 'after' date lies in the past or is NOW, return results up to 1 month into the future
-				$data['before'] = new DateTime('+1 month', new DateTimeZone( Auth::user()->timezone ));
+				$data['before'] = new DateTime('+1 month', new DateTimeZone( Context::get()->timezone ));
 			}
 			*/
 
@@ -142,7 +143,7 @@ class DepartureController extends Controller {
 		else
 		{
 			// If a 'before' date is submitted, simply use it
-			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Auth::user()->timezone ) );
+			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Context::get()->timezone ) );
 		}
 
 		if( isset($data['before']) && $data['after'] > $data['before'] )
@@ -170,7 +171,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$trip = Auth::user()->trips()->findOrFail( $options['trip_id'] );
+				$trip = Context::get()->trips()->findOrFail( $options['trip_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -184,7 +185,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$ticket = Auth::user()->tickets()->findOrFail( $options['ticket_id'] );
+				$ticket = Context::get()->tickets()->findOrFail( $options['ticket_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -198,7 +199,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$package = Auth::user()->packages()->findOrFail( $options['package_id'] );
+				$package = Context::get()->packages()->findOrFail( $options['package_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -212,7 +213,7 @@ class DepartureController extends Controller {
 		{
 			try
 			{
-				$course = Auth::user()->courses()->findOrFail( $options['course_id'] );
+				$course = Context::get()->courses()->findOrFail( $options['course_id'] );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -265,7 +266,7 @@ class DepartureController extends Controller {
 		  ticket and then (conditionally) to package.
 		*/
 		// Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-		$departures = Auth::user()->departures()->withTrashed()->with(/*'bookings', */'boat', 'boat.boatrooms', 'trip')
+		$departures = Context::get()->departures()->withTrashed()->with(/*'bookings', */'boat', 'boat.boatrooms', 'trip')
 		->whereHas('trip', function($query) use ($trip, $ticket, $package, $course)
 		{
 			$query
@@ -417,7 +418,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::has('trip_id') ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->findOrFail( Input::get('trip_id') );
+			$trip = Context::get()->trips()->findOrFail( Input::get('trip_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -430,7 +431,7 @@ class DepartureController extends Controller {
 			try
 			{
 				if( !Input::has('boat_id') ) throw new ModelNotFoundException();
-				$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+				$boat = Context::get()->boats()->findOrFail( Input::get('boat_id') );
 			}
 			catch(ModelNotFoundException $e)
 			{
@@ -443,7 +444,7 @@ class DepartureController extends Controller {
 		if($trip->boat_required)
 		{
 			// Check if the boat is already being used during the submitted time
-			$tripStart = new DateTime( $data['start'], new DateTimeZone( Auth::user()->timezone ) );
+			$tripStart = new DateTime( $data['start'], new DateTimeZone( Context::get()->timezone ) );
 			$tripEnd   = clone $tripStart;
 
 			$duration_hours   = floor($trip->duration);
@@ -453,7 +454,7 @@ class DepartureController extends Controller {
 			$tripStart = $tripStart->format('Y-m-d H:i:s');
 			$tripEnd   = $tripEnd->format('Y-m-d H:i:s');
 
-			$overlappingSessions = Auth::user()->departures()
+			$overlappingSessions = Context::get()->departures()
 				->where('boat_id', $departure->boat_id)
 				->where('start', '<=', $tripEnd)
 				->where(DB::raw("ADDTIME(start, '$duration_hours:$duration_minutes:0')"), '>=', $tripStart)
@@ -482,7 +483,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -509,7 +510,7 @@ class DepartureController extends Controller {
 				// Check if the boat_id exists and belongs to the logged in company
 				try
 				{
-					$boat = Auth::user()->boats()->findOrFail( Input::get('boat_id') );
+					$boat = Context::get()->boats()->findOrFail( Input::get('boat_id') );
 				}
 				catch(ModelNotFoundException $e)
 				{
@@ -590,7 +591,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -612,7 +613,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->onlyTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -633,7 +634,7 @@ class DepartureController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$departure = Auth::user()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->withTrashed()->where('sessions.id', Input::get('id'))->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -652,7 +653,7 @@ class DepartureController extends Controller {
 				case 'following':
 
 					// Get all affected sessions
-					$sessions = Auth::user()->departures()
+					$sessions = Context::get()->departures()
 						->where('start', '>=', $departure->start)
 						->where('timetable_id', $departure->timetable_id)
 						->with('bookingdetails')

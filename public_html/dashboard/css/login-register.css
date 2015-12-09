@@ -257,5 +257,34 @@ footer{
 	width:100%;
 }
 
-
-
+.password-meter {
+	width: 288px;
+	margin: auto;
+	line-height: 0;
+	margin-top: -4px;
+	margin-bottom: 20px;
+}
+.password-meter span {
+	display: inline-block;
+	background: gainsboro;
+	width: 23%;
+	height: 3px;
+}
+.password-meter.score-1 .meter-1 {
+	background: orangered;
+}
+.password-meter.score-2 .meter-1,
+.password-meter.score-2 .meter-2 {
+	background: darkorange;
+}
+.password-meter.score-3 .meter-1,
+.password-meter.score-3 .meter-2,
+.password-meter.score-3 .meter-3 {
+	background: gold;
+}
+.password-meter.score-4 .meter-1,
+.password-meter.score-4 .meter-2,
+.password-meter.score-4 .meter-3,
+.password-meter.score-4 .meter-4 {
+	background: yellowgreen;
+}

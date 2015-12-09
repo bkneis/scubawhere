@@ -72,6 +72,16 @@ $(function() {
 
 	window.clickedEdit = false;
 
+	// Check for unassigned items (tickets/classes/packaged addons/packaged accommodations)
+	booking.loadStorage();
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items in this booking are still unassigned. Please assign or remove those items before continuing.', 'warning', true);
+		delete booking;
+
+		window.location.href = "#manage-bookings";
+		return false;
+	}
+
 	bookingDetailsTemplate        = Handlebars.compile( $('#booking-details-template').html() );
 	paymentgatewaysSelectTemplate = Handlebars.compile( $('#paymentgateways-select-template').html() );
 

@@ -17,7 +17,7 @@ Route::get('/', function()
 	return Redirect::to('../');
 });
 
-// Route::controller('test', 'TestController');
+Route::controller('test', 'TestController');
 
 Route::controller('password', 'PasswordController');
 Route::controller('register', 'RegisterController');
@@ -37,11 +37,14 @@ Route::get('terms', function()
 Route::post('login', 'AuthenticationController@postLogin');
 Route::get('logout', 'AuthenticationController@getLogout');
 
+//Route::get('get_crm_image', 'CrmTrackingController@getScubaImage');
+
 // These controllers need to be unauthorized, because they are required in registration
 Route::controllers([
 	'agency'   => 'AgencyController',
 	'country'  => 'CountryController',
-	'currency' => 'CurrencyController'
+	'currency' => 'CurrencyController',
+    'crm_tracking' => 'CrmTrackingController'
 ]);
 
 Route::group(array('before' => 'auth|auth.basic|csrf'), function()
@@ -52,31 +55,32 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	});
 
 	Route::controllers([
-		'accommodation' => 'AccommodationController',
-		'addon'         => 'AddonController',
-		'agent'         => 'AgentController',
-		'boat'          => 'BoatController',
-		'boatroom'      => 'BoatroomController',
-		'booking'       => 'BookingController',
-		'campaign'		=> 'CrmCampaignController',
-		'certificate'	=> 'CertificateController',
-		'class'         => 'TrainingController',
-		'class-session' => 'TrainingSessionController',
-		'company'       => 'CompanyController',
-		'course'        => 'CourseController',
-		'customer'      => 'CustomerController',
+		'accommodation'  => 'AccommodationController',
+		'addon'          => 'AddonController',
+		'agent'          => 'AgentController',
+		'boat'           => 'BoatController',
+		'boatroom'       => 'BoatroomController',
+		'booking'        => 'BookingController',
+		'campaign'       => 'CrmCampaignController',
+        'campaign_template' => 'CrmTemplateController',
+		'certificate'    => 'CertificateController',
+		'class'          => 'TrainingController',
+		'class-session'  => 'TrainingSessionController',
+		'company'        => 'CompanyController',
+		'course'         => 'CourseController',
+		'customer'       => 'CustomerController',
 		'customer-group' => 'CrmGroupController',
-		'location'      => 'LocationController',
-		'package'       => 'PackageController',
-		'payment'       => 'PaymentController',
-		'refund'        => 'RefundController',
-		'report'        => 'ReportController',
-		'schedule'      => 'ScheduleController',
-		'search'        => 'SearchController',
-		'session'       => 'DepartureController',
-		'ticket'        => 'TicketController',
-		'timetable'     => 'TimetableController',
-		'trip'          => 'TripController'
+		'location'       => 'LocationController',
+		'package'        => 'PackageController',
+		'payment'        => 'PaymentController',
+		'refund'         => 'RefundController',
+		'report'         => 'ReportController',
+		'schedule'       => 'ScheduleController',
+		'search'         => 'SearchController',
+		'session'        => 'DepartureController',
+		'ticket'         => 'TicketController',
+		'timetable'      => 'TimetableController',
+		'trip'           => 'TripController'
 	]);
 });
 

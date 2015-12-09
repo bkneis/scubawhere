@@ -237,56 +237,49 @@ function randomString() {
 	return result;
 }
 
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
+	// Taken from http://doginthehat.com.au/2012/02/comparison-block-helper-for-handlebars-templates/#comment-44 and extended with '&&', '||' cases
+	var operators, result;
 
-	switch (operator) {
-		case '==':
-		return (v1 == v2)  ? options.fn(this) : options.inverse(this);
-		case '!=':
-		return (v1 != v2)  ? options.fn(this) : options.inverse(this);
-		case '===':
-		return (v1 === v2) ? options.fn(this) : options.inverse(this);
-		case '!==':
-		return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-		case '<':
-		return (v1 < v2)   ? options.fn(this) : options.inverse(this);
-		case '<=':
-		return (v1 <= v2)  ? options.fn(this) : options.inverse(this);
-		case '>':
-		return (v1 > v2)   ? options.fn(this) : options.inverse(this);
-		case '>=':
-		return (v1 >= v2)  ? options.fn(this) : options.inverse(this);
-		case '&&':
-		return (v1 && v2)  ? options.fn(this) : options.inverse(this);
-		case '||':
-		return (v1 || v2)  ? options.fn(this) : options.inverse(this);
-		default:
-		return options.inverse(this);
+	if (arguments.length < 3) {
+		throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
 	}
+
+	if (options === undefined) {
+		options  = rvalue;
+		rvalue   = operator;
+		operator = "===";
+	}
+
+	operators = {
+		'=='    : function (l, r) { return l == r; },
+		'==='   : function (l, r) { return l === r; },
+		'!='    : function (l, r) { return l != r; },
+		'!=='   : function (l, r) { return l !== r; },
+		'<'     : function (l, r) { return l < r; },
+		'>'     : function (l, r) { return l > r; },
+		'<='    : function (l, r) { return l <= r; },
+		'>='    : function (l, r) { return l >= r; },
+		'&&'    : function (l, r) { return l && r; },
+		'||'    : function (l, r) { return l || r; },
+		'typeof': function (l, r) { return typeof l == r; }
+	};
+
+	if (!operators[operator]) {
+		throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+	}
+
+	result = operators[operator](lvalue, rvalue);
+
+	if(result)
+		return options.fn(this);
+	else
+		return options.inverse(this);
+
 });
 
-Handlebars.registerHelper('unlessCond', function (v1, operator, v2, options) {
-
-	switch (operator) {
-		case '==':
-		return (v1 == v2) ? options.inverse(this) : options.fn(this);
-		case '===':
-		return (v1 === v2) ? options.inverse(this) : options.fn(this);
-		case '<':
-		return (v1 < v2) ? options.inverse(this) : options.fn(this);
-		case '<=':
-		return (v1 <= v2) ? options.inverse(this) : options.fn(this);
-		case '>':
-		return (v1 > v2) ? options.inverse(this) : options.fn(this);
-		case '>=':
-		return (v1 >= v2) ? options.inverse(this) : options.fn(this);
-		case '&&':
-		return (v1 && v2) ? options.inverse(this) : options.fn(this);
-		case '||':
-		return (v1 || v2) ? options.inverse(this) : options.fn(this);
-		default:
-		return options.inverse(this);
-	}
+Handlebars.registerHelper("notEmptyObj", function (item, options) {
+	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
 function decRound(number, places) {

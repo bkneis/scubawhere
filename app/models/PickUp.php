@@ -10,6 +10,7 @@ class PickUp extends Ardent {
 		'location'   => 'required',
 		'date'       => 'required|date',
 		'time'       => 'required|time',
+		'quantity'   => 'required|integer|min:1',
 	);
 
 	public function beforeSave( $forced )

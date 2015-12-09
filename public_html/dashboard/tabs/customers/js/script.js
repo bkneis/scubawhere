@@ -114,19 +114,41 @@ $(function() {
 		params._token = window.token;
 		//console.log(params);
 
-		Customer.updateCustomer(params, function success(data) {
-			pageMssg(data.status, 'success');
-			btn.html('Save');
-			$('#edit-customer-modal').modal('hide');
-			Customer.getCustomer("id="+params.id, function(data) {
-				window.customers[params.id] = data;
-				renderCustomerList(window.customers);
+		if(params.mode === 'edit') {
+			delete params.mode;
+
+			Customer.updateCustomer(params, function success(data) {
+				pageMssg(data.status, 'success');
+				btn.html('Save');
+				$('#edit-customer-modal').modal('hide');
+				Customer.getCustomer("id="+params.id, function(data) {
+					window.customers[params.id] = data;
+					renderCustomerList(window.customers);
+				});
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Save');
 			});
-		}, function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
-			btn.html('Save');
-		});
+		}
+		else if(params.mode === 'add') {
+			delete params.mode;
+			delete params.id;
+
+			Customer.createCustomer(params, function success(data) {
+				pageMssg(data.status, 'success');
+				btn.html('Save');
+				$('#edit-customer-modal').modal('hide');
+				Customer.getCustomer("id="+data.id, function(data) {
+					window.customers[data.id] = data;
+					renderCustomerList(window.customers);
+				});
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Save');
+			});
+		}
 	});
 
 	$('#edit-customer-modal').on('change', '#agency_id', function() {
@@ -292,39 +314,6 @@ function editDetails(id) {
 	else {
 		$('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
 	}
-
-	$('#edit-customer-modal').on('change', '#agency_id', function() {
-		var self = $(this);
-
-		if(self.val() === "") self.closest('fieldset').find('#certificate_id').empty();
-
-		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
-
-		certificate_dropdown.html(certificatesTemplate({certificates: window.agencies[self.val()].certificates}));
-		certificate_dropdown.select2("val", "");
-	});
-
-	$('#edit-customer-modal').on('click', '.add-certificate', function(event) {
-		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
-
-		var self = $(this);
-		var agency_dropdown      = self.closest('fieldset').find('#agency_id');
-		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
-
-		if(agency_dropdown.val() === "" || certificate_dropdown.val() === "") return false;
-
-		self.closest('fieldset').find('#selected-certificates').append(selectedCertificateTemplate({
-			id: certificate_dropdown.val(),
-			abbreviation: window.agencies[agency_dropdown.val()].abbreviation,
-			name: _.find(window.agencies[agency_dropdown.val()].certificates, function(certificate) {
-				return certificate.id == certificate_dropdown.val();
-			}).name,
-		}));
-	});
-
-	$('#edit-customer-modal').on('click', '.remove-certificate', function() {
-		$(this).parent().remove();
-	});
 }
 
 function emailCustomer(id) {

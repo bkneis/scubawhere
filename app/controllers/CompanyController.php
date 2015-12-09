@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 /**
  * This controller lets you retrieve and save all data concerning companies. It will only return data for the logged in company. The methods in this controller require authentication.
@@ -12,16 +13,16 @@ class CompanyController extends Controller {
 
 	public function getIndex()
 	{
-        return Auth::user();
+		return Context::get();
 	}
 
 	public function postUpdate()
 	{
-		$data = Input::only('contact', 'description', 'email', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website', 'terms');
+		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', 'phone', 'website', 'terms');
 
 		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
-			$country = Auth::user()->country;
+			$country = Context::get()->country;
 
 			$address = urlencode( implode( ',', array(
 				$data['address_1'],
@@ -58,7 +59,7 @@ class CompanyController extends Controller {
 			}
 		}
 
-		$company = Auth::user();
+		$company = Context::get();
 
 		// Mass assigned insert with automatic validation
 		$company->fill($data);
@@ -159,14 +160,14 @@ class CompanyController extends Controller {
 		}
 
 		// Automatically attach location to the company
-		Auth::user()->locations()->attach( $location->id );
+		Context::get()->locations()->attach( $location->id );
 
 		return Response::json( array('status' => 'OK. Location created', 'id' => $location->id), 201 ); // 201 Created
 	}
 
 	public function postInitialise()
 	{
-		$company = Auth::user();
+		$company = Context::get();
 		$company->fill(array('initialised' => 1));
 		if(!$company->updateUniques())
 			return Response::json( array('errors' => $company->errors()->all()), 406 );
@@ -184,7 +185,7 @@ class CompanyController extends Controller {
 		$date = new DateTime($date);
 		$date = $date->format('Y-m-d');
 
-		$pick_ups = Auth::user()->pick_ups()->with('booking', 'booking.lead_customer')
+		$pick_ups = Context::get()->pick_ups()->with('booking', 'booking.lead_customer')
 		    ->where('date', $date)
 		    ->whereHas('booking', function($query)
 		    {
@@ -193,10 +194,12 @@ class CompanyController extends Controller {
 		    ->orderBy('time')
 		    ->get();
 
+		/*
 		foreach($pick_ups as &$pick_up)
 		{
 			$pick_up->booking->setNumberOfCustomersAttribute();
 		}
+		*/
 
 		return ['date' => $date, 'pick_ups' => $pick_ups];
 	}
@@ -207,7 +210,7 @@ class CompanyController extends Controller {
 		if(empty($data['tab'] && $data['issue']))
 			return Response::json(['errors' => ['A tab and issue is required.']], 406); // 406 Not Acceptable
 
-		Mail::send('emails.feedback', array('company' => Auth::user(), 'feedback' => $data), function($message) {
+		Mail::send('emails.feedback', array('company' => Context::get(), 'feedback' => $data), function($message) {
 			$message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('scubawhereRMS Feedback');
 		});
 	}
@@ -218,7 +221,7 @@ class CompanyController extends Controller {
 		if(empty($data['message'] && $data['subject']))
 			return Response::json(['errors' => ['A message and subject is required.']], 406); // 406 Not Acceptable
 
-		Mail::send('emails.customerEmail', array('company' => Auth::user(), 'data' => $data), function($message) use ($data) {
+		Mail::send('emails.customerEmail', array('company' => Context::get(), 'data' => $data), function($message) use ($data) {
 			$message->to($data['to'], $data['customer_name'])->subject($data['subject']);
 			// $message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
 		});
@@ -251,7 +254,7 @@ class CompanyController extends Controller {
 		array_push($line, date('Y-m-d H:i:s'));
 
 		// Add user ID
-		array_push($line, Auth::user()->id);
+		array_push($line, Context::get()->id);
 
 		// Add identifier of navigation event vs. automated heartbeat (or '-' if not specified)
 		if(Input::has('n'))
@@ -281,13 +284,13 @@ class CompanyController extends Controller {
 
 		$NOTIFICATIONS = [];
 
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 
-		if(!Auth::user()->initialised)
+		if(!Context::get()->initialised)
 			$NOTIFICATIONS['init'] = 'Please start the tour!';
 
 		// TODO Possible performance problem because this query gets ALL counted bookings?
-		$bookings = Auth::user()->bookings()
+		$bookings = Context::get()->bookings()
 			->with('payments', 'refunds')
 			->whereIn('status', Booking::$counted)
 			->orderBy('id', 'DESC')
@@ -301,7 +304,7 @@ class CompanyController extends Controller {
 		$localNow = Helper::localTime();
 		$localNow->setTime(0, 0, 0); // Set localNow datetime to the start of the day, so "today's" trips get returned as well.
 
-		$in24Hours = new DateTime('+24 hours', new DateTimeZone( Auth::user()->timezone ));
+		$in24Hours = new DateTime('+24 hours', new DateTimeZone( Context::get()->timezone ));
 
 		foreach($bookings as $booking)
 		{
@@ -316,7 +319,7 @@ class CompanyController extends Controller {
 				$amountPaid -= $refund->amount;
 			}
 
-			$arrivalDate = new DateTime($booking->arrival_date, new DateTimeZone( Auth::user()->timezone ));
+			$arrivalDate = new DateTime($booking->arrival_date, new DateTimeZone( Context::get()->timezone ));
 
 			/* Get all bookings that have outstanding payments */
 			$amountDue = $booking->price / $currency->getSubunitToUnit() - $amountPaid;
@@ -326,13 +329,13 @@ class CompanyController extends Controller {
 			}
 
 			/* Get all booking that expire within the next 24 hours */
-			if($booking->reserved !== null)
+			if($booking->reserved_until !== null)
 			{
-				$reservedDate = new DateTime($booking->reserved, new DateTimeZone( Auth::user()->timezone ));
+				$reservedDate = new DateTime($booking->reserved_until, new DateTimeZone( Context::get()->timezone ));
 
 				if($reservedDate < $in24Hours && $reservedDate > $localNow)
 				{
-					array_push($expiring, array($booking->reference, $booking->reserved));
+					array_push($expiring, array($booking->reference, $booking->reserved_until));
 				}
 			}
 		}

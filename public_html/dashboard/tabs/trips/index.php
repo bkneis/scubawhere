@@ -70,6 +70,14 @@
 										<strong>{{name}}</strong><br>
 										Lon: {{longitude}} | Lat: {{latitude}}
 									</label>
+								{{else}}
+									<div class="alert alert-danger clearfix">
+										<i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i>
+										<p class="pull-left">
+											<strong>No locations available!</strong><br>
+											Please go to <a href="#locations">Locations</a> to add or select locations for your trips.
+										</p>
+									</div>
 								{{/each}}
 							</div>
 

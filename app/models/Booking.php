@@ -3,6 +3,7 @@
 use LaravelBook\Ardent\Ardent;
 use PhilipBrown\Money\Currency;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class Booking extends Ardent {
 	protected $fillable = array(
@@ -31,7 +32,7 @@ class Booking extends Ardent {
 		'source'           => 'alpha|required_without:agent_id|in:telephone,email,facetoface'/*,frontend,widget,other'*/,
 		'price'            => 'integer|min:0',
 		'discount'         => 'integer|min:0',
-		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled',
+		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled,temporary',
 		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
 		'comment'          => ''
@@ -48,7 +49,7 @@ class Booking extends Ardent {
 
 	public function getDecimalPriceAttribute()
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		return number_format(
 			$this->price / $currency->getSubunitToUnit(), // number
@@ -108,7 +109,7 @@ class Booking extends Ardent {
 
 	public function getCreatedAtLocalAttribute() {
 		$datetime = new DateTime( $this->created_at, new DateTimeZone('UTC') );
-		$datetime->setTimezone( new DateTimeZone( Auth::user()->timezone ) );
+		$datetime->setTimezone( new DateTimeZone( Context::get()->timezone ) );
 
 		return $datetime->format('Y-m-d H:i:s');
 	}
@@ -177,14 +178,14 @@ class Booking extends Ardent {
 
 	public function setDiscountAttribute($value)
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		$this->attributes['discount'] = (int) round( $value * $currency->getSubunitToUnit() );
 	}
 
 	public function getDiscountAttribute($value)
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		return number_format(
 			$value / $currency->getSubunitToUnit(), // number
@@ -196,14 +197,14 @@ class Booking extends Ardent {
 
 	public function setCancellationFeeAttribute($value)
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		$this->attributes['cancellation_fee'] = (int) round( $value * $currency->getSubunitToUnit() );
 	}
 
 	public function getCancellationFeeAttribute($value)
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
 		return number_format(
 			$value / $currency->getSubunitToUnit(), // number
@@ -213,10 +214,12 @@ class Booking extends Ardent {
 		);
 	}
 
+	/*
 	public function setNumberOfCustomersAttribute()
 	{
 		$this->attributes['number_of_customers'] = count(DB::table('booking_details')->where('booking_id', $this->id)->distinct()->select(['customer_id'])->get());
 	}
+	*/
 
 	public function decimal_price()
 	{
@@ -314,7 +317,7 @@ class Booking extends Ardent {
 
 	public function updatePrice($onlyApplyDiscount = false, $oldDiscount = 0)
 	{
-		$currency = new Currency( Auth::user()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 		$tickedOffPackagefacades = [];
 		$tickedOffCourses = [];
 		$sum = 0;

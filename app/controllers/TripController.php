@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use ScubaWhere\Context;
 
 class TripController extends Controller {
 
@@ -9,7 +10,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->trips()->withTrashed()->with(
+			return Context::get()->trips()->withTrashed()->with(
 				array(
 					'locations',
 					'tags',
@@ -25,7 +26,7 @@ class TripController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->trips()->with(
+		return Context::get()->trips()->with(
 			array(
 				'locations',
 				'tags',
@@ -35,7 +36,7 @@ class TripController extends Controller {
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->trips()->withTrashed()->with(
+		return Context::get()->trips()->withTrashed()->with(
 			array(
 				'locations',
 				'tags',
@@ -87,7 +88,7 @@ class TripController extends Controller {
 		}
 
 		// Input has been validated, save the model
-		$trip = Auth::user()->trips()->save($trip);
+		$trip = Context::get()->trips()->save($trip);
 
 		// Trip has been created, let's connect it
 		// Connect locations
@@ -131,7 +132,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->findOrFail( Input::get('id') );
+			$trip = Context::get()->trips()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -180,7 +181,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->findOrFail( Input::get('id') );
+			$trip = Context::get()->trips()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -197,7 +198,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->onlyTrashed()->findOrFail( Input::get('id') );
+			$trip = Context::get()->trips()->onlyTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -214,7 +215,7 @@ class TripController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$trip = Auth::user()->trips()->findOrFail( Input::get('id') );
+			$trip = Context::get()->trips()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{

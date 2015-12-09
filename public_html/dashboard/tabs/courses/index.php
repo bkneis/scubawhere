@@ -125,29 +125,27 @@
 
 	<script type="text/x-handlebars-template" id="ticket-select-template">
 		<p>
-			<select class="ticket-select">
-				<option value="0">Select a ticket</option>
-				{{#each available_tickets}}
-					<option value="{{id}}"
-						{{#if ../existing}}
-							{{selected ../../id}}
-						{{/if}}
-					>{{{name}}}</option>
-				{{/each}}
-			</select>
-
-			Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
-			{{!--
-			<span class="ticket-prices" data-default="-">
-				{{#if existing}}
-					{{#each prices}}
-						<span style="border: 1px solid lightgray; padding: 0.25em 0.5em;">{{from}} - {{until}}: {{currency}} {{multiply ../pivot.quantity decimal_price}}</span>
+			{{#notEmptyObj available_tickets}}
+				<select class="ticket-select">
+					<option value="0">Select a ticket</option>
+					{{#each available_tickets}}
+						<option value="{{id}}"
+							{{#if ../existing}}
+								{{selected ../../id}}
+							{{/if}}
+						>{{{name}}}</option>
 					{{/each}}
-				{{else}}
-				-
-				{{/if}}
-			</span>
-			--}}
+				</select>
+				Quantity: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="tickets[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
+			{{else}}
+				<div class="alert alert-danger clearfix">
+					<i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i>
+					<p class="pull-left">
+						<strong>No tickets available!</strong><br>
+						Please go to <a href="#tickets">Tickets</a> to create tickets for your courses.
+					</p>
+				</div>
+			{{/notEmptyObj}}
 		</p>
 	</script>
 
@@ -163,13 +161,23 @@
 
 	<script type="text/x-handlebars-template" id="class-select-template">
 		<p>
-			<select id="class-select" class="class-select">
-				<option value="0">Select a class</option>
-				{{#each available_trainings}}
-					<option value="{{id}}">{{name}}</option>
-				{{/each}}
-			</select>
-			Number of sessions: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="trainings[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
+			{{#notEmptyObj available_trainings}}
+				<select id="class-select" class="class-select">
+					<option value="0">Select a class</option>
+					{{#each available_trainings}}
+						<option value="{{id}}">{{name}}</option>
+					{{/each}}
+				</select>
+				Number of sessions: &nbsp;<input type="number" class="quantity-input"{{#if pivot.quantity}} name="trainings[{{id}}][quantity]"{{else}} disabled{{/if}} value="{{pivot.quantity}}" min="1" step="1" style="width: 50px;">
+			{{else}}
+				<div class="alert alert-danger clearfix">
+					<i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i>
+					<p class="pull-left">
+						<strong>No classes available!</strong><br>
+						Please go to <a href="#classes">Classes</a> to create classes for your courses.
+					</p>
+				</div>
+			{{/notEmptyObj}}
 		</p>
 	</script>
 

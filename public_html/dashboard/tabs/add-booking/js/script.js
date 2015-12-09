@@ -37,14 +37,10 @@ function generateFreeSpacesBar(capacity, id) {
 	return new Handlebars.SafeString(html);
 }
 
-Handlebars.registerHelper("tripFinish", function() {
-	var startDate = friendlyDate(this.start);
+Handlebars.registerHelper("tripFinish", function(start, duration) {
+	var startDate = friendlyDate(start);
 
-	var duration = 0;
-	if(this.trip) duration = this.trip.duration;
-	if(this.training) duration = this.training.duration;
-
-	var endDate   = friendlyDate( moment(this.start).add(duration, 'hours') );
+	var endDate = friendlyDate( moment(start).add(parseFloat(duration), 'hours') );
 
 	if(startDate.substr(0, 11) === endDate.substr(0, 11))
 		// Only return the time, if the date is the same
@@ -68,10 +64,6 @@ Handlebars.registerHelper("firstChar", function(s) {
 
 Handlebars.registerHelper("isLead", function (customer, options) {
 	return (booking.lead_customer && booking.lead_customer.id == customer.id) ? options.fn(customer) : options.inverse(customer);
-});
-
-Handlebars.registerHelper("notEmptyObj", function (item, options) {
-	return $.isEmptyObject(item) ? options.inverse(this) : options.fn(this);
 });
 
 Handlebars.registerHelper('pricerange', function(base_prices, prices) {
@@ -227,15 +219,23 @@ function statusIcon(booking) {
 	else if(booking.status === 'reserved') {
 		icon    = 'fa-clock-o';
 		tooltip = 'Reserved until ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
-
-		if(booking.reserved_until == null) {
-			tooltip = 'Reservation expired';
-			color   = '#d9534f';
-		}
+	}
+	else if(booking.status === 'expired') {
+		icon    = 'fa-clock-o';
+		tooltip = 'Reservation expired on ' + moment(booking.reserved_until).format('DD MMM, HH:mm');
+		color   = '#d9534f';
+	}
+	else if(booking.status === 'initialised') {
+		icon    = 'fa-star-o';
+		tooltip = 'New';
 	}
 	else if(booking.status === 'saved') {
 		icon    = 'fa-floppy-o';
 		tooltip = 'Saved';
+	}
+	else if(booking.status === 'temporary') {
+		icon    = 'fa-pencil';
+		tooltip = 'In editing mode';
 	}
 	else {
 		icon = 'fa-minus';
@@ -268,6 +268,17 @@ Handlebars.registerHelper('trimSeconds', function(date) {
 	return date.substring(0, date.length - 3);
 });
 
+Handlebars.registerHelper('reference', function() {
+	if(this.status === 'temporary')
+		return this.reference.substr(0, this.reference.length - 1);
+
+	return this.reference;
+});
+
+Handlebars.registerHelper('fullPrice', function() {
+	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
+});
+
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
 	return (parseFloat(decimal_price) * quantity).toFixed(2);
 }); */
@@ -289,6 +300,7 @@ var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-te
 var boatroomModalTemplate       = Handlebars.compile($("#boatroom-select-modal-template").html());
 var pickUpListPartial           = Handlebars.compile($('#pick-up-list-partial').html());
 var bookingSummaryTemplate      = Handlebars.compile($("#booking-summary-template").html());
+var toolbarTemplate             = Handlebars.compile($("#toolbar-template").html());
 
 Handlebars.registerPartial('pick-up-list', pickUpListPartial);
 /**
@@ -437,15 +449,40 @@ window.promises.loadedAccommodations.done(function() {
 });
 
 // Set up disabling and enabling of Prev and Next buttons
-$('a[role="tab"]').on('show.bs.tab', function (e) {
+function setUpPrevNextButtons() {
+	$('.btn-prev').on('click', function() {
+		$('.nav-wizard li').filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+	});
+
+	$('.btn-next').on('click', function() {
+
+		// When the tab is the Extra Info tab, first save the info, before showing the next tab
+		if(booking.currentTab == '#extra-tab') {
+			$('#extra-form').trigger('submit', {
+				callback: function() {
+					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+				}
+			});
+
+			// Break out of function to not trigger the next tab just yet
+			return false;
+		}
+
+		$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+	});
+
+	handlePrevNextButtons();
+}
+function handlePrevNextButtons() {
 	$('.btn-prev').prop('disabled', false);
 	$('.btn-next').prop('disabled', false);
 
-	var currentTab = e.target.getAttribute('data-target');
+	if(booking.currentTab === '#ticket-tab' || booking.mode === 'view')
+		$('.btn-prev').prop('disabled', true);
 
-	if(currentTab === '#ticket-tab')  $('.btn-prev').prop('disabled', true);
-	if(currentTab === '#summary-tab') $('.btn-next').prop('disabled', true);
-});
+	if(booking.currentTab === '#summary-tab')
+		$('.btn-next').prop('disabled', true);
+}
 
 /*
 *************************
@@ -544,7 +581,7 @@ window.promises.loadedTickets.done(function() {
 		pageMssg('<b>' + window.tickets[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-ticket', function() {
+	$('#booking-summary-column').on('click', '.remove-ticket', function() {
 		var id = $(this).data('id');
 
 		//Lower quantity, if last ticket, remove from selected tickets.
@@ -600,7 +637,7 @@ window.promises.loadedPackages.done(function() {
 		pageMssg('<b>' + window.packages[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-package', function() {
+	$('#booking-summary-column').on('click', '.remove-package', function() {
 		var UID = $(this).data('uid');
 		var id  = booking.selectedPackages[UID].id;
 
@@ -642,7 +679,7 @@ window.promises.loadedCourses.done(function() {
 		pageMssg('<b>' + window.courses[id].name + '</b> added to basket.', 'success');
 	});
 
-	$('#booking-summary').on('click', '.remove-course', function() {
+	$('#booking-summary-column').on('click', '.remove-course', function() {
 		var UID = $(this).data('uid');
 		var id  = booking.selectedCourses[UID].id;
 
@@ -822,7 +859,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
 });
 
-$('#booking-summary').on('click', '.remove-customer', function() {
+$('#booking-summary-column').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
 
 	var details = _.filter(booking.bookingdetails, function(detail) {
@@ -986,7 +1023,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 	form.find('#country_id').select2("val", "");
 });
 
-$('#booking-summary').on('click', '.lead-customer', function() {
+$('#booking-summary-column').on('click', '.lead-customer', function() {
 	booking.setLead( {_token: window.token, customer_id: $(this).data('id')}, function success(status) {
 		pageMssg(status, 'success');
 		drawBasket();
@@ -1289,20 +1326,24 @@ function submitAddDetail(params, data) {
 		}
 
 		// Reduce selected quantity
-		var parentPointer = booking;
-		var itemPointer = null;
+		var parentPointer       = booking;
+		var parentParentPointer = booking;
 		if(packageUID) {
 			// It's a top-level package
 			parentPointer = parentPointer.selectedPackages[packageUID];
 		}
 		if(data.parent === 'course') {
-			if(data.parentParent)
+			if(data.parentParent) {
 				// It's a course in a package
-				parentPointer = parentPointer.courses[data.parentUid];
+				parentParentPointer = parentPointer;
+				parentPointer       = parentPointer.courses[data.parentUid];
+			}
 			else
 				// It's a top-level course
 				parentPointer = parentPointer.selectedCourses[data.parentUid];
 		}
+
+		var itemPointer = null;
 		if(data.type === 'ticket') {
 			if(data.parent)
 				// It's a ticket in a course or package
@@ -1340,7 +1381,33 @@ function submitAddDetail(params, data) {
 		}
 
 		// Check if parent still contains something unassigned, otherwise remove parent
-		// TODO ... need parentParentPointer... :$
+		if(parentPointer.reference === undefined) {
+			// Is package or course
+
+			if(parentParentPointer.reference !== undefined) {
+				// Is top-level
+				if(packageUID) {
+					// Check if package is empty yet
+					if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+						delete booking.selectedPackages[parentPointer.UID];
+				}
+				else {
+					if(parentPointer.tickets.length === 0 && parentPointer.trainings.length === 0)
+						delete booking.selectedCourses[parentPointer.UID];
+				}
+			}
+			else {
+				// Is nested course in package
+
+				// Check if course is empty
+				if(parentPointer.tickets.length === 0 && parentPointer.trainings.length === 0)
+					delete parentParentPointer.courses[parentPointer.UID];
+
+				// Now check if package is empty
+				if(parentParentPointer.accommodations.length === 0 && parentParentPointer.addons.length === 0 && parentParentPointer.tickets.length === 0 && _.size(parentParentPointer.courses) === 0)
+					delete booking.selectedPackages[parentParentPointer.UID];
+			}
+		}
 
 		pageMssg(status, 'success');
 
@@ -1351,7 +1418,7 @@ function submitAddDetail(params, data) {
 		drawSessionTicketsList();
 
 		drawBasket(function() {
-			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); //When basket has been refreshed, expand latest bookingdetail
+			$('[data-parent="#booking-summary-trips"]').last().trigger('click'); // When basket has been refreshed, expand latest bookingdetail
 		});
 
 	}, function error(xhr) {
@@ -1385,7 +1452,7 @@ function drawSessionTicketsList() {
 	$('#session-filters').submit();
 }
 
-$('#booking-summary').on('click', '.unassign-session', function() {
+$('#booking-summary-column').on('click', '.unassign-session', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Unassigning...');
 
@@ -1395,74 +1462,43 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 
 	booking.removeDetail(params, function success(status, detail) {
 		// First, take care of attached addons that need to be re-added to a selectedPackage
-		if(detail.ticket) reAddPackagedAddons(detail.addons);
+		if(detail.ticket && detail.addons && detail.packagefacade)
+			reAddPackagedAddons(detail.addons, detail.packagefacade.package);
 
 		// Set up variable that is assigned in IF blocks, but is needed afterwards when checking for still assigned course items
 		var relatedCourse = undefined;
 
 		// Re-add a removed item to selectedTickets/selectedCourses/selectedPackages
-		do { // Enclose the whole procedure in a one-time do-while loop to be able to "break" out of it at any time.
-			if(!detail.packagefacade) {
-				// Not packaged
-				if(!detail.course && detail.ticket) {
-					// Is standalone ticket
-					if(booking.selectedTickets[detail.ticket.id]) {
-						booking.selectedTickets[detail.ticket.id].qty++;
-					}
-					else {
-						detail.ticket.qty = 1;
-						booking.selectedTickets[detail.ticket.id] = detail.ticket;
-					}
+		if(!detail.packagefacade) {
+			// Not packaged
+			if(!detail.course && detail.ticket) {
+				// Is standalone ticket
+				if(booking.selectedTickets[detail.ticket.id]) {
+					booking.selectedTickets[detail.ticket.id].qty++;
 				}
 				else {
-					// Is course
-					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
-
-					relatedCourse = _.find(booking.selectedCourses, function(course) {
-						return course.identifier === identifier;
-					});
-
-					if(relatedCourse === undefined) break;
-
-					if(detail.ticket) {
-						// Is ticket in course
-						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
-							return ticket.id == detail.ticket.id;
-						});
-
-						if(existingTicket !== undefined)
-							existingTicket.qty++;
-						else {
-							detail.ticket.qty = 1;
-							relatedCourse.tickets.push(detail.ticket);
-						}
-					}
-					else {
-						// Is class in course
-						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training.id;
-						});
-
-						if(existingTraining !== undefined)
-							existingTraining.qty++;
-						else {
-							detail.training.qty = 1;
-							relatedCourse.trainings.push(detail.training);
-						}
-					}
+					detail.ticket.qty = 1;
+					booking.selectedTickets[detail.ticket.id] = detail.ticket;
 				}
 			}
 			else {
-				// Is packaged
-				var relatedPackage = _.find(booking.selectedPackages, function(package) {
-					return package.packagefacade == detail.packagefacade.id;
+				// Is course
+				var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
+
+				relatedCourse = _.find(booking.selectedCourses, function(course) {
+					return course.identifier === identifier;
 				});
 
-				if(relatedPackage === undefined) break;
+				if(relatedCourse === undefined) {
+					relatedCourse = generateEmptyCourse(identifier);
 
-				if(!detail.course && detail.ticket) {
-					// Is packaged ticket
-					var existingTicket = _.find(relatedPackage.tickets, function(ticket) {
+					// Append to booking.selectedCourses
+					booking.selectedCourses[relatedCourse.UID] = relatedCourse;
+				}
+
+				if(detail.ticket) {
+					// Is ticket in course
+					var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
 						return ticket.id == detail.ticket.id;
 					});
 
@@ -1470,47 +1506,92 @@ $('#booking-summary').on('click', '.unassign-session', function() {
 						existingTicket.qty++;
 					else {
 						detail.ticket.qty = 1;
-						relatedPackage.tickets.push(detail.ticket);
+						relatedCourse.tickets.push(detail.ticket);
 					}
 				}
 				else {
-					// Is course
-					var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
-
-					relatedCourse = _.find(relatedPackage.courses, function(course) {
-						return course.identifier === identifier;
+					// Is class in course
+					var existingTraining = _.find(relatedCourse.trainings, function(training) {
+						return training.id == detail.training.id;
 					});
 
-					if(relatedCourse === undefined) break;
-
-					if(detail.ticket) {
-						// Is ticket in course in package
-						var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
-							return ticket.id == detail.ticket.id;
-						});
-
-						if(existingTicket !== undefined)
-							existingTicket.qty++;
-						else {
-							detail.ticket.qty = 1;
-							relatedCourse.tickets.push(detail.ticket);
-						}
-					}
+					if(existingTraining !== undefined)
+						existingTraining.qty++;
 					else {
-						var existingTraining = _.find(relatedCourse.trainings, function(training) {
-							return training.id == detail.training_session.training.id;
-						});
-
-						if(existingTraining !== undefined)
-							existingTraining.qty++;
-						else {
-							detail.training_session.training.qty = 1;
-							relatedCourse.trainings.push(detail.training_session.training);
-						}
+						detail.training.qty = 1;
+						relatedCourse.trainings.push(detail.training);
 					}
 				}
 			}
-		} while(false);
+		}
+		else {
+			// Is packaged
+			var relatedPackage = _.find(booking.selectedPackages, function(package) {
+				return package.packagefacade == detail.packagefacade.id;
+			});
+
+			if(relatedPackage === undefined) {
+				relatedPackage = generateEmptyPackage(detail.packagefacade.id, detail.packagefacade.package);
+
+				// Append to booking.selectedPackages
+				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
+			}
+
+			if(!detail.course && detail.ticket) {
+				// Is packaged ticket
+				var existingTicket = _.find(relatedPackage.tickets, function(ticket) {
+					return ticket.id == detail.ticket.id;
+				});
+
+				if(existingTicket !== undefined)
+					existingTicket.qty++;
+				else {
+					detail.ticket.qty = 1;
+					relatedPackage.tickets.push(detail.ticket);
+				}
+			}
+			else {
+				// Is course
+				var identifier = booking.id + '-' + detail.customer.id + '-' + detail.course.id;
+
+				relatedCourse = _.find(relatedPackage.courses, function(course) {
+					return course.identifier === identifier;
+				});
+
+				if(relatedCourse === undefined) {
+					relatedCourse = generateEmptyCourse(identifier);
+
+					// Append to booking.selectedPackages
+					relatedPackage.courses[relatedCourse.UID] = relatedCourse;
+				}
+
+				if(detail.ticket) {
+					// Is ticket in course in package
+					var existingTicket = _.find(relatedCourse.tickets, function(ticket) {
+						return ticket.id == detail.ticket.id;
+					});
+
+					if(existingTicket !== undefined)
+						existingTicket.qty++;
+					else {
+						detail.ticket.qty = 1;
+						relatedCourse.tickets.push(detail.ticket);
+					}
+				}
+				else {
+					var existingTraining = _.find(relatedCourse.trainings, function(training) {
+						return training.id == detail.training.id;
+					});
+
+					if(existingTraining !== undefined)
+						existingTraining.qty++;
+					else {
+						detail.training_session.training.qty = 1;
+						relatedCourse.trainings.push(detail.training_session.training);
+					}
+				}
+			}
+		}
 
 		// Check if, when a course, all tickets/training-sessions have been unassigned
 		// and if so, release the course so it can be assigned to other customers
@@ -1641,15 +1722,21 @@ $('#addon-tab').on('click', '.add-packaged-addon', function() {
 
 	booking.addAddon(params, function success(status) {
 		// Reduce qty
-		for(var i = 0; i < booking.selectedPackages[addon.data('packageUid')].addons.length; i++) {
-			if(booking.selectedPackages[addon.data('packageUid')].addons[i].id == params.addon_id) {
-				booking.selectedPackages[addon.data('packageUid')].addons[i].qty--;
+		var parentPointer = booking.selectedPackages[addon.data('packageUid')];
+
+		for(var i = 0; i < parentPointer.addons.length; i++) {
+			if(parentPointer.addons[i].id == params.addon_id) {
+				parentPointer.addons[i].qty--;
 
 				// Check if qty is now 0, and if so remove the addon from the array
-				if(booking.selectedPackages[addon.data('packageUid')].addons[i].qty === 0)
-					booking.selectedPackages[addon.data('packageUid')].addons.splice(i, 1);
+				if(parentPointer.addons[i].qty === 0)
+					parentPointer.addons.splice(i, 1);
 			}
 		}
+
+		// Check if package is empty yet
+		if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+			delete booking.selectedPackages[parentPointer.UID];
 
 		booking.store();
 
@@ -1700,9 +1787,9 @@ $('#addon-tab').on('click', '.add-addon', function() {
 	});
 });
 
-$('#booking-summary').on('click', '.remove-addon', function() {
+$('#booking-summary-column').on('click', '.remove-addon', function() {
 	var btn = $(this);
-	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
+	btn.html('<i class="fa fa-cog fa-lg fa-spin"></i>');
 
 	var params = {};
 	params._token           = window.token;
@@ -1713,7 +1800,7 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 
 	booking.removeAddon(params, function success(status, removedAddon) {
 		// If the addon was packaged, re-add it to the selected package (if it exists)
-		reAddPackagedAddons([removedAddon]);
+		reAddPackagedAddons([removedAddon], null, params.bookingdetail_id);
 
 		pageMssg(status, 'success');
 
@@ -1722,37 +1809,76 @@ $('#booking-summary').on('click', '.remove-addon', function() {
 	}, function error(xhr) {
 		var data = JSON.parse(xhr.responseText);
 		if(data.errors) pageMssg(data.errors[0], 'danger');
-		btn.html('Remove');
+		btn.html('<i class="fa fa-times fa-lg"></i>');
 	});
 });
 
-function reAddPackagedAddons(removedAddons) {
+function reAddPackagedAddons(removedAddons, package, bookingdetail_id) {
 	_.each(removedAddons, function(removedAddon) {
 		if(removedAddon.compulsory === 1) return;
 
-		if(removedAddon.pivot.packagefacade_id) {
-			var relatedPackage = _.find(booking.selectedPackages, function(package) {
-				return package.packagefacade == removedAddon.pivot.packagefacade_id;
-			});
+		if(!removedAddon.pivot.packagefacade_id) return;
 
-			if(relatedPackage !== undefined) {
-				// Check if the addon already exists in the package
-				var existingAddon = _.find(relatedPackage.addons, function(addon) {
-					return removedAddon.id == addon.id;
-				});
+		var relatedPackage = _.find(booking.selectedPackages, function(package) {
+			return package.packagefacade == removedAddon.pivot.packagefacade_id;
+		});
 
-				if(existingAddon !== undefined) {
-					existingAddon.qty += removedAddon.pivot.quantity;
-				}
-				else {
-					removedAddon.qty = removedAddon.pivot.quantity;
-					relatedPackage.addons.push(removedAddon);
-				}
-
-				updatePackagedAddonsList();
+		if(relatedPackage === undefined) {
+			// When package is passed, just use generateEmptyPackage()
+			// This is the case when a bookingdetail is removed that included addons
+			if(package) {
+				relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, package);
 			}
+			else {
+				// Find bookingdetail and get package from it
+				// This is the case when just the addon is removed
+				relatedPackage = generateEmptyPackage(removedAddon.pivot.packagefacade_id, _.find(booking.bookingdetails, function(detail) {
+					return detail.id == bookingdetail_id;
+				}).packagefacade.package);
+			}
+			booking.selectedPackages[relatedPackage.UID] = relatedPackage;
+		}
+
+		// Check if the addon already exists in the package
+		var existingAddon = _.find(relatedPackage.addons, function(addon) {
+			return removedAddon.id == addon.id;
+		});
+
+		if(existingAddon !== undefined) {
+			existingAddon.qty += removedAddon.pivot.quantity;
+		}
+		else {
+			removedAddon.qty = removedAddon.pivot.quantity;
+			relatedPackage.addons.push(removedAddon);
 		}
 	});
+
+	updatePackagedAddonsList();
+}
+
+function generateEmptyPackage(packagefacade_id, package) {
+	package = $.extend(true, {}, package);
+
+	// Add packagefacade_id to the package object
+	package.packagefacade = packagefacade_id;
+	package.UID           = randomString();
+	package               = $.extend(package, {accommodations: [], addons: [], courses: {}, tickets: []});
+
+	return package;
+}
+
+function generateEmptyCourse(identifier) {
+	var course_id = identifier.split('-')[2];
+
+	// Clone course object from window.courses and empty course of all tickets & classes
+	var course = $.extend(true, {}, window.courses[course_id]);
+
+	// Generate UID and return (don't append to booking.selectedCourses, as the course may be needed to be injected as a child of a package)
+	course.identifier = identifier;
+	course.UID        = randomString();
+	course            = $.extend(course, {tickets: [], trainings: []});
+
+	return course;
 }
 
 window.promises.loadedAccommodations.done(function() {
@@ -1902,17 +2028,23 @@ $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 		var quantity = moment(params.end).diff(moment(params.start), 'days');
 
 		// Reduce qty
-		for(var i = 0; i < booking.selectedPackages[btn.data('packageUid')].accommodations.length; i++) {
-			if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].id == params.accommodation_id) {
-				booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty -= quantity;
+		var parentPointer = booking.selectedPackages[btn.data('packageUid')];
+
+		for(var i = 0; i < parentPointer.accommodations.length; i++) {
+			if(parentPointer.accommodations[i].id == params.accommodation_id) {
+				parentPointer.accommodations[i].qty -= quantity;
 
 				// Check if qty is now 0, and if so remove the accommodation from the array
-				if(booking.selectedPackages[btn.data('packageUid')].accommodations[i].qty === 0)
-					booking.selectedPackages[btn.data('packageUid')].accommodations.splice(i, 1);
+				if(parentPointer.accommodations[i].qty === 0)
+					parentPointer.accommodations.splice(i, 1);
 
 				break;
 			}
 		}
+
+		// Check if package is empty yet
+		if(parentPointer.accommodations.length === 0 && parentPointer.addons.length === 0 && parentPointer.tickets.length === 0 && _.size(parentPointer.courses) === 0)
+			delete booking.selectedPackages[parentPointer.UID];
 
 		booking.store();
 
@@ -1953,7 +2085,7 @@ $('#accommodation-tab').on('click', '.add-accommodation', function() {
 	});
 });
 
-$('#booking-summary').on('click', '.remove-accommodation', function() {
+$('#booking-summary-column').on('click', '.remove-accommodation', function() {
 	var btn = $(this);
 	btn.html('<i class="fa fa-cog fa-spin"></i> Removing...');
 
@@ -1967,31 +2099,36 @@ $('#booking-summary').on('click', '.remove-accommodation', function() {
 	params.start            = $(this).data('start');
 
 	booking.removeAccommodation(params, function success(status, removedAccommodation) {
-		// If the accommodation was packaged, re-add it to the selected package (if it exists)
+		// If the accommodation was packaged, re-add it to the selected package
 		if(removedAccommodation.pivot.packagefacade_id) {
 			var relatedPackage = _.find(booking.selectedPackages, function(package) {
 				return package.packagefacade == removedAccommodation.pivot.packagefacade_id;
 			});
 
-			if(relatedPackage !== undefined) {
-				// Check if the accommodations already exists in the package
-				var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
-					return removedAccommodation.id == accommodations.id;
-				});
+			if(relatedPackage === undefined) {
+				relatedPackage = generateEmptyPackage(removedAccommodation.pivot.packagefacade_id, removedAccommodation.package);
 
-				// Calculate how many nights got removed
-				var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
-
-				if(existingAccommodation !== undefined) {
-					existingAccommodation.qty += quantity;
-				}
-				else {
-					removedAccommodation.qty = quantity;
-					relatedPackage.accommodations.push(removedAccommodation);
-				}
-
-				updatePackagedAccommodationsList();
+				// Append to booking.selectedPackages
+				booking.selectedPackages[relatedPackage.UID] = relatedPackage;
 			}
+
+			// Check if the accommodations already exists in the package
+			var existingAccommodation = _.find(relatedPackage.accommodations, function(accommodations) {
+				return removedAccommodation.id == accommodations.id;
+			});
+
+			// Calculate how many nights got removed
+			var quantity = moment(removedAccommodation.pivot.end).diff(moment(removedAccommodation.pivot.start), 'days');
+
+			if(existingAccommodation !== undefined) {
+				existingAccommodation.qty += quantity;
+			}
+			else {
+				removedAccommodation.qty = quantity;
+				relatedPackage.accommodations.push(removedAccommodation);
+			}
+
+			updatePackagedAccommodationsList();
 		}
 
 		booking.store();
@@ -2065,6 +2202,9 @@ $('[data-target="#extra-tab"]').on('show.bs.tab', function () {
 			$('#pick-up-time').val( window.pick_up_locations[ $('#pick-up-location-input').val() ].substr(0, 5) );
 		}
 	});
+
+	// Auto-fill numberOfPeopleToPickUp field
+	$('#numberOfPeopleToPickUp').val(_.size(booking.selectedCustomers));
 });
 
 $('#extra-tab').on('submit', '#extra-form', function(e, data) {
@@ -2090,7 +2230,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	});
 });
 
-$('#extra-tab').on('change', '#discount-percentage', function(e) {
+$('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
 	$discount_percentage = $(e.target);
 
@@ -2217,9 +2357,9 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 		_.each(detail.addons, function(addon) {
 			if(!addon.pivot.packagefacade_id) {
 				if(addonsSummary[addon.id])
-					addonsSummary[addon.id].qtySummary += addon.pivot.quantity;
+					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
 				else {
-					addon.qtySummary = addon.pivot.quantity;
+					addon.qtySummary = parseInt(addon.pivot.quantity);
 					addonsSummary[addon.id] = addon;
 				}
 			}
@@ -2259,6 +2399,10 @@ $('#summary-tab').on('click', '.save-booking', function() {
 });
 
 $('#summary-tab').on('click', '.confirm-booking', function() {
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
 
 	var params = {};
 	params._token = window.token;
@@ -2277,6 +2421,11 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 
 $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 	event.preventDefault();
+
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
 
 	var params = $(this).serializeObject();
 
@@ -2311,7 +2460,7 @@ $(document).ready(function() {
 	$('#agency_id').select2();
 	$('#certificate_id').select2();
 
-	//This function runs whenever a new step has loaded
+	// This function runs whenever a new step has loaded
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		booking.currentTab = $(e.target).data('target');
 		booking.store();
@@ -2327,55 +2476,89 @@ $(document).ready(function() {
 			$('#booking-summary-column').show();
 		}
 
+		if(booking) {
+			$('#booking-toolbar').html(toolbarTemplate({'booking': booking}));
+
+			if(booking.status === 'temporary' || booking.mode === 'view')
+				$('#margin-bottom-needed').css('margin-bottom', '50px');
+		}
+
+		handlePrevNextButtons();
 	});
 
-	$('.btn-prev').on('click', function() {
-	    $('.nav-wizard li').filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+	// Toolbar click handlers
+	$('#booking-toolbar').on('click', '.edit-booking', function() {
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
+
+		// Load booking data and redirect to add-booking tab
+		Booking.startEditing(booking.id, function success(object) {
+			window.booking      = object;
+			window.booking.mode = 'edit';
+			window.clickedEdit  = true;
+
+			// Reload page with new data
+			$(window).trigger('hashchange');
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			if(data.errors) pageMssg(data.errors[0]);
+			btn.html('Edit booking');
+		});
 	});
 
-	$('.btn-next').on('click', function() {
+	$('#booking-toolbar').on('click', '.abandon-booking', function() {
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
 
-		// When the tab is the Extra Info tab, first save the info, before showing the next tab
-		if(booking.currentTab == '#extra-tab') {
-			$('#extra-form').trigger('submit', {
-				callback: function() {
-					$('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-				}
+		if(confirm('Really discard all changes to this booking?'))
+			booking.cancel({_token: window.token}, function success(status) {
+				pageMssg('Ok, all changes have been discarded.', 'success');
+
+				// Remove local data
+				booking.clearStorage();
+
+				window.location.hash = '#manage-bookings';
+			}, function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+				if(data.errors) pageMssg(data.errors[0], 'danger');
+				btn.html('Discard changes');
 			});
+		else
+			btn.html('Discard changes');
+	});
 
-			// Break out of function to not trigger the next tab just yet
+	$('#booking-toolbar').on('click', '.apply-booking', function() {
+		if(booking.checkUnassigned()) {
+			pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
 			return false;
 		}
 
-	    $('.nav-wizard li').filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+		var btn = $(this);
+		btn.append(' <i class="fa fa-cog fa-fw fa-spin"></i>');
+
+		booking.applyChanges({_token: window.token}, function success(status) {
+			pageMssg(status, 'success');
+
+			window.booking.mode = 'view';
+			window.clickedEdit  = true;
+
+			$(window).trigger('hashchange');
+		}, function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			if(data.errors) pageMssg(data.errors[0], 'danger');
+			btn.html('Apply changes');
+		});
 	});
 
 	$('a[data-toggle="tab"]').on('click', function () {
-		if(!$(this).hasClass('done') && !$(this).hasClass('selected')) {
+		var $self = $(this);
+		if((!$self.hasClass('done') && !$self.hasClass('selected')) || (booking.mode === 'view' && $self.attr('data-target') !== '#summary-tab')) {
 			return false;
 		}
 	});
 
 	$('#wrapper').on('click', '.list-group-radio', function() {
 		listGroupRadio($(this));
-	});
-
-	$('#booking-summary').on('click', '.accordion-heading', function() {
-		if($(this).find('.expand-icon').hasClass('fa-plus-square-o')) {
-			$(this).find('.expand-icon').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-		}else{
-			$(this).find('.expand-icon').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-		}
-	});
-
-	$('#booking-summary').on('click', '.list-expand', function() {
-		if($(this).hasClass('fa-plus-square-o')) {
-			$(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideDown();
-		}else{
-			$(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-			$(this).closest('.list-group-expandable').children().not('list-group-heading').slideUp();
-		}
 	});
 
 	$('.alert-container').remove();
@@ -2462,6 +2645,11 @@ function friendlyDateNoTime(date) {
 }
 
 function addTransaction() {
+	if(booking.checkUnassigned()) {
+		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
+		return false;
+	}
+
 	window.clickedEdit = true;
 	window.location.hash = 'add-transaction';
 }
@@ -2482,8 +2670,9 @@ function drawBasket(doneFn) {
 		return accom.pivot.start;
 	});
 
-	$('#booking-summary').html(bookingSummaryTemplate(booking)).promise().done(function(){
+	$('#booking-summary-column').html(bookingSummaryTemplate(booking)).promise().done(function(){
 	    if($.isFunction(doneFn)) doneFn();
+	    setUpPrevNextButtons();
 	});
 }
 
@@ -2494,7 +2683,17 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	window.clickedEdit = false;
 	booking.loadStorage();
 
-	if(Object.keys(booking.selectedCustomers).length === 0) {
+	if(booking.mode === 'edit') {
+		booking.currentTab = '#ticket-tab';
+	}
+	else {
+		booking.currentTab = '#summary-tab';
+
+		// Visually disable navigation (the functionality is disabled already because of the booking.mode)
+		$('.nav-wizard > li').not(':last').addClass('disabled');
+	}
+
+	// if(Object.keys(booking.selectedCustomers).length === 0) {
 		// Load selectedCustomers from bookingdetails
 		_.each(booking.bookingdetails, function(detail) {
 			if(typeof booking.selectedCustomers[detail.customer.id] === 'undefined') {
@@ -2507,8 +2706,8 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 			booking.currentTab = '#customer-tab';
 		}*/
 
-		booking.store();
-	}
+	// 	booking.store();
+	// }
 
 	/**
 	 * The system has been changed to remove selected tickets/packages/courses from the list when they are assigned.
@@ -2553,6 +2752,11 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 	}
 	*/
 
+	/**
+	 * The system has been changed to a separation between viewing a booking and editing a booking.
+	 * As a result, fixed starting tabs have been set for both modes and as such the starting tab does
+	 * not need to be calculated anymore.
+
 	if(booking.currentTab === null) {
 		booking.currentTab = '#ticket-tab';
 		// if(Object.keys(booking.selectedTickets).length > 0) booking.currentTab = '#customer-tab';
@@ -2561,6 +2765,7 @@ if(typeof booking !== 'undefined' && typeof clickedEdit !== 'undefined' && click
 
 		booking.store();
 	}
+	*/
 
 	$('[data-target="'+booking.currentTab+'"]').tab('show');
 	drawBasket();

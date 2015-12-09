@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use ScubaWhere\Context;
 
 class BoatroomController extends Controller {
 
@@ -9,7 +10,7 @@ class BoatroomController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->boatrooms()->findOrFail( Input::get('id') );
+			return Context::get()->boatrooms()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -19,7 +20,7 @@ class BoatroomController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->boatrooms()->get();
+		return Context::get()->boatrooms()->get();
 	}
 
 	public function postAdd()
@@ -36,7 +37,7 @@ class BoatroomController extends Controller {
 			return Response::json( array('errors' => $boatroom->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$boatroom = Auth::user()->boatrooms()->save($boatroom);
+		$boatroom = Context::get()->boatrooms()->save($boatroom);
 
 		return Response::json( array('status' => 'OK. Cabin created', 'id' => $boatroom->id), 201 ); // 201 Created
 	}
@@ -46,7 +47,7 @@ class BoatroomController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Auth::user()->boatrooms()->findOrFail( Input::get('id') );
+			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -73,7 +74,7 @@ class BoatroomController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Auth::user()->boatrooms()->findOrFail( Input::get('id') );
+			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -90,7 +91,7 @@ class BoatroomController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Auth::user()->boatrooms()->onlyTrashed()->findOrFail( Input::get('id') );
+			$boatroom = Context::get()->boatrooms()->onlyTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -108,7 +109,7 @@ class BoatroomController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Auth::user()->boatrooms()->findOrFail( Input::get('id') );
+			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{

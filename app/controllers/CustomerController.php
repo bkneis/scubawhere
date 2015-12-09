@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Context;
 
 class CustomerController extends Controller {
 
@@ -8,7 +9,7 @@ class CustomerController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->customers()->with('certificates', 'certificates.agency')->findOrFail( Input::get('id') );
+			return Context::get()->customers()->with('certificates', 'certificates.agency')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -18,7 +19,7 @@ class CustomerController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->customers()->with('certificates', 'certificates.agency')->get();
+		return Context::get()->customers()->with('certificates', 'certificates.agency')->get();
 	}
 
 	public function getFilter($from = 0, $take = 20)
@@ -37,7 +38,7 @@ class CustomerController extends Controller {
 		if(empty($firstname) && empty($lastname) && empty($email))
 			return $this->getAll();
 
-		$customers = Auth::user()->customers()
+		$customers = Context::get()->customers()
 			->where(function($query) use ($firstname)
 			{
 				if(!empty($firstname))
@@ -94,10 +95,10 @@ class CustomerController extends Controller {
 		}
 
 		// Validate that the customer does not already exist within the logged-in company
-		if( !empty($data['email']) && Auth::user()->customers()->where('email', $data['email'])->count() > 0 )
+		if( !empty($data['email']) && Context::get()->customers()->where('email', $data['email'])->count() > 0 )
 			return Response::json( array('errors' => 'Cannot create new customer! The email already exists.'), 409 ); // 409 Conflict
 
-		$customer = Auth::user()->customers()->save($customer);
+		$customer = Context::get()->customers()->save($customer);
 
 		$certificates = Input::get('certificates', []);
 		if( $certificates && !empty($certificates) && is_array($certificates) && (count($certificates) === 0 || is_numeric($certificates[0])) )
@@ -120,7 +121,7 @@ class CustomerController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$customer = Auth::user()->customers()->findOrFail( Input::get('id') );
+			$customer = Context::get()->customers()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{

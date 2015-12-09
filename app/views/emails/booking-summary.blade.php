@@ -1,240 +1,522 @@
 @extends('emails.layouts.main')
 
 @section('title')
-    <title>ScubawhereRMS Booking Summary</title>
+	<title>{{$company->name}} Booking Summary</title>
 @stop
 
 @section('content')
-    <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    <td align="center" valign="top" width="100%" style="background-color: #f7f7f7;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 20px 0 5px;" class="content-padding">
-      <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-        <table cellspacing="0" cellpadding="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td class="header-lg" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 32px;color: #4d4d4d;text-align: center;line-height: normal;border-collapse: collapse;font-weight: 700;padding: 35px 0 0;">
-              Your scubawhere booking summary
-            </td>
-          </tr>
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td class="free-text" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 10px 60px 0 60px;width: 100% !important;">
-              The details for your order with reference is below.
-            </td>
-          </tr>
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td class="button" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 30px 0;">
-              <div style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"><!--[if mso]>
-                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{$siteUrl}}/#manage-bookings" style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%" strokecolor="#ffffff" fillcolor="#4a89dc">
-                  <w:anchorlock/>
-                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">View Booking</center>
-                </v:roundrect>
-                <![endif]--><a class="button-mobile" href="{{$siteUrl}}/#manage-bookings" style="background-color:#4a89dc;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">View Booking</a>
-              </div>
-            </td>
-          </tr>
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-              <table cellpadding="0" cellspacing="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                  <td class="mini-container-left" style="width: 278px;padding: 10px 0 10px 15px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-                    <table cellpadding="0" cellspacing="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                      <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                        <td class="mini-block-padding" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-                          <table cellspacing="0" cellpadding="0" width="100%" style="border-collapse: separate !important;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                              <td class="mini-block" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;border: 1px solid #e5e5e5;border-radius: 5px;background-color: #ffffff;padding: 12px 15px 15px;width: 253px;">
-                                <span class="header-sm" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 18px;font-weight: 700;line-height: 1.3;padding: 5px 0;color: #4d4d4d;">Lead Customer</span><br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                {{{$booking->lead_customer->firstname}}} {{{$booking->lead_customer->lastname}}} <br>
-                                @if ($booking->lead_customer->address_1)
-                                  {{{$booking->lead_customer->address_1}}} <br>
-                                @endif
-                                @if ($booking->lead_customer->city)
-                                  {{{$booking->lead_customer->city}}},
-                                @endif
-                                @if ($booking->lead_customer->county)
-                                  {{{$booking->lead_customer->county}}},
-                                @endif
-                                @if ($booking->lead_customer->postcode)
-                                  {{{$booking->lead_customer->postcode}}}
-                                @endif
-                                <br>{{{$booking->lead_customer->country->name}}}
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td class="mini-container-right" style="width: 278px;padding: 10px 14px 10px 15px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-                    <table cellpadding="0" cellspacing="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                      <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                        <td class="mini-block-padding" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-                          <table cellspacing="0" cellpadding="0" width="100%" style="border-collapse: separate !important;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                              <td class="mini-block" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;border: 1px solid #e5e5e5;border-radius: 5px;background-color: #ffffff;padding: 12px 15px 15px;width: 253px;">
-                                <span class="header-sm" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 18px;font-weight: 700;line-height: 1.3;padding: 5px 0;color: #4d4d4d;">Booking Date</span><br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                {{$booking->created_at}} <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                <span class="header-sm" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 18px;font-weight: 700;line-height: 1.3;padding: 5px 0;color: #4d4d4d;">Booking Reference</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                {{$booking->reference}}
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </center>
-    </td>
-  </tr>
-  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    <td align="center" valign="top" width="100%" style="background-color: #ffffff;border-top: 1px solid #e5e5e5;border-bottom: 1px solid #e5e5e5;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
-      <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-        <table cellpadding="0" cellspacing="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-            <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-              <td class="item-table" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 50px 20px;width: 560px;">
-                <table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                    <td class="title-dark" width="120" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #4d4d4d;text-align: left;line-height: 21px;border-collapse: collapse;border-bottom: 1px solid #cccccc;font-weight: 700;padding-bottom: 5px;">
-                       Trip
-                    </td>
-                    <td class="title-dark" width="340" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #4d4d4d;text-align: left;line-height: 21px;border-collapse: collapse;border-bottom: 1px solid #cccccc;font-weight: 700;padding-bottom: 5px;">
-                      
-                    </td>
-                    <td class="title-dark" width="100" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #4d4d4d;text-align: left;line-height: 21px;border-collapse: collapse;border-bottom: 1px solid #cccccc;font-weight: 700;padding-bottom: 5px;">
-                      Total
-                    </td>
-                  </tr>
 
-                  @foreach ($booking->bookingdetails as $bookingdetail)
-                    <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <td class="item-col" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                        <table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <td class="item-col-inner title" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-bottom: 10px;width: 300px;vertical-align: top;">
-                              <span style="color: #4d4d4d;font-weight: bold;font-size: 17px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">{{$bookingdetail->session->trip->name}}</span>
-                            </td>
-                          </tr>
-                          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
-                              <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Customer:</span> {{{$bookingdetail->customer->firstname}}} {{{$bookingdetail->customer->lastname}}} <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            </td>
-                          </tr>
-                          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
-                              <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Ticket</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"> 
-                              @if ($bookingdetail->packagefacade_id)
-                                {{{$bookingdetail->ticket->name}}}<br>
-                                <em>From "{{{$bookingdetail->package->name}}}" package</em>
-                              @else
-                                {{{$bookingdetail->ticket->name}}}  | {{$company->currency->symbol}}{{{$bookingdetail->ticket->decimal_price}}}<br>
-                              @endif
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td class="item-col" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                        <table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-                          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            <td class="item-col-inner title" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-bottom: 10px;width: 300px;vertical-align: top;">
-                              &nbsp;
-                            </td>
-                          </tr>
-                          @if ($bookingdetail->addons)
-                            <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                              <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
-                                <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Addons</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                @foreach ($bookingdetail->addons as $addon)
-                                  @if($addon->pivot->packagefacade_id)
-                                    {{$addon->name}} (Packaged)<br>
-                                  @else
-                                    {{$addon->name}} | {{$company->currency->symbol}}{{$addon->decimal_price}}<br>
-                                  @endif
-                                @endforeach
-                              </td>
-                            </tr>
-                          @endif
-                          @if ($bookingdetail->course)
-                            <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                              <td class="item-col-inner item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;vertical-align: top;">
-                                <span style="color: #4d4d4d;font-weight: bold;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Course</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                {{$bookingdetail->course->name}}
-                              </td>
-                            </tr>
-                          @endif
-                        </table>
-                      </td>
-                      <td class="item-col" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                        {{$company->currency->symbol}}{{$bookingdetail->getPrice()}}
-                      </td>
-                    </tr>
-                  @endforeach
+	<?php
+		function isObjectEmpty($obj)
+		{
+			foreach($obj as $x)
+				return false;
 
-                  @foreach ($booking->accommodations as $accommodation)
-                  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                    <td class="item-col-last item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 5px;padding-top: 20px;vertical-align: top;">
-                      <span style="color: #4d4d4d;font-weight: bold;font-size: 17px;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">{{$accommodation->name}}</span>
-                    </td>
-                    <td class="item-col-last quantity" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;">
-                      {{$accommodation->pivot->start}} - {{$accommodation->pivot->end}}
-                    </td>
-                    <td class="item-col-last" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;">
-                      {{$company->currency->symbol}}{{$accommodation->decimal_price}}
-                    </td>
-                  </tr>
-                  @endforeach
+			return true;
+		}
 
+		function friendlyDate($date)
+		{
+			return date('d M Y H:i', strtotime($date));
+		}
 
-                  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                    <td class="item-col item mobile-row-padding" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 20px;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;"></td>
-                    <td class="item-col quantity" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;"></td>
-                    <td class="item-col price" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;"></td>
-                  </tr>
+		function friendlyDateNoTime($date)
+		{
+			return date('d M Y', strtotime($date));
+		}
 
+		function tripFinish($start, $duration)
+		{
+			$startDate = friendlyDate($start);
 
-                  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                    <td class="item-col item" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 300px;padding-bottom: 20px;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;">
-                    </td>
-                    <td class="item-col quantity" style="text-align: right;padding-right: 10px;border-top: 1px solid #cccccc;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                      <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">Subtotal</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">Discount</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">Tax</span>  <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-weight: bold;color: #4d4d4d;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">Total</span>
-                    </td>
-                    <td class="item-col price" style="text-align: left;border-top: 1px solid #cccccc;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;line-height: 21px;border-collapse: collapse;padding-top: 20px;vertical-align: top;border-bottom: 1px solid #e7e7e7;padding-bottom: 20px;">
-                    <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">{{$company->currency->symbol}}{{$booking->decimal_price + $booking->discount}}</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">{{$company->currency->symbol}}{{$booking->discount}}</span> <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">N/A</span>  <br style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                      <span class="total-space" style="font-weight: bold;color: #4d4d4d;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;padding-bottom: 8px;display: inline-block;">{{$company->currency->symbol}}{{$booking->decimal_price}}</span>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
+			$endDate          = new DateTime($start);
+			$duration_hours   = floor($duration);
+			$duration_minutes = round( ($duration - $duration_hours) * 60 );
+			$endDate->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+			$endDate = $endDate->format('Y-m-d H:i:s');
 
-        </table>
-      </center>
-    </td>
-  </tr>
-  <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-    <td align="center" valign="top" width="100%" style="background-color: #f7f7f7;font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 20px 0 5px;" class="content-padding">
-      <center style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-        <table cellspacing="0" cellpadding="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
-          <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-            <td class="button" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 30px 0;">
-              <div style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"><!--[if mso]>
-                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{$siteUrl}}/#manage-bookings" style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%" strokecolor="#ffffff" fillcolor="#4a89dc">
-                  <w:anchorlock/>
-                  <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">View Booking</center>
-                </v:roundrect>
-              <![endif]--><a href="{{$siteUrl}}/#manage-bookings" style="background-color:#4a89dc;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">View Booking</a></div>
-            </td>
-          </tr>
-        </table>
-      </center>
-    </td>
-  </tr>
+			$endDate = friendlyDate($endDate);
+
+			if(substr($startDate, 0, 11) === substr($endDate, 0, 11))
+				// Only return the time, if the date is the same
+				return substr($endDate, 12);
+			else
+				// Only return the date and the Month (and time)
+				return substr($endDate, 0, 6) . ' ' . substr($endDate, 12);
+		}
+	?>
+	<table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%" style="max-width: 800px;">
+		<tr>
+			<td align="center" valign="top" width="100%" class="content-padding">
+				<center>
+					<h1 align="center">{{$company->name}} Booking Summary</h1>
+					<table cellpadding="0" cellspacing="0" width="100%">
+						<tr>
+							<td class="mini-container-left mini-block-padding">
+								<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
+									<tr>
+										<td class="mini-block">
+											<span class="header-sm">Lead Customer</span><br />
+											{{{$booking->lead_customer->firstname}}} {{{$booking->lead_customer->lastname}}}<br />
+											@if($booking->lead_customer->address_1)
+												{{{$booking->lead_customer->address_1}}}<br />
+											@endif
+											@if($booking->lead_customer->address_2)
+												{{{$booking->lead_customer->address_2}}}<br />
+											@endif
+											@if($booking->lead_customer->city)
+												{{$booking->lead_customer->city}},
+											@endif
+											@if($booking->lead_customer->county)
+												{{$booking->lead_customer->county}},
+											@endif
+											@if($booking->lead_customer->postcode)
+												{{$booking->lead_customer->postcode}}
+											@endif
+											<br />
+											{{{$booking->lead_customer->country->name}}}
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td class="mini-container-right mini-block-padding">
+								<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
+									<tr>
+										<td class="mini-block">
+											Booking Reference<br />
+											<span class="header-sm">{{$booking->reference}}</span><br />
+											<br />
+											Booking Date<br />
+											<span class="header-sm">{{friendlyDateNoTime($booking->created_at_local)}}</span>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" width="100%" style="background-color: #ffffff; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+				<center>
+					<table cellpadding="0" cellspacing="0" width="600" class="w320">
+						<tr>
+							<td class="item-table">
+								<table cellspacing="0" cellpadding="0" width="100%">
+
+									@if(!isObjectEmpty($booking->bookingdetails))
+										<tr>
+											<td class="title-dark">
+												 Trips & Classes
+											</td>
+											<td class="title-dark" width="100"></td>
+											<td class="title-dark" width="100"></td>
+										</tr>
+
+										@foreach($booking->bookingdetails as $detail)
+											<tr>
+												<td class="item-col" colspan="3">
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tr>
+															<td class="item-col-inner title" colspan="2">
+																<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
+																	@if(!empty($detail->ticket))
+																		<i class="fa fa-ship fa-fw"></i>
+																		@if($detail->temporary)
+																			-
+																		@else
+																			{{{$detail->session->trip->name}}}
+																		@endif
+																	@else
+																		<i class="fa fa-graduation-cap fa-fw"></i>
+																		@if($detail->temporary)
+																			-
+																		@else
+																			{{{$detail->training->name}}}
+																		@endif
+																	@endif
+																</span>
+
+																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+																	@if($detail->temporary)
+																		No date set
+																	@else
+																		@if(!empty($detail->session))
+																			{{friendlyDate($detail->session->start)}} -
+																			{{tripFinish($detail->session->start, $detail->session->trip->duration)}}
+																		@else
+																			{{friendlyDate($detail->training_session->start)}} -
+																			{{tripFinish($detail->training_session->start, $detail->training->duration)}}
+																		@endif
+																	@endif
+																</span>
+															</td>
+														</tr>
+														<tr>
+															<td class="item-col-inner item" style="padding-left: 28px;">
+																<table cellspacing="0" cellpadding="0" width="100%">
+																	<tr>
+																		<td style="width: 90px;">
+																			<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
+																		</td>
+																		<td>
+																			{{{$detail->customer->firstname}}} {{{$detail->customer->lastname}}}
+																		</td>
+																	</tr>
+
+																	@if(!empty($detail->ticket))
+																		<tr>
+																			<td>
+																				<span style="color: #4d4d4d; font-weight:bold;">Ticket:</span>
+																			</td>
+																			<td>
+																				{{{$detail->ticket->name}}}
+																			</td>
+																		</tr>
+																	@endif
+
+																	@if(!empty($detail->training))
+																		<tr>
+																			<td>
+																				<span style="color: #4d4d4d; font-weight:bold;">Class:</span>
+																			</td>
+																			<td>
+																				{{{$detail->training->name}}}
+																			</td>
+																		</tr>
+																	@endif
+																</table>
+															</td>
+															<td class="item-col-inner item">
+																<table cellspacing="0" cellpadding="0" width="100%">
+																	@if($detail->addons == new stdClass())
+																		<tr>
+																			<td style="width: 90px;">
+																				<span style="color: #4d4d4d; font-weight:bold;">Addons:</span>
+																			</td>
+																			<td>
+																				@foreach($detail->addons as $addon)
+																					{{{$addon->name}}} <small><span class="badge badge-default">{{$addon->pivot->quantity}}</span></small><br />
+																				@endforeach
+																			</td>
+																		</tr>
+																	@endif
+
+																	@if(!empty($detail->course))
+																		<tr>
+																			<td style="padding-bottom: 0; width: 90px;">
+																				<span style="color: #4d4d4d; font-weight:bold;">Course:</span>
+																			</td>
+																			<td style="padding-bottom: 0;">
+																				<i class="fa fa-graduation-cap fa-fw"></i> {{{$detail->course->name}}}
+																			</td>
+																		</tr>
+																	@endif
+
+																	@if(!empty($detail->packagefacade))
+																		<tr>
+																			<td style="padding-top: 0; width: 90px;">
+																				<span style="color: #4d4d4d; font-weight:bold;">Package:</span>
+																			</td>
+																			<td style="padding-top: 0;">
+																				<i class="fa fa-tags fa-fw"></i> {{{$detail->packagefacade->package->name}}}
+																			</td>
+																		</tr>
+																	@endif
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										@endforeach
+									@endif
+
+									@if(!isObjectEmpty($booking->accommodations))
+										<tr>
+											<td class="item-col item mobile-row-padding" style="border-bottom: 0;"></td>
+										</tr>
+
+										<tr>
+											<td class="title-dark">
+												 Accommodations
+											</td>
+											<td class="title-dark" width="100"></td>
+											<td class="title-dark" width="100"></td>
+										</tr>
+
+										@foreach($booking->accommodations as $accommodation)
+											<tr>
+												<td class="item-col item" colspan="3">
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tr>
+															<td class="item-col-inner title" colspan="2">
+																<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
+																	<i class="fa fa-bed fa-fw"></i> {{{$accommodation->name}}}
+																</span>
+
+																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+																	{{friendlyDateNoTime($accommodation->pivot->start)}} - {{friendlyDateNoTime($accommodation->pivot->end)}}
+																</span>
+															</td>
+														</tr>
+														<tr>
+															<td class="item-col-inner item" style="padding-left: 28px;">
+																<table cellspacing="0" cellpadding="0" width="100%">
+																	<tr>
+																		<td style="width: 90px;">
+																			<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
+																		</td>
+																		<td>
+																			{{{$accommodation->customer->firstname}}} {{{$accommodation->customer->lastname}}}
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										@endforeach
+									@endif
+								</table>
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+	<?php echo("<table>"); /*
+
+		<tr><td>&nbsp;</td><tr>
+
+		<tr>
+			<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+				<center>
+					<table cellpadding="0" cellspacing="0" width="600" class="w320">
+						<tr>
+							<td class="item-table">
+								<table cellspacing="0" cellpadding="0" width="100%">
+									<tr>
+										<td class="title-dark">
+											 Price Breakdown
+										</td>
+										<td class="title-dark" width="100"></td>
+										<td class="title-dark" width="100"></td>
+									</tr>
+									{{#each packagesSummary}}
+										<tr>
+											<td class="inner-item-col">
+												<i class="fa fa-tags fa-fw"></i> {{{name}}}
+											</td>
+											<td class="inner-item-col" style="text-align: right;">
+												x1
+											</td>
+											<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+												{{currency}} {{decimal_price}}
+											</td>
+										</tr>
+									{{/each}}
+									{{#each coursesSummary}}
+										<tr>
+											<td class="inner-item-col">
+												<i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
+											</td>
+											<td class="inner-item-col" style="text-align: right;">
+												x1
+											</td>
+											<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+												{{currency}} {{decimal_price}}
+											</td>
+										</tr>
+									{{/each}}
+									{{#each ticketsSummary}}
+										<tr>
+											<td class="inner-item-col">
+												<i class="fa fa-ticket fa-fw"></i> {{{name}}}
+											</td>
+											<td class="inner-item-col" style="text-align: right;">
+												x1
+											</td>
+											<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+												{{currency}} {{decimal_price}}
+											</td>
+										</tr>
+									{{/each}}
+									{{#each addonsSummary}}
+										<tr>
+											<td class="inner-item-col">
+												<i class="fa fa-cart-plus fa-fw"></i> {{{name}}}
+											</td>
+											<td class="inner-item-col" style="text-align: right;">
+												x{{qtySummary}}
+											</td>
+											<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+												{{currency}} {{decimal_price}}
+											</td>
+										</tr>
+									{{/each}}
+									{{#each accommodations}}
+										{{#unless pivot.packagefacade_id}}
+											<tr>
+												<td class="inner-item-col">
+													<i class="fa fa-bed fa-fw"></i> {{{name}}}
+												</td>
+												<td class="inner-item-col" style="text-align: right;">
+													{{numberOfNights pivot.start pivot.end}}
+												</td>
+												<td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+													{{currency}} {{decimal_price}}
+												</td>
+											</tr>
+										{{/unless}}
+									{{/each}}
+
+									<tr>
+										<td class="item-col item" style="border-top: 1px solid #cccccc;">
+										</td>
+										<td class="item-col quantity" style="text-align: right; padding-right: 10px; border-top: 1px solid #cccccc;">
+											<span class="total-space">Subtotal</span><br />
+
+											{{#compare discount '!==' '0.00'}}
+												<span class="total-space">Discount</span><br />
+											{{/compare}}
+
+											{{!-- <span class="total-space">Tax</span><br /> --}}
+
+											{{#if agent_id}}
+												<span class="total-space" style="font-weight: bold; color: #4d4d4d">Gross</span><br />
+												<span class="total-space">{{commission_percentage agent_id}} Commission</span><br />
+												<span class="total-space" style="font-weight: bold; color: #4d4d4d">Net</span>
+											{{else}}
+												<span class="total-space" style="font-weight: bold; color: #4d4d4d">Total</span>
+											{{/if}}
+										</td>
+										<td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
+											<span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
+
+											{{#compare discount '!==' '0.00'}}
+												<span class="total-space">-{{discount}}</span><br />
+											{{/compare}}
+
+											{{!-- <span class="total-space">$0.75</span><br /> --}}
+
+											{{#if agent_id}}
+												<span class="total-space" style="font-weight: bold; color: #4d4d4d;">{{currency}} {{decimal_price}}</span><br />
+												<span class="total-space">-{{commission_amount agent_id decimal_price}}</span><br />
+												<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{commission_result agent_id decimal_price}}</span>
+											{{else}}
+												<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{decimal_price}}</span>
+											{{/if}}
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+
+		<tr><td>&nbsp;</td><tr>
+
+		<tr>
+			<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+				<center>
+					<table cellpadding="0" cellspacing="0" width="600" class="w320">
+						<tr>
+							<td class="item-table">
+								<table cellspacing="0" cellpadding="0" width="100%">
+									<tr>
+										<td class="title-dark">
+											 Booking Status
+										</td>
+										<td class="title-dark" width="100"></td>
+										<td class="title-dark" width="100"></td>
+									</tr>
+									<tr>
+										<td class="inner-item-col">
+											<h4 id="status">{{statusIcon}}</h4>
+											<p>{{sourceIcon}}<p>
+										</td>
+										<td></td>
+										<td></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+
+		{{#compare status '!==' 'temporary'}}
+			<tr>
+				<td align="center" valign="top" width="100%">
+					<center>
+						<table cellpadding="0" cellspacing="0" width="600" class="w320">
+							<tr>
+								<td class="item-table">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tr>
+											<td class="title-dark" width="50%">
+												 Options
+											</td>
+											<td class="title-dark" width="50%"></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle; border-right: 1px solid #ccc;">
+												<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save For Later</button>
+												{{#unless price}}
+													<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+												{{else}}
+													{{#if agent_id}}
+														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+													{{else}}
+														<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
+													{{/if}}
+												{{/unless}}
+											</td>
+											<td>
+												<h4 class="text-center">Reserve Booking</h4>
+												<form id="reserve-booking" class="form-horizontal">
+													<div class="form-group">
+														<div class="radio col-md-12">
+															<label>
+																<input type="radio" name="email" id="email-yes" value="1" checked>
+																Send confirmation email to customer
+															</label>
+														</div>
+														<div class="radio col-md-12">
+															<label>
+																<input type="radio" name="email" id="email-no" value="0">
+																Do not send email
+															</label>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="reserve-until" class="col-sm-6 control-label">Reserve for (hours)</label>
+														<div class="col-md-6">
+															<input id="reserve-until" name="reserved_until" class="form-control" type="number" value="24">
+														</div>
+													</div>
+													<div class="form-group">
+														<div class="col-md-12">
+															<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
+														</div>
+													</div>
+												</form>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</center>
+				</td>
+			</tr>
+		{{/compare}}
+	</table>
+	*/ ?>
 @stop

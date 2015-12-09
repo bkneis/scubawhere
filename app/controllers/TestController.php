@@ -1,6 +1,22 @@
 <?php
+use ScubaWhere\Context;
 
 class TestController extends Controller {
+
+	public function getEmail()
+	{
+		$b = DB::table('bookings')->where('reference', Input::only('reference'))->lists('id');
+
+		if(empty($b)) throw new Exception('Unknown booking reference');
+
+		Request::replace(["id" => $b[0]]);
+
+		$app        = app();
+		$controller = $app->make('BookingController');
+		$booking    = $controller->callAction('getIndex', []);
+
+		return View::make('emails.booking-summary', ['company' => Context::get(), 'booking' => $booking, 'siteUrl' => Config::get('app.url')]);
+	}
 
 	/*public function getTime()
 	{
@@ -16,7 +32,7 @@ class TestController extends Controller {
 
 	public function getLogin()
 	{
-		if(Auth::check()) return "You are allready logged in!";
+		if(Auth::check()) return "You are already logged in!";
 
 		return View::make('test.login');
 	}

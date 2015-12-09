@@ -26,7 +26,7 @@
 								<span class="input-group-addon"><i class="fa fa-money"></i></span>
 								<input type="text" class="form-control" id="discount" name="discount" value="{{discount}}" />
 							</div>
-							<p style="margin-top: 5px; margin-bottom: 5px;">Full price: {{currency}} {{real_decimal_price}}</p>
+							<p style="margin-top: 5px; margin-bottom: 5px;">Full price: {{currency}} {{fullPrice}}</p>
 							<p style="margin-top: 5px;">Discounted price: <span id="discounted-price" style="font-weight: bold;"></span></p>
 						</div>
 					</div>
@@ -37,14 +37,12 @@
 							<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?">{{comment}}</textarea>
 						</div>
 					</div>
-				</form>
-			</div>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-12">
-						<input type="submit" value="Save" class="btn btn-primary pull-right" style="margin-left:5px;">
+					<div class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save</button>
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 
@@ -77,6 +75,13 @@
 						</div>
 					</div>
 
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Number of people</label>
+						<div class="col-md-8">
+							<input type="number" name="quantity" id="numberOfPeopleToPickUp" class="form-control" min="1" step="1" style="width: 60px;">
+						</div>
+					</div>
+
 					<div class="form-group" style="margin-bottom: 0;">
 						<div class="col-md-12">
 							<input type="submit" value="Add" class="btn btn-primary pull-right" style="margin-left:5px;">
@@ -92,7 +97,8 @@
 			<div class="row" style="line-height: 2.5;">
 				<div class="col-md-2 col-md-offset-2" style="border-bottom: 1px solid lightgrey">{{friendlyDateNoTime date}}</div>
 				<div class="col-md-1" style="border-bottom: 1px solid lightgrey">{{trimSeconds time}}</div>
-				<div class="col-md-5" style="border-bottom: 1px solid lightgrey">{{location}}</div>
+				<div class="col-md-4" style="border-bottom: 1px solid lightgrey">{{location}}</div>
+				<div class="col-md-1" style="border-bottom: 1px solid lightgrey">x{{quantity}}</div>
 				<div class="col-md-1"><button class="btn btn-sm btn-danger removePickUp" data-id="{{id}}">&times;</button></div>
 			</div>
 		{{else}}

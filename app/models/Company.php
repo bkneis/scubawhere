@@ -1,31 +1,17 @@
 <?php
 
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 
-class Company extends Ardent implements UserInterface, RemindableInterface {
-	use RemindableTrait;
+class Company extends Ardent {
 
 	private $currency;
 
-	protected $guarded = array('id', 'password', 'verified', 'views', 'remember_token', 'created_at', 'updated_at');
+	protected $guarded = array('id', 'verified', 'views', 'created_at', 'updated_at');
 
 	protected $appends = array('currency', 'country', 'agencies');
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array('password');
-
 	public static $rules = array(
-		'username'            => 'sometimes|required|alpha_dash|between:4,64|different:name|unique:companies,username',
-		'password'            => 'size:60',
-		'email'               => 'required|email|unique:companies,email',
 		'name'                => 'required',
 		'description'         => '',
 		'address_1'           => 'required',
@@ -42,7 +28,6 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		'latitude'            => 'required|numeric|between:-90,90',
 		'longitude'           => 'required|numeric|between:-180,180',
 		'timezone'            => 'required',
-		'phone'               => 'required',
 		'contact'             => 'required',
 		'website'             => '', //active_url
 		'logo'                => '',
@@ -201,6 +186,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('CrmGroupRule');
 	}
+    
+    public function crmLinks()
+    {
+        return $this->hasMany('CrmLink');
+    }
 
 	public function departures()
 	{
@@ -236,6 +226,11 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Schedule');
 	}
+    
+    public function templates()
+	{
+		return $this->hasMany('CrmTemplate');
+	}
 
 	public function tickets()
 	{
@@ -262,57 +257,8 @@ class Company extends Ardent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Trip');
 	}
 
-	/* END Relations */
-
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getAuthIdentifier()
+	public function users()
 	{
-		return $this->getKey();
+		return $this->hasMany('User');
 	}
-
-	/**
-	 * Get the password for the user.
-	 *
-	 * @return string
-	 */
-	public function getAuthPassword()
-	{
-		return $this->password;
-	}
-
-	/**
-	 * Get the e-mail address where password reminders are sent.
-	 *
-	 * @return string
-	 */
-	public function getReminderEmail()
-	{
-		return $this->email;
-	}
-
-	/**
-	 * Additions with Laravel v4.1.26
-	 */
-	public function getRememberToken()
-	{
-		return $this->remember_token;
-	}
-
-	public function setRememberToken($value)
-	{
-		$this->remember_token = $value;
-	}
-
-	public function getRememberTokenName()
-	{
-		return 'remember_token';
-	}
-	/**
-	 * END Additions
-	 */
-
 }

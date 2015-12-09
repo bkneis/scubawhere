@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class PackageController extends Controller {
 
@@ -10,7 +11,7 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->packages()->withTrashed()->with(
+			return Context::get()->packages()->withTrashed()->with(
 				'tickets',
 				'courses',
 					'courses.trainings',
@@ -29,7 +30,7 @@ class PackageController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->packages()->with(
+		return Context::get()->packages()->with(
 			'tickets',
 			'courses',
 				'courses.trainings',
@@ -43,7 +44,7 @@ class PackageController extends Controller {
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->packages()->withTrashed()->with(
+		return Context::get()->packages()->withTrashed()->with(
 			'tickets',
 			'courses',
 				'courses.trainings',
@@ -59,7 +60,7 @@ class PackageController extends Controller {
 		$now = Helper::localTime();
 		$now = $now->format('Y-m-d');
 
-		return Auth::user()->packages()
+		return Context::get()->packages()
 			->where(function($query) use ($now)
 			{
 				$query->whereNull('available_from')->orWhere('available_from', '<=', $now);
@@ -128,7 +129,7 @@ class PackageController extends Controller {
 			return Response::json( array('errors' => $package->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$package = Auth::user()->packages()->save($package);
+		$package = Context::get()->packages()->save($package);
 
 		// Package has been created, let's connect it with its tickets
 		// TODO Validate input
@@ -182,7 +183,7 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$package = Auth::user()->packages()->withTrashed()->findOrFail( Input::get('id') );
+			$package = Context::get()->packages()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -268,7 +269,7 @@ class PackageController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$package = Auth::user()->packages()->findOrFail( Input::get('id') );
+			$package = Context::get()->packages()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -285,7 +286,7 @@ class PackageController extends Controller {
 		catch(QueryException $e)
 		{
 			// SoftDelete instead
-			$package = Auth::user()->packages()->find( Input::get('id') );
+			$package = Context::get()->packages()->find( Input::get('id') );
 			$package->delete();
 		}
 

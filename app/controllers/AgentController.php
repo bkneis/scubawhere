@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Context;
 
 class AgentController extends Controller {
 
@@ -8,7 +9,7 @@ class AgentController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->agents()->findOrFail( Input::get('id') );
+			return Context::get()->agents()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -18,7 +19,7 @@ class AgentController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->agents()->get();
+		return Context::get()->agents()->get();
 	}
 
 	public function postAdd()
@@ -44,7 +45,7 @@ class AgentController extends Controller {
 			return Response::json( array('errors' => $agent->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$agent = Auth::user()->agents()->save($agent);
+		$agent = Context::get()->agents()->save($agent);
 
 		return Response::json( array('status' => 'OK. Agent created', 'id' => $agent->id), 201 ); // 201 Created
 	}
@@ -54,7 +55,7 @@ class AgentController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$agent = Auth::user()->agents()->findOrFail( Input::get('id') );
+			$agent = Context::get()->agents()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{

@@ -42,7 +42,8 @@ $PROTOCOL = 'http';
 		header("Location: " . $BASE_URL . "/login/");
 		exit();
 	}
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -224,13 +225,6 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<!--<li>
-					<a href="#calendar">
-						<i class="fa fa-calendar fa-lg fa-fw"></i>
-						<span>Calendar</span>
-					</a>
-				</li>-->
-
 				<li>
 					<div>
 						<!-- <i class="fa fa-briefcase"></i> -->
@@ -259,7 +253,7 @@ $PROTOCOL = 'http';
 						<span>CRM</span>
 						<span class="caret"></span>
 					</div>
-					<ul id="calendar-submenu">
+					<ul id="crm-submenu">
 						<li>
 							<a href="#customers">My Customers</a>
 						</li>
@@ -267,19 +261,17 @@ $PROTOCOL = 'http';
 							<!-- Additional CRM features will appear here -->
 						<?php } else { ?>
 							<li>
+								<a href="#mailing-lists">My Mailing Lists</a>
+							</li>
+							<li>
 								<a href="#campaigns">My Campaigns</a>
 							</li>
+                            <!--<li>
+								<a href="#automated-emails">Automated Emails</a>
+							</li>-->
 						<?php } ?>
 					</ul>
 				</li>
-
-				<?php /* <li>
-					<a href="#reviews">
-						<i class="fa fa-comments fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-users"></i> -->
-						<span>Reviews</span>
-					</a>
-				</li> */ ?>
 
 				<li>
 					<a href="#reports">
@@ -323,22 +315,19 @@ $PROTOCOL = 'http';
 							<a href="#locations">Locations</a>
 						</li>
 						<li>
-							<a href="#trips">Open Water Trips</a>
-						</li>
-						<li>
 							<a href="#packages">Packages</a>
 						</li>
-						<!--<li>
-							<a href="#activate-trip">Scheduling</a>
-						</li>-->
 						<li>
 							<a href="#tickets">Tickets</a>
+						</li>
+						<li>
+							<a href="#trips">Trips (Open Water)</a>
 						</li>
 					</ul>
 				</li>
 
 				<li>
-					<a href="#help">
+					<a href="https://scubawhere.zendesk.com" target="_blank">
 						<i class="fa fa-question-circle fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
 						<span>Help & FAQ</span>

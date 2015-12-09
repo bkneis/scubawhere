@@ -1,6 +1,6 @@
 <?php
-
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class ReportController extends Controller {
 
@@ -30,13 +30,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 
 		#############################
 		// Generate utilisation report
-		$departures = Auth::user()->departures()->whereBetween('start', [$after, $before])->with(
+		$departures = Context::get()->departures()->whereBetween('start', [$after, $before])->with(
 			'trip',
 			'bookingdetails',
 				'bookingdetails.booking',
@@ -125,13 +125,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 
 		#############################
 		// Generate utilisation report
-		$trainings = Auth::user()->training_sessions()->whereBetween('start', [$after, $before])->with(
+		$trainings = Context::get()->training_sessions()->whereBetween('start', [$after, $before])->with(
 			'training',
 			'bookingdetails',
 				'bookingdetails.booking',
@@ -199,12 +199,12 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 
 
 		#################################
@@ -212,13 +212,13 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		########################################
 		// Generate frequency of booking sources
 		$sql = "SELECT source, COUNT(*) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
-		$sql = DB::select($sql, [Auth::user()->id, $afterUTC, $beforeUTC]);
+		$sql = DB::select($sql, [Context::get()->id, $afterUTC, $beforeUTC]);
 
 		$sources = [];
 
@@ -233,8 +233,8 @@ class ReportController extends Controller {
 
 		######################################
 		// Generate revenue per booking source
-		$sql = "SELECT source, SUM(price), SUM(discount) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
-		$sql = DB::select($sql, [Auth::user()->id, $afterUTC, $beforeUTC]);
+		$sql = "SELECT source, SUM(price) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
+		$sql = DB::select($sql, [Context::get()->id, $afterUTC, $beforeUTC]);
 
 		$sources = [];
 
@@ -244,7 +244,7 @@ class ReportController extends Controller {
 
 			if(empty($sources[$name])) $sources[$name] = 0;
 
-			$sources[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+			$sources[$name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
 		}
 
 		$RESULT['source_revenue'] = $sources;
@@ -266,12 +266,12 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Auth::user()->currency->code );
+		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
 
 
 		#################################
@@ -279,14 +279,14 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		###########################################
 		// Generate revenue by customer age
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
-			->where('bookings.company_id', Auth::user()->id)
+			->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
 		    ->select('bookings.price', 'bookings.created_at', 'customers.birthday')
@@ -326,10 +326,10 @@ class ReportController extends Controller {
 		$sql = DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
 		    ->join('countries', 'customers.country_id', '=', 'countries.id')
-		    ->where('bookings.company_id', Auth::user()->id)
+		    ->where('bookings.company_id', Context::get()->id)
 		    ->where('bookings.status', 'confirmed')
 		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
-		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'), DB::raw('SUM(discount)'))
+		    ->select('customers.country_id', 'countries.name', DB::raw('SUM(price)'))
 		    ->groupBy('customers.country_id')
 		    ->get();
 
@@ -337,15 +337,41 @@ class ReportController extends Controller {
 
 		foreach($sql as $object)
 		{
-			$name = $object->{'name'};
+			$name = $object->name;
 
 			if(empty($countries[$name])) $countries[$name] = 0;
 
-			$countries[$name] += ($object->{'SUM(price)'} - $object->{'SUM(discount)'}) / $currency->getSubunitToUnit();
+			$countries[$name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
 		}
 
-		$RESULT['country_revenue'] = $countries;
-		$RESULT['age_revenue'] = $ages;
+		###########################################
+		// Generate revenue by customer certificate
+		$sql = DB::table('bookings')
+		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
+		    ->join('certificate_customer', 'customer_id', '=', 'bookings.lead_customer_id')
+		    ->where('bookings.company_id', Context::get()->id)
+		    ->where('bookings.status', 'confirmed')
+		    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC])
+		    ->select('certificate_customer.certificate_id', DB::raw('SUM(price)'))
+		    ->groupBy('certificate_customer.certificate_id')
+		    ->get();
+
+		$certificates = [];
+
+		$cert_list = Certificate::lists('name', 'id'); // Produces [id => name] array
+
+		foreach($sql as $object)
+		{
+			$cert_name = $cert_list[$object->certificate_id];
+
+			if(empty($certificates[$cert_name])) $certificates[$cert_name] = 0;
+
+			$certificates[$cert_name] += $object->{'SUM(price)'} / $currency->getSubunitToUnit();
+		}
+
+		$RESULT['age_revenue']         = $ages;
+		$RESULT['country_revenue']     = $countries;
+		$RESULT['certificate_revenue'] = $certificates;
 
 		return $RESULT;
 	}
@@ -364,8 +390,8 @@ class ReportController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		$afterUTC  = new DateTime( $after,  new DateTimeZone( Auth::user()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
-		$beforeUTC = new DateTime( $before, new DateTimeZone( Auth::user()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
+		$afterUTC  = new DateTime( $after,  new DateTimeZone( Context::get()->timezone ) ); $afterUTC->setTimezone(  new DateTimeZone('UTC') );
+		$beforeUTC = new DateTime( $before, new DateTimeZone( Context::get()->timezone ) ); $beforeUTC->setTimezone( new DateTimeZone('UTC') );
 		$beforeUTC->add(new DateInterval('P1D'));
 
 		$RESULT = [];
@@ -375,7 +401,7 @@ class ReportController extends Controller {
 		$RESULT['daterange'] = [
 			'after'    => Helper::sanitiseString($after),
 			'before'   => Helper::sanitiseString($before),
-			'timezone' => Auth::user()->timezone,
+			'timezone' => Context::get()->timezone,
 		];
 
 		$timer = -microtime(true);
@@ -395,7 +421,7 @@ class ReportController extends Controller {
 		 */
 		/*$realDiscountPercentage = [];
 
-		$bookings = Booking::where('company_id', Auth::user()->id)
+		$bookings = Booking::where('company_id', Context::get()->id)
 		    ->whereIn('status', ['confirmed'])
 		    ->whereBetween('created_at', [$afterUTC, $beforeUTC])
 		    ->whereHas('bookingdetails', function($query)
@@ -447,7 +473,7 @@ class ReportController extends Controller {
 		    ->whereHas('booking', function($query) use ($afterUTC, $beforeUTC)
 		    {
 		    	$query
-		    	    ->where('company_id', Auth::user()->id)
+		    	    ->where('company_id', Context::get()->id)
 		    	    ->whereIn('status', ['confirmed'])
 		    	    ->whereBetween('created_at', [$afterUTC, $beforeUTC]);
 		    })->get();
@@ -457,20 +483,21 @@ class ReportController extends Controller {
 
 		foreach($bookingdetails as $detail)
 		{
-			if(!empty($detail->ticket_id) && !empty($detail->session_id) && empty($detail->packagefacade_id) && empty($detail->course_id))
+			if(!empty($detail->ticket_id)/* && !empty($detail->session_id)*/ && empty($detail->packagefacade_id) && empty($detail->course_id))
 			{
 				### -------------------------------- ###
 				### This is a directly booked ticket ###
 				### -------------------------------- ###
 
-				$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+				if($detail->departure)
+					$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+				else
+					$detail->ticket->calculatePrice($detail->created_at, $detail->created_at);
 
 				$revenue = $detail->ticket->decimal_price;
 				$model   = 'tickets';
 				$name    = $detail->ticket->name;
 				$id      = $detail->ticket->id;
-
-
 			}
 			elseif(empty($detail->packagefacade_id) && !empty($detail->course_id))
 			{
@@ -496,11 +523,13 @@ class ReportController extends Controller {
 					{
 						if(!empty($d->departure))
 							return $d->departure->start;
-						else
+						elseif(!empty($d->training_session))
 							return $d->training_session->start;
+						else
+							return $d->created_at;
 					})->first();
 
-					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : $firstDetail->training_session->start;
+					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : !empty($firstDetail->training_session) ? $firstDetail->training_session->start : $firstDetail->created_at;
 
 					// Calculate the course price at this first departure/training_session datetime
 					$detail->course->calculatePrice($start, $detail->created_at);
@@ -530,14 +559,18 @@ class ReportController extends Controller {
 					{
 						if($detail->departure)
 							return $detail->departure->start;
-						else
+						elseif(!empty($detail->training_session))
 							return $detail->training_session->start;
+						else
+							return $detail->created_at;
 					})->first();
 
 					if($firstDetail->departure)
 						$start = $firstDetail->departure->start;
-					else
+					elseif(!empty($firstDetail->training_session))
 						$start = $firstDetail->training_session->start;
+					else
+						$start = $firstDetail->created_at;
 
 					$accommodations = $detail->booking->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
 					$firstAccommodation = $accommodations->sortBy(function($accommodation)
@@ -659,7 +692,7 @@ class ReportController extends Controller {
 		$accommodations = Accommodation::whereHas('bookings', function($query) use ($afterUTC, $beforeUTC)
 		{
 			$query
-			    ->where('company_id', Auth::user()->id)
+			    ->where('company_id', Context::get()->id)
 			    ->whereIn('status', ['confirmed'])
 			    ->whereBetween('bookings.created_at', [$afterUTC, $beforeUTC]);
 		})->get();

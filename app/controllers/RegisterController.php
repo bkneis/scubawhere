@@ -6,10 +6,8 @@ class RegisterController extends Controller {
 	public function postCompany()
 	{
 		$data = Input::only(
-			'username',
 			'contact',
 			'description',
-			'email',
 			'name',
 			'address_1',
 			'address_2',
@@ -22,9 +20,14 @@ class RegisterController extends Controller {
 			'business_email',
 			'vat_number',
 			'registration_number',
-			'phone',
 			'website',
 			'terms'
+		);
+
+		$userData = Input::only(
+			'username',
+			'email',
+			'phone'
 		);
 
 		// Check for the acceptance of scubawhereRMS' terms & conditions
@@ -32,6 +35,7 @@ class RegisterController extends Controller {
 		if(empty($terms))
 			return Response::json(['errors' => ['Please accept scubawhereRMS\' terms & conditions']], 412); // 412 Precondition Failed
 
+		// Find the country
 		try
 		{
 			if( !Input::get('country_id') ) throw new ModelNotFoundException();
@@ -42,6 +46,7 @@ class RegisterController extends Controller {
 			return Response::json( array('errors' => array('The country could not be found.')), 404 ); // 404 Not Found
 		}
 
+		// Find the address, latLng and timezone with Google
 		$address = urlencode( implode( ',', array(
 			$data['address_1'],
 			$data['address_2'],
@@ -77,42 +82,48 @@ class RegisterController extends Controller {
 		}
 
 		$company = new Company($data);
+		$user    = new User($userData);
 
 		// Mass assigned insert with automatic validation
-		if($company->save())
-		{
-			$company->agencies()->sync( Input::get('agencies', []) );
-
-			// Send notification to Slack if production RMS
-			if(gethostname() === 'rms.scubawhere.com')
-			{
-				Slack::attach([
-					'color' => 'good',
-					'fields' => [
-					[
-						'title' => 'Name',
-						'value' => $company->name,
-						'short' => true
-					],
-					[
-						'title' => 'Contact',
-						'value' => $company->contact . ': ' . $company->business_email,
-						'short' => true
-					]
-					]
-				])->send('New RMS registration! :smiley:');
-			}
-
-			$originalInput = Request::input();
-			$request = Request::create('password/remind', 'POST', array('email' => $company->email, 'welcome' => 1));
-			Request::replace($request->input());
-			return Route::dispatch($request);
-			Request::replace($originalInput);
-		}
-		else
-		{
+		if(!$company->validate())
 			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
+
+		if(!$user->validate())
+			return Response::json( array('errors' => $user->errors()->all()), 406 ); // 406 Not Acceptable
+
+		$company->save();
+
+		$user = $company->users()->save($user);
+
+		// Company and User have been created successfully
+
+		$company->agencies()->sync( Input::get('agencies', []) );
+
+		// Send notification to Slack if production RMS
+		if(gethostname() === 'rms.scubawhere.com')
+		{
+			Slack::attach([
+				'color' => 'good',
+				'fields' => [
+				[
+					'title' => 'Name',
+					'value' => $company->name,
+					'short' => true
+				],
+				[
+					'title' => 'Contact',
+					'value' => $company->contact . ': ' . $company->business_email,
+					'short' => true
+				]
+				]
+			])->send('New RMS registration! :smiley:');
 		}
+
+		// $originalInput = Request::input();
+		$request = Request::create('password/remind', 'POST', array('email' => $user->email, 'welcome' => 1));
+		Request::replace($request->input());
+		return Route::dispatch($request);
+		// Request::replace($originalInput);
 	}
 
 	public function getExists()

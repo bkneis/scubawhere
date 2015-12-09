@@ -381,7 +381,7 @@ ul#sidenav div {
 }
 
 ul#sidenav ul a {
-	padding: 10px 30px;
+	padding: 10px 0 10px 30px;
 }
 
 ul#sidenav a span,
@@ -1322,6 +1322,21 @@ big {
 .email-template-option {
 	padding-bottom: 10px;
 }
+
+.email-action {
+    margin-right: 5px;
+}
+
+.sw-blue-table > tr {
+	cursor: pointer;
+	background-color: #e7eef8;
+	border: 1px solid #C3D9F4;
+}
+
+.sw-blue-table > tr:hover {
+	background-color: #C3D9F4;
+}
+
 
 
 

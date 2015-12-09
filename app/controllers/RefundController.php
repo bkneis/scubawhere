@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class RefundController extends Controller {
 
@@ -10,7 +11,7 @@ class RefundController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->refunds()->with('currency', 'paymentgateway')->findOrFail( Input::get('id') );
+			return Context::get()->refunds()->with('currency', 'paymentgateway')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -20,7 +21,7 @@ class RefundController extends Controller {
 
 	public function getAll($from = 0, $take = 10)
 	{
-		return Auth::user()->refunds()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
+		return Context::get()->refunds()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
 	}
 
 	public function getFilter()
@@ -31,7 +32,7 @@ class RefundController extends Controller {
 		if(empty($after) || empty($before))
 			return Response::json(['errors' => ['Both the "after" and the "before" parameters are required.']], 400); // 400 Bad Request
 
-		return Auth::user()->refunds()->with(
+		return Context::get()->refunds()->with(
 			// 'currency',
 			'paymentgateway',
 			'booking',
@@ -49,7 +50,7 @@ class RefundController extends Controller {
 		try
 		{
 			if( !Input::has('booking_id') ) throw new ModelNotFoundException();
-			$booking = Auth::user()->bookings()->findOrFail( Input::get('booking_id') );
+			$booking = Context::get()->bookings()->findOrFail( Input::get('booking_id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -67,7 +68,7 @@ class RefundController extends Controller {
 		}
 
 		// For now, just use the company's currency
-		$data['currency_id']       = Auth::user()->currency->id;
+		$data['currency_id']       = Context::get()->currency->id;
 
 		// This needs to be defined AFTER $data['currency_id']!
 		$data['amount']            = Input::get('amount');

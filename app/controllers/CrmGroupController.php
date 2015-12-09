@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class CrmGroupController extends Controller {
 
@@ -10,7 +11,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->customerGroups()->findOrFail( Input::get('id') );
+			return Context::get()->customerGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -21,13 +22,162 @@ class CrmGroupController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->crmGroups()->with('rules')->get(); // with('rules')
+		return Context::get()->crmGroups()->with('rules')->get(); // with('rules')
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->crmGroups()->with('rules')->withTrashed()->get();
+		return Context::get()->crmGroups()->with('rules')->withTrashed()->get();
 	}
+    
+    public function getCustomeranalytics()
+    {
+        $group_id = Input::only('id');
+        
+        $customers = [];
+
+		$tmpRules = [];
+		$rules = [];
+		$rules['certs'] = [];
+		$rules['classes'] = [];
+		$rules['tickets'] = [];
+
+		// FORMAT RULES INTO IDS TO FILTER THROUGH
+        $group = Context::get()->crmGroups()->where('id', '=', $group_id)->with('rules')->first();
+        $tmpRules = $group->rules;
+        foreach ($tmpRules as $rule) {
+            // Translate agency to certification ids
+            if($rule->agency_id !== null) {
+                $agency = Agency::with('certificates')->findOrFail( $rule->agency_id );
+                $certs = $agency->certificates;
+                foreach ($certs as $cert) {
+                    array_push($rules['certs'], $cert->id); // ->id
+                }
+            }
+            else if($rule->certificate_id !== null) {
+                array_push($rules['certs'], $rule->certificate_id);
+            }
+            else if($rule->training_id !== null) {
+                array_push($rules['classes'], $rule->training_id);
+            }
+            else if($rule->ticket_id !== null) {
+                array_push($rules['tickets'], $rule->ticket_id);
+            }
+        }
+
+		$certificates_customers = Context::get()->customers()->with('tokens')->whereHas('certificates', function($query) use ($rules){
+			$query->whereIn('certificates.id', $rules['certs']);
+		})->get();//->lists('email', 'firstname', 'lastname', 'id');
+        
+		$customers = array_merge($customers, array($certificates_customers));
+
+		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
+			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
+		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
+		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->with('tokens')->get();//->lists('email', 'firstname', 'lastname', 'id');
+
+		$customers = array_merge($customers, array($booked_customers));
+		$customers = array_unique($customers);
+        $customers = $customers[0]; // second index is empty array?
+        
+        foreach($customers as $customer)
+        {
+            $customer->num_sent = 0;
+            $customer->num_read = 0;
+            foreach($customer->tokens as $token)
+            {
+                $customer->num_sent++;
+                if($token->opened > 0) $customer->num_read++;
+            }
+            $customer->opened_rate = ($customer->num_read / $customer->num_sent) * 100;
+        }
+        
+        return Response::json($customers, 200);
+    }
+    
+    /*public function getCustomeranalytics()
+    {
+        $group_id = Input::only('id');
+    
+        $customers = [];
+        $campaigns = Context::get()->campaigns()->with('groups')->get();
+        foreach($campaigns as $obj)
+        {
+            foreach($obj->groups as $group)
+            {
+                if($group->id == (int)$group_id) 
+                {
+                    $tokens = CrmToken::with('customer')->where('campaign_id', '=', $obj->id)->get();
+                    foreach($tokens as $token)
+                    {
+                        if(array_key_exists($token->customer->id, $customers))
+                        {
+                            if($token->opened > 0) $customers[$token->customer->id]['emails_opened'] += 1;
+                        }
+                        else
+                        {
+                            $customers[$token->customer->id] = $token->customer;
+                            $customers[$token->customer->id]['emails_opened'] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return Response::json(array('customers' => $customers, 'num_sent' => sizeof($campaigns)), 200);
+    }*/
+    
+    public function getCustomers()
+    {
+        $group_id = Input::only('id');
+        $customers = [];
+
+		$tmpRules = [];
+		$rules = [];
+		$rules['certs'] = [];
+		$rules['classes'] = [];
+		$rules['tickets'] = [];
+
+		// FORMAT RULES INTO IDS TO FILTER THROUGH
+        $group = Context::get()->crmGroups()->where('id', '=', $group_id)->with('rules')->first();
+        $tmpRules = $group->rules;
+        foreach ($tmpRules as $rule) {
+            // Translate agency to certification ids
+            if($rule->agency_id !== null) {
+                $agency = Agency::with('certificates')->findOrFail( $rule->agency_id ); // Context::get()->agencies() etc gives eeror
+                $certs = $agency->certificates;
+                foreach ($certs as $cert) {
+                    array_push($rules['certs'], $cert->id); // ->id
+                }
+            }
+            else if($rule->certificate_id !== null) {
+                array_push($rules['certs'], $rule->certificate_id);
+            }
+            else if($rule->training_id !== null) {
+                array_push($rules['classes'], $rule->training_id);
+            }
+            else if($rule->ticket_id !== null) {
+                array_push($rules['tickets'], $rule->ticket_id);
+            }
+        }
+
+		$certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
+			$query->whereIn('certificates.id', $rules['certs']);
+		})->get();//->lists('email', 'firstname', 'lastname', 'id');
+        
+		$customers = array_merge($customers, array($certificates_customers));
+
+		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
+			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
+		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
+		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->get();//->lists('email', 'firstname', 'lastname', 'id');
+
+		$customers = array_merge($customers, array($booked_customers));
+		$customers = array_unique($customers);
+        $customers = $customers[0]; // second index is empty array?
+        
+        return Response::json(array('customers' => $customers), 200);
+    }
 
 	public function postAdd()
 	{
@@ -43,7 +193,7 @@ class CrmGroupController extends Controller {
 			return Response::json( array('errors' => $group->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		$group = Auth::user()->crmGroups()->save($group);
+		$group = Context::get()->crmGroups()->save($group);
 
 		// ADD RULES FOR CERTIFICATES
 		$certificates = Input::get('certificates', []);
@@ -110,7 +260,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$group = Auth::user()->crmGroups()->findOrFail( Input::get('id') );
+			$group = Context::get()->crmGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -150,7 +300,7 @@ class CrmGroupController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$group = Auth::user()->crmGroups()->findOrFail( Input::get('id') );
+			$group = Context::get()->crmGroups()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -164,7 +314,7 @@ class CrmGroupController extends Controller {
 		catch(QueryException $e)
 		{
 
-			$group = Auth::user()->crmGroups()->find( Input::get('id') );
+			$group = Context::get()->crmGroups()->find( Input::get('id') );
 			$group->delete();
 		}
 

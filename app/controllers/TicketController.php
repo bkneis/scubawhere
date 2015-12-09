@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 
 class TicketController extends Controller {
 
@@ -9,7 +10,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Auth::user()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->findOrFail( Input::get('id') );
+			return Context::get()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -19,19 +20,19 @@ class TicketController extends Controller {
 
 	public function getAll()
 	{
-		return Auth::user()->tickets()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
+		return Context::get()->tickets()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function getAllWithTrashed()
 	{
-		return Auth::user()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
+		return Context::get()->tickets()->withTrashed()->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
 	}
 
 	public function getOnlyAvailable() {
 		$now = Helper::localTime();
 		$now = $now->format('Y-m-d');
 
-		return Auth::user()->tickets()
+		return Context::get()->tickets()
 			->where(function($query) use ($now)
 			{
 				$query->whereNull('available_from')->orWhere('available_from', '<=', $now);
@@ -94,7 +95,7 @@ class TicketController extends Controller {
 		}
 
 		// Required input has been validated, save the model
-		$ticket = Auth::user()->tickets()->save($ticket);
+		$ticket = Context::get()->tickets()->save($ticket);
 
 		// Ticket has been created, let's connect it to trips
 		// TODO Validate existence and ownership of trip IDs
@@ -158,7 +159,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->withTrashed()->findOrFail( Input::get('id') );
+			$ticket = Context::get()->tickets()->withTrashed()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -315,7 +316,7 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$ticket = Auth::user()->tickets()->findOrFail( Input::get('id') );
+			$ticket = Context::get()->tickets()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{

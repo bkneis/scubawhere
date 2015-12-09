@@ -40,15 +40,18 @@ $(function (){
 		renderEditForm();
 	});
 
-	$("#boatroom-list-container").on('click', '#change-to-add-boatroom', function(event){
+	$("#wrapper").on('click', '.change-to-add-boatroom', function(event){
 		event.preventDefault();
 		renderRoomEditForm();
 	});
 
 	$("#boat-form-container").on('click', '#add-room', function(event){
 		event.preventDefault();
-		$('form').data('hasChanged', true);
-		$('#room-types').append( addRoom({boatrooms : roomTypes}) );
+		if(!$.isEmptyObject(roomTypes)) {
+			$('form').data('hasChanged', true);
+			$('#room-types').append( addRoom({boatrooms : roomTypes}) );
+		}
+		$(this).before('<div class="alert alert-danger clearfix"><i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i><p class="pull-left"><strong>No cabins available!</strong><br>You can create <a href="#" class="change-to-add-boatroom">Cabins</a> to add.</p></div>');
 	});
 
 	$("#boat-form-container").on('click', '.remove-room', function(event){

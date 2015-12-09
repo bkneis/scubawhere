@@ -8,439 +8,367 @@ var selectedCertificateTemplate;
 var selectedCustomerGroupTemplate;
 var createCampaignTemplate;
 var groupSelectTemplate;
-var campaignsGroupsTemplate;
 var selected_email_template;
+var optionListTemplate;
+var campaignAnalyticsTable;
 
-$(function() {
+$(function () {
 
-	viewCampaignsTemplate = Handlebars.compile($("#campaigns-template").html());
-	customerGroupListTemplate = Handlebars.compile($("#group-list-template").html());
-	addCustomerGroupTemplate = Handlebars.compile($("#customer-group-form-template").html());
-	groupSelectTemplate = Handlebars.compile($("#group-select-template").html());
-	agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
-	ticketsTemplate            = Handlebars.compile($("#tickets-template").html());
-	classesTemplate            = Handlebars.compile($("#classes-template").html());
-	certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
-	selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
-	selectedCustomerGroupTemplate = Handlebars.compile($("#selected-group-template").html());
-	selectedTicketTemplate = Handlebars.compile($("#selected-ticket-template").html());
-	selectedClassTemplate = Handlebars.compile($("#selected-class-template").html());
-	selectedAgencyTemplate = Handlebars.compile($("#selected-agency-template").html());
+    viewCampaignsTemplate = Handlebars.compile($("#campaigns-template").html());
+    groupSelectTemplate = Handlebars.compile($("#group-select-template").html());
+    selectedCustomerGroupTemplate = Handlebars.compile($("#selected-group-template").html());
+    createCampaignTemplate = Handlebars.compile($("#create-campaign-template").html());
+    optionListTemplate = Handlebars.compile($("#layout-options-list-template").html());
 
-	createCampaignTemplate 		= Handlebars.compile($("#create-campaign-template").html());
-	campaignsGroupsTemplate = Handlebars.compile($("#view-campaigns-groups-template").html());
+    campaignAnalyticsTable = $('#campaign-analytics-table').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "columnDefs" : [
+            {
+                "targets" : [3],
+                "visible" : false
+            }
+        ]
+    });
 
-	$('#campaign-container').append(campaignsGroupsTemplate());
-
-	Agency.getAll(function sucess(data) {
-		window.agencies = _.indexBy(data, 'id');
-		Certificate.getAll(function success(data) {
-			window.certificates = _.indexBy(data, 'id');
-			Ticket.getAllTickets(function success(data) {
-				window.tickets = _.indexBy(data, 'id');
-				Class.getAll(function success(data) {
-					window.trainings = _.indexBy(data, 'id');
-					renderGroupList(renderCampaignTable());
-				});
-			});
-		});
-	});
-
-	$('#campaign-form-container').on('click', '.remove-customer-group', function(event) {
-    	event.preventDefault();
-		var check = confirm('Do you really want to remove this customer group?');
-		if(check){
-			// Show loading indicator
-			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-			CustomerGroup.delete({
-				'id'    : $('#update-group-form input[name=id]').val(),
-				'_token': $('[name=_token]').val()
-			}, function success(data){
-
-				pageMssg(data.status, true);
-
-				renderGroupList(renderGroupEditForm);
-
-			}, function error(xhr){
-
-				pageMssg('Oops, something wasn\'t quite right');
-
-				$('.remove-customer-group').prop('disabled', false);
-				$('#save-loader').remove();
-			});
-		}
-	});
-
-	$("#campaign-form-container").on('submit', '#add-group-form', function(event) {
-		event.preventDefault();
-		var params = $(this).serializeObject();
-		params._token = window.token;
-		console.log(params);
-
-		CustomerGroup.create(params, function success(data) {
-			pageMssg(data.status, true);
-			renderGroupList(renderCampaignTable);
-		},
-		function error(xhr) {
-			pageMssg(xhr.responseText);
-			console.log(xhr);
-		});
-	});
-
-	$("#campaign-form-container").on('submit', '#update-group-form', function(event) {
-		event.preventDefault();
-		var params = $(this).serializeObject();
-		params._token = window.token;
-		console.log(params);
-
-		CustomerGroup.update(params, function success(data) {
-			pageMssg(data.status, true);
-			renderGroupList(renderCampaignTable);
-		},
-		function error(xhr) {
-			pageMssg(xhr.responseText);
-			console.log(xhr);
-		});
-	});
-
-	$("#campaign-form-container").on('click', '#create-campaign', function(event) {
-		event.preventDefault();
-		renderCampaignForm();
-	});
+    Agency.getAll(function sucess(data) {
+        window.agencies = _.indexBy(data, 'id');
+        Certificate.getAll(function success(data) {
+            window.certificates = _.indexBy(data, 'id');
+            Ticket.getAllTickets(function success(data) {
+                window.tickets = _.indexBy(data, 'id');
+                Class.getAll(function success(data) {
+                    window.trainings = _.indexBy(data, 'id');
+                    CustomerGroup.getAll(function success(data) {
+                        window.groups = _.indexBy(data, 'id');
+                        renderCampaignTable();
+                    },
+                    function error(xhr) {
+                        console.log(xhr);
+                    });
+                });
+            });
+        });
+    });
 
 });
 
 function renderCampaignTable() {
-	$(".return-campaign").remove();
-	Campaign.getAll(function sucess(data) {
-		console.log(data);
-		$("#campaign-form-container").empty().append(viewCampaignsTemplate({campaigns : data}));
-	});
+    Campaign.getAll(function sucess(data) {
+        console.log(data);
+        $("#campaign-container").empty().append(viewCampaignsTemplate({
+            campaigns: data
+        }));
+        $('.view-email-campaign').on('click', function() {
+            showEmailBrowser($(this).attr('data-html'));
+        });
+        $('.view-email-analytics').on('click', function() {
+            showEmailAnalytics($(this).attr('data-campaign-id'));
+        });
+        $('.resend-email-campaign').on('click', function() {
+            var params = {};
+            params.id = $(this).attr('data-campaign-id');
+            Campaign.get(params, function success(data) {
+                $('#resend-email-modal').modal('show');
+                console.log(data);
+                var new_params= {};
+                new_params.email_html = data.email_html;
+                new_params.groups = [];
+                for(i in data.groups)
+                {
+                   new_params.groups.push(data.groups[i].id);
+                }
+                $('#btn-resend-campaign').on('click', function(event) {
+                    event.preventDefault();
+                    new_params.subject = $('#resend-email-subject').val();
+                    new_params.name = $('#resend-campaign-name').val();
+                    new_params._token = window.token;
+                    sendCampaign(new_params);
+                    renderCampaignTable();
+                    $('#resend-email-modal').modal('hide');
+                });
+            });
+        });
+    });
+    $("#campaign-container").on('click', '#create-campaign', function(event) {
+        event.preventDefault();
+        renderCampaignForm();
+    });
+}
+
+function showEmailAnalytics(id) {
+    $('#show-email-analytics-modal').modal('show');
+    var params = {};
+    params.id = id;
+    Campaign.getAnalytics(params, function success(data) {
+        console.log('analytics', data);
+        campaignAnalyticsTable.clear();
+        var opened_date;
+        for(i in data.analytics) {
+            if(data.analytics[i].opened_time > 0) {
+                opened_date = new Date(parseInt(data.analytics[i].opened_time) * 1000).toUTCString();
+                opened_date = opened_date.slice(0, opened_date.length - 3);
+            }
+            else opened_date = 'Not opened yet';
+            campaignAnalyticsTable.row.add([
+                data.analytics[i].customer.firstname + ' ' + data.analytics[i].customer.lastname,
+                data.analytics[i].customer.email,
+                data.analytics[i].opened,
+                data.analytics[i].customer.id,
+                opened_date
+            ]);
+        }
+        campaignAnalyticsTable.draw(); // how to order ???
+        $('#total-emails-seen').html(data.total_seen + ' emails viewed');
+        $('#total-emails-sent').html(data.total_sent + ' emails sent');
+        $('#average-click-rate').html(parseInt(((data.total_seen / data.total_sent) * 100)) + ' %' + ' Avg Opened Rate');
+
+        $('#campaign-analytics-table tr').on('click', function () {
+            console.log('clicke');
+            var tr = $(this).closest('tr');
+            var row = campaignAnalyticsTable.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
+                tr.addClass('shown');
+            }
+        });
+    },
+    function error(xhr) {
+        console.log(xhr);
+        pageMssg(xhr.responseText, false);
+    });
+}
+
+function getLinkAnalytics (customer_id, data) {
+    var accordian = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;"><tr><p><strong>Link Analytics</strong></p></tr>';
+    var customer_clicks = 0;
+    for(var i = 0; i < (data.length - 1); i++)
+    {
+        customer_clicks = 0;
+        for(var j in data[i].analytics)
+        {
+            if(data[i].analytics[j].customer_id == customer_id) {
+                customer_clicks = data[i].analytics[j].count;
+                break;
+            }
+        }
+        accordian += '<tr><p><a target="_blank" href="'+data[i].link+'">'+data[i].link+'</a> : '+customer_clicks+' clicks</p></tr>'
+    }
+    accordian += '</table>';
+    return accordian;
+}
+
+function showEmailBrowser(html) {
+    var w = window.open('');
+    w.document.write(html);
+    w.document.close();
 }
 
 function renderCampaignForm(id) {
 
-	var campaign;
+    var campaign;
 
-	if( id ) {
-		campaign = window.campaigns[id];
-		campaign.task = 'view';
-		campaign.update = true;
-	}
-	else {
-		campaign = {
-			task: 'create',
-			update : false
-		};
-	}
+    if (id) {
+        campaign = window.campaigns[id];
+        campaign.task = 'view';
+        campaign.update = true;
+    } else {
+        campaign = {
+            task: 'create',
+            update: false
+        };
+    }
 
-	$("#campaign-container").empty().append(createCampaignTemplate(campaign));
+    $("#campaign-container").empty().append(createCampaignTemplate(campaign));
 
-	$('#show-email-browser').on('click', function(event) {
-		event.preventDefault();
-		var html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
-		var script_pos = html_string.indexOf('<script type="text/javascript" src="js/medium-editor.js"></script>');
-		var html_compiled = html_string.substring(0, script_pos) + '</body></html>';
+    $('#show-email-browser').on('click', function(event) {
+        event.preventDefault();
+        showEmailBrowser(processEmailHtml());
+    });
 
-		var find = 'contenteditable="true"';
-		var re = new RegExp(find, 'g');
-		html_compiled = html_compiled.replace(re, '');
+    if (!id)
+        $('input[name=name]').focus();
 
-		find = 'data-medium-editor-element="true"';
-		re = new RegExp(find, 'g');
-		html_compiled = html_compiled.replace(re, '');
+    setToken('[name=_token]');
 
-		find = 'role="textbox"';
-		re = new RegExp(find, 'g');
-		html_compiled = html_compiled.replace(re, '');
+    $("#add-customer-group-to-campaign").find('#customer_group_id').empty().append(groupSelectTemplate({
+        groups: window.groups
+    }));
 
-		var w = window.open('');
-		w.document.write(html_compiled);
-		w.document.close();
-	});
+    $('#add-customer-group-to-campaign').on('click', '.add-group', function(event) {
+        event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
 
-	if(!id)
-		$('input[name=name]').focus();
+        var self = $(this);
+        var group_dropdown = self.closest('fieldset').find('#customer_group_id');
 
-	setToken('[name=_token]');
+        if (group_dropdown.val() === "") return false;
 
-	$("#add-customer-group-to-campaign").find('#customer_group_id').empty().append(groupSelectTemplate({groups : window.groups}));
+        self.closest('fieldset').find('#selected-customer-groups').append(selectedCustomerGroupTemplate({
+            id: group_dropdown.val(),
+            name: window.groups[group_dropdown.val()].name
+        }));
+    });
 
-	$('#add-customer-group-to-campaign').on('click', '.add-group', function(event) {
-		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
+    $('#add-customer-group-to-campaign').on('click', '.remove-group', function() {
+        $(this).parent().remove();
+    });
 
-		var self = $(this);
-		var group_dropdown = self.closest('fieldset').find('#customer_group_id');
+    $('#save-as-template').on('click', function(event) {
+        event.preventDefault();
+        $('#save-email-template-modal').modal('show');
+        $('#btn-save-template').on('click', function(event) {
+            event.preventDefault();
+            var params = {};
+            params.html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
+            params.name = $('#template-name').val();
+            params._token = window.token;
+            Campaign.createTemplate(params, function success(data) {
+                console.log(data);
+                pageMssg(data.status, true);
+                $('#template-name').val('');
+                $('#save-email-template-modal').modal('hide');
+                renderCampaignTable();
+            },
+            function error(xhr) {
+                console.log(xhr);
+                pageMssg(xhr.responseText, false);
+            });
+        });
+    });
 
-		if(group_dropdown.val() === "" ) return false;
+    $('#select-campaign-template').on('click', function(event) {
+        event.preventDefault();
+        $('#select-email-template-modal').modal('show');
+        var email_template_html = '';
+        var email_preview_frame = document.getElementById('email-template-option-preview');
+        var email_editor_frame = document.getElementById('email-template-editor');
+        var using_layout = true;
+        var layout_html_string = '';
 
-		self.closest('fieldset').find('#selected-customer-groups').append(selectedCustomerGroupTemplate({
-			id: group_dropdown.val(),
-			name: window.groups[group_dropdown.val()].name
-		}));
-	});
+        $('.option-button').on('click', function() {
+            $('.email-template-option').css('border', 'none');
+            $('.email-options-list').css('display', 'none');
+            $('#' + $(this).attr('display')).css('display', 'block');
+            $('.option-button').removeClass('btn-primary');
+            $(this).addClass('btn-primary');
+            Campaign.getAllTemplates(function success(data) {
+                console.log(data);
+                $('#layout-options-list').empty().append(optionListTemplate({layout:data}));
+                $('.email-layout-option').on('click', function() {
+                    layout_html_string = $(this).attr('data-html');
+                    email_template_html = processEmailHtml(layout_html_string);
+                    email_preview_frame.contentWindow.document.open();
+                    email_preview_frame.contentWindow.document.write(email_template_html);
+                    email_preview_frame.contentWindow.document.close();
+                });
+            });
+        });
 
-	$('#add-customer-group-to-campaign').on('click', '.remove-group', function() {
-		$(this).parent().remove();
-	});
+        $('.email-template-option').on('click', function() {
+            $('.email-template-option').css('border', 'none');
+            $(this).css('border', '3px solid #FF7163');
+            $.get($(this).attr('data-url'), function(response) {
+                email_template_html = processEmailHtml(response);
+                email_preview_frame.contentWindow.document.open();
+                email_preview_frame.contentWindow.document.write(email_template_html);
+                email_preview_frame.contentWindow.document.close();
+                using_layout = false;
+            });
+            selected_email_template = $(this).attr('data-url');
+        });
 
-	$('#select-campaign-template').on('click', function(event) {
-		event.preventDefault();
-		$('#select-email-template-modal').modal('show');
-		$('.email-template-option').on('click', function() {
-			$('.email-template-option').css('border', 'none');
-			$(this).css('border', '3px solid #FF7163');
-			$('#email-template-option-preview').attr('src', $(this).attr('data-url'));
-			selected_email_template = $(this).attr('data-url');
-		});
-		$('#select-email-template').on('click', function() {
-			$('#email-template-editor').css('display', 'inline');
-			$('#show-email-browser').css('display', 'inline');
-			$('#email-template-editor').attr('src', selected_email_template);
-			$('#select-email-template-modal').modal('hide');
-		});
-	})
+        $('#select-email-template').on('click', function() {
+            $('#save-as-template').removeAttr('disabled');
+            $('#email-editor-tips').css('display', 'none');
+            $('#email-template-editor').css('display', 'inline');
+            $('#show-email-browser').css('display', 'inline');
+            if(using_layout) {
+                email_editor_frame.contentWindow.document.open();
+                email_editor_frame.contentWindow.document.write(layout_html_string);
+                email_editor_frame.contentWindow.document.close();
+            }
+            else $('#email-template-editor').attr('src', selected_email_template);
+            $('#select-email-template-modal').modal('hide');
+        });
+    });
 
-	if( id ) {
+    $('.return-campaigns').on('click', function(event) {
+        event.preventDefault();
+        renderCampaignTable();
+    });
 
-		$('#campaign-container').find('#selected-rules').empty();
-		_.each(window.groups[id].rules, function(rule) {
-			if(rule.certificate_id !== null || rule.certificate_id !== undefined){
-				$('#campaign-form-container').find('#selected-rules').append(selectedCertificateTemplate({
-					id: rule.certificate_id,
-					abbreviation: window.certificates[rule.certificate_id].agency.abbreviation,
-					name: window.certificates[rule.certificate_id].name
-				}));
-			}
-		});
+    if (id) {
 
-	}
-	else {
+        $('#campaign-container').find('#selected-rules').empty();
+        _.each(window.groups[id].rules, function(rule) {
+            if (rule.certificate_id !== null || rule.certificate_id !== undefined) {
+                $('#campaign-form-container').find('#selected-rules').append(selectedCertificateTemplate({
+                    id: rule.certificate_id,
+                    abbreviation: window.certificates[rule.certificate_id].agency.abbreviation,
+                    name: window.certificates[rule.certificate_id].name
+                }));
+            }
+        });
 
-		$('#campaign-container').on('submit', '#create-campaign-form', function(event) {
-			event.preventDefault();
-			var params = $(this).serializeObject();
-			params.message = "Messages will be replaced with html of email";
-			for(var i = 0; i < params.groups.length; i++) {
-				params.groups[i] = parseInt(params.groups[i]);
-			}
-			Campaign.create(params, function success(data) {
-				console.log(data);
-				pageMssg(data.status, true);
-			},
-			function error(xhr) {
-				console.log(xhr.responseText);
-			});
-		});
+    } else {
 
-	}
+        $('#send-email-campaign').on('submit', '#create-campaign-form', function(event) {
+            event.preventDefault();
+            var params = $(this).serializeObject();
+            params.email_html = processEmailHtml();
+            for (var i = 0; i < params.groups.length; i++) {
+                params.groups[i] = parseInt(params.groups[i]);
+            }
+            sendCampaign(params);
+        });
 
-	$(".return-campaigns").on('click', function(event) {
-		event.preventDefault();
-		Campaign.getAll(function sucess(data) {
-			console.log(data);
-			$('#campaign-container').empty().append(campaignsGroupsTemplate());
-			renderGroupList();
-			$("#campaign-form-container").empty().append(viewCampaignsTemplate({campaigns : data}));
-			$("#campaign-form-container").on('click', '#create-campaign', function(event) {
-				event.preventDefault();
-				renderCampaignForm();
-			});
-		});
-	});
+    }
 }
 
-function renderGroupEditForm(id) {
-
-	if( unsavedChanges() ) {
-		var question = confirm("ATTENTION: All unsaved changes are lost!");
-		if( !question) {
-			return false;
-		}
-	}
-
-	var group;
-
-	if( id ) {
-		group = window.groups[id];
-		group.task = 'update';
-		group.update = true;
-	}
-	else {
-		group = {
-			task: 'add'
-		};
-		group.update = false;
-	}
-
-	$("#campaign-form-container").empty().append(addCustomerGroupTemplate(group));
-
-	if(!id)
-		$('input[name=name]').focus();
-
-	CKEDITOR.replace( 'description' );
-
-	setToken('[name=_token]');
-
-	// Set up change monitoring
-	$('form').on('change', 'input, select, textarea', function() {
-		$('form').data('hasChanged', true);
-	});
-
-	$("#add-certificates").find('#agency_id').html(agenciesTemplate({agencies:window.agencies}));
-
-	$("#add-tickets").find('#ticket_id').html(ticketsTemplate({tickets:window.tickets}));
-
-	$("#add-classes").find('#class_id').html(classesTemplate({trainings:window.trainings}));
-
-	$('#add-certificates').on('change', '#agency_id', function() {
-		var self = $(this);
-
-		if(self.val() === "") self.closest('fieldset').find('#certificate_id').empty();
-
-		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
-
-		certificate_dropdown.html(certificatesTemplate({certificates: window.agencies[self.val()].certificates}));
-		certificate_dropdown.select2("val", "");
-	});
-
-	$('#add-certificates').on('click', '.add-certificate', function(event) {
-		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
-		var self = $(this);
-		var agency_dropdown      = self.closest('fieldset').find('#agency_id');
-		var certificate_dropdown = self.closest('fieldset').find('#certificate_id');
-
-		if(agency_dropdown.val() === "" || certificate_dropdown.val() === "") return false;
-
-		if(certificate_dropdown.val() === 'all') {
-			$('#campaign-form-container').find('#selected-rules').append(selectedAgencyTemplate({
-				id: agency_dropdown.val(),
-				abbreviation: window.agencies[agency_dropdown.val()].abbreviation
-			}));
-		}
-		else {
-			$('#campaign-form-container').find('#selected-rules').append(selectedCertificateTemplate({
-				id: certificate_dropdown.val(),
-				abbreviation: window.agencies[agency_dropdown.val()].abbreviation,
-				name: _.find(window.agencies[agency_dropdown.val()].certificates, function(certificate) {
-					return certificate.id == certificate_dropdown.val();
-				}).name,
-			}));
-		}
-	});
-
-	$('#add-tickets').on('click', '.add-ticket', function(event) {
-		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
-		var self = $(this);
-		var ticket_dropdown = self.closest('fieldset').find('#ticket_id');
-
-		if(ticket_dropdown.val() === "") return false;
-
-		$('#campaign-form-container').find('#selected-rules').append(selectedTicketTemplate({
-			id: ticket_dropdown.val(),
-			name: window.tickets[ticket_dropdown.val()].name,
-		}));
-	});
-
-	$('#add-classes').on('click', '.add-class', function(event) {
-		event.preventDefault(); // Prevent form submission (some browsers treat any <button> press in a form as a submit)
-		var self = $(this);
-		var class_dropdown = self.closest('fieldset').find('#class_id');
-
-		if(class_dropdown.val() === "") return false;
-
-		$('#campaign-form-container').find('#selected-rules').append(selectedClassTemplate({
-			id: class_dropdown.val(),
-			name: window.trainings[class_dropdown.val()].name,
-		}));
-	});
-
-	if( id ) {
-
-		$('#add-certificates').find('#selected-rules').empty();
-		_.each(window.groups[id].rules, function(rule) {
-			if(rule.certificate_id !== null) {
-				$('#campaign-form-container').find('#selected-rules').append(selectedCertificateTemplate({
-					id: rule.certificate_id,
-					abbreviation: window.certificates[rule.certificate_id].agency.abbreviation,
-					name: window.certificates[rule.certificate_id].name,
-				}));
-			}
-			else if(rule.ticket_id !== null){
-				$('#campaign-form-container').find('#selected-rules').append(selectedTicketTemplate({
-					id: rule.ticket_id,
-					name: window.tickets[rule.ticket_id].name
-				}));
-			}
-			else if(rule.training_id !== null){
-				$('#campaign-form-container').find('#selected-rules').append(selectedClassTemplate({
-					id: rule.training_id,
-					name: window.trainings[rule.training_id].name
-				}));
-			}
-			else if(rule.agency_id !== null){
-				$('#campaign-form-container').find('#selected-rules').append(selectedAgencyTemplate({
-					id: rule.agency_id,
-					abbreviation: window.agencies[rule.agency_id].abbreviation
-				}));
-			}
-		});
-
-	}
-
-	$('#campaign-form-container').on('click', '.remove-certificate', function() {
-		$(this).parent().remove();
-	});
-
-	$('#campaign-form-container').on('click', '.remove-ticket', function() {
-		$(this).parent().remove();
-	});
-
-	$('#campaign-form-container').on('click', '.remove-class', function() {
-		$(this).parent().remove();
-	});
-
-	$(".return-campaign").remove();
-	$("#customer-group-container").append('<button class="btn btn-primary return-campaign pull-right">Return to Campaigns</button>');
-
-	$(".return-campaign").on('click', function(event) {
-		event.preventDefault();
-		renderCampaignTable();
-	});
-
+function sendCampaign(params)
+{
+    Campaign.create(params, function success(data) {
+        console.log(data);
+        pageMssg(data.status, true);
+        renderCampaignTable();
+    },
+    function error(xhr) {
+        console.log(xhr);
+        pageMssg(xhr.responseText, false);
+    });
 }
 
-function unsavedChanges() {
-	return $('form').data('hasChanged');
-}
+function processEmailHtml(html_string)
+{
 
-function renderGroupList(callback) {
+    if(!html_string) {
+        var html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
+    }
 
-	$('#customer-group-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
+    var script_pos = html_string.indexOf('<script type="text/javascript" src="/tabs/campaigns/email-templates/js/medium-editor.js"></script>');
+    var html_compiled = html_string.substring(0, script_pos) + '</body></html>';
 
-	CustomerGroup.getAll(function success(data) {
+    var find = 'contenteditable="true"';
+    var re = new RegExp(find, 'g');
+    html_compiled = html_compiled.replace(re, '');
 
-		window.groups = _.indexBy(data, 'id');
-		$('#customer-group-container .loader').remove();
+    find = 'data-medium-editor-element="true"';
+    re = new RegExp(find, 'g');
+    html_compiled = html_compiled.replace(re, '');
 
-		$("#customer-group-list").empty().append( customerGroupListTemplate({groups : data}) );
+    find = 'role="textbox"';
+    re = new RegExp(find, 'g');
+    html_compiled = html_compiled.replace(re, '');
 
-		// (Re)Assign eventListener for addon clicks
-		$('#customer-group-list').on('click', 'li, strong', function(event) {
+    // ADD ABILITY TO REG EXP OUT THE INPUT FILE
 
-			if( $(event.target).is('strong') )
-				event.target = event.target.parentNode;
-
-			renderGroupEditForm( event.target.getAttribute('data-id') );
-		});
-
-		if( typeof callback === 'function')
-			callback();
-	});
-
-	$("#add-customer-group").on('click', function(event) {
-		event.preventDefault();
-		renderGroupEditForm();
-	});
+    return html_compiled;
 }
