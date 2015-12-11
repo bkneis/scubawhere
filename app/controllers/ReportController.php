@@ -529,7 +529,12 @@ class ReportController extends Controller {
 							return $d->created_at;
 					})->first();
 
-					$start = !empty($firstDetail->departure) ? $firstDetail->departure->start : !empty($firstDetail->training_session) ? $firstDetail->training_session->start : $firstDetail->created_at;
+					$start = $firstDetail->created_at;
+
+					if(!empty($firstDetail->departure))
+						$start = $firstDetail->departure->start;
+					elseif(!empty($firstDetail->training_session))
+						$start = $firstDetail->training_session->start;
 
 					// Calculate the course price at this first departure/training_session datetime
 					$detail->course->calculatePrice($start, $detail->created_at);
