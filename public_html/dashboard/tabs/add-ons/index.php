@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="addon-list-template">
 						<ul id="addon-list" class="entity-list">
 							{{#each addons}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{currency}} {{decimal_price}}</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices}}</li>
 							{{else}}
 								<p id="no-addons">No addons available.</p>
 							{{/each}}
@@ -44,10 +44,12 @@
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div class="form-row">
-								<label class="field-label">Add-on Price</label>
-								<span class="currency">{{currency}}</span>
-								<input id="addon-price" type="number" name="new_decimal_price" placeholder="0.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
+							<div class="form-row prices">
+								<p><strong>Set prices for this add-on:</strong></p>
+								{{#each base_prices}}
+									{{> price_input}}
+								{{/each}}
+								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>
 							</div>
 
 							<div class="form-row" id="addon-compulsory-div" data-step="3" data-position="left" data-intro="Additionally, you can set an addon to be compulsory for all bookings. For example, governmental dive taxes.">
@@ -69,6 +71,44 @@
 			</div>
 		</div>
 	</div><!-- .row -->
+
+	<script type="text/x-handlebars-template" id="price-input-template">
+		<p{{#unless decimal_price}} class="new_price"{{/unless}}>
+			<span class="currency">{{currency}}</span>
+			{{#if decimal_price}}
+				<span class="amount">{{decimal_price}}</span>
+			{{else}}
+				<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
+			{{/if}}
+
+			{{#unless isAlways}}
+				{{#if decimal_price}}
+					from <big>{{from}}</big>
+				{{else}}
+					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				{{/if}}
+			{{else}}
+				from <strong>the beginning of time</strong>
+				{{#unless decimal_price}}
+					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
+				{{/unless}}
+			{{/unless}}
+
+			{{#unless isBase}}
+				{{#if decimal_price}}
+					until <big>{{until}}</big>
+				{{else}}
+					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				{{/if}}
+			{{/unless}}
+
+			{{#unless isAlways}}
+				{{#unless decimal_price}}
+					<button class="btn btn-danger remove-price">&#215;</button>
+				{{/unless}}
+			{{/unless}}
+		</p>
+	</script>
 
 	<script type="text/x-handlebars-template" id="errors-template">
 		<div class="yellow-helper errors" style="color: #E82C0C;">

@@ -68,12 +68,23 @@ class Booking extends Ardent {
 
 		$feeSum = 0;
 		if(empty($this->bookingdetails))
-			$this->load('bookingdetails', 'bookingdetails.addons');
+			$this->load('bookingdetails', 'bookingdetails.departure', 'bookingdetails.addons');
 
 		foreach($this->bookingdetails as $detail) {
+			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
+
 			foreach($detail->addons as $addon) {
 				if($addon->compulsory === 1)
+				{
+					if($detail->departure)
+						$start = $detail->departure->start;
+					else
+						$start = $detail->created_at;
+
+					$addon->calculatePrice($start, $limitBefore);
+
 					$feeSum += floatval($addon->decimal_price) * $addon->pivot->quantity;
+				}
 			}
 		}
 
@@ -444,10 +455,18 @@ class Booking extends Ardent {
 			}
 
 			// Sum up all addons that are not part of a package
-			$detail->addons->each(function($addon) use (&$sum, $currency)
+			$detail->addons->each(function($addon) use ($detail, &$sum, $limitBefore)
 			{
 				if($addon->pivot->packagefacade_id === null)
-					$sum += $addon->decimal_price * $addon->pivot->quantity;
+				{
+					if($detail->departure)
+						$start = $detail->departure->start;
+					else
+						$start = $detail->created_at;
+
+					$addon->calculatePrice($start, $limitBefore);
+					$sum += floatval($addon->decimal_price) * $addon->pivot->quantity;
+				}
 			});
 		});
 

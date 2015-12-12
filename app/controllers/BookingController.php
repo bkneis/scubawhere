@@ -156,6 +156,19 @@ class BookingController extends Controller {
 
 				$detail->ticket->calculatePrice($start, $limitBefore);
 			}
+
+			// Calculate add-ons
+			$detail->addons->each(function($addon) use ($detail)
+			{
+				if(!empty($addon->pivot->packagefacade_id)) return;
+
+				if($detail->departure)
+					$start = $detail->departure->start;
+				else
+					$start = $detail->created_at;
+
+				$addon->calculatePrice($start);
+			});
 		});
 
 		$booking->accommodations->each(function($accommodation) use ($booking, &$pricedPackagefacades)
@@ -977,9 +990,18 @@ class BookingController extends Controller {
 			// Add compulsory addons
 			$addons = Context::get()->addons()->where('compulsory', true)->get();
 			if($addons->count() > 0) {
+				$bookingdetail->load('departure');
+
 				$addons->each(function($addon) use ($bookingdetail)
 				{
 					$bookingdetail->addons()->attach( $addon->id, array('quantity' => 1) );
+
+					if($bookingdetail->departure)
+						$start = $bookingdetail->departure->start;
+					else
+						$start = $bookingdetail->created_at;
+
+					$addon->calculatePrice($start);
 				});
 			}
 		}
@@ -1077,7 +1099,7 @@ class BookingController extends Controller {
 		return array(
 			'status'                => 'OK. Booking details added.',
 			'id'                    => $bookingdetail->id,
-			'addons'                => $addons ? $addons->lists('id') : false,
+			'addons'                => $addons ? $addons : false,
 			'decimal_price'         => $booking->decimal_price,
 
 			'boatroom_id'           => $departure && $trip->boat_required ? $boatroom_id : false,
@@ -1334,9 +1356,17 @@ class BookingController extends Controller {
 
 		// Update booking price
 		if(!$package)
-			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
+		{
+			if($bookingdetail->departure)
+				$start = $bookingdetail->departure->start;
+			else
+				$start = $bookingdetail->created_at;
 
-		return array('status' => 'OK. Addon(s) added.', 'decimal_price' => $booking->decimal_price);
+			$addon->calculatePrice($start);
+			$booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
+		}
+
+		return array('status' => 'OK. Addon(s) added.', 'decimal_price' => $booking->decimal_price, 'addon_decimal_price' => $addon->decimal_price);
 	}
 
 	public function postRemoveAddon()

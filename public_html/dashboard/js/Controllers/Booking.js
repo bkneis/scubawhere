@@ -338,8 +338,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				detail.temporary = params.temporary;
 
 			// Add compulsory addons
-			_.each(data.addons, function(id) {
-				var addon = $.extend(true, {}, window.addons[id]);
+			_.each(data.addons, function(addon) {
 				addon.pivot = {
 					quantity: 1,
 				};
@@ -469,6 +468,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 			}
 			else {
 				var addon = $.extend(true, {}, window.addons[params.addon_id]);
+				addon.decimal_price = data.addon_decimal_price;
 				addon.pivot = {
 					quantity: parseInt(params.quantity),
 					packagefacade_id: params.packagefacade_id || null,

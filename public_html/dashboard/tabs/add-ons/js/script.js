@@ -1,9 +1,30 @@
+var addonForm,
+	addonList,
+	priceInputTemplate;
+
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(selectObject) {
 	if(this.terms == selectObject)
 		return ' selected';
 	else
 		return '';
+});
+
+Handlebars.registerHelper('pricerange', function(base_prices) {
+
+	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
+	    max = 0;
+
+	if( base_prices.length === 1 ) {
+		return window.company.currency.symbol + ' ' + base_prices[0].decimal_price;
+	}
+
+	_.each(base_prices, function(value) {
+		min = Math.min(value.decimal_price, min).toFixed(2);
+		max = Math.max(value.decimal_price, max).toFixed(2);
+	});
+
+	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
 Handlebars.registerHelper('currency', function() {
@@ -13,8 +34,20 @@ Handlebars.registerHelper('currency', function() {
 		return '???'; // TODO Set placeholder and try again in a second (similar to the 'countryName' helper)
 });
 
-var addonForm,
-	addonList;
+priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
+Handlebars.registerPartial('price_input', priceInputTemplate);
+
+window.sw.default_first_base_price = {
+	id: randomString(),
+	from: '0000-00-00',
+	isBase: true,
+	isAlways: true,
+};
+
+window.sw.default_base_price = {
+	isBase: true,
+	from: moment().format('YYYY-MM-DD'),
+};
 
 $(function(){
 
@@ -144,6 +177,22 @@ $(function(){
 		}
 	});
 
+	$('#addon-form-container').on('click', '.add-base-price', function(event) {
+		event.preventDefault();
+
+		window.sw.default_base_price.id = randomString();
+
+		$(event.target).before( priceInputTemplate(window.sw.default_base_price) );
+
+		initPriceDatepickers();
+	});
+
+	$('#addon-form-container').on('click', '.remove-price', function(event) {
+		event.preventDefault();
+
+		$(event.target).parent().remove();
+	});
+
 });
 
 function loadAddons() {
@@ -189,23 +238,23 @@ function renderEditForm(id) {
 		addon.task = 'update';
 		addon.update = true;
 		addon.compulsory = parseInt( addon.compulsory );
+
+		_.each(addon.base_prices, function(value) {
+			value.isBase = true;
+
+			if(value.from == '0000-00-00')
+				value.isAlways = true;
+		});
+
+		if(_.size(addon.base_prices) === 0)
+			addon.base_prices = [window.sw.default_first_base_price];
 	}
 	else {
 		addon = {
 			task: 'add',
-			/*name: 'TUI',
-			website: 'http://tui.com',
-			branch_name: 'Fishponds',
-			branch_address: 'R8t down the road\nBristol, BS16 2HG',
-			branch_phone: '+44791234567',
-			branch_email: 'fishponds@uk.tui.com',
-			commission: 12.8,
-			terms: 'deposit',
-			has_billing_details: function() {
-				return this.billing_address || this.billing_email || this.billing_phone;
-			},*/
+			update: false,
+			base_prices: [ window.sw.default_first_base_price ],
 		};
-		addon.update = false;
 	}
 
 	$('#addon-form-container').empty().append( addonForm(addon) );
@@ -214,6 +263,8 @@ function renderEditForm(id) {
 		$('input[name=name]').focus();
 
 	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
 
 	setToken('[name=_token]');
 
@@ -247,6 +298,8 @@ function clearForm() {
 
 	addon = {
 		task: 'add',
+		update: false,
+		base_prices: [ window.sw.default_first_base_price ],
 		/*name: 'TUI',
 		website: 'http://tui.com',
 		branch_name: 'Fishponds',
@@ -259,13 +312,14 @@ function clearForm() {
 			return this.billing_address || this.billing_email || this.billing_phone;
 		},*/
 	};
-	addon.update = false;
 
 	$('#addon-form-container').empty().append( addonForm(addon) );
 
 	$('input[name=name]').focus();
 
 	CKEDITOR.replace( 'description' );
+
+	initPriceDatepickers();
 
 	setToken('[name=_token]');
 

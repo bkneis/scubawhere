@@ -70,6 +70,8 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	var min = 9007199254740992, // http://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
 	    max = 0;
 
+	if(prices === undefined) prices = [];
+
 	if( base_prices.length === 1 && prices.length === 0) {
 		return window.company.currency.symbol + ' ' + base_prices[0].decimal_price;
 	}

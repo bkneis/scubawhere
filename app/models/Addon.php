@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
-use PhilipBrown\Money\Currency;
 
 class Addon extends Ardent {
 	use SoftDeletingTrait;
@@ -13,20 +12,15 @@ class Addon extends Ardent {
 	protected $fillable = array(
 		'name',
 		'description',
-		'new_decimal_price',
-		'price',
 		'compulsory',
 		'parent_id'
 	);
-
-	protected $appends = array('decimal_price'/*, 'currency'*/);
 
 	protected $hidden = array('parent_id');
 
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
-		'price'       => 'sometimes|integer|min:0',
 		'compulsory'  => 'required|boolean',
 		'parent_id'   => 'integer|min:1'
 	);
@@ -39,27 +33,23 @@ class Addon extends Ardent {
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
 
-		if( isset($this->new_decimal_price) )
-		{
-			$currency = new Currency( Context::get()->currency->code );
-			$this->price = (int) round( $this->new_decimal_price * $currency->getSubunitToUnit() );
-			unset($this->new_decimal_price);
-		}
-
 		if( isset($this->compulsory) )
 			$this->compulsory = Helper::sanitiseString($this->compulsory);
 	}
 
-	public function getDecimalPriceAttribute()
-	{
-		$currency = new Currency( Context::get()->currency->code );
+	public function calculatePrice($start, $limitBefore = false) {
+		$price = Price::where(Price::$owner_id_column_name, $this->id)
+		     ->where(Price::$owner_type_column_name, 'Addon')
+		     ->where('from', '<=', $start)
+		     ->where(function($query) use ($limitBefore)
+		     {
+		     	if($limitBefore)
+		     		$query->where('created_at', '<=', $limitBefore);
+		     })
+		     ->orderBy('from', 'DESC')
+		     ->first();
 
-		return number_format(
-			$this->price / $currency->getSubunitToUnit(), // number
-			strlen( $currency->getSubunitToUnit() ) - 1, // decimals
-			/* $currency->getDecimalMark() */ '.', // decimal seperator
-			/* $currency->getThousandsSeperator() */ ''
-		);
+		$this->decimal_price = $price->decimal_price;
 	}
 
 	public function getHasBookingsAttribute()
@@ -100,5 +90,10 @@ class Addon extends Ardent {
 	public function packages()
 	{
 		return $this->morphToMany('Package', 'packageable')->withPivot('quantity')->withTimestamps();
+	}
+
+	public function basePrices()
+	{
+		return $this->morphMany('Price', 'owner')->whereNull('until')->orderBy('from');
 	}
 }
