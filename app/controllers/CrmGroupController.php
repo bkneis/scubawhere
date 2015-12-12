@@ -29,11 +29,11 @@ class CrmGroupController extends Controller {
 	{
 		return Context::get()->crmGroups()->with('rules')->withTrashed()->get();
 	}
-    
+
     public function getCustomeranalytics()
     {
         $group_id = Input::only('id');
-        
+
         $customers = [];
 
 		$tmpRules = [];
@@ -68,7 +68,7 @@ class CrmGroupController extends Controller {
 		$certificates_customers = Context::get()->customers()->with('tokens')->whereHas('certificates', function($query) use ($rules){
 			$query->whereIn('certificates.id', $rules['certs']);
 		})->get();//->lists('email', 'firstname', 'lastname', 'id');
-        
+
 		$customers = array_merge($customers, array($certificates_customers));
 
 		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
@@ -79,7 +79,7 @@ class CrmGroupController extends Controller {
 		$customers = array_merge($customers, array($booked_customers));
 		$customers = array_unique($customers);
         $customers = $customers[0]; // second index is empty array?
-        
+
         foreach($customers as $customer)
         {
             $customer->num_sent = 0;
@@ -89,23 +89,23 @@ class CrmGroupController extends Controller {
                 $customer->num_sent++;
                 if($token->opened > 0) $customer->num_read++;
             }
-            $customer->opened_rate = ($customer->num_read / $customer->num_sent) * 100;
+            $customer->opened_rate = $customer->num_sent != 0 ? ($customer->num_read / $customer->num_sent) * 100 : 0;
         }
-        
+
         return Response::json($customers, 200);
     }
-    
+
     /*public function getCustomeranalytics()
     {
         $group_id = Input::only('id');
-    
+
         $customers = [];
         $campaigns = Context::get()->campaigns()->with('groups')->get();
         foreach($campaigns as $obj)
         {
             foreach($obj->groups as $group)
             {
-                if($group->id == (int)$group_id) 
+                if($group->id == (int)$group_id)
                 {
                     $tokens = CrmToken::with('customer')->where('campaign_id', '=', $obj->id)->get();
                     foreach($tokens as $token)
@@ -123,10 +123,10 @@ class CrmGroupController extends Controller {
                 }
             }
         }
-        
+
         return Response::json(array('customers' => $customers, 'num_sent' => sizeof($campaigns)), 200);
     }*/
-    
+
     public function getCustomers()
     {
         $group_id = Input::only('id');
@@ -164,7 +164,7 @@ class CrmGroupController extends Controller {
 		$certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
 			$query->whereIn('certificates.id', $rules['certs']);
 		})->get();//->lists('email', 'firstname', 'lastname', 'id');
-        
+
 		$customers = array_merge($customers, array($certificates_customers));
 
 		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
@@ -175,7 +175,7 @@ class CrmGroupController extends Controller {
 		$customers = array_merge($customers, array($booked_customers));
 		$customers = array_unique($customers);
         $customers = $customers[0]; // second index is empty array?
-        
+
         return Response::json(array('customers' => $customers), 200);
     }
 
