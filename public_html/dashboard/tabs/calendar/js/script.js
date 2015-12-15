@@ -10,7 +10,7 @@ var calendarOptions = {
 	boatsListTemplate: null,
 	tripsListTemplate: null,
 	filterSelectTemplate: null,
-	calendarDisplay: "all"
+	calendarDisplay: "trips"
 };
 
 $(function() {
@@ -605,7 +605,7 @@ function getTripEvents(start, end, timezone, callback) {
 			}
 		});
 
-callback(events);
+		callback(events);
 
 		// Remove loading indictor
 		$('#fetch-events-loader').remove();

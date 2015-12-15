@@ -88,24 +88,16 @@
 		<script type="text/x-handlebars-template" id="accommodations-list-template">
 			{{#each accommodations}}
 				<li data-id="{{id}}" class="list-group-item accommodation-item">
-					<p class="lead mb5 pull-right"><span class="price">{{pricerange base_prices prices}}</span></p>
+					<p class="lead mb5 pull-right">
+						<span class="price">{{pricerange base_prices prices}}</span>
+						<small><small>/ night</small></small>
+					</p>
 					<h4 class="list-group-item-heading">{{{name}}}</h4>
-					{{!-- <p>{{{description}}}</p> --}}
-					<div class="row">
-						<div class="form-group">
-							<label for="" class="col-lg-1 control-label">From: </label>
-							<div class="col-lg-4">
-								<input type="text" name="start" class="form-control input-sm datepicker accommodation-start" data-date-format="YYYY-MM-DD">
-							</div>
-							<label class="col-lg-1 control-label">To: </label>
-							<div class="col-lg-4">
-								<input type="text" name="end" class="form-control input-sm datepicker accommodation-end" data-date-format="YYYY-MM-DD">
-							</div>
-							<div class="col-lg-2">
-								<button class="btn btn-primary btn-sm add-accommodation pull-right" data-id="{{id}}">Add</button>
-							</div>
-						</div>
-					</div>
+
+					<button class="btn btn-primary btn-sm select-accommodation-dates" data-id="{{id}}">Select Dates</button>
+					{{!-- <button class="btn btn-primary btn-sm add-accommodation pull-right" data-id="{{id}}">Add</button> --}}
+
+					<p>{{{description}}}</p>
 				</li>
 			{{/each}}
 		</script>

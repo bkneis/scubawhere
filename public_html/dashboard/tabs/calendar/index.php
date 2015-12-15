@@ -7,10 +7,10 @@
 				</div>
 				<div class="panel-body" id="filters">
 					<div id="filter-types" class="btn-group" role="group">
-					  <button id="filter-all" display="all" type="button" class="btn btn-default btn-primary filter-type">All</button>
-					  <button id="filter-trips" display="trips" type="button" class="btn btn-default filter-type">Trips</button>
+					  <button id="filter-all"            display="all"            type="button" class="btn btn-default filter-type">All</button>
+					  <button id="filter-trips"          display="trips"          type="button" class="btn btn-default filter-type btn-primary">Trips</button>
 					  <button id="filter-accommodations" display="accommodations" type="button" class="btn btn-default filter-type">Accommodations</button>
-					  <button id="filter-classes" display="classes" type="button" class="btn btn-default filter-type">Classes</button>
+					  <button id="filter-classes"        display="classes"        type="button" class="btn btn-default filter-type">Classes</button>
 					</div>
 						<div style="clear:both; padding-top:10px;"></div>
 						<div id="jump-to-date" class="form-row">

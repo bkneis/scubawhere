@@ -1902,6 +1902,8 @@ window.promises.loadedAccommodations.done(function() {
 var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
 var packagedAccommodationsListTemplate = Handlebars.compile($("#packaged-accommodations-list-template").html());
 
+var accommodationSelectionModalTemplate = Handlebars.compile($("#accommodation-selection-template").html());
+
 $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
 	$("#accommodation-customers").children().first().addClass('active');
@@ -1920,13 +1922,175 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 		}).sort()
 	);
 
-	// Set all accommodations' start fields
-	if(firstDepartureDate !== '9999-12-31') {
-		var startDate = moment(firstDepartureDate).subtract(1, 'days').format('YYYY-MM-DD');
-		$('.accommodation-start').val(startDate);
-		$('#packaged-accommodations-list .accommodation-start').change();
-	}
+	$('#accommodation-tab').data('firstDepartureDate', firstDepartureDate);
 });
+
+
+
+
+
+
+$('#accommodation-tab').on('click', '.select-accommodation-dates', function(event) {
+	var accommodation = window.accommodations[ $(this).attr('data-id') ];
+
+	showModalAccommodationSelection(accommodation);
+});
+
+
+
+function showModalAccommodationSelection(accommodation) {
+	// Create the modal window from accommodation-selection-template
+
+	// Find which month to display
+	var firstDepartureDate = $('#accommodation-tab').data('firstDepartureDate');
+	var defaultDate;
+
+	if(firstDepartureDate !== '9999-12-31')
+		defaultDate = firstDepartureDate;
+	else
+		defaultDate = moment();
+
+	$('#modalWindows')
+	.append( accommodationSelectionModalTemplate(accommodation) )        // Create the modal
+	.children('#modal-accommodation-selection')          // Directly find it and use it
+	.data('accommodation', accommodation)              // Assign the accommodation object to the modal DOM element
+	.reveal({                                      // Open modal window | Options:
+		animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+		animationSpeed: 300,                       // how fast animtions are
+		closeOnBackgroundClick: true,              // if you click background will modal close?
+		dismissModalClass: 'close-modal',   // the class of a button or element that will close an open modal
+		'accommodation': accommodation,                  // Submit by reference to later get it as this.accommodation
+		onOpenedModal: function() {
+			var accommodation_id = this.accommodation.id;
+
+			$('#calendar').fullCalendar({
+				header: {
+					left: '',
+					center: 'title',
+				},
+				timezone: false,
+				firstDay: 1, // Set Monday as the first day of the week
+				events: function(start, end, timezone, callback) {
+					$('.fc-center h2').after('<div id="fetch-events-loader" class="loader"></div>');
+
+					var sessionFilters = {
+						'after': start.format(),
+						'before': end.format(),
+						'with_full': 1
+					};
+
+					sessionFilters.accommodation_id = accommodation_id;
+
+					Accommodation.filter(sessionFilters, function success(data) {
+
+						console.log(data);
+						var events = [];
+
+						_.each(data, function(value, key) {
+							var start = new moment(key);
+
+							_.each(value, function(utilisation, id) {
+								var eventObject = {
+									start: start,
+									end : start,
+									title: '<strong>' + (utilisation[1] - utilisation[0]) + '</strong> available',
+									color : "#060",
+									type: 'utilisation',
+								};
+								if((utilisation[1] - utilisation[0]) < 3) eventObject.color = "orange"
+								if((utilisation[1] - utilisation[0]) === 0) eventObject.color = "#600";
+
+								events.push( eventObject );
+						    });
+						});
+
+						// Render booked trips & classes for reference
+						_.each(booking.bookingdetails, function(detail) {
+							var start = '',
+							    end   = '',
+							    title = '',
+							    color = '',
+							    textColor = 'white',
+							    type = '';
+
+							if(detail.session) {
+								start     = moment(detail.session.start);
+								end       = moment(detail.session.start).add(detail.session.trip.duration, 'hours');
+								title     = detail.session.trip.name;
+								color     = '#01FF70';
+								textColor = 'black';
+								type      = 'trip';
+							}
+							else if(detail.training_session) {
+								start = moment(detail.training_session.start);
+								end   = moment(detail.training_session.start).add(detail.training.duration, 'hours');
+								title = detail.training.name;
+								color = '#001F3F';
+								type  = 'class';
+							}
+							else
+								return;
+
+							var eventObject = {
+								start: start,
+								end : end,
+								title: detail.customer.firstname + ' | ' + title,
+								color : color,
+								textColor: textColor,
+								type: type,
+							};
+
+							events.push( eventObject );
+						});
+
+						callback(events);
+						$('#fetch-events-loader').remove();
+					},
+					function error(xhr){
+						$('.loader').remove();
+					});
+				},
+				eventRender: function(event, element) {
+					// Intercept the event rendering to inject the non-html-escaped version of the title
+					// Needed for trip names with special characters in it (like ó, à, etc.)
+					element.find('.fc-title').html(event.title);
+
+					// Remove the event time from the utilisation displays
+					if(event.type === 'utilisation')
+						element.find('.fc-time').remove();
+
+					// Add icon to trips, classes and accommodations
+					if(event.type === 'trip')
+						element.find('.fc-content').prepend('<i class="fa fa-ship fa-fw"></i> ');
+					if(event.type === 'class')
+						element.find('.fc-content').prepend('<i class="fa fa-graduation-cap fa-fw"></i> ');
+					if(event.type === 'accommodation')
+						element.find('.fc-content').prepend('<i class="fa fa-bed fa-fw"></i> ');
+
+					element.attr('title', element.find('.fc-title').text());
+				},
+				editable: false,
+				droppable: false, // This allows things to be dropped onto the calendar
+				dayClick: function(date) {
+
+				},
+			});
+		},
+		onFinishModal: function() {
+			$('#modal-accommodation-selection').remove();
+		},
+	});
+}
+
+
+
+
+
+
+
+
+
+
 
 $('#accommodation-tab').on('change', '#packaged-accommodations-list .accommodation-start', function() {
 	// Find the end date field

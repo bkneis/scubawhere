@@ -138,6 +138,21 @@
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
 		</script>
+
+		<script type="text/x-handlebars-template" id="accommodation-selection-template">
+			<div id="modal-accommodation-selection" class="reveal-modal" style="width: 900px; margin-left: -500px; top: 50px;">
+
+				<h3>Accommodation Date Selection</h3>
+				<p>
+					For: <strong>{{{name}}}</strong><br>
+					Maximum capacity: {{capacity}}
+				</p>
+
+				<div id="calendar"></div>
+
+				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+			</div>
+		</script>
 	</div>
 
 	<!--Styling (Temporary)-->
@@ -148,6 +163,8 @@
 
 	<!--Basil LocalStorage Wrapper-->
 	<script type="text/javascript" src="/common/vendor/basil.js/build/basil.min.js"></script>
+
+	<script src="/common/js/fullcalendar.min.js"></script>
 
 	<!--My scripts-->
 	<script src="/tabs/add-booking/js/script.js"></script>
