@@ -1,0 +1,1 @@
+<p>Sorry that you want to unsubscribe to our awesome news letter</p>
