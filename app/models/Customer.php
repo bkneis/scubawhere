@@ -131,4 +131,9 @@ class Customer extends Ardent {
     {
         return $this->hasMany('CrmToken');
     }
+    
+    public function crmSubscription()
+    {
+        return $this->hasOne('CrmSubscription');
+    }
 }

@@ -176,6 +176,11 @@ class Company extends Ardent {
 	{
 		return $this->hasMany('Customer');
 	}
+    
+    public function crmSubscriptions()
+    {
+        return $this->hasMany('CrmSubscription');
+    }
 
 	public function crmGroups()
 	{
