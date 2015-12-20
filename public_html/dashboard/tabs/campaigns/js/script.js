@@ -12,6 +12,17 @@ var selected_email_template;
 var optionListTemplate;
 var campaignAnalyticsTable;
 
+Handlebars.registerHelper('listGroups', function(groups) {
+    if(groups.length == 0 || groups == undefined || groups == null) return "All customers";
+    else {
+        var groups_html = "";
+        for(var i=0; i < groups.length; i++) {
+            groups_html += '<span style="margin-right:5px;">' + groups[i].name + '</span>';
+        }
+        return new Handlebars.SafeString(groups_html);
+    }
+});
+
 $(function () {
 
     viewCampaignsTemplate = Handlebars.compile($("#campaigns-template").html());

@@ -135,10 +135,25 @@ $(function () {
         var params = $(this).serializeObject();
         params.email_html = processEmailHtml();
         params._token = window.token;
-        for (var i = 0; i < params.groups.length; i++) {
-            params.groups[i] = parseInt(params.groups[i]);
+        params.sendallcustomers = $('#send-all-customers').val();
+        if(params.groups != undefined) {
+            for (var i = 0; i < params.groups.length; i++) {
+                params.groups[i] = parseInt(params.groups[i]);
+            }
         }
         sendCampaign(params);
+    });
+    
+    $('#select-all-customers').on('change', function() {
+        if($(this).is(':checked')) {
+            $('.remove-group').parent().remove();
+            $('#customer_group_id').attr('disabled', true);
+            $('#send-all-customers').val(1);
+        }
+        else {
+            $('#customer_group_id').attr('disabled', false);
+            $('#send-all-customers').val(0);
+        }
     });
 
     showTemplates();

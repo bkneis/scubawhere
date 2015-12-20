@@ -77,9 +77,7 @@
                                 <td>{{name}}</td>
                                 <td>{{subject}}</td>
                                 <td>
-                                    {{#each groups}}
-                                        <span style="margin-right:5px;">{{name}}</span>
-                                    {{/each}}
+                                    {{listGroups groups}}
                                 </td>
                                 <td> 
                                     <i class="fa fa-line-chart fa-fw view-email-analytics" data-toggle="tooltip" data-placement="top" data-campaign-id="{{id}}" title="View analytics"></i> 

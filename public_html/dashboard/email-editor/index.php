@@ -186,6 +186,10 @@
                                     <br>
                                     <button class="btn btn-primary add-group" style="width: 100%;">Add</button>
                                 </div>
+                                <div style="padding-top:10px;" class="col-md-12">
+                                    <input id="select-all-customers" type="checkbox">Send all customers
+                                    <input id="send-all-customers" type="hidden" value="0">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12" style="padding-top:10px" id="selected-customer-groups">
