@@ -92,12 +92,14 @@
     <div style="position: fixed; bottom: 0; width: 100%; height:80px" class="alert-warning clearfix">
         <div class="alert pull-right">
             <div class="pull-left">
-                <button id="choose-template" class="btn btn-primary btn-lg pull-left">Choose Different Template</button>
+    
             </div>
             <div class="pull-right">
                 <button id="send-email" class="btn btn-primary btn-lg pull-right">SEND</button>
-                <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 5px;">Save as Template</button>
-                <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 5px;">Discard Email</a>
+                <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
+                <button id="update-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px; display:none;">Update Template</button>
+                <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
+                <button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>
             </div>
         </div>
     </div>
@@ -211,7 +213,7 @@
     <!-- Handlebars templates -->
     <script type="text/x-handlebars-template" id="layout-options-list-template">
         {{#each layout}}
-            <li class="email-layout-option" data-html="{{html_string}}">{{name}}</li>
+            <li class="email-layout-option" data-id="{{id}}" data-html="{{html_string}}">{{name}}</li>
         {{/each}}
     </script>
 

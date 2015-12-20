@@ -4,10 +4,12 @@ var selectedCustomerGroupTemplate;
 var email_created = false;
 window.token;
 $(function () {
-
+    
     optionListTemplate = Handlebars.compile($("#layout-options-list-template").html());
     groupSelectTemplate = Handlebars.compile($('#group-select-template').html());
     selectedCustomerGroupTemplate = Handlebars.compile($('#selected-group-template').html());
+    
+    var template_id;
     
     window.token = getToken();
 
@@ -36,6 +38,30 @@ $(function () {
                     pageMssg(xhr.responseText, false);
                 });
         });
+    });
+    
+    $('#update-template').on('click', function (event) {
+        event.preventDefault();
+        if(!email_created) {
+            pageMssg('Please create an email to save it as a template', false);
+            return false;
+        }
+        if(confirm('Are you sure you want to update this template ?')) {
+            var params = {};
+            params.html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
+            params.template_id = template_id;
+            params._token = window.token;
+            Campaign.updateTemplate(params, function success(data) {
+                console.log(data);
+                pageMssg(data.status, true);
+                $('#update-email-template-modal').modal('hide');
+                window.location.href = "/#campaigns";
+            },
+            function error(xhr) {
+                console.log(xhr);
+                pageMssg(xhr.responseText, false);
+            });
+        }
     });
 
     $('#send-email').on('click', function (event) {
@@ -70,12 +96,14 @@ $(function () {
     var layout_html_string = '';
 
     $('.option-button').on('click', function () {
+        $('#update-template').css('display', 'inline');
         $('.email-template-option').css('border', 'none');
         $('.email-options-list').css('display', 'none');
         $('#' + $(this).attr('display')).css('display', 'block');
         $('.option-button').removeClass('btn-primary');
         $(this).addClass('btn-primary');
         $('.email-layout-option').on('click', function () {
+            template_id = $(this).attr('data-id');
             layout_html_string = $(this).attr('data-html');
             email_template_html = processEmailHtml(layout_html_string);
             email_preview_frame.contentWindow.document.open();
@@ -85,6 +113,7 @@ $(function () {
     });
 
     $('.email-template-option').on('click', function () {
+        $('#update-template').css('display', 'none');
         $('.email-template-option').css('border', 'none');
         $(this).css('border', '3px solid #FF7163');
         $.get($(this).attr('data-url'), function (response) {

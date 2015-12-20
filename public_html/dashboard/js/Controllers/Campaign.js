@@ -28,6 +28,16 @@ var Campaign = {
 		});
     },
     
+    updateTemplate : function(params, handleData, errorFn) {
+        $.ajax({
+			type: "POST",
+			url: "/api/campaign_template/update",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+    },
+    
     getAllTemplates : function(handleData) {
         $.get("/api/campaign_template/all", handleData);
     },
