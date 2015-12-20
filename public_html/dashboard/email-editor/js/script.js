@@ -164,6 +164,7 @@ $(function () {
         var params = $(this).serializeObject();
         params.email_html = processEmailHtml();
         params._token = window.token;
+        params.is_campaign = 1;
         params.sendallcustomers = $('#send-all-customers').val();
         if(params.groups != undefined) {
             for (var i = 0; i < params.groups.length; i++) {
