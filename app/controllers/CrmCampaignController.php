@@ -96,7 +96,8 @@ class CrmCampaignController extends Controller {
 			'subject',
 			'email_html',
             'name',
-            'sendallcustomers'
+            'sendallcustomers',
+            'is_campaign'
 		);
 
 		$data['sent_at'] = Helper::localTime();
@@ -108,6 +109,16 @@ class CrmCampaignController extends Controller {
         if((int) $data['sendallcustomers'] == 1)
         {
             $customers = Context::get()->customers()->get();
+        }
+        else if((int) $data['is_campaign'] == 0)
+        {
+            $booked_cust_id = Input::only('customer_id');
+            $booked_cust = Context::get()->customers()->find($booked_cus_id); // possibly use where in?
+            if(!$booked_cust)
+            {
+                return Response::json( 'Customer ID is not valid', 406 );
+            }
+            array_push($customers, $booked_cust);
         }
         else
         {

@@ -15,6 +15,7 @@ return array(
     'AddAvailableBetweenAndAvailableForBetweenColumnsToTicketsAndPackagesTables' => $baseDir . '/app/database/migrations/2015_06_18_084227_add_available_between_and_available_for_between_columns_to_tickets_and_packages_tables.php',
     'AddBoatRequiredFieldToTripsTable' => $baseDir . '/app/database/migrations/2015_09_08_192918_add_boat_required_field_to_trips_table.php',
     'AddBoatroomIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2014_12_01_234755_add_boatroom_id_to_booking_details_table.php',
+    'AddBookingEmailsIntoCrm' => $baseDir . '/app/database/migrations/2015_12_20_144951_add_booking_emails_into_crm.php',
     'AddCancellationFeeToBookingTable' => $baseDir . '/app/database/migrations/2015_02_10_234000_add_cancellation_fee_to_booking_table.php',
     'AddCapacityFieldToPackagesTable' => $baseDir . '/app/database/migrations/2014_06_09_194447_add_capacity_field_to_packages_table.php',
     'AddCertificateIdToCoursesTable' => $baseDir . '/app/database/migrations/2015_08_29_090245_add_certificate_id_to_courses_table.php',
