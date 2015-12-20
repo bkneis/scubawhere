@@ -60,6 +60,20 @@ class CrmCampaignController extends Controller {
 	    return Response::json( array('sucess' => array('File Uploaded.'), 'filepath' => $filepath), 200 ); // 200 Success
 	}
     
+    public function postDelete()
+    {
+        $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
+        $campaign->delete();
+        return Response::json(array('status' => 'Campaign has been deleted'));
+    }
+    
+    public function postRestore()
+    {
+        $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
+        $campaign->restore();
+        return Response::json(array('status' => 'Campaign has been restored'));
+    }
+    
     public function getAnalytics()
     {
         $campaign_id = Input::only('id');

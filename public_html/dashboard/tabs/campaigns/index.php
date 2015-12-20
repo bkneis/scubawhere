@@ -84,6 +84,7 @@
                                         <i class="fa fa-line-chart fa-fw view-email-analytics" data-toggle="tooltip" data-placement="top" data-campaign-id="{{id}}" title="View analytics"></i> 
                                         <i class="fa fa-eye fa-fw view-email-campaign" data-toggle="tooltip" data-placement="top" title="View email" data-html="{{email_html}}"></i>
                                         <i class="fa fa-envelope fa-fw resend-email-campaign" data-toggle="tooltip" data-placement="top" title="Re send campaign" data-campaign-id="{{id}}"></i>
+                                        <i class="fa fa-times fa-fw delete-email-campaign" data-toggle="tooltip" data-placement="top" title="Delete campaign" data-campaign-id="{{id}}"></i>
                                     </td>
                                 </tr>
                             {{/if}}

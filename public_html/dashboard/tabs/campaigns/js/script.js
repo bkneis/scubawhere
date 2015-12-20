@@ -101,6 +101,19 @@ function renderCampaignTable() {
                 });
             });
         });
+        $('.delete-email-campaign').on('click', function(event) {
+            var params = {};
+            params.id = $(this).attr('data-campaign-id');
+            params._token = window.token;
+            Campaign.delete(params, function(data) {
+                pageMssg(data.status, true);
+                renderCampaignTable();
+            },
+            function error(xhr) {
+                console.log(xhr);
+                pageMssg('Campaign could not be deleted', false);
+            });
+        });
     });
     $("#campaign-container").on('click', '#create-campaign', function(event) {
         event.preventDefault();

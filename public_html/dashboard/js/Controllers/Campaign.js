@@ -18,6 +18,16 @@ var Campaign = {
 		});
 	},
     
+    delete : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/campaign/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
+    
     createTemplate : function(params, handleData, errorFn) {
         $.ajax({
 			type: "POST",

@@ -2,10 +2,15 @@
 
 use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class CrmCampaign extends Ardent {
+    
+    use SoftDeletingTrait;
 
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
+    
+    protected $dates = ['deleted_at'];
 
 	public static $rules = array(
 		'subject'        => 'required',
