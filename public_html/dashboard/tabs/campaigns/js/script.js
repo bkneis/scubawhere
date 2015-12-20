@@ -21,8 +21,8 @@ $(function () {
     optionListTemplate = Handlebars.compile($("#layout-options-list-template").html());
 
     campaignAnalyticsTable = $('#campaign-analytics-table').DataTable({
-        "paging":   false,
-        "ordering": false,
+        "paging":   true,
+        "ordering": true,
         "info":     false,
         "columnDefs" : [
             {
@@ -97,6 +97,11 @@ function renderCampaignTable() {
     });
 }
 
+function isCustomerUnsubscribed(customer, campaign_id)
+{
+    return (customer.unsubscribed_campaign_id == campaign_id) ? "Unsubscribed" : "";
+}
+
 function showEmailAnalytics(id) {
     $('#show-email-analytics-modal').modal('show');
     var params = {};
@@ -116,13 +121,16 @@ function showEmailAnalytics(id) {
                 data.analytics[i].customer.email,
                 data.analytics[i].opened,
                 data.analytics[i].customer.id,
+                isCustomerUnsubscribed(data.analytics[i].customer.crm_subscription, data.analytics[i].campaign_id),
                 opened_date
             ]);
         }
         campaignAnalyticsTable.draw(); // how to order ???
         $('#total-emails-seen').html(data.total_seen + ' emails viewed');
         $('#total-emails-sent').html(data.total_sent + ' emails sent');
-        $('#average-click-rate').html(parseInt(((data.total_seen / data.total_sent) * 100)) + ' %' + ' Avg Opened Rate');
+        $('#average-open-rate').html(parseInt((data.total_seen / data.total_sent) * 100) + ' %' + ' Avg Opened Rate');
+        $('#average-click-rate').html(parseInt((data.num_links_clicked/ data.total_sent) * 100) + ' % Avg Click Rate');
+        $('#num-unsubscribed').html(data.num_unsubscriptions + ' No. of unsubscribes');
 
         $('#campaign-analytics-table tr').on('click', function () {
             console.log('clicke');

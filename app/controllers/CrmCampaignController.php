@@ -63,16 +63,31 @@ class CrmCampaignController extends Controller {
     public function getAnalytics()
     {
         $campaign_id = Input::only('id');
-        $analytics = CrmToken::where('campaign_id', '=', $campaign_id)->with('customer')->get(); // maybe only get their name and email??
+        $analytics = CrmToken::where('campaign_id', '=', $campaign_id)->with('customer.crmSubscription')->get();
         $total_sent = sizeof($analytics);
         $total_seen = 0;
         foreach ($analytics as $token)
         {
             if($token->opened > 0) $total_seen += 1;
         }
+        // WOULD GETTING THE CRM_SUBSCRIPTIONS FROM CAMPAIGN ID BE MORE EFFECIENT THAN LOOPING THROUGH EXISITING DATA ???????
+        $unsubscriptions = 0;
+        foreach($analytics as $analytic)
+        {
+            if($analytic->customer->crm_subscription->subscribed == 0) $unsubscriptions ++;
+        }
+        
         $campaign_links = CrmLink::with('analytics')->where('campaign_id', '=', $campaign_id)->get();
+        $links_clicked = 0;
+        foreach($campaign_links as $link)
+        {
+            foreach($link->analytics as $analytic)
+            {
+                $links_clicked += $analytic->count;
+            }
+        }
 
-        return Response::json(array('analytics' => $analytics, 'total_sent' => $total_sent, 'total_seen' => $total_seen, 'link_analytics' => $campaign_links), 200);
+        return Response::json(array('analytics' => $analytics, 'total_sent' => $total_sent, 'total_seen' => $total_seen, 'link_analytics' => $campaign_links, 'num_links_clicked' => $links_clicked, 'num_unsubscriptions' => $unsubscriptions), 200);
     }
 
 	public function postAdd()
