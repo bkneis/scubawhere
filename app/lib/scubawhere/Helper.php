@@ -142,7 +142,6 @@ class Helper
 
 		# 2. Generate email HTML
 		$html = \View::make('emails.booking-summary', ['company' => Context::get(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')])->render();
-		$html = str_replace('&', '&amp;', $html);
 
 		# 3. Send email via CrmCampaignController
 		\Request::replace([

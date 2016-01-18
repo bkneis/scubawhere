@@ -108,7 +108,7 @@
 									@if(!isObjectEmpty($booking->bookingdetails))
 										<tr>
 											<td class="title-dark">
-												 Trips & Classes
+												 Trips &amp; Classes
 											</td>
 											<td class="title-dark" width="100"></td>
 											<td class="title-dark" width="100"></td>
