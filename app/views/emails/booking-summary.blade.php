@@ -190,7 +190,7 @@
 															</td>
 															<td class="item-col-inner item">
 																<table cellspacing="0" cellpadding="0" width="100%">
-																	@if($detail->addons == new stdClass())
+																	@if(!empty($detail->addons))
 																		<tr>
 																			<td style="width: 90px;">
 																				<span style="color: #4d4d4d; font-weight:bold;">Addons:</span>

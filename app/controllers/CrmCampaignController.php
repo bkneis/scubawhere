@@ -59,21 +59,21 @@ class CrmCampaignController extends Controller {
 
 	    return Response::json( array('sucess' => array('File Uploaded.'), 'filepath' => $filepath), 200 ); // 200 Success
 	}
-    
+
     public function postDelete()
     {
         $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
         $campaign->delete();
         return Response::json(array('status' => 'Campaign has been deleted'));
     }
-    
+
     public function postRestore()
     {
         $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
         $campaign->restore();
         return Response::json(array('status' => 'Campaign has been restored'));
     }
-    
+
     public function getAnalytics()
     {
         $campaign_id = Input::only('id');
@@ -90,7 +90,7 @@ class CrmCampaignController extends Controller {
         {
             if($analytic->customer->crm_subscription->subscribed == 0) $unsubscriptions ++;
         }
-        
+
         $campaign_links = CrmLink::with('analytics')->where('campaign_id', '=', $campaign_id)->get();
         $links_clicked = 0;
         foreach($campaign_links as $link)
@@ -117,17 +117,17 @@ class CrmCampaignController extends Controller {
 		$data['sent_at'] = Helper::localTime();
 
 		$group_ids = Input::only('groups')['groups'];
-        
+
         $customers = [];
-        
+
         if((int) $data['sendallcustomers'] == 1)
         {
             $customers = Context::get()->customers()->get();
         }
         else if((int) $data['is_campaign'] == 0)
         {
-            $booked_cust_id = Input::only('customer_id');
-            $booked_cust = Context::get()->customers()->find($booked_cus_id); // possibly use where in?
+            $booked_cust_id = Input::get('customer_id');
+            $booked_cust = Context::get()->customers()->findOrFail($booked_cust_id); // possibly use where in?
             if(!$booked_cust)
             {
                 return Response::json( 'Customer ID is not valid', 406 );
@@ -182,8 +182,9 @@ class CrmCampaignController extends Controller {
             $customers = array_unique($customers);
             $customers = $customers[0]; // second index is empty array?
         }
-        
+
 		$data['num_sent'] = sizeof($customers);
+        unset($data['customer_id']);
 
 		$campaign = new CrmCampaign($data);
 
@@ -193,12 +194,12 @@ class CrmCampaignController extends Controller {
 		}
 
 		$campaign = Context::get()->campaigns()->save($campaign);
-        
-        if((int) $data['sendallcustomers'] == 0)
+
+        if((int) $data['sendallcustomers'] == 0 && (int) $data['is_campaign'] == 1)
         {
             $campaign->groups()->sync($group_ids);
         }
-        
+
         // find all instances of a link and create them
         $hrefs = array();
         $dom = new DOMDocument();
@@ -219,7 +220,7 @@ class CrmCampaignController extends Controller {
                 $hrefs[$tag->getAttribute('href')] = $link->id;
             }
         }
-    
+
 		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
 
 		foreach($customers as $customer)
@@ -234,7 +235,7 @@ class CrmCampaignController extends Controller {
 				return Response::json( array('errors' => $new_token->errors()->all()), 406 ); // 406 Not Acceptable
 			}
             $new_token->save();
-            
+
             // Create customer subscriptions
             $customer_subscription = CrmSubscription::where('customer_id', '=', $customer->id)->first();
             if(is_null($customer_subscription))
@@ -242,7 +243,7 @@ class CrmCampaignController extends Controller {
                 $subscription_data = [];
                 $subscription_data['customer_id'] = $customer->id;
                 $subscription_data['token'] = str_random(50);
-            
+
                 $customer_subscription = new CrmSubscription($subscription_data);
                 if( !$customer_subscription->validate() )
                 {
@@ -250,20 +251,20 @@ class CrmCampaignController extends Controller {
                 }
                 $customer_subscription->save();
             }
-            
+
             // add the token api to the scubawhere image
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;
             $email_html = str_replace('/img/scubawhere_logo.png', $token_api, $data['email_html']);
-            
+
 			$cust_name = $customer->firstname . ' ' . $customer->lastname;
 			$email_html = str_replace('{{name}}', $cust_name, $email_html);
             $email_html = str_replace('{{last_dive}}', $customer->last_dive, $email_html);
             $email_html = str_replace('{{number_of_dives}}', $customer->number_of_dives, $email_html);
             $email_html = str_replace('{{birthday}}', $customer->birthday, $email_html);
-            
+
             $unsubscribe_link = Request::root() . '/crm_tracking/unsubscribe?customer_id=' . $customer->id . '&campaign_id=' . $campaign->id . '&token=' . $customer_subscription->token;
             $email_html = str_replace('{{unsubscribe_link}}', $unsubscribe_link, $email_html);
-                
+
             $link_tracker_data = [];
             // add link and link tracker
             foreach($hrefs as $link => $link_id)
@@ -280,7 +281,7 @@ class CrmCampaignController extends Controller {
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
 
             }
-            
+
 			Mail::send([], [], function($message) use ($data, $customer, $email_html) {
 				$message->to($customer->email)
 				->subject($data['subject'])
@@ -292,7 +293,7 @@ class CrmCampaignController extends Controller {
 		return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201 ); // 201 Created
 
 	}
-    
+
     /*
     public function postAdd()
 	{
@@ -342,7 +343,7 @@ class CrmCampaignController extends Controller {
 		$certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
 			$query->whereIn('certificates.id', $rules['certs']);
 		})->get();//->lists('email', 'firstname', 'lastname', 'id');
-        
+
 		$customers = array_merge($customers, array($certificates_customers));
 
 		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
@@ -353,7 +354,7 @@ class CrmCampaignController extends Controller {
 		$customers = array_merge($customers, array($booked_customers));
 		$customers = array_unique($customers);
         $customers = $customers[0]; // second index is empty array?
-        
+
 		$data['num_sent'] = sizeof($customers);
 
 		$campaign = new CrmCampaign($data);
@@ -366,7 +367,7 @@ class CrmCampaignController extends Controller {
 		$campaign = Context::get()->campaigns()->save($campaign);
 
 		$campaign->groups()->sync($group_ids);
-        
+
         // find all instances of a link and create them
         $hrefs = array();
         $dom = new DOMDocument();
@@ -385,7 +386,7 @@ class CrmCampaignController extends Controller {
             $link->save();
             $hrefs[$tag->getAttribute('href')] = $link->id;
         }
-    
+
 		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
 
 		foreach($customers as $customer)
@@ -400,7 +401,7 @@ class CrmCampaignController extends Controller {
 				return Response::json( array('errors' => $new_token->errors()->all()), 406 ); // 406 Not Acceptable
 			}
             $new_token->save();
-            
+
             // Create customer subscription
             $cust_subscription = Context::get()->crmSubscriptions()->where('customer_id', '=', $customer->id)->get();
             if(!$cust_subscription)
@@ -408,21 +409,21 @@ class CrmCampaignController extends Controller {
                 $subscription_data = [];
                 $subscription_data['customer_id'] = $customer->id;
                 $subscription_data['token'] = str_random(50);
-            
+
                 $customer_subscription = new CrmSubscription($subscription_data);
                 $customer_subscription = Context::get()->campaign_subscriptions()->save($customer_subscription);
             }
-            
+
             // add the token api to the scubawhere image
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;
             $email_html = str_replace('/img/scubawhere_logo.png', $token_api, $data['email_html']);
-            
+
 			$cust_name = $customer->firstname . ' ' . $customer->lastname;
 			$email_html = str_replace('{{name}}', $cust_name, $email_html);
             $email_html = str_replace('{{last_dive}}', $customer->last_dive, $email_html);
             $email_html = str_replace('{{number_of_dives}}', $customer->number_of_dives, $email_html);
             $email_html = str_replace('{{birthday}}', $customer->birthday, $email_html);
-            
+
             $link_tracker_data = [];
             // add link and link tracker
             foreach($hrefs as $link => $link_id)
@@ -438,7 +439,7 @@ class CrmCampaignController extends Controller {
                 $link_tracker->save();
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
             }
-            
+
 			Mail::send([], [], function($message) use ($data, $customer, $email_html) {
 				$message->to($customer->email)
 				->subject($data['subject'])

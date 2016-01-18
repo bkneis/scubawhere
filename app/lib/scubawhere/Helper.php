@@ -133,16 +133,37 @@ class Helper
 	{
 		$originalInput = \Request::input();
 
-		\Request::replace(array("id" => $booking_id, "_token" => \Session::token()));
+		# 1. Get booking information
+		\Request::replace(["id" => $booking_id]);
 
-		$app = app();
+		$app        = app();
 		$controller = $app->make('BookingController');
-		$booking = $controller->callAction('getIndex', []);
+		$booking    = $controller->callAction('getIndex', []);
 
-		\Request::replace($originalInput);
+		# 2. Generate email HTML
+		$html = \View::make('emails.booking-summary', ['company' => Context::get(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')])->render();
+		$html = str_replace('&', '&amp;', $html);
 
-		\Mail::send('emails.booking-summary', array('company' => Context::get(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')), function($message) use ($booking) {
-		    $message->to($booking->lead_customer->email, $booking->lead_customer->firstname . ' ' . $booking->lead_customer->lastname)->subject('Booking Confirmation');
-		});
+		# 3. Send email via CrmCampaignController
+		\Request::replace([
+			'subject'          => Context::get()->name . ' Booking Itinerary',
+			'email_html'       => $html,
+			'name'             => 'Booking Itinerary for ' . $booking->reference,
+			'sendallcustomers' => 0,
+			'is_campaign'      => 0,
+			'customer_id'      => $booking->lead_customer_id,
+		]);
+
+		$controller = $app->make('CrmCampaignController');
+		$request    = $controller->callAction('postAdd', []);
+
+		# 4. Check if request was successfull
+		if($request->getStatusCode() !== 201)
+		{
+			$json = json_decode($request->getContent());
+			throw new \Exception('Email Sending Error: ' . $json->errors[0], 1);
+		}
+
+		return $request;
 	}
 }

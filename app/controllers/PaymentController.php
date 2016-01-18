@@ -112,11 +112,14 @@ class PaymentController extends Controller {
 			$booking->reserved_until = null;
 			if( !$booking->save() )
 				return Response::json( array('errors' => $booking->errors()->all()), 500 ); // 500 Internal Server Error
+
+			Helper::sendBookingConfirmation($booking->id);
 		}
 
-		$lead = $booking->lead_customer()->first();
+		// Send Payment Confirmation
+		/* $lead = $booking->lead_customer()->first();
 
-		/* Mail::send('emails.transaction', array('payment' => $payment, 'siteUrl' => \Config::get('app.url')), function($message) use ($lead) {
+		Mail::send('emails.transaction', array('payment' => $payment, 'siteUrl' => \Config::get('app.url')), function($message) use ($lead) {
 		    $message->to($lead->email, $lead->firstname . ' ' . $lead->lastname)->subject('Payment Recieved');
 		}); */
 
