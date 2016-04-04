@@ -201,6 +201,16 @@ class Company extends Ardent {
 	{
 		return $this->hasManyThrough('Departure', 'Trip'/*, 'company_id', 'trip_id'*/);
 	}
+    
+    public function equipment()
+    {
+        return $this->hasMany('Equipment');
+    }
+    
+    public function equipmentCategories()
+    {
+        return $this->hasMany('EquipmentCategory');
+    }
 
 	public function locations()
 	{
