@@ -144,6 +144,7 @@ $PROTOCOL = 'http';
 		<script type="text/javascript" src="js/Controllers/CustomerGroup.js"></script>
 		<script type="text/javascript" src="js/Controllers/Campaign.js"></script>
 		<script type="text/javascript" src="js/Controllers/Certificate.js"></script>
+        <script type="text/javascript" src="js/Controllers/Equipment.js"></script>
 	<?php } ?>
 
 	<script type="text/javascript">
@@ -325,12 +326,28 @@ $PROTOCOL = 'http';
 						</li>
 					</ul>
 				</li>
+                
+                <li>
+					<div>
+						<!-- <i class="fa fa-briefcase"></i> -->
+						<!-- <i class="fa fa-bullhorn"></i> -->
+						<!-- <i class="fa fa-paper-plane"></i> -->
+						<i class="fa fa-anchor fa-lg fa-fw"></i>
+						<span>Rentals</span>
+						<span class="caret"></span>
+					</div>
+					<ul id="equipment-submenu">
+						<li>
+							<a href="#equipment">Equipment</a>
+						</li>
+					</ul>
+				</li>
 
 				<li>
 					<a href="https://scubawhere.zendesk.com" target="_blank">
-						<i class="fa fa-question-circle fa-lg fa-fw"></i>
+						<i class="fa fa-life-ring fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-users"></i> -->
-						<span>Help & FAQ</span>
+						<span>Support</span>
 					</a>
 				</li>
 
