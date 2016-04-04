@@ -101,8 +101,8 @@ class CreateCrmTables extends Migration {
 	public function down()
 	{
 		Schema::drop('crm_groups');
-		Schema::drop('crm_group_rules');
 		Schema::drop('crm_campaigns');
+        Schema::drop('crm_group_rules');
 		Schema::drop('crm_campaign_crm_group');
 	}
 
