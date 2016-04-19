@@ -1,9 +1,9 @@
-<script type="text/javascript" src="js/social-media.js"></script>
+<!--<script type="text/javascript" src="js/social-media.js"></script>-->
 
 <div id="wrapper" class="clearfix">
   <div class="row" id="row1">
 
-    <div class="col-md-5">
+    <!-- <div class="col-md-5">
       <div class="panel panel-default" id="todays-stats">
         <div class="panel-heading">
           <h4 class="panel-title">Social Media Stats</h4>
@@ -11,15 +11,15 @@
         <div style="min-height:250px;" class="panel-body">
           <div id="social-media-stats"></div>
           <!--<h5>Social Media integration is coming soon</h5>
-          Keep an eye on this space!-->
+          Keep an eye on this space! --*>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 
   <div class="row" id="row2">
-    <div class="col-md-5">
+    <div class="col-md-6">
       <div class="panel panel-default" id="recent-bookings">
         <div class="panel-heading">
           <h4 class="panel-title">Recent Bookings</h4>
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div class="col-md-7">
+    <div class="col-md-6">
       <div class="panel panel-default" id="feedback-div">
         <div class="panel-heading">
           <h4 class="panel-title">Feedback Form</h4>
@@ -104,7 +104,7 @@
   </div>
 
   <script type="text/x-handlebars-template" id="todays-sessions-widget">
-    <div class="col-md-7">
+    <div class="col-md-12">
       <div class="panel panel-default" id="todays-sessions">
         <div class="panel-heading">
           <h4 class="panel-title">Upcoming Trips & Classes</h4>
@@ -135,7 +135,7 @@
   </script>
 
   <script type="text/x-handlebars-template" id="setup-wizard">
-    <div class="col-md-7">
+    <div class="col-md-12">
       <div class="panel panel-default" id="setup-wizard">
         <div class="panel-heading">
           <h4 class="panel-title">Setup Wizard</h4>
