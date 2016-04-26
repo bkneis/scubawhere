@@ -27,8 +27,8 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
-//priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
-priceInputTemplate = Handlebars.templates.accommodationPriceInput();
+priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
+//priceInputTemplate = Handlebars.templates.accommodationPriceInput();
 Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
@@ -50,10 +50,10 @@ window.sw.default_price = {
 $(function(){
 
 	// Render initial accommodation list
-	//accommodationList = Handlebars.compile( $("#accommodation-list-template").html() );
-	//accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
-	accommodationList = Handlebars.templates.accommodationList();
-	accommodationForm = Handlebars.templates.accommodationForm();
+	accommodationList = Handlebars.compile( $("#accommodation-list-template").html() );
+	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
+	//accommodationList = Handlebars.templates.accommodationList();
+	//accommodationForm = Handlebars.templates.accommodationForm();
 	loadAccommodations(); // Automatically renders the views when data is loaded
 
 	Tour.getAcommodationsTour();

@@ -34,7 +34,8 @@ Handlebars.registerHelper('currency', function() {
 		return '???'; // TODO Set placeholder and try again in a second (similar to the 'countryName' helper)
 });
 
-priceInputTemplate = Handlebars.templates.priceInput();
+//priceInputTemplate = Handlebars.templates.priceInput();
+priceInputTemplate = Handlebars.compile( $("#price-input-template").html() );
 Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
@@ -52,9 +53,10 @@ window.sw.default_base_price = {
 $(function(){
 
 	// Render initial addon list
-	addonList = Handlebars.templates.addonList();
-	//addonList = Handlebars.compile( $("#addon-list-template").html() );
-	addonForm = Handlebars.templates.addonForm();
+	//addonList = Handlebars.templates.addonList();
+	addonList = Handlebars.compile( $("#addon-list-template").html() );
+	//addonForm = Handlebars.templates.addonForm();
+	addonForm = Handlebars.compile( $("#addon-form-template").html() );
 	loadAddons(); // Automatically renders the views when data is loaded
 
 	Tour.getAddonsTour();
