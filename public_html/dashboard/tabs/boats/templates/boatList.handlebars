@@ -1,0 +1,7 @@
+<ul id="boat-list" class="entity-list">
+	{{#each boats}}
+		<li data-id="{{id}}"><strong>{{name}}</strong> | Capacity: {{capacity}}</li>
+	{{else}}
+		<p id="no-boats">No boats available.</p>
+	{{/each}}
+</ul>

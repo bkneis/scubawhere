@@ -1,0 +1,23 @@
+<div class="panel-heading">
+	<h4 class="panel-title">{{task}} cabin</h4>
+</div>
+<div class="panel-body">
+	<form id="{{task}}-boatroom-form" accept-charset="utf-8">
+		{{#if update}}
+			<span class="btn btn-danger pull-right remove-boatroom">Remove</span>
+		{{/if}}
+		<div class="form-row">
+			<label class="field-label">Cabin name</label>
+			<input type="text" name="name" value="{{{name}}}">
+		</div>
+		<div class="form-row">
+			<label class="field-label">Cabin description</label>
+			<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
+		</div>
+		{{#if update}}
+			<input type="hidden" name="id" value="{{id}}">
+		{{/if}}
+		<input type="hidden" name="_token">
+		<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-boatroom" value="SAVE">
+	</form>
+</div>

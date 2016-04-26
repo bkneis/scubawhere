@@ -1,0 +1,36 @@
+<div class="panel-heading">
+	<h4 class="panel-title">{{task}} boat</h4>
+</div>
+<div class="panel-body">
+	<form id="{{task}}-boat-form" accept-charset="utf-8">
+	{{#if update}}
+		<span class="btn btn-danger pull-right remove-boat">Remove</span>
+	{{/if}}
+		<div class="form-row">
+			<label class="field-label">Boat name</label>
+			<input id="boat-name" type="text" name="name" value="{{{name}}}">
+		</div>
+		<div class="form-row">
+			<label class="field-label">Boat description</label>
+			<textarea id="boat-description" name="description" style="height: 243px;">{{{description}}}</textarea>
+		</div>
+		<div class="form-row" data-step="6" data-position="left" data-intro="Enter your boat capacity, excluding your crew.">
+			<label class="field-label">Boat capacity</label>
+			<input id="boat-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
+		</div>
+		<div id="boat-cabins" class="form-row" data-step="7" data-position="left" data-intro="Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin and select the cabin type and number of rooms">
+			<div id="room-types">
+			<h4>Cabins on this boat</h4>
+				{{#each boatrooms}}
+					{{> boatroom_show}}
+				{{/each}}
+			</div>
+			<button id="add-room" class="btn btn-success text-uppercase"> &plus; Add cabin</button>
+		</div>
+		{{#if update}}
+			<input type="hidden" name="id" value="{{id}}">
+		{{/if}}
+		<input type="hidden" name="_token">
+		<input type="submit" class="btn btn-primary btn-lg text-uppercase pull-right" id="{{task}}-boat" value="SAVE">
+	</form>
+</div>

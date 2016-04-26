@@ -1,0 +1,7 @@
+<ul id="addon-list" class="entity-list">
+	{{#each addons}}
+		<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices}}</li>
+	{{else}}
+		<p id="no-addons">No addons available.</p>
+	{{/each}}
+</ul>

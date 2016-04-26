@@ -1,0 +1,7 @@
+<ul id="agent-list" class="entity-list">
+	{{#each agents}}
+		<li data-id="{{id}}"{{isBanned}}><strong>{{{name}}}</strong> | {{{branch_name}}}</li>
+	{{else}}
+		<p id="no-agents">No agents available.</p>
+	{{/each}}
+</ul>

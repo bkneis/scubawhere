@@ -1,0 +1,34 @@
+<div class="panel-heading">
+	<h4 class="panel-title">{{task}} add-on</h4>
+</div>
+<div class="panel-body">
+	<form id="{{task}}-addon-form">
+		<div class="form-row">
+			<label class="field-label">Add-on Name</label>
+			<input id="addon-name" type="text" name="name" value="{{{name}}}">
+			{{#if update}}
+				<span class="btn btn-danger pull-right remove-addon">Remove</span>
+			{{/if}}
+		</div>
+		<div class="form-row">
+			<label class="field-label">Add-on Description</label>
+			<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
+		</div>
+		<div class="form-row prices">
+			<p><strong>Set prices for this add-on:</strong></p>
+			{{#each base_prices}}
+				{{> price_input}}
+			{{/each}}
+			<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>
+		</div>
+		<div class="form-row" id="addon-compulsory-div" data-step="3" data-position="left" data-intro="Additionally, you can set an addon to be compulsory for all bookings. For example, governmental dive taxes.">
+			<label class="field-label">Compulsory?</label>
+			<input id="addon-compulsory" type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}> Automatically add this add-on to every trip during booking.
+		</div>
+		{{#if update}}
+			<input type="hidden" name="id" value="{{id}}">
+		{{/if}}
+		<input type="hidden" name="_token">
+		<input type="submit" class="btn btn-lg btn-primary text-uppercase pull-right" id="{{task}}-addon" value="SAVE">
+	</form>
+</div>

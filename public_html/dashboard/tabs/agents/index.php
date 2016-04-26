@@ -123,5 +123,6 @@
 		</div>
 	</script>
 
-	<script src="/tabs/agents/js/script.js"></script>
+	<!--<script src="/tabs/agents/handlebars.runtime.js"></script>-->
+	<script src="/tabs/agents/script.js"></script>
 </div>

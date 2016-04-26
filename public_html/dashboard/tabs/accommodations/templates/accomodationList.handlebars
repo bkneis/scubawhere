@@ -1,0 +1,7 @@
+<ul id="accommodation-list" class="entity-list">
+	{{#each accommodations}}
+		<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{capacity}} | {{pricerange base_prices prices}}</li>
+	{{else}}
+		<p id="no-accommodations">No accommodations available.</p>
+	{{/each}}
+</ul>
