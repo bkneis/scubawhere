@@ -147,5 +147,5 @@
 	</script>
 
 	<!--<script src="/tabs/boats/handlebars.runtime.js"></script>-->
-	<script src="/tabs/boats/script.js"></script>
+	<script src="/tabs/boats/js/script.js"></script>
 </div>

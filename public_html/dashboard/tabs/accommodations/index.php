@@ -139,6 +139,6 @@
 	</script>
 
 	<!--<script src="/tabs/accommodations/handlebars.runtime.js"></script>-->
-	<script src="/tabs/accommodations/script.js"></script>
+	<script src="/tabs/accommodations/js/script.js"></script>
 
 </div>

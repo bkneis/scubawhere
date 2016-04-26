@@ -122,6 +122,5 @@
 	</script>
 
 	<!--<script src="/tabs/add-ons/handlebars.js"></script>-->
-
-	<script src="/tabs/add-ons/script.js"></script>
+	<script src="/tabs/add-ons/js/script.js"></script>
 </div>
