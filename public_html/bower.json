@@ -15,6 +15,7 @@
     "bootstrap3-typeahead": "~3.0.0",
     "font-awesome": "~4.3.0",
     "basil.js": "~0.3.4",
-    "nprogress": "~0.1.6"
+    "nprogress": "~0.1.6",
+    "handlebars": "^4.0.5"
   }
 }
