@@ -78,7 +78,8 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- other -->
-	<script type="text/javascript" src="/common/js/handlebars.min.js"></script>
+	<!--<script type="text/javascript" src="/common/js/handlebars.min.js"></script>-->
+	<script type="text/javascript" src="/common/vendor/handlebars/handlebars.min.js"></script>
 	<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
 	<script type="text/javascript" src="/common/js/moment.min.js"></script>
