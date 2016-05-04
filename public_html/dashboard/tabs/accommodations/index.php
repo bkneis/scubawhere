@@ -1,5 +1,5 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Do you own or manage any accommodations? If so, click 'next'. If not, then just 'skip' this step."></div>
+	<div id="tour-div" style="width:0; height:0; margin-left:50%;" data-step="1" data-intro="Do you own or manage any accommodations? If so, click 'next'. If not, then just 'skip' this step."></div>
 
 	<div class="row">
 		<div class="col-md-4">
@@ -31,7 +31,7 @@
 					<div class="panel-body">
 						<form id="{{task}}-accommodation-form">
 							<div class="form-row" id="acom-name">
-								<label class="field-label">Room Name</label>
+								<label for="name" class="field-label">Room Name</label>
 								<input id="room-name" type="text" name="name" value="{{{name}}}">
 
 								{{#if update}}
@@ -40,7 +40,7 @@
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Accommodation Description</label>
+								<label for="description" class="field-label">Accommodation Description</label>
 								<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
@@ -54,10 +54,10 @@
 
 							<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="If you have prices that change throughout the year, you can ajust your prices depening on the seasons">
 								<label>
-									<input id="acom-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+									<input id="acom-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);" {{#if prices}} checked{{/if}}>
 									Add seasonal price changes?
 								</label>
-								<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
+								<div class="dashed-border" id="seasonal-prices-list" {{#unless prices}} style="display: none;"{{/unless}}>
 									<h3>Seasonal price changes</h3>
 									{{#each prices}}
 										{{> price_input}}
@@ -71,7 +71,7 @@
 							</div>
 
 							<div class="form-row" id="acom-rooms" data-step="5" data-position="top" data-intro="Lastly enter the number of rooms you have available. If the room is a dorm room, then treat each dorm room. Lastly, click 'save' to add your accommodation.">
-								<label class="field-label">Number of Rooms/Beds</label>
+								<label for="capacity" class="field-label">Number of Rooms/Beds</label>
 								<input id="room-amount" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 							</div>
 
@@ -138,7 +138,7 @@
 		</div>
 	</script>
 
-	<!--<script src="/tabs/accommodations/handlebars.runtime.js"></script>-->
+	<script src="/tabs/accommodations/js/handlebars.runtime.js"></script>
 	<script src="/tabs/accommodations/js/script.js"></script>
 
 </div>

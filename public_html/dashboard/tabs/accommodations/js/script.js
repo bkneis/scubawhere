@@ -27,24 +27,23 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
-priceInputTemplate = Handlebars.compile( $('#price-input-template').html() );
-//priceInputTemplate = Handlebars.templates.accommodationPriceInput();
+priceInputTemplate = Handlebars.templates['accommodationPriceInput'];
 Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
 	id: randomString(),
 	from: '0000-00-00',
 	isBase: true,
-	isAlways: true,
+	isAlways: true
 };
 window.sw.default_base_price = {
 	isBase: true,
-	from: moment().format('YYYY-MM-DD'),
+	from: moment().format('YYYY-MM-DD')
 };
 window.sw.default_price = {
 	id: randomString(),
 	from: moment().format('YYYY-MM-DD'),
-	until: moment().add(3, 'months').format('YYYY-MM-DD'),
+	until: moment().add(3, 'months').format('YYYY-MM-DD')
 };
 
 $(function(){
@@ -52,13 +51,16 @@ $(function(){
 	// Render initial accommodation list
 	accommodationList = Handlebars.compile( $("#accommodation-list-template").html() );
 	accommodationForm = Handlebars.compile( $("#accommodation-form-template").html() );
-	//accommodationList = Handlebars.templates.accommodationList();
-	//accommodationForm = Handlebars.templates.accommodationForm();
+	console.log(Handlebars.templates);
+	//accommodationList = Handlebars.templates['accommodationList'];
+	//accommodationForm = Handlebars.templates['accommodationForm'];
 	loadAccommodations(); // Automatically renders the views when data is loaded
 
 	Tour.getAcommodationsTour();
 
-	$("#accommodation-form-container").on('submit', '#add-accommodation-form', function(event) {
+	var selAccommodationFortContainer = $("#accommodation-form-container");
+
+	selAccommodationFortContainer.on('submit', '#add-accommodation-form', function(event) {
 
 		event.preventDefault();
 
@@ -100,7 +102,7 @@ $(function(){
 		});
 	});
 
-	$("#accommodation-form-container").on('submit', '#update-accommodation-form', function(event) {
+	selAccommodationFortContainer.on('submit', '#update-accommodation-form', function(event) {
 
 		event.preventDefault();
 
@@ -142,7 +144,7 @@ $(function(){
 		});
 	});
 
-	$('#accommodation-form-container').on('click', '.remove-accommodation', function(event){
+	selAccommodationFortContainer.on('click', '.remove-accommodation', function(event){
 		event.preventDefault();
     var check = confirm('Do you really want to remove this accommodation?');
 		if(check){
@@ -193,7 +195,7 @@ $(function(){
 		renderEditForm();
 	});
 
-	$('#accommodation-form-container').on('click', '.add-base-price', function(event) {
+	selAccommodationFortContainer.on('click', '.add-base-price', function(event) {
 		event.preventDefault();
 
 		window.sw.default_base_price.id = randomString();
@@ -203,7 +205,7 @@ $(function(){
 		initPriceDatepickers();
 	});
 
-	$('#accommodation-form-container').on('click', '.add-price', function(event) {
+	selAccommodationFortContainer.on('click', '.add-price', function(event) {
 		event.preventDefault();
 
 		window.sw.default_price.id = randomString();
@@ -213,7 +215,7 @@ $(function(){
 		initPriceDatepickers();
 	});
 
-	$('#accommodation-form-container').on('click', '.remove-price', function(event) {
+	selAccommodationFortContainer.on('click', '.remove-price', function(event) {
 		event.preventDefault();
 
 		$(event.target).parent().remove();
@@ -277,7 +279,7 @@ function renderEditForm(id) {
 			task: 'add',
 			update: false,
 			base_prices: [ window.sw.default_first_base_price ],
-			capacity: 0,
+			capacity: 0
 		};
 	}
 
@@ -321,10 +323,10 @@ function showMe(box, self) {
 function clearForm() {
 
 	var accommodation = {
-			task: 'add',
-			update: false,
-			base_prices: [ window.sw.default_first_base_price ],
-		};
+		task: 'add',
+		update: false,
+		base_prices: [ window.sw.default_first_base_price ]
+	};
 
 
 	accommodation.default_price = window.sw.default_price;
