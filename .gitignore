@@ -116,3 +116,6 @@ www
 /public_html/node_modules
 /public_html/oblivion/
 public_html/phpinfo.php
+
+# Development Envioment
+.idea/*
