@@ -1238,6 +1238,7 @@ return array(
     'CreateHotelAccommodationsTable' => $baseDir . '/app/database/migrations/2014_11_11_132623_create_hotel_accommodations_table.php',
     'CreateLocationTripTable' => $baseDir . '/app/database/migrations/2014_02_17_020801_create_location_trip_table.php',
     'CreateLocationsTable' => $baseDir . '/app/database/migrations/2014_02_17_020714_create_locations_table.php',
+    'CreateMutexTable' => $baseDir . '/app/database/migrations/2016_05_08_150615_create_mutex_table.php',
     'CreatePackageFacadeSystem' => $baseDir . '/app/database/migrations/2014_10_18_153824_create_package_facade_system.php',
     'CreatePackageTicketTable' => $baseDir . '/app/database/migrations/2014_02_17_021041_create_package_ticket_table.php',
     'CreatePackagesTable' => $baseDir . '/app/database/migrations/2014_02_17_021010_create_packages_table.php',
