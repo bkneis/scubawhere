@@ -169,18 +169,43 @@ class CustomerController extends Controller {
 		return Response::json( array('status' => 'OK. Customer updated.'), 200 ); // 200 OK
 	}
 
-	public function postImport()
+	/**
+	 * API Function to import customer data saved as a CSV then create and validate them as customers within the system.
+	 * @param {Array} columns 				An array where the index represents the column number and the value which attribute it should map to the customer. "" is null
+	 * @param {Array} customerData  		An array which holds an array for each customer, where each attribute is its own field in the array
+	 * @return {ResponseObject} Response 	A HTTP response object, 200 for OK all customers created, 406 for invalid customers
+	 */
+	public function postImportcsv()
 	{
+		$columns = Input::only('columns');
+		$customer_data = Input::only('customerData');
 
-		$csv_data = Input::get('csvData');
+		$imported_customers = array();
 
-		$lines = explode(PHP_EOL, $csv_data);
-		$customer_data = array();
-		foreach ($lines as $line) {
-			$customer_data[] = str_getcsv($line);
+		foreach($customer_data as $customer)
+		{
+			$new_customer_data = array();
+			foreach($columns as $attr => $index)
+			{
+				if($attr != "")
+				{
+					$new_customer_data[$attr] = $customer[$index];
+				}
+			}
+
+			$new_customer = new Customer($new_customer_data);
+
+			if( !$new_customer->validate() )
+			{
+				return Response::json( array('errors' => $new_customer->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			array_push($imported_customers, $new_customer);
 		}
 
-		var_dump($customer_data);
+		Context::get()->customers()->saveMany($imported_customers);
+
+		return Response::json( array('status' => 'OK. Customers imported.'), 200 ); // 200 OK
 
 	}
 }
