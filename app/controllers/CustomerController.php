@@ -168,4 +168,19 @@ class CustomerController extends Controller {
 
 		return Response::json( array('status' => 'OK. Customer updated.'), 200 ); // 200 OK
 	}
+
+	public function postImport()
+	{
+
+		$csv_data = Input::get('csvData');
+
+		$lines = explode(PHP_EOL, $csv_data);
+		$customer_data = array();
+		foreach ($lines as $line) {
+			$customer_data[] = str_getcsv($line);
+		}
+
+		var_dump($customer_data);
+
+	}
 }

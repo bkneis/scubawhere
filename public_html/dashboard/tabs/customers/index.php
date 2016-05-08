@@ -12,22 +12,25 @@
 
 					<form id="find-customer-form">
 						<div class="form-row">
-							<label class="field-label">Customer's First Name</label>
+							<label for="firstname" class="field-label">Customer's First Name</label>
 							<input type="text" name="firstname" class="form-control">
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Customer's Last Name</label>
+							<label for="lastname" class="field-label">Customer's Last Name</label>
 							<input type="text" name="lastname" class="datepicker form-control" data-date-format="YYYY-MM-DD">
 						</div>
 
 						<div class="form-row">
-							<label class="field-label">Customer's Email</label>
+							<label for="email" class="field-label">Customer's Email</label>
 							<input type="text" name="email" class="form-control">
 						</div>
 
-						<input type="reset" class="btn btn-danger btn-sm" value="Clear">
-						<button class="btn btn-primary pull-right" id="find-customer">Find Customer</button>
+						<div class="form-row">
+							<input type="reset" class="btn btn-danger btn-sm" value="Clear">
+							<button class="btn btn-primary pull-right" id="find-customer">Find Customer</button>
+						</div>
+						<button class="btn btn-success pull-right" id="btn-import-customers">Import Customers</button>
 					</form>
 				</div>
 			</div>
@@ -76,9 +79,9 @@
 
 	<script type="text/x-handlebars-template" id="customer-buttons-template">
 		<div style="float:right; text-align:right">
-			<button onclick="emailCustomer({{customerID}})" class="btn btn-default"><i class="fa fa-envelope fa-fw"></i> Email Customer</button>
-			<button onclick="editDetails({{customerID}})" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit / View Details</button>
-			<button onclick="viewBookings({{customerID}})" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> View Bookings</button>
+			<button onclick="emailCustomer({{customerID}});" class="btn btn-default"><i class="fa fa-envelope fa-fw"></i> Email Customer</button>
+			<button onclick="editDetails({{customerID}});" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i> Edit / View Details</button>
+			<button onclick="viewBookings({{customerID}});" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> View Bookings</button>
 		</div>
 	</script>
 
@@ -159,6 +162,32 @@
 	</div>
 </script>
 
+<script type="text/x-handlebars-template" id="template-column-format-select">
+	<p>
+		<label for="column-data" class="control-label label-column">Column {{this}} :</label>
+		<select name="column-data[]" class="form-control">
+			<option></option>
+			<option value="email">Email</option>
+			<option value="firstname">First name</option>
+			<option value="lastname">Last name</option>
+			<option value="birthday">Birthday</option>
+			<option value="gender">Gender</option>
+			<option value="address">Address</option>
+			<option value="city">City</option>
+			<option value="county">County</option>
+			<option value="postcode">Post Code</option>
+			<option value="country">Country</option>
+			<option value="phone">Phone Number</option>
+			<option value="last_dive">Last Dive</option>
+			<option value="num_of_dives">Number of Dives</option>
+			<option value="chest_size">Chest Size</option>
+			<option value="show_size">Shoe Size</option>
+			<option value="height">Height</option>
+		</select>
+		<i class="fa fa-remove fa-lg remove-column" style="cursor: pointer"></i>
+	</p>
+</script>
+
 <div class="modal fade" id="edit-customer-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -168,8 +197,8 @@
 			</div>
 			<form id="edit-customer-form" class="form-horizontal" role="form">
 				<div class="modal-body">
-					<fieldset id="edit-customer-details">
-						<!-- This is where the Handlebars template will load into -->
+					<fieldset id="e<hello></hello>dit-customer-details">
+						<!-- This implateColumnFormatSelects where the Handlebars template will load into -->
 					</fieldset>
 
 					<fieldset id="edit-customer-countries">
@@ -200,7 +229,7 @@
 								</select>
 							</div>
 							<div class="col-md-2">
-								<label>&nbsp;</label><br>
+								<label>&nbsp;</label><brselect>
 								<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
 							</div>
 						</div>
@@ -238,6 +267,39 @@
 					<button type="submit" class="btn btn-primary">Send Email</button>
 				</div>
 			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modal-import-customers">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Import Customers</h4>
+			</div>
+			<div class="modal-body">
+				<form id="frm-import-customer-data">
+					<div class="form-group">
+						<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>
+						<p>
+							<input id="in-customer-data-csv" type="file" name="customer-data-csv" accept=".csv">
+							<!--<button id="btn-import" class="btn btn-primary">&#43; Upload CSV File</button>-->
+						</p>
+					</div>
+					<div class="form-group">
+						<p><strong>Step 2 : </strong> Tell us what the column contains about the customer</p>
+						<div id="column-csv-format" class="form-group"></div>
+						<p><button id="btn-add-column" class="btn btn-success">&#43; Column</button> </p>
+					</div>
+					<div class="form-group" style="padding-bottom: 20px">
+						<input class="btn btn-primary pull-right" type="submit" value="SUBMIT">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
 		</div>
 	</div>
 </div>
