@@ -232,59 +232,86 @@ $(function () {
         editDetails();
     });
 
-    $('#btn-import-customers').on('click', function(event) {
+    $('#btn-import-customers').on('click', function (event) {
         event.preventDefault();
         $('#modal-import-customers').modal('show');
     });
 
-    sModelImportCustomers.on('click', '#btn-add-column', function(event) {
+    sModelImportCustomers.on('click', '#btn-add-column', function (event) {
         event.preventDefault();
         $('#column-csv-format').append(templateColumnFormatSelect(num_import_columns));
         num_import_columns++;
     });
 
-    sModelImportCustomers.on('click', '.remove-column', function(event) {
+    sModelImportCustomers.on('click', '.remove-column', function (event) {
         event.preventDefault();
         num_import_columns--;
         $(this).parent().remove();
         // Loop through the column labels so they represent the correct column when one is removed, i.e 1 2 3, 2 is removed so 3 becomes 2
-        $('.label-column').each(function(index) {
+        $('.label-column').each(function (index) {
             $(this).html('Column ' + (index + 1) + ' :');
         });
     });
 
-    sModelImportCustomers.on('submit', '#frm-import-customer-data', function(event) {
+    sModelImportCustomers.on('submit', '#frm-import-customer-data', function (event) {
         event.preventDefault();
+        // Check for HTML5 file reader support
         if (!window.FileReader) {
             alert('FileReader are not supported in this browser.');
         }
+        // Get data from the form and serialize it into an array
+        var data = $(this).serializeArray();
+
+        // Get the file from the html input
         var customerDataCSV = $('#in-customer-data-csv').prop('files')[0];
-        console.log(customerDataCSV);
+
         var reader = new FileReader();
         // Read file into memory as UTF-8
         reader.readAsText(customerDataCSV);
 
-        reader.onload = loadCSVFile;
+        reader.onload = function (evt) {
+            loadCSVFile(evt, data);
+        };
         reader.onerror = errorCSVFile;
-        var data = $(this).serializeArray();
-        console.log(data);
     });
 
 });
 
-function loadCSVFile(evt) {
+function loadCSVFile(evt, columnData) {
+
     var csv = evt.target.result;
     var allTextLines = csv.split(/\r\n|\n/);
     var lines = [];
-    for (var i=0; i < allTextLines.length; i++) {
+    for (var i = 0; i < allTextLines.length; i++) {
         var data = allTextLines[i].split(',');
         var tarr = [];
-        for (var j=0; j < data.length; j++) {
+        for (var j = 0; j < data.length; j++) {
             tarr.push(data[j]);
         }
         lines.push(tarr);
     }
-    console.log(lines);
+
+    var csvData = {
+        columns: [],
+        customerData: lines,
+        _token: getToken()
+    };
+
+    // Transform the form data to an array mapping column indexes to attributes
+    for (var j = 0; j < columnData.length; j++) {
+        csvData.columns.push(columnData[j].value);
+    }
+
+    console.log('csv data', csvData);
+    Customer.importCSV(csvData,
+        function success(data) {
+            console.log(data);
+        },
+        function error(xhr) {
+            console.log(xhr);
+            alert(xhr.responseText);
+        }
+    );
 }
 
 function errorCSVFile(evt) {

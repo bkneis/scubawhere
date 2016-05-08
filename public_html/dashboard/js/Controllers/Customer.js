@@ -41,6 +41,16 @@ var Customer = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	importCSV : function(params, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/customer/importcsv",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
 	}
 
 };
