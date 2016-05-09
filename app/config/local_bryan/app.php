@@ -26,5 +26,17 @@ return array(
 	|
 	*/
 
-	'url' => 'http://scubawhere.app'
+	'url' => 'http://scubawhere.app',
+
+	'providers' => append_config(array(
+
+		'Clockwork\Support\Laravel\ClockworkServiceProvider',
+
+	)),
+
+	'aliases' => append_config(array(
+
+		'Clockwork' => 'Clockwork\Support\Laravel\Facade',
+
+	)),
 );

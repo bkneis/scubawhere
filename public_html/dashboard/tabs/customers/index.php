@@ -162,6 +162,22 @@
 	</div>
 </script>
 
+<script type="text/x-handlebars-template" id="template-import-errors">
+	<div class="form-group">
+		<p><strong>Success!</strong> Most of your customer data was imported</p>
+		<p>
+			Unfortunately though some customers could not be added as our system has detected errors within their information.
+			Please see below the error. If you wish to fix these errors manually and re upload them the our system can attempt to add them again.
+		</p>
+		<p><strong>Errors : </strong></p>
+		<ul>
+			{{#each errors}}
+				<li>{{this}}</li>
+			{{/each}}
+		</ul>
+	</div>
+</script>
+
 <script type="text/x-handlebars-template" id="template-column-format-select">
 	<p>
 		<label for="column-data" class="control-label label-column">Column {{this}} :</label>
@@ -278,7 +294,7 @@
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title">Import Customers</h4>
 			</div>
-			<div class="modal-body">
+			<div id="import-customer-data-body" class="modal-body">
 				<form id="frm-import-customer-data">
 					<div class="form-group">
 						<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>

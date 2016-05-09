@@ -72,6 +72,7 @@ var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-i
 var certificatesTemplate = Handlebars.compile($("#certificates-template").html());
 var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
 var templateColumnFormatSelect = Handlebars.compile($("#template-column-format-select").html());
+var templateImportErrors = Handlebars.compile($('#template-import-errors').html());
 
 $(function () {
 
@@ -280,6 +281,7 @@ $(function () {
 function loadCSVFile(evt, columnData) {
 
     var csv = evt.target.result;
+    // @todo minor - Move this file processing to backend. Javascript should just send the file not strings
     var allTextLines = csv.split(/\r\n|\n/);
     var lines = [];
     for (var i = 0; i < allTextLines.length; i++) {
@@ -306,6 +308,7 @@ function loadCSVFile(evt, columnData) {
     Customer.importCSV(csvData,
         function success(data) {
             console.log(data);
+            $('#import-customer-data-body').empty().append(templateImportErrors({errors : data.errors}));
         },
         function error(xhr) {
             console.log(xhr);

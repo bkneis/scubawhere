@@ -177,19 +177,29 @@ class CustomerController extends Controller {
 	 */
 	public function postImportcsv()
 	{
-		$columns = Input::only('columns');
-		$customer_data = Input::only('customerData');
+		$data = Input::all();
+		$columns = $data["columns"];
+		$customer_data = $data["customerData"];
 
 		$imported_customers = array();
 
-		foreach($customer_data as $customer)
+		$errors = array();
+
+		foreach($customer_data as $line_num => $customer)
 		{
 			$new_customer_data = array();
-			foreach($columns as $attr => $index)
+			foreach($columns as $index => $attr)
 			{
-				if($attr != "")
+				if(!empty($attr))
 				{
-					$new_customer_data[$attr] = $customer[$index];
+					if(array_key_exists($index, $customer))
+					{
+						if(!empty($customer[$index]))
+						{
+							//var_dump($attr, $index, $customer);
+							$new_customer_data[$attr] = $customer[$index];
+						}
+					}
 				}
 			}
 
@@ -197,15 +207,16 @@ class CustomerController extends Controller {
 
 			if( !$new_customer->validate() )
 			{
-				return Response::json( array('errors' => $new_customer->errors()->all()), 406 ); // 406 Not Acceptable
+				$error_msg = "The customer data on line number " . $line_num . " was invalid";
+				array_push($errors, $error_msg);
 			}
 
 			array_push($imported_customers, $new_customer);
 		}
 
-		Context::get()->customers()->saveMany($imported_customers);
+		//Context::get()->customers()->saveMany($imported_customers);
 
-		return Response::json( array('status' => 'OK. Customers imported.'), 200 ); // 200 OK
+		return Response::json( array('status' => 'OK. Customers imported.', 'customers' => $imported_customers, 'errors' => $errors), 200 ); // 200 OK
 
 	}
 }
