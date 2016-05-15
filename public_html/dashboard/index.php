@@ -177,11 +177,11 @@ $PROTOCOL = 'http';
 
 			<div class="nav-opt pull-right"><a href="#settings" class="username"></a></div>
 
-			<div class="notifications pull-right">
+			<!--<div class="notifications pull-right">
 				<i style="padding-left:8px; padding-top:9px; cursor:pointer" class="fa fa-bell fa-lg fa-fw"></i>
 				<div id="notification-messages" style="border: 2px solid #34495e;" class="messages">
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 
