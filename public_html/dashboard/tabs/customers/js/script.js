@@ -73,6 +73,7 @@ var certificatesTemplate = Handlebars.compile($("#certificates-template").html()
 var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
 var templateColumnFormatSelect = Handlebars.compile($("#template-column-format-select").html());
 var templateImportErrors = Handlebars.compile($('#template-import-errors').html());
+var templateImpotCustomers = Handlebars.compile($('#template-import-customers').html());
 
 $(function () {
 
@@ -235,6 +236,8 @@ $(function () {
 
     $('#btn-import-customers').on('click', function (event) {
         event.preventDefault();
+        num_import_columns = 1;
+        $('#import-customer-data-body').empty().append(templateImpotCustomers);
         $('#modal-import-customers').modal('show');
     });
 
@@ -258,13 +261,19 @@ $(function () {
         event.preventDefault();
         // Check for HTML5 file reader support
         if (!window.FileReader) {
-            alert('FileReader are not supported in this browser.');
+            alert('Im so sorry but your browser is not supported. So that scubawhere can offer you the best possible system, we require you to use the most up to date chrome. (change this)');
+            return;
         }
         // Get data from the form and serialize it into an array
         var data = $(this).serializeArray();
 
         // Get the file from the html input
         var customerDataCSV = $('#in-customer-data-csv').prop('files')[0];
+
+        if(customerDataCSV == undefined || customerDataCSV == null) {
+            pageMssg("Please upload a csv file to import your customer data");
+            return;
+        }
 
         var reader = new FileReader();
         // Read file into memory as UTF-8
@@ -284,7 +293,7 @@ function loadCSVFile(evt, columnData) {
     // @todo minor - Move this file processing to backend. Javascript should just send the file not strings
     var allTextLines = csv.split(/\r\n|\n/);
     var lines = [];
-    for (var i = 0; i < allTextLines.length; i++) {
+    for (var i = 0; i < (allTextLines.length - 1); i++) {
         var data = allTextLines[i].split(',');
         var tarr = [];
         for (var j = 0; j < data.length; j++) {
@@ -302,6 +311,16 @@ function loadCSVFile(evt, columnData) {
     // Transform the form data to an array mapping column indexes to attributes
     for (var j = 0; j < columnData.length; j++) {
         csvData.columns.push(columnData[j].value);
+    }
+
+    // Validate that the required columns have been included
+    if(csvData.columns.indexOf("firstname") < 0) {
+        pageMssg("The first name column is required for our system");
+        return;
+    }
+    if(csvData.columns.indexOf("lastname") < 0) {
+        pageMssg("The last name column is required for our system");
+        return;
     }
 
     console.log('csv data', csvData);

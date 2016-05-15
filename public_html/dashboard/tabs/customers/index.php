@@ -164,17 +164,24 @@
 
 <script type="text/x-handlebars-template" id="template-import-errors">
 	<div class="form-group">
-		<p><strong>Success!</strong> Most of your customer data was imported</p>
-		<p>
-			Unfortunately though some customers could not be added as our system has detected errors within their information.
-			Please see below the error. If you wish to fix these errors manually and re upload them the our system can attempt to add them again.
-		</p>
-		<p><strong>Errors : </strong></p>
-		<ul>
-			{{#each errors}}
-				<li>{{this}}</li>
-			{{/each}}
-		</ul>
+		{{#if errors}}
+			<p><strong>Success!</strong> Most of your customer data was imported</p>
+			<p>
+				Unfortunately though some customers could not be added as our system has detected errors within their information.
+				Please see below the error. If you wish to fix these errors manually and re upload them the our system can attempt to add them again.
+			</p>
+			<p><strong>Errors : </strong></p>
+			<ul>
+				{{#each errors}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		{{else}}
+			<p><strong>Success!</strong> All of your customer data was imported</p>
+			<p>
+				Thank you for importing your customer data. You should now be able to see them in the my customers tab.
+			</p>
+		{{/if}}
 	</div>
 </script>
 
@@ -218,7 +225,7 @@
 					</fieldset>
 
 					<fieldset id="edit-customer-countries">
-						<div class="form-group">
+						<sing double quotes is apparently relediv class="form-group">
 							<div class="col-md-8">
 								<label for="country_id">Country <span class="text-danger">*</span></label></label>
 								<select id="country_id" name="country_id" class="form-control select2">
@@ -287,6 +294,28 @@
 	</div>
 </div>
 
+<script type="x-handlebars-template" id="template-import-customers">
+
+	<form id="frm-import-customer-data">
+		<div class="form-group">
+			<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>
+			<p>
+				<input id="in-customer-data-csv" type="file" name="customer-data-csv" accept=".csv">
+				<!--<button id="btn-import" class="btn btn-primary">&#43; Upload CSV File</button>-->
+			</p>
+		</div>
+		<div class="form-group">
+			<p><strong>Step 2 : </strong> Tell us what the column contains about the customer</p>
+			<div id="column-csv-format" class="form-group"></div>
+			<p><button id="btn-add-column" class="btn btn-success">&#43; Column</button> </p>
+		</div>
+		<div class="form-group" style="padding-bottom: 20px">
+			<input class="btn btn-primary pull-right" type="submit" value="SUBMIT">
+		</div>
+	</form>
+
+</script>
+
 <div class="modal fade" id="modal-import-customers">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -295,27 +324,11 @@
 				<h4 class="modal-title">Import Customers</h4>
 			</div>
 			<div id="import-customer-data-body" class="modal-body">
-				<form id="frm-import-customer-data">
-					<div class="form-group">
-						<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>
-						<p>
-							<input id="in-customer-data-csv" type="file" name="customer-data-csv" accept=".csv">
-							<!--<button id="btn-import" class="btn btn-primary">&#43; Upload CSV File</button>-->
-						</p>
-					</div>
-					<div class="form-group">
-						<p><strong>Step 2 : </strong> Tell us what the column contains about the customer</p>
-						<div id="column-csv-format" class="form-group"></div>
-						<p><button id="btn-add-column" class="btn btn-success">&#43; Column</button> </p>
-					</div>
-					<div class="form-group" style="padding-bottom: 20px">
-						<input class="btn btn-primary pull-right" type="submit" value="SUBMIT">
-					</div>
-				</form>
+
 			</div>
-			<div class="modal-footer">
+			<!--<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>

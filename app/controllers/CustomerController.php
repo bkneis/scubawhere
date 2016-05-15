@@ -207,7 +207,7 @@ class CustomerController extends Controller {
 
 			if( !$new_customer->validate() )
 			{
-				$error_msg = "The customer data on line number " . $line_num . " was invalid";
+				$error_msg = "The customer data on row number " . ($line_num  + 1) . " was invalid";
 				array_push($errors, $error_msg);
 			}
 
