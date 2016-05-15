@@ -185,6 +185,14 @@ class CustomerController extends Controller {
 
 		$errors = array();
 
+		$csv_path = storage_path() . "/customer_imports/" . Context::get()->name . ".csv";
+
+		$bytes_written = File::put($csv_path, "");
+		if($bytes_written === false)
+		{
+			return Response::json(array('status' => 'Error. Could not write a file'), 500);
+		}
+
 		foreach($customer_data as $line_num => $customer)
 		{
 			$new_customer_data = array();
@@ -212,14 +220,47 @@ class CustomerController extends Controller {
 				$err["message"] = $error_msg;
 				$err["errs"] = $new_customer->errors();
 				array_push($errors, $err);
+				$err_csv_str = "";
+				foreach($new_customer_data as $cust_attr)
+				{
+					$err_csv_str = $err_csv_str . $cust_attr . ",";
+				}
+				foreach($err["errs"] as $err_attr)
+				{
+					$err_csv_str = $err_csv_str . $err_attr . ",";
+				}
+				rtrim($err_csv_str, ","); // remove trailing commas
+				$err_csv_str = $err_csv_str . "\n"; // add the next line
+				File::append($csv_path, $err_csv_str); // move this to end to prevent multiple IO
 			}
 
-			array_push($imported_customers, $new_customer);
 		}
 
 		//Context::get()->customers()->saveMany($imported_customers);
 
-		return Response::json( array('status' => 'OK. Customers imported.', 'customers' => $imported_customers, 'errors' => $errors), 200 ); // 200 OK
+		return Response::json( array('status' => 'OK. Customers imported.', 'errors' => $errors, 'bytres' => $bytes_written), 200 ); // 200 OK
+
+	}
+
+	/**
+	 * API Function to send the last failed import CSV file containing customers and their errors
+	 * @return {File|JSON} Response 	A HTTP download promise to send the file over http to the client. Or on failure a json object with an error code.
+	 */
+	public function getLastImportErrors()
+	{
+
+		$csv_path = storage_path() . "/customer_imports/" . Context::get()->name . ".csv";
+
+		if(File::exists($csv_path))
+		{
+			$file = File::get($csv_path);
+			$headers = array('Content-Type' => 'text/csv');
+			return Response::download($csv_path, 'invalid_import_data.csv', $headers);
+		}
+		else
+		{
+			return Response::json(array('status' => 'BAD REQUEST. Apologies, something has gone wrong and we cant seem to find the file right now.'), 500);
+		}
 
 	}
 }
