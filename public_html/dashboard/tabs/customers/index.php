@@ -173,7 +173,11 @@
 			<p><strong>Errors : </strong></p>
 			<ul>
 				{{#each errors}}
-					<li>{{this}}</li>
+					<li><strong>{{message}}</strong></li>
+					{{#each errs}}
+						<li>{{this}}</li>
+					{{/each}}
+					<p></p>
 				{{/each}}
 			</ul>
 		{{else}}
