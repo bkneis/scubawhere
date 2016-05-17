@@ -229,7 +229,7 @@ class CustomerController extends Controller {
 				{
 					$err_csv_str = $err_csv_str . $err_attr . ",";
 				}
-				rtrim($err_csv_str, ","); // remove trailing commas
+				rtrim($err_csv_str, ","); // remove trailing commas DIDNT WORK??
 				$err_csv_str = $err_csv_str . "\n"; // add the next line
 				File::append($csv_path, $err_csv_str); // move this to end to prevent multiple IO
 			}

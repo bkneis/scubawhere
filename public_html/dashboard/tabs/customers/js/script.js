@@ -285,6 +285,17 @@ $(function () {
         reader.onerror = errorCSVFile;
     });
 
+    /*sModelImportCustomers.on('click', '#btn-download-error-file', function(event) {
+        event.preventDefault();
+        Customer.getLastImportErrorFile(
+            function success(data) {},
+            function error(xhr) {
+                alert(xhr.responseText);
+                console.log(xhr);
+            }
+        );
+    });*/
+
 });
 
 function loadCSVFile(evt, columnData) {

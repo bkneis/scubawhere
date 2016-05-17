@@ -170,6 +170,12 @@
 				Unfortunately though some customers could not be added as our system has detected errors within their information.
 				Please see below the error. If you wish to fix these errors manually and re upload them the our system can attempt to add them again.
 			</p>
+			{{#compare errors.length ">" 5}}
+				<p><strong>Or click this button to download a csv file with the invalid customers and their errors</strong></p>
+				<p><a id="btn-download-error-file" href="/api/customer/last-import-errors" class="btn btn-primary">Download here</a></p>
+			{{/compare}}
+			<!-- @todo Would be nice if we could implement an else compare helper function to prevent multiple calls to compare -->
+			{{#compare errors.length "<" 6}}
 			<p><strong>Errors : </strong></p>
 			<ul>
 				{{#each errors}}
@@ -180,6 +186,7 @@
 					<p></p>
 				{{/each}}
 			</ul>
+			{{/compare}}
 		{{else}}
 			<p><strong>Success!</strong> All of your customer data was imported</p>
 			<p>
