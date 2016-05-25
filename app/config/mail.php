@@ -14,8 +14,9 @@ return array(
 	| Supported: "smtp", "mail", "sendmail"
 	|
 	*/
-
-	'driver' => 'mandrill',
+	/* THIS NEEDS TO BE CHANGED BACKED TO MANDRILL BEFORE EVER MERGING MASTER WITH PRODUCTION, OTHERWISE IT WILL CAUSE A CONFLICT */
+	'driver' => 'mailgun',
+	//'driver' => 'mandrill',
 	// 'driver' => 'mail',
 
 	/*
