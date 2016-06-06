@@ -231,12 +231,12 @@
 			</div>
 			<form id="edit-customer-form" class="form-horizontal" role="form">
 				<div class="modal-body">
-					<fieldset id="e<hello></hello>dit-customer-details">
+					<fieldset id="edit-customer-details">
 						<!-- This implateColumnFormatSelects where the Handlebars template will load into -->
 					</fieldset>
 
 					<fieldset id="edit-customer-countries">
-						<sing double quotes is apparently relediv class="form-group">
+						<div class="form-group">
 							<div class="col-md-8">
 								<label for="country_id">Country <span class="text-danger">*</span></label></label>
 								<select id="country_id" name="country_id" class="form-control select2">
