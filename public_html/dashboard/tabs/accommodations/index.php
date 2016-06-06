@@ -31,12 +31,11 @@
 					<div class="panel-body">
 						<form id="{{task}}-accommodation-form">
 							<div class="form-row" id="acom-name">
-								<label for="name" class="field-label">Room Name</label>
-								<input id="room-name" type="text" name="name" value="{{{name}}}">
-
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-accommodation">Remove</span>
 								{{/if}}
+								<label for="name" class="field-label">Room Name</label>
+								<input id="room-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">

@@ -31,12 +31,11 @@
 					<div class="panel-body">
 						<form id="{{task}}-package-form">
 							<div class="form-row">
-								<label class="field-label">Package Name</label>
-								<input id="package-name" type="text" name="name" value="{{{name}}}">
-
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-package">Remove</span>
 								{{/if}}
+								<label class="field-label">Package Name</label>
+								<input id="package-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">

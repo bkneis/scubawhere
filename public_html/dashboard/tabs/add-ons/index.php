@@ -31,12 +31,11 @@
 					<div class="panel-body">
 						<form id="{{task}}-addon-form">
 							<div class="form-row">
-								<label class="field-label">Add-on Name</label>
-								<input id="addon-name" type="text" name="name" value="{{{name}}}">
-
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-addon">Remove</span>
 								{{/if}}
+								<label class="field-label">Add-on Name</label>
+								<input id="addon-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">

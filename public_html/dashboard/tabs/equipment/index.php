@@ -29,9 +29,11 @@
                     <div class="panel-body">
                         <form id="{{category.task}}-equipment-category-form">
                             <div class="form-row">
+                                {{#if category.update}}
+                                    <span class="btn btn-danger pull-right remove-equipment-category">Remove</span> 
+                                {{/if}}
                                 <label class="field-label">Equipment Category Name</label>
-                                <input id="equipment-category-name" type="text" name="name" value="{{{category.name}}}"> {{#if category.update}}
-                                <span class="btn btn-danger pull-right remove-equipment-category">Remove</span> {{/if}}
+                                <input id="equipment-category-name" type="text" name="name" value="{{{category.name}}}">
                             </div>
 
                             <div class="form-row">
