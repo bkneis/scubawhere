@@ -70,7 +70,8 @@ $(function(){
 		NProgress.done();
 	});
 
-	Company.getNotifications(function sucess(data) {
+	// This feature has been pushed back to hammerhead as discussed in issue SCUBA-234
+	/*Company.getNotifications(function sucess(data) {
 		var notificationTemplate = Handlebars.compile( $("#notification-message-template").html() );
 		window.notifications = createNotifications(data);
 		$('#notification-messages').append(notificationTemplate({notifications : window.notifications}));
@@ -81,7 +82,7 @@ $(function(){
 		if($(this).children(".messages").children().length > 0) {
 			$(this).children(".messages").fadeToggle(300);
 		}
-	});
+	});*/
 
 	$("#logout").click(function(e){
 		$.ajax({
@@ -174,7 +175,7 @@ function reproColor(id) { // Stands for: reproducible color
 	return colors[ (id % length) ];
 }
 
-function createNotifications(data) {
+/*function createNotifications(data) {
 	// handle data from api call and create notification messages
 	var notifications = [];
 	// console.log(data);
@@ -193,7 +194,7 @@ function createNotifications(data) {
 	}
 
 	return notifications;
-}
+}*/
 
 function colorOpacity(hex, opa) {
 

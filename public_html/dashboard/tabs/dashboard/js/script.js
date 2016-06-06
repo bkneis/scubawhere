@@ -56,7 +56,7 @@ $(function () {
 		});
 	});
 
-	displayFBStats();
+	//displayFBStats();
 
 	if(window.company.initialised != 1) {
 		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for using scubawhereRMS!</strong> To get started, please use the setup wizard below to configure your system.</div>';
@@ -157,7 +157,7 @@ function getCustomers(id, type) {
 
 }
 
-function displayFBStats() {
+/*function displayFBStats() {
 
 	if(window.facebook.status == "connected") {
 		socialMedia = Handlebars.compile($('#social-media-template').html());
@@ -182,5 +182,5 @@ function displayFBStats() {
 		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
 	}
 
-}
+}*/
 

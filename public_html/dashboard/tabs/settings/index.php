@@ -1,4 +1,4 @@
-<script type="text/javascript" src="js/social-media.js"></script>
+<!--<script type="text/javascript" src="js/social-media.js"></script>-->
 <div id="wrapper" class="clearfix">
 	<div id="company-form-container">
 		<script type="text/x-handlebars-template" id="company-form-template">
@@ -136,7 +136,8 @@
 						</div>
 					</div>
 
-					<div class="col-md-6">
+					<!-- The feature has been pushed back to hammerhead release as discussed in issue SCUBA-238 -->
+					<!--<div class="col-md-6">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">Social Media Integration</h4>
@@ -145,7 +146,7 @@
 								<div class="fb-login-button" scope="public_profile,email,read_insights" onlogin="checkLoginState();" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>
 							</div>
 						</div>
-					</div>
+					</div>-->
 
 					<div class="col-md-12">
 						<div class="panel panel-default">
