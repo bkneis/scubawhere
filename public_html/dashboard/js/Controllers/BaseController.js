@@ -1,7 +1,7 @@
 // WORK IN PROGRESS
 "use strict";
 class AssetModel {
-
+	
 	constructor(modelName) {
 		this.modelName = modelName;
 		this.list = Handlebars.compile( $('#' + this.modelName + '-list-template').html() );
