@@ -133,15 +133,15 @@
 	</div>
 	<div class="form-group">
 		<div class="col-md-4">
-			<label for="chest_size" class="control-label">Chest size</label>
+			<label for="chest_size" class="control-label">BCD Size</label>
 			<input type="text" name="chest_size" class="form-control" value="{{chest_size}}">
 		</div>
 		<div class="col-md-4">
-			<label for="shoe_size" class="control-label">Shoe size</label>
+			<label for="shoe_size" class="control-label">Fin size</label>
 			<input type="text" name="shoe_size" class="form-control" value="{{shoe_size}}">
 		</div>
 		<div class="col-md-4">
-			<label for="height" class="control-label">Height</label>
+			<label for="height" class="control-label">Wetsuit Size</label>
 			<input type="text" name="height" class="form-control" value="{{height}}">
 		</div>
 	</div>

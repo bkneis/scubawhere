@@ -200,9 +200,9 @@
          				<th style="color:#313131">Name</th>
          				<th style="color:#313131"><span style="display: none;">Country</span></th>
          				<th style="color:#313131">Phone</th>
-         				<th style="color:#313131">Shoes</th>
-         				<th style="color:#313131">Chest</th>
-         				<th style="color:#313131">Height</th>
+         				<th style="color:#313131">Fins</th>
+         				<th style="color:#313131">BCD</th>
+         				<th style="color:#313131">Wetsuit</th>
          				<th style="color:#313131">Last Dive</th>
          				<th style="color:#313131">Purchase</th>
          				<th style="color:#313131"><span style="display: none;">Booking</span></th>
@@ -223,9 +223,9 @@
          				<th style="color:#313131">Name</th>
          				<th style="color:#313131"><span style="display: none;">Country</span></th>
          				<th style="color:#313131">Phone</th>
-         				<th style="color:#313131">Shoes</th>
-         				<th style="color:#313131">Chest</th>
-         				<th style="color:#313131">Height</th>
+         				<th style="color:#313131">Fins</th>
+         				<th style="color:#313131">BCD</th>
+         				<th style="color:#313131">Wetsuit</th>
          				<th style="color:#313131">Last Dive</th>
          				<th style="color:#313131">Purchase</th>
          				<th style="color:#313131"><span style="display: none;">Booking</span></th>
