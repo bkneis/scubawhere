@@ -1458,3 +1458,7 @@ big {
 .sw-blue-table > tr:hover {
     background-color: #C3D9F4;
 }
+
+input[type=text] {
+    width:100%;
+}
