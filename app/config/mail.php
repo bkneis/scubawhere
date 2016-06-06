@@ -15,7 +15,8 @@ return array(
 	|
 	*/
 
-	'driver' => 'mandrill',
+	//'driver' => 'mandrill',
+	'driver' => 'mailgun',
 	// 'driver' => 'mail',
 
 	/*
