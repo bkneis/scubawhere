@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Mailer;
 
 class CrmCampaignController extends Controller {
 
@@ -118,6 +119,10 @@ class CrmCampaignController extends Controller {
 
 		$group_ids = Input::only('groups')['groups'];
 
+        // @todo create a validator controller so that we dont need to specify and check explicity every param sent (FOR ALL CONTROLLERS)
+        if(count($group_ids) < 1 && $data['sendallcustomers'] !== 1)
+            return Response::json(array('error' => 'Please specify atleast one group to send the email too'), 406);
+
         $customers = [];
 
         if((int) $data['sendallcustomers'] == 1)
@@ -167,16 +172,23 @@ class CrmCampaignController extends Controller {
                 }
             }
 
-            $certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
+            $certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules)
+            {
                 $query->whereIn('certificates.id', $rules['certs']);
-            })->get();//->lists('email', 'firstname', 'lastname', 'id');
+            })
+            ->with('crmSubscription')
+            ->get();// @todo only get the nesseray attributes of the customer to save bandwidth of db - app server
 
             $customers = array_merge($customers, array($certificates_customers));
 
-            $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
-                $query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
-            })->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
-            ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->get();//->lists('email', 'firstname', 'lastname', 'id');
+            $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) 
+            {
+                $query->where('status', 'confirmed'); // @todo changed confirmed to completed when soren pushes it
+            })
+            ->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) @todo add in training
+            ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
+            ->with('crmSubscription')
+            ->get();
 
             $customers = array_merge($customers, array($booked_customers));
             $customers = array_unique($customers);
@@ -205,9 +217,11 @@ class CrmCampaignController extends Controller {
         $dom = new DOMDocument();
         $dom->loadHTML($data['email_html']);
         $tags = $dom->getElementsByTagName('a');
-        foreach ($tags as $tag) {
+        foreach ($tags as $tag) 
+        {
             if($tag->getAttribute('href') != "{{unsubscribe_link}}")
-            {   $link_data = [];
+            {   
+                $link_data = [];
                 $hrefs[$tag->getAttribute('href')] = 0;
                 $link_data['campaign_id'] = $campaign->id;
                 $link_data['link'] = $tag->getAttribute('href');
@@ -222,9 +236,13 @@ class CrmCampaignController extends Controller {
         }
 
 		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
-
 		foreach($customers as $customer)
 		{
+            // If the customer has unsubscribed skip them and go to the next customer
+            if(!$customer->crmSubscription->subscribed)
+            {
+                continue;
+            }
             $new_token_data = [];
             $new_token_data['campaign_id'] = $campaign->id;
             $new_token_data['token'] = str_random(50);
@@ -281,7 +299,7 @@ class CrmCampaignController extends Controller {
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
 
             }
-
+            //Mailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
 			Mail::send([], [], function($message) use ($data, $customer, $email_html) {
 				$message->to($customer->email)
 				->subject($data['subject'])

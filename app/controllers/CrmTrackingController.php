@@ -49,18 +49,21 @@ class CrmTrackingController extends Controller {
         $data['token'] = Input::get('token');
         $data['campaign_id'] = Input::get('campaign_id');
         
-        $customer = Customer::find($data['customer_id'])->with('crmSubscription')->first();
-        //return $customer;
-        if((string)$data['token'] == $customer->crm_subscription->token)
+        $customer = Customer::where('id', '=', (int)$data['customer_id'])
+                            ->with('crmSubscription')
+                            ->first();
+
+        if(strcmp($data['token'], $customer->crm_subscription->token) === 0)
         {
             $customer->crm_subscription->subscribed = 0;
             $customer->crm_subscription->unsubscribed_campaign_id = $data['campaign_id'];
             $customer->crm_subscription->save();
-            return Redirect::to(public_path() . '/crm_unsubscribed');
+            return View::make('pages/email_unsubscribe'); // @todo , array('name' => $customer->name) add some customer details to pass the page
         }
         else 
         {
-            return "Sorry, you could not be unsubscribed due to a token mismatch"; // replace with error
+            // @todo create an external error landing page to pass messages to
+            return Response::json(array("error" => "Well this is embarrassing isn't it, there seems to be a mix up with our tokens so we could not unsubscribe you"), 406);
         }
     }
     

@@ -1,21 +1,19 @@
 <?php namespace ScubaWhere;
 
-use ScubaWhere\Context;
-
 class Mailer 
 {
-	public function send($subject, $body, $customer)
+	public static function send($subject, $customer, $from, $email_html)
 	{
-		Mail::send([], [], function($message) use ($data, $customer, $email_html) 
+		Mail::send([], [], function($message) use ($subject, $customer, $from, $email_html) 
 		{
 			$message->to($customer->email, $customer->name)
 			->subject($subject)
-			->from(Context::get()->business_email)
+			->from($from)
 			->setBody($email_html, 'text/html');
 		});
 	}
 
-	public function sendBookingConf($booking)
+	public static function sendBookingConf($booking)
 	{
 		Mail::queue('emails.booking-summary', array('booking' => $booking, 'company' => $company), function($message) use ($booking, $company)
 		{
@@ -27,7 +25,7 @@ class Mailer
 		});
 	}
 
-	public function sendTransactionConf($booking)
+	public static function sendTransactionConf($booking)
 	{
 		Mail::queue('emails.transaction', array('booking' => $booking, 'company' => Context::get()), function($message) use ($booking)
 		{
@@ -37,7 +35,7 @@ class Mailer
 		});
 	}
 
-	public function sendRegisterConf($user)
+	public static function sendRegisterConf($user)
 	{
 		// TODO move the blade template to emails and rename it
 		Mail::queue('reset', array('email' => $user->email), function($message) use ($user)

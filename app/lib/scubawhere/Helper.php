@@ -1,19 +1,17 @@
-<?php namespace ScubaWhere;
+<?php 
+namespace ScubaWhere;
 
-use Mews\Purifier\Facades\Purifier;
+use Mews\Purifier\Facades\Purifier;	// htmlpurifier.org
 
 class Helper
 {
-
 	public static function sanitiseString($string)
 	{
-		// return strip_tags( trim($string) );
 		return htmlentities( strip_tags( trim($string) ) );
 	}
 
 	public static function sanitiseBasicTags($string)
 	{
-		// htmlpurifier.org
 		return Purifier::clean($string);
 	}
 
