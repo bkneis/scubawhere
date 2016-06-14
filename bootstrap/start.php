@@ -30,6 +30,7 @@ $env = $app->detectEnvironment(array(
 	'local_bryan'       => array('marvin'),
 	'krystal'           => array('poseidon.krystal.co.uk'),
 	'digitalocean'      => array('rms.scubawhere.com'),
+	'local_gdawg'	    => array('gary-MS-7821')
 
 ));
 
