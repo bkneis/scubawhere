@@ -20,8 +20,7 @@ class RegisterController extends Controller {
 			'business_email',
 			'vat_number',
 			'registration_number',
-			'website',
-			'terms'
+			'website'
 		);
 
 		$userData = Input::only(

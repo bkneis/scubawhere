@@ -33,8 +33,7 @@ class Company extends Ardent {
 		'logo'                => '',
 		'photo'               => '',
 		'video'               => '',
-		'views'               => 'integer',
-		//'terms'               => 'required'
+		'views'               => 'integer'
 	);
 
 	public function beforeSave()
@@ -83,9 +82,6 @@ class Company extends Ardent {
 
 		if( isset($this->video) )
 			$this->video = Helper::sanitiseString($this->video);
-
-		if( isset($this->terms) )
-			$this->terms = Helper::sanitiseBasicTags($this->terms);
 
 		if( isset($this->phone_ext) )
 			$this->phone_ext = Helper::sanitiseString($this->phone_ext);
