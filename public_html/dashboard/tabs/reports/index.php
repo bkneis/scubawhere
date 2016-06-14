@@ -12,7 +12,7 @@
 					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
 					<button type="button" data-report="class-utilisation" class="btn btn-default">Class Utilisation</button>
 					<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
-					<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>
+					<!--<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>-->
 				</div>
 
 				<div style="margin-top:20px"></div>
