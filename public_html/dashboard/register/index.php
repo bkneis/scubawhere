@@ -151,8 +151,9 @@
 					<section>
 						<div id="section3">
 							<div style="float:none; margin: 0 auto;" class="form-row">
-								<label for="terms">(Optional) Copy and paste your Customer Booking Terms and Conditions below:</label>
-								<textarea id="terms" name="terms" style="width: 100%;"></textarea>
+								<!--<label for="terms">(Optional) Copy and paste your Customer Booking Terms and Conditions below:</label>-->
+								<label for="terms">(Optional) Upload your terms and conditions as a pdf here:</label>
+								<input type="file" id="in-terms-file">
 							</div>
 						</div>
 					</section>

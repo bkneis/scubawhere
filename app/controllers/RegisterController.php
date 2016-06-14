@@ -126,6 +126,33 @@ class RegisterController extends Controller {
 		// Request::replace($originalInput);
 	}
 
+	// @note this kind of feel more appropriate in the company controller, but when a user registers they are not authenticated yet ...
+	/**
+	 * API Function to save a DO's terms and conditions
+	 * @return ResponseObject 200 if the file has been saved or a 406 if the file was not retrieved from the request params
+	 */
+	public function postUploadTerms()
+	{
+		// @todo add a check to ensure it is pdf
+		//$data = Input::all();
+		//dd($data);
+		if(Input::hasFile('terms_file'))
+		{
+			if (Input::file('terms_file')->isValid())
+			{
+				Input::file('terms_file')->move(storage_path() . '/scubawhere/' . Input::get('company_name') . '/', 'terms.pdf');
+			}
+			else
+			{
+				return Response::json(array('errors' => 'Error : Please upload a valid pdf'), 406);
+			}
+		}
+		else
+		{
+			return Response::json(array('errors' => 'Error : Please upload a pdf to save as your terms and conditions'), 406);
+		}
+	}
+
 	public function getExists()
 	{
 		$field = Input::get('field');

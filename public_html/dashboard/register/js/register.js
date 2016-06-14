@@ -47,6 +47,9 @@ function validateAccount(){
 }
 
 $(function(){
+	window.promises = {};
+	window.promises.companyRegistered = $.Deferred();
+	var company_name;
 
 	$.get("/api/country/all", function(data) {
 		var country_select_options = '';
@@ -96,7 +99,7 @@ $(function(){
 
 		var params = form.serializeObject();
 		//params.terms = $('#terms').val();
-		params.terms = CKEDITOR.instances.terms.getData();
+		params.terms = " ";
 
 		params.phone = params.phone_ext + ' ' + params.phone;
 		params.business_phone = params.business_phone_ext + ' ' + params.business_phone;
@@ -105,14 +108,16 @@ $(function(){
 		$.ajax({
 			url: '/api/register/company',
 			type: "POST",
-			// dataType: "json",
 			data: params,
 			success: function(data){
 				console.log(data.status);
 				completed = true;
 
-				$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS.</p><p><strong>Please check your email inbox for a link to create your password. Once complete, we will review your registration and be personally in contact with you shortly.</p></center><br><a class="btn btn-success btn-lg" style="color: white;" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
-				form.find('#save-loader').remove();
+				company_name = params.name;
+				window.promises.companyRegistered.resolve();
+
+				//$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS.</p><p><strong>Please check your email inbox for a link to create your password. Once complete, we will review your registration and be personally in contact with you shortly.</p></center><br><a class="btn btn-success btn-lg" style="color: white;" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
+				//form.find('#save-loader').remove();
 			},
 			error: function(xhr) {
 
@@ -133,6 +138,30 @@ $(function(){
 				form.find('#save-loader').remove();
 			}
 		});
+	});
+
+	$.when(window.promises.companyRegistered).done(function() {
+		var terms_file = $('#in-terms-file').prop('files')[0];
+		console.log('when is being run');
+
+		var formData = new FormData();
+		formData.append('terms_file', terms_file);
+		formData.append('company_name', company_name);
+
+		$.ajax({
+	        url: "/api/register/upload-terms",
+	        type: "POST",
+	        data: formData,
+	        success: function(data) {
+	        	$('#section4').html('<center><h3 class="text-success">Registration complete!</h3><p>Thank your for registering for scubawhereRMS.</p><p><strong>Please check your email inbox for a link to create your password. Once complete, we will review your registration and be personally in contact with you shortly.</p></center><br><a class="btn btn-success btn-lg" style="color: white;" href="http://www.scubawhere.com/blog">Go back to the scubawhere homepage</a>');
+				$('#register-form').find('#save-loader').remove();
+	        },
+	        error: function(xhr) {
+	        	console.log(xhr);
+	        },
+	        contentType: false,
+	        processData: false
+	    });
 	});
 
 	$("#steps").steps({
@@ -184,8 +213,8 @@ $(function(){
 		$('#currency_id option').filter('[value=' + currency_id + ']').prop('selected', true);
 	});
 
-	CKEDITOR.config.height = 490;
+	//CKEDITOR.config.height = 490;
 
-	editor = CKEDITOR.replace('terms');
+	//editor = CKEDITOR.replace('terms');
 
 });
