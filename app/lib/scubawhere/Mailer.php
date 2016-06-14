@@ -1,6 +1,18 @@
 <?php namespace ScubaWhere;
 
-class Mailer 
+interface CrmMailerInterface
+{
+	public static function send($subject, $customer, $from, $email_html);
+
+	public static function sendBookingConf($booking);
+
+	public static function sendTransactionConf($booking);
+
+	public static function sendRegisterConf($user);
+
+}
+
+class CrmMailer implements CrmMailerInterface
 {
 	public static function send($subject, $customer, $from, $email_html)
 	{

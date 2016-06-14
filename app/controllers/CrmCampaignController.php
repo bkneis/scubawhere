@@ -3,7 +3,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
-use ScubaWhere\Mailer;
+use ScubaWhere\CrmMailer;
 
 class CrmCampaignController extends Controller {
 
@@ -299,13 +299,15 @@ class CrmCampaignController extends Controller {
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
 
             }
-            //Mailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
-			Mail::send([], [], function($message) use ($data, $customer, $email_html) {
+
+            CrmMailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
+            
+			/*Mail::send([], [], function($message) use ($data, $customer, $email_html) {
 				$message->to($customer->email)
 				->subject($data['subject'])
 				->from(Context::get()->business_email)
 				->setBody($email_html, 'text/html');
-			});
+			});*/
 		}
 
 		return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201 ); // 201 Created

@@ -178,19 +178,19 @@ class CustomerController extends Controller {
 	public function postImportcsv()
 	{
 		$data = Input::all();
-		$columns = $data["columns"];
-		$customer_data = $data["customerData"];
+		$columns = $data['columns'];
+		$customer_data = $data['customerData'];
 
 		$imported_customers = array();
 
 		$errors = array();
 
-		$csv_path = storage_path() . "/customer_imports/" . Context::get()->name . ".csv";
+		$csv_path = storage_path() . '/customer_imports/' . Context::get()->name . '.csv';
 
 		$bytes_written = File::put($csv_path, "");
 		if($bytes_written === false)
 		{
-			return Response::json(array('status' => 'Error. Could not write a file'), 500);
+			return Response::json(array('status' => 'Ooops, Something seems to have gone wrong. Please try upload your customer data again. If the problem persists, please contact support@scubawhere.com.'), 500);
 		}
 
 		foreach($customer_data as $line_num => $customer)
@@ -215,23 +215,33 @@ class CustomerController extends Controller {
 
 			if( !$new_customer->validate() )
 			{
-				$error_msg = "The customer data on row number " . ($line_num  + 1) . " was invalid";
+				$error_msg = 'The customer data on row number ' . ($line_num  + 1) . ' was invalid';
 				$err = array();
 				$err["message"] = $error_msg;
-				$err["errs"] = $new_customer->errors();
+				$err["errs"] = $new_customer->errors(); // @todo change this to ->all() and fix front end to display them correctly
 				array_push($errors, $err);
 				$err_csv_str = "";
-				foreach($new_customer_data as $cust_attr)
+				foreach($customer as $cust_attr)
 				{
 					$err_csv_str = $err_csv_str . $cust_attr . ",";
 				}
-				foreach($err["errs"] as $err_attr)
+				$err_csv_str = $err_csv_str . ",Errors - ,";
+				foreach($err["errs"]->all() as $err_attr)
 				{
 					$err_csv_str = $err_csv_str . $err_attr . ",";
 				}
-				rtrim($err_csv_str, ","); // remove trailing commas DIDNT WORK??
-				$err_csv_str = $err_csv_str . "\n"; // add the next line
-				File::append($csv_path, $err_csv_str); // move this to end to prevent multiple IO
+				
+				rtrim($err_csv_str, ",");
+				$err_csv_str = $err_csv_str . "\n";
+				$bytes_written = File::append($csv_path, $err_csv_str); // @todo somehow queue this method and then execute outside the loop to reduce disk IO
+				if($bytes_written === false)
+				{
+					return Response::json(array('status' => 'Ooops, Something seems to have gone wrong. Please try upload your customer data again. If the problem persists, please contact support@scubawhere.com.'), 500);
+				}
+			}
+			else
+			{
+				array_push($imported_customers, $new_customer);
 			}
 
 		}

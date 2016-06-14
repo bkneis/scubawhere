@@ -1,5 +1,4 @@
-<?php 
-namespace ScubaWhere;
+<?php namespace ScubaWhere;
 
 use Mews\Purifier\Facades\Purifier;	// htmlpurifier.org
 
