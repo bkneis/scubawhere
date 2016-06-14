@@ -9,7 +9,6 @@ interface CrmMailerInterface
 	public static function sendTransactionConf($booking);
 
 	public static function sendRegisterConf($user);
-
 }
 
 class CrmMailer implements CrmMailerInterface
