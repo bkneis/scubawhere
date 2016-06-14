@@ -236,7 +236,7 @@ function renderGroupEditForm(id) {
             for(var i in data)
             {
                   groupCustomersTable.row.add([
-                      data[i].firstname + data[i].lastname,
+                      data[i].firstname + " " + data[i].lastname,
                       data[i].email,
                       data[i].id,
                       data[i].num_read,

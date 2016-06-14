@@ -87,7 +87,7 @@
 
     <div id="modalWindows" style="height: 0;"></div>
 
-    <iframe id="email-template-editor" style="position: fixed; border: none; top: 50px; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"></iframe>
+    <iframe id="email-template-editor" style="position: fixed; border: none; top: 50px; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; padding-bottom: 120px"></iframe>
 
     <div style="position: fixed; bottom: 0; width: 100%; height:80px" class="alert-warning clearfix">
         <div class="alert pull-right">

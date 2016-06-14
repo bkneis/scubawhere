@@ -109,7 +109,7 @@
 	</div><!-- .row -->
     
     <div class="modal fade" id="view-group-customers-modal">
-        <div class="modal-dialog" style="width:40%">
+        <div class="modal-dialog" style="width:70%">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
