@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\CrmMailer;
 
 class BookingController extends Controller {
 
@@ -100,7 +101,7 @@ class BookingController extends Controller {
 							$start = $firstAccommodation->pivot->start;
 					}
 
-					// Calculate the package price at this first datetime and sum it up
+					// Calculate the package pricregister/e at this first datetime and sum it up
 					if($start === null) $start = $firstDetail->created_at;
 					$detail->packagefacade->package->calculatePrice($start, $limitBefore);
 
@@ -1962,7 +1963,8 @@ class BookingController extends Controller {
 			return Response::json( array('errors' => $booking->errors()->all()), 406 ); // 406 Not Acceptable
 		}
 
-		Helper::sendBookingConfirmation($booking->id);
+		//Helper::sendBookingConfirmation($booking->id);
+		CrmMailer::sendBookingConf($booking->id);
 
 		return array('status' => 'OK. Booking confirmed.');
 	}

@@ -2,9 +2,9 @@
 
 interface CrmMailerInterface
 {
-	public static function send($subject, $customer, $from, $email_html);
+	public static function send($campaign, $customer);
 
-	public static function sendBookingConf($booking);
+	public static function sendBookingConf($booking_id);
 
 	public static function sendTransactionConf($booking);
 
@@ -13,27 +13,61 @@ interface CrmMailerInterface
 
 class CrmMailer implements CrmMailerInterface
 {
-	public static function send($subject, $customer, $from, $email_html)
+	public static function send($campaign, $customer)
 	{
-		Mail::send([], [], function($message) use ($subject, $customer, $from, $email_html) 
+		$company = Context::get();
+		$terms_file = storage_path() . '/scubawhere/' . $company->name . '/terms.pdf';
+		\Mail::send([], [], function($message) use ($campaign, $customer, $company, $terms_file)
 		{
 			$message->to($customer->email, $customer->name)
-			->subject($subject)
-			->from($from)
-			->setBody($email_html, 'text/html');
+			->subject($campaign->subject)
+			->from($company->email)
+			->setBody($campaign->email_html, 'text/html');
+			if($campaign->is_campaign == 0)
+			{
+				//$message->attach(\Swift_Attachment::fromPath($terms_file));
+				/*$message->attach('$terms_file', array(
+						'as' => 'terms.pdf',
+						'mime' => 'application/pdf')
+				);*/
+			}
 		});
 	}
 
-	public static function sendBookingConf($booking)
+	public static function sendBookingConf($booking_id)
 	{
-		Mail::queue('emails.booking-summary', array('booking' => $booking, 'company' => $company), function($message) use ($booking, $company)
+		# 1. Get booking information
+		\Request::replace(["id" => $booking_id]);
+
+		$app        = app();
+		$controller = $app->make('BookingController');
+		$booking    = $controller->callAction('getIndex', []);
+
+		# 2. Generate email HTML
+		$html = \View::make('emails.booking-summary', ['company' => Context::get(), 'booking' => $booking, 'siteUrl' => \Config::get('app.url')])->render();
+
+		# 3. Send email via CrmCampaignController
+		\Request::replace([
+			'subject'          => Context::get()->name . ' Booking Itinerary',
+			'email_html'       => $html,
+			'name'             => 'Booking Itinerary for ' . $booking->reference,
+			'sendallcustomers' => 0,
+			'is_campaign'      => 0,
+			'customer_id'      => $booking->lead_customer_id,
+		]);
+
+		$controller = $app->make('CrmCampaignController');
+		$request    = $controller->callAction('postAdd', []);
+
+		# 4. Check if request was successful
+		if($request->getStatusCode() !== 201)
 		{
-			$message->to($booking->lead_customer->email, $booking->lead_customer->name)
-			->subject('Booking Confirmation with ' . $company->name)
-			->from($company->email);
-			// TODO add to register controller to upload a DO's terms and conditions to this address then it can be added to emails
-			//$message->attach(storage_path() . 'terms/' . $company->name . '.pdf');
-		});
+			$json = json_decode($request->getContent());
+			throw new \Exception('Email Sending Error: ' . $json->errors, 1);
+		}
+
+		return $request;
+
 	}
 
 	public static function sendTransactionConf($booking)

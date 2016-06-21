@@ -120,8 +120,8 @@ class CrmCampaignController extends Controller {
 		$group_ids = Input::only('groups')['groups'];
 
         // @todo create a validator controller so that we dont need to specify and check explicity every param sent (FOR ALL CONTROLLERS)
-        if(count($group_ids) < 1 && $data['sendallcustomers'] !== 1)
-            return Response::json(array('error' => 'Please specify atleast one group to send the email too'), 406);
+        if(count($group_ids) < 1 && $data['sendallcustomers'] !== 1 && $data['is_campaign'] !== 0)
+            return Response::json(array('errors' => 'Please specify atleast one group to send the email too'), 406);
 
         $customers = [];
 
@@ -135,7 +135,7 @@ class CrmCampaignController extends Controller {
             $booked_cust = Context::get()->customers()->findOrFail($booked_cust_id); // possibly use where in?
             if(!$booked_cust)
             {
-                return Response::json( 'Customer ID is not valid', 406 );
+                return Response::json( array('errors' => 'Customer ID is not valid'), 406 );
             }
             array_push($customers, $booked_cust);
         }
@@ -177,7 +177,7 @@ class CrmCampaignController extends Controller {
                 $query->whereIn('certificates.id', $rules['certs']);
             })
             ->with('crmSubscription')
-            ->get();// @todo only get the nesseray attributes of the customer to save bandwidth of db - app server
+            ->get();
 
             $customers = array_merge($customers, array($certificates_customers));
 
@@ -204,6 +204,8 @@ class CrmCampaignController extends Controller {
 		{
 			return Response::json( array('errors' => $campaign->errors()->all()), 406 ); // 406 Not Acceptable
 		}
+
+        //CrmMailer::save($campaign, (int) $data['sendallcustomers'], (int) $data['is_campaign']);
 
 		$campaign = Context::get()->campaigns()->save($campaign);
 
@@ -239,8 +241,9 @@ class CrmCampaignController extends Controller {
 		foreach($customers as $customer)
 		{
             // If the customer has unsubscribed skip them and go to the next customer
-            if(!$customer->crmSubscription->subscribed)
+            if($customer->crmSubscription->subscribed === 0)
             {
+                var_dump('test');
                 continue;
             }
             $new_token_data = [];
@@ -300,7 +303,8 @@ class CrmCampaignController extends Controller {
 
             }
 
-            CrmMailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
+            //CrmMailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
+            CrmMailer::send($campaign, $customer);
             
 			/*Mail::send([], [], function($message) use ($data, $customer, $email_html) {
 				$message->to($customer->email)
