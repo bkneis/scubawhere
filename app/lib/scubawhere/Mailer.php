@@ -2,6 +2,13 @@
 
 interface CrmMailerInterface
 {
+	/**
+	 * Function to use when sending emails of any type.
+	 * Please Note : Only the CrmCampaign Controller should reference this function, all others should us the specific send* function so that the email is saved in the DB.
+	 * @param $campaign The Campaign model that was created in CrmCampaign Controller after being validated
+	 * @param $customer The Customer model who should receive the email
+	 * @return void
+     */
 	public static function send($campaign, $customer);
 
 	public static function sendBookingConf($booking_id);
@@ -15,15 +22,23 @@ class CrmMailer implements CrmMailerInterface
 {
 	public static function send($campaign, $customer)
 	{
+		// We need to assign variables required for the mail closure as the eloquent models aren't serializable (which is required of queuing)
 		$company = Context::get();
 		$terms_file = storage_path() . '/scubawhere/' . $company->name . '/terms.pdf';
-		\Mail::send([], [], function($message) use ($campaign, $customer, $company, $terms_file)
+		$email_to = $customer->email;
+		$name_to = $customer->name;
+		$subject = $campaign->subject;
+		$email_from = $company->email;
+		$email_html = $campaign->email_html;
+		$is_campaign = $campaign->is_campaign;
+
+		\Mail::queue([], [], function($message) use ($email_to, $name_to, $subject, $email_from, $email_html, $is_campaign, $terms_file)
 		{
-			$message->to($customer->email, $customer->name)
-			->subject($campaign->subject)
-			->from($company->email)
-			->setBody($campaign->email_html, 'text/html');
-			if($campaign->is_campaign == 0 && file_exists($terms_file))
+			$message->to($email_to, $name_to)
+			->subject($subject)
+			->from($email_from)
+			->setBody($email_html, 'text/html');
+			if($is_campaign == 0 && file_exists($terms_file))
 			{
 				$message->attach($terms_file, array(
 					'as' => 'terms.pdf',
@@ -31,6 +46,7 @@ class CrmMailer implements CrmMailerInterface
 				);
 			}
 		});
+
 	}
 
 	public static function sendBookingConf($booking_id)
