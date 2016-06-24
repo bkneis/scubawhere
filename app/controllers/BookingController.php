@@ -1964,7 +1964,7 @@ class BookingController extends Controller {
 		}
 
 		//Helper::sendBookingConfirmation($booking->id);
-		CrmMailer::sendBookingConf($booking->id);
+		CrmMailer::sendBookingConf($booking->idp); // ->id
 
 		return array('status' => 'OK. Booking confirmed.');
 	}

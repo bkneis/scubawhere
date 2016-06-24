@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\CrmMailer;
 
 class RegisterController extends Controller {
 
@@ -119,9 +120,12 @@ class RegisterController extends Controller {
 		}
 
 		// $originalInput = Request::input();
-		$request = Request::create('password/remind', 'POST', array('email' => $user->email, 'welcome' => 1));
+
+		CrmMailer::sendRegisterConf($user);
+		/*$request = Request::create('password/remind', 'POST', array('email' => $user->email, 'welcome' => 1));
 		Request::replace($request->input());
-		return Route::dispatch($request);
+		return Route::dispatch($request); */
+
 		// Request::replace($originalInput);
 	}
 

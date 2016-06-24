@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\CrmMailer;
 
 class PaymentController extends Controller {
 
@@ -107,13 +108,16 @@ class PaymentController extends Controller {
 
 		$payment = $booking->payments()->save($payment);
 
+		CrmMailer::sendTransactionConf($payment);
+
 		if($booking->status !== "confirmed") {
 			$booking->status = 'confirmed';
 			$booking->reserved_until = null;
 			if( !$booking->save() )
 				return Response::json( array('errors' => $booking->errors()->all()), 500 ); // 500 Internal Server Error
 
-			Helper::sendBookingConfirmation($booking->id);
+			//Helper::sendBookingConfirmation($booking->id);
+			CrmMailer::sendBookingConf($booking);
 		}
 
 		// Send Payment Confirmation
