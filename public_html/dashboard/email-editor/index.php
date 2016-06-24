@@ -90,10 +90,10 @@
     <iframe id="email-template-editor" style="position: fixed; border: none; top: 50px; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; padding-bottom: 120px"></iframe>
 
     <div style="position: fixed; bottom: 0; width: 100%; height:80px" class="alert-warning clearfix">
+        <div class="pull-left">
+            <p style="padding: 30px 0 0 30px"><strong>Please note : Maximum upload image size is 5 MB</strong></p>
+        </div>
         <div class="alert pull-right">
-            <div class="pull-left">
-    
-            </div>
             <div class="pull-right">
                 <button id="send-email" class="btn btn-primary btn-lg pull-right">SEND</button>
                 <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
