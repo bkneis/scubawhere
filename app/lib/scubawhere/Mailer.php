@@ -23,13 +23,12 @@ class CrmMailer implements CrmMailerInterface
 			->subject($campaign->subject)
 			->from($company->email)
 			->setBody($campaign->email_html, 'text/html');
-			if($campaign->is_campaign == 0)
+			if($campaign->is_campaign == 0 && file_exists($terms_file))
 			{
-				//$message->attach(\Swift_Attachment::fromPath($terms_file));
-				/*$message->attach('$terms_file', array(
-						'as' => 'terms.pdf',
-						'mime' => 'application/pdf')
-				);*/
+				$message->attach($terms_file, array(
+					'as' => 'terms.pdf',
+					'mime' => 'application/pdf')
+				);
 			}
 		});
 	}

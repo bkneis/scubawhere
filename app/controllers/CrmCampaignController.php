@@ -52,13 +52,13 @@ class CrmCampaignController extends Controller {
 			File::makeDirectory($savepath);
 		}
 
-	    $filename = $image->getClientOriginalName() . str_random(20);
+	    $filename = $image->getClientOriginalName() . str_random(20); // @todo add in check to ensure file doesnt exist
 
 	    Input::file('uploaded-image')->move($savepath, $filename);
 
 	    $filepath = substr(Request::root(), 0, -4) . '/uploads/images/' . Context::get()->name . '/' . $filename;
 
-	    return Response::json( array('sucess' => array('File Uploaded.'), 'filepath' => $filepath), 200 ); // 200 Success
+	    return Response::json( array('success' => array('File Uploaded.'), 'filepath' => $filepath), 200 ); // 200 Success
 	}
 
     public function postDelete()
