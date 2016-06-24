@@ -6,6 +6,8 @@ $(function() {
 		window.company.other_agencies = _.omit( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
 
 		companyForm = Handlebars.compile( $("#company-form-template").html());
+		
+		$.get
 		renderEditForm();
 	});
 
@@ -110,8 +112,8 @@ function renderEditForm() {
 	//console.log(window.company);
 	$('#company-form-container').empty().append( companyForm(window.company) );
 
-	CKEDITOR.replace('description');
-	CKEDITOR.replace('terms');
+	//CKEDITOR.replace('description');
+	//CKEDITOR.replace('terms');
 
 	setToken('[name=_token]');
 
