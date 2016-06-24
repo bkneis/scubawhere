@@ -175,9 +175,8 @@ function getReport(reportType, callback) {
 					for(var i = 0; i < data2.length; i++) {
 						data2[i].refund = true;
 					}
-					// console.log(newData);
 					window.transactions = newData;
-					$("#reports").html( report({entries : newData}) );
+
 					var totalCash   = 0,
 					    totalCredit = 0,
 					    totalCheque = 0,
@@ -220,6 +219,13 @@ function getReport(reportType, callback) {
 					          + Math.max(totalBank, 0)
 					          + Math.max(totalOnline, 0)
 					          + Math.max(totalPaypal, 0);
+					console.log(newData);
+					window.totalTransactionsRevenue = total;
+					var aggregateData = {
+						transactions: newData,
+						totalRevenue: total
+					};
+					$("#reports").html( report({entries : aggregateData}) );
 					// If the no positive totals are in this daterange, set total to 1 (division by zero is not possible) as it doesn't matter anyway as all totals are < 0
 					if(total === 0) total = 1;
 
@@ -466,9 +472,14 @@ function filterReport(reportType, value)
 					if(parseInt(transaction.paymentgateway_id) == value) results.push(transaction);
 				});
 
-				// console.log(results);
+				var data = {
+					transactions: results,
+					total: window.totalTransactionsRevenue
+				};
+
+				console.log(data);
 				report = Handlebars.compile($("#transactions-report-template").html());
-				$("#reports").empty().append( report({entries : results}) );
+				$("#reports").empty().append( report({entries : data}) );
 				$("#transactions-summary").css('display', 'none');
 				createDataTable();
 			}

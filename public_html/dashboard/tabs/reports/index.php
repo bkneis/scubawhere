@@ -54,7 +54,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{#each entries}}
+			{{#each entries.transactions}}
 				<tr{{#if refund}} style="color: red;"{{/if}}>
 					<td>{{received_at}}</td>
 					<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
@@ -63,7 +63,7 @@
 					<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
 				</tr>
 			{{else}}
-				<tr><td colspan="4" class="text-center">There are no transactions between these dates</td></tr>
+				<tr><td colspan="5" class="text-center">There are no transactions between these dates</td></tr>
 			{{/each}}
 		</tbody>
 
@@ -73,7 +73,7 @@
 			<tr>
 				<td></td>
 				<td></td>
-				<td class="pull-right" id="transactions-date-range">Total </td>
+				<td class="pull-right" id="transactions-date-range">Revenue breakdown </td>
 				<td id="transactions-cash">
 					Cash
 					<div style="width:100%" class="percentage-bar-container bg-success border-success">
@@ -144,6 +144,10 @@
 			</tr>
 		</thead>
 	</table>
+	<div class="text-right" style="font-weight: bold;">
+		<p>&nbsp;</p>
+		<h4>Total revenue: {{currency}} {{entries.totalRevenue}}</h4>
+	</div>
 </script>
 <script type="text/x-handlebars-template" id="agents-report-template">
 	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
@@ -172,16 +176,16 @@
 					<td>{{currency}} {{decimal_price}}</td>
 				</tr>
 			{{else}}
-				<tr><td colspan="6" class="text-center">There are no agent bookings between these dates</td></tr>
+				<tr><td colspan="8" class="text-center">There are no agent bookings between these dates</td></tr>
 			{{/each}}
 		</tbody>
 	</table>
 
 	<div class="text-right" style="font-weight: bold;">
 		<p>&nbsp;</p>
-		<p>Total commission: {{currency}} {{entries.totals.commission}}</p>
-		<p>Total revenue: {{currency}} {{entries.totals.revenue}}</p>
-		<p>Total invoicable: {{currency}} {{entries.totals.invoicable}}</p>
+		<h4>Total commission: {{currency}} {{entries.totals.commission}}</h4>
+		<h4>Total revenue: {{currency}} {{entries.totals.revenue}}</h4>
+		<h4>Total invoicable: {{currency}} {{entries.totals.invoicable}}</h4>
 	</div>
 </script>
 <script type="text/x-handlebars-template" id="booking-history-report-template">
@@ -214,7 +218,7 @@
 
 	<div class="text-right" style="font-weight: bold;">
 		<p>&nbsp;</p>
-		<p>Total revenue: {{currency}} {{entries.totals.revenue}}</p>
+		<h4>Total revenue: {{currency}} {{entries.totals.revenue}}</h4>
 	</div>
 </script>
 <script type="text/x-handlebars-template" id="utilisation-report-template">
