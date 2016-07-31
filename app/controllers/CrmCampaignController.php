@@ -210,7 +210,6 @@ class CrmCampaignController extends Controller
         foreach ($customers as $customer) {
             // If the customer has unsubscribed skip them and go to the next customer
             if ($customer->crmSubscription->subscribed === 0) {
-                var_dump('test');
                 continue;
             }
             $new_token_data = [];
