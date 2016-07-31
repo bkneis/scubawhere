@@ -42,6 +42,32 @@ $(function(){
 				type: "POST",
 				dataType: "json",
 				data: $("#loginForm").serialize(),
+				statusCode: {
+					401: function(xhr) {
+						var data = JSON.parse(xhr.responseText);
+
+						$('#loginDC').removeClass('loading');
+
+						$(".form-error").html(data.errors[0]);
+
+						$( "#login-form" ).effect( "shake" );
+					},
+					406: function(xhr) {
+						var data = JSON.parse(xhr.responseText);
+
+						$('#loginDC').removeClass('loading');
+
+						$(".form-error").html(data.errors[0]);
+
+						$( "#login-form" ).effect( "shake" );
+					},
+					202: function() {
+						window.location.href = "/";
+					},
+					200: function() {
+						window.location.href = "/";
+					}
+				}/*
 				success: function(){
 					window.location.href = "/";
 				},
@@ -53,7 +79,7 @@ $(function(){
 					$(".form-error").html(data.errors[0]);
 
 					$( "#login-form" ).effect( "shake" );
-				}
+				}*/
 			});
 		}
 	});

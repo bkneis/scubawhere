@@ -4,9 +4,9 @@ $HOST = $_SERVER['HTTP_HOST'];
 $PROTOCOL = 'http';
 	if(!empty($_SERVER['HTTPS'])) $PROTOCOL = 'https'; // http://php.net/manual/en/reserved.variables.server.php
 	// If not accessed from the rms subdomain, redirect to it
-	if(substr($HOST, 0, 3) !== 'rms')
+	/*if(substr($HOST, 0, 3) !== 'rms')
 	{
-		// To allow for local dev environments, only change the subdomain part of the url
+		// To allow for local dev environments, only change the sub domain part of the url
 		$hostParts = explode('.', $HOST);
 		switch(count($hostParts))
 		{
@@ -17,7 +17,7 @@ $PROTOCOL = 'http';
 
 		header("Location: " . $PROTOCOL . "://" . $location . "/");
 		exit;
-	}
+	}*/
 	$BASE_URL = $PROTOCOL . "://" . $HOST;
 
 	session_start();
