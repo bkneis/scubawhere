@@ -16,6 +16,10 @@ composer.phar
 app/tests/reports
 phpunit-soren.xml
 vendor/
+tags
+cs_fixer*
+.jira_url
+.phpcomplete_extended/
 
 # Krystal hosting webspace files
 .bash_history
