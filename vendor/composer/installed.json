@@ -175,7 +175,8 @@
                 "role": "Creator/Developer"
             }
         ],
-        "description": "money"
+        "description": "money",
+        "abandoned": "money/money"
     },
     {
         "name": "predis/predis",
@@ -1020,7 +1021,7 @@
         "dist": {
             "type": "zip",
             "url": "https://api.github.com/repos/laravel-ardent/ardent/zipball/3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa",
-            "reference": "51b99b485a8c5447f2fb2124d9574a1ef82a9549",
+            "reference": "3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa",
             "shasum": ""
         },
         "require": {
@@ -1193,12 +1194,12 @@
         "target-dir": "Symfony/Component/Routing",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Routing.git",
+            "url": "https://github.com/symfony/routing.git",
             "reference": "46142c34ea830f47429df6e15faec3a33292d618"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
+            "url": "https://api.github.com/repos/symfony/routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
             "reference": "46142c34ea830f47429df6e15faec3a33292d618",
             "shasum": ""
         },
@@ -2777,7 +2778,8 @@
             "http client",
             "rest",
             "web service"
-        ]
+        ],
+        "abandoned": "guzzlehttp/guzzle"
     },
     {
         "name": "aws/aws-sdk-php",
