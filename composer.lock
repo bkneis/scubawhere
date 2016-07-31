@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e2fa8fe4180a67ae480fbe741ac70b49",
-    "content-hash": "f48a6f4ab3c1c39b1527810571d8460a",
+    "hash": "eb4b23d2abc41d579d5630706c898b13",
+    "content-hash": "cf9fe710860171aa9010646b353f9859",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -940,6 +940,7 @@
                 "rest",
                 "web service"
             ],
+            "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18 18:23:50"
         },
         {
@@ -1321,7 +1322,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel-ardent/ardent/zipball/3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa",
-                "reference": "51b99b485a8c5447f2fb2124d9574a1ef82a9549",
+                "reference": "3b9d9ca4f9b8ace922d1425f3ddca1689151e2fa",
                 "shasum": ""
             },
             "require": {
@@ -1803,6 +1804,7 @@
                 }
             ],
             "description": "money",
+            "abandoned": "money/money",
             "time": "2014-04-26 14:19:15"
         },
         {
@@ -2700,12 +2702,12 @@
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Routing.git",
+                "url": "https://github.com/symfony/routing.git",
                 "reference": "46142c34ea830f47429df6e15faec3a33292d618"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
                 "reference": "46142c34ea830f47429df6e15faec3a33292d618",
                 "shasum": ""
             },

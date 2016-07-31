@@ -24,15 +24,40 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+/*$env = $app->detectEnvironment(array(
 
 	'local_soren'       => array('packer-virtualbox-iso'),
 	'local_bryan'       => array('marvin'),
 	'krystal'           => array('poseidon.krystal.co.uk'),
 	'digitalocean'      => array('rms.scubawhere.com'),
+	'production_aws'	=> array('scubawhere-rms.eu-central-1.elasticbeanstalk.com'),
 	'local_gdawg'	    => array('gary-MS-7821')
 
-));
+));*/
+$env = $app->detectEnvironment(function() {
+
+	if($_SERVER['SERVER_NAME'] == 'scubawhererms-1.puzntmrpqp.eu-central-1.elasticbeanstalk.com')
+	{
+		return 'production_aws';
+	}
+	elseif($_SERVER['SERVER_NAME'] == 'scubawhererms-dev.eu-central-1.elasticbeanstalk.com')
+	{
+		return 'production_aws';
+	}
+
+	switch(gethostname()) {
+		case 'marvin':
+			return 'local_bryan';
+		case 'poseidon.krystal.co.uk':
+			return 'krystal';
+		case 'rms.scubawhere.com':
+			return 'digitalocean';
+		case 'digitalocean':
+			return 'local_gdawg';
+		default:
+			return 'production';
+	}
+});
 
 /*
 |--------------------------------------------------------------------------

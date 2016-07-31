@@ -16,6 +16,7 @@ ClassLoader::addDirectories(array(
 	app_path().'/commands',
 	app_path().'/controllers',
 	app_path().'/models',
+	app_path().'/models/entities',
 	app_path().'/database/seeds',
 
 ));
@@ -48,6 +49,11 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 
 App::error(function(Exception $exception, $code)
 {
+	if($exception instanceof \ScubaWhere\Exceptions\BaseException)
+	{
+		return $exception->response();
+	}
+
 	if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
 	{
 		Log::error('NotFoundHttpException - Route: ' . Request::url() );
