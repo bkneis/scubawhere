@@ -4,10 +4,10 @@ use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
 
-class CrmGroupController extends Controller {
-
-	public function getIndex() {
-
+class CrmGroupController extends Controller 
+{
+    public function getIndex() 
+    {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
