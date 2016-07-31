@@ -15,6 +15,7 @@ error_log
 composer.phar
 app/tests/reports
 phpunit-soren.xml
+vendor/
 
 # Krystal hosting webspace files
 .bash_history
