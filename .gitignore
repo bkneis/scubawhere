@@ -15,10 +15,10 @@ error_log
 composer.phar
 app/tests/reports
 phpunit-soren.xml
-vendor/
+vendor/composer/
 tags
 cs_fixer*
-.jira_url
+.jira-url
 .phpcomplete_extended/
 
 # Krystal hosting webspace files
