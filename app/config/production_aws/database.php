@@ -1,5 +1,14 @@
 <?php
 
+if (!defined('RDS_HOSTNAME')) {
+    define('RDS_HOSTNAME', $_SERVER['RDS_HOSTNAME']);
+    define('RDS_USERNAME', $_SERVER['RDS_USERNAME']);
+    define('RDS_PASSWORD', $_SERVER['RDS_PASSWORD']);
+    define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
+    define('REDIS_HOSTNAME', $_SERVER['REDIS_HOSTNAME']);
+    define('REDIS_PORT', $_SERVER['REDIS_PORT']);
+}
+
 return array(
 
     /*
@@ -22,15 +31,25 @@ return array(
 
         'mysql' => array(
             'driver'    => 'mysql',
-            'host'      => '$_SERVER[\'RDS_HOSTNAME\']',
-            'database'  => '$_SERVER[\'RDS_DB_NAME\']',
-            'username'  => '$_SERVER[\'RDS_USERNAME\']',
-            'password'  => '$_SERVER[\'RDS_PASSWORD\']',
+            'host'      => RDS_HOSTNAME,
+            'database'  => RDS_DB_NAME,
+            'username'  => RDS_USERNAME,
+            'password'  => RDS_PASSWORD,
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
         ),
+    ),
 
+    'redis' => array(
+        'cluster' => true,
+        'default' => array(
+            'host'     => REDIS_HOSTNAME,
+            'port'     => REDIS_PORT,
+            'database' => 0,
+        ),
     ),
 
 );

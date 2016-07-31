@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'url' => 'http://scubawhere-rms.eu-central-1.elasticbeanstalk.com',
+    'url' => 'http://scubawhererms-dev.eu-central-1.elasticbeanstalk.com ',
 
     /*'providers' => append_config(array(
 
