@@ -131,6 +131,8 @@ return array(
 
 		'Mews\Purifier\PurifierServiceProvider',
 
+		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
+
 	),
 
 	/*
@@ -197,7 +199,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 
-        'Purifier'        => 'Mews\Purifier\Facades\Purifier',
+		'Purifier'        => 'Mews\Purifier\Facades\Purifier',
 
 	),
 

@@ -1,76 +1,60 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
 use ScubaWhere\CrmMailer;
+use Illuminate\Database\QueryException;
+use ScubaWhere\Services\ObjectStoreService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CrmCampaignController extends Controller {
+class CrmCampaignController extends Controller
+{
+    protected $object_store_service;
 
-	public function getIndex() {
+    public function __construct(ObjectStoreService $obj_store_service)
+    {
+        $this->object_store_service = $obj_store_service;
+    }
+    
+    public function getIndex()
+    {
+        try {
+            if (!Input::get('id')) {
+                throw new ModelNotFoundException();
+            }
+            return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->findOrFail(Input::get('id'));
+        } catch (ModelNotFoundException $e) {
+            return Response::json(array('errors' => array('The campaign could not be found.')), 404); // 404 Not Found
+        }
+    }
+    
+    public function getAll()
+    {
+        return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->get();
+    }
 
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The campaign could not be found.')), 404 ); // 404 Not Found
-		}
+    public function getAllWithTrashed()
+    {
+        return Context::get()->campaigns()->withTrashed()->with('tokens', 'groups', 'crmLinks')->get();
+    }
 
-	}
-
-	public function getAll()
-	{
-		return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->get();
-	}
-
-	public function getAllWithTrashed()
-	{
-		return Context::get()->campaigns()->withTrashed()->with('tokens', 'groups', 'crmLinks')->get();
-	}
-
-	public function postUploadImage()
-	{
-		$image = Input::file('uploaded-image');
-
-		if(! Input::file('uploaded-image') )
-		{
-			return Response::json( array('errors' => array('Please upload a file.')), 406 ); // 406 bad request
-		}
-
-		if(! Input::file('uploaded-image')->isValid() )
-		{
-			return Response::json( array('errors' => array('Uploaded file is not valid.')), 406 ); // 406 bad request
-		}
-
-		$savepath = public_path() . '/uploads/images/' . Context::get()->name . '/';
-
-		if(!file_exists($savepath))
-		{
-			File::makeDirectory($savepath);
-		}
-
-	    $filename = $image->getClientOriginalName() . str_random(20); // @todo add in check to ensure file doesnt exist
-
-	    Input::file('uploaded-image')->move($savepath, $filename);
-
-	    $filepath = substr(Request::root(), 0, -4) . '/uploads/images/' . Context::get()->name . '/' . $filename;
-
-	    return Response::json( array('success' => array('File Uploaded.'), 'filepath' => $filepath), 200 ); // 200 Success
-	}
+    public function postUploadImage()
+    {
+        $url = $this->object_store_service->uploadEmailImage(Input::file('uploaded-image'));
+        
+        return Response::json(array('status' => 200, 'filepath' => $url));
+    }
 
     public function postDelete()
     {
-        $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
+        $campaign = Context::get()->campaigns()->findOrFail(Input::get('id'));
         $campaign->delete();
         return Response::json(array('status' => 'Campaign has been deleted'));
     }
 
     public function postRestore()
     {
-        $campaign = Context::get()->campaigns()->findOrFail( Input::get('id') );
+        $campaign = Context::get()->campaigns()->findOrFail(Input::get('id'));
         $campaign->restore();
         return Response::json(array('status' => 'Campaign has been restored'));
     }
@@ -81,23 +65,23 @@ class CrmCampaignController extends Controller {
         $analytics = CrmToken::where('campaign_id', '=', $campaign_id)->with('customer.crmSubscription')->get();
         $total_sent = sizeof($analytics);
         $total_seen = 0;
-        foreach ($analytics as $token)
-        {
-            if($token->opened > 0) $total_seen += 1;
+        foreach ($analytics as $token) {
+            if ($token->opened > 0) {
+                $total_seen += 1;
+            }
         }
         // WOULD GETTING THE CRM_SUBSCRIPTIONS FROM CAMPAIGN ID BE MORE EFFECIENT THAN LOOPING THROUGH EXISITING DATA ???????
         $unsubscriptions = 0;
-        foreach($analytics as $analytic)
-        {
-            if($analytic->customer->crm_subscription->subscribed == 0) $unsubscriptions ++;
+        foreach ($analytics as $analytic) {
+            if ($analytic->customer->crm_subscription->subscribed == 0) {
+                $unsubscriptions ++;
+            }
         }
 
         $campaign_links = CrmLink::with('analytics')->where('campaign_id', '=', $campaign_id)->get();
         $links_clicked = 0;
-        foreach($campaign_links as $link)
-        {
-            foreach($link->analytics as $analytic)
-            {
+        foreach ($campaign_links as $link) {
+            foreach ($link->analytics as $analytic) {
                 $links_clicked += $analytic->count;
             }
         }
@@ -105,42 +89,37 @@ class CrmCampaignController extends Controller {
         return Response::json(array('analytics' => $analytics, 'total_sent' => $total_sent, 'total_seen' => $total_seen, 'link_analytics' => $campaign_links, 'num_links_clicked' => $links_clicked, 'num_unsubscriptions' => $unsubscriptions), 200);
     }
 
-	public function postAdd()
-	{
-		$data = Input::only(
-			'subject',
-			'email_html',
+    public function postAdd()
+    {
+        $data = Input::only(
+            'subject',
+            'email_html',
             'name',
             'sendallcustomers',
             'is_campaign'
-		);
+        );
 
-		$data['sent_at'] = Helper::localTime();
+        $data['sent_at'] = Helper::localTime();
 
-		$group_ids = Input::only('groups')['groups'];
+        $group_ids = Input::only('groups')['groups'];
 
         // @todo create a validator controller so that we dont need to specify and check explicity every param sent (FOR ALL CONTROLLERS)
-        if(count($group_ids) < 1 && $data['sendallcustomers'] !== 1 && $data['is_campaign'] !== 0)
+        if (count($group_ids) < 1 && $data['sendallcustomers'] !== 1 && $data['is_campaign'] !== 0) {
             return Response::json(array('errors' => 'Please specify atleast one group to send the email too'), 406);
+        }
 
         $customers = [];
 
-        if((int) $data['sendallcustomers'] == 1)
-        {
+        if ((int) $data['sendallcustomers'] == 1) {
             $customers = Context::get()->customers()->get();
-        }
-        else if((int) $data['is_campaign'] == 0)
-        {
+        } elseif ((int) $data['is_campaign'] == 0) {
             $booked_cust_id = Input::get('customer_id');
             $booked_cust = Context::get()->customers()->findOrFail($booked_cust_id); // possibly use where in?
-            if(!$booked_cust)
-            {
-                return Response::json( array('errors' => 'Customer ID is not valid'), 406 );
+            if (!$booked_cust) {
+                return Response::json(array('errors' => 'Customer ID is not valid'), 406);
             }
             array_push($customers, $booked_cust);
-        }
-        else
-        {
+        } else {
             $tmpRules = [];
             $rules = [];
             $rules['certs'] = [];
@@ -153,27 +132,23 @@ class CrmCampaignController extends Controller {
                 $tmpRules = $group->rules;
                 foreach ($tmpRules as $rule) {
                     // Translate agency to certification ids
-                    if($rule->agency_id !== null) {
-                        $agency = Agency::with('certificates')->findOrFail( $rule->agency_id ); // Context::get()->agencies() etc gives eeror
+                    if ($rule->agency_id !== null) {
+                        $agency = Agency::with('certificates')->findOrFail($rule->agency_id); // Context::get()->agencies() etc gives eeror
                         $certs = $agency->certificates;
                         foreach ($certs as $cert) {
                             array_push($rules['certs'], $cert->id); // ->id
                         }
-                    }
-                    else if($rule->certificate_id !== null) {
+                    } elseif ($rule->certificate_id !== null) {
                         array_push($rules['certs'], $rule->certificate_id);
-                    }
-                    else if($rule->training_id !== null) {
+                    } elseif ($rule->training_id !== null) {
                         array_push($rules['classes'], $rule->training_id);
-                    }
-                    else if($rule->ticket_id !== null) {
+                    } elseif ($rule->ticket_id !== null) {
                         array_push($rules['tickets'], $rule->ticket_id);
                     }
                 }
             }
 
-            $certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules)
-            {
+            $certificates_customers = Context::get()->customers()->whereHas('certificates', function ($query) use ($rules) {
                 $query->whereIn('certificates.id', $rules['certs']);
             })
             ->with('crmSubscription')
@@ -181,8 +156,7 @@ class CrmCampaignController extends Controller {
 
             $customers = array_merge($customers, array($certificates_customers));
 
-            $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) 
-            {
+            $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function ($query) use ($rules) {
                 $query->where('status', 'confirmed'); // @todo changed confirmed to completed when soren pushes it
             })
             ->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) @todo add in training
@@ -195,22 +169,20 @@ class CrmCampaignController extends Controller {
             $customers = $customers[0]; // second index is empty array?
         }
 
-		$data['num_sent'] = sizeof($customers);
+        $data['num_sent'] = sizeof($customers);
         unset($data['customer_id']);
 
-		$campaign = new CrmCampaign($data);
+        $campaign = new CrmCampaign($data);
 
-		if( !$campaign->validate() )
-		{
-			return Response::json( array('errors' => $campaign->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+        if (!$campaign->validate()) {
+            return Response::json(array('errors' => $campaign->errors()->all()), 406); // 406 Not Acceptable
+        }
 
         //CrmMailer::save($campaign, (int) $data['sendallcustomers'], (int) $data['is_campaign']);
 
-		$campaign = Context::get()->campaigns()->save($campaign);
+        $campaign = Context::get()->campaigns()->save($campaign);
 
-        if((int) $data['sendallcustomers'] == 0 && (int) $data['is_campaign'] == 1)
-        {
+        if ((int) $data['sendallcustomers'] == 0 && (int) $data['is_campaign'] == 1) {
             $campaign->groups()->sync($group_ids);
         }
 
@@ -219,30 +191,25 @@ class CrmCampaignController extends Controller {
         $dom = new DOMDocument();
         $dom->loadHTML($data['email_html']);
         $tags = $dom->getElementsByTagName('a');
-        foreach ($tags as $tag) 
-        {
-            if($tag->getAttribute('href') != "{{unsubscribe_link}}")
-            {   
+        foreach ($tags as $tag) {
+            if ($tag->getAttribute('href') != "{{unsubscribe_link}}") {
                 $link_data = [];
                 $hrefs[$tag->getAttribute('href')] = 0;
                 $link_data['campaign_id'] = $campaign->id;
                 $link_data['link'] = $tag->getAttribute('href');
                 $link = new CrmLink($link_data);
-                if( !$link->validate() )
-                {
-                    return Response::json( array('errors' => $link->errors()->all()), 406 ); // 406 Not Acceptable
+                if (!$link->validate()) {
+                    return Response::json(array('errors' => $link->errors()->all()), 406); // 406 Not Acceptable
                 }
                 $link->save();
                 $hrefs[$tag->getAttribute('href')] = $link->id;
             }
         }
 
-		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
-		foreach($customers as $customer)
-		{
+        // LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
+        foreach ($customers as $customer) {
             // If the customer has unsubscribed skip them and go to the next customer
-            if($customer->crmSubscription->subscribed === 0)
-            {
+            if ($customer->crmSubscription->subscribed === 0) {
                 var_dump('test');
                 continue;
             }
@@ -251,24 +218,21 @@ class CrmCampaignController extends Controller {
             $new_token_data['token'] = str_random(50);
             $new_token_data['customer_id'] = $customer->id;
             $new_token = new CrmToken($new_token_data);
-            if( !$new_token->validate() )
-			{
-				return Response::json( array('errors' => $new_token->errors()->all()), 406 ); // 406 Not Acceptable
-			}
+            if (!$new_token->validate()) {
+                return Response::json(array('errors' => $new_token->errors()->all()), 406); // 406 Not Acceptable
+            }
             $new_token->save();
 
             // Create customer subscriptions
             $customer_subscription = CrmSubscription::where('customer_id', '=', $customer->id)->first();
-            if(is_null($customer_subscription))
-            {
+            if (is_null($customer_subscription)) {
                 $subscription_data = [];
                 $subscription_data['customer_id'] = $customer->id;
                 $subscription_data['token'] = str_random(50);
 
                 $customer_subscription = new CrmSubscription($subscription_data);
-                if( !$customer_subscription->validate() )
-                {
-                    return Response::json( array('errors' => $customer_subscription->errors()->all()), 406 ); // 406 Not Acceptable
+                if (!$customer_subscription->validate()) {
+                    return Response::json(array('errors' => $customer_subscription->errors()->all()), 406); // 406 Not Acceptable
                 }
                 $customer_subscription->save();
             }
@@ -277,8 +241,8 @@ class CrmCampaignController extends Controller {
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;
             $email_html = str_replace('/img/scubawhere_logo.png', $token_api, $data['email_html']);
 
-			$cust_name = $customer->firstname . ' ' . $customer->lastname;
-			$email_html = str_replace('{{name}}', $cust_name, $email_html);
+            $cust_name = $customer->firstname . ' ' . $customer->lastname;
+            $email_html = str_replace('{{name}}', $cust_name, $email_html);
             $email_html = str_replace('{{last_dive}}', $customer->last_dive, $email_html);
             $email_html = str_replace('{{number_of_dives}}', $customer->number_of_dives, $email_html);
             $email_html = str_replace('{{birthday}}', $customer->birthday, $email_html);
@@ -288,109 +252,105 @@ class CrmCampaignController extends Controller {
 
             $link_tracker_data = [];
             // add link and link tracker
-            foreach($hrefs as $link => $link_id)
-            {
+            foreach ($hrefs as $link => $link_id) {
                 $link_tracker_data['customer_id'] = $customer->id;
                 $link_tracker_data['link_id'] = $link_id;
                 $link_tracker_data['token'] = str_random(50);
                 $link_tracker = new CrmLinkTracker($link_tracker_data);
-                if( !$link_tracker->validate() )
-                {
-                    return Response::json( array('errors' => $link_tracker->errors()->all()), 406 ); // 406 Not Acceptable
+                if (!$link_tracker->validate()) {
+                    return Response::json(array('errors' => $link_tracker->errors()->all()), 406); // 406 Not Acceptable
                 }
                 $link_tracker->save();
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
-
             }
 
             //CrmMailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
             CrmMailer::send($campaign, $customer);
             
-			/*Mail::send([], [], function($message) use ($data, $customer, $email_html) {
-				$message->to($customer->email)
-				->subject($data['subject'])
-				->from(Context::get()->business_email)
-				->setBody($email_html, 'text/html');
-			});*/
-		}
+            /*Mail::send([], [], function($message) use ($data, $customer, $email_html) {
+                $message->to($customer->email)
+                ->subject($data['subject'])
+                ->from(Context::get()->business_email)
+                ->setBody($email_html, 'text/html');
+            });*/
+        }
 
-		return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201 ); // 201 Created
-
-	}
+        return Response::json(array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201); // 201 Created
+    }
 
     /*
     public function postAdd()
-	{
-		$data = Input::only(
-			'subject',
-			'email_html',
+    {
+        $data = Input::only(
+            'subject',
+            'email_html',
             'name'
-		);
+        );
 
-		$data['sent_at'] = Helper::localTime();
+        $data['sent_at'] = Helper::localTime();
 
-		$group_ids = Input::only('groups')['groups'];
+        $group_ids = Input::only('groups')['groups'];
 
-		$customers = [];
+        $customers = [];
 
-		$tmpRules = [];
-		$rules = [];
-		$rules['certs'] = [];
-		$rules['classes'] = [];
-		$rules['tickets'] = [];
+        $tmpRules = [];
+        $rules = [];
+        $rules['certs'] = [];
+        $rules['classes'] = [];
+        $rules['tickets'] = [];
 
-		// FORMAT RULES INTO IDS TO FILTER THROUGH
-		foreach ($group_ids as $group_id) {
-			$group = Context::get()->crmGroups()->where('id', '=', $group_id)->with('rules')->first();
-			$tmpRules = $group->rules;
-			foreach ($tmpRules as $rule) {
-				// Translate agency to certification ids
-				if($rule->agency_id !== null) {
-					$agency = Agency::with('certificates')->findOrFail( $rule->agency_id ); // Context::get()->agencies() etc gives eeror
-					$certs = $agency->certificates;
-					foreach ($certs as $cert) {
-						array_push($rules['certs'], $cert->id); // ->id
-					}
-				}
-				else if($rule->certificate_id !== null) {
-					array_push($rules['certs'], $rule->certificate_id);
-				}
-				else if($rule->training_id !== null) {
-					array_push($rules['classes'], $rule->training_id);
-				}
-				else if($rule->ticket_id !== null) {
-					array_push($rules['tickets'], $rule->ticket_id);
-				}
-			}
-		}
+        // FORMAT RULES INTO IDS TO FILTER THROUGH
+        foreach ($group_ids as $group_id) {
+            $group = Context::get()->crmGroups()->where('id', '=', $group_id)->with('rules')->first();
+            $tmpRules = $group->rules;
+            foreach ($tmpRules as $rule) {
+                // Translate agency to certification ids
+                if($rule->agency_id !== null) {
+                    $agency = Agency::with('certificates')->findOrFail( $rule->agency_id ); // Context::get()->agencies() etc gives eeror
+                    $certs = $agency->certificates;
+                    foreach ($certs as $cert) {
+                        array_push($rules['certs'], $cert->id); // ->id
+                    }
+                }
+                else if($rule->certificate_id !== null) {
+                    array_push($rules['certs'], $rule->certificate_id);
+                }
+                else if($rule->training_id !== null) {
+                    array_push($rules['classes'], $rule->training_id);
+                }
+                else if($rule->ticket_id !== null) {
+                    array_push($rules['tickets'], $rule->ticket_id);
+                }
+            }
+        }
 
-		$certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
-			$query->whereIn('certificates.id', $rules['certs']);
-		})->get();//->lists('email', 'firstname', 'lastname', 'id');
+        $certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
+            $query->whereIn('certificates.id', $rules['certs']);
+        })->get();//->lists('email', 'firstname', 'lastname', 'id');
 
-		$customers = array_merge($customers, array($certificates_customers));
+        $customers = array_merge($customers, array($certificates_customers));
 
-		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
-			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
-		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
-		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->get();//->lists('email', 'firstname', 'lastname', 'id');
+        $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
+            $query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
+        })->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
+        ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->get();//->lists('email', 'firstname', 'lastname', 'id');
 
-		$customers = array_merge($customers, array($booked_customers));
-		$customers = array_unique($customers);
+        $customers = array_merge($customers, array($booked_customers));
+        $customers = array_unique($customers);
         $customers = $customers[0]; // second index is empty array?
 
-		$data['num_sent'] = sizeof($customers);
+        $data['num_sent'] = sizeof($customers);
 
-		$campaign = new CrmCampaign($data);
+        $campaign = new CrmCampaign($data);
 
-		if( !$campaign->validate() )
-		{
-			return Response::json( array('errors' => $campaign->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+        if( !$campaign->validate() )
+        {
+            return Response::json( array('errors' => $campaign->errors()->all()), 406 ); // 406 Not Acceptable
+        }
 
-		$campaign = Context::get()->campaigns()->save($campaign);
+        $campaign = Context::get()->campaigns()->save($campaign);
 
-		$campaign->groups()->sync($group_ids);
+        $campaign->groups()->sync($group_ids);
 
         // find all instances of a link and create them
         $hrefs = array();
@@ -411,19 +371,19 @@ class CrmCampaignController extends Controller {
             $hrefs[$tag->getAttribute('href')] = $link->id;
         }
 
-		// LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
+        // LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
 
-		foreach($customers as $customer)
-		{
+        foreach($customers as $customer)
+        {
             $new_token_data = [];
             $new_token_data['campaign_id'] = $campaign->id;
             $new_token_data['token'] = str_random(50);
             $new_token_data['customer_id'] = $customer->id;
             $new_token = new CrmToken($new_token_data);
             if( !$new_token->validate() )
-			{
-				return Response::json( array('errors' => $new_token->errors()->all()), 406 ); // 406 Not Acceptable
-			}
+            {
+                return Response::json( array('errors' => $new_token->errors()->all()), 406 ); // 406 Not Acceptable
+            }
             $new_token->save();
 
             // Create customer subscription
@@ -442,8 +402,8 @@ class CrmCampaignController extends Controller {
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;
             $email_html = str_replace('/img/scubawhere_logo.png', $token_api, $data['email_html']);
 
-			$cust_name = $customer->firstname . ' ' . $customer->lastname;
-			$email_html = str_replace('{{name}}', $cust_name, $email_html);
+            $cust_name = $customer->firstname . ' ' . $customer->lastname;
+            $email_html = str_replace('{{name}}', $cust_name, $email_html);
             $email_html = str_replace('{{last_dive}}', $customer->last_dive, $email_html);
             $email_html = str_replace('{{number_of_dives}}', $customer->number_of_dives, $email_html);
             $email_html = str_replace('{{birthday}}', $customer->birthday, $email_html);
@@ -464,17 +424,16 @@ class CrmCampaignController extends Controller {
                 $email_html = str_replace($link, Request::root() . '/crm_tracking/link?customer_id=' . $customer->id . '&link_id=' . $link_id . '&token=' . $link_tracker->token, $email_html);
             }
 
-			Mail::send([], [], function($message) use ($data, $customer, $email_html) {
-				$message->to($customer->email)
-				->subject($data['subject'])
-				->from(Context::get()->business_email)
-				->setBody($email_html, 'text/html');
-			});
-		}
+            Mail::send([], [], function($message) use ($data, $customer, $email_html) {
+                $message->to($customer->email)
+                ->subject($data['subject'])
+                ->from(Context::get()->business_email)
+                ->setBody($email_html, 'text/html');
+            });
+        }
 
-		return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201 ); // 201 Created
+        return Response::json( array('status' => '<b>OK</b> Campaign created and emails sent', 'id' => $campaign->id, 'emails' => $customers), 201 ); // 201 Created
 
-	}
+    }
     */
-
 }

@@ -1,9 +1,15 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\CrmMailer;
+use ScubaWhere\Repositories\ObjectStore;
 
 class RegisterController extends Controller {
 
+	public function __construct(ObjectStoreService $obj_store_service)
+	{
+		$this->object_store_service = $obj_store_service;
+	}
+	
 	public function postCompany()
 	{
 		$data = Input::only(
@@ -136,24 +142,9 @@ class RegisterController extends Controller {
 	 */
 	public function postUploadTerms()
 	{
-		// @todo add a check to ensure it is pdf
-		//$data = Input::all();
-		//dd($data);
-		if(Input::hasFile('terms_file'))
-		{
-			if (Input::file('terms_file')->isValid())
-			{
-				Input::file('terms_file')->move(storage_path() . '/scubawhere/' . Input::get('company_name') . '/', 'terms.pdf');
-			}
-			else
-			{
-				return Response::json(array('errors' => 'Error : Please upload a valid pdf'), 406);
-			}
-		}
-		else
-		{
-			return Response::json(array('errors' => 'Error : Please upload a pdf to save as your terms and conditions'), 406);
-		}
+		$this->object_store_service->uploadTerms(Input::file('terms_file'));
+
+		return Response::json(array('status' => 'Your terms have been uploaded'), 200);
 	}
 
 	public function getExists()
