@@ -15,7 +15,6 @@ error_log
 composer.phar
 app/tests/reports
 phpunit-soren.xml
-vendor/composer/
 tags
 cs_fixer*
 .jira-url
