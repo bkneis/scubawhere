@@ -680,7 +680,7 @@ class BookingController extends Controller
         // Validate that the customer is not already booked for this session or training_session on another booking
         if ($departure || $training_session) {
             $check = Context::get()->bookings()
-                ->whereNotIn('id', array($booking->id))
+                //->whereNotIn('id', array($booking->id))
                 ->whereIn('status', Booking::$counted)
                 ->whereHas('bookingdetails', function ($query) use ($customer, $departure, $training_session) {
                     $query
