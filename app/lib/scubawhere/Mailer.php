@@ -91,7 +91,7 @@ class CrmMailer implements CrmMailerInterface
 		\Request::replace(["id" => $payment_id]);
 
 		$app = app();
-		$controller = $app->make('BookingController');
+		$controller = $app->make('PaymentController');
 		$payment    = $controller->callAction('getIndex', []);
 		$booking = $payment->booking();
 
