@@ -309,6 +309,8 @@ Handlebars.registerPartial('pick-up-list', pickUpListPartial);
  * Load all data in order of requirement
  */
 
+window.selectedAccommodations = [];
+
 window.promises.loadedAgents = $.Deferred();
 Agent.getAllAgents(function(data){
 	window.agents = _.indexBy(data, 'id');
@@ -1901,8 +1903,8 @@ window.promises.loadedAccommodations.done(function() {
 
 var accommodationCustomersTemplate = Handlebars.compile($("#accommodation-customers-template").html());
 var packagedAccommodationsListTemplate = Handlebars.compile($("#packaged-accommodations-list-template").html());
-
 var accommodationSelectionModalTemplate = Handlebars.compile($("#accommodation-selection-template").html());
+
 
 $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 	$("#accommodation-customers").html(accommodationCustomersTemplate({customers:booking.selectedCustomers}));
@@ -1926,16 +1928,11 @@ $('[data-target="#accommodation-tab"]').on('show.bs.tab', function () {
 });
 
 
-
-
-
-
 $('#accommodation-tab').on('click', '.select-accommodation-dates', function(event) {
 	var accommodation = window.accommodations[ $(this).attr('data-id') ];
 
 	showModalAccommodationSelection(accommodation);
 });
-
 
 
 function showModalAccommodationSelection(accommodation) {
@@ -1990,7 +1987,12 @@ function showModalAccommodationSelection(accommodation) {
 							var start = new moment(key);
 
 							_.each(value, function(utilisation, id) {
+                                for(var i = 0; i < booking.accommodations; i++) {
+                                    if(id === booking.accommodations.id)
+                                        return;
+                                }
 								var eventObject = {
+                                    id: id,
 									start: start,
 									end : start,
 									title: '<strong>' + (utilisation[1] - utilisation[0]) + '</strong> available',
@@ -2037,11 +2039,25 @@ function showModalAccommodationSelection(accommodation) {
 								title: detail.customer.firstname + ' | ' + title,
 								color : color,
 								textColor: textColor,
-								type: type,
+								type: type
 							};
 
 							events.push( eventObject );
 						});
+
+                        // Loop through existing accommodations booked and display for refrence
+                        _.each(booking.accommodations, function(obj) {
+                            var eventObject = {
+                                start: moment(obj.start),
+                                end: moment(obj.end),
+                                title: 'Already booked',
+                                color: 'grey',
+                                textColor: 'black',
+                                type: 'accommodation',
+                                readonly: true
+                            };    
+                            events.push(eventObject);
+                        });
 
 						callback(events);
 						$('#fetch-events-loader').remove();
@@ -2074,22 +2090,21 @@ function showModalAccommodationSelection(accommodation) {
 				dayClick: function(date) {
 
 				},
+                eventClick: function(eventObject) {
+                    if(eventObject.readonly != undefined)
+                        return false;
+                    $(this).css('background-color', 'purple');
+                    window.selectedAccommodations.push(eventObject);
+                }
 			});
 		},
 		onFinishModal: function() {
+            addAccommodationToBooking(window.selectedAccommodations);
+            window.selectedAccommodations = [];
 			$('#modal-accommodation-selection').remove();
 		},
 	});
 }
-
-
-
-
-
-
-
-
-
 
 
 $('#accommodation-tab').on('change', '#packaged-accommodations-list .accommodation-start', function() {
@@ -2163,6 +2178,62 @@ function updatePackagedAccommodationsList() {
 			});
 		}
 	}
+}
+
+function addAccommodationToBooking(eventObjects) {
+
+    // Get a sorted list of accommodation events by start date
+    var booked_nights = _.sortBy(eventObjects, function(obj) { return obj.start; });
+
+    // Initialise the number of hours to jump everytime their is an accommodation event that preceeds the next
+    // i.e. event on the 18th, 19th and 20th should show as 1 event of 18th - 20th and not 3 seperate
+    var jump = 24;
+
+    for(var i = 0; i < (booked_nights.length - 1); i++) {
+
+        // Check if next accommodation event is next day, if so, extend the original booking across both and delete the later one
+        if(moment(booked_nights[i].start).format() === moment(booked_nights[i + 1].start.subtract(24, 'hours')).format()) {
+            console.log('there the same :)');
+            booked_nights[i].end = moment(booked_nights[i].start).add(jump, 'hours').format(); // make the first event last the length of both bookings (combine them)
+            booked_nights.splice(i + 1, 1); // remove later event from the array as it is now combined with the event preceeding it
+            jump += 24; // Increment jump as next comparison will be one day later
+            i--; // Keep index on current event until we know the next one is not the day after
+        }
+        else {
+            booked_nights[i + 1].start.add(24, 'hours'); // Add day to start as moment js
+            jump = 24; // reset num of days to jump
+        }
+    }
+    
+    // Loop through each event and submit it to add it to the booking, in addition to adding it to the summary and basket
+    _.each(booked_nights, function(obj) {
+        
+        var params = {};
+        params._token           = window.token;
+        params.accommodation_id = obj.id;
+        params.customer_id      = $('#accommodation-customers').children('.active').first().data('id');
+        params.start            = obj.start.format(); 
+        if(obj.end != null)
+            params.end          = moment(obj.end).add(24, 'hours').format();
+        else
+            params.end          = moment(obj.start).add(24, 'hours').format();
+
+        console.log('params', params);
+
+        booking.addAccommodation(params, function success(status, packagefacade_id) {
+
+            booking.store();
+
+            pageMssg(status, 'success');
+
+            drawBasket();
+
+        }, function error(xhr) {
+            var data = JSON.parse(xhr.responseText);
+            if(data.errors) pageMssg(data.errors[0], 'danger');
+        });
+
+    });
 }
 
 $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
