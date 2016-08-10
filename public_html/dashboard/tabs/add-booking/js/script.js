@@ -1978,6 +1978,8 @@ function showModalAccommodationSelection(accommodation) {
 
 					sessionFilters.accommodation_id = accommodation_id;
 
+                    var selected_customer_id = parseInt($("#accommodation-customers").children().first().attr('data-id'));
+
 					Accommodation.filter(sessionFilters, function success(data) {
 
 						console.log(data);
@@ -1987,6 +1989,12 @@ function showModalAccommodationSelection(accommodation) {
 							var start = new moment(key);
 
 							_.each(value, function(utilisation, id) {
+                                for(var i in booking.accommodations) {
+                                    if(booking.accommodations[i].customer.id === selected_customer_id) {
+                                        if(moment(booking.accommodations[i].pivot.start).isSame(start))
+                                            return;
+                                    }
+                                }
                                 for(var i = 0; i < booking.accommodations; i++) {
                                     if(id === booking.accommodations.id)
                                         return;
@@ -2048,8 +2056,8 @@ function showModalAccommodationSelection(accommodation) {
                         // Loop through existing accommodations booked and display for refrence
                         _.each(booking.accommodations, function(obj) {
                             var eventObject = {
-                                start: moment(obj.start),
-                                end: moment(obj.end),
+                                start: moment(obj.pivot.start),
+                                end: moment(obj.pivot.end),
                                 title: 'Already booked',
                                 color: 'grey',
                                 textColor: 'black',
