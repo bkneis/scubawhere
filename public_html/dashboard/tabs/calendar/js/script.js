@@ -435,6 +435,9 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'reference'
+                }, {
+                    data: null,
+                    render: 'notes'
                 }],
                 "dom": 'T<"clear">lfrtip',
                 "tableTools": {
@@ -506,6 +509,9 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'reference'
+                }, {
+                    data: null,
+                    render: 'notes'
                 }],
                 "dom": 'T<"clear">lfrtip',
                 "tableTools": {
@@ -936,6 +942,7 @@ function customerData(customer) {
     this._lastDive = customer.last_dive || "-";
     this._reference = customer.pivot.reference;
     this._booking_id = customer.pivot.booking_id;
+    this._notes = customer.pivot.
 
     this.name = function() {
         return this._name;

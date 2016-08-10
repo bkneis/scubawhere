@@ -1982,7 +1982,6 @@ function showModalAccommodationSelection(accommodation) {
 
 					Accommodation.filter(sessionFilters, function success(data) {
 
-						console.log(data);
 						var events = [];
 
 						_.each(data, function(value, key) {
@@ -1991,7 +1990,7 @@ function showModalAccommodationSelection(accommodation) {
 							_.each(value, function(utilisation, id) {
                                 for(var i in booking.accommodations) {
                                     if(booking.accommodations[i].customer.id === selected_customer_id) {
-                                        if(moment(booking.accommodations[i].pivot.start).isSame(start))
+                                        if(moment(booking.accommodations[i].pivot.end).isAfter(start) && moment(booking.accommodations[i].pivot.start).isSameOrBefore(start))
                                             return;
                                     }
                                 }
@@ -2197,11 +2196,79 @@ function addAccommodationToBooking(eventObjects) {
     // i.e. event on the 18th, 19th and 20th should show as 1 event of 18th - 20th and not 3 seperate
     var jump = 24;
 
+    var existing_nights = _.sortBy(booking.accommodations, function(obj) { return obj.start });
+
+    var extended_nights = [];
+    var extended;
+    
+    for(var k = 0; k < existing_nights.length; k++) {
+        extended = false;
+        for(var j = 0; j < booked_nights.length; j++) {
+            if(moment(existing_nights[k].pivot.end).format() === moment(booked_nights[j].start).format()) {
+                moment(existing_nights[k].pivot.end).add(24, 'hours');
+                booked_nights.splice(j, 1);
+                extended_nights.push(existing_nights[k]);
+            }
+            else if(moment(existing_nights[k].pivot.start).format() === moment(booked_nights[j].start).add(24, 'hours').format()) { 
+               if(typeof existing_nights[k].pivot.old_start === 'undefined') 
+                   existing_nights[k].pivot.old_start = moment(existing_nights[k].pivot.start).format(); 
+               existing_nights[k].pivot.start = moment(existing_nights[k].pivot.start).subtract(24, 'hours').format();
+               booked_nights.splice(j, 1);
+               extended_nights.push(existing_nights[k]);
+            }
+        }
+    }
+
+    _.each(extended_nights, function(obj) {
+        
+        var prev_start;
+        if(typeof obj.pivot.old_start === 'undefined')
+            prev_start = moment(obj.pivot.start).format();
+        else
+            prev_start = obj.pivot.old_start;
+
+        console.log('previous start', prev_start);
+        console.log('new start', moment(obj.pivot.start).format());
+        var params = {
+            _token: window.token,
+            booking_id: booking.id,
+            accommodation_id: obj.id,
+            customer_id: obj.customer.id,
+            start: prev_start
+            //start: moment(obj.pivot.start).format()
+        };
+
+        booking.removeAccommodation(params, function success(data) {
+            var params = {
+                _token :            window.token,
+                accommodation_id :  obj.id,
+                customer_id :       obj.customer.id,
+                start :             moment(obj.pivot.start).format(),
+                end :               moment(obj.pivot.end).add(24, 'hours').format()
+            };
+            // maybe use a proimise here, i feel this is readable though
+            booking.addAccommodation(params, function success(data) {
+    
+                booking.store();
+
+                pageMssg(data, 'success');
+
+                drawBasket();
+            },
+            function error(xhr) {
+                console.log(xhr);
+            });
+        },
+        function error(xhr) {
+            console.log(xhr);
+        });
+
+    });
+
     for(var i = 0; i < (booked_nights.length - 1); i++) {
 
         // Check if next accommodation event is next day, if so, extend the original booking across both and delete the later one
         if(moment(booked_nights[i].start).format() === moment(booked_nights[i + 1].start.subtract(24, 'hours')).format()) {
-            console.log('there the same :)');
             booked_nights[i].end = moment(booked_nights[i].start).add(jump, 'hours').format(); // make the first event last the length of both bookings (combine them)
             booked_nights.splice(i + 1, 1); // remove later event from the array as it is now combined with the event preceeding it
             jump += 24; // Increment jump as next comparison will be one day later
@@ -2225,8 +2292,6 @@ function addAccommodationToBooking(eventObjects) {
             params.end          = moment(obj.end).add(24, 'hours').format();
         else
             params.end          = moment(obj.start).add(24, 'hours').format();
-
-        console.log('params', params);
 
         booking.addAccommodation(params, function success(status, packagefacade_id) {
 

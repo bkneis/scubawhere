@@ -206,6 +206,7 @@
          				<th style="color:#313131">Last Dive</th>
          				<th style="color:#313131">Purchase</th>
          				<th style="color:#313131"><span style="display: none;">Booking</span></th>
+         				<th style="color:#313131">Notes</th>
          			</tr>
          	</thead>
          	<tbody id="customers-table">
@@ -229,6 +230,7 @@
          				<th style="color:#313131">Last Dive</th>
          				<th style="color:#313131">Purchase</th>
          				<th style="color:#313131"><span style="display: none;">Booking</span></th>
+         				<th style="color:#313131">Notes</th>
          			</tr>
          	</thead>
          	<tbody id="customers-table">
