@@ -52,6 +52,8 @@ class TrainingSessionController extends Controller
             // Also add the booking reference to display it in the manifest (the booking_id for linking is already in the pivot object)
             $customer->pivot->reference = $detail->booking->reference;
 
+            $customer->pivot->notes = $detail->booking->comment;
+
             // Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
             unset($customer->pivot->customer);
             unset($customer->pivot->booking);

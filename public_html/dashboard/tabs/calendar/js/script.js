@@ -942,7 +942,7 @@ function customerData(customer) {
     this._lastDive = customer.last_dive || "-";
     this._reference = customer.pivot.reference;
     this._booking_id = customer.pivot.booking_id;
-    this._notes = customer.pivot.
+    this._notes = customer.pivot.notes;
 
     this.name = function() {
         return this._name;
@@ -982,6 +982,10 @@ function customerData(customer) {
 
     this.reference = function() {
         return '<a href="javascript:void(0);" onclick="editBooking(' + this._booking_id + ', this);">' + this._reference + '</a>';
+    };
+
+    this.notes = function() {
+        return this._notes;
     };
 }
 
