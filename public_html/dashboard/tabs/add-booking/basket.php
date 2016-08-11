@@ -253,12 +253,12 @@
 						<div class="panel panel-default">
 							<div class="panel-heading" role="tab">
 								<h4 class="panel-title">
-									<a class="accordion-heading" data-toggle="collapse" data-parent="#booking-summary-accommodation" href="#booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}">
+									<a class="accordion-heading" data-toggle="collapse" data-parent="#booking-summary-accommodation" href="#booking-summary-accommodation-{{id}}-{{customer.id}}-{{trimDate pivot.start}}">
 										<i class="fa fa-bed fa-fw visible-lg-inline-block"></i>&nbsp; {{{firstChar customer.firstname}}}. {{{customer.lastname}}} | {{{name}}} <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 									</a>
 								</h4>
 							</div>
-							<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{pivot.start}}" class="panel-collapse collapse" role="tabpanel">
+							<div id="booking-summary-accommodation-{{id}}-{{customer.id}}-{{trimDate pivot.start}}" class="panel-collapse collapse" role="tabpanel">
 								<div class="panel-body">
 									{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-accommodation pull-right" title="Remove Accommodation" data-id="{{id}}" data-customer-id="{{pivot.customer_id}}" data-start="{{pivot.start}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 

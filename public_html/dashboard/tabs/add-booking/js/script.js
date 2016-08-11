@@ -14,6 +14,11 @@ Handlebars.registerHelper("freeSpaces", function(capacity) {
 	return generateFreeSpacesBar(capacity, this.id);
 });
 
+Handlebars.registerHelper("trimDate", function(date) {
+    return date.substring(0, date.length - 14);
+});
+
+
 /**
  * Generate the free spaces percentage bar
  * @param  {array} capacity  Array of the following form: [used-up places, total places]
@@ -487,6 +492,7 @@ function handlePrevNextButtons() {
 	if(booking.currentTab === '#summary-tab')
 		$('.btn-next').prop('disabled', true);
 }
+
 
 /*
 *************************
