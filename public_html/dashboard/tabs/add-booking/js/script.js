@@ -2106,7 +2106,7 @@ function showModalAccommodationSelection(accommodation) {
 			});
 		},
 		onFinishModal: function() {
-            addAccommodationToBooking(window.selectedAccommodations);
+            addAccommodationToBooking(window.selectedAccommodations, this.accommodation.id);
             window.selectedAccommodations = [];
 			$('#modal-accommodation-selection').remove();
 		},
@@ -2187,127 +2187,281 @@ function updatePackagedAccommodationsList() {
 	}
 }
 
-function addAccommodationToBooking(eventObjects) {
 
-    // Get a sorted list of accommodation events by start date
-    var booked_nights = _.sortBy(eventObjects, function(obj) { return obj.start; });
+function addAccommodationToBooking(eventObjects, accommodation_id)
+{
+    if(eventObjects.length < 1) return;
 
-    // Initialise the number of hours to jump everytime their is an accommodation event that preceeds the next
-    // i.e. event on the 18th, 19th and 20th should show as 1 event of 18th - 20th and not 3 seperate
-    var jump = 24;
-
-    var existing_nights = _.sortBy(booking.accommodations, function(obj) { return obj.start });
-
-    var extended_nights = [];
-    var extended;
-    
-    for(var k = 0; k < existing_nights.length; k++) {
-        extended = false;
-        for(var j = 0; j < booked_nights.length; j++) {
-            if(moment(existing_nights[k].pivot.end).format() === moment(booked_nights[j].start).format()) {
-                moment(existing_nights[k].pivot.end).add(24, 'hours');
-                booked_nights.splice(j, 1);
-                extended_nights.push(existing_nights[k]);
-            }
-            else if(moment(existing_nights[k].pivot.start).format() === moment(booked_nights[j].start).add(24, 'hours').format()) { 
-               if(typeof existing_nights[k].pivot.old_start === 'undefined') 
-                   existing_nights[k].pivot.old_start = moment(existing_nights[k].pivot.start).format(); 
-               existing_nights[k].pivot.start = moment(existing_nights[k].pivot.start).subtract(24, 'hours').format();
-               booked_nights.splice(j, 1);
-               extended_nights.push(existing_nights[k]);
-            }
-        }
-    }
-
-    _.each(extended_nights, function(obj) {
-        
-        var prev_start;
-        if(typeof obj.pivot.old_start === 'undefined')
-            prev_start = moment(obj.pivot.start).format();
-        else
-            prev_start = obj.pivot.old_start;
-
-        console.log('previous start', prev_start);
-        console.log('new start', moment(obj.pivot.start).format());
-        var params = {
-            _token: window.token,
-            booking_id: booking.id,
-            accommodation_id: obj.id,
-            customer_id: obj.customer.id,
-            start: prev_start
-            //start: moment(obj.pivot.start).format()
+    var new_nights = _.map(eventObjects, function(obj) {
+        if(obj.end === null) obj.end = moment(obj.start).add(24, 'hours').format();
+        return {
+            start : moment(obj.start).format(),
+            end   : moment(obj.end).format()
         };
-
-        booking.removeAccommodation(params, function success(data) {
-            var params = {
-                _token :            window.token,
-                accommodation_id :  obj.id,
-                customer_id :       obj.customer.id,
-                start :             moment(obj.pivot.start).format(),
-                end :               moment(obj.pivot.end).add(24, 'hours').format()
-            };
-            // maybe use a proimise here, i feel this is readable though
-            booking.addAccommodation(params, function success(data) {
-    
-                booking.store();
-
-                pageMssg(data, 'success');
-
-                drawBasket();
-            },
-            function error(xhr) {
-                console.log(xhr);
-            });
-        },
-        function error(xhr) {
-            console.log(xhr);
-        });
-
     });
 
-    for(var i = 0; i < (booked_nights.length - 1); i++) {
+    var existing_nights;
+    var customer_id = $('#accommodation-customers').children('.active').first().data('id'); 
+    var all_nights;
+    var params;
 
-        // Check if next accommodation event is next day, if so, extend the original booking across both and delete the later one
-        if(moment(booked_nights[i].start).format() === moment(booked_nights[i + 1].start.subtract(24, 'hours')).format()) {
-            booked_nights[i].end = moment(booked_nights[i].start).add(jump, 'hours').format(); // make the first event last the length of both bookings (combine them)
-            booked_nights.splice(i + 1, 1); // remove later event from the array as it is now combined with the event preceeding it
-            jump += 24; // Increment jump as next comparison will be one day later
-            i--; // Keep index on current event until we know the next one is not the day after
-        }
-        else {
-            booked_nights[i + 1].start.add(24, 'hours'); // Add day to start as moment js
-            jump = 24; // reset num of days to jump
-        }
-    }
-    
-    // Loop through each event and submit it to add it to the booking, in addition to adding it to the summary and basket
-    _.each(booked_nights, function(obj) {
+    existing_nights = _.map(booking.accommodations, function(obj) {
+        return {
+            start   : moment(obj.pivot.start).format(),
+            end     : moment(obj.pivot.end).format(),
+            promise : $.Deferred() 
+        };
+    });
+
+    _.each(existing_nights, function(obj) {
+        var params = {
+            _token            : window.token,
+            booking_id        : booking.id,
+            accommodation_id  : accommodation_id,
+            customer_id       : customer_id
+        };
+        params.start = obj.start;
+        booking.removeAccommodation(params, function success(data) {
+           obj.promise.resolve(); 
+        },
+        function error(xhr) {
+            console.log(xhr.responseText);
+        });
+    });
+
+    var remove_promises = _.map(existing_nights, function(obj) { return obj.promise; });
+
+    $.when.apply($, remove_promises).done(function() {
         
-        var params = {};
-        params._token           = window.token;
-        params.accommodation_id = obj.id;
-        params.customer_id      = $('#accommodation-customers').children('.active').first().data('id');
-        params.start            = obj.start.format(); 
-        if(obj.end != null)
-            params.end          = moment(obj.end).add(24, 'hours').format();
-        else
-            params.end          = moment(obj.start).add(24, 'hours').format();
+        all_nights = existing_nights.concat(new_nights);
 
-        booking.addAccommodation(params, function success(status, packagefacade_id) {
+        all_nights = _.sortBy(all_nights, function(obj) { return obj.start; });
 
-            booking.store();
+        console.log('all nights', all_nights);
+        
+        for(var i = 0; i < (all_nights.length - 1); i++)
+        {
+            if(all_nights[i].start === all_nights[i + 1].end)
+            {
+                all_nights[i].start = all_nights[i + 1].start;
+                all_nights.splice(i + 1, 1);
+                i--;
+            }
+            else if(all_nights[i].end === all_nights[i + 1].start)
+            {
+                all_nights[i].end = all_nights[i + 1].end;
+                all_nights.splice(i + 1, 1);
+                i--;
+            }
+        }
 
-            pageMssg(status, 'success');
+        console.log('after all nights', all_nights);
 
-            drawBasket();
 
-        }, function error(xhr) {
-            var data = JSON.parse(xhr.responseText);
-            if(data.errors) pageMssg(data.errors[0], 'danger');
+        _.each(all_nights, function(obj) {
+            var params = {
+                _token           : window.token,
+                booking_id       : booking.id,
+                accommodation_id : accommodation_id,
+                customer_id      : customer_id
+            };
+            params.start = obj.start;
+            params.end = obj.end;
+            console.log('params before', params);
+            
+            booking.addAccommodation(params, function success(status, packagefacade_id) {
+                booking.store();
+                pageMssg(status, 'success');
+                drawBasket();
+            }, function error(xhr) {
+                var data = JSON.parse(xhr.responseText);
+                if(data.errors) pageMssg(data.errors[0], 'danger');
+            });
+
         });
 
     });
 }
+
+/*function addAccommodationToBooking_old(eventObjects, accommodation_id) {
+
+    // Get a sorted list of accommodation events by start date
+    var booked_nights = _.sortBy(eventObjects, function(obj) { return obj.start; });
+
+    _.each(booked_nights, function(obj) { if(obj.end === null) obj.end = moment(obj.start).add(24, 'hours'); });
+
+    var existing_nights = _.sortBy(booking.accommodations, function(obj) { return obj.start });
+
+    var extended_nights = [];
+
+    /*
+     * Loop through existing nights if either the start of exisiting = end of booking or start of booking = existing
+     * then merge them and make note of the original start date of the existing and remove it from backend,
+     * then add all accommodation left to backend
+     */
+    
+   /* var remove_accommodations = [];
+
+    _.each(existing_nights, function(e_obj) {
+        var e_start = moment(e_obj.pivot.start).format();
+        var e_end = moment(e_obj.pivot.end).format();
+
+        _.each(booked_nights, function(n_obj, index) {
+            if(e_start === moment(n_obj.end).format())
+            {
+                remove_accommodations.push({
+                    start :     e_start,
+                    promise:    $.Deferred()   
+                });
+                //e_obj.pivot.start = moment(n_obj.start).format();
+                extended_nights.push({
+                    start:  moment(n_obj.start).format(),
+                    end:    moment(e_obj.pivot.end).format(),
+                    index:  index   
+                });
+                //booked_nights.splice(index, 1);
+            }
+            else if(e_end === moment(n_obj.start).format())
+            {
+                remove_accommodations.push({
+                    start :     e_start,
+                    promise:    $.Deferred()   
+                });
+                //e_obj.pivot.end = moment(n_obj.end).format();
+                extended_nights.push({
+                    start:  moment(e_obj.pivot.start).format(),
+                    end:    moment(n_obj.end).format(),
+                    index: index,
+                    promise: $.Deferred() 
+                });
+                //booked_nights.splice(index, 1);
+            }
+        });
+    });
+
+    console.log('extended nights', extended_nights);
+
+    _.each(existing_nights, function(e_obj) {
+        var e_start = moment(e_obj.pivot.start).format();
+        var e_end = moment(e_obj.pivot.end).format();
+
+        _.each(booked_nights, function(n_obj, index) {
+            if(e_start === moment(n_obj.end).format())
+            {
+                remove_accommodations.push({
+                    start :     e_start,
+                    promise:    $.Deferred()   
+                });
+                e_obj.pivot.start = moment(n_obj.start).format();
+                extended_nights.push(e_obj);
+                booked_nights.splice(index, 1);
+            }
+            else if(e_end === moment(n_obj.start).format())
+            {
+                remove_accommodations.push({
+                    start :     e_start,
+                    promise:    $.Deferred()   
+                });
+                e_obj.pivot.end = moment(n_obj.end).format();
+                extended_nights.push(e_obj);
+                booked_nights.splice(index, 1);
+            }
+        });
+    });
+    var customer_id = $('#accommodation-customers').children('.active').first().data('id'); 
+
+    _.each(remove_accommodations, function(obj) {
+        var params = {
+            _token: window.token,
+            booking_id: booking.id,
+            accommodation_id: accommodation_id,
+            customer_id: customer_id
+        };
+        params.start = obj.start;
+
+        booking.removeAccommodation(params, function success(data) {
+            obj.promise.resolve();
+        },
+        function error(xhr) {
+            console.log(xhr);
+        });
+    });
+
+    var remove_promises = _.map(remove_accommodations, function(obj) { return obj.promise; });
+
+    $.when.apply($, remove_promises).done(function() {
+        _.each(extended_nights, function(obj) {
+            var params = {
+                _token:             window.token,
+                booking_id:         booking.id,
+                customer_id:        customer_id,
+                accommodation_id:   accommodation_id
+            };
+            console.log('object', obj);
+            params.start = moment(obj.start).format();
+            params.end = moment(obj.end).format();
+
+            console.log('booked night befor splce', booked_nights);
+            console.log('index', obj.index);
+            booked_nights.splice(obj.index, 1);
+
+            booking.addAccommodation(params, function success(data) {
+                booking.store();
+                pageMssg(data, 'success');
+                drawBasket();
+                obj.promise.resolve();
+            },
+            function error(xhr) {
+                console.log(xhr);
+            });
+
+        });
+
+    });
+
+    var add_promises = _.map(extended_nights, function(obj) { return obj.promise; });
+
+    $.when.apply($, add_promises).done(function() {
+        for(var i = 0; i < (booked_nights.length - 1); i++) 
+        {
+            if(moment(booked_nights[i].end).format() === moment(booked_nights[i + 1].start).format()) {
+                booked_nights[i].end = moment(booked_nights[i].end).add(24, 'hours').format(); 
+                booked_nights.splice(i + 1, 1);
+                i--;
+            }
+            else if(moment(booked_nights[i].start).format() === moment(booked_nights[i + 1].end).format()) {
+                booked_nights[i].start = moment(booked_nights.start).format();
+                booked_nights.splice(i + 1, 1);
+                i--;
+            }
+        }
+        
+        
+        _.each(booked_nights, function(obj) {
+            var params = {
+                _token:             window.token,
+                accommodation_id:   accommodation_id,
+                customer_id:        customer_id
+            };
+            params.start = moment(obj.start).format(); 
+            params.end   = moment(obj.end).format();
+
+            booking.addAccommodation(params, function success(status, packagefacade_id) {
+
+                booking.store();
+
+                pageMssg(status, 'success');
+
+                drawBasket();
+
+            }, function error(xhr) {
+                var data = JSON.parse(xhr.responseText);
+                if(data.errors) pageMssg(data.errors[0], 'danger');
+            });
+
+        });
+    });
+}*/
 
 $('#accommodation-tab').on('click', '.add-packaged-accommodation', function() {
 	var btn = $(this);
