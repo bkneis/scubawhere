@@ -611,8 +611,6 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			var removedAccommodation = _.find(this.accommodations, function(accommodation) {
-                console.log('start', accommodation.pivot.start);
-                console.log('start2', params.start);
 				return accommodation.id == params.accommodation_id && accommodation.pivot.customer_id == params.customer_id && accommodation.pivot.start === params.start;
 			});
 
