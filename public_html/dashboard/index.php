@@ -331,12 +331,12 @@ $PROTOCOL = 'http';
 					</ul>
 				</li>
                 
-                <li>
+                <!--<li>
 					<div>
 						<!-- <i class="fa fa-briefcase"></i> -->
 						<!-- <i class="fa fa-bullhorn"></i> -->
 						<!-- <i class="fa fa-paper-plane"></i> -->
-						<i class="fa fa-anchor fa-lg fa-fw"></i>
+						<!--<i class="fa fa-anchor fa-lg fa-fw"></i>
 						<span>Rentals</span>
 						<span class="caret"></span>
 					</div>
@@ -345,7 +345,7 @@ $PROTOCOL = 'http';
 							<a href="#equipment">Equipment</a>
 						</li>
 					</ul>
-				</li>
+				</li>-->
 
 				<li>
 					<a href="https://scubawhere.zendesk.com" target="_blank">
