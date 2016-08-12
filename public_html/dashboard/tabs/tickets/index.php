@@ -31,6 +31,9 @@
 					<div class="panel-body">
 						<form id="{{task}}-ticket-form">
 							<div class="form-row">
+								{{#if update}}
+									<span class="btn btn-danger pull-right remove-ticket">Remove</span>
+								{{/if}}
 								<label class="field-label">Ticket Name</label>
 								<input id="ticket-name" type="text" name="name" value="{{{name}}}">
 

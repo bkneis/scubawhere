@@ -248,6 +248,32 @@ $(function () {
 		$(event.target).parent().remove();
 	});
 
+	$('#ticket-form-container').on('click', '.remove-ticket', function(event) {
+    	event.preventDefault();
+		var check = confirm('Do you really want to remove this ticket?');
+		if(check){
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			Ticket.deleteTicket({
+				'id'    : $('#update-ticket-form input[name=id]').val(),
+				'_token': $('[name=_token]').val()
+			}, function success(data){
+
+				pageMssg(data.status, true);
+
+				renderTicketList();
+
+				renderEditForm();
+			}, function error(xhr){
+
+				pageMssg('Oops, something wasn\'t quite right');
+
+				$('.remove-ticket').prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+	});
 });
 
 function renderTicketList(callback) {
