@@ -71,8 +71,7 @@ $(function(){
 
 			pageMssg(data.status, true);
 
-			window.addons[data.model.id] = data.model;
-
+			window.addons[data.model.id] = data.model; 
 			$('form').data('hasChanged', false);
 
 			renderViews(data.model.id);
@@ -152,7 +151,7 @@ $(function(){
 	});
 
 	$('#addon-form-container').on('click', '.remove-addon', function(event) {
-    event.preventDefault();
+        event.preventDefault();
 		var check = confirm('Do you really want to remove this addon?');
 		if(check){
 			// Show loading indicator
