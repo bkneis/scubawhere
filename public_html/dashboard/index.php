@@ -361,6 +361,13 @@ $PROTOCOL = 'http';
 						<span>Settings</span>
 					</a>
 				</li>
+
+                <li>
+                    <a href="#logs">
+                        <i class="fa fa-exclamation fa-lg fa-fw"></i>
+                        <span>Logs</span>
+                    </a>
+                </li>
 			</ul>
 		</div>
 
