@@ -132,6 +132,7 @@ return array(
 		'Mews\Purifier\PurifierServiceProvider',
 
 		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
+        'ScubaWhere\Repositories\LogRepoServiceProvider',
 
 	),
 

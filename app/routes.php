@@ -74,6 +74,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
         'equipment-category' => 'EquipmentCategoryController',
         'equipment-price' => 'EquipmentPriceController',
 		'location'       => 'LocationController',
+        'log'            => 'LogController',
 		'package'        => 'PackageController',
 		'payment'        => 'PaymentController',
 		'refund'         => 'RefundController',
