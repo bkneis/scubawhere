@@ -81,4 +81,16 @@ class AgentController extends Controller
 
         return Response::json(array('status' => 'OK. Agent updated.'), 200); // 200 OK
     }
+
+    public function postDelete()
+    {
+        try {
+            if(!Input::get('id'))
+                throw new ModelNotFoundException();
+            $agent = Context::get()->agents()->findOrFail(Input::get('id'));
+            $agent->delete();
+        } catch (ModelNotFoundException $e) {
+            return Response::json(array('errors' => array('The agent could not be found.')), 404); // 404 Not Found
+        }
+    }
 }

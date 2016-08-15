@@ -107,8 +107,7 @@ $(function(){
 				alert(xhr.responseText);
 			}
 
-			pageMssg('Oops, something wasn\'t quite right');
-
+			pageMssg('Oops, something wasn\'t quite right'); 
 			$('#update-agent').prop('disabled', false);
 			$('#save-loader').remove();
 		});
@@ -120,6 +119,38 @@ $(function(){
 
 		renderEditForm();
 	});
+
+    $("#agent-form-container").on('click', '.remove-agent', function(event) {
+        event.preventDefault();
+		var check = confirm('Do you really want to remove this agent?');
+		if(check){
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			var id = $('#update-agent-form input[name=id]').val();
+
+			Agent.delete({
+				'id'    : id,
+				'_token': $('[name=_token]').val()
+			}, function success(data){
+
+				pageMssg(data.status, true);
+
+				delete window.agents[id];
+
+				$('.remove-agent').prop('disabled', false);
+				$('#save-loader').remove();
+
+				renderAgentList(renderEditForm);
+			}, function error(xhr){
+
+				pageMssg('Oops, something wasn\'t quite right');
+
+				$('.remove-agent').prop('disabled', false);
+				$('#save-loader').remove();
+			});
+		}
+    });
 
 });
 

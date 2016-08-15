@@ -32,6 +32,16 @@ var Agent = {
 		});
 	},
 
+    delete: function(params, handledata, erroFn) {
+        $.ajax({
+            type: "POST",
+            url: "/api/agent/delete",
+            data: params,
+            success: handledata,
+            error: erroFn
+        });
+    }
+
 	/*
 	deleteAgent : function(params, handleData){
 		$.post("/api/agent/delete", params, function(data){

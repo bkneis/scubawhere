@@ -30,6 +30,9 @@
 					</div>
 					<div class="panel-body">
 						<form id="{{task}}-agent-form">
+                            {{#if update}}
+                                <span class="btn btn-danger pull-right remove-agent">Remove</span>
+                            {{/if}}
 							<div class="form-row">
 								<label class="field-label">Agent Name</label>
 								<input id="agent-name" type="text" name="name" value="{{{name}}}">
