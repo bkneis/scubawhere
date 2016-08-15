@@ -213,6 +213,11 @@ class Company extends Ardent {
 		return $this->belongsToMany('Location')->withPivot('description')->withTimestamps();
 	}
 
+    public function logs() // Needed to create seperate namespace for logs as its reseved for laravel facade
+    {
+        return $this->hasMany('ScubaWhere\Entities\Log');
+    }
+
 	public function packages()
 	{
 		return $this->hasMany('Package');
