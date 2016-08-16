@@ -146,7 +146,14 @@ $(function(){
 
 	selAccommodationFortContainer.on('click', '.remove-accommodation', function(event){
 		event.preventDefault();
-    var check = confirm('Do you really want to remove this accommodation?');
+	    var deletable = $('#update-accommodation-form input[name=force]').val();
+       
+        var check;
+        if(deletable === "false")
+            check = confirm('If you delete this accommodation then it will be removed from all packages associated with it, are you sure you wish to contiue?');
+        else
+            check = confirm('Do you really want to remove this accommodation?');
+
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -155,6 +162,7 @@ $(function(){
 
 			Accommodation.delete({
 				'id'    : id,
+                'deletable' : deletable,
 				'_token': $('[name=_token]').val()
 			}, function success(data) {
 

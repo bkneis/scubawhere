@@ -13,6 +13,8 @@ class Accommodation extends Ardent {
 
 	protected $hidden = array('parent_id');
 
+    protected $appends = array('deletable');
+
 	public static $rules = array(
 		'name'        => 'required',
 		'description' => '',
@@ -27,7 +29,12 @@ class Accommodation extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-	}
+    }
+
+    public function getDeletableAttribute() 
+    {
+        return !($this->packages()->exists());
+    }
 
 	public function calculatePrice($start, $end, $limitBefore = false) {
 		$current_date = gettype($start) === "object" ? $start : new DateTime($start, new DateTimeZone( Context::get()->timezone ));

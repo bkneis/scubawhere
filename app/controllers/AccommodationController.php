@@ -290,9 +290,23 @@ class AccommodationController extends Controller
             return Response::json(array('errors' => array('The accommodation could not be found.')), 404); // 404 Not Found
         }
 
-        if ($accommodation->packages()->exists()) {
-            return Response::json(array('errors' => array('The accommodation can not be removed currently because it is used in packages.')), 409);
-        } // 409 Conflict
+        // Check if the user wants to delete accommodation even when in packages
+        if(Input::get('deletable') == "false") {
+
+            if ($accommodation->packages()->exists()) {
+                // Loop through each package and remove its pivot from packages
+                $packages = $accommodation->packages();
+                foreach($packages as $obj) {
+                    $accommodation->packages()->detach($obj->id);    
+                }
+                $accommodation->save();
+            }
+        }
+        else {
+            if ($accommodation->packages()->exists()) {
+                return Response::json(array('errors' => array('The accommodation can not be removed currently because it is used in packages.')), 409);
+            } // 409 Conflict
+        }
 
         try {
             $accommodation->forceDelete();

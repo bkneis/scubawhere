@@ -34,6 +34,7 @@
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-accommodation">Remove</span>
 								{{/if}}
+                                <input type="hidden" name="force" value="{{deletable}}">
 								<label for="name" class="field-label">Room Name</label>
 								<input id="room-name" type="text" name="name" value="{{{name}}}">
 							</div>
