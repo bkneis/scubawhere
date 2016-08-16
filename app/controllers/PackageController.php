@@ -16,7 +16,7 @@ class PackageController extends Controller {
 				'courses',
 					'courses.trainings',
 					'courses.tickets',
-				'accommodations',
+				'currentAccommodations',
 				'addons',
 				'basePrices',
 				'prices'
@@ -35,7 +35,7 @@ class PackageController extends Controller {
 			'courses',
 				'courses.trainings',
 				'courses.tickets',
-			'accommodations',
+			'currentAccommodations',
 			'addons',
 			'basePrices',
 			'prices'
@@ -49,7 +49,7 @@ class PackageController extends Controller {
 			'courses',
 				'courses.trainings',
 				'courses.tickets',
-			'accommodations',
+			'currentAccommodations',
 			'addons',
 			'basePrices',
 			'prices'
@@ -74,7 +74,7 @@ class PackageController extends Controller {
 			'courses',
 				'courses.trainings',
 				'courses.tickets',
-			'accommodations',
+			'currentAccommodations',
 			'addons',
 			'basePrices',
 			'prices'
@@ -141,7 +141,7 @@ class PackageController extends Controller {
 		//                                ticket_id --^   quantity value --^
 		$package->tickets()->sync( $tickets );
 		$package->courses()->sync( $courses );
-		$package->accommodations()->sync( $accommodations );
+		$package->currentAccommodations()->sync( $accommodations );
 		$package->addons()->sync( $addons );
 
 		// Normalise base_prices array

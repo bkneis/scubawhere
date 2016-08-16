@@ -297,7 +297,12 @@ class AccommodationController extends Controller
                 // Loop through each package and remove its pivot from packages
                 $packages = $accommodation->packages();
                 foreach($packages as $obj) {
-                    $accommodation->packages()->detach($obj->id);    
+                    //$accommodation->packages()->detach($obj->id);
+                    DB::table('packageables')
+                        ->where('packageable_type', 'Accommodation')
+                        ->where('packageable_id', $accommodation->id)
+                        ->where('package_id', $obj->id)
+                        ->update(array('deleted_at' => DB::raw('NOW()')));    
                 }
                 $accommodation->save();
             }
@@ -308,8 +313,15 @@ class AccommodationController extends Controller
             } // 409 Conflict
         }
 
-        try {
-            $accommodation->forceDelete();
+        // check here if in future bookings to force delete ??
+        $accommodation->delete();
+
+        // If deletion worked, delete associated prices
+        Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
+
+        /*try {
+            $accommodation->delete();
+            //$accommodation->forceDelete();
 
             // If deletion worked, delete associated prices
             Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
@@ -317,7 +329,7 @@ class AccommodationController extends Controller
             // SoftDelete instead
             $accommodation = Context::get()->accommodations()->find(Input::get('id'));
             $accommodation->delete();
-        }
+        }*/
 
         return array('status' => 'Ok. Accommodation deleted');
     }

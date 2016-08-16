@@ -77,8 +77,19 @@ class Package extends Ardent {
 
 	public function accommodations()
 	{
-		return $this->morphedByMany('Accommodation', 'packageable')->withPivot('quantity')->withTimestamps();
+        return $this->morphedByMany('Accommodation', 'packageable')
+                    ->withPivot('quantity')
+                    ->withTrashed()
+                    ->withTimestamps();
 	}
+
+    public function currentAccommodations()
+    {
+        return $this->morphedByMany('Accommodation', 'packageable')
+                    ->withPivot('quantity')
+                    ->whereNull('packageables.deleted_at')
+                    ->withTimestamps();
+    }
 
 	public function addons()
 	{
