@@ -152,7 +152,13 @@ $(function(){
 
 	$('#addon-form-container').on('click', '.remove-addon', function(event) {
         event.preventDefault();
-		var check = confirm('Do you really want to remove this addon?');
+	    var deletable = $('#update-addon-form input[name=deletable]').val();
+		var check;
+        if(deletable === "false")
+            check = confirm('If you delete this addon then it will be removed from all packages associated with it, are you sure you wish to contiue?');
+        else
+            check = confirm('Do you really want to remove this addon?');
+
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');

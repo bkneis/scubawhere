@@ -25,6 +25,8 @@ class Addon extends Ardent {
 		'parent_id'   => 'integer|min:1'
 	);
 
+    protected $appends = array('deletable');
+
 	public function beforeSave()
 	{
 		if( isset($this->name) )
@@ -36,6 +38,11 @@ class Addon extends Ardent {
 		if( isset($this->compulsory) )
 			$this->compulsory = Helper::sanitiseString($this->compulsory);
 	}
+
+    public function getDeletableAttribute() 
+    {
+        return !($this->packages()->exists());
+    }
 
 	public function calculatePrice($start, $limitBefore = false) {
 		$price = Price::where(Price::$owner_id_column_name, $this->id)

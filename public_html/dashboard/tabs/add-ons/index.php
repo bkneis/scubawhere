@@ -34,6 +34,7 @@
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-addon">Remove</span>
 								{{/if}}
+                                <input type="hidden" name="deletable" value="{{deletable}}">
 								<label class="field-label">Add-on Name</label>
 								<input id="addon-name" type="text" name="name" value="{{{name}}}">
 							</div>
