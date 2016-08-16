@@ -162,7 +162,6 @@ $(function(){
 
 			Accommodation.delete({
 				'id'    : id,
-                'deletable' : deletable,
 				'_token': $('[name=_token]').val()
 			}, function success(data) {
 

@@ -291,7 +291,7 @@ class AccommodationController extends Controller
         }
 
         // Check if the user wants to delete accommodation even when in packages
-        if(Input::get('deletable') == "false") {
+        if(!$accommodation->getDeletableAttribute()) {
 
             if ($accommodation->packages()->exists()) {
                 // Loop through each package and remove its pivot from packages
