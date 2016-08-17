@@ -168,30 +168,29 @@ class AddonController extends Controller
             return Response::json(array('errors' => array('The addon could not be found.')), 404); // 404 Not Found
         }
 
+        // Check if the addon is used in any packages
         if(!$addon->getDeletableAttribute()) {
             if($addon->packages()->exists()) {
                 $packages = $addon->packages();
+                /* Loop through each package and soft delete the pivot betweeen
+                 * addon and package, so that packages used in the future
+                 * can use a previous state
+                 * http://stackoverflow.com/questions/17350072/soft-delete-on-a-intermediate-table-for-many-to-many-relationship
+                */
                 foreach($packages as $obj) {
-                    $addon->packages()->detach($obj->id);
+                    DB::table('packageables')
+                        ->where('packageable_type', 'Addon')
+                        ->where('packageable_id', $addon->id)
+                        ->where('package_id', $obj->id)
+                        ->update(array('deleted_at' => DB::raw('NOW()')));    
                 }
                 $addon->save();
             }
         }
-        else {
-            if ($addon->packages()->exists()) {
-                return Response::json(array('errors' => array('The addon can not be removed currently because it is used in packages.')), 409);
-            } // 409 Conflict
-        }
 
-        try {
-            $addon->forceDelete();
-
-            // If deletion worked, delete associated prices
-            Price::where(Price::$owner_id_column_name, $addon->id)->where(Price::$owner_type_column_name, 'Addon')->delete();
-        } catch (QueryException $e) {
-            $addon = Context::get()->addons()->find(Input::get('id'));
-            $addon->delete();
-        }
+        // @todo use force delete if used in future booking
+        $addon->delete();
+        Price::where(Price::$owner_id_column_name, $addon->id)->where(Price::$owner_type_column_name, 'Addon')->delete();
 
         return array('status' => 'Ok. Addon deleted');
     }
