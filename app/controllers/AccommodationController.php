@@ -313,7 +313,7 @@ class AccommodationController extends Controller
             } // 409 Conflict
         }
 
-        // check here if in future bookings to force delete ??
+        // @todo check here if in future bookings to force delete
         $accommodation->delete();
 
         // If deletion worked, delete associated prices
