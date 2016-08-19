@@ -79,7 +79,7 @@ class Package extends Ardent {
 	{
         return $this->morphedByMany('Accommodation', 'packageable')
                     ->withPivot('quantity')
-                    ->withTrashed()
+                    //->withTrashed()
                     ->withTimestamps();
 	}
 
@@ -100,7 +100,9 @@ class Package extends Ardent {
 
 	public function courses()
 	{
-		return $this->morphedByMany('Course', 'packageable')->withPivot('quantity')->withTimestamps();
+        return $this->morphedByMany('Course', 'packageable')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
 	}
 
 	public function packagefacades()

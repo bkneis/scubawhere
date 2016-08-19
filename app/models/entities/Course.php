@@ -17,6 +17,8 @@ class Course extends Ardent {
 		'certificate_id' => 'integer|exists:certificates,id'
 	);
 
+    public $appends = array('deleteable');
+
 	public function beforeSave()
 	{
 		if( isset($this->name) )
@@ -24,7 +26,12 @@ class Course extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-	}
+    }
+
+    public function getDeleteableAttribute()
+    {
+        return !($this->packages()->exists());
+    }
 
 	public function calculatePrice($start, $limitBefore = false)
 	{
@@ -59,7 +66,9 @@ class Course extends Ardent {
 
 	public function packages()
 	{
-		return $this->morphToMany('Package', 'packageable')->withPivot('quantity')->withTimestamps();
+        return $this->morphToMany('Package', 'packageable')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
 	}
 
 	public function basePrices()

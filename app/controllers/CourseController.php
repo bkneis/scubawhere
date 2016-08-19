@@ -221,6 +221,43 @@ class CourseController extends Controller
 
     public function postDelete()
     {
+        try 
+        {
+            if (!Input::get('id')) throw new ModelNotFoundException();
+            $course = Context::get()->courses()
+                                    ->with('packages')
+                                    ->findOrFail(Input::get('id'));
+        } 
+        catch (ModelNotFoundException $e) 
+        {
+            return Response::json(
+                            array('errors' => 
+                                array('The course could not be found.')
+                            ), 404); // 404 Not Found
+        }
+
+        if(!$course->getDeleteableAttribute())
+        {
+            foreach($course->packages as $obj) 
+            {
+                DB::table('packageables')
+                    ->where('packageable_type', 'Course')
+                    ->where('packageable_id', $course->id)
+                    ->where('package_id', $obj->id)
+                    ->update(array('deleted_at' => DB::raw('NOW()')));    
+            } 
+        }
+        // @todo add in check for future bookings
+        // if none, use force delete
+        $course->delete();
+
+        return array('status' => 'Ok. Course deleted');
+    }
+
+    /*
+     *
+    public function postDelete()
+    {
         try {
             if (!Input::get('id')) {
                 throw new ModelNotFoundException();
@@ -247,4 +284,6 @@ class CourseController extends Controller
 
         return array('status' => 'Ok. Course deleted');
     }
+     * 
+     */
 }
