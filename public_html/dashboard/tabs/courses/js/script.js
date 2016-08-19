@@ -289,7 +289,13 @@ $(function(){
 
 	$('#course-form-container').on('click', '.remove-course', function(event) {
     event.preventDefault();
-		var check = confirm('Do you really want to remove this course?');
+		var check;
+        var deleteable = $('#update-course-form input[name=deleteable]').val();
+        if(deleteable === 'true')
+            check = confirm('Do you really want to remove this course?');
+        else
+            check = confirm('If you delete this class then it will be removed from all courses associated with it, are you sure you wish to contiue?');
+
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');

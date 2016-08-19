@@ -10,7 +10,7 @@ class Training extends Ardent {
 
 	protected $fillable = array('name', 'description', 'duration');
 
-	protected $appends = array('deletable');
+	protected $appends = array('deleteable');
 
 	public static $rules = array(
 		'name'        => 'required',
@@ -29,10 +29,9 @@ class Training extends Ardent {
 		$this->duration = round($this->duration, 1);
 	}
 
-	public function getDeletableAttribute()
+	public function getDeleteableAttribute()
 	{
-		// TODO Only deny when future training_sessions are affected
-		return !($this->courses()->exists() || $this->training_sessions()->exists());
+        return !($this->courses()->exists());
 	}
 
 	public function company()
@@ -42,7 +41,9 @@ class Training extends Ardent {
 
 	public function courses()
 	{
-		return $this->belongsToMany('Course')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany('Course')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
 	}
 
 	public function training_sessions()

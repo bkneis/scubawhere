@@ -118,7 +118,13 @@ $(function () {
 
 	$('#class-form-container').on('click', '.remove-class', function(event) {
     	event.preventDefault();
-		var check = confirm('Do you really want to remove this class?');
+        var deleteable = $('#update-class-form input[name=deleteable]').val();
+		var check;
+        if(deleteable === "true")
+            check = confirm('Do you really want to remove this class?');
+        else
+            check = confirm('If you delete this class then it will be removed from all courses associated with it, are you sure you wish to contiue?');
+
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -134,8 +140,9 @@ $(function () {
 
 				renderEditForm();
 			}, function error(xhr){
-
-				pageMssg('Oops, something wasn\'t quite right');
+				
+                pageMssg(xhr.responseText);
+                //pageMssg('Oops, something wasn\'t quite right');
 
 				$('.remove-class').prop('disabled', false);
 				$('#save-loader').remove();

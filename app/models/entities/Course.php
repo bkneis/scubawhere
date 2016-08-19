@@ -79,6 +79,8 @@ class Course extends Ardent {
 
 	public function trainings()
 	{
-		return $this->belongsToMany('Training')->withPivot('quantity')->withTimestamps();
-	}
+        return $this->belongsToMany('Training')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
 }

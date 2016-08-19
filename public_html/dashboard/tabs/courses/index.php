@@ -34,6 +34,7 @@
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-course">Remove</span>
 								{{/if}}
+                                <input type="hidden" name="deleteable" value="{{deleteable}}">
 								<label class="field-label">Course Name</label>
 								<input id="course-name" type="text" name="name" value="{{{name}}}">
 							</div>
