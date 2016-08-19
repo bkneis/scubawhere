@@ -190,7 +190,7 @@ function initialise() {
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
-			console.log(data);
+			console.log(xhr);
 
 			// Close modal window
 			$('#modalWindows .close-reveal-modal').click();

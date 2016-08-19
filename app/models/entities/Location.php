@@ -13,6 +13,8 @@ class Location extends Ardent {
 		'longitude'   => 'required|numeric|between:-180,180',
 	);
 
+    public $appends = array('deleteable');
+
 	public function beforeSave()
 	{
 		if( isset($this->description) )
@@ -22,6 +24,11 @@ class Location extends Ardent {
 			$this->name = Helper::sanitiseString($this->name);
 	}
 
+    public function getDeleteableAttribute()
+    {
+        return !($this->trips()->exists()); 
+    }
+
 	public function companies()
 	{
 		return $this->belongsToMany('Company')->withPivot('description')->withTimestamps();
@@ -30,5 +37,12 @@ class Location extends Ardent {
 	public function tags()
 	{
 		return $this->morphToMany('Tag', 'taggable')->withTimestamps();
-	}
+    }
+
+    public function trips()
+    {
+        return $this->belongsToMany('Trip')
+                    ->whereNull('location_trip.deleted_at')
+                    ->withTimestamps();
+    }
 }

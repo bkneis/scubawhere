@@ -50,7 +50,9 @@ class Trip extends Ardent {
 
 	public function locations()
 	{
-		return $this->belongsToMany('Location')->withTimestamps();
+        return $this->belongsToMany('Location')
+                    ->whereNull('location_trip.deleted_at')
+                    ->withTimestamps();
 	}
 
 	public function tags()
