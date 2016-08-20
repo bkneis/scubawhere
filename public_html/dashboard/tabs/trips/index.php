@@ -38,13 +38,6 @@
 								<label class="field-label">Trip Name</label>
 								<input id="trip-name" type="text" name="name" value="{{{name}}}" style="width: 350px;">
 
-                                {{!--{{#if update}}
-                                    {{#if deletable}}
-										<span class="btn btn-danger pull-right remove-trip" style="color: white;">Remove</span>
-									{{else}}
-										<span class="questionmark-tooltip pull-right" title="This trip has tickets or sessions associated with it. It can not be removed.">?</span><span class="btn btn-danger pull-right disabled" style="color: white;">Remove</span>
-									{{/if}}
-								{{/if}}--}}
 							</div>
 
 							<div class="form-row">
