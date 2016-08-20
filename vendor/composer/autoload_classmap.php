@@ -61,6 +61,7 @@ return array(
     'AddSoftDeleteForCampaigns' => $baseDir . '/app/database/migrations/2015_12_20_165935_add_soft_delete_for_campaigns.php',
     'AddSoftDeleteToCourseTrainingTable' => $baseDir . '/app/database/migrations/2016_08_17_095451_add_soft_delete_to_course_training_table.php',
     'AddSoftDeletesToLocationTripTable' => $baseDir . '/app/database/migrations/2016_08_19_091656_add_soft_deletes_to_location_trip_table.php',
+    'AddSoftDeletesToTripTicketTable' => $baseDir . '/app/database/migrations/2016_08_20_084225_add_soft_deletes_to_trip_ticket_table.php',
     'AddSoftDeletionToBoatsTable' => $baseDir . '/app/database/migrations/2014_11_18_165840_add_soft_deletion_to_boats_table.php',
     'AddStatusFieldToBookingsTable' => $baseDir . '/app/database/migrations/2014_12_11_200307_add_status_field_to_bookings_table.php',
     'AddThaiBahtToCurrencies' => $baseDir . '/app/database/migrations/2015_03_26_132625_add_thai_baht_to_currencies.php',

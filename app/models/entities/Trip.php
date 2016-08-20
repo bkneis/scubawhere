@@ -69,4 +69,5 @@ class Trip extends Ardent {
 	{
 		return $this->hasMany('Departure');
 	}
+
 }

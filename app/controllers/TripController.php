@@ -1,11 +1,19 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class TripController extends Controller
-{
+class TripController extends Controller {
+
+    protected $log_service;
+
+    public function __construct(LogService $log_service)
+    {
+        $this->log_service = $log_service;
+    }
+    
     public function getIndex()
     {
         try {
@@ -193,6 +201,82 @@ class TripController extends Controller
 
     public function postDelete()
     {
+        try 
+        {
+            if (!Input::get('id')) throw new ModelNotFoundException();
+            $trip = Context::get()->trips()
+                                  ->with('tickets', 'departures')
+                                  ->findOrFail(Input::get('id'));
+        } 
+        catch (ModelNotFoundException $e) 
+        {
+            return Response::json(
+                        array('errors' => 
+                            array('The trip could not be found.')
+                        ), 404); // 404 Not Found
+        }
+
+        $problem_tickets = array();
+
+        // Check for any tickets that require the trip (the tickets only trip)
+        foreach($trip->tickets as $obj) 
+        {
+            $ticket = Context::get()->tickets()
+                                         ->with('trips')
+                                         ->where('id', '=', $obj->id)
+                                         ->first();
+            if(sizeof($ticket->trips) == 1)
+            {
+                array_push($problem_tickets, $obj);
+            }
+        }
+        // Check for any problems, if so log them and return 409 error
+        if(sizeof($problem_tickets) > 0)
+        {
+            $logger = $this->log_service->create('Attempting to delete the trip ' . $trip->name);
+            foreach($problem_tickets as $prob) 
+            {
+                $logger->append('The ticket ' . $prob->name . ' uses soley this trip, please assign the ticket a diffrent trip to delete');
+            }    
+            return Response::json(
+                        array('errors' =>
+                            array('The trip could not be deleted as it has tickets that require it, for more information on how to delete it, visit the error logs tab')
+                        ), 409);
+        }
+        // Check if the trip is scheduled for future departures
+        elseif(sizeof($trip->departures) > 0)
+        {
+            $logger = $this->log_service->create('Attempting to delete the trip ' . $trip->name);
+            foreach($trip->departures as $obj) 
+            {
+                $logger->append('The trip is scheduled to depart on ' . $obj->start . ', please delete the departure in scheduleing or edit it to use a diffrent trip');
+            }
+            return Response::json(
+                        array('errors' =>
+                            array('The trip could not be deleted as it is scheduled for departure in the future, for more information on how to delete it, visit the error logs tab')
+                        ), 409);
+        }
+        // If no problems, unassign the trips to the tickets
+        else 
+        {
+            foreach($trip->tickets as $obj) 
+            {
+                DB::table('ticket_trip')
+                    ->where('trip_id', $trip->id)
+                    ->where('ticket_id', $obj->id)
+                    ->update(array('deleted_at' => DB::raw('NOW()'))); 
+            }
+        }
+
+        $trip->delete();
+
+        return array('status' => 'Ok. Trip deleted');
+    }
+
+    /*
+     *
+    public function postDelete()
+    {
         try {
             if (!Input::get('id')) {
                 throw new ModelNotFoundException();
@@ -205,9 +289,10 @@ class TripController extends Controller
         try {
             $trip->forceDelete();
         } catch (QueryException $e) {
-            return Response::json(array('errors' => array('The trip can not be removed currently because it has tickets or active trips assigned to it.'/*.' Try deactivating it instead.'*/)), 409); // 409 Conflict
+            return Response::json(array('errors' => array('The trip can not be removed currently because it has tickets or active trips assigned to it.')), 409); // 409 Conflict
         }
 
         return array('status' => 'Ok. Trip deleted');
     }
+     */
 }

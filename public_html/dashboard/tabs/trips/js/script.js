@@ -148,8 +148,11 @@ $(function(){
 	});
 
 	$tripFormContainer.on('click', '.remove-trip', function(event) {
-    event.preventDefault();
-		var check = confirm('Do you really want to remove this trip?');
+        event.preventDefault();
+        var deleteable = $('#update-trip-form input[name=deleteable]').val()
+		var check;
+        if(deleteable === 'true') check = confirm('Do you really want to remove this trip?');
+        else check = confirm('There are tickets associated with this trip, if you delete this trip, these tickets might be effected. Are you sure you wish to continue?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
@@ -166,7 +169,9 @@ $(function(){
 				renderEditForm();
 			}, function error(xhr){
 
-				pageMssg('Oops, something wasn\'t quite right');
+                var data = JSON.parse(xhr.responseText);
+
+				pageMssg(data.errors[0], 'danger', true);
 
 				$('.remove-trip').prop('disabled', false);
 				$('#save-loader').remove();
