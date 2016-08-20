@@ -33,6 +33,7 @@
 							<div class="form-row">
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-ticket">Remove</span>
+                                    <input type="hidden" name="deleteable" value="{{deleteable}}">
 								{{/if}}
 								<label class="field-label">Ticket Name</label>
 								<input id="ticket-name" type="text" name="name" value="{{{name}}}">

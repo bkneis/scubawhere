@@ -250,24 +250,33 @@ $(function () {
 
 	$('#ticket-form-container').on('click', '.remove-ticket', function(event) {
     	event.preventDefault();
-		var check = confirm('Do you really want to remove this ticket?');
-		if(check){
+        var deleteable = $('#update-ticket-form input[name=deleteable]').val()
+		var check;
+        if(deleteable === 'true')
+        {
+            check = confirm('Do you really want to remove this ticket?');
+        }
+        else 
+        {
+            check = confirm('This ticket has courses or package associated with it, if you delete it they might be affected, are you sure you wish to continue?');
+        }
+		if(check)
+        {
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 			Ticket.deleteTicket({
 				'id'    : $('#update-ticket-form input[name=id]').val(),
 				'_token': $('[name=_token]').val()
-			}, function success(data){
+			}, function success(data) {
 
 				pageMssg(data.status, true);
-
 				renderTicketList();
-
 				renderEditForm();
-			}, function error(xhr){
 
-				pageMssg('Oops, something wasn\'t quite right');
+			}, function error(xhr) {
+                var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'danger', true);
 
 				$('.remove-ticket').prop('disabled', false);
 				$('#save-loader').remove();

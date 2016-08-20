@@ -1,9 +1,17 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends Controller {
+
+    protected $log_service;
+
+    public function __construct(LogService $log_service)
+    {
+        $this->log_service = $log_service;
+    }
 
 	public function getIndex()
 	{
@@ -316,6 +324,88 @@ class TicketController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
+            $ticket = Context::get()->tickets()
+                                    ->with('packages', 'courses')
+                                    ->findOrFail( Input::get('id') );
+		}
+		catch(ModelNotFoundException $e)
+		{
+			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
+		}
+
+        if(!$ticket->deleteable)
+        {
+            // Remove the ticket from all packages, as packages don't require a ticket, there is no checks
+            foreach($ticket->packages as $obj) 
+            {
+                DB::table('packageables')
+                    ->where('package_id', $obj->id)
+                    ->where('packageable_type', 'Ticket')
+                    ->where('packageable_id', $ticket->id)
+                    ->update(array('deleted_at' => DB::raw('NOW()')));    
+            }
+            
+            // Get a list of the tickets course ids
+            $course_ids = array();
+            foreach($ticket->courses as $obj) 
+            {
+                array_push($course_ids, $obj->id);
+            }
+            // Courses require atleast one ticket or training, before deleting, ensure that
+            // the ticket is not the only one in a course
+            $courses = Context::get()->courses()
+                                     ->whereIn('id', $course_ids)
+                                     ->with('tickets', 'trainings')
+                                     ->get();
+            // Get a list of courses that require the ticket
+            $problem_courses = array();
+            foreach($courses as $obj) 
+            {
+                if((sizeof($obj->tickets) + sizeof($obj->trainings)) < 2)
+                {
+                    array_push($problem_courses, $obj);
+                }
+            }
+            // If there are courses that rely on the ticket, log the errors and respond with a conflidt (409)
+            if(sizeof($problem_courses) > 0)
+            {
+                $logger = $this->log_service
+                               ->create('Attempting to delete the ticket ' . $ticket->name);
+                foreach($problem_courses as $obj) 
+                {
+                    $logger->append('The ticket can not be deleted as the course ' . $obj->name . ' requires atleast one ticket or class, please delete or edit the course so that the ticket can be deleted');
+                }
+                return Response::json(
+                            array('errors' => 
+                                array('The ticket cannot be deleted as it has courses that depend on it, please visit the error logs tab to see more information on how to fix this.')
+                            ), 409);
+            }
+            // Otherwise soft delete the pivots to the courses
+            else
+            {
+                foreach($ticket->courses as $obj) 
+                {
+                    DB::table('packageables')
+                        ->where('package_id', $obj->id)
+                        ->where('packageable_type', 'Course')
+                        ->where('packageable_id', $ticket->id)
+                        ->update(array('deleted_at' => DB::raw('NOW()')));    
+                }
+            }
+        }
+
+        $ticket->delete();
+
+		return array('status' => 'OK. Ticket deleted');
+	}
+
+    /*
+     *
+	public function postDelete()
+	{
+		try
+		{
+			if( !Input::get('id') ) throw new ModelNotFoundException();
 			$ticket = Context::get()->tickets()->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
@@ -340,5 +430,5 @@ class TicketController extends Controller {
 
 		return array('status' => 'OK. Ticket deleted');
 	}
-
+     */
 }

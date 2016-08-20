@@ -23,6 +23,8 @@ class Ticket extends Ardent {
 		'available_for_until' => 'date'
 	);
 
+    public $appends = array('deleteable');
+
 	public function beforeSave()
 	{
 		if( isset($this->name) )
@@ -30,7 +32,12 @@ class Ticket extends Ardent {
 
 		if( isset($this->description) )
 			$this->description = Helper::sanitiseBasicTags($this->description);
-	}
+    }
+
+    public function getDeleteableAttribute()
+    {
+        return !($this->packages()->exists() || $this->courses()->exists());
+    }
 
 	public function setAvailableFromAttribute($value)
 	{
