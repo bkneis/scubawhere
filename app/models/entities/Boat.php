@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Boat extends Ardent {
 	use SoftDeletingTrait;
@@ -16,6 +16,8 @@ class Boat extends Ardent {
 		'capacity'    => 'required|integer'
 	);
 
+	public $appends = array('deleteable');
+
 	public function beforeSave( $forced )
 	{
 		if( isset($this->description) )
@@ -26,6 +28,12 @@ class Boat extends Ardent {
 
 		if( isset($this->photo) )
 			$this->photo = Helper::sanitiseString($this->photo);
+	}
+
+	public function getDeleteableAttribute()
+	{
+		return !($this->departures()->where('start', '>', Helper::localTime())
+									->exists());
 	}
 
 	public function company()
@@ -46,5 +54,10 @@ class Boat extends Ardent {
 	public function departures()
 	{
 		return $this->hasMany('Departure');
+	}
+
+	public function futureDepartures()
+	{
+		return $this->hasMany('Departure')->where('start', '>', Helper::localTime());
 	}
 }
