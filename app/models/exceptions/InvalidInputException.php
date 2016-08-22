@@ -5,15 +5,15 @@ use Illuminate\Support\Facades\Request;
 
 class InvalidInputException extends BaseException
 {
-    protected $message;
+	protected $message;
 
     public function __construct($msg)
     {
-        $this->message = $msg;
+        $this->message = $errors;
     }
 
     public function response()
     {
-        return \Response::json(array('errors' => $this->message), 406);
+        return \Response::json(array('errors' => $this->errors), 406);
     }
 }

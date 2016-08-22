@@ -133,7 +133,8 @@ return array(
 
 		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
         'ScubaWhere\Repositories\LogRepoServiceProvider',
-		'ScubaWhere\Repositories\CreditRepoServiceProvider'
+		'ScubaWhere\Repositories\CreditRepoServiceProvider',
+		'ScubaWhere\Repositories\CustomerRepoServiceProvider'
 
 	),
 
