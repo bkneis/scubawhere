@@ -6,7 +6,9 @@ use ScubaWhere\Helper;
 use ScubaWhere\Context;
 
 class Addon extends Ardent {
+
 	use SoftDeletingTrait;
+	
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = array(
@@ -54,6 +56,7 @@ class Addon extends Ardent {
 		     		$query->where('created_at', '<=', $limitBefore);
 		     })
 		     ->orderBy('from', 'DESC')
+			 ->withTrashed()
 		     ->first();
 
 		$this->decimal_price = $price->decimal_price;

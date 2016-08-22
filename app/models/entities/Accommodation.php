@@ -6,7 +6,9 @@ use ScubaWhere\Helper;
 use ScubaWhere\Context;
 
 class Accommodation extends Ardent {
+
 	use SoftDeletingTrait;
+
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = array('name', 'description', 'capacity', 'parent_id');
@@ -61,6 +63,7 @@ class Accommodation extends Ardent {
 			     	if($limitBefore)
 			     		$query->where('created_at', '<=', $limitBefore);
 			     })
+				->withTrashed()
 				->orderBy('id', 'DESC')
 				->first()->decimal_price;
 

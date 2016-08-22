@@ -368,6 +368,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'AddSoftDeleteToCourseTrainingTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_17_095451_add_soft_delete_to_course_training_table.php',
         'AddSoftDeletesToBoatBoatroomsTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_20_133228_add_soft_deletes_to_boat_boatrooms_table.php',
         'AddSoftDeletesToLocationTripTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_19_091656_add_soft_deletes_to_location_trip_table.php',
+        'AddSoftDeletesToPricesTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_22_073955_add_soft_deletes_to_prices_table.php',
         'AddSoftDeletesToTicketablesTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_20_141119_add_soft_deletes_to_ticketables_table.php',
         'AddSoftDeletesToTripTicketTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_20_084225_add_soft_deletes_to_trip_ticket_table.php',
         'AddSoftDeletionToBoatsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_11_18_165840_add_soft_deletion_to_boats_table.php',

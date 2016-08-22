@@ -1,14 +1,20 @@
 <?php
 
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
 use PhilipBrown\Money\Currency;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Price extends Ardent {
+
+	use SoftDeletingTrait;
+
 	protected $fillable = array('new_decimal_price', 'from', 'until');
 
 	protected $appends = array('decimal_price');
+
+	protected $dates = array('deleted_at');
 
 	public static $owner_id_column_name   = 'owner_id';
 	public static $owner_type_column_name = 'owner_type';

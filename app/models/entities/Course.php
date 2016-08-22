@@ -49,6 +49,7 @@ class Course extends Ardent {
 		     		$query->where('created_at', '<=', $limitBefore);
 		     })
 		     ->orderBy('id', 'DESC')
+			 ->withTrashed()
 		     ->first();
 
 		$this->decimal_price = $price->decimal_price;
