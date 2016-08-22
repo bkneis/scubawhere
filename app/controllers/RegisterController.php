@@ -1,7 +1,9 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use ScubaWhere\Helper;
 use ScubaWhere\CrmMailer;
-use ScubaWhere\Repositories\ObjectStore;
+use ScubaWhere\Services\ObjectStoreService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RegisterController extends Controller {
 
@@ -87,8 +89,13 @@ class RegisterController extends Controller {
 			return Response::json( array('errors' => array('Sorry, Google could not find the specified address.')), 406 ); // 406 Not Acceptable
 		}
 
+		$renewal_date = Helper::localTime()->add(new \DateInterval('P1Y'));
+
+		$credit_data = array('renewal_date' => $renewal_date->format('Y-m-d H:i:s'));
+
 		$company = new Company($data);
 		$user    = new User($userData);
+		$credit  = new Credit($credit_data);
 
 		// Mass assigned insert with automatic validation
 		if(!$company->validate())
@@ -97,9 +104,13 @@ class RegisterController extends Controller {
 		if(!$user->validate())
 			return Response::json( array('errors' => $user->errors()->all()), 406 ); // 406 Not Acceptable
 
+		if(!$credit->validate())
+			return Response::json( array('errors' => $credit->errors()->all()), 406 ); // 406 Not Acceptable
+
 		$company->save();
 
 		$user = $company->users()->save($user);
+		$credit = $company->users()->save($credit);
 
 		// Company and User have been created successfully
 
