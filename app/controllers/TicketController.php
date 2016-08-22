@@ -396,6 +396,10 @@ class TicketController extends Controller {
 
         $ticket->delete();
 
+		Price::where(Price::$owner_id_column_name, $ticket->id)
+			->where(Price::$owner_type_column_name, 'Ticket')
+			->delete();
+
 		return array('status' => 'OK. Ticket deleted');
 	}
 

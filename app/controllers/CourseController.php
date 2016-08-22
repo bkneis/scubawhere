@@ -251,6 +251,10 @@ class CourseController extends Controller
         // if none, use force delete
         $course->delete();
 
+		Price::where(Price::$owner_id_column_name, $course->id)
+			->where(Price::$owner_type_column_name, 'Course')
+			->delete();
+
         return array('status' => 'Ok. Course deleted');
     }
 
