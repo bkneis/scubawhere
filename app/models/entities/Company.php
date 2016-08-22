@@ -133,6 +133,11 @@ class Company extends Ardent {
 		return $this->hasMany('Course');
 	}
 
+	public function credits()
+	{
+		return $this->hasOne('Credit');
+	}
+
 	public function boats()
 	{
 		return $this->hasMany('Boat');

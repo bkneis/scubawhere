@@ -1,10 +1,19 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\CreditService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CompanyController extends Controller {
+
+	protected $credit_service;
+
+	public function __construct(CreditService $credit_service)
+	{
+		$this->credit_service = $credit_service;
+	}
 
 	public function getIndex()
 	{
@@ -339,5 +348,19 @@ class CompanyController extends Controller {
 		$NOTIFICATIONS['expiring'] = $expiring;
 
 		return $NOTIFICATIONS;
+	}
+
+	/**
+	 * @return array Credit usage data about the RMS user
+	 * example  
+	 * {
+     * 		renewal_date    : '2016-08-22',
+	 *		booking_credits : { used : 14, total : 200 }
+	 *		email_credits   : { used : 450, total : 20000 }
+	 * }
+	 */
+	public function getCredits()
+	{
+		return Response::json($this->credit_service->getCredits(), 200);
 	}
 }
