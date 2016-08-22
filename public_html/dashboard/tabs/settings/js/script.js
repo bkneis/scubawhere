@@ -1,4 +1,14 @@
 var companyForm;
+var creditInfoTemplate;
+
+Handlebars.registerHelper('trimDate', function(date) {
+	return date.slice(0, -9);
+});
+
+Handlebars.registerHelper('getUtil', function(capacity, assigned){
+	if(capacity === assigned) return 0;
+	return Math.round((assigned/capacity) * 100);
+});
 
 $(function() {
 	$.get("/api/agency/all", function(data) {
@@ -6,8 +16,8 @@ $(function() {
 		window.company.other_agencies = _.omit( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
 
 		companyForm = Handlebars.compile( $("#company-form-template").html());
+		creditInfoTemplate = Handlebars.compile( $('#credit-info-template').html());
 		
-		$.get
 		renderEditForm();
 	});
 
@@ -111,6 +121,17 @@ function renderEditForm() {
 
 	//console.log(window.company);
 	$('#company-form-container').empty().append( companyForm(window.company) );
+
+	$.ajax({
+		type: 'GET',
+		url: '/api/company/credits',
+		success: function(data) {
+			$('#credit-info').empty().append(creditInfoTemplate(data));	
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	});
 
 	//CKEDITOR.replace('description');
 	//CKEDITOR.replace('terms');

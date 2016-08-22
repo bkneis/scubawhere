@@ -70,6 +70,8 @@
 									<button id="send-password" class="btn btn-default btn-sm">Send password reminder email</button>
 								</div>-->
 
+								<div id="credit-info"></div>
+
 								<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the tour : </label>
 									<button id="start-wizard" class="btn btn-default text-uppercase">Start wizard</button>
@@ -170,6 +172,25 @@
 			</form>
 		</script>
 	</div>
+
+	<script type="text/x-handlebars-template" id="credit-info-template">
+		<div class="form-row">
+			<label class="field-label">Licence Expires on : </label>
+			<input type="text" name="licence_renewal" value="{{trimDate renewal_date}}" class="form-control" disabled>
+		</div>
+		<div class="form-row">
+			<label class="field-label">Booking credits used : {{bookings.used}} / {{bookings.total}}</label>
+			<div style="width:100%" class="percentage-bar-container bg-success border-success">
+				<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil bookings.total bookings.used}}%;">&nbsp</div>
+			</div>
+		</div>
+		<div class="form-row">
+			<label class="field-label">Email credits used : {{emails.used}} / {{emails.total}}</label>
+			<div style="width:100%; background-color: #ffe4b2;" class="percentage-bar-container border-success" >
+				<div class="percentage-bar" style="background-color: #FFA500; width: {{getUtil emails.total emails.used}}%;">&nbsp</div>
+			</div>
+		</div>
+	</script>
 
 	<script type="text/x-handlebars-template" id="errors-template">
 		<div class="yellow-helper errors" style="color: #E82C0C;">
