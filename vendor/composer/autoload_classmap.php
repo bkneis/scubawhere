@@ -88,6 +88,7 @@ return array(
     'AlterBookingsTable' => $baseDir . '/app/database/migrations/2014_07_26_162601_alter_bookings_table.php',
     'AlterLastDiveOnCustomersToDate' => $baseDir . '/app/database/migrations/2014_05_24_204451_alter_last_dive_on_customers_to_date.php',
     'AmmendCompaniesTableRelaxNullableConstraints' => $baseDir . '/app/database/migrations/2016_08_23_175552_ammend_companies_table_relax_nullable_constraints.php',
+    'AmmendUsersTableToRelaxNullableConstraints' => $baseDir . '/app/database/migrations/2016_08_23_182209_ammend_users_table_to_relax_nullable_constraints.php',
     'AuthenticationController' => $baseDir . '/app/controllers/AuthenticationController.php',
     'Aws\\AutoScaling\\AutoScalingClient' => $vendorDir . '/aws/aws-sdk-php/src/Aws/AutoScaling/AutoScalingClient.php',
     'Aws\\AutoScaling\\Enum\\LifecycleState' => $vendorDir . '/aws/aws-sdk-php/src/Aws/AutoScaling/Enum/LifecycleState.php',

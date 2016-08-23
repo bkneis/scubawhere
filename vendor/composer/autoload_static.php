@@ -394,6 +394,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'AlterBookingsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_07_26_162601_alter_bookings_table.php',
         'AlterLastDiveOnCustomersToDate' => __DIR__ . '/../..' . '/app/database/migrations/2014_05_24_204451_alter_last_dive_on_customers_to_date.php',
         'AmmendCompaniesTableRelaxNullableConstraints' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_23_175552_ammend_companies_table_relax_nullable_constraints.php',
+        'AmmendUsersTableToRelaxNullableConstraints' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_23_182209_ammend_users_table_to_relax_nullable_constraints.php',
         'AuthenticationController' => __DIR__ . '/../..' . '/app/controllers/AuthenticationController.php',
         'Aws\\AutoScaling\\AutoScalingClient' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/Aws/AutoScaling/AutoScalingClient.php',
         'Aws\\AutoScaling\\Enum\\LifecycleState' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/Aws/AutoScaling/Enum/LifecycleState.php',
