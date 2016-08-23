@@ -21,7 +21,7 @@ class User extends Ardent implements UserInterface, RemindableInterface {
 		'username' => 'sometimes|required|alpha_dash|between:4,64|unique:users,username',
 		'password' => 'size:60',
 		'email'    => 'required|email|unique:users,email',
-		'phone'    => 'required',
+		'phone'    => '', //'required',
 	);
 
 	public function company()
