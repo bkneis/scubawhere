@@ -6,6 +6,7 @@ $(function() {
 
 	$('#registerForm').on('submit', function(event) {
 		event.preventDefault();
+		$('#registerForm input').removeClass('input-error');
 		register_service.register($('#registerForm'));
 	});
 

@@ -84,6 +84,10 @@ label {
 	width: 300px;
 }
 
+.input-error {
+	border: 2px solid red;
+}
+
 /* form */
 form {
 	font-size: 18px;
