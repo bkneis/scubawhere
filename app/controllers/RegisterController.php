@@ -16,6 +16,113 @@ class RegisterController extends Controller {
 	{
 		$data = Input::only(
 			'contact',
+			'name'
+		);
+
+		$userData = Input::only(
+			'username',
+			'email',
+			'phone'
+		);
+
+		$today = new DateTime();
+		$renewal_date = $today->add(new \DateInterval('P1Y'));
+
+		$credit_data = array('renewal_date' => $renewal_date->format('Y-m-d H:i:s'));
+
+		$company = new Company($data);
+		$user    = new User($userData);
+		$credit  = new Credit($credit_data);
+
+		// Mass assigned insert with automatic validation
+		if(!$company->validate())
+			return Response::json( array('errors' => $company->errors()->all()), 406 ); // 406 Not Acceptable
+
+		if(!$user->validate())
+			return Response::json( array('errors' => $user->errors()->all()), 406 ); // 406 Not Acceptable
+
+		if(!$credit->validate())
+			return Response::json( array('errors' => $credit->errors()->all()), 406 ); // 406 Not Acceptable
+
+		$company->save();
+
+		$user = $company->users()->save($user);
+		$credit = $company->users()->save($credit);
+
+		// Company and User have been created successfully
+
+		// Send notification to Slack if production RMS
+		if(gethostname() === 'rms.scubawhere.com')
+		{
+			Slack::attach([
+				'color' => 'good',
+				'fields' => [
+				[
+					'title' => 'Name',
+					'value' => $company->name,
+					'short' => true
+				],
+				[
+					'title' => 'Contact',
+					'value' => $company->contact . ': ' . $company->business_email,
+					'short' => true
+				]
+				]
+			])->send('New RMS registration! :smiley:');
+		}
+
+		//CrmMailer::sendRegisterConf($user); // todo use this without context
+		return Response::json(
+					array('status' => 
+						'Ok. Company and user created'
+					), 201);
+	}
+
+	// @note this kind of feel more appropriate in the company controller, but when a user registers they are not authenticated yet ...
+	/**
+	 * API Function to save a DO's terms and conditions
+	 * @return ResponseObject 200 if the file has been saved or a 406 if the file was not retrieved from the request params
+	 */
+	public function postUploadTerms()
+	{
+		$this->object_store_service->uploadTerms(Input::file('terms_file'));
+
+		return Response::json(array('status' => 'Your terms have been uploaded'), 200);
+	}
+
+	public function getExists()
+	{
+		$field = Input::get('field');
+		$value = Input::get('value');
+
+		switch($field)
+		{
+			case 'username':
+				$exists = Company::where('username', '=', $value)->exists();
+				break;
+			case 'email':
+				$exists = Company::where('email', '=', $value)->exists();
+				break;
+			case 'business_email':
+				$exists = Company::where('business_email', '=', $value)->exists();
+				break;
+			default:
+				return Response::json( array('errors' => array('Field name not supported.')), 406 ); // 406 Not Acceptable
+		}
+
+		return $exists ? 1 : 0;
+	}
+
+}
+
+
+
+/*
+ *
+	public function postCompany()
+	{
+		$data = Input::only(
+			'contact',
 			'description',
 			'name',
 			'address_1',
@@ -144,41 +251,4 @@ class RegisterController extends Controller {
 		return Route::dispatch($request); */
 
 		// Request::replace($originalInput);
-	}
-
-	// @note this kind of feel more appropriate in the company controller, but when a user registers they are not authenticated yet ...
-	/**
-	 * API Function to save a DO's terms and conditions
-	 * @return ResponseObject 200 if the file has been saved or a 406 if the file was not retrieved from the request params
-	 */
-	public function postUploadTerms()
-	{
-		$this->object_store_service->uploadTerms(Input::file('terms_file'));
-
-		return Response::json(array('status' => 'Your terms have been uploaded'), 200);
-	}
-
-	public function getExists()
-	{
-		$field = Input::get('field');
-		$value = Input::get('value');
-
-		switch($field)
-		{
-			case 'username':
-				$exists = Company::where('username', '=', $value)->exists();
-				break;
-			case 'email':
-				$exists = Company::where('email', '=', $value)->exists();
-				break;
-			case 'business_email':
-				$exists = Company::where('business_email', '=', $value)->exists();
-				break;
-			default:
-				return Response::json( array('errors' => array('Field name not supported.')), 406 ); // 406 Not Acceptable
-		}
-
-		return $exists ? 1 : 0;
-	}
-
-}
+	//}
