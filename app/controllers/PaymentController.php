@@ -118,7 +118,7 @@ class PaymentController extends Controller
             } // 500 Internal Server Error
 
             //Helper::sendBookingConfirmation($booking->id);
-            CrmMailer::sendBookingConf($booking);
+            CrmMailer::sendBookingConf($booking->id);
         }
 
         // Send Payment Confirmation

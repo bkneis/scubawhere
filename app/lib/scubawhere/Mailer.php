@@ -85,22 +85,22 @@ class CrmMailer implements CrmMailerInterface
 
 	}
 
-	public static function sendTransactionConf($payment_id)
+	public static function sendTransactionConf($payment_obj)
 	{
 		# 1. Get booking information
-		\Request::replace(["id" => $payment_id]);
+		\Request::replace(["id" => $payment_obj->id]);
 
 		$app = app();
 		$controller = $app->make('PaymentController');
 		$payment    = $controller->callAction('getIndex', []);
-		$booking = $payment->booking();
+		$booking = $payment->booking;
 
 		# 2. Generate email HTML
 		$html = \View::make('emails.transaction', ['company' => Context::get(), 'payment' => $payment, 'siteUrl' => \Config::get('app.url')])->render();
 
 		# 3. Send email via CrmCampaignController
 		\Request::replace([
-			'subject'          => Context::get()->name . ' Booking Itinerary',
+			'subject'          => Context::get()->name . ' Transaction confirmation',
 			'email_html'       => $html,
 			'name'             => 'Transaction Confirmation for ' . $booking->reference,
 			'sendallcustomers' => 0,
