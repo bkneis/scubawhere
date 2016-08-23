@@ -43,9 +43,9 @@
 
 				<p style="font-size:14px; width:280px; font-style: italic;">
 					By signing up, you agree to our 
-					<a target="_blank" href="#">terms of use</a>, 
+					<a target="_blank" href="/api/terms">terms of use</a><!--, 
 					<a target="_blank" href="#">privacy policy</a> and 
-					<a target="_blank" href="#">cookie policy</a>
+					<a target="_blank" href="#">cookie policy</a>-->
 				</p>				
 
 				<input type="hidden" name="_token" value="" />
