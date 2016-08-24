@@ -13,7 +13,7 @@ function RegisterService(company_repo) {
 		{
 			$('#registerForm [name="email"]').addClass('input-error');
 			//$('#registerForm [name="email"]').css('border', '2px solid red');
-			$('.form-errors').html('<p style="width:280px">Please correct the highlighted fields</p>');
+			$('.form-errors').html('<p style="color: red; width:280px;">Please input a valid email address</p>');
 			return true;
 		}
 
@@ -25,7 +25,7 @@ function RegisterService(company_repo) {
 		else 
 		{
 			$('#registerForm [type="password"]').addClass('input-error');
-			$('.form-errors').html('<p style="width:280px">The passwords you entered did not match</p>');
+			$('.form-errors').html('<p style="color:red; width:280px">The passwords you entered did not match</p>');
 			return true;
 		}
 	}
@@ -45,6 +45,11 @@ function RegisterService(company_repo) {
 			$('#registerForm').html(success_html);
 		},
 		function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			for(var i in data.errors)
+			{
+				$('.form-errors').append('<p style="color:red;">' + data.errors[i] + '</p>');
+			}
 			console.log(xhr);
 		});
 	}
