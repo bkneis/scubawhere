@@ -73,7 +73,7 @@
 
 								<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the tour : </label>
-									<button id="start-wizard" class="btn btn-default text-uppercase">Start wizard</button>
+									<a id="start-wizard" class="btn btn-default text-uppercase">Start wizard</a>
 								</div>
 
 								<input type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
@@ -132,6 +132,12 @@
 								<div class="form-row">
 									<label class="field-label">VAT number : </label>
 									<input type="text" name="vat_number" value="{{vat_number}}" class="form-control">
+								</div>
+
+								<div class="form-row">
+									<label class="field-label">Upload terms file : </label>
+									<input id="terms-file" style="margin-bottom:10px" type="file"> 
+									<a id="upload-terms" class="btn btn-default text-uppercase">Upload Terms</a>
 								</div>
 
 								<input type="hidden" name="_token">

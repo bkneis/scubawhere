@@ -44,6 +44,33 @@ $(function() {
 		}
 	});
 
+	// @todo potentially change this to trigge coniditonally on update of form thoruhg save button
+	$('#company-form-container').on('click', '#upload-terms', function(event) {
+		event.preventDefault();
+
+		var terms_file = $('#terms-file').prop('files')[0];
+
+		// Use FormData Object instead of JSON to handle the file types such as pdf
+		var formData = new FormData();
+		formData.append('terms_file', terms_file);
+		formData.append('company_name', window.company.name);
+
+		// @todo change uplaod terms to copany controllr and add it to js repo
+		$.ajax({
+	        url: "/api/register/upload-terms",
+	        type: "POST",
+	        data: formData,
+	        success: function(data) {
+				pageMssg(data.status, 'success');
+	        },
+	        error: function(xhr) {
+	        	console.log(xhr);
+	        },
+	        contentType: false,
+	        processData: false
+	    });
+	});
+
 	$('#company-form-container').on('submit', '#update-company-form', function(event) {
 
 		event.preventDefault();
