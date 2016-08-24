@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Request;
 
 class InvalidInputException extends BaseException
 {
-	protected $message;
+	protected $errors;
 
-    public function __construct($msg)
+    public function __construct($errors)
     {
-        $this->message = $errors;
+        $this->errors = $errors;
     }
 
     public function response()
