@@ -33,7 +33,7 @@ class ObjectStoreRepo implements ObjectStoreRepoInterface
 		$result = $this->s3_client->putObject(array(
 				'Bucket'		=> $dest_dir,
 				'Key'			=> $key,
-				'SourceFile'	=> $tmp_dir . $filename,
+				'Body'			=> $tmp_dir . $filename,
 				'MetaData'		=> array(
 					'account'	=> Context::get()->name
 				)

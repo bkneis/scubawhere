@@ -15,14 +15,14 @@ class ObjectStoreService {
 
 	public function uploadTerms($file)
 	{
-		if(!$file) throw new InvalidInputException('Please upload a file.');
+		if(!$file) throw new InvalidInputException(array('Please upload a file.'));
 		
-		if(!$file->isValid()) throw new InvalidInputException('Uploaded file is not valid');
+		if(!$file->isValid()) throw new InvalidInputException(array('Uploaded file is not valid'));
 		
 		$save_path = storage_path() . '/scubawhere/' . Context::get()->name;
 		$dest_path = 'sw-rms-terms';
-		$filename = Context::get() . '/' . 'terms.pdf';
-		$this->object_store_repo->uploadFile(Input::file('terms_file'), $filename, $save_path, $dest_path);
+		$filename = Context::get()->name . '/' . 'terms.pdf';
+		$this->object_store_repo->uploadFile($file, $filename, $save_path, $dest_path);
 	}
 
 	public function uploadEmailImage($image)
