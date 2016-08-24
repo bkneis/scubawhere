@@ -4,7 +4,7 @@ var Tour = {
         if (window.tourStart) {
             $("#tour-next-step").show();
             $("#tour-finish").hide();
-            /*introJs().setOptions({
+            introJs().setOptions({
                 showStepNumbers: false,
                 exitOnOverlayClick: false,
                 exitOnEsc: false
@@ -34,7 +34,7 @@ var Tour = {
                 $("#dummy-room").remove();
                 $("#accommodation-list").append('<p id="no-accommodations">No accommodations available.</p>');
                 clearForm();
-            });*/
+            });
 
             $("#tour-next-step").on("click", function() {
                 window.location.href = "#agents";
@@ -57,7 +57,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -86,7 +86,7 @@ var Tour = {
                     $("#dummy-agent").remove();
                     $("#agent-list").append('<p id="no-agents">No agents available.</p>');
                     clearForm();
-                });*/
+                });
             }
             $("#tour-next-step").on("click", function() {
                 window.location.href = "#locations";
@@ -109,11 +109,11 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
-                }).start();*/
+                }).start();
             }
             $("#tour-next-step").on("click", function() {
                 window.location.href = "#boats";
@@ -136,7 +136,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -173,7 +173,7 @@ var Tour = {
                     $("#dummy-boat").remove();
                     $("#boat-list").append('<p id="no-boats">No boats available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-next-step").on("click", function() {
@@ -200,7 +200,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -225,7 +225,7 @@ var Tour = {
                     $("#dummy-trip").remove();
                     $("#trip-list").append('<p id="no-trips">No trips available.</p>');
                     clearForm();
-                });*/
+                });
             }
             $("#tour-next-step").on("click", function() {
                 if (window.trips.length != 0) {
@@ -250,7 +250,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -278,7 +278,7 @@ var Tour = {
                     $("#dummy-ticket").remove();
                     $("#ticket-list").append('<p id="no-tickets">No tickets available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-next-step").on("click", function() {
@@ -304,7 +304,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -323,7 +323,7 @@ var Tour = {
                     $("#dummy-class").remove();
                     $("#class-list").append('<p id="no-classes">No classes available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-next-step").on("click", function() {
@@ -347,7 +347,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -367,7 +367,7 @@ var Tour = {
                     $("#dummy-course").remove();
                     //$("#course-list").append('<p id="no-courses">No courses available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-next-step").on("click", function() {
@@ -393,7 +393,7 @@ var Tour = {
             } else {
                 $("#tour-next-step").show();
                 $("#tour-finish").hide();
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -415,7 +415,7 @@ var Tour = {
                     $("#dummy-addon").remove();
                     $("#addon-list").append('<p id="no-addons">No addons available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-next-step").on("click", function() {
@@ -442,7 +442,7 @@ var Tour = {
                 $("#tour-next-step").hide();
                 $("#tour-finish").show();
                 //$("#tour-button").append('<button id="tour-finish" class="btn btn-success text-uppercase">Finish tour</button>');
-                /*introJs().setOptions({
+                introJs().setOptions({
                     showStepNumbers: false,
                     exitOnOverlayClick: false,
                     exitOnEsc: false
@@ -473,7 +473,7 @@ var Tour = {
                     $("#dummy-package").remove();
                     $("#package-list").append('<p id="no-packages">No packages available.</p>');
                     clearForm();
-                });*/
+                });
             }
 
             $("#tour-finish").click(function(event) {
