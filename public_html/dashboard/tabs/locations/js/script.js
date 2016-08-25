@@ -11,7 +11,7 @@ $(function() {
 	$('#map-container').css('height', window.innerHeight - 200);
 
 	loadGoogleMaps();
-	Tour.getLocationsTour();
+	TourManager.getLocationsTour();
 
 });
 

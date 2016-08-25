@@ -38,7 +38,7 @@ $(function(){
 
 			tripForm = Handlebars.compile( $("#trip-form-template").html() );
 			renderEditForm();
-			Tour.getTripsTour();
+			TourManager.getTripsTour();
 		});
 	});
 

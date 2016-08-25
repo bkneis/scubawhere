@@ -120,56 +120,105 @@ function TourManager() {
 	var locationsTour = new Tour({
 		steps: [
 			{
-				element : '#agent-list-div', // @todo find a way to float this centre screen
-				title	: 'Managing Agents',
-				content : 'Do you recieve any reservations from 3rd party booking agents? For example, travel agents, hotel booking desk, etc. If so, click next. Otherwise, you can just skip this step'
+				element   : '#map-container', // @todo find a way to float this centre screen
+				title	  : 'Managing Locations',
+				placement : 'top',
+				content   : 'Here is where you declare your dive locations. These will be used when creating a trip.'
 			},
 			{
-				element : '#agent-form-container',
-				title: 'Adding Agents',
-				placement: 'left',
-				content: 'Create an agent profile, by entering their details',
+				element : '#add-location',
+				title: 'Adding Locations',
+				placement: 'bottom',
+				content: "To add a location, simply enter in the Latitude and Longitude co-ordinates and click 'Show'.",
 				onShown	  : function(tour) {
-					$("#agent-name").val("John doe");
-					$("#agent-web").val("http://www.onlinescubaholidays.com");
-					$("#branch-name").val("Scuba holidays R us");
-					$("#branch-address").val("46 grand avenue tenerife");
-					$("#branch-phone").val("+44 7866565047");
-					$("#branch-email").val("john.doe@scubaholidays.com");
 				}
 			},
 			{
-				element	  : '#commission-div',
-				title	  : 'Assigning a Commission',
-				placement : 'left',
-				content	  : 'Enter the percentage of commission the agent recieves for each reservation.',
-				onShown   : function(tour) {
-					$("#commission-amount").val(20);
+				element : '#showLocation',
+				title: 'Viewing the location',
+				placement: 'left',
+				content: 'Click ‘Show’ to see exactly where the co-ordinates display on the Map.',
+				onShown	  : function(tour) {
 				}
 			},
 			{
-				element	  : '#terms-div',
-				title	  : 'Defining the business terms',
-				placement : 'left',
-				content	  : "Define your terms of business to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission as a deposit. 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.",
-				onShown   : function(tour) {
-					$('#terms').val('deposit');
+				element : '#createLocation',
+				title: 'Creating the location',
+				placement: 'left',
+				content: "When you click 'Create', a pop up box will appear. Enter a name and description for the dive location. Additionally, you can select any relevant tags for the dive location.",
+				onShown	  : function(tour) {
 				}
 			},
 			{
-				element   : '#agent-list-div',
-				title     : 'Viewing your agents',
-				placement : 'left',
-				content   : 'Once an agent is saved, you will see it in your list. Click on an agent to view or edit its details.',
-				onShown   : function(tour) {
-					clearForm();
-					$("#no-agents").remove();
-					$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
+				element : '#map-container',
+				title: 'Viewing your locations',
+				placement: 'top',
+				content: 'Here is a map that displays all the available dive locations, made by you and other dive operators. The house icon represents where your dive operation is based.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element : '#markers-info',
+				title: 'Loctation Markers',
+				placement: 'left',
+				content: 'Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag.',
+				onShown	  : function(tour) {
 				}
 			}
 		],
 		onEnd : function(tour) {
-			$('#dummy-agent').remove();
+		}
+	});
+
+	var tripsTour = new Tour({
+		steps: [
+			{
+				element   : '#trip-list-container', // @todo find a way to float this centre screen
+				title	  : 'Managing Trips',
+				placement : 'right',
+				content   : 'Now, we need to add your trips. A trip consists of all the information for a dive, and are used to create tickets.'
+			},
+			{
+				element   : '#trip-form-container',
+				title     : 'Creating a trip',
+				placement : 'left',
+				content   : 'Enter a name, description and duration for the trip. Please note trip duration is in hours.',
+				onShown	  : function(tour) {
+					$("#trip-name").val("Single boat dive");
+					$("#tripDuration").val(4);
+				}
+			},
+			{
+				element   : '#locationsList',
+				title     : 'Select a loation',
+				placement : 'left',
+				content   : 'Next, select the locations of the trip',
+				onShown	  : function(tour) {
+                	$('#locationsList').find('.location').filter(':first').click();
+				}
+			},
+			{
+				element   : '#tagsList',
+				title     : 'Adding tags',
+				placement : 'left',
+				content   : "Next, select any tags that describes what is offered in the trip. These tags will be searchable when scubawhere.com is launched. Lastly click 'Save' to create the trip.",
+				onShown	  : function(tour) {
+					$('#tagsList').find('.tag').filter(':first').click();
+				}
+			},
+			{
+				element   : '#trips-list-div',
+				title     : 'Viewing Trips',
+				placement : 'right',
+				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view/edit the details.',
+				onShown	  : function(tour) {
+					$("#no-trips").remove();
+					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-trip").remove();
 		}
 	});
 	
@@ -211,8 +260,52 @@ function TourManager() {
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-                $('#locations-tab').addClass("selected");
+                $('#location-tab').addClass("selected");
                 window.location.href = "#locations";
+            });
+		}
+	};
+
+	this.getLocationsTour = function() {
+		if(window.tourStart) 
+		{
+			locationsTour.init();
+			locationsTour.start(true);	
+			// Force the tour to start at the beginning
+			locationsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 3) {
+                    window.currentStep = {
+                        tab: "#boats",
+                        position: 4
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#boat-tab').addClass("selected");
+                window.location.href = "#boats";
+            });
+		}
+	};
+
+	this.getTripsTour = function() {
+		if(window.tourStart) 
+		{
+			tripsTour.init();
+			tripsTour.start(true);	
+			// Force the tour to start at the beginning
+			tripsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 4) {
+                    window.currentStep = {
+                        tab: "#tickets",
+                        position: 5
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#ticket-tab').addClass("selected");
+                window.location.href = "#tickets";
             });
 		}
 	};
