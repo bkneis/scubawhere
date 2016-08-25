@@ -43,7 +43,7 @@ $(function() {
 		renderEditForm();
 	});
 
-	$('#company-form-container').on('click', '#start-wizard', function(event) {
+	/*$('#company-form-container').on('click', '#start-wizard', function(event) {
 		if(window.tourStart) {
 			window.location.href = window.currentStep.tab;
 		}
@@ -64,6 +64,23 @@ $(function() {
 					}
 				});
 		}
+	});*/
+
+	$('#company-form-container').on('click', '#start-wizard', function(event) {
+		window.location.href = '#accommodations';
+		$("#guts").prepend($("#tour-nav-wizard").html());
+		window.tourStart = true;
+		window.currentStep = {
+			tab : "#accommodations",
+			position : 1
+		};
+		$(".tour-progress").on("click", function(event) {
+			if(window.currentStep.position >= $(this).attr('data-position')) {
+				window.location.href = $(this).attr('data-target');
+			} else {
+				pageMssg("Please complete the unfinished steps");
+			}
+		});
 	});
 
 	// @todo potentially change this to trigge coniditonally on update of form thoruhg save button
