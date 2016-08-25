@@ -221,6 +221,79 @@ function TourManager() {
         	$("#dummy-trip").remove();
 		}
 	});
+
+	var boatsTour = new Tour({
+		steps: [
+			{
+				element   : '#boat-list-container', // @todo find a way to float this centre screen
+				title	  : 'Managing Your Boats',
+				placement : 'right',
+				content   : 'Now, we need to add your boats. Boats are assigned to trips once activated. This allows you to manage the schedule of your boats.'
+			},
+			{
+				element   : '#cabins-container',
+				title     : 'Manage Cabins',
+				placement : 'right',
+				content   : 'If your dive operation offers liveaboards, you will need to declare the diffrent types of cabins.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#boatroom-list-container',
+				title     : 'Creating Cabins',
+				placement : 'right',
+				content   : 'To add a cabin, click ADD CABIN. Then enter a name and description in the form to thr right.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#boat-form-container',
+				title     : 'Creating Boats',
+				placement : 'left',
+				content   : 'Enter a name and description for the boat.',
+				onShown	  : function(tour) {
+					$("#boat-name").val("Barry's big boat");
+					//CKEDITOR.setData("Add a description of your boat here."); 
+				}
+			},
+			{
+				element   : '#boat-capacity',
+				title     : 'Assigning the Boats Size',
+				placement : 'left',
+				content   : 'Enter your boat capacity, excluding your crew.',
+				onShown	  : function(tour) {
+					$("#boat-capacity").val(25);
+				}
+			},
+			{
+				element   : '#boat-cabins',
+				title     : 'Assigning Cabins to a Boat',
+				placement : 'left',
+				content   : 'Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin and select the cabin type and number of rooms',
+				onShown	  : function(tour) {
+					$("#room-types").append('<p id="cabin-option">' +
+					'<select class="room-type-select">' +
+					'<option value="{{id}}">Single Cabin</option>' +
+					'</select> Number of rooms:' +
+					'<input type="number" value="6" placeholder="0" style="width: 100px;" min="0">' +
+					'<button class="btn btn-danger remove-room">&#215;</button>' +
+					'</p>');
+				}
+			},
+			{
+				element   : '#boat-list-container',
+				title     : 'Viewing Your Boats',
+				placement : 'right',
+				content   : 'Once a boat is saved, you will see it in your list. Click on a boat to view/edit the details.',
+				onShown	  : function(tour) {
+					$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-boat").remove();
+		}
+	});
 	
 	this.getAccommodationsTour = function() {
 		if(window.tourStart) 
@@ -288,6 +361,28 @@ function TourManager() {
 		}
 	};
 
+	this.getBoatsTour = function() {
+		if(window.tourStart) 
+		{
+			boatsTour.init();
+			boatsTour.start(true);	
+			// Force the tour to start at the beginning
+			boatsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 4) {
+                    window.currentStep = {
+                        tab: "#trips",
+                        position: 5
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#trip-tab').addClass("selected");
+                window.location.href = "#trips";
+            });
+		}
+	};
+
 	this.getTripsTour = function() {
 		if(window.tourStart) 
 		{
@@ -297,10 +392,10 @@ function TourManager() {
 			tripsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 4) {
+                if (window.currentStep.position <= 5) {
                     window.currentStep = {
                         tab: "#tickets",
-                        position: 5
+                        position: 6
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");

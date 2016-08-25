@@ -20,7 +20,7 @@ $(function() {
 
     boatsForm = Handlebars.compile($("#boat-form-template").html());
     renderEditForm();
-    Tour.getBoatsTour();
+    TourManager.getBoatsTour();
     boatroomsForm = Handlebars.compile($("#boatroom-form-template").html());
     addRoom = Handlebars.compile($('#add-room-template').html());
 
