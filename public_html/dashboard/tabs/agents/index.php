@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Do you have any agents? If so, click 'next'. If not, then just 'skip' this step."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;"></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="agent-list-div" data-step="6" data-position="right" data-intro="Once an agent is saved, you will see it in your list. Click on an agent to view/edit the details.">
+			<div class="panel panel-default" id="agent-list-div">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Agents</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="agent-form-container" data-setp="2" data-position="left" data-intro="Create an agent profile, by entering their details and business relationship. These details will be used when generating an invoice at a later date.">
+			<div class="panel panel-default" id="agent-form-container">
 				<script type="text/x-handlebars-template" id="agent-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} agent</h4>
@@ -87,12 +87,12 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="commission-div" data-step="3" data-position="left" data-intro="Enter the percentage of commission the agent recieves for each booking.">
-								<label class="field-label">Commission</label>
-								<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}"> %
+							<div class="form-row" id="commission-div">
+								<label class="field-label">Commission (%)</label>
+								<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}">
 							</div>
 
-							<div class="form-row" data-step="4" data-position="top" data-intro="Define your relationship to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission percentage directly, and the remaning balance will be paid directly to you. 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.">
+							<div id="terms-div" class="form-row">
 								<label class="field-label">Business Terms</label>
 								<select id="terms" name="terms">
 									<option>Please select..</option>
@@ -127,5 +127,8 @@
 	</script>
 
 	<!--<script src="/tabs/agents/handlebars.runtime.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/agents/js/script.js"></script>
 </div>

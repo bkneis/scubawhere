@@ -22,7 +22,7 @@ $(function(){
 	// Default view: show create agent form
 	agentForm = Handlebars.compile( $("#agent-form-template").html() );
 	renderEditForm();
-	Tour.getAgentsTour();
+	TourManager.getAgentsTour();
 
 	$("#agent-form-container").on('click', '#add-agent', function(event) {
 

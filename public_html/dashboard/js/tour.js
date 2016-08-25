@@ -1,4 +1,227 @@
-var Tour = {
+function TourManager() {
+
+	var accommodationTour = new Tour({
+		steps: [
+			{
+				element : '#accommodations-list', // @todo find a way to float this centre screen
+				title	: 'Managing Accommodations',
+				content : 'Do you own or manage any accommodation? If so, click next. Otherwise, you can just skip this step'
+			},
+			{
+				element : '#acom-name',
+				title: 'Adding Accommodation',
+				placement: 'left',
+				content: 'To get started, enter the room name and description.',
+				onShown	  : function(tour) {
+					$("#room-name").val("3* Hotel Single Room");
+				}
+			},
+			{
+				element	  : '#acom-base',
+				title	  : 'Assigning a Price',
+				placement : 'left',
+				content	  : 'Here you can set a price per night for the accommodation',
+				onShown   : function(tour) {
+					$("#acom-price").val(50);
+				}
+			},
+			{
+				element	  : '#acom-season',
+				title	  : 'Assigning Seasonal Price Changes',
+				placement : 'left',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons',
+				onShown   : function(tour) {
+					$("#acom-season-price").click();
+					$("#seasonal-prices-list #acom-price").val(60);
+				}
+			},
+			{
+				element   : '#acom-rooms',
+				title     : 'Assiging the number of rooms',
+				placement : 'left',
+				content   : 'Lastly enter the number of rooms you have available. If the room is a dorm room, then treat each dorm room. Lastly, click save to add your accommodation.',
+				onShown   : function(tour) {
+                	$("#room-amount").val(6);
+				}
+			},
+			{
+				element   : '#accommodations-list',
+				title     : 'Viewing Your Accommodation',
+				placement : 'right',
+				content   : 'Once an accommodation is saved, you will see it in your list. Click on an accommodation to view or edit its details.',
+				onShown   : function(tour) {
+					clearForm();
+					$("#no-accommodations").remove();
+					$("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+			$('#dummy-room').remove();
+		}
+	});
+
+	var agentsTour = new Tour({
+		steps: [
+			{
+				element : '#agent-list-div', // @todo find a way to float this centre screen
+				title	: 'Managing Agents',
+				content : 'Do you recieve any reservations from 3rd party booking agents? For example, travel agents, hotel booking desk, etc. If so, click next. Otherwise, you can just skip this step'
+			},
+			{
+				element : '#agent-form-container',
+				title: 'Adding Agents',
+				placement: 'left',
+				content: 'Create an agent profile, by entering their details',
+				onShown	  : function(tour) {
+					$("#agent-name").val("John doe");
+					$("#agent-web").val("http://www.onlinescubaholidays.com");
+					$("#branch-name").val("Scuba holidays R us");
+					$("#branch-address").val("46 grand avenue tenerife");
+					$("#branch-phone").val("+44 7866565047");
+					$("#branch-email").val("john.doe@scubaholidays.com");
+				}
+			},
+			{
+				element	  : '#commission-div',
+				title	  : 'Assigning a Commission',
+				placement : 'left',
+				content	  : 'Enter the percentage of commission the agent recieves for each reservation.',
+				onShown   : function(tour) {
+					$("#commission-amount").val(20);
+				}
+			},
+			{
+				element	  : '#terms-div',
+				title	  : 'Defining the business terms',
+				placement : 'left',
+				content	  : "Define your terms of business to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission as a deposit. 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.",
+				onShown   : function(tour) {
+					$('#terms').val('deposit');
+				}
+			},
+			{
+				element   : '#agent-list-div',
+				title     : 'Viewing your agents',
+				placement : 'left',
+				content   : 'Once an agent is saved, you will see it in your list. Click on an agent to view or edit its details.',
+				onShown   : function(tour) {
+					clearForm();
+					$("#no-agents").remove();
+					$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+			$('#dummy-agent').remove();
+		}
+	});
+
+	var locationsTour = new Tour({
+		steps: [
+			{
+				element : '#agent-list-div', // @todo find a way to float this centre screen
+				title	: 'Managing Agents',
+				content : 'Do you recieve any reservations from 3rd party booking agents? For example, travel agents, hotel booking desk, etc. If so, click next. Otherwise, you can just skip this step'
+			},
+			{
+				element : '#agent-form-container',
+				title: 'Adding Agents',
+				placement: 'left',
+				content: 'Create an agent profile, by entering their details',
+				onShown	  : function(tour) {
+					$("#agent-name").val("John doe");
+					$("#agent-web").val("http://www.onlinescubaholidays.com");
+					$("#branch-name").val("Scuba holidays R us");
+					$("#branch-address").val("46 grand avenue tenerife");
+					$("#branch-phone").val("+44 7866565047");
+					$("#branch-email").val("john.doe@scubaholidays.com");
+				}
+			},
+			{
+				element	  : '#commission-div',
+				title	  : 'Assigning a Commission',
+				placement : 'left',
+				content	  : 'Enter the percentage of commission the agent recieves for each reservation.',
+				onShown   : function(tour) {
+					$("#commission-amount").val(20);
+				}
+			},
+			{
+				element	  : '#terms-div',
+				title	  : 'Defining the business terms',
+				placement : 'left',
+				content	  : "Define your terms of business to the agent with one of the drop down options. 'Deposit only' means the agent will take the commission as a deposit. 'Full amount' means the agent gets paid the full amount for the reservation, then you will invoice the agent for payment. 'Banned' means that the agent is blocked and they are no longer allowed to make reservations. Lastly, click 'save' to add your agent.",
+				onShown   : function(tour) {
+					$('#terms').val('deposit');
+				}
+			},
+			{
+				element   : '#agent-list-div',
+				title     : 'Viewing your agents',
+				placement : 'left',
+				content   : 'Once an agent is saved, you will see it in your list. Click on an agent to view or edit its details.',
+				onShown   : function(tour) {
+					clearForm();
+					$("#no-agents").remove();
+					$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+			$('#dummy-agent').remove();
+		}
+	});
+	
+	this.getAccommodationsTour = function() {
+		if(window.tourStart) 
+		{
+			accommodationTour.init();
+			accommodationTour.start(true);	
+			// Force the tour to start at the beginning
+			accommodationTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 1) {
+                    window.currentStep = {
+                        tab: "#agents",
+                        position: 2
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#agent-tab').addClass("selected");
+                window.location.href = "#agents";
+            });
+		}
+	};
+
+	this.getAgentsTour = function() {
+		if(window.tourStart) 
+		{
+			agentsTour.init();
+			agentsTour.start(true);	
+			// Force the tour to start at the beginning
+			agentsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 2) {
+                    window.currentStep = {
+                        tab: "#locations",
+                        position: 3
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#locations-tab').addClass("selected");
+                window.location.href = "#locations";
+            });
+		}
+	};
+
+};
+
+var TourManager = new TourManager();
+
+/*var Tour = {
 
     getAcommodationsTour: function() {
         if (window.tourStart) {
@@ -493,4 +716,4 @@ var Tour = {
         }
     }
 
-};
+};*/

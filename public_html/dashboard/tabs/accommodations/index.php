@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0; height:0; margin-left:50%;" data-step="1" data-intro="Do you own or manage any accommodations? If so, click 'next'. If not, then just 'skip' this step."></div>
+	<div id="tour-div" style="width:0; height:0; margin-left:50%;"></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="accommodations-list" data-step="6" data-position="right" data-intro="Once an accommodation is saved, you will see it in your list. Click on an accommodation to view/edit the details.">
+			<div class="panel panel-default" id="accommodations-list">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Accommodation</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="accommodation-form-container" data-step="2" data-position="left" data-intro="To get started, enter the room name and description.">
+			<div class="panel panel-default" id="accommodation-form-container">
 				<script type="text/x-handlebars-template" id="accommodation-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} accommodation</h4>
@@ -44,7 +44,7 @@
 								<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div class="form-row" id="acom-base" data-step="3" data-position="top" data-intro="Here you can set any price changes that start from a certain date.">
+							<div class="form-row" id="acom-base">
 								<p><strong>Set base prices for this accommodation:</strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
@@ -52,7 +52,7 @@
 								<button id="add-base-price" class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
 							</div>
 
-							<div class="form-row" id="acom-season" data-step="4" data-position="left" data-intro="If you have prices that change throughout the year, you can ajust your prices depening on the seasons">
+							<div class="form-row" id="acom-season">
 								<label>
 									<input id="acom-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);" {{#if prices}} checked{{/if}}>
 									Add seasonal price changes?
@@ -70,8 +70,8 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="acom-rooms" data-step="5" data-position="top" data-intro="Lastly enter the number of rooms you have available. If the room is a dorm room, then treat each dorm room. Lastly, click 'save' to add your accommodation.">
-								<label for="capacity" class="field-label">Number of Rooms/Beds</label>
+							<div class="form-row" id="acom-rooms">
+								<label for="capacity" class="field-label">Number of Rooms : </label>
 								<input id="room-amount" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
 							</div>
 
@@ -138,7 +138,10 @@
 		</div>
 	</script>
 
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
 	<script src="/tabs/accommodations/js/handlebars.runtime.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/accommodations/js/script.js"></script>
 
 </div>

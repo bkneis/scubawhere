@@ -56,7 +56,7 @@ $(function(){
 	//accommodationForm = Handlebars.templates['accommodationForm'];
 	loadAccommodations(); // Automatically renders the views when data is loaded
 
-	Tour.getAcommodationsTour();
+	TourManager.getAccommodationsTour();
 
 	var selAccommodationFortContainer = $("#accommodation-form-container");
 
