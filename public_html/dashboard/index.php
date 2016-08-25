@@ -70,7 +70,6 @@ $PROTOCOL = 'http';
 	<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
-    <link rel="stylesheet" type="text/css" href="/common/css/bootstrap-tour.min.css">
 
 	<!-- jQuery -->
 	<script src="/common/js/jquery/jquery.min.js"></script>
@@ -95,7 +94,7 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
 	<!--intojs tour-->
-	<script type="text/javascript" src="/common/js/intro.js"></script>
+	<!--<script type="text/javascript" src="/common/js/intro.js"></script>-->
 
 	<!--nprogress bar-->
 	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
@@ -105,7 +104,6 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
 
-    <script type="text/javascript" src="/common/js/bootstrap-tour.min.js"></script>    
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -120,7 +118,7 @@ $PROTOCOL = 'http';
 	<?php } else { ?>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/navigation.js"></script>
-		<script type="text/javascript" src="js/tour.js"></script>
+		<!--<script type="text/javascript" src="js/tour.js"></script>-->
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/validate.js"></script>
 
