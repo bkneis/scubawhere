@@ -294,6 +294,82 @@ function TourManager() {
         	$("#dummy-boat").remove();
 		}
 	});
+
+	var ticketsTour = new Tour({
+		steps: [
+			{
+				element   : '#tickets-list-div', // @todo find a way to float this centre screen
+				title	  : 'Managing Tickets',
+				placement : 'right',
+				content   : 'Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page).'
+			},
+			{
+				element   : '#ticket-form-container',
+				title     : 'Creating a Ticket',
+				placement : 'left',
+				content   : 'Enter a name, description and base price for the ticket.',
+				onShown	  : function(tour) {
+					$("#ticket-name").val("2 dive boat ticket");
+					$("#acom-price").val(50); //@todo change handlebars tempate to change name based on tab
+				}
+			},
+			{
+				element   : '#tickets-trips',
+				title     : 'Assigning Trips',
+				placement : 'left',
+				content   : 'Select which trips a ticket can be used for. The ticket is valid for only 1 trip.',
+				onShown	  : function(tour) {
+					$('input').filter('[name="trips[]"]').first().click();
+				}
+			},
+			{
+				element   : '#tickets-boats',
+				title     : 'Assigning Specific Boats to a Trip',
+				placement : 'left',
+				content   : 'You can also limit the ticket to be used for specific boats.',
+				onShown	  : function(tour) {
+					$("#tickets-boats-checkbox").click();
+				}
+			},
+			{
+				element   : '#tickets-boatrooms',
+				title     : 'Assigning Specific Boatrooms to a Boat',
+				placement : 'left',
+				content   : 'You can also limit the ticket to be used on specific cabins for overnight trips. Click Save to create the ticket.',
+				onShow	  : function(tour) {
+					$("#tickets-boats-checkbox").click();
+				},
+				onShown	  : function(tour) {
+					$("#tickets-boatroom-checkbox").click();
+				}
+			},
+			{
+				element   : '#tickets-availability',
+				title     : "Limitin a Ticket's Availabity",
+				placement : 'left',
+				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date',
+				onShow	  : function(tour) {
+					$("#tickets-boatroom-checkbox").click();
+				},
+				onShown	  : function(tour) {
+					$('#tickets-availability-checkbox').click();
+				}
+			},
+			{
+				element   : '#ticket-list-container',
+				title     : 'Viewing Tickets',
+				placement : 'right',
+				content   : 'Once a ticket is saved, you will see it in your list. Click on a ticket to view or edit  its details.',
+				onShown	  : function(tour) {
+					clearForm();		
+					$("#ticket-list").append('<li id="dummy-ticket"><strong>2 dive boat ticket</strong> | ' + window.currency + '50.00 </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-ticket").remove();
+		}
+	});
 	
 	this.getAccommodationsTour = function() {
 		if(window.tourStart) 
@@ -401,6 +477,28 @@ function TourManager() {
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
                 $('#ticket-tab').addClass("selected");
                 window.location.href = "#tickets";
+            });
+		}
+	};
+
+	this.getTicketsTour = function() {
+		if(window.tourStart) 
+		{
+			ticketsTour.init();
+			ticketsTour.start(true);	
+			// Force the tour to start at the beginning
+			ticketsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 6) {
+                    window.currentStep = {
+                        tab: "#classes",
+                        position: 7
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#class-tab').addClass("selected");
+                window.location.href = "#classes";
             });
 		}
 	};
@@ -672,7 +770,7 @@ var TourManager = new TourManager();
                             $("#ticket-base").val(50);
                             break;
                         case "tickets-seasonal":
-                            $("#seasonal-prices-checkbox").click();
+                            $"#seasonal-prices-checkbox").click();
                             break;
                         case "tickets-boats":
                             $("#tickets-boats-checkbox").click();

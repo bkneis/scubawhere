@@ -83,7 +83,7 @@ $(function () {
 		window.promises.loadedBoats.done(function() {
 			window.promises.loadedBoatrooms.done(function() {
 				renderEditForm();
-				Tour.getTicketsTour();
+				TourManager.getTicketsTour();
 			});
 		});
 	});

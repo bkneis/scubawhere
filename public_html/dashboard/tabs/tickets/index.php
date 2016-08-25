@@ -1,9 +1,8 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page)."></div>
-
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;"></div> 
 	<div class="row">
 		<div class="col-md-4">
-			<div id="tickets-list-div" class="panel panel-default" data-step="8" data-position="right" data-intro="Once a ticket is saved, you will see it in your list. Click on a ticket to view/edit the details.">
+			<div id="tickets-list-div" class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Tickets</h4>
 				</div>
@@ -23,7 +22,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="ticket-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and base price for the ticket.">
+			<div class="panel panel-default" id="ticket-form-container">
 				<script type="text/x-handlebars-template" id="ticket-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} Ticket</h4>
@@ -82,7 +81,7 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="tickets-trips" data-step="3" data-position="top" data-intro="Select which trips a ticket can be used for. The ticket is valid for only 1 trip.">
+							<div class="form-row" id="tickets-trips">
 								<h4>Please select the trips that this ticket should be eligible for:</h4>
 								<div id="ticket-selectList" class="form-row">
 								{{#each available_trips}}
@@ -102,7 +101,7 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="tickets-boats" data-step="4" data-position="top" data-intro="You can also limit the ticket to be used for specific boats.">
+							<div class="form-row" id="tickets-boats">
 								<label style="display: block;">
 									<input id="tickets-boats-checkbox" type="checkbox" onclick="showMe('#boat-select', this)"{{#if hasBoats}} checked{{/if}}> <strong>Limit the ticket to certain boats?</strong>
 								</label>
@@ -119,7 +118,7 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="tickets-boatrooms" data-step="6" data-position="top" data-intro="You can also limit the ticket to be used on specific cabins for overnight trips. Click 'Save' to create the ticket.">
+							<div class="form-row" id="tickets-boatrooms">
 								<label style="display: block;">
 									<input id="tickets-boatroom-checkbox" type="checkbox" onclick="showMe('#boatroom-select', this)"{{#if hasBoatrooms}} checked{{/if}}><strong> Limit the ticket to certain cabins?</strong>
 								</label>
@@ -136,7 +135,7 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="tickets-availability" data-step="7" data-position="top" data-intro="...">
+							<div class="form-row" id="tickets-availability">
 								<label style="display: block;">
 									<input id="tickets-availability-checkbox" type="checkbox" onclick="showMe('#availability-select', this)"{{#if hasAvailability}} checked{{/if}}><strong> Limit the ticket's availability?</strong>
 								</label>
@@ -214,5 +213,8 @@
 		</div>
 	</script>
 
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/tickets/js/script.js"></script>
 </div>
