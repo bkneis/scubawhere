@@ -11,10 +11,32 @@ Handlebars.registerHelper('getUtil', function(capacity, assigned){
 });
 
 $(function() {
+
+	window.promises.agencies_loaded = $.Deferred();
+	window.promises.countries_loaded = $.Deferred();
+	window.promises.currencies_loaded = $.Deferred();
+
 	$.get("/api/agency/all", function(data) {
 		window.company.agencies       = _.indexBy(window.company.agencies, 'id');
 		window.company.other_agencies = _.omit( _.indexBy(data, 'id'), _.keys(window.company.agencies) );
+		window.promises.agencies_loaded.resolve();	
+	});
 
+	$.get('/api/country/all', function(data) {
+		window.countries = _.indexBy(data, 'id');
+		window.promises.countries_loaded.resolve();	
+	});
+
+	$.get('/api/currency/all', function(data) {
+		window.currencies = _.indexBy(data, 'id');
+		window.promises.currencies_loaded.resolve();	
+	});
+
+	$.when(
+		window.promises.agencies_loaded,
+		window.promises.countries_loaded,
+		window.promises.currencies_loaded
+	).then(function() {
 		companyForm = Handlebars.compile( $("#company-form-template").html());
 		creditInfoTemplate = Handlebars.compile( $('#credit-info-template').html());
 		
@@ -69,6 +91,11 @@ $(function() {
 	        contentType: false,
 	        processData: false
 	    });
+	});
+
+	$('#company-form-container').on('change', '#country_id', function(event) {
+		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');
+		$('#currency_id option').filter('[value=' + currency_id + ']').prop('selected', true);
 	});
 
 	$('#company-form-container').on('submit', '#update-company-form', function(event) {
@@ -139,6 +166,28 @@ $(function() {
 
 });
 
+function renderCurrencyList() {
+	var currency_select_options = '';
+	var selected = '';
+	for(var key in window.currencies) {
+		if(window.currencies[key].id === window.company.currency_id) selected = 'selected ';
+		else selected = '';
+		currency_select_options += '<option value="' + window.currencies[key].id + '"' + selected + '>' + window.currencies[key].name + '</option>';
+	}
+	$('#currency_id').append( currency_select_options );
+}
+
+function renderCountryList() {
+	var country_select_options = '';
+	var selected;
+	for(var key in window.countries) {
+		if(window.countries[key].id === window.company.country_id) selected = 'selected ';
+		else selected = '';
+		country_select_options += '<option data-currency-id="' + window.countries[key].currency_id + '"' + selected + ' value="' + window.countries[key].id + '">' + window.countries[key].name + '</option>';
+	}
+	$('#country_id').append( country_select_options );
+}
+
 function renderEditForm() {
 
 	if( unsavedChanges() ) {
@@ -160,8 +209,8 @@ function renderEditForm() {
 		}
 	});
 
-	//CKEDITOR.replace('description');
-	//CKEDITOR.replace('terms');
+	renderCountryList();
+	renderCurrencyList();
 
 	setToken('[name=_token]');
 

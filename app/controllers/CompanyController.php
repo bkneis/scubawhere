@@ -22,11 +22,12 @@ class CompanyController extends Controller {
 
 	public function postUpdate()
 	{
-		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode',/* 'country_id', 'currency_id',*/ 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website');
+		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website');
 
 		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
-			$country = Context::get()->country;
+			//$country = Context::get()->country;
+			$country = Country::findOrFail($data['country_id']);
 
 			$address = urlencode( implode( ',', array(
 				$data['address_1'],

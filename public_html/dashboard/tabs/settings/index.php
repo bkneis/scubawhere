@@ -135,6 +135,20 @@
 								</div>
 
 								<div class="form-row">
+									<label for="country_id">Country : </label>
+									<select id="country_id" name="country_id" style="width: 100%;" required>
+										<option value="">Please select</option>
+									</select>
+								</div>
+
+								<div class="form-row">
+									<label for="currency_id">Currency : </label>
+									<select id="currency_id" name="currency_id" style="width: 100%;" required>
+										<option value="">Please select</option>
+									</select>
+								</div>
+
+								<div class="form-row">
 									<label class="field-label">Upload terms file : </label>
 									<input id="terms-file" style="margin-bottom:10px" type="file"> 
 									<a id="upload-terms" class="btn btn-default text-uppercase">Upload Terms</a>
