@@ -1,17 +1,94 @@
 function TourManager() {
 
+	var settingsTour = new Tour({
+		steps: [
+			{
+				element   : '#account-info', // @todo find a way to float this centre screen
+				title	  : 'We Want To Know More About You',
+				palcement : 'right',
+				content   : 'Please fill in the following fields so that we can include your information within the system'
+			},
+			{
+				element   : '#business-website',
+				title     : 'Basic Info',
+				placement : 'right',
+				content   : 'Enter your dive operators website',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#agencies-list',
+				title     : 'Accredited Agencies',
+				placement : 'right',
+				content   : 'Please select all of the diving agencies you are accredited to',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#credit-info',
+				title     : 'Account Credit Usage',
+				placement : 'right',
+				content   : 'Here you can view when your scubawhere RMS licnece expries and how many booking / email credits you have left in your licence.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#postcode-div',
+				title     : 'Locating your business',
+				placement : 'left',
+				content   : 'Please enter your full address so that we can geo locate your business and show it on your map and include it in invoices and transaction confirmation emails.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#legal-info',
+				title     : 'Your Business Information',
+				placement : 'left',
+				content   : "Please enter your business's VAT and registration number",
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#country_id',
+				title     : 'Your Country and Currency',
+				placement : 'left',
+				content   : 'Please select from the drop down you country and currency.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#terms-file',
+				title     : 'Uploading your Terms and Conditions',
+				placement : 'left',
+				content   : 'If you would like to send a copy of your terms and conditions in customer emails, please upload it here in a pdf format.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#save-company-info',
+				title     : 'Save and Finish your Settings',
+				placement : 'left',
+				content   : 'When you are finished and happy with the information provided, please click SAVE and continue the tour.',
+				onShown	  : function(tour) {
+				}
+			}
+		],
+		onEnd : function(tour) {
+		}
+	});
+
 	var accommodationTour = new Tour({
 		steps: [
 			{
-				element : '#accommodations-list', // @todo find a way to float this centre screen
-				title	: 'Managing Accommodations',
-				content : 'Do you own or manage any accommodation? If so, click next. Otherwise, you can just skip this step'
+				element   : '#accommodations-list', // @todo find a way to float this centre screen
+				title	  : 'Managing Accommodations',
+				content   : 'Do you own or manage any accommodation? If so, click next. Otherwise, you can just skip this step'
 			},
 			{
-				element : '#acom-name',
-				title: 'Adding Accommodation',
-				placement: 'left',
-				content: 'To get started, enter the room name and description.',
+				element   : '#acom-name',
+				title     : 'Adding Accommodation',
+				placement : 'left',
+				content   : 'To get started, enter the room name and description.',
 				onShown	  : function(tour) {
 					$("#room-name").val("3* Hotel Single Room");
 				}
@@ -295,7 +372,6 @@ function TourManager() {
 		}
 	});
 
-
 	var ticketsTour = new Tour({
 		steps: [
 			{
@@ -371,28 +447,6 @@ function TourManager() {
         	$("#dummy-ticket").remove();
 		}
 	});
-	
-	this.getAccommodationsTour = function() {
-		if(window.tourStart) 
-		{
-			accommodationTour.init();
-			accommodationTour.start(true);	
-			// Force the tour to start at the beginning
-			accommodationTour.goTo(0);	
-
-            $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 1) {
-                    window.currentStep = {
-                        tab: "#agents",
-                        position: 2
-                    };
-                }
-                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-                $('#agent-tab').addClass("selected");
-                window.location.href = "#agents";
-            });
-		}
-	};
 
 	var classesTour = new Tour({
 		steps: [
@@ -436,6 +490,218 @@ function TourManager() {
 		}
 	});
 
+	var coursesTour = new Tour({
+		steps: [
+			{
+				element   : '#packages-list-div', // @todo find a way to float this centre screen
+				title	  : 'Managing your Courses',
+				placement : 'right',
+				content   : 'Now you need to add your courses. A course is defined by its class, each course consists of a single class and many/one tickets.'
+			},
+			{
+				element   : '#course-form-container',
+				title     : 'Creating a Course',
+				placement : 'left',
+				content   : 'Enter a name, description and price for the course.',
+				onShown	  : function(tour) {
+					$("#course-name").val("PADI open water");
+					$("#course-capacity").val(10);
+				}
+			},
+			{
+				element   : '#course-classes',
+				title     : 'Assigning Classes to your Course',
+				placement : 'left',
+				content   : 'Now, select the classes that you want to include in the course.',
+				onShown	  : function(tour) {
+					$('#class-select').find('option:eq(1)').attr('selected', true);
+				}
+			},
+			{
+				element   : '#course-tickets', // @todo change this to course-classes
+				title     : 'Assigning Tickets to your Course',
+				placement : 'left',
+				content   : 'Now, select the tickets that you want to include in the course.',
+				onShown	  : function(tour) {
+					$('#ticket-select').find('option:eq(1)').attr('selected', true);
+				}
+			},
+			{
+				element   : '#add-course',
+				title     : 'Saving the Course',
+				placement : 'left',
+				content   : 'To create the course with the information you provided, click SAVE.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#packages-list-div',
+				title     : 'Viewing your Courses',
+				placement : 'right',
+				content   : 'Once a course is saved, you will see it in your list. Click on a course to view or edit its details.',
+				onShown	  : function(tour) {
+					clearForm();
+					$("#course-list").append('<li id="dummy-course"><strong>PADI open water</strong> | £10.00 </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-course").remove();
+		}
+	});
+
+	var addonsTour = new Tour({
+		steps: [
+			{
+				element   : '#addon-list-div', // @todo find a way to float this centre screen
+				title	  : 'Managing Addons',
+				placement : 'right',
+				content   : 'Now you need to enter your add-ons. An add-on can be attached to a booking and can be useful for things like extra dives, hotel pick ups and nitrox air etc.'
+			},
+			{
+				element   : '#addon-form-container',
+				title     : 'Creating an Addon',
+				placement : 'left',
+				content   : 'Enter a name, description and price for the add-on',
+				onShown	  : function(tour) {
+					$("#addon-name").val("Reef diving tax");
+					$("#acom-price").first().val(10); //@todo look at price input template
+				}
+			},
+			{
+				element   : '#add-addon',
+				title     : 'Save the Addon',
+				placement : 'left',
+				content   : 'To crete the addon with the information provided, click SAVE',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#addon-list-div',
+				title     : 'Viewing Addons',
+				placement : 'right',
+				content   : 'Once a add-on is saved, you will see it in your list. Click on a add-on to view or edit its details.',
+				onShown	  : function(tour) {
+					clearForm();
+					$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-addon").remove();
+		}
+	});
+
+	var packagesTour = new Tour({
+		steps: [
+			{
+				element   : '#packages-list-div', // @todo find a way to float this centre screen
+				title	  : 'Managing Packages',
+				placement : 'right',
+				content   : 'Now you need to add your packages. A package consists of many tickets and is great for offering deals that include more than 1 ticket. A package is also used for educational courses that include multiple trips.'
+			},
+			{
+				element   : '#package-form-container',
+				title     : 'Creating Packages',
+				placement : 'right',
+				content   : 'Enter a name, description and price for the package.',
+				onShown	  : function(tour) {
+					$("#package-name").val("Family dive day");
+					$('#acom-price').val(150);
+				}
+			},
+			{
+				element   : '#package-entities',
+				title     : 'Assigning Tickets, Courses, Addons and Accommodations',
+				placement : 'left',
+				content   : 'Now, select the tickets, courses, accommodations and addons that you want to include in the package. ',
+				onShown	  : function(tour) {
+					$("#package-tickets").find(".ticket-select").filter(":first").val(1);
+					$("#package-tickets").find(".quantity-input").filter(":first").val(4);
+				}
+			},
+			{
+				element	  : '#package-seasonal',
+				title	  : 'Assigning Seasonal Price Changes',
+				placement : 'left',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons',
+				onShown   : function(tour) {
+					$("#package-season-price").click();
+					$("#package-seasonal input").filter('type["number"]').first().val(175);
+				}
+			},
+			{
+				element   : '#package-availability',
+				title     : 'Package Availability',
+				placement : 'left',
+				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date',
+				onShown	  : function(tour) {
+					$('#package-availability-checkbox').click();
+				}
+			},
+			{
+				element   : '#packages-list-div',
+				title     : 'Viewing Packages',
+				placement : 'right',
+				content   : 'Once a package is saved, you will see it in your list. Click on a package to view/edit the details.',
+				onShow    : function(tour) {
+					$('#package-availability-checkbox').click();
+				},
+				onShown	  : function(tour) {
+					clearForm();
+					$("#package-list").append('<li id="dummy-package"><strong>Family dive day</strong> | £150.00 </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-package").remove();
+		}
+	});
+
+	this.getSettingsTour = function() {
+		if(window.tourStart) 
+		{
+			settingsTour.init();
+			settingsTour.start(true);	
+			// Force the tour to start at the beginning
+			settingsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 1) {
+                    window.currentStep = {
+                        tab: "#accommodation",
+                        position: 2
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#accommodation-tab').addClass("selected");
+                window.location.href = "#accommodation";
+            });
+		}
+	};
+
+	this.getAccommodationsTour = function() {
+		if(window.tourStart) 
+		{
+			accommodationTour.init();
+			accommodationTour.start(true);	
+			// Force the tour to start at the beginning
+			accommodationTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 2) {
+                    window.currentStep = {
+                        tab: "#agents",
+                        position: 3
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#agent-tab').addClass("selected");
+                window.location.href = "#agents";
+            });
+		}
+	};
+
 	this.getAgentsTour = function() {
 		if(window.tourStart) 
 		{
@@ -445,10 +711,10 @@ function TourManager() {
 			agentsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 2) {
+                if (window.currentStep.position <= 3) {
                     window.currentStep = {
                         tab: "#locations",
-                        position: 3
+                        position: 4
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -467,10 +733,10 @@ function TourManager() {
 			locationsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 3) {
+                if (window.currentStep.position <= 4) {
                     window.currentStep = {
                         tab: "#boats",
-                        position: 4
+                        position: 5
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -489,10 +755,10 @@ function TourManager() {
 			boatsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 4) {
+                if (window.currentStep.position <= 5) {
                     window.currentStep = {
                         tab: "#trips",
-                        position: 5
+                        position: 6
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -511,10 +777,10 @@ function TourManager() {
 			tripsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 5) {
+                if (window.currentStep.position <= 6) {
                     window.currentStep = {
                         tab: "#tickets",
-                        position: 6
+                        position: 7
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -533,10 +799,10 @@ function TourManager() {
 			ticketsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 6) {
+                if (window.currentStep.position <= 7) {
                     window.currentStep = {
                         tab: "#classes",
-                        position: 7
+                        position: 8
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -555,10 +821,10 @@ function TourManager() {
 			classesTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
-                if (window.currentStep.position <= 7) {
+                if (window.currentStep.position <= 8) {
                     window.currentStep = {
                         tab: "#courses",
-                        position: 8
+                        position: 9
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
@@ -568,6 +834,75 @@ function TourManager() {
 		}
 	};
 
+	this.getCoursesTour = function() {
+		if(window.tourStart) 
+		{
+			coursesTour.init();
+			coursesTour.start(true);	
+			// Force the tour to start at the beginning
+			coursesTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 9) {
+                    window.currentStep = {
+                        tab: "#add-ons",
+                        position: 10
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#addon-tab').addClass("selected");
+                window.location.href = "#add-ons";
+            });
+		}
+	};
+
+	this.getAddonsTour = function() {
+		if(window.tourStart) 
+		{
+			addonsTour.init();
+			addonsTour.start(true);	
+			// Force the tour to start at the beginning
+			addonsTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 10) {
+                    window.currentStep = {
+                        tab: "#packages",
+                        position: 11
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#package-tab').addClass("selected");
+                window.location.href = "#packages";
+            });
+		}
+	};
+
+	this.getPackagesTour = function() {
+		if(window.tourStart) 
+		{
+			packagesTour.init();
+			packagesTour.start(true);	
+			// Force the tour to start at the beginning
+			packagesTour.goTo(0);	
+
+			$('#tour-next-step').hide();
+			$('#tour-finish').show();
+
+            $("#tour-finish").click(function(event) {
+                var params = {
+                    _token: window.token
+                };
+                Company.initialise(params, function success(data) {
+                    pageMssg("Thank you for following our wizard. Your system is now fully configured.", 'success');
+                    setTimeout(function() {
+                        window.location.href = "#scheduling";
+                        window.location.reload(true);
+                    }, 3000);
+                });
+            });
+		}
+	};
 
 };
 

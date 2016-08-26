@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now you need to add your packages. A package consists of many tickets and is great for offering deals that include more than 1 ticket. A package is also used for educational courses that include multiple trips."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;"></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="packages-list-div" data-step="8" data-position="right" data-intro="Once a package is saved, you will see it in your list. Click on a package to view/edit the details.">
+			<div class="panel panel-default" id="packages-list-div">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Packages</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="package-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and price for the package.">
+			<div class="panel panel-default" id="package-form-container">
 				<script type="text/x-handlebars-template" id="package-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} Package</h4>
@@ -43,7 +43,7 @@
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
-							<div id="package-entities" class="form-row entity-lists" data-step="3" data-position="left" data-intro="Now, select the tickets, courses, accommodations and addons that you want to include in the package. Once you select one of them, another drop down box will appear to allow you to add another one. When you are finished adding, leave the remaining select boxes blank.">
+							<div id="package-entities" class="form-row entity-lists">
 
 								{{#if update}}
 									<strong>Included tickets:</strong>
@@ -95,7 +95,7 @@
 
 							<div id="package-seasonal" class="form-row">
 								<label>
-									<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+									<input id="package-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 									Add seasonal price changes?
 								</label>
 								<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
@@ -111,7 +111,7 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="package-availability" data-step="7" data-position="top" data-intro="...">
+							<div class="form-row" id="package-availability">
 								<label style="display: block;">
 									<input id="package-availability-checkbox" type="checkbox" onclick="showMe('#availability-select', this)"{{#if hasAvailability}} checked{{/if}}><strong> Limit the package's availability?</strong>
 								</label>
@@ -202,5 +202,8 @@
 		</div>
 	</script>
 
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/packages/js/script.js"></script>
 </div>

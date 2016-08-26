@@ -43,7 +43,7 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
-	$("#feedback-div").on('submit', '#feedback-form', function(event){
+	/*$("#feedback-div").on('submit', '#feedback-form', function(event){
 		event.preventDefault();
 		setToken('[name=_token]');
 		Company.sendFeedback($('#feedback-form').serialize(), function success(data){
@@ -54,6 +54,23 @@ $(function () {
 			var data = JSON.parse(xhr.responseText);
 			pageMssg(data.errors[0], 'danger');
 		});
+	});*/
+
+	$("#feedback-div").on('submit', '#feedback-form', function(event){
+		$("#guts").prepend($("#tour-nav-wizard").html());
+		window.tourStart = true;
+		window.currentStep = {
+			tab : "#settings",
+			position : 1
+		};
+		$(".tour-progress").on("click", function(event) {
+			if(window.currentStep.position >= $(this).attr('data-position')) {
+				window.location.href = $(this).attr('data-target');
+			} else {
+				pageMssg("Please complete the unfinished steps");
+			}
+		});
+		window.location.href = '#settings';
 	});
 
 	//displayFBStats();

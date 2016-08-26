@@ -82,7 +82,7 @@ $(function(){
 		window.promises.loadedAgencies
 	).then(function() {
 		renderEditForm();
-		Tour.getCoursesTour();
+		TourManager.getCoursesTour();
 	});
 
 	courseForm = Handlebars.compile( $("#course-form-template").html() );

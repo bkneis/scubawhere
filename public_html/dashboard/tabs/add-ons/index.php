@@ -1,9 +1,9 @@
 <div id="wrapper" class="clearfix">
-	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;" data-step="1" data-intro="Now you need to enter your add-ons. An add-on can be attached to a booking and can be useful for things like extra dives, hotel pick ups and nitrox air etc."></div>
+	<div id="tour-div" style="width:0px; height:0px; margin-left:50%;"></div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<div class="panel panel-default" id="addon-list-div" data-step="4" data-position="right" data-intro="Once a add-on is saved, you will see it in your list. Click on a add-on to view/edit the details.">
+			<div class="panel panel-default" id="addon-list-div">
 				<div class="panel-heading">
 					<h4 class="panel-title">Available Add-ons</h4>
 				</div>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="panel panel-default" id="addon-form-container" data-step="2" data-position="left" data-intro="Enter a name, description and price for the add-on">
+			<div class="panel panel-default" id="addon-form-container">
 				<script type="text/x-handlebars-template" id="addon-form-template">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{task}} add-on</h4>
@@ -52,7 +52,7 @@
 								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>
 							</div>
 
-							<div class="form-row" id="addon-compulsory-div" data-step="3" data-position="left" data-intro="Additionally, you can set an addon to be compulsory for all bookings. For example, governmental dive taxes.">
+							<div class="form-row" id="addon-compulsory-div">
 								<label class="field-label">Compulsory?</label>
 								<input id="addon-compulsory" type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}> Automatically add this add-on to every trip during booking.
 							</div>
@@ -122,5 +122,8 @@
 	</script>
 
 	<!--<script src="/tabs/add-ons/handlebars.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/add-ons/js/script.js"></script>
 </div>

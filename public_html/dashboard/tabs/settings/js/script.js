@@ -66,12 +66,11 @@ $(function() {
 		}
 	});*/
 
-	$('#company-form-container').on('click', '#start-wizard', function(event) {
-		window.location.href = '#accommodations';
+	/*$('#company-form-container').on('click', '#start-wizard', function(event) {
 		$("#guts").prepend($("#tour-nav-wizard").html());
 		window.tourStart = true;
 		window.currentStep = {
-			tab : "#accommodations",
+			tab : "#settings",
 			position : 1
 		};
 		$(".tour-progress").on("click", function(event) {
@@ -81,7 +80,8 @@ $(function() {
 				pageMssg("Please complete the unfinished steps");
 			}
 		});
-	});
+		window.location.href = '#settings';
+	});*/
 
 	// @todo potentially change this to trigge coniditonally on update of form thoruhg save button
 	$('#company-form-container').on('click', '#upload-terms', function(event) {

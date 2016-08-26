@@ -56,7 +56,7 @@ $(function(){
 				window.promises.loadedAddons.done(function() {
 					packageForm = Handlebars.compile( $("#package-form-template").html() );
 					renderEditForm();
-					Tour.getPackagesTour();
+					TourManager.getPackagesTour();
 				});
 			});
 		});

@@ -8,22 +8,12 @@
 							<div class="panel-heading">
 								<h4 class="panel-title">Account Information</h4>
 							</div>
-							<div class="panel-body">
-
-								<!--<div class="form-row">
-									<label class="field-label">Username : </label>
-									<input type="text" id="username" value="{{username}}" class="form-control" disabled></input>
-								</div>-->
+							<div id="account-info" class="panel-body">
 
 								<div class="form-row">
 									<label class="field-label">Main person of contact : </label>
 									<input type="text" name="contact" value="{{contact}}" class="form-control"></input>
 								</div>
-
-								<!--<div class="form-row">
-									<label class="field-label">Contact phone number : </label>
-									<input class="form-control" type="text" id="phone" name="phone" value="{{phone}}">
-								</div>-->
 
 								<div class="form-row">
 									<label class="field-label">Dive operator name : </label>
@@ -31,11 +21,11 @@
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Dive operator website : </label>
+									<label id="business-website" class="field-label">Dive operator website : </label>
 									<input type="text" name="website" placeholder="http://" value="{{website}}" class="form-control">
 								</div>
 
-								<div class="form-row" style="overflow:auto;">
+								<div id="agencies-list" class="form-row" style="overflow:auto;">
 									<label>Accepted Diving Instuitions</label>
 									<div id="agencies">
 										{{#each agencies}}
@@ -53,11 +43,6 @@
 										{{/each}}
 									</div>
 								</div>
-
-								<!--<div class="form-row">
-									<label class="field-label">Dive center bio : </label>
-									<textarea name="description" rows="3" value="{{description}}"></textarea>
-								</div>-->
 
 								<!--<div class="form-row">
 									<label class="field-label">Contact email address : </label>
@@ -109,7 +94,7 @@
 									<input type="text" name="county" value="{{county}}" class="form-control">
 								</div>
 
-								<div class="form-row">
+								<div id="postcode-div" class="form-row">
 									<label class="field-label">Post code / zip code : </label>
 									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
 								</div>
@@ -124,7 +109,7 @@
 									<input type="text" name="business_email" value="{{business_email}}" class="form-control">
 								</div>
 
-								<div class="form-row">
+								<div id="legal-info" class="form-row">
 									<label class="field-label">Registration number : </label>
 									<input type="text" name="registration_number" value="{{registration_number}}" class="form-control">
 								</div>
@@ -155,7 +140,7 @@
 								</div>
 
 								<input type="hidden" name="_token">
-								<input type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
+								<input id="save-company-info" type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
 							</div>
 						</div>
 					</div>
@@ -285,5 +270,8 @@
       </div>
     </script>
 
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/js/tour.js"></script>
 	<script src="/tabs/settings/js/script.js"></script>
 </div>

@@ -59,7 +59,7 @@ $(function(){
 	addonForm = Handlebars.compile( $("#addon-form-template").html() );
 	loadAddons(); // Automatically renders the views when data is loaded
 
-	Tour.getAddonsTour();
+	TourManager.getAddonsTour();
 	$("#addon-form-container").on('submit', '#add-addon-form', function(event) {
 
 		event.preventDefault();
