@@ -170,58 +170,6 @@ function TourManager() {
 		}
 	});
 
-	var tripsTour = new Tour({
-		steps: [
-			{
-				element   : '#trip-list-container', // @todo find a way to float this centre screen
-				title	  : 'Managing Trips',
-				placement : 'right',
-				content   : 'Now, we need to add your trips. A trip consists of all the information for a dive, and are used to create tickets.'
-			},
-			{
-				element   : '#trip-form-container',
-				title     : 'Creating a trip',
-				placement : 'left',
-				content   : 'Enter a name, description and duration for the trip. Please note trip duration is in hours.',
-				onShown	  : function(tour) {
-					$("#trip-name").val("Single boat dive");
-					$("#tripDuration").val(4);
-				}
-			},
-			{
-				element   : '#locationsList',
-				title     : 'Select a loation',
-				placement : 'left',
-				content   : 'Next, select the locations of the trip',
-				onShown	  : function(tour) {
-                	$('#locationsList').find('.location').filter(':first').click();
-				}
-			},
-			{
-				element   : '#tagsList',
-				title     : 'Adding tags',
-				placement : 'left',
-				content   : "Next, select any tags that describes what is offered in the trip. These tags will be searchable when scubawhere.com is launched. Lastly click 'Save' to create the trip.",
-				onShown	  : function(tour) {
-					$('#tagsList').find('.tag').filter(':first').click();
-				}
-			},
-			{
-				element   : '#trips-list-div',
-				title     : 'Viewing Trips',
-				placement : 'right',
-				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view/edit the details.',
-				onShown	  : function(tour) {
-					$("#no-trips").remove();
-					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
-				}
-			}
-		],
-		onEnd : function(tour) {
-        	$("#dummy-trip").remove();
-		}
-	});
-
 	var boatsTour = new Tour({
 		steps: [
 			{
@@ -294,6 +242,59 @@ function TourManager() {
         	$("#dummy-boat").remove();
 		}
 	});
+	
+	var tripsTour = new Tour({
+		steps: [
+			{
+				element   : '#trip-list-container', // @todo find a way to float this centre screen
+				title	  : 'Managing Trips',
+				placement : 'right',
+				content   : 'Now, we need to add your trips. A trip consists of all the information for a dive, and are used to create tickets.'
+			},
+			{
+				element   : '#trip-form-container',
+				title     : 'Creating a trip',
+				placement : 'left',
+				content   : 'Enter a name, description and duration for the trip. Please note trip duration is in hours.',
+				onShown	  : function(tour) {
+					$("#trip-name").val("Single boat dive");
+					$("#tripDuration").val(4);
+				}
+			},
+			{
+				element   : '#locationsList',
+				title     : 'Select a loation',
+				placement : 'left',
+				content   : 'Next, select the locations of the trip',
+				onShown	  : function(tour) {
+                	$('#locationsList').find('.location').filter(':first').click();
+				}
+			},
+			{
+				element   : '#tagsList',
+				title     : 'Adding tags',
+				placement : 'left',
+				content   : "Next, select any tags that describes what is offered in the trip. These tags will be searchable when scubawhere.com is launched. Lastly click 'Save' to create the trip.",
+				onShown	  : function(tour) {
+					$('#tagsList').find('.tag').filter(':first').click();
+				}
+			},
+			{
+				element   : '#trips-list-div',
+				title     : 'Viewing Trips',
+				placement : 'right',
+				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view/edit the details.',
+				onShown	  : function(tour) {
+					$("#no-trips").remove();
+					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-trip").remove();
+		}
+	});
+
 
 	var ticketsTour = new Tour({
 		steps: [
@@ -392,6 +393,48 @@ function TourManager() {
             });
 		}
 	};
+
+	var classesTour = new Tour({
+		steps: [
+			{
+				element   : '#classes-list-div', // @todo find a way to float this centre screen
+				title	  : 'Managing Classes',
+				placement : 'right',
+				content   : 'Now, we need to add your classes. A class is any event that requires students to participate in learning for a qualification'
+			},
+			{
+				element   : '#class-form-container',
+				title     : 'Adding a Class',
+				placement : 'left',
+				content   : 'Enter a name, description and duration for the class.',
+				onShown	  : function(tour) {
+					$("#class-name").val("Open Water Theory");
+					$("#tripDuration").val(5); // @todo rename this in classes and go through all mangement tabs
+				}
+			},
+			{
+				element   : '#add-class',
+				title     : 'Saving the Class',
+				placement : 'left',
+				content   : 'Click SAVE to create the class with the information you provided.',
+				onShown	  : function(tour) {
+				}
+			},
+			{
+				element   : '#classes-list-div',
+				title     : 'Viewing you Classes',
+				placement : 'right',
+				content   : 'Once a class is saved, you will see it in your list. Click on a class to view or edit its details.',
+				onShown	  : function(tour) {
+					clearForm()
+					$("#class-list").append('<li id="dummy-class"><strong>Open Water Theory</strong> </li>');
+				}
+			}
+		],
+		onEnd : function(tour) {
+        	$("#dummy-class").remove();
+		}
+	});
 
 	this.getAgentsTour = function() {
 		if(window.tourStart) 
@@ -502,6 +545,29 @@ function TourManager() {
             });
 		}
 	};
+
+	this.getClassesTour = function() {
+		if(window.tourStart) 
+		{
+			classesTour.init();
+			classesTour.start(true);	
+			// Force the tour to start at the beginning
+			classesTour.goTo(0);	
+
+            $("#tour-next-step").on("click", function() {
+                if (window.currentStep.position <= 7) {
+                    window.currentStep = {
+                        tab: "#courses",
+                        position: 8
+                    };
+                }
+                $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
+                $('#course-tab').addClass("selected");
+                window.location.href = "#courses";
+            });
+		}
+	};
+
 
 };
 

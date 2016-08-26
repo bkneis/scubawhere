@@ -14,7 +14,7 @@ $(function () {
 	renderClassList();
 	renderEditForm();
 
-	Tour.getClassesTour();
+	TourManager.getClassesTour();
 
 	$('#class-list-container').on('click', 'li', function(event) {
 
