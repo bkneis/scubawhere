@@ -38,7 +38,7 @@
 								<input id="package-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
-							<div class="form-row">
+							<div id="container-package-description" class="form-row">
 								<label class="field-label">Package Description</label>
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>

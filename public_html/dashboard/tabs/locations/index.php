@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="panel panel-default">
-				<div class="panel-heading">
+				<div id="markers-info" class="panel-heading">
 					<h4 class="panel-title">
 						<img src="//mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1" style="height: 1.5em; margin: -0.3em 0 -0.2em 0.5em; display: none;" id="legend-your-locations-icon" />
 						<span class="loader" id="legend-your-locations-loader" style="top: 0;"></span>

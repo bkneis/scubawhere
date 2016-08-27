@@ -115,7 +115,9 @@
         		<h4 class="modal-title">Welcome to scubawhere RMS</h4>
       		</div>
       		<div class="modal-body">
-        		<p>test</p>
+				<p><strong>Congratualations, your only a few minutes away from revolutioning your business operations</strong></p>
+				<p>Before you can get using your new system, we need to know more about your business so we can customize the system. We have created a setup wizard for you to guide you through the system and show you how to add everything it needs, such as the type of trips you offer, where you go diving etc.</p> 
+				<p>Please click Let's Go to start the wizard. The wizard will take you through the system page by page. It will show you how to insert your information. At the end of each step, please click End Tour, fill in your business's information and then click next step to move on the the next page. Enjoy.</p>
 			</div>
 			<div class="modal-footer">
 				<button id="btn-start-wizard" type="button" class="btn btn-primary">Let's Go</button>

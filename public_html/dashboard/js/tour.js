@@ -6,71 +6,63 @@ function TourManager() {
 				element   : '#account-info', // @todo find a way to float this centre screen
 				title	  : 'We Want To Know More About You',
 				palcement : 'right',
-				content   : 'Please fill in the following fields so that we can include your information within the system'
+				content   : 'Please fill in the following fields so that we can include your information within the system.'
 			},
 			{
 				element   : '#business-website',
 				title     : 'Basic Info',
 				placement : 'right',
-				content   : 'Enter your dive operators website',
-				onShown	  : function(tour) {
-				}
+				content   : 'Please enter your dive operators website.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#agencies-list',
 				title     : 'Accredited Agencies',
 				placement : 'right',
-				content   : 'Please select all of the diving agencies you are accredited to',
-				onShown	  : function(tour) {
-				}
+				content   : 'Please select all of the diving agencies you are accredited to.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#credit-info',
 				title     : 'Account Credit Usage',
 				placement : 'right',
-				content   : 'Here you can view when your scubawhere RMS licnece expries and how many booking / email credits you have left in your licence.',
-				onShown	  : function(tour) {
-				}
+				content   : 'Here you can view when your scubawhere RMS licence expries and how many booking / email credits you have left in your licence.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#postcode-div',
 				title     : 'Locating your business',
 				placement : 'left',
-				content   : 'Please enter your full address so that we can geo locate your business and show it on your map and include it in invoices and transaction confirmation emails.',
-				onShown	  : function(tour) {
-				}
+				content   : 'Please enter your full address so that we can geo locate your business. This allows us to show it on your map and include it in invoices and transaction confirmation emails.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#legal-info',
 				title     : 'Your Business Information',
 				placement : 'left',
-				content   : "Please enter your business's VAT and registration number",
-				onShown	  : function(tour) {
-				}
+				content   : "Please enter your business's VAT and registration number.",
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#country_id',
 				title     : 'Your Country and Currency',
 				placement : 'left',
 				content   : 'Please select from the drop down you country and currency.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#terms-file',
 				title     : 'Uploading your Terms and Conditions',
 				placement : 'left',
 				content   : 'If you would like to send a copy of your terms and conditions in customer emails, please upload it here in a pdf format.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#save-company-info',
 				title     : 'Save and Finish your Settings',
 				placement : 'left',
 				content   : 'When you are finished and happy with the information provided, please click SAVE and continue the tour.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			}
 		],
 		onEnd : function(tour) {
@@ -84,7 +76,7 @@ function TourManager() {
 			{
 				element   : '#accommodations-list', // @todo find a way to float this centre screen
 				title	  : 'Managing Accommodations',
-				content   : 'Do you own or manage any accommodation? If so, click next. Otherwise, you can just skip this step'
+				content   : 'Do you own or manage any accommodation? If so, click next. Otherwise, you can just skip this step.'
 			},
 			{
 				element   : '#acom-name',
@@ -93,13 +85,14 @@ function TourManager() {
 				content   : 'To get started, enter the room name and description.',
 				onShown	  : function(tour) {
 					$("#room-name").val("3* Hotel Single Room");
+					CKEDITOR.instances['acom-description'].setData('<p>A very spacious single room with a great view.</p>');
 				}
 			},
 			{
 				element	  : '#acom-base',
 				title	  : 'Assigning a Price',
 				placement : 'left',
-				content	  : 'Here you can set a price per night for the accommodation',
+				content	  : 'Here you can set a price per night for the accommodation.',
 				onShown   : function(tour) {
 					$("#acom-price").val(50);
 				}
@@ -108,7 +101,7 @@ function TourManager() {
 				element	  : '#acom-season',
 				title	  : 'Assigning Seasonal Price Changes',
 				placement : 'left',
-				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons.',
 				onShown   : function(tour) {
 					$("#acom-season-price").click();
 					$("#seasonal-prices-list #acom-price").val(60);
@@ -118,10 +111,17 @@ function TourManager() {
 				element   : '#acom-rooms',
 				title     : 'Assiging the number of rooms',
 				placement : 'left',
-				content   : 'Lastly enter the number of rooms you have available. If the room is a dorm room, then treat each dorm room. Lastly, click save to add your accommodation.',
+				content   : 'Enter the number of rooms you have available.',
 				onShown   : function(tour) {
                 	$("#room-amount").val(6);
 				}
+			},
+			{
+				element   : '#add-accommodation',
+				title     : 'Saving you Accommodation',
+				placement : 'left',
+				content   : 'Click SAVE to create your accommodation.',
+				onShown   : function(tour) { }
 			},
 			{
 				element   : '#accommodations-list',
@@ -129,10 +129,11 @@ function TourManager() {
 				placement : 'right',
 				content   : 'Once an accommodation is saved, you will see it in your list. Click on an accommodation to view or edit its details.',
 				onShown   : function(tour) {
-					clearForm();
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#no-accommodations").remove();
 					$("#accommodation-list").append('<li id="dummy-room"><strong>3* Hotel Single Room</strong> | 6 | 50</li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -181,15 +182,23 @@ function TourManager() {
 				}
 			},
 			{
+				element   : '#add-agent',
+				title     : 'Saving your Agent',
+				placement : 'left',
+				content   : 'Click SAVE to create you agent.',
+				onShown   : function(tour) { }
+			},
+			{
 				element   : '#agent-list-div',
 				title     : 'Viewing your agents',
-				placement : 'left',
+				placement : 'right',
 				content   : 'Once an agent is saved, you will see it in your list. Click on an agent to view or edit its details.',
 				onShown   : function(tour) {
-					clearForm();
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#no-agents").remove();
 					$("#agent-list").append('<li id="dummy-agent"><strong>John doe</strong> | Scuba holidays r us</li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -235,16 +244,14 @@ function TourManager() {
 				title: 'Viewing your locations',
 				placement: 'top',
 				content: 'Here is a map that displays all the available dive locations, made by you and other businesses. The house icon represents where your dive operation is based.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			},
 			{
 				element : '#markers-info',
 				title: 'Loctation Markers',
-				placement: 'left',
+				placement: 'bottom',
 				content: 'Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag. You can click on a blue tag at any time to add it to your dive locations.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			}
 		],
 		onEnd : function(tour) {
@@ -265,16 +272,14 @@ function TourManager() {
 				title     : 'Manage Cabins',
 				placement : 'right',
 				content   : 'If your business offers liveaboards, you will need to declare the diffrent types of cabins.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#boatroom-list-container',
 				title     : 'Creating Cabins',
 				placement : 'right',
-				content   : 'To add a cabin, click ADD CABIN. Then enter a name and description in the form to thr right.',
-				onShown	  : function(tour) {
-				}
+				content   : 'To add a cabin, click ADD CABIN. Then enter a name and description in the form to the right.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#boat-form-container',
@@ -283,7 +288,7 @@ function TourManager() {
 				content   : 'Enter a name and description for the boat.',
 				onShown	  : function(tour) {
 					$("#boat-name").val("Barry's big boat");
-					//CKEDITOR.setData("Add a description of your boat here."); 
+					CKEDITOR.instances['boat-description'].setData('<p>This is our largest boat at 29 feet, it hold up to 18 divers comftably and has a small deck near the back perfect for getting some sun.</p>');
 				}
 			},
 			{
@@ -299,7 +304,7 @@ function TourManager() {
 				element   : '#boat-cabins',
 				title     : 'Assigning Cabins to a Boat',
 				placement : 'left',
-				content   : 'Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin, select the cabin type and number of rooms',
+				content   : 'Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin, select the cabin type and number of rooms.',
 				onShown	  : function(tour) {
 					$("#room-types").append('<p id="cabin-option">' +
 					'<select class="room-type-select">' +
@@ -311,13 +316,23 @@ function TourManager() {
 				}
 			},
 			{
+				element   : '#add-boat',
+				title     : 'Saving you Boat',
+				placement : 'left',
+				content   : 'Click SAVE to create your boat.',
+				onShown	  : function(tour) { }
+			},
+			{
 				element   : '#boat-list-container',
 				title     : 'Viewing Your Boats',
 				placement : 'right',
 				content   : 'Once a boat is saved, you will see it in your list. Click on a boat to view or edit its details.',
 				onShown	  : function(tour) {
+					$('form').data('hasChanged', false);
+					renderEditForm();
+					$('#no-boats').remove();
 					$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -341,6 +356,7 @@ function TourManager() {
 				content   : 'Enter a name, description and duration for the trip. Please note trip duration is in hours.',
 				onShown	  : function(tour) {
 					$("#trip-name").val("Single boat dive");
+					CKEDITOR.instances['description'].setData('<p>This dive is great for new and experienced divers, we visit a beautiful reef only a few miles of the shore.</p>');
 					$("#tripDuration").val(4);
 				}
 			},
@@ -348,7 +364,7 @@ function TourManager() {
 				element   : '#locationsList',
 				title     : 'Select a loation',
 				placement : 'left',
-				content   : 'Next, select the locations of the trip',
+				content   : 'Next, select the locations of the trip.',
 				onShown	  : function(tour) {
                 	$('#locationsList').find('.location').filter(':first').click();
 				}
@@ -363,14 +379,23 @@ function TourManager() {
 				}
 			},
 			{
+				element   : '#add-trip',
+				title     : 'Saving you Trip',
+				placement : 'left',
+				content   : 'Click SAVE to create your trip.',
+				onShown	  : function(tour) { }
+			},
+			{
 				element   : '#trips-list-div',
 				title     : 'Viewing Trips',
 				placement : 'right',
 				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view or edit its details.',
 				onShown	  : function(tour) {
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#no-trips").remove();
 					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -388,13 +413,24 @@ function TourManager() {
 				content   : 'Now you can create your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip.'
 			},
 			{
-				element   : '#ticket-form-container',
+				element   : '#container-ticket-description',
 				title     : 'Creating a Ticket',
 				placement : 'left',
 				content   : 'Enter a name, description and base price for the ticket.',
 				onShown	  : function(tour) {
 					$("#ticket-name").val("2 dive boat ticket");
+					CKEDITOR.instances['description'].setData('<p>This ticket is perfect for divers of any skill level, our first dive goes to either a reef or ship wreck depending on the conditions. The next dive is just a few miles of the shore were turtles are regularly seen. The ticket also comes with a fre lunch.</p>');
 					$("#acom-price").val(50); //@todo change handlebars tempate to change name based on tab
+				}
+			},
+			{
+				element	  : '#tickets-seasonal',
+				title	  : 'Assigning Seasonal Price Changes',
+				placement : 'left',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons.',
+				onShown   : function(tour) {
+					$("#seasonal-prices-checkbox").click();
+					$("#seasonal-prices-list input").first().val(175);
 				}
 			},
 			{
@@ -402,6 +438,9 @@ function TourManager() {
 				title     : 'Assigning Trips',
 				placement : 'left',
 				content   : 'Select which trips a ticket can be used for',
+				onShow 	  : function(tour) {
+					$("#seasonal-prices-checkbox").click();
+				},
 				onShown	  : function(tour) {
 					$('input').filter('[name="trips[]"]').first().click();
 				}
@@ -412,7 +451,7 @@ function TourManager() {
 				placement : 'left',
 				content   : 'You can also limit the ticket to be used for specific boats.',
 				onShown	  : function(tour) {
-					$("#tickets-boats-checkbox").click();
+					//$("#tickets-boats-checkbox").click();
 				}
 			},
 			{
@@ -421,7 +460,7 @@ function TourManager() {
 				placement : 'left',
 				content   : 'You can also limit the ticket to be used on specific cabins for overnight trips. Click Save to create the ticket.',
 				onShow	  : function(tour) {
-					$("#tickets-boats-checkbox").click();
+					//$("#tickets-boats-checkbox").click();
 				},
 				onShown	  : function(tour) {
 					$("#tickets-boatroom-checkbox").click();
@@ -440,14 +479,23 @@ function TourManager() {
 				}
 			},
 			{
+				element   : '#add-ticket',
+				title     : 'Saving you Ticket',
+				placement : 'left',
+				content   : 'Click SAVE to create your ticket.',
+				onShown	  : function(tour) { }
+			},
+			{
 				element   : '#ticket-list-container',
 				title     : 'Viewing Tickets',
 				placement : 'right',
 				content   : 'Once a ticket is saved, you will see it in your list. Click on a ticket to view or edit  its details.',
 				onShown	  : function(tour) {
-					clearForm();		
-					$("#ticket-list").append('<li id="dummy-ticket"><strong>2 dive boat ticket</strong> | ' + window.currency + '50.00 </li>');
-				}
+					$('form').data('hasChanged', false);
+					renderEditForm();
+					$("#no-trips").remove();
+					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -471,6 +519,7 @@ function TourManager() {
 				content   : 'Enter a name, description and duration for the class.',
 				onShown	  : function(tour) {
 					$("#class-name").val("Open Water Theory");
+					CKEDITOR.instances['description'].setData('<p>This is a classroom session that teaches the basics of diver safety, it runs for about 2 hours with a short test at the end.</p>');
 					$("#tripDuration").val(5); // @todo rename this in classes and go through all mangement tabs
 				}
 			},
@@ -478,9 +527,8 @@ function TourManager() {
 				element   : '#add-class',
 				title     : 'Saving the Class',
 				placement : 'left',
-				content   : 'Click SAVE to create the class with the information you provided.',
-				onShown	  : function(tour) {
-				}
+				content   : 'Click SAVE to create the class.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#classes-list-div',
@@ -488,7 +536,9 @@ function TourManager() {
 				placement : 'right',
 				content   : 'Once a class is saved, you will see it in your list. Click on a class to view or edit its details.',
 				onShown	  : function(tour) {
-					clearForm()
+					$('form').data('hasChanged', false);
+					renderEditForm();
+					$('#no-classes').remove();
 					$("#class-list").append('<li id="dummy-class"><strong>Open Water Theory</strong> </li>');
 				}
 			}
@@ -505,7 +555,7 @@ function TourManager() {
 				element   : '#packages-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing your Courses',
 				placement : 'right',
-				content   : 'Now you can create your courses. A course consists of variations of classes and tickets, for example an open water course could consist of 2 confined sessions, one classroom session and 2 open water trips'
+				content   : 'Now you can create your courses. A course consists of variations of classes and tickets, for example an open water course could consist of 2 confined sessions, one classroom session and 2 open water trips.'
 			},
 			{
 				element   : '#select-certification',
@@ -523,6 +573,7 @@ function TourManager() {
 				content   : 'Enter a name, description and price for the course.',
 				onShown	  : function(tour) {
 					$("#course-name").val("PADI open water");
+					CKEDITOR.instances['description'].setData('<p>This open water course is perfect to new comers to the sport. After this course you will be qualified to dive anywhere aslong as you have a buddy!</p>');
 					$("#course-capacity").val(10);
 				}
 			},
@@ -532,7 +583,7 @@ function TourManager() {
 				placement : 'left',
 				content   : 'Now, select the classes that you want to include in the course.',
 				onShown	  : function(tour) {
-					$('#class-select').find('option:eq(1)').attr('selected', true);
+					$('.class-select').first().find('option:eq(1)').attr('selected', true);
 				}
 			},
 			{
@@ -541,7 +592,26 @@ function TourManager() {
 				placement : 'left',
 				content   : 'Now, select the tickets that you want to include in the course.',
 				onShown	  : function(tour) {
-					$('#ticket-select').find('option:eq(1)').attr('selected', true);
+					$('.ticket-select').first().find('option:eq(2)').attr('selected', true);
+				}
+			},
+			{
+				element   : '#course-base', // @todo change this to course-classes
+				title     : 'Setting a Price',
+				placement : 'left',
+				content   : 'Please enter a price for the course.',
+				onShown	  : function(tour) {
+					$('#acom-price').val(200);;
+				}
+			},
+			{
+				element	  : '#course-seasonal',
+				title	  : 'Assigning Seasonal Price Changes',
+				placement : 'left',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons.',
+				onShown   : function(tour) {
+					$("#course-season-price").click();
+					$("#seasonal-prices-list input").first().val(175);
 				}
 			},
 			{
@@ -549,8 +619,7 @@ function TourManager() {
 				title     : 'Saving the Course',
 				placement : 'left',
 				content   : 'To create the course with the information you provided, click SAVE.',
-				onShown	  : function(tour) {
-				}
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#packages-list-div',
@@ -558,9 +627,10 @@ function TourManager() {
 				placement : 'right',
 				content   : 'Once a course is saved, you will see it in your list. Click on a course to view or edit its details.',
 				onShown	  : function(tour) {
-					clearForm();
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#course-list").append('<li id="dummy-course"><strong>PADI open water</strong> | £10.00 </li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {
@@ -581,9 +651,10 @@ function TourManager() {
 				element   : '#addon-form-container',
 				title     : 'Creating an Addon',
 				placement : 'left',
-				content   : 'Enter a name, description and price for the add-on',
+				content   : 'Enter a name, description and price for the add-on.',
 				onShown	  : function(tour) {
 					$("#addon-name").val("Reef diving tax");
+					CKEDITOR.instances['description'].setData('<p>Reef tax is compulsory for all divers in this country, the money goes towards cleaning of the ocean to ensure we preserve our beautiful dive spots.</p>');
 					$("#acom-price").first().val(10); //@todo look at price input template
 				}
 			},
@@ -591,9 +662,8 @@ function TourManager() {
 				element   : '#add-addon',
 				title     : 'Save the Addon',
 				placement : 'left',
-				content   : 'To crete the addon with the information provided, click SAVE',
-				onShown	  : function(tour) {
-				}
+				content   : 'To crete the addon with the information provided, click SAVE.',
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#addon-list-div',
@@ -601,7 +671,8 @@ function TourManager() {
 				placement : 'right',
 				content   : 'Once a add-on is saved, you will see it in your list. Click on a add-on to view or edit its details.',
 				onShown	  : function(tour) {
-					clearForm();
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#addon-list").append('<li id="dummy-addon"><strong>Reef diving tax</strong> | £10.00 </li>');
 				}
 			}
@@ -621,12 +692,13 @@ function TourManager() {
 				content   : 'Now you can create your packages. A package can consist of many tickets, addons, courses and accommodation. For example, a week long diving holiday.'
 			},
 			{
-				element   : '#package-form-container',
+				element   : '#container-package-description',
 				title     : 'Creating Packages',
-				placement : 'right',
+				placement : 'left',
 				content   : 'Enter a name, description and price for the package.',
 				onShown	  : function(tour) {
 					$("#package-name").val("Family dive day");
+					CKEDITOR.instances['description'].setData('<p>This package is perfect for families, 2 adults and 2 children dives are included.</p>');
 					$('#acom-price').val(150);
 				}
 			},
@@ -634,30 +706,54 @@ function TourManager() {
 				element   : '#package-entities',
 				title     : 'Assigning Tickets, Courses, Addons and Accommodations',
 				placement : 'left',
-				content   : 'Now, select the tickets, courses, accommodations and addons that you want to include in the package. ',
+				content   : 'Now, select the tickets, courses, accommodations and addons that you want to include in the package.',
 				onShown	  : function(tour) {
-					$("#package-tickets").find(".ticket-select").filter(":first").val(1);
-					$("#package-tickets").find(".quantity-input").filter(":first").val(4);
+					$('.entity-select').filter('[data-model="ticket"]').find('option:eq(1)').attr('selected', true);
+					$('.entity-select').filter('[data-model="course"]').find('option:eq(1)').attr('selected', true);
+					$('.entity-select').filter('[data-model="addon"]').find('option:eq(1)').attr('selected', true);
+					$('.entity-select').filter('[data-model="accommodation"]').find('option:eq(1)').attr('selected', true);
+				}
+			},
+			{
+				element	  : '#package-base',
+				title	  : 'Assigning a Price',
+				placement : 'left',
+				content	  : 'Set a price for the package.',
+				onShown   : function(tour) {
+					$('#acom-price').val(600);
 				}
 			},
 			{
 				element	  : '#package-seasonal',
 				title	  : 'Assigning Seasonal Price Changes',
 				placement : 'left',
-				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons',
+				content	  : 'If you have prices that change throughout the year, you can ajust your prices depening on the seasons.',
 				onShown   : function(tour) {
 					$("#package-season-price").click();
-					$("#package-seasonal input").filter('type["number"]').first().val(175);
+					$("#seasonal-prices-list input").first().val(175);
 				}
 			},
 			{
 				element   : '#package-availability',
 				title     : 'Package Availability',
 				placement : 'left',
-				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date',
+				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date.',
+				onShow 	  : function(tour) {
+					$("#package-season-price").click();
+				},
 				onShown	  : function(tour) {
 					$('#package-availability-checkbox').click();
 				}
+			},
+			{
+				element   : '#add-package',
+				title     : 'Saving your Package',
+				placement : 'left',
+				content   : 'Click SAVE to create your package.',
+				onShow    : function(tour) {
+					$('#package-availability-checkbox').click();
+				},
+				onShown	  : function(tour) { }
 			},
 			{
 				element   : '#packages-list-div',
@@ -668,9 +764,10 @@ function TourManager() {
 					$('#package-availability-checkbox').click();
 				},
 				onShown	  : function(tour) {
-					clearForm();
+					$('form').data('hasChanged', false);
+					renderEditForm();
 					$("#package-list").append('<li id="dummy-package"><strong>Family dive day</strong> | £150.00 </li>');
-				}
+			   	}
 			}
 		],
 		onEnd : function(tour) {

@@ -93,7 +93,7 @@
 
 							<div id="course-seasonal" class="form-row">
 								<label>
-									<input type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
+									<input id="course-season-price" type="checkbox" onchange="showMe('#seasonal-prices-list', this);"{{#if prices}} checked{{/if}}>
 									Add seasonal price changes?
 								</label>
 								<div class="dashed-border" id="seasonal-prices-list"{{#unless prices}} style="display: none;"{{/unless}}>
