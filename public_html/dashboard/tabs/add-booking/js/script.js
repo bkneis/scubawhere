@@ -1,3 +1,9 @@
+// Check that the company has gone through the setup wizard
+if(window.company.initialised !== 1)
+{
+	window.location.href = '#dashboard';
+}
+
 window.promises.loadedToken = $.Deferred();
 getToken(function callback() {
 	window.promises.loadedToken.resolve();

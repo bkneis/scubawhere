@@ -1,3 +1,10 @@
+
+// Check that the company has gone through the setup wizard
+if(window.company.initialised !== 1)
+{
+	window.location.href = '#dashboard';
+}
+
 // Needs to be declared before the $(function) call
 Handlebars.registerHelper('selected', function(selectObject) {
 	if(this.terms == selectObject)

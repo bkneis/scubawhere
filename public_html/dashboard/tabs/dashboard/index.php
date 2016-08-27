@@ -109,15 +109,25 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
         	<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
         		<h4 class="modal-title">Welcome to scubawhere RMS</h4>
       		</div>
       		<div class="modal-body">
-				<p><strong>Congratualations, your only a few minutes away from revolutioning your business operations</strong></p>
-				<p>Before you can get using your new system, we need to know more about your business so we can customize the system. We have created a setup wizard for you to guide you through the system and show you how to add everything it needs, such as the type of trips you offer, where you go diving etc.</p> 
-				<p>Please click Let's Go to start the wizard. The wizard will take you through the system page by page. It will show you how to insert your information. At the end of each step, please click End Tour, fill in your business's information and then click next step to move on the the next page. Enjoy.</p>
+          		<h4>Welcome to scubawhereRMS!</h4>
+         		 <p>
+				 	So we can get you all set up with your content,
+				 	this wizard will take you through our system
+					and help you fill in the information about your
+					dive operation.
+			  	</p>
+				<p>
+					A tour will begin on each page, explaining what the page is for and how to use it.
+			  		Once the tour is finished for that page, you will need to fill in all the relevant information about
+			  		your dive centre. Don't worry it's easy! We interactively show you how and where to add your data into our system every step
+			  		of the way :)
+				</p>
+			  	<p>
+					So let's get started. Click the button to begin the configuration.
+			  	</p>
 			</div>
 			<div class="modal-footer">
 				<button id="btn-start-wizard" type="button" class="btn btn-primary">Let's Go</button>
@@ -155,34 +165,6 @@
     {{#each facebook}}
       <p><span style="font-weight:bold; font-size:22px">{{data}}</span> {{title}}</p>
     {{/each}}
-  </script>
-
-  <script type="text/x-handlebars-template" id="setup-wizard">
-    <div class="col-md-12">
-      <div class="panel panel-default" id="setup-wizard">
-        <div class="panel-heading">
-          <h4 class="panel-title">Setup Wizard</h4>
-        </div>
-        <div style="min-height:250px;" class="panel-body">
-          <h4>Welcome to scubawhereRMS!</h4>
-          <p>
-            So we can get you all set up with your content,
-            this wizard will take you through our system
-            and help you fill in the information about your
-            dive operation.
-          </p>
-          <p>A tour will begin on each page, explaining what the page is for and how to use it.
-          Once the tour is finished for that page, you will need to fill in all the relevant information about
-          your dive centre. Don't worry it's easy! We interactively show you how and where to add your data into our system every step
-          of the way :)</p>
-          <p>
-            So let's get started. Click the button to begin
-            the configuration.
-          </p>
-          <button id="start-wizard" class="btn btn-success text-uppercase">Start wizard</button>
-        </div>
-      </div>
-    </div>
   </script>
 
   <script type="text/x-handlebars-template" id="today-session-template">

@@ -43,69 +43,12 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
-	/*$("#feedback-div").on('submit', '#feedback-form', function(event){
-		event.preventDefault();
-		setToken('[name=_token]');
-		Company.sendFeedback($('#feedback-form').serialize(), function success(data){
-			pageMssg('Thank you, your feedback has been submitted', true);
-			$('#feedback-form').trigger('reset');
-		},
-		function error(xhr) {
-			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
+	if(window.company.initialised !== 1) {
+
+		$('#modal-intro').modal({
+			backdrop: 'static',
+			keyboard: false
 		});
-	});*/
-
-	/*$("#feedback-div").on('click', '#test-btn', function(event){
-		window.location.href = '#settings';
-		$("#guts").prepend($("#tour-nav-wizard").html());
-		window.tourStart = true;
-		window.currentStep = {
-			tab : "#settings",
-			position : 1
-		};
-		$(".tour-progress").on("click", function(event) {
-			if(window.currentStep.position >= $(this).attr('data-position')) {
-				window.location.href = $(this).attr('data-target');
-			} else {
-				pageMssg("Please complete the unfinished steps");
-			}
-		});
-	});*/
-
-	//displayFBStats();
-
-	if(window.company.initialised === 1) {
-		/*var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for using scubawhereRMS!</strong> To get started, please use the setup wizard below to configure your system.</div>';
-		$("#wrapper").prepend(initWarning);
-
-		var setupWizard = $("#setup-wizard").html();
-		$("#row1").prepend(setupWizard);
-		if(window.tourStart) {
-			$("#start-wizard").text("Continue wizard");
-		}
-		$("#start-wizard").on('click', function(event) {
-			if(window.tourStart) {
-				window.location.href = window.currentStep.tab;
-			}
-			else {
-				window.currentStep = "#dashboard";
-				window.location.href = '#accommodations';
-				$("#guts").prepend($("#tour-nav-wizard").html());
-				window.tourStart = true;
-				window.currentStep = {
-					tab : "#accommodations",
-					position : 1
-				};
-				$(".tour-progress").on("click", function(event) {
-					if(window.currentStep.position >= $(this).attr('data-position')) {
-						window.location.href = $(this).attr('data-target');
-					} else {
-						pageMssg("Please complete the unfinished steps");
-					}
-				});
-			}
-		});*/
 		
 		$('#modal-intro').modal('show'); 		
 		$('#btn-start-wizard').on('click', function(event) {

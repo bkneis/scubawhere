@@ -1,4 +1,10 @@
 
+// Check that the company has gone through the setup wizard
+if(window.company.initialised !== 1)
+{
+	window.location.href = '#dashboard';
+}
+
 Handlebars.registerHelper('date', function(datetime) {
 	return datetime.format('DD-MM-YYYY');
 });
