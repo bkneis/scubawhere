@@ -93,9 +93,6 @@ $PROTOCOL = 'http';
 	<!--Select 2-->
 	<script type="text/javascript" src="/common/js/select2.min.js"></script>
 
-	<!--intojs tour-->
-	<!--<script type="text/javascript" src="/common/js/intro.js"></script>-->
-
 	<!--nprogress bar-->
 	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
