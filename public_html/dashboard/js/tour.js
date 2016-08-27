@@ -74,6 +74,8 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
+			$('html, body').css('overflowY', 'auto'); 
 		}
 	});
 
@@ -134,6 +136,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
 			$('#dummy-room').remove();
 		}
 	});
@@ -190,6 +193,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
 			$('#dummy-agent').remove();
 		}
 	});
@@ -244,6 +248,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
 		}
 	});
 
@@ -316,6 +321,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-boat").remove();
 		}
 	});
@@ -368,6 +374,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-trip").remove();
 		}
 	});
@@ -444,6 +451,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-ticket").remove();
 		}
 	});
@@ -486,6 +494,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-class").remove();
 		}
 	});
@@ -546,6 +555,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-course").remove();
 		}
 	});
@@ -588,6 +598,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-addon").remove();
 		}
 	});
@@ -654,6 +665,7 @@ function TourManager() {
 			}
 		],
 		onEnd : function(tour) {
+			$('html, body').css('overflowY', 'auto'); 
         	$("#dummy-package").remove();
 		}
 	});

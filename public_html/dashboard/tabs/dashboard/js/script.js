@@ -56,7 +56,7 @@ $(function () {
 		});
 	});*/
 
-	$("#feedback-div").on('click', '#test-btn', function(event){
+	/*$("#feedback-div").on('click', '#test-btn', function(event){
 		window.location.href = '#settings';
 		$("#guts").prepend($("#tour-nav-wizard").html());
 		window.tourStart = true;
@@ -71,12 +71,12 @@ $(function () {
 				pageMssg("Please complete the unfinished steps");
 			}
 		});
-	});
+	});*/
 
 	//displayFBStats();
 
-	if(window.company.initialised != 1) {
-		var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for using scubawhereRMS!</strong> To get started, please use the setup wizard below to configure your system.</div>';
+	if(window.company.initialised === 1) {
+		/*var initWarning = '<div class="alert alert-info" role="alert"><i class="fa fa-heart fa-lg fa-fw"></i> <strong>Thank you for using scubawhereRMS!</strong> To get started, please use the setup wizard below to configure your system.</div>';
 		$("#wrapper").prepend(initWarning);
 
 		var setupWizard = $("#setup-wizard").html();
@@ -105,7 +105,14 @@ $(function () {
 					}
 				});
 			}
+		});*/
+		
+		$('#modal-intro').modal('show'); 		
+		$('#btn-start-wizard').on('click', function(event) {
+			event.preventDefault();
+			startWizard();
 		});
+
 	} else {
 		var nextSessionsWidget = $("#todays-sessions-widget").html();
 		$("#row1").prepend(nextSessionsWidget);
@@ -172,6 +179,24 @@ function getCustomers(id, type) {
 		});
 	});
 
+}
+
+function startWizard()
+{
+	window.location.href = '#settings';
+	$("#guts").prepend($("#tour-nav-wizard").html());
+	window.tourStart = true;
+	window.currentStep = {
+		tab : "#settings",
+		position : 1
+	};
+	$(".tour-progress").on("click", function(event) {
+		if(window.currentStep.position >= $(this).attr('data-position')) {
+			window.location.href = $(this).attr('data-target');
+		} else {
+			pageMssg("Please complete the unfinished steps");
+		}
+	});
 }
 
 /*function displayFBStats() {
