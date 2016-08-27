@@ -146,13 +146,13 @@ function TourManager() {
 			{
 				element : '#agent-list-div', // @todo find a way to float this centre screen
 				title	: 'Managing Agents',
-				content : 'Do you recieve any reservations from 3rd party booking agents? For example, travel agents, hotel booking desk, etc. If so, click next. Otherwise, you can just skip this step'
+				content : 'Do you recieve any reservations from 3rd party booking agents? For example, travel agents, hotel booking desk, etc. If so, click next. Otherwise, you can just skip this step.'
 			},
 			{
 				element : '#agent-form-container',
 				title: 'Adding Agents',
 				placement: 'left',
-				content: 'Create an agent profile, by entering their details',
+				content: 'Create an agent profile, by entering their details such as their name, website, address, phone number and email address.',
 				onShown	  : function(tour) {
 					$("#agent-name").val("John doe");
 					$("#agent-web").val("http://www.onlinescubaholidays.com");
@@ -204,7 +204,7 @@ function TourManager() {
 				element   : '#map-container', // @todo find a way to float this centre screen
 				title	  : 'Managing Locations',
 				placement : 'top',
-				content   : 'Here is where you declare your dive locations. These will be used when creating a trip.'
+				content   : 'Now you can create your dive locations. These will be used when creating a trip.'
 			},
 			{
 				element : '#add-location',
@@ -234,7 +234,7 @@ function TourManager() {
 				element : '#map-container',
 				title: 'Viewing your locations',
 				placement: 'top',
-				content: 'Here is a map that displays all the available dive locations, made by you and other dive operators. The house icon represents where your dive operation is based.',
+				content: 'Here is a map that displays all the available dive locations, made by you and other businesses. The house icon represents where your dive operation is based.',
 				onShown	  : function(tour) {
 				}
 			},
@@ -242,7 +242,7 @@ function TourManager() {
 				element : '#markers-info',
 				title: 'Loctation Markers',
 				placement: 'left',
-				content: 'Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag.',
+				content: 'Red tags indicate your dive locations. Blue tags indicate dive locations used by other dive operators. For more information on a dive location, click on a tag. You can click on a blue tag at any time to add it to your dive locations.',
 				onShown	  : function(tour) {
 				}
 			}
@@ -258,13 +258,13 @@ function TourManager() {
 				element   : '#boat-list-container', // @todo find a way to float this centre screen
 				title	  : 'Managing Your Boats',
 				placement : 'right',
-				content   : 'Now, we need to add your boats. Boats are assigned to trips once activated. This allows you to manage the schedule of your boats.'
+				content   : 'Now you can create your boats. Boats are assigned to trips once activated. This allows you to manage the schedule for day trips and liveaboards.'
 			},
 			{
 				element   : '#cabins-container',
 				title     : 'Manage Cabins',
 				placement : 'right',
-				content   : 'If your dive operation offers liveaboards, you will need to declare the diffrent types of cabins.',
+				content   : 'If your business offers liveaboards, you will need to declare the diffrent types of cabins.',
 				onShown	  : function(tour) {
 				}
 			},
@@ -299,7 +299,7 @@ function TourManager() {
 				element   : '#boat-cabins',
 				title     : 'Assigning Cabins to a Boat',
 				placement : 'left',
-				content   : 'Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin and select the cabin type and number of rooms',
+				content   : 'Here shows a summary of the cabins available for this boat. To attach a cabin to a boat, click add cabin, select the cabin type and number of rooms',
 				onShown	  : function(tour) {
 					$("#room-types").append('<p id="cabin-option">' +
 					'<select class="room-type-select">' +
@@ -314,7 +314,7 @@ function TourManager() {
 				element   : '#boat-list-container',
 				title     : 'Viewing Your Boats',
 				placement : 'right',
-				content   : 'Once a boat is saved, you will see it in your list. Click on a boat to view/edit the details.',
+				content   : 'Once a boat is saved, you will see it in your list. Click on a boat to view or edit its details.',
 				onShown	  : function(tour) {
 					$("#boat-list").append('<li id="dummy-boat"><strong>Barrys big boat</strong> | Capacity: 25</li>');
 				}
@@ -332,7 +332,7 @@ function TourManager() {
 				element   : '#trip-list-container', // @todo find a way to float this centre screen
 				title	  : 'Managing Trips',
 				placement : 'right',
-				content   : 'Now, we need to add your trips. A trip consists of all the information for a dive, and are used to create tickets.'
+				content   : 'Now you can create your trips. A trip consists of all the information for a dive, and are used to create tickets.'
 			},
 			{
 				element   : '#trip-form-container',
@@ -357,7 +357,7 @@ function TourManager() {
 				element   : '#tagsList',
 				title     : 'Adding tags',
 				placement : 'left',
-				content   : "Next, select any tags that describes what is offered in the trip. These tags will be searchable when scubawhere.com is launched. Lastly click 'Save' to create the trip.",
+				content   : "Next, select any tags that describes what is offered in the trip. Lastly click 'Save' to create the trip.",
 				onShown	  : function(tour) {
 					$('#tagsList').find('.tag').filter(':first').click();
 				}
@@ -366,7 +366,7 @@ function TourManager() {
 				element   : '#trips-list-div',
 				title     : 'Viewing Trips',
 				placement : 'right',
-				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view/edit the details.',
+				content   : 'Once a trip is saved, you will see it in your list. Click on a trip to view or edit its details.',
 				onShown	  : function(tour) {
 					$("#no-trips").remove();
 					$("#trip-list").append('<li id="dummy-trip"><strong>Single boat dive</strong> | 0d 4h </li>');
@@ -385,7 +385,7 @@ function TourManager() {
 				element   : '#tickets-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing Tickets',
 				placement : 'right',
-				content   : 'Now, we need to add your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip. For an educational course please create a package (see next page).'
+				content   : 'Now you can create your tickets. A ticket can be valid for many trips. A ticket is a single reservation for a trip.'
 			},
 			{
 				element   : '#ticket-form-container',
@@ -401,7 +401,7 @@ function TourManager() {
 				element   : '#tickets-trips',
 				title     : 'Assigning Trips',
 				placement : 'left',
-				content   : 'Select which trips a ticket can be used for. The ticket is valid for only 1 trip.',
+				content   : 'Select which trips a ticket can be used for',
 				onShown	  : function(tour) {
 					$('input').filter('[name="trips[]"]').first().click();
 				}
@@ -431,7 +431,7 @@ function TourManager() {
 				element   : '#tickets-availability',
 				title     : "Limitin a Ticket's Availabity",
 				placement : 'left',
-				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date',
+				content   : 'You can also limit the ticket to only be booked during specific dates by entering a before and after date.',
 				onShow	  : function(tour) {
 					$("#tickets-boatroom-checkbox").click();
 				},
@@ -462,7 +462,7 @@ function TourManager() {
 				element   : '#classes-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing Classes',
 				placement : 'right',
-				content   : 'Now, we need to add your classes. A class is any event that requires students to participate in learning for a qualification'
+				content   : 'Now you can create your classes. A class is a confined water or classroom based session that contributes to a qualification, for example a confined pool session.'
 			},
 			{
 				element   : '#class-form-container',
@@ -505,7 +505,16 @@ function TourManager() {
 				element   : '#packages-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing your Courses',
 				placement : 'right',
-				content   : 'Now you need to add your courses. A course is defined by its class, each course consists of a single class and many/one tickets.'
+				content   : 'Now you can create your courses. A course consists of variations of classes and tickets, for example an open water course could consist of 2 confined sessions, one classroom session and 2 open water trips'
+			},
+			{
+				element   : '#select-certification',
+				title     : 'Selecting a Certification',
+				placement : 'left',
+				content   : 'Select a certificate this course will accredit to.',
+				onShown	  : function(tour) {
+					$('#select-certification').val(4);
+				}
 			},
 			{
 				element   : '#course-form-container',
@@ -566,7 +575,7 @@ function TourManager() {
 				element   : '#addon-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing Addons',
 				placement : 'right',
-				content   : 'Now you need to enter your add-ons. An add-on can be attached to a booking and can be useful for things like extra dives, hotel pick ups and nitrox air etc.'
+				content   : 'Now you can create your add-ons. An add-on can be attached to a booking, for example extra dives, hotel pick ups, nitrox air etc.'
 			},
 			{
 				element   : '#addon-form-container',
@@ -609,7 +618,7 @@ function TourManager() {
 				element   : '#packages-list-div', // @todo find a way to float this centre screen
 				title	  : 'Managing Packages',
 				placement : 'right',
-				content   : 'Now you need to add your packages. A package consists of many tickets and is great for offering deals that include more than 1 ticket. A package is also used for educational courses that include multiple trips.'
+				content   : 'Now you can create your packages. A package can consist of many tickets, addons, courses and accommodation. For example, a week long diving holiday.'
 			},
 			{
 				element   : '#package-form-container',
@@ -654,7 +663,7 @@ function TourManager() {
 				element   : '#packages-list-div',
 				title     : 'Viewing Packages',
 				placement : 'right',
-				content   : 'Once a package is saved, you will see it in your list. Click on a package to view/edit the details.',
+				content   : 'Once a package is saved, you will see it in your list. Click on a package to view or edit its details.',
 				onShow    : function(tour) {
 					$('#package-availability-checkbox').click();
 				},

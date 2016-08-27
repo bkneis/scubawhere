@@ -41,7 +41,7 @@
 
 							<div class="form-row">
 								<label class="field-label">For Certification</label>
-								<select name="certificate_id">
+								<select id="select-certification" name="certificate_id">
 									<option value="">-</option>
 									{{#each affiliated_agencies}}
 										<optgroup label="{{abbreviation}}">
