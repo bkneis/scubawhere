@@ -207,69 +207,6 @@
 		</div>
 	</script>
 
-	<script type="text/x-handlebars-template" id="tour-nav-wizard">
-  <div>
-    <div style="width:88%; margin-left:20px; float:left" class="">
-      <ul class="nav tnav-wizard" role="tablist">
-        <li id="accomli" role="presentation" class="tour-progress" data-position="1" data-target="#accommodations">
-          <a id="acom-tab" href="javascript:void(0)" role="tab" class="selected" data-toggle="tab">
-            <span class="step-description">Accommodations</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="2" data-target="#agents">
-          <a id="agent-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Agents</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="3" data-target="#locations">
-          <a id="location-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Locations</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="4" data-target="#boats">
-          <a id="boat-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Boats</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="5" data-target="#trips">
-          <a id="trip-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Trips</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="6" data-target="#tickets">
-          <a id="ticket-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Tickets</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="7" data-target="#classes">
-          <a id="class-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Classes</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="8" data-target="#courses">
-          <a id="course-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Courses</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="10" data-target="#add-ons">
-          <a id="addon-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Add ons</span>
-          </a>
-        </li>
-        <li role="presentation" class="tour-progress" data-position="9" data-target="#packages">
-          <a id="package-tab" href="javascript:void(0)" role="tab" data-toggle="tab">
-            <span class="step-description">Packages</span>
-          </a>
-        </li>
-      </ul>
-      </div>
-      <div class="" style="min-height:80px; width:10%; float:left" id="tour-button">
-        <button id="tour-next-step" style="margin-top:20px" class="btn btn-success text-uppercase">Next Step</button>
-        <button id="tour-finish" style="display:none; margin-top:20px;" class="btn btn-success text-uppercase">Finish tour</button>
-      </div>
-      </div>
-    </script>
-
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
     <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
 	<script type="text/javascript" src="/js/tour.js"></script>

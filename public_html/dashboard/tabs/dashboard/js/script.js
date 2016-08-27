@@ -56,7 +56,8 @@ $(function () {
 		});
 	});*/
 
-	$("#feedback-div").on('submit', '#feedback-form', function(event){
+	$("#feedback-div").on('click', '#test-btn', function(event){
+		window.location.href = '#settings';
 		$("#guts").prepend($("#tour-nav-wizard").html());
 		window.tourStart = true;
 		window.currentStep = {
@@ -70,7 +71,6 @@ $(function () {
 				pageMssg("Please complete the unfinished steps");
 			}
 		});
-		window.location.href = '#settings';
 	});
 
 	//displayFBStats();

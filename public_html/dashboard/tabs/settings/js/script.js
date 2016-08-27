@@ -39,6 +39,7 @@ $(function() {
 	).then(function() {
 		companyForm = Handlebars.compile( $("#company-form-template").html());
 		creditInfoTemplate = Handlebars.compile( $('#credit-info-template').html());
+
 		
 		renderEditForm();
 	});
@@ -220,6 +221,7 @@ function renderEditForm() {
 		url: '/api/company/credits',
 		success: function(data) {
 			$('#credit-info').empty().append(creditInfoTemplate(data));	
+			TourManager.getSettingsTour();
 		},
 		error: function(xhr) {
 			console.log(xhr);

@@ -669,13 +669,13 @@ function TourManager() {
             $("#tour-next-step").on("click", function() {
                 if (window.currentStep.position <= 1) {
                     window.currentStep = {
-                        tab: "#accommodation",
+                        tab: "#accommodations",
                         position: 2
                     };
                 }
                 $('.nav-wizard a').filter('.selected').first().addClass("done").removeClass("selected");
-                $('#accommodation-tab').addClass("selected");
-                window.location.href = "#accommodation";
+                $('#acom-tab').addClass("selected");
+                window.location.href = "#accommodations";
             });
 		}
 	};
