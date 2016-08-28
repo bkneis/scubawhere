@@ -40,7 +40,7 @@ $env = $app->detectEnvironment(function() {
 	{
 		return 'production_aws';
 	}
-	elseif($_SERVER['SERVER_NAME'] == 'scubawhererms-dev.eu-central-1.elasticbeanstalk.com')
+	elseif($_SERVER['AWS_ENV'] == 'dev')
 	{
 		return 'production_aws';
 	}
