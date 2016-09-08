@@ -94,31 +94,36 @@ class TrainingController extends Controller
             return Response::json(array('errors' => array('The class could not be found.')), 404); // 404 Not Found
         }
 
-        if(!$training->getDeleteableAttribute()) {
+		if(!$training->getDeleteableAttribute()) 
+		{
             $problem_courses = array();
-            foreach($training->courses as $obj) {
-                if($obj->tickets()->exists()) {
+			foreach($training->courses as $obj) 
+			{
+				if($obj->tickets()->exists()) 
+				{
                     DB::table('course_training')
                         ->where('course_id', $obj->id)
                         ->where('training_id', $training->id)
                         ->update(array('deleted_at' => DB::raw('NOW()')));    
                 }
-                else {
+				else 
+				{
                     array_push($problem_courses, $obj);
                 }
             }
-            if(sizeof($problem_courses) > 0)
+			if(sizeof($problem_courses) > 0)
+			{
                 $logger = $this->log_service->create('Attempting to delete the class ' . $training->name);
-            else {
-                $training->delete();
-                return Response::json(array('status' => 'Ok. Class deleted'), 200);
-            }
 
-            foreach($problem_courses as $prob) 
-            {
-                $logger->append('The class can not be deleted becuase it belongs to the course ' . $obj->name . ', please assign a diffrent class or ticket to it');
-            }
-            return Response::json('The class could not be deleted as it is assigned to a course, please visit the error logs to view how to correct it before deleting it', 409);
+				foreach($problem_courses as $prob) 
+				{
+					$logger->append('The class can not be deleted becuase it belongs to the course ' . $obj->name . ', please assign a diffrent class or ticket to it');
+				}
+				return Response::json('The class could not be deleted as it is assigned to a course, please visit the error logs to view how to correct it before deleting it', 409);
+			}
         }
+
+		$training->delete();
+		return Response::json(array('status' => 'Ok. Class deleted'), 200);
     }
 }
