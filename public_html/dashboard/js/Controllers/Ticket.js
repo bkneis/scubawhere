@@ -12,10 +12,10 @@ var Ticket = {
 	// No params needed
 	getAllTickets : function(handleData){
 		$.get("/api/ticket/all", function(data){
-			if(window.location.hostname === 'rms-test.scubawhere.com')
+			/*if(window.location.hostname === 'rms-test.scubawhere.com')
 				_.each(data, function(object) {
 					object.only_packaged = parseInt(object.only_packaged);
-				});
+				});*/
 
 			handleData(data);
 		});

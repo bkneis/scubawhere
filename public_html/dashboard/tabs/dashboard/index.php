@@ -181,10 +181,10 @@
           <table id="customers-{{id}}" class="table table-striped table-bordered cust-tbl" cellspacing="0" width="100%">
             <thead>
               <tr>
+                <th style="color:#313131">Booking Ref</th>
                 <th style="color:#313131">Name</th>
-                <th style="color:#313131">Email</th>
-                <th style="color:#313131">Country</th>
                 <th style="color:#313131">Phone Number</th>
+                <th style="color:#313131">Ticket</th>
               </tr>
             </thead>
             <tbody id="customer-table-{{id}}">
@@ -200,10 +200,10 @@
   <script type="text/x-handlebars-template" id="customer-details-template">
     {{#each customers}}
       <tr>
+		<td>{{pivot.reference}}</td>
         <td>{{{firstname}}} {{{lastname}}}</td>
-        <td>{{email}}</td>
-        <td>{{country}}</td>
         <td>{{phone}}</td>
+		<td>{{getTicketName pivot.ticket_id}}</td>
       </tr>
     {{/each}}
   </script>

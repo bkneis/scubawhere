@@ -18,6 +18,10 @@ Handlebars.registerHelper("friendlyDate", function(date) {
 	return friendlyDate(date);
 });
 
+Handlebars.registerHelper('getTicketName', function(id) {
+	return window.tickets[id].name;
+});
+
 Handlebars.registerHelper("tripFinish", function() {
 	var startDate = friendlyDate(this.start);
 
@@ -43,6 +47,8 @@ Handlebars.registerHelper('getPer', function(capacity){
 
 $(function () {
 
+	window.tickets = [];
+
 	if(window.company.initialised !== 1) {
 
 		$('#modal-intro').modal({
@@ -61,17 +67,22 @@ $(function () {
 		$("#row1").prepend(nextSessionsWidget);
 
 		var nextSessionTemplates = Handlebars.compile($('#today-session-template').html());
-		Session.filter({after: moment().format('YYYY-MM-DD')}, function success(nextTrips) {
-			Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
-				var nextSessions = nextTrips.concat(nextClasses);
-				nextSessions = _.sortBy(nextSessions, 'start');
+		Ticket.getAllWithTrashed(function success(data) {
+			console.log(data);
+			window.tickets = _.indexBy(data, 'id');
+			console.log(window.tickets);
+			Session.filter({after: moment().format('YYYY-MM-DD')}, function success(nextTrips) {
+				Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
+					var nextSessions = nextTrips.concat(nextClasses);
+					nextSessions = _.sortBy(nextSessions, 'start');
 
-				$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+					$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+				});
+			},
+			function error(xhr){
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'danger');
 			});
-		},
-		function error(xhr){
-			var data = JSON.parse(xhr.responseText);
-			pageMssg(data.errors[0], 'danger');
 		});
 
 		$('#sessions-list').on('click', '.accordion-header', function() {
@@ -104,6 +115,7 @@ function getCustomers(id, type) {
 	}
 
 	Model.getAllCustomers(params, function sucess(data) {
+		console.log(data);
 		//console.log(data.customers);
 		$('#sessions-list .accordion-header[data-id=' + id + '][data-type=' + type + ']').addClass('manifest-loaded');
 		$('#customer-table-' + id).append( customerDetailsTemplate( {customers : data.customers} ) );
