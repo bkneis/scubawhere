@@ -54,6 +54,8 @@ class TrainingSessionController extends Controller
 
             $customer->pivot->notes = $detail->booking->comment;
 
+			$customer->pivot->status = $detail->booking->status;
+
             // Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
             unset($customer->pivot->customer);
             unset($customer->pivot->booking);

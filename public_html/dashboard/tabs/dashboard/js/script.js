@@ -75,7 +75,7 @@ $(function () {
 				Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
 					var nextSessions = nextTrips.concat(nextClasses);
 					nextSessions = _.sortBy(nextSessions, 'start');
-
+					console.log(nextSessions, 'next');
 					$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
 				});
 			},

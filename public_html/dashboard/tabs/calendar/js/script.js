@@ -419,6 +419,9 @@ function showModalWindowManifest(id, type) {
                     data: null,
                     render: 'reference'
                 }, {
+					data: null,
+					render: 'status'	
+				}, {
                     data: null,
                     render: 'name'
                 }, {
@@ -493,6 +496,9 @@ function showModalWindowManifest(id, type) {
                     data: null,
                     render: 'reference'
                 }, {
+					data: null,
+					render: 'status'	
+				}, {
                     data: null,
                     render: 'name'
                 }, {
@@ -950,6 +956,7 @@ function customerData(customer) {
     this._reference = customer.pivot.reference;
     this._booking_id = customer.pivot.booking_id;
     this._notes = customer.pivot.notes || "-";
+	this._status = customer.pivot.status;
 
     this.name = function() {
         return this._name;
@@ -994,6 +1001,10 @@ function customerData(customer) {
     this.notes = function() {
         return this._notes;
     };
+
+	this.status = function() {
+		return this._status;
+	};
 }
 
 function editBooking(booking_id, self) {

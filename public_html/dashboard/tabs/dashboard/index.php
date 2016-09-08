@@ -182,6 +182,7 @@
             <thead>
               <tr>
                 <th style="color:#313131">Booking Ref</th>
+                <th style="color:#313131">Booking Status</th>
                 <th style="color:#313131">Name</th>
                 <th style="color:#313131">Phone Number</th>
                 <th style="color:#313131">Ticket</th>
@@ -201,6 +202,7 @@
     {{#each customers}}
       <tr>
 		<td>{{pivot.reference}}</td>
+		<td>{{pivot.status}}</td>
         <td>{{{firstname}}} {{{lastname}}}</td>
         <td>{{phone}}</td>
 		<td>{{getTicketName pivot.ticket_id}}</td>
