@@ -52,10 +52,10 @@
 								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>
 							</div>
 
-							<div class="form-row" id="addon-compulsory-div">
+							<!--<div class="form-row" id="addon-compulsory-div">
 								<label class="field-label">Compulsory?</label>
 								<input id="addon-compulsory" type="checkbox" name="compulsory" value="1" {{#if compulsory}}checked{{/if}}> Automatically add this add-on to every trip during booking.
-							</div>
+							</div>-->
 
 
 							{{#if update}}
