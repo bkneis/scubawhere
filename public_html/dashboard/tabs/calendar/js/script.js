@@ -417,6 +417,9 @@ function showModalWindowManifest(id, type) {
                 "searching": true,
                 columns: [{
                     data: null,
+                    render: 'reference'
+                }, {
+                    data: null,
                     render: 'name'
                 }, {
                     data: null,
@@ -426,6 +429,15 @@ function showModalWindowManifest(id, type) {
                     render: 'phone'
                 }, {
                     data: null,
+                    render: 'ticket'
+                }, {
+					data: null,
+					render: 'lastDive'
+				}, {
+                    data: null,
+                    render: 'notes'
+                }, {
+                    data: null,
                     render: 'shoe'
                 }, {
                     data: null,
@@ -433,18 +445,6 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'height'
-                }, {
-                    data: null,
-                    render: 'lastDive'
-                }, {
-                    data: null,
-                    render: 'ticket'
-                }, {
-                    data: null,
-                    render: 'reference'
-                }, {
-                    data: null,
-                    render: 'notes'
                 }],
                 "dom": 'T<"clear">lfrtip',
                 "tableTools": {
@@ -491,6 +491,9 @@ function showModalWindowManifest(id, type) {
                 "searching": false,
                 columns: [{
                     data: null,
+                    render: 'reference'
+                }, {
+                    data: null,
                     render: 'name'
                 }, {
                     data: null,
@@ -500,6 +503,15 @@ function showModalWindowManifest(id, type) {
                     render: 'phone'
                 }, {
                     data: null,
+                    render: 'course'
+                }, {
+					data: null,
+					render: 'lastDive'
+				}, {
+                    data: null,
+                    render: 'notes'
+                }, {
+                    data: null,
                     render: 'shoe'
                 }, {
                     data: null,
@@ -507,18 +519,6 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'height'
-                }, {
-                    data: null,
-                    render: 'lastDive'
-                }, {
-                    data: null,
-                    render: 'course'
-                }, {
-                    data: null,
-                    render: 'reference'
-                }, {
-                    data: null,
-                    render: 'notes'
                 }],
                 "dom": 'T<"clear">lfrtip',
                 "tableTools": {
@@ -949,7 +949,7 @@ function customerData(customer) {
     this._lastDive = customer.last_dive || "-";
     this._reference = customer.pivot.reference;
     this._booking_id = customer.pivot.booking_id;
-    this._notes = customer.pivot.notes;
+    this._notes = customer.pivot.notes || "-";
 
     this.name = function() {
         return this._name;

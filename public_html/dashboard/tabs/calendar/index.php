@@ -192,45 +192,45 @@
          	</div>
       </script>
       <script type="text/x-handlebars-template" id="manifest-template">
-         <div id="modal-{{id}}" class="reveal-modal xlarge">
-         		<h3>{{{trip.name}}} - Trip Manifest</h3>
-         		<table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
-         				<thead>
-         			<tr>
-         				<th style="color:#313131">Name</th>
-         				<th style="color:#313131"><span style="display: none;">Country</span></th>
-         				<th style="color:#313131">Phone</th>
-         				<th style="color:#313131">Fins</th>
-         				<th style="color:#313131">BCD</th>
-         				<th style="color:#313131">Wetsuit</th>
-         				<th style="color:#313131">Last Dive</th>
-         				<th style="color:#313131">Purchase</th>
-         				<th style="color:#313131"><span style="display: none;">Booking</span></th>
-         				<th style="color:#313131">Notes</th>
-         			</tr>
-         	</thead>
-         	<tbody id="customers-table">
-         	</tbody>
-         		</table>
-         		<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+          <div id="modal-{{id}}" class="reveal-modal xxlarge">
+			  <h3>{{{trip.name}}} - Trip Manifest</h3>
+			  <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
+				  <thead>
+					  <tr>
+						<th style="color:#313131">Booking Ref</th>
+						<th style="color:#313131;">Name</th>
+						<th style="color:#313131"><span style="display: none;">Country</span></th>
+						<th style="color:#313131">Phone</th>
+						<th style="color:#313131">Ticket</th>
+						<th style="color:#313131">Last Dive</th>
+						<th style="color:#313131; width:15%;">Notes</th>
+						<th style="color:#313131">Fins</th>
+						<th style="color:#313131">BCD</th>
+						<th style="color:#313131">Wetsuit</th>
+					</tr>
+				</thead>
+				<tbody id="customers-table">
+				</tbody>
+			 </table>
+			 <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
          </div>
       </script>
       <script type="text/x-handlebars-template" id="class-manifest-template">
-         <div id="modal-{{id}}" class="reveal-modal xlarge">
+         <div id="modal-{{id}}" class="reveal-modal xxlarge">
          		<h3>{{{training.name}}} - Class Manifest</h3>
          		<table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
          				<thead>
          			<tr>
+         				<th style="color:#313131">Booking Ref</th>
          				<th style="color:#313131">Name</th>
          				<th style="color:#313131"><span style="display: none;">Country</span></th>
          				<th style="color:#313131">Phone</th>
+         				<th style="color:#313131">Course</th>
+         				<th style="color:#313131">Last Dive</th>
+         				<th style="color:#313131">Notes</th>
          				<th style="color:#313131">Fins</th>
          				<th style="color:#313131">BCD</th>
          				<th style="color:#313131">Wetsuit</th>
-         				<th style="color:#313131">Last Dive</th>
-         				<th style="color:#313131">Purchase</th>
-         				<th style="color:#313131"><span style="display: none;">Booking</span></th>
-         				<th style="color:#313131">Notes</th>
          			</tr>
          	</thead>
          	<tbody id="customers-table">
