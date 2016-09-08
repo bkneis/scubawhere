@@ -224,31 +224,31 @@ $(function() {
         event.preventDefault();
         $('#update-boatroom').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
         Boatroom.update($('#update-boatroom-form').serialize(), function success(data) {
-                pageMssg(data.status, true);
-                //console.log(data);
+			pageMssg(data.status, true);
+			//console.log(data);
 
-                $('form').data('hasChanged', false);
+			$('form').data('hasChanged', false);
 
-                /*renderBoatList(function() {
-                renderRoomEditForm($('#update-boatroom-form input[name=id]').val());
-            });*/
-                renderBoatList();
-                $('.loader').remove();
-                $('#update-boatroom').prop('disabled', false);
-            },
-            function error(xhr) {
-                var data = JSON.parse(xhr.responseText);
-                //console.log(data);
+			/*renderBoatList(function() {
+			renderRoomEditForm($('#update-boatroom-form input[name=id]').val());
+		});*/
+			renderBoatList();
+			$('.loader').remove();
+			$('#update-boatroom').prop('disabled', false);
+		},
+		function error(xhr) {
+			var data = JSON.parse(xhr.responseText);
+			//console.log(data);
 
-                var errorsHTML = Handlebars.compile($("#errors-template").html());
-                errorsHTML = errorsHTML(data);
+			var errorsHTML = Handlebars.compile($("#errors-template").html());
+			errorsHTML = errorsHTML(data);
 
-                // Render error messages
-                $('.errors').remove();
-                $('#update-boatroom-form').prepend(errorsHTML);
-                $('#update-boatroom').prop('disabled', false);
-                $('.loader').remove();
-            });
+			// Render error messages
+			$('.errors').remove();
+			$('#update-boatroom-form').prepend(errorsHTML);
+			$('#update-boatroom').prop('disabled', false);
+			$('.loader').remove();
+		});
     });
 
 });
