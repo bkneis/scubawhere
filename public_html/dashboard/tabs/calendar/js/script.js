@@ -44,7 +44,7 @@ $(function() {
     });
 
     window.promises.loadedBoats = $.Deferred();
-    Boat.getAll(function(data) {
+    Boat.getAllWithTrashed(function(data) {
         window.boats = _.indexBy(data, 'id');
         window.promises.loadedBoats.resolve();
     });
