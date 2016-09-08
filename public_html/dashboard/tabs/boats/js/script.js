@@ -59,7 +59,10 @@ $(function() {
                 boatrooms: roomTypes
             }));
         }
-        $(this).before('<div class="alert alert-danger clearfix"><i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i><p class="pull-left"><strong>No cabins available!</strong><br>You can create <a href="#" class="change-to-add-boatroom">Cabins</a> to add.</p></div>');
+		if(roomTypes.length === 0)
+		{
+        	$(this).before('<div class="alert alert-danger clearfix"><i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i><p class="pull-left"><strong>No cabins available!</strong><br>You can create <a href="#" class="change-to-add-boatroom">Cabins</a> to add.</p></div>');
+		}
     });
 
     $("#boat-form-container").on('click', '.remove-room', function(event) {
