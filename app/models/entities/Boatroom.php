@@ -16,6 +16,8 @@ class Boatroom extends Ardent {
 		'photo'       => '',
 	);
 
+	public $appends = array('deleteable');
+
 	public function beforeSave( $forced )
 	{
 		if( isset($this->name) )
@@ -26,6 +28,11 @@ class Boatroom extends Ardent {
 
 		if( isset($this->photo) )
 			$this->photo = Helper::sanitiseString($this->photo);
+	}
+
+	public function getDeleteableAttribute()
+	{
+		return !($this->boats()->exists() || $this->tickets()->exists());
 	}
 
 	public function company()

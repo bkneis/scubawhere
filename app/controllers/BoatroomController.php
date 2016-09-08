@@ -1,9 +1,18 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BoatroomController extends Controller {
+
+	protected $logging_service;
+
+	public function __construct(LogService $logging_service)
+	{
+		$this->logging_service = $logging_service;
+	}
 
 	public function getIndex()
 	{
@@ -106,42 +115,76 @@ class BoatroomController extends Controller {
 
 	public function postDelete()
 	{
+		/**
+		 * 1 - Retrieve the boatroom.
+		 * 2 - Get any future booking's reference code. This needs to be done through booking details as cabins are not
+		 * directly related to bookings.
+		 * 3 - If there are future bookings, create an error log and add entries telling the user which bookings must be changed 
+		 * 4 - Check if the boatroom has any tickets or boats associated to it
+		 * (5) - If so, soft delete their pivot tables, DO NOT DETACH. As past bookings may need to refrence previous states
+		 * 6 - Soft delete the boat, @todo if there are no bookings in the past, force delete it. But this adds computation
+		 * to the API. Maybe a cron job should be in charge of that. Or push a notification to a queue.
+		 */
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
+			$boatroom = Context::get()->boatrooms()->with('boats', 'tickets', 'bookingdetails')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
 		}
 
-		// TODO Evaluate removing this
-		if( $boatroom->boats->exists() )
-			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in boats.')), 409); // 409 Conflict
+		$future_bookings = $boatroom->bookingdetails()
+									->with(['booking' => function($q) {
+										return $q->select('id');
+									}])
+									->whereHas('departure', function($query) {
+										return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
+									})
+									->get();
 
-		/*
-		if( $boatroom->tickets->exists() )
-			return Response::json( array('errors' => array('The cabin can not be removed because it is still used in tickets.')), 409); // 409 Conflict
-		*/
-
-		// TODO Evaluate removing this
-		if( $boatroom->bookingdetails()->whereHas('departure', function($query)
+		if(!$future_bookings->isEmpty())
 		{
-			return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-		})->exists() )
-			return Response::json( array('errors' => array('The cabin can not be removed because it is booked for future sessions.')), 409); // 409 Conflict
-
-		if( $boatroom->bookingdetails()->exists() )
-			$boatroom->delete(); // softDeletes
-		else
-		{
-			$boatroom->forceDelete();
-
-			// Manually remove from ticketable table, as no foreign key possible
-			$boatroom->tickets()->detach();
+			$logger = $this->logging_service->create('Attempting to delete the boatroom ' . $boatroom->name);
+			$booking_ids = $future_bookings->map(function($obj) {
+				return $obj->booking_id;
+			});
+			//return $booking_ids;
+			// @todo investigate how to remove this by using bookingdetails.booking.reference
+			$booking_refs = Context::get()->bookings()->whereIn('id', $booking_ids->toArray())->lists('reference');
+			foreach($booking_refs as $obj) 
+			{
+				$logger->append('Could not delete the cabin as it is used in the booking ' . $obj);
+			}
+			return Response::json(
+						array('errors' => 
+							array('The cabin could not be delete, please visit the error logs for more information on how to resolve this.')
+						), 409);
 		}
 
-		return array('status' => 'Ok. Cabin deleted');
+		if(!$boatroom->deleteable)
+		{
+			foreach($boatroom->tickets as $obj) 
+			{
+				DB::table('ticketables')
+					->where('ticketable_type', 'Boatroom')
+					->where('ticketable_id', $boatroom->id)
+					->where('ticket_id', $obj->id)
+					->update(array('deleted_at' => DB::raw('NOW()')));    
+			}	
+			foreach($boatroom->boats as $obj) 
+			{
+				DB::table('boat_boatroom')
+					->where('boat_id', $obj->id)
+					->where('boatroom_id', $boatroom->id)
+					->update(array('deleted_at' => DB::raw('NOW()')));    
+			}
+		}
+
+		$boatroom->delete();
+
+		return array('status' => 'Ok. Cabin deleted'); // todo, change this to proper json response, but needs to be fixed in the front end first
 	}
+
 }
