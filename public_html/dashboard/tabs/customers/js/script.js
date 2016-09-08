@@ -426,6 +426,7 @@ function editDetails(id) {
     else {
         $("#edit-customer-details").html(editCustomerTemplate(customer));
         $("#customer-diving-information").html(customerDivingInformationTemplate({}));
+    	$('#edit-customer-agencies').find('#selected-certificates').empty();
     }
 
     $('#edit-customer-modal').modal('show');
