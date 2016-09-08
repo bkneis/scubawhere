@@ -346,6 +346,10 @@ function loadCSVFile(evt, columnData) {
         function success(data) {
             console.log(data);
             $('#import-customer-data-body').empty().append(templateImportErrors({errors : data.errors}));
+			Customer.getAllCustomers(function (data) {
+				window.customers = _.indexBy(data, 'id');
+				renderCustomerList(window.customers);
+			});
         },
         function error(xhr) {
             console.log(xhr);

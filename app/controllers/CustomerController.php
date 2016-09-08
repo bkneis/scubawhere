@@ -246,7 +246,7 @@ class CustomerController extends Controller {
 
 		}
 
-		//Context::get()->customers()->saveMany($imported_customers);
+		Context::get()->customers()->saveMany($imported_customers);
 
 		return Response::json( array('status' => 'OK. Customers imported.', 'errors' => $errors, 'bytres' => $bytes_written), 200 ); // 200 OK
 
