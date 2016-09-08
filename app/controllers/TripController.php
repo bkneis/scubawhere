@@ -1,5 +1,6 @@
 <?php
 
+use ScubaWhere\Helper;
 use ScubaWhere\Context;
 use ScubaWhere\Services\LogService;
 use Illuminate\Database\QueryException;
@@ -205,7 +206,10 @@ class TripController extends Controller {
         {
             if (!Input::get('id')) throw new ModelNotFoundException();
             $trip = Context::get()->trips()
-                                  ->with('tickets', 'departures')
+								  ->with(['tickets',
+								  'departures' => function($query) {
+								      return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
+								  }])
                                   ->findOrFail(Input::get('id'));
         } 
         catch (ModelNotFoundException $e) 
