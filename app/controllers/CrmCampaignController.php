@@ -209,9 +209,11 @@ class CrmCampaignController extends Controller
         // LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
         foreach ($customers as $customer) {
             // If the customer has unsubscribed skip them and go to the next customer
-            if ($customer->crmSubscription->subscribed === 0) {
-                continue;
-            }
+			if(isset($customer->crmSubscription->subscribed)) {
+				if ($customer->crmSubscription->subscribed === 0) {
+					continue;
+				}
+			}
             $new_token_data = [];
             $new_token_data['campaign_id'] = $campaign->id;
             $new_token_data['token'] = str_random(50);
