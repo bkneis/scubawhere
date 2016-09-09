@@ -28,15 +28,16 @@ class CrmMailer implements CrmMailerInterface
 		$email_to = $customer->email;
 		$name_to = $customer->name;
 		$subject = $campaign->subject;
-		$email_from = $company->email;
+		$email_from = $company->business_email;
+		$name_from = $company->name;
 		$email_html = $campaign->email_html;
 		$is_campaign = $campaign->is_campaign;
 
-		\Mail::queue([], [], function($message) use ($email_to, $name_to, $subject, $email_from, $email_html, $is_campaign, $terms_file)
+		\Mail::queue([], [], function($message) use ($email_to, $name_to, $name_from, $subject, $email_from, $email_html, $is_campaign, $terms_file)
 		{
 			$message->to($email_to, $name_to)
 			->subject($subject)
-			->from($email_from)
+			->from($email_from, $name_from)
 			->setBody($email_html, 'text/html');
 			if($is_campaign == 0 && file_exists($terms_file))
 			{
