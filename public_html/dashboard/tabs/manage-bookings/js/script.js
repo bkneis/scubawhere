@@ -274,6 +274,16 @@ function renderBookingList(bookings, display) {
 	var results = [];
 
 	var results = _.filter(bookings, function(booking) {
+
+		if(booking.agent !== null)
+		{
+			if(booking.agent.terms === 'deposit')
+			{
+				var net_price = (booking.decimal_price * (1 - (booking.agent.commission / 100)));
+				net_price = Math.round(net_price * 100) / 100;
+				booking.decimal_price = net_price;	
+			}
+		}
 		booking.sums = {};
 		Booking.prototype.calculateSums.call(booking);
 		Booking.prototype.setStatus.call(booking);
@@ -284,6 +294,8 @@ function renderBookingList(bookings, display) {
 		else
 			return true;
 	});
+
+	console.log('res', results);
 
 	$('#booking-table-div').html( bookingListItem({bookings: results}) );
 

@@ -212,6 +212,25 @@ function statusIcon(booking) {
 			color = '#5cb85c';
 			tooltip = 'Confirmed, agent takes full amount';
 		}
+		else if(booking.agent && booking.agent.terms === 'deposit') {
+
+			var net_price = booking.decimal_price * (1 - (booking.agent.commission / 100));
+			net_price = Math.round(net_price * 100) / 100; // round to 2 decimals
+			var percentage = booking.sums.have / net_price;
+
+			if(percentage === 1) color = '#5cb85c';
+			else if(percentage === 0) color = '#d9534f';
+			else color = '#f0ad4e';
+
+			if(percentage === 1) tooltip = 'Confirmed, completely paid';
+			else                 tooltip = 'Confirmed, ' + window.company.currency.symbol + ' ' + booking.sums.have + '/' + net_price + ' paid';
+
+			if(percentage > 1) {
+				icon = 'fa-exclamation';
+				color = '#d9534f';
+				tooltip = 'Confirmed, refund necessary';
+			}
+		}
 		else {
 			var percentage = booking.sums.have / booking.decimal_price;
 
