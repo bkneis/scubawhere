@@ -2132,7 +2132,18 @@ function showModalAccommodationSelection(accommodation) {
                     if(eventObject.readonly != undefined)
                         return false;
                     $(this).css('background-color', 'purple');
-                    window.selectedAccommodations.push(eventObject);
+
+					if(_.contains(window.selectedAccommodations, eventObject))
+					{
+						window.selectedAccommodations = _.filter(window.selectedAccommodations, function(obj) { 
+							return obj.start._i !== eventObject.start._i; 
+						});
+						$(this).css('background-color', eventObject.color);
+					}
+					else
+					{
+                    	window.selectedAccommodations.push(eventObject);
+					}
                 }
 			});
 		},
