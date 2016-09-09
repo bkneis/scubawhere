@@ -19,10 +19,11 @@ class ObjectStoreService {
 		
 		if(!$file->isValid()) throw new InvalidInputException(array('Uploaded file is not valid'));
 		
-		$save_path = storage_path() . '/scubawhere/' . Context::get()->name;
+		$save_path = storage_path() . '/scubawhere/' . Context::get()->name . '/';
 		$dest_path = 'sw-rms-terms';
 		$filename = Context::get()->name . '/' . 'terms.pdf';
-		$this->object_store_repo->uploadFile($file, $filename, $save_path, $dest_path);
+		$tmp_name = 'terms.pdf';
+		$this->object_store_repo->uploadFile($file, $filename, $tmp_name, $save_path, $dest_path);
 	}
 
 	public function uploadEmailImage($image)
@@ -35,9 +36,9 @@ class ObjectStoreService {
 		$storage_path = 'sw-rms-crm-photos';
 		
         $o_filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-        $filename = $o_filename . str_random(20) . '.' . $image->getClientOriginalExtension();
+        $filename = Context::get()->name . $o_filename . str_random(20) . '.' . $image->getClientOriginalExtension();
 
-		$url = $this->object_store_repo->uploadFile($image, $filename, $save_path, $storage_path);
+		$url = $this->object_store_repo->uploadFile($image, $filename, $filename, $save_path, $storage_path);
 
 		return $url;	
 	}

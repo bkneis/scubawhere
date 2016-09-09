@@ -84,8 +84,9 @@ $(function() {
 		window.location.href = '#settings';
 	});*/
 
+
 	// @todo potentially change this to trigge coniditonally on update of form thoruhg save button
-	$('#company-form-container').on('click', '#upload-terms', function(event) {
+	/*$('#company-form-container').on('click', '#upload-terms', function(event) {
 		event.preventDefault();
 
 		var terms_file = $('#terms-file').prop('files')[0];
@@ -105,11 +106,13 @@ $(function() {
 	        },
 	        error: function(xhr) {
 	        	console.log(xhr);
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
 	        },
 	        contentType: false,
 	        processData: false
 	    });
-	});
+	});*/
 
 	$('#company-form-container').on('change', '#country_id', function(event) {
 		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');
@@ -232,6 +235,24 @@ function renderEditForm() {
 	renderCurrencyList();
 
 	setToken('[name=_token]');
+
+	$('#terms-file').bind('fileuploadsubmit', function (e, data) {
+		data.formData = {
+			_token: window.token
+		};
+	});
+
+    $('#terms-file').fileupload({
+        url: '/api/register/upload-terms',
+        maxFileSize: 50000000,
+        done: function (e, data) {
+			pageMssg(data.result.status, 'success');
+        },
+		fail: function(e, data) {
+			var res = JSON.parse(data.jqXHR.responseText);
+			pageMssg(res.errors[0]);
+		}
+    });
 
 	// Set up change monitoring
 	$('form').on('change', 'input, select, textarea', function() {

@@ -3,6 +3,7 @@
 use ScubaWhere\Context;
 use ScubaWhere\Exceptions;
 use Aws\S3\S3Client;
+use Guzzle\Http\EntityBody;
 
 class ObjectStoreRepo implements ObjectStoreRepoInterface
 {
@@ -20,7 +21,7 @@ class ObjectStoreRepo implements ObjectStoreRepoInterface
 		));
 	}
 
-	public function uploadFile($file, $filename, $tmp_dir, $dest_dir)
+	public function uploadFile($file, $filename, $tmp_name, $tmp_dir, $dest_dir)
 	{
 		if(!file_exists($tmp_dir))
 		{
@@ -29,11 +30,11 @@ class ObjectStoreRepo implements ObjectStoreRepoInterface
 
 		$file->move($tmp_dir, $filename);
 
-		$key = Context::get()->name . $filename;
 		$result = $this->s3_client->putObject(array(
 				'Bucket'		=> $dest_dir,
-				'Key'			=> $key,
-				'Body'			=> $tmp_dir . $filename,
+				'Key'			=> $filename,
+				'Body'			=> EntityBody::factory(fopen($tmp_dir . $tmp_name, 'r')),
+				'Content'		=> 'application/pdf',
 				'MetaData'		=> array(
 					'account'	=> Context::get()->name
 				)
@@ -41,11 +42,11 @@ class ObjectStoreRepo implements ObjectStoreRepoInterface
 
 		$this->s3_client->waitUntil('ObjectExists', array(
 				'Bucket'	=> $dest_dir,
-				'Key'		=> $key
+				'Key'		=> $filename
 		)); 
         
 		\File::delete($tmp_dir . $filename);
 
-		return $this->s3_client->getObjectUrl($dest_dir, $key);
+		return $this->s3_client->getObjectUrl($dest_dir, $filename);
 	}
 }
