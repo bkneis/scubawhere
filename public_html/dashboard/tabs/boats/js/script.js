@@ -261,6 +261,9 @@ function renderBoatList(callback) {
     $('#boat-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
     $('#boatroom-list-container').append('<div id="save-loader" class="loader" style="margin: auto; display: block;"></div>');
 
+	var gotBoats = $.Deferred();
+	var gotBoatRooms = $.Deferred();
+
     Boat.getAll(function success(data) {
         window.boats = _.indexBy(data, 'id');
         console.log(data);
@@ -269,7 +272,8 @@ function renderBoatList(callback) {
         $("#boat-list-container").append(boatsList({
             boats: data
         }));
-        if (typeof callback === 'function') callback();
+		gotBoats.resolve();
+        //if (typeof callback === 'function') callback();
     });
 
     Boatroom.getAll(function success(data) {
@@ -280,7 +284,15 @@ function renderBoatList(callback) {
         $("#boatroom-list-container").append(boatroomsList({
             boatrooms: data
         }));
+		gotBoatRooms.resolve();
     });
+
+	if(typeof callback === 'function')
+	{
+		$.when(gotBoats, gotBoatRooms).done(function() {
+			callback();
+		});
+	}
 }
 
 function renderEditForm(id) {
