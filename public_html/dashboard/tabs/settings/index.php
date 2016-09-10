@@ -135,10 +135,10 @@
 
 								<div class="form-row">
 									<label class="field-label">Upload terms file : </label>
-									<!--<input id="terms-file" style="margin-bottom:10px" type="file" accept="application/pdf">-->
+									<input id="terms-file" style="margin-bottom:10px" type="file" accept="application/pdf">
 									
-                                    <input id="terms-file" name="terms_file" type="file" accept="application/pdf" />
-									<!--<a id="upload-terms" class="btn btn-default text-uppercase">Upload Terms</a>-->
+                                    <!--<input id="terms-file" name="terms_file" type="file" accept="application/pdf" />-->
+									<a id="upload-terms" class="btn btn-default text-uppercase">Upload Terms</a>
 								</div>
 
 								<input type="hidden" name="_token">
@@ -212,9 +212,9 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
     <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
 	<script type="text/javascript" src="/js/tour.js"></script>
-	<script src="/tabs/campaigns/email-templates/js/jquery.min.js"></script>
-	<script src="/tabs/campaigns/email-templates/js/jquery.ui.widget.js"></script>
+	<!--<script src="/tabs/campaigns/email-templates/js/jquery.min.js"></script>-->
+	<!--<script src="/tabs/campaigns/email-templates/js/jquery.ui.widget.js"></script>
 	<script src="/tabs/campaigns/email-templates/js/jquery.iframe-transport.js"></script>
-	<script src="/tabs/campaigns/email-templates/js/jquery.fileupload.js"></script>
+	<script src="/tabs/campaigns/email-templates/js/jquery.fileupload.js"></script>-->
 	<script src="/tabs/settings/js/script.js"></script>
 </div>

@@ -86,7 +86,7 @@ $(function() {
 
 
 	// @todo potentially change this to trigge coniditonally on update of form thoruhg save button
-	/*$('#company-form-container').on('click', '#upload-terms', function(event) {
+	$('#company-form-container').on('click', '#upload-terms', function(event) {
 		event.preventDefault();
 
 		var terms_file = $('#terms-file').prop('files')[0];
@@ -94,7 +94,7 @@ $(function() {
 		// Use FormData Object instead of JSON to handle the file types such as pdf
 		var formData = new FormData();
 		formData.append('terms_file', terms_file);
-		formData.append('company_name', window.company.name);
+		//formData.append('company_name', window.company.name);
 
 		// @todo change uplaod terms to copany controllr and add it to js repo
 		$.ajax({
@@ -112,7 +112,7 @@ $(function() {
 	        contentType: false,
 	        processData: false
 	    });
-	});*/
+	});
 
 	$('#company-form-container').on('change', '#country_id', function(event) {
 		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');
@@ -236,7 +236,7 @@ function renderEditForm() {
 
 	setToken('[name=_token]');
 
-	$('#terms-file').bind('fileuploadsubmit', function (e, data) {
+	/*$('#terms-file').bind('fileuploadsubmit', function (e, data) {
 		data.formData = {
 			_token: window.token
 		};
@@ -252,7 +252,7 @@ function renderEditForm() {
 			var res = JSON.parse(data.jqXHR.responseText);
 			pageMssg(res.errors[0]);
 		}
-    });
+    });*/
 
 	// Set up change monitoring
 	$('form').on('change', 'input, select, textarea', function() {
