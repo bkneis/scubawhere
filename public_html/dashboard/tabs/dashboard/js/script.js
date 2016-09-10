@@ -22,6 +22,10 @@ Handlebars.registerHelper('getTicketName', function(id) {
 	return window.tickets[id].name;
 });
 
+Handlebars.registerHelper('getCourseName', function(id) {
+	return window.courses[id].name;
+});
+
 Handlebars.registerHelper("tripFinish", function() {
 	var startDate = friendlyDate(this.start);
 
@@ -67,23 +71,60 @@ $(function () {
 		$("#row1").prepend(nextSessionsWidget);
 
 		var nextSessionTemplates = Handlebars.compile($('#today-session-template').html());
-		Ticket.getAllWithTrashed(function success(data) {
-			console.log(data);
-			window.tickets = _.indexBy(data, 'id');
-			console.log(window.tickets);
-			Session.filter({after: moment().format('YYYY-MM-DD')}, function success(nextTrips) {
-				Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
-					var nextSessions = nextTrips.concat(nextClasses);
-					nextSessions = _.sortBy(nextSessions, 'start');
-					console.log(nextSessions, 'next');
-					$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
-				});
+
+		var gotCourses = $.Deferred();
+		var gotTickets = $.Deferred();
+		var gotSessions = $.Deferred();
+
+		Course.getAllWithTrashed(function success(data) {
+			window.courses = _.indexBy(data, 'id');
+			gotCourses.resolve();
+		});
+
+		$.when(gotCourses).done(function() {
+			Ticket.getAllWithTrashed(function success(data) {
+				window.tickets = _.indexBy(data, 'id');	
+				gotTickets.resolve();
+			});
+		});
+
+		$.when(gotTickets).done(function() {
+			Session.filter({after: moment().format('YYYY-MM-DD')}, function success(data) {
+				gotSessions.resolve(data);
 			},
 			function error(xhr){
 				var data = JSON.parse(xhr.responseText);
 				pageMssg(data.errors[0], 'danger');
 			});
 		});
+
+		$.when(gotSessions).done(function(nextTrips) {
+			Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
+				var nextSessions = nextTrips.concat(nextClasses);
+				nextSessions = _.sortBy(nextSessions, 'start');
+				console.log(nextSessions, 'next');
+				$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+			});
+		});
+
+		/*Course.getAllWithTrashed(function success(data) {
+			window.courses = _.indexBy(data, 'id');
+			Ticket.getAllWithTrashed(function success(data) {
+				window.tickets = _.indexBy(data, 'id');
+				Session.filter({after: moment().format('YYYY-MM-DD')}, function success(nextTrips) {
+					Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
+						var nextSessions = nextTrips.concat(nextClasses);
+						nextSessions = _.sortBy(nextSessions, 'start');
+						console.log(nextSessions, 'next');
+						$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+					});
+				},
+				function error(xhr){
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0], 'danger');
+				});
+			});
+		});*/
 
 		$('#sessions-list').on('click', '.accordion-header', function() {
 			self = $(this);

@@ -205,7 +205,11 @@
 		<td>{{pivot.status}}</td>
         <td>{{{firstname}}} {{{lastname}}}</td>
         <td>{{phone}}</td>
-		<td>{{getTicketName pivot.ticket_id}}</td>
+		{{#if pivot.ticket_id}}
+			<td>{{getTicketName pivot.ticket_id}}</td>
+		{{else}}
+			<td>{{getCourseName pivot.course_id}}</td>
+		{{/if}}
       </tr>
     {{/each}}
   </script>
