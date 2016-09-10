@@ -96,7 +96,7 @@ class CustomerController extends Controller {
 
 		// Validate that the customer does not already exist within the logged-in company
 		if( !empty($data['email']) && Context::get()->customers()->where('email', $data['email'])->count() > 0 )
-			return Response::json( array('errors' => 'Cannot create new customer! The email already exists.'), 409 ); // 409 Conflict
+			return Response::json( array('errors' => array('Cannot create new customer! The email already exists.')), 409 ); // 409 Conflict
 
 		$customer = Context::get()->customers()->save($customer);
 
