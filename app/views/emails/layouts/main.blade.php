@@ -431,12 +431,12 @@
         <table cellpadding="0" cellspacing="0" width="600" height="60" class="w320">
           <tr>
             <td class="mobile-header-padding-left">
-              <a href="http://scubawhere.com"><img width="252" height="36" src="https://rms.scubawhere.com/img/scubawhere_logo.png" alt="logo"></a>
+              <!--<a href="http://scubawhere.com"><img width="252" height="36" src="https://rms.scubawhere.com/img/scubawhere_logo.png" alt="logo"></a>-->
             </td>
             <td class="mobile-header-padding-right">
-              <a href="https://twitter.com/scubawhere"><img width="36" height="36" src="https://rms.scubawhere.com/img/twitter.png" alt="twitter"></a>
+              <!--<a href="https://twitter.com/scubawhere"><img width="36" height="36" src="https://rms.scubawhere.com/img/twitter.png" alt="twitter"></a>
               <a href="https://facebook.com/scubawhere"><img width="36" height="36" src="https://rms.scubawhere.com/img/facebook.png" alt="facebook"></a>
-              <a href="https://plus.google.com/+scubawhere-com"><img width="36" height="36" src="https://rms.scubawhere.com/img/google.png" alt="google"></a>
+              <a href="https://plus.google.com/+scubawhere-com"><img width="36" height="36" src="https://rms.scubawhere.com/img/google.png" alt="google"></a>-->
             </td>
           </tr>
         </table>
@@ -452,7 +452,7 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td align="center">
-              <strong>scubawhere Limited</strong>
+              <!--<strong>scubawhere Limited</strong>-->
             </td>
           </tr>
         </table>

@@ -1,7 +1,7 @@
 @extends('emails.layouts.main')
 
 @section('title')
-    <title>ScubawhereRMS Transaction Confirmation</title>
+    <title>Transaction Confirmation</title>
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
             <td class="header-lg" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 32px;color: #4d4d4d;text-align: center;line-height: normal;border-collapse: collapse;font-weight: 700;padding: 35px 0 0;">
-              Your scubawhere transaction confirmation
+              Your transaction confirmation
             </td>
           </tr>
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">

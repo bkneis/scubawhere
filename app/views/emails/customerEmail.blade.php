@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Email | scubawhereRMS</title>
+	<title>Email | {{$company->name}}</title>
 
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css">
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
