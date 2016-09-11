@@ -1,12 +1,20 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AddonController extends Controller
-{
+class AddonController extends Controller {
+
+	protected $log_service;
+
+	public function __construct(LogService $log_service)
+	{
+		$this->log_service = $log_service;
+	}
+
     public function getIndex()
     {
         try {
@@ -159,25 +167,73 @@ class AddonController extends Controller
 
     public function postDelete()
     {
-        try {
-            if (!Input::get('id')) {
-                throw new ModelNotFoundException();
-            }
-            $addon = Context::get()->addons()->findOrFail(Input::get('id'));
-        } catch (ModelNotFoundException $e) {
+		try 
+		{
+            if (!Input::get('id')) throw new ModelNotFoundException();
+			$addon = Context::get()->addons()
+								   ->with([
+								   'bookingdetails.session' => function($q) {
+								       $q->where('start', '>=', Helper::localtime());
+								   },
+								   'bookingdetails.training_session' => function($q) {
+										$q->where('start', '>=', Helper::localtime());
+								   }])
+								   ->findOrFail(Input::get('id'));
+		} 
+		catch (ModelNotFoundException $e) 
+		{
             return Response::json(array('errors' => array('The addon could not be found.')), 404); // 404 Not Found
         }
 
+		$booking_ids = $addon->bookingdetails
+							 ->map(function($obj) {
+							     if($obj->session != null || $obj->training_session != null)
+							     {
+								     return $obj->booking_id;
+								 }
+							 })
+							 ->toArray();
+
+		$bookings = Context::get()->bookings()
+									  ->whereIn('id', $booking_ids)
+									  ->get(['reference', 'status']);
+
+		$bookings = $bookings->map(function($obj){
+			if($obj->status != 'cancelled') return $obj;	
+		})->toArray();
+
+		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+
+		if($bookings)
+		{
+			$logger = $this->log_service->create('Attempting to delete the addon, '
+												. $addon->name);
+			foreach($bookings as $obj) 
+			{
+				$logger->append('The addon is used in the future in booking ' . $obj['reference']);
+			}
+
+			return Response::json(
+				array('errors' => 
+					array('The addon could not be deleted as it is used in bookings in the future, '.
+						'Please visit the error logs for more info on how to delete it.')
+				), 409); // Conflict
+		}
+
+
         // Check if the addon is used in any packages
-        if(!$addon->getDeletableAttribute()) {
-            if($addon->packages()->exists()) {
+		if(!$addon->getDeletableAttribute()) 
+		{
+			if($addon->packages()->exists()) 
+			{
                 $packages = $addon->packages();
                 /* Loop through each package and soft delete the pivot betweeen
                  * addon and package, so that packages used in the future
                  * can use a previous state
                  * http://stackoverflow.com/questions/17350072/soft-delete-on-a-intermediate-table-for-many-to-many-relationship
                 */
-                foreach($packages as $obj) {
+				foreach($packages as $obj) 
+				{
                     DB::table('packageables')
                         ->where('packageable_type', 'Addon')
                         ->where('packageable_id', $addon->id)

@@ -77,10 +77,12 @@ class Addon extends Ardent {
 		return Context::get()->currency;
 	}
 
-	/* public function bookings()
+	/*public function bookings()
 	{
-		return $this->hasManyThrough('Booking', 'Bookingdetail');
-	} */
+		return $this->belongsToMany('Bookingdetail')
+					->join('bookings', 'booking_id', '=', 'bookings.id')
+					->select('bookings.reference', 'bookings.created_at');
+	}*/
 
 	public function bookingdetails()
 	{

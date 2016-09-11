@@ -4,9 +4,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
 
-class AccommodationController extends Controller
-{
+class AccommodationController extends Controller {
+
+	public function __construct(LogService $log_service)
+	{
+		$this->log_service = $log_service;
+	}
+
     public function getIndex()
     {
         try {
@@ -281,22 +287,64 @@ class AccommodationController extends Controller
 
     public function postDelete()
     {
-        try {
-            if (!Input::get('id')) {
-                throw new ModelNotFoundException();
-            }
-            $accommodation = Context::get()->accommodations()->findOrFail(Input::get('id'));
-        } catch (ModelNotFoundException $e) {
+		/**
+		 * 1. Get the accommodation model with any sessions it is booked in for
+		 * 2. Filter through bookings that have not been cancelled
+		 * 3. If there are valid (not cancelled) bookings, log all of their refrences and return a conflict
+		 * 4. Check if the accommodation is used in any packages, if so, remove them
+		 * 5. Delete the accommodation
+		 *
+		 * @todo
+		 * - Soft delete the prices
+		 */
+		try 
+		{
+            if (!Input::get('id')) throw new ModelNotFoundException();
+			$accommodation = Context::get()->accommodations()
+										   ->with(['bookings' => function($q) {
+											   $q->where('accommodation_booking.start', '>=', Helper::localtime());
+										   }])
+										   ->findOrFail(Input::get('id'));
+		} 
+		catch (ModelNotFoundException $e) 
+		{
             return Response::json(array('errors' => array('The accommodation could not be found.')), 404); // 404 Not Found
         }
 
-        // Check if the user wants to delete accommodation even when in packages
-        if(!$accommodation->getDeletableAttribute()) {
+		$bookings = $accommodation->bookings
+								  ->map(function($obj) {
+								       if($obj->status != 'cancelled') return $obj;
+								   })
+								   ->toArray();
 
-            if ($accommodation->packages()->exists()) {
+		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+
+		//return $bookings;
+
+		if($bookings)
+		{
+			$logger = $this->log_service->create('Attempting to delete the accommodation, ' 
+												 . $accommodation->name);
+			foreach($bookings as $obj) 
+			{
+				$logger->append('The accommodation is used in the booking ' . $obj['reference']);
+			}
+			return Response::json(
+						array('errors' => 
+							array('The accommodation could not be deleted as it is booked in the future, 
+								   please visit the error logs tab to find how to delete it.')
+						), 409); // Conflict
+		}
+
+        // Check if the user wants to delete accommodation even when in packages
+		if(!$accommodation->getDeletableAttribute()) 
+		{
+			if ($accommodation->packages()->exists()) 
+			{
                 // Loop through each package and remove its pivot from packages
                 $packages = $accommodation->packages();
-                foreach($packages as $obj) {
+				foreach($packages as $obj) 
+				{
                     //$accommodation->packages()->detach($obj->id);
                     DB::table('packageables')
                         ->where('packageable_type', 'Accommodation')
@@ -307,29 +355,11 @@ class AccommodationController extends Controller
                 $accommodation->save();
             }
         }
-        else {
-            if ($accommodation->packages()->exists()) {
-                return Response::json(array('errors' => array('The accommodation can not be removed currently because it is used in packages.')), 409);
-            } // 409 Conflict
-        }
 
-        // @todo check here if in future bookings to force delete
         $accommodation->delete();
 
         // If deletion worked, delete associated prices
-        Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
-
-        /*try {
-            $accommodation->delete();
-            //$accommodation->forceDelete();
-
-            // If deletion worked, delete associated prices
-            Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
-        } catch (QueryException $e) {
-            // SoftDelete instead
-            $accommodation = Context::get()->accommodations()->find(Input::get('id'));
-            $accommodation->delete();
-        }*/
+        //Price::where(Price::$owner_id_column_name, $accommodation->id)->where(Price::$owner_type_column_name, 'Accommodation')->delete();
 
         return array('status' => 'Ok. Accommodation deleted');
     }

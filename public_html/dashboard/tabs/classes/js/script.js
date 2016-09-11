@@ -147,8 +147,10 @@ $(function () {
 
 				renderEditForm();
 			}, function error(xhr){
+
+				var data = JSON.parse(xhr.responseText);
 				
-                pageMssg(xhr.responseText);
+                pageMssg(data.errors[0], 'danger', true);
                 //pageMssg('Oops, something wasn\'t quite right');
 
 				$('.remove-class').prop('disabled', false);
