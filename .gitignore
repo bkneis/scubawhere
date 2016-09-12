@@ -123,3 +123,8 @@ public_html/phpinfo.php
 
 # Development Envioment
 .idea/*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
