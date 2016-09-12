@@ -202,6 +202,14 @@ class TripController extends Controller {
 
     public function postDelete()
     {
+		/**
+		 * 1. Get the trip model with any tickets that it's in and any future departures.
+		 * 2. Check for any tickets that require the trip (as a ticket must have atleast one trip)
+		 * (3). If any tickets require the trip, log the ticket names and return a conflict
+		 * 4. Check if there are any future departures of the trip, if so return a conflict
+		 * 5. Unassign any tickets to the trip
+		 * 6. Delete the trip
+		 */
         try 
         {
             if (!Input::get('id')) throw new ModelNotFoundException();

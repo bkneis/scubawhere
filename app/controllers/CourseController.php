@@ -1,12 +1,20 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CourseController extends Controller
-{
+class CourseController extends Controller {
+
+	protected $log_service;
+
+	public function __construct(LogService $log_service)
+	{
+		$this->log_service = $log_service;
+	}
+
     public function getIndex()
     {
         try {
@@ -225,7 +233,13 @@ class CourseController extends Controller
         {
             if (!Input::get('id')) throw new ModelNotFoundException();
             $course = Context::get()->courses()
-                                    ->with('packages')
+									->with(['packages',
+									'bookingdetails.session' => function($q) {
+										$q->where('start', '>=', Helper::localtime());
+									},
+									'bookingdetails.training_session' => function($q) {
+										$q->where('start', '>=', Helper::localtime());
+									}])
                                     ->findOrFail(Input::get('id'));
         } 
         catch (ModelNotFoundException $e) 
@@ -235,6 +249,41 @@ class CourseController extends Controller
                                 array('The course could not be found.')
                             ), 404); // 404 Not Found
         }
+
+		$booking_ids = $course->bookingdetails
+							  ->map(function($obj) {
+							      if($obj->session != null || $obj->training_session != null)
+								  {
+								      return $obj->booking_id;
+								  }
+							  })
+							  ->toArray();
+
+		$bookings = Context::get()->bookings()
+								  ->whereIn('id', $booking_ids)
+								  ->get(['reference', 'status']);
+
+		$bookings = $bookings->map(function($obj){
+			if($obj->status != 'cancelled') return $obj;	
+		})->toArray();
+
+		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+
+		if($bookings)
+		{
+			$logger = $this->log_service->create('Attempting to delete the course, '
+												. $course->name);
+			foreach($bookings as $obj) 
+			{
+				$logger->append('The course is used in the future in booking ' . $obj['reference']);
+			}
+
+			return Response::json(
+				array('errors' => 
+					array('The course could not be deleted as it is used in bookings in the future, '.
+						'Please visit the error logs for more info on how to delete it.')
+				), 409); // Conflict
+		}
 
         if(!$course->getDeleteableAttribute())
         {
@@ -247,8 +296,7 @@ class CourseController extends Controller
                     ->update(array('deleted_at' => DB::raw('NOW()')));    
             } 
         }
-        // @todo add in check for future bookings
-        // if none, use force delete
+
         $course->delete();
 
 		Price::where(Price::$owner_id_column_name, $course->id)

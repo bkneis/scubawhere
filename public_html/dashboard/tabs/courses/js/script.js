@@ -319,7 +319,8 @@ $(function(){
 				renderEditForm();
 			}, function error(xhr){
 
-				pageMssg('Oops, something wasn\'t quite right');
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'danger', true);
 
 				$('.remove-course').prop('disabled', false);
 				$('#save-loader').remove();

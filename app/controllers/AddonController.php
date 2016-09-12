@@ -167,6 +167,13 @@ class AddonController extends Controller {
 
     public function postDelete()
     {
+		/**
+		 * 1. Get the addon model with any sessions it is booked in
+		 * 2. Filter through bookings that have not been cancelled
+		 * 3. If there are valid (not cancelled) bookings, log all of their refrences and return a conflict
+		 * 4. Check if the addon is used in any packages, if so, remove them
+		 * 5. Delete the addon and its associated prices
+		 */
 		try 
 		{
             if (!Input::get('id')) throw new ModelNotFoundException();
@@ -195,8 +202,8 @@ class AddonController extends Controller {
 							 ->toArray();
 
 		$bookings = Context::get()->bookings()
-									  ->whereIn('id', $booking_ids)
-									  ->get(['reference', 'status']);
+								  ->whereIn('id', $booking_ids)
+								  ->get(['reference', 'status']);
 
 		$bookings = $bookings->map(function($obj){
 			if($obj->status != 'cancelled') return $obj;	
@@ -244,9 +251,10 @@ class AddonController extends Controller {
             }
         }
 
-        // @todo use force delete if used in future booking
         $addon->delete();
-        Price::where(Price::$owner_id_column_name, $addon->id)->where(Price::$owner_type_column_name, 'Addon')->delete();
+		Price::where(Price::$owner_id_column_name, $addon->id)
+			 ->where(Price::$owner_type_column_name, 'Addon')
+			 ->delete();
 
         return array('status' => 'Ok. Addon deleted');
     }

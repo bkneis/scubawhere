@@ -85,10 +85,17 @@ var Ticket = {
 	},
 
 	//only param is ID - the id of the ticket needed to be deleted
-	deleteTicket : function(params, handleData){
-		$.post("/api/ticket/delete", params, function(data){
-			handleData(data);
+	deleteTicket : function(params, handleData, errorFn){
+		$.ajax({
+			type: "POST",
+			url: "/api/ticket/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
 		});
+		/*$.post("/api/ticket/delete", params, function(data){
+			handleData(data);
+		});*/
 	}
 
 };

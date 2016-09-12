@@ -321,17 +321,63 @@ class TicketController extends Controller {
 
 	public function postDelete()
 	{
+		/**
+		 * 1. Get the ticket model with any sessions it is booked in
+		 * 2. Filter through bookings that have not been cancelled
+		 * 3. If there are valid (not cancelled) bookings, log all of their refrences and return a conflict
+		 * 4. Check if the ticket is used in any packages, if so, remove the ticket from them
+		 * 5. Delete the ticket and its associated prices
+		 */
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
             $ticket = Context::get()->tickets()
-                                    ->with('packages', 'courses')
+									->with(['packages', 'courses',
+									'bookingdetails.session' => function($q) {
+										$q->where('start', '>=', Helper::localtime());
+									}])
                                     ->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
 			return Response::json( array('errors' => array('The ticket could not be found.')), 404 ); // 404 Not Found
 		}
+
+		$booking_ids = $ticket->bookingdetails
+							  ->map(function($obj) {
+							      if($obj->session != null || $obj->training_session != null)
+							      {
+								      return $obj->booking_id;
+								  }
+							  })
+							  ->toArray();
+
+		$bookings = Context::get()->bookings()
+								  ->whereIn('id', $booking_ids)
+								  ->get(['reference', 'status']);
+
+		$bookings = $bookings->map(function($obj){
+			if($obj->status != 'cancelled') return $obj;	
+		})->toArray();
+
+		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+
+		if($bookings)
+		{
+			$logger = $this->log_service->create('Attempting to delete the ticket, '
+												. $ticket->name);
+			foreach($bookings as $obj) 
+			{
+				$logger->append('The ticket is used in the future in booking ' . $obj['reference']);
+			}
+
+			return Response::json(
+				array('errors' => 
+					array('The ticket could not be deleted as it is used in bookings in the future, '.
+						'Please visit the error logs for more info on how to delete it.')
+				), 409); // Conflict
+		}
+
 
         if(!$ticket->deleteable)
         {

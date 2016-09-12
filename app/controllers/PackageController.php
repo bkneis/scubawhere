@@ -1,10 +1,19 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\Services\LogService;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PackageController extends Controller {
+
+	protected $log_service;
+
+	public function __construct(LogService $log_service)
+	{
+		$this->log_service = $log_service;
+	}
 
 	public function getIndex()
 	{
@@ -266,31 +275,74 @@ class PackageController extends Controller {
 
 	public function postDelete()
 	{
+		/**
+		 * 1. Get the package model with any sessions its tickets or classes is booked in for
+		 * 2. Filter through bookings that have not been cancelled
+		 * 3. If there are valid (not cancelled) bookings, log all of their refrences and return a conflict
+		 * 4. Delete the package and its associated prices
+		 *
+		 * @todo
+		 */
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$package = Context::get()->packages()->findOrFail( Input::get('id') );
+			$package = Context::get()->packages()
+									 ->with([
+									 'bookingdetails.session' => function($q) {
+									     $q->where('start', '>=', Helper::localtime());
+									 },
+							         'bookingdetails.training_session' => function($q) {
+									     $q->where('start', '>=', Helper::localtime());
+									 }
+									 ])
+									 ->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
-			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // 404 Not Found
+			return Response::json( array('errors' => array('The package could not be found.')), 404 ); // Not Found
 		}
 
-		try
+		$booking_ids = $package->bookingdetails
+							   ->map(function($obj) {
+							       if($obj->session != null || $obj->training_session != null)
+							       {
+								       return $obj->booking_id;
+								   }
+							   })
+							   ->toArray();
+
+		$bookings = Context::get()->bookings()
+								  ->whereIn('id', $booking_ids)
+								  ->get(['reference', 'status']);
+
+		$bookings = $bookings->map(function($obj){
+			if($obj->status != 'cancelled') return $obj;	
+		})->toArray();
+
+		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+
+		if($bookings)
 		{
-			$package->forceDelete();
+			$logger = $this->log_service->create('Attempting to delete the package, '
+												. $package->name);
+			foreach($bookings as $obj) 
+			{
+				$logger->append('The package is used in the future in booking ' . $obj['reference']);
+			}
 
-			// If deletion worked, delete associated prices
-			Price::where(Price::$owner_id_column_name, $package->id)->where(Price::$owner_type_column_name, 'Package')->delete();
-		}
-		catch(QueryException $e)
-		{
-			// SoftDelete instead
-			$package = Context::get()->packages()->find( Input::get('id') );
-			$package->delete();
+			return Response::json(
+				array('errors' => 
+					array('The package could not be deleted as it is used in bookings in the future, '.
+						'Please visit the error logs for more info on how to delete it.')
+				), 409); // Conflict
 		}
 
-		return array('status' => 'Ok. Package deleted');
+		$package->delete();
+		Price::where(Price::$owner_id_column_name, $package->id)
+			 ->where(Price::$owner_type_column_name, 'Package')
+			 ->delete();
+
+		return Response::json(array('status' => 'Ok. Package deleted.'), 200);
 	}
 
 }
