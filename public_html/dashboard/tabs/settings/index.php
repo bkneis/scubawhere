@@ -56,10 +56,10 @@
 
 								<div id="credit-info"></div>
 
-								<div id="start-tour-div" class="form-row">
+								<!--<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the tour : </label>
 									<a id="start-wizard" class="btn btn-default text-uppercase">Start wizard</a>
-								</div>
+								</div>-->
 
 								<input type="submit" class="update-settings btn btn-primary btn-lg pull-right" value="SAVE">
 
