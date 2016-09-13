@@ -9,7 +9,7 @@ interface CrmMailerInterface
 	 * @param $customer The Customer model who should receive the email
 	 * @return void
      */
-	public static function send($campaign, $customer);
+	public static function send($campaign, $customer, $email_html);
 
 	public static function sendBookingConf($booking_id);
 
@@ -20,7 +20,7 @@ interface CrmMailerInterface
 
 class CrmMailer implements CrmMailerInterface
 {
-	public static function send($campaign, $customer)
+	public static function send($campaign, $customer, $email_html)
 	{
 		// We need to assign variables required for the mail closure as the eloquent models aren't serializable (which is required of queuing)
 		$company = Context::get();
@@ -30,7 +30,7 @@ class CrmMailer implements CrmMailerInterface
 		$subject = $campaign->subject;
 		$email_from = $company->business_email;
 		$name_from = $company->name;
-		$email_html = $campaign->email_html;
+		//$email_html = $campaign->email_html;
 		$is_campaign = $campaign->is_campaign;
 
 		\Mail::queue([], [], function($message) use ($email_to, $name_to, $name_from, $subject, $email_from, $email_html, $is_campaign, $terms_file)

@@ -278,7 +278,7 @@ class CrmCampaignController extends Controller
             }
 
             //CrmMailer::send($data['subject'], $customer, Context::get()->business_email, $email_html);
-            CrmMailer::send($campaign, $customer);
+            CrmMailer::send($campaign, $customer, $email_html);
             
             /*Mail::send([], [], function($message) use ($data, $customer, $email_html) {
                 $message->to($customer->email)
