@@ -1,5 +1,5 @@
 // Check that the company has gone through the setup wizard
-if(window.company.initialised !== 1)
+if(window.company.initialised !== 1 && (!window.tourStart))
 {
 	window.location.href = '#dashboard';
 }

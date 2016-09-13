@@ -1,3 +1,9 @@
+
+if(window.company.initialised !== 1  && (!window.tourStart))
+{
+	window.location.href = '#dashboard';
+}
+
 var ticketForm,
     ticketList,
     priceInputTemplate;
