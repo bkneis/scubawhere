@@ -112,8 +112,8 @@ $(function () {
 
 				// Render error messages
 				$('.errors').remove();
-				$('#add-class-form').prepend(errorsHTML);
-				$('#add-class').before(errorsHTML);
+				$('#update-class-form').prepend(errorsHTML);
+				$('#update-class').before(errorsHTML);
 			}
 			else {
 				alert(xhr.responseText);
@@ -121,7 +121,7 @@ $(function () {
 
 			pageMssg('Oops, something wasn\'t quite right');
 
-			$('#add-class').prop('disabled', false);
+			$('#update-class').prop('disabled', false);
 			//$('#add-class-form').find('#save-loader').remove();
 		});
 	});
