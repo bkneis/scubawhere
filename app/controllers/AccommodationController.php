@@ -327,7 +327,7 @@ class AccommodationController extends Controller {
 												 . $accommodation->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The accommodation is used in the booking ' . $obj['reference']);
+				$logger->append('The accommodation is used in the booking ' . '['.$obj['reference'].']');
 			}
 			return Response::json(
 						array('errors' => 

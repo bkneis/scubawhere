@@ -130,7 +130,7 @@ class LocationController extends Controller {
 													. $location->name);
 				foreach($bookings as $obj) 
 				{
-					$logger->append('The location is used in the future in booking ' . $obj['reference'] .
+					$logger->append('The location is used in the future in booking ' . '['.$obj['reference'].']' .
 									'. Please either cancel the booking, or assign the trips a diffrent'.
 									' location.');
 				}

@@ -10,7 +10,7 @@ class BookingController extends Controller
     public function getIndex()
     {
         try {
-            if (!Input::get('id')) {
+            if (!(Input::get('id') || Input::get('ref'))) {
                 throw new ModelNotFoundException();
             }
             $booking = Context::get()->bookings()->with(
@@ -38,7 +38,7 @@ class BookingController extends Controller
                     // 'refunds.currency',
                     'refunds.paymentgateway',
                 'pick_ups'
-            )->findOrFail(Input::get('id'));
+            )->fetch();
         } catch (ModelNotFoundException $e) {
             return Response::json(array('errors' => array('The booking could not be found.')), 404); // 404 Not Found
         }

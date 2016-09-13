@@ -32,6 +32,10 @@ body {
 *******************************
 */
 
+a {
+	cursor: default
+}
+
 #nav {
     height: 50px;
     /*background-color: #373737;*/

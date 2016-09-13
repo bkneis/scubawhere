@@ -368,7 +368,7 @@ class TicketController extends Controller {
 												. $ticket->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The ticket is used in the future in booking ' . $obj['reference']);
+				$logger->append('The ticket is used in the future in booking ' . '['.$obj['reference'].']');
 			}
 
 			return Response::json(

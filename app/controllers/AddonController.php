@@ -217,7 +217,7 @@ class AddonController extends Controller {
 												. $addon->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The addon is used in the future in booking ' . $obj['reference']);
+				$logger->append('The addon is used in the future in booking ' . '['.$obj['reference'].']');
 			}
 
 			return Response::json(

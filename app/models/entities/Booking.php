@@ -232,6 +232,14 @@ class Booking extends Ardent {
 	}
 	*/
 
+	public function scopeFetch($query)
+	{
+		$id = Input::get('id');
+		$ref = Input::get('ref');
+		if(isset($id)) return $query->findOrFail($id);
+		else return $query->where('reference', '=', $ref)->first();
+	}
+
 	public function decimal_price()
 	{
 		// TODO Tombstone

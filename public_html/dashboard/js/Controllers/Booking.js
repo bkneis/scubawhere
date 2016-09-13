@@ -54,6 +54,18 @@ Booking.get = function(id, successFn) {
 };
 
 /**
+ * Takes the required booking's reference and calls the success callback with a Booking object as its only parameter
+ *
+ * @param {integer} id The ID of the wanted booking
+ * @param {function} successFn Recieves new Booking object as first and only parameter
+ */
+Booking.getByRef = function(reference, successFn) {
+	$.get("/api/booking", {ref: reference}, function(data) {
+		successFn( new Booking(data) );
+	});
+};
+
+/**
  * Takes the ID of the booking to edit and calls the success callback with a Booking object (dublicate of the booking to edit) as its only parameter
  *
  * @param {integer} id The ID of the booking to edit

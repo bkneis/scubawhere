@@ -150,7 +150,7 @@ class TrainingController extends Controller
 												. $training->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The class is used in the future in booking ' . $obj['reference']);
+				$logger->append('The class is used in the future in booking ' . '['.$obj['reference'].']');
 			}
 
 			return Response::json(

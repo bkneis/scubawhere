@@ -327,7 +327,7 @@ class PackageController extends Controller {
 												. $package->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The package is used in the future in booking ' . $obj['reference']);
+				$logger->append('The package is used in the future in booking ' . '['.$obj['reference'].']');
 			}
 
 			return Response::json(

@@ -275,7 +275,7 @@ class CourseController extends Controller {
 												. $course->name);
 			foreach($bookings as $obj) 
 			{
-				$logger->append('The course is used in the future in booking ' . $obj['reference']);
+				$logger->append('The course is used in the future in booking ' . '['.$obj['reference'].']');
 			}
 
 			return Response::json(
