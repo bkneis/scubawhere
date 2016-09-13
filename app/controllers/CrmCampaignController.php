@@ -103,23 +103,29 @@ class CrmCampaignController extends Controller
 
         $group_ids = Input::only('groups')['groups'];
 
-        // @todo create a validator controller so that we dont need to specify and check explicity every param sent (FOR ALL CONTROLLERS)
-        if (count($group_ids) < 1 && $data['sendallcustomers'] !== 1 && $data['is_campaign'] !== 0) {
+        if (count($group_ids) < 1 && (int) $data['sendallcustomers'] !== 1 && $data['is_campaign'] !== 0) {
             return Response::json(array('errors' => 'Please specify atleast one group to send the email too'), 406);
         }
 
         $customers = [];
 
-        if ((int) $data['sendallcustomers'] == 1) {
-            $customers = Context::get()->customers()->get();
-        } elseif ((int) $data['is_campaign'] == 0) {
+		if ((int) $data['sendallcustomers'] == 1) 
+		{
+			$customers = Context::get()->customers()
+									   ->whereNotNull('email')
+									   ->get();
+		} 
+		elseif ((int) $data['is_campaign'] == 0) 
+		{
             $booked_cust_id = Input::get('customer_id');
             $booked_cust = Context::get()->customers()->findOrFail($booked_cust_id); // possibly use where in?
             if (!$booked_cust) {
                 return Response::json(array('errors' => 'Customer ID is not valid'), 406);
             }
             array_push($customers, $booked_cust);
-        } else {
+		} 
+		else 
+		{
             $tmpRules = [];
             $rules = [];
             $rules['certs'] = [];
@@ -225,6 +231,7 @@ class CrmCampaignController extends Controller
             $new_token->save();
 
             // Create customer subscriptions
+			// @todo remove this and include an eager loaded relationship with the call to customers
             $customer_subscription = CrmSubscription::where('customer_id', '=', $customer->id)->first();
             if (is_null($customer_subscription)) {
                 $subscription_data = [];
