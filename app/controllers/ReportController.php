@@ -147,6 +147,7 @@ class ReportController extends Controller {
 				'date'       => $training->start,
 				'name'       => $training->training->name,
 				'courses'    => [],
+				'assigned'	 => 0,
 				'unassigned' => $max,
 				'capacity'   => $max,
 			];
@@ -158,16 +159,21 @@ class ReportController extends Controller {
 				if(empty($utilisation[$i]['courses'][$detail->course->name])) $utilisation[$i]['courses'][$detail->course->name] = 0;
 
 				$utilisation[$i]['courses'][$detail->course->name]++;
+				$utilisation[$i]['assigned']++;
 				$utilisation[$i]['unassigned']--;
 			}
+
+			if($utilisation[$i]['capacity'] === 0)
+				$utilisation[$i]['capacity'] = $utilisation[$i]['assigned'];
 
 			$i++;
 		}
 
 		// Calculate total average
-		$total = ['courses' => [], 'unassigned' => 0, 'capacity' => 0];
+		$total = ['courses' => [], 'assigned' => 0, 'unassigned' => 0, 'capacity' => 0];
 		foreach ($utilisation as $training)
 		{
+			$total['assigned']   += $training['assigned'];
 			$total['unassigned'] += $training['unassigned'];
 			$total['capacity']   += $training['capacity'];
 

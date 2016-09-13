@@ -296,7 +296,7 @@ function getReport(reportType, callback) {
 			});
 
 			Report.getTripUtilisation(dates, function sucess(data) {
-				// console.log(data);
+				console.log(data);
 				window.utlisations = data;
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
@@ -315,12 +315,12 @@ function getReport(reportType, callback) {
 			});
 
 			Report.getClassUtilisation(dates, function sucess(data) {
-				// console.log(data);
+				console.log(data);
 				window.classUtlisations = data;
 				report = Handlebars.compile($("#class-utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-				$("#class-utilisation-total-capacity").text(data.utilisation_total.unassigned);
-				$("#class-utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
+				//$("#class-utilisation-total-capacity").text(data.utilisation_total.unassigned);
+				//$("#class-utilisation-average").css("width", (100 - ((data.utilisation_total.unassigned/data.utilisation_total.capacity)*100)) + "%");
 				$("#class-utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
 				if(data.utilisation != null && typeof callback === 'function') callback();
 			});
