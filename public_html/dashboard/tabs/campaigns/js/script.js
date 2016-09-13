@@ -162,7 +162,7 @@ function showEmailAnalytics(id) {
         $('#total-emails-seen').html(data.total_seen + ' emails viewed');
         $('#total-emails-sent').html(data.total_sent + ' emails sent');
         $('#average-open-rate').html(parseInt((data.total_seen / data.total_sent) * 100) + ' %' + ' Avg Opened Rate');
-        $('#average-click-rate').html(parseInt((data.num_links_clicked/ data.total_sent) * 100) + ' % Avg Click Rate');
+        //$('#average-click-rate').html(parseInt((data.num_links_clicked/ data.total_sent) * 100) + ' % Avg Click Rate');
         $('#num-unsubscribed').html(data.num_unsubscriptions + ' No. of unsubscribes');
 
         $('#campaign-analytics-table tr').on('click', function () {
@@ -177,8 +177,11 @@ function showEmailAnalytics(id) {
             }
             else {
                 // Open this row
-                row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
-                tr.addClass('shown');
+				if(data.link_analytics.length > 1)
+				{
+					row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
+                	tr.addClass('shown');
+				}
             }
         });
     },

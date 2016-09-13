@@ -235,10 +235,10 @@
                             <p><i class="fa fa-pie-chart fa-3x"></i></p>
                             <p id="average-open-rate" class="text-center">Avg Opened Rate</p>
                         </a>
-                        <a role="button" class="btn btn-default">
+                        <!--<a role="button" class="btn btn-default">
                             <p><i class="fa fa-mouse-pointer fa-3x"></i></p>
                             <p id="average-click-rate" class="text-center">Avg Click Rate</p>
-                        </a>
+                        </a>-->
                         <a role="button" class="btn btn-default">
                             <p><i class="fa fa-trash fa-3x"></i></p>
                             <p id="num-unsubscribed" class="text-center">No. unsubscribed</p>
