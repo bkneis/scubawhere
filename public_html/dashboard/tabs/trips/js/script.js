@@ -190,6 +190,7 @@ $(function(){
 		event.preventDefault();
 
 		var $field = $('#tripDuration');
+		if(duration === '') duration = 0;
 		var duration = $field.val();
 		$field.val( parseInt(duration) + 24 );
 

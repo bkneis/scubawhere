@@ -43,8 +43,8 @@
 								<label class="field-label">Class Duration</label>
 								<input type="number" min="1" step="0.1" name="duration" id="tripDuration" rows="3" cols="10" value="{{duration}}" style="width: 70px;"> hours
 								<strong><span id="readableDuration" style="margin-left: 2em;">{{readable duration}}</span></strong>
-								<button class="btn btn-primary btn-sm add1d" style="margin-left: 2em;">+1 day</button>
-								<button class="btn btn-primary btn-sm sub1d">-1 day</button>
+								<a class="btn btn-primary btn-sm add1d" style="margin-left: 2em;">+1 day</a>
+								<a class="btn btn-primary btn-sm sub1d">-1 day</a>
 							</div>
 
 							<div class="form-row">

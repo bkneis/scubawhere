@@ -14,6 +14,9 @@ Handlebars.registerHelper('readable', function(duration) {
 
 $(function () {
 
+	var $classListContainer = $('#class-list-container');
+	var $classFormContainer = $('#class-form-container');
+
 	// Handlebars Prep
 	classList = Handlebars.compile( $("#class-list-template").html() );
 	classForm = Handlebars.compile( $("#class-form-template").html() );
@@ -23,19 +26,19 @@ $(function () {
 
 	TourManager.getClassesTour();
 
-	$('#class-list-container').on('click', 'li', function(event) {
+	$classListContainer.on('click', 'li', function(event) {
 
 		if( $(event.target).is('strong') ) event.target = event.target.parentNode;
 		renderEditForm( event.target.getAttribute('data-id') );
 	});
 
-	$("#class-list-container").on('click', '#change-to-add-class', function(event){
+	$classListContainer.on('click', '#change-to-add-class', function(event){
 
 		event.preventDefault();
 		renderEditForm();
 	});
 
-	$("#class-form-container").on('submit', '#add-class-form', function(event) {
+	$classFormContainer.on('submit', '#add-class-form', function(event) {
 
 		event.preventDefault();
 
@@ -78,7 +81,7 @@ $(function () {
 		});
 	});
 
-	$("#class-form-container").on('submit', '#update-class-form', function(event) {
+	$classFormContainer.on('submit', '#update-class-form', function(event) {
 
 		event.preventDefault();
 
@@ -123,7 +126,7 @@ $(function () {
 		});
 	});
 
-	$('#class-form-container').on('click', '.remove-class', function(event) {
+	$classFormContainer.on('click', '.remove-class', function(event) {
     	event.preventDefault();
         var deleteable = $('#update-class-form input[name=deleteable]').val();
 		var check;
@@ -157,6 +160,35 @@ $(function () {
 				$('#save-loader').remove();
 			});
 		}
+	});
+
+	$classFormContainer.on('click', '.add1d', function(event) {
+		event.preventDefault();
+
+		var $field = $('#tripDuration');
+		var duration = $field.val();
+		if(duration === '') duration = 0;
+		$field.val( parseInt(duration) + 24 );
+
+		$field.trigger('change');
+	});
+
+	$classFormContainer.on('click', '.sub1d', function(event) {
+		event.preventDefault();
+
+		var $field = $('#tripDuration');
+		var duration = $field.val();
+		$field.val( Math.max( 1, parseInt(duration) - 24 ) );
+
+		$field.trigger('change');
+	});
+
+	$classFormContainer.on('change', "#tripDuration", function() {
+		$('#readableDuration').text(
+			readableDuration(
+				$('#tripDuration').val()
+			)
+		);
 	});
 
 });
