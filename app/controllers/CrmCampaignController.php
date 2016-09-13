@@ -252,7 +252,7 @@ class CrmCampaignController extends Controller
 
             // add the token api to the scubawhere image
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;
-            $email_html = str_replace('/img/scubawhere_logo.png', $token_api, $data['email_html']);
+            $email_html = str_replace('{{tracking_link}}', $token_api, $data['email_html']);
 
             $cust_name = $customer->firstname . ' ' . $customer->lastname;
             $email_html = str_replace('{{name}}', $cust_name, $email_html);

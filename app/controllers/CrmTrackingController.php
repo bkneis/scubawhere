@@ -1,4 +1,5 @@
 <?php
+use ScubaWhere\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CrmTrackingController extends Controller {
@@ -14,15 +15,11 @@ class CrmTrackingController extends Controller {
 
         if($token) {
             $token->opened += 1;
-            $token->opened_time = time();
+            $token->opened_time = Helper::localtime();
             $token->save();
         }
         
-        $image_path = public_path() . '/img/scubawhere_logo.png';
-        
-        $response = Response::make(File::get($image_path));
-        $response->header('Content-Type', 'image/png');
-        return $response;
+        return;
 	}
     
     public function getLink()
