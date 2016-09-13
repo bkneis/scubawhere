@@ -260,6 +260,48 @@ class CrmGroupController extends Controller
 			$group->rules()->save($rule);
 		}
 
+		// ADD RULES FOR TICKETS
+		$tickets = Input::get('tickets', []);
+
+		foreach ($tickets as $ticket) {
+			$rule_data = array('ticket_id' => (int) $ticket);
+			$rule = new CrmGroupRule($rule_data);
+			if( !$rule->validate() )
+			{
+				return Response::json( array('errors' => $rule->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			$group->rules()->save($rule);
+		}
+
+		// ADD RULES FOR TRAININGS
+		$trainings = Input::get('classes', []);
+
+		foreach ($trainings as $training) {
+			$rule_data = array('training_id' => (int) $training);
+			$rule = new CrmGroupRule($rule_data);
+			if( !$rule->validate() )
+			{
+				return Response::json( array('errors' => $rule->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			$group->rules()->save($rule);
+		}
+
+		// ADD RULES FOR TRAININGS
+		$agencies = Input::get('agencies', []);
+
+		foreach ($agencies as $agency) {
+			$rule_data = array('agency_id' => (int) $agency);
+			$rule = new CrmGroupRule($rule_data);
+			if( !$rule->validate() )
+			{
+				return Response::json( array('errors' => $rule->errors()->all()), 406 ); // 406 Not Acceptable
+			}
+
+			$group->rules()->save($rule);
+		}
+
 		return Response::json( array('status' => '<b>OK</b> Customer Group updated', 'id' => $group->id), 201 ); // 201 Created
 	}
 
