@@ -100,13 +100,14 @@ $(function() {
         console.log(params);
 
         CustomerGroup.update(params, function success(data) {
-                pageMssg(data.status, true);
-                renderGroupList();
-            },
-            function error(xhr) {
-                pageMssg(xhr.responseText);
-                console.log(xhr);
-            });
+			pageMssg(data.status, true);
+			$('form').data('hasChanged', false);
+			renderGroupList();
+		},
+		function error(xhr) {
+			pageMssg(xhr.responseText);
+			console.log(xhr);
+		});
     });
     
     groupCustomersTable = $('#group-customers-table').DataTable({
