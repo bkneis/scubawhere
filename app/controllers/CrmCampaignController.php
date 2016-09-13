@@ -89,6 +89,11 @@ class CrmCampaignController extends Controller
         return Response::json(array('analytics' => $analytics, 'total_sent' => $total_sent, 'total_seen' => $total_seen, 'link_analytics' => $campaign_links, 'num_links_clicked' => $links_clicked, 'num_unsubscriptions' => $unsubscriptions), 200);
     }
 
+	public function getTest()
+	{
+		return Request::root();
+	}
+
     public function postAdd()
     {
         $data = Input::only(
