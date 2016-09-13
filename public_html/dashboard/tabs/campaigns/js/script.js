@@ -101,6 +101,8 @@ function renderCampaignTable() {
                     event.preventDefault();
                     new_params.subject = $('#resend-email-subject').val();
                     new_params.name = $('#resend-campaign-name').val();
+					new_params.is_campaign = 1;
+					new_params.sendallcustomers = 0;
                     new_params._token = window.token;
                     sendCampaign(new_params);
                     renderCampaignTable();
