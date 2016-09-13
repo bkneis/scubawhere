@@ -88,7 +88,7 @@ $(function(){
 
 			if(data.errors.length > 0) {
 
-				var errorsHTML = Handlebars.templates.errors();
+				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
 				errorsHTML = errorsHTML(data);
 
 				// Render error messages
@@ -182,6 +182,23 @@ $(function(){
 
 				renderViews()
 			}, function error(xhr){
+				
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				if(data.errors.length > 0) {
+
+					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+					errorsHTML = errorsHTML(data);
+
+					// Render error messages
+					$('.errors').remove();
+					$('#update-addon-form').prepend(errorsHTML);
+					$('#update-addon').before(errorsHTML);
+				}
+				else {
+					alert(xhr.responseText);
+				}
 
 				pageMssg('Oops, something wasn\'t quite right');
 
