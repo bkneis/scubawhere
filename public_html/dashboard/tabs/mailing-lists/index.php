@@ -31,11 +31,11 @@
 					<div class="panel-body">
 						<form id="{{task}}-group-form" accept-charset="utf-8">
 							<div class="form-row">
-								<label class="field-label">Group name</label>
-								<input id="group-name" type="text" name="name" value="{{{name}}}">
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-customer-group">Remove</span>
 								{{/if}}
+								<label class="field-label">Group name</label>
+								<input id="group-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">
