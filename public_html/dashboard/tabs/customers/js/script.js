@@ -523,15 +523,22 @@ function friendlyDateNoTime(date) {
 
 function createDataTable() {
     var customerTable = $('#customers-table').DataTable({
-        "paging": true,
-        "ordering": false,
-        "info": false,
         "pageLength": 10,
-        "searching": false,
-        "dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-        }
+		"dom": 'Bfrtlp',
+		"buttons": [
+			{
+				extend : 'excel',
+	   			title  : 'Customer List' 	
+			},
+			{
+				extend : 'pdf',
+				title  : 'Customer List'
+			},
+			{
+				extend : 'print',
+				title  : 'Customer List'
+			}
+		]
     });
 
     // Add event listener for opening and closing details

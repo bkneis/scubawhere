@@ -68,11 +68,12 @@ $PROTOCOL = 'http';
 	<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
-	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />
+	<!--<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
+	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />-->
+	<link rel="stylesheet" type="text/css" href="/common/css/dataTables.bootstrap.min.css" />
 
 	<!-- jQuery -->
-	<script src="/common/js/jquery/jquery.min.js"></script>
+	<script src="/common/js/jquery/jquery-1.12.3.min.js"></script>
 
 	<!--Bootstrap js-->
 	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
@@ -97,10 +98,10 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
 
 	<!-- Datatables -->
-	<script type="text/javascript" src="/common/js/jquery/jquery.datatables.min.js"></script>
+	<!--<script type="text/javascript" src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
-	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>
-
+	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
+	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">

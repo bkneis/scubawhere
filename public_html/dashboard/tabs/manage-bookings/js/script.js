@@ -447,15 +447,22 @@ function generateBookingDetails(id) {
 
 function createDataTable() {
 	var bookingTable = $('#bookings-table').DataTable({
-		"paging":   true,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		"dom": 'T<"clear">lfrtip',
-		"tableTools": {
-			"sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-		}
+        "pageLength": 10,
+		"dom": 'Bfrtlp',
+		"buttons": [
+			{
+				extend : 'excel',
+	   			title  : 'Bookings List' 	
+			},
+			{
+				extend : 'pdf',
+				title  : 'Bookings List'
+			},
+			{
+				extend : 'print',
+				title  : 'Bookings List'
+			}
+		]
 	});
 
 	// Add event listener for opening and closing details

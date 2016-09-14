@@ -134,21 +134,32 @@ $(function() {
 
 });
 
+function getFileName() {
+	return report_type + ' report for ' + $('#start-date').val() + ' - ' + $('#end-date').val(); 	
+}
+
 function createDataTable() {
 
 	// Check if table contains any data
 	if($('.reports-table tbody tr').first().children('td').length === 1) return false;
 
 	$('.reports-table').dataTable({
-		"paging":   true,
-		"ordering": false,
-		"info":     false,
-		"pageLength" : 10,
-		"searching" : false,
-		"dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-        }
+        "pageLength": 10,
+		"dom": 'Bfrtlp',
+		"buttons": [
+			{
+				extend : 'excel',
+	   			title  : getFileName() 	
+			},
+			{
+				extend : 'pdf',
+				title  : getFileName()
+			},
+			{
+				extend : 'print',
+				title  : getFileName()
+			}
+		]
 	});
 }
 
