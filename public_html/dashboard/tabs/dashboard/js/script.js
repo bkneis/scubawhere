@@ -102,8 +102,7 @@ $(function () {
 			Class.filter({after: moment().format('YYYY-MM-DD')}, function success(nextClasses) {
 				var nextSessions = nextTrips.concat(nextClasses);
 				nextSessions = _.sortBy(nextSessions, 'start');
-				console.log(nextSessions, 'next');
-				$('#sessions-list').append( nextSessionTemplates( {sessions : _.first(nextSessions, 6)} ) );
+				$('#sessions-list').append( nextSessionTemplates( {sessions : nextSessions.slice(0,6)} ) );
 			});
 		});
 
@@ -168,10 +167,7 @@ function getCustomers(id, type) {
 			"language": {
 				"emptyTable": "There are no customers booked for this " + type
 			},
-		"dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-        }
+		"dom": 'T<"clear">lfrtip'
 		});
 	});
 

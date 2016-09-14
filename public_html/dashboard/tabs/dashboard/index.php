@@ -163,7 +163,7 @@
         <td>{{#if trip}}<i class="fa fa-ship"></i>{{else}}<i class="fa fa-graduation-cap"></i>{{/if}}</td>
         <td>{{#if trip}}{{{trip.name}}}{{else}}{{{training.name}}}{{/if}}</td>
         <td>{{{boat.name}}}</td>
-        <td>{{getPer capacity}}</td>
+		<td>{{getPer capacity}}</td>
         <td>{{friendlyDate start}} - {{tripFinish start trip.duration}}</td>
       </tr>
       <tr class="accordion-body accordion-{{id}}">
