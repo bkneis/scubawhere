@@ -112,22 +112,12 @@
         		<h4 class="modal-title">Welcome to scubawhere RMS</h4>
       		</div>
       		<div class="modal-body">
-          		<h4>Welcome to scubawhereRMS!</h4>
-         		 <p>
-				 	So we can get you all set up with your content,
-				 	this wizard will take you through our system
-					and help you fill in the information about your
-					dive operation.
+				<p>
+					To get started, you need to configure scubawhereRMS to suit your business. We will take you through the setup, step by step, explaining each element on the pages to help you set the system up to your business needs.
 			  	</p>
 				<p>
-					A tour will begin on each page, explaining what the page is for and how to use it.
-			  		Once the tour is finished for that page, you will need to fill in all the relevant information about
-			  		your dive centre. Don't worry it's easy! We interactively show you how and where to add your data into our system every step
-			  		of the way :)
+					<strong>So, let's get started!</strong>
 				</p>
-			  	<p>
-					So let's get started. Click the button to begin the configuration.
-			  	</p>
 			</div>
 			<div class="modal-footer">
 				<button id="btn-start-wizard" type="button" class="btn btn-primary">Let's Go</button>
