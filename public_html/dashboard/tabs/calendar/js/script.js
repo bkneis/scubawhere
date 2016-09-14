@@ -385,6 +385,10 @@ function showModalWindowCourse(eventObject) {
         });
 }
 
+function getFileName(data) {
+	return data.trip.name + ' Trip Manifest - ' + data.start;
+}
+
 function showModalWindowManifest(id, type) {
     // Create the modal window from manifest-template
     var params = {
@@ -410,11 +414,7 @@ function showModalWindowManifest(id, type) {
                 });
 
             var table = $('#customer-data-table').DataTable({
-                "paging": false,
-                "ordering": false,
-                "info": false,
                 "pageLength": 10,
-                "searching": true,
                 columns: [{
                     data: null,
                     render: 'reference'
@@ -449,10 +449,21 @@ function showModalWindowManifest(id, type) {
                     data: null,
                     render: 'height'
                 }],
-                "dom": 'T<"clear">lfrtip',
-                "tableTools": {
-                    "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-                }
+				"dom": 'Bfrtlp',
+				"buttons": [
+					{
+						extend : 'excel',
+						title  : getFileName(data)	
+					},
+					{
+						extend : 'pdf',
+						title  : getFileName(data)
+					},
+					{
+						extend : 'print',
+						title  : getFileName(data)
+					}
+				]
             });
 
             $.when(
