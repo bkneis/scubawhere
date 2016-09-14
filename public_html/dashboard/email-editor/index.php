@@ -99,7 +99,7 @@
                 <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
                 <button id="update-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px; display:none;">Update Template</button>
                 <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
-                <button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>
+                <!--<button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>-->
             </div>
         </div>
     </div>

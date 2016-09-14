@@ -84,10 +84,10 @@ $(function () {
         $('#send-email-modal').modal('hide');
     });
 
-    $('#choose-template').on('click', function (event) {
+    /*$('#choose-template').on('click', function (event) {
         event.preventDefault();
         showTemplates();
-    });
+    });*/
 
     var email_template_html = '';
     var email_preview_frame = document.getElementById('email-template-option-preview');
