@@ -885,7 +885,7 @@
                                             	<label for="file-input0">
                                             		<img id="upload-image-0" src="http://gallery.mailchimp.com/2425ea8ad3/images/header_placeholder_600px.png" style="max-width:600px;" />
                                             	</label>
-                                            	<input id="file-input0" name="uploaded-image" data-image-id="upload-image-0" class="uploadable-file" style="display:none" type="file"/>
+                                            	<input id="file-input0" name="uploaded-image" data-image-id="upload-image-0" class="uploadable-file" style="display:none" type="file" accept="image/*" />
                                             </td>
                                         </tr>
                                     </table>
@@ -926,7 +926,7 @@
                                                     		<label for="file-input1">
                                                         		<img id="upload-image-1" src="http://gallery.mailchimp.com/569c0869e0552eb4cd827f095/images/image_placeholder_160px.png" style="max-width:160px;" class="columnImage" />
                                                         	</label>
-                                                        	<input id="file-input1" name="uploaded-image" data-image-id="upload-image-1" class="uploadable-file" style="display:none" type="file"/>
+                                                        	<input id="file-input1" name="uploaded-image" data-image-id="upload-image-1" class="uploadable-file" style="display:none" type="file" accept="image/*" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -949,7 +949,7 @@
                                                     		<label for="file-input2">
                                                         		<img id="upload-image-2" src="http://gallery.mailchimp.com/569c0869e0552eb4cd827f095/images/image_placeholder_160px.png" style="max-width:160px;" class="columnImage" />
                                                         	</label>
-                                                        	<input id="file-input2" name="uploaded-image" data-image-id="upload-image-2" class="uploadable-file" style="display:none" type="file"/>
+                                                        	<input id="file-input2" name="uploaded-image" data-image-id="upload-image-2" class="uploadable-file" style="display:none" type="file" accept="image/*" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -972,7 +972,7 @@
                                                     		<label for="file-input3">
                                                         		<img id="upload-image-3" src="http://gallery.mailchimp.com/569c0869e0552eb4cd827f095/images/image_placeholder_160px.png" style="max-width:160px;" class="columnImage" />
                                                         	</label>
-                                                        	<input id="file-input3" name="uploaded-image" data-image-id="upload-image-3" class="uploadable-file" style="display:none" type="file"/>
+                                                        	<input id="file-input3" name="uploaded-image" data-image-id="upload-image-3" class="uploadable-file" style="display:none" type="file" accept="image/*" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1081,7 +1081,7 @@
 
 		$('.uploadable-file').fileupload({
 		    url: '/api/campaign/upload-image',
-            maxFileSize: 50000000,
+            maxFileSize: 500000,
 		    done: function (e, data) {
 				$('#' + $(this).attr('data-image-id')).attr('src', data.result.filepath);
 				console.log('data', data.result);

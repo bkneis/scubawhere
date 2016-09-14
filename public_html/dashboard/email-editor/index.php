@@ -91,7 +91,7 @@
 
     <div style="position: fixed; bottom: 0; width: 100%; height:80px" class="alert-warning clearfix">
         <div class="pull-left">
-            <p style="padding: 30px 0 0 30px"><strong>Please note : Maximum upload image size is 5 MB</strong></p>
+            <p style="padding: 30px 0 0 30px"><strong>Please note : Maximum upload image size is 500 KB and only supports PNG and JPG file types</strong></p>
         </div>
         <div class="alert pull-right">
             <div class="pull-right">

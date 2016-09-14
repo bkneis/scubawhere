@@ -735,7 +735,7 @@
                                             	<label for="file-input0">
                                             		<img id="upload-image-0" src="http://gallery.mailchimp.com/2425ea8ad3/images/header_placeholder_600px.png" style="max-width:600px;" />
                                             	</label>
-                                            	<input id="file-input0" name="uploaded-image" data-image-id="upload-image-0" class="uploadable-file" style="display:none" type="file"/>
+                                            	<input id="file-input0" name="uploaded-image" data-image-id="upload-image-0" class="uploadable-file" style="display:none" type="file" accept="image/*"/>
                                             </td>
                                         </tr>
                                     </table>
@@ -852,7 +852,7 @@
 
 		$('.uploadable-file').fileupload({
 		    url: '/api/campaign/upload-image',
-            maxFileSize: 50000000,
+            maxFileSize: 500000,
 		    done: function (e, data) {
 				$('#' + $(this).attr('data-image-id')).attr('src', data.result.filepath);
 				console.log('data', data.result);
