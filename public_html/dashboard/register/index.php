@@ -43,9 +43,7 @@
 
 				<p style="font-size:14px; width:280px; font-style: italic;">
 					By signing up, you agree to our 
-					<a target="_blank" href="/api/terms">terms of use</a><!--, 
-					<a target="_blank" href="#">privacy policy</a> and 
-					<a target="_blank" href="#">cookie policy</a>-->
+					<a target="_blank" href="/api/terms">terms of use</a> 
 				</p>				
 
 				<input type="hidden" name="_token" value="" />
@@ -53,6 +51,8 @@
 					Register
 					<div id="save-loader" class="loader"></div>
 				</button>
+
+				<a style="font-size:14px; font-style:italic" href="/login">Already signed up? Login here</a>
 
 			</form>
 		</div>
