@@ -10,8 +10,8 @@
         </div>
         <div style="min-height:250px;" class="panel-body">
           <div id="social-media-stats"></div>
-          <!--<h5>Social Media integration is coming soon</h5>
-          Keep an eye on this space! --*>
+          <h5>Social Media integration is coming soon</h5>
+          Keep an eye on this space!
         </div>
       </div>
     </div> -->
@@ -95,8 +95,7 @@
 
             <input type="hidden" name="_token">
 
-			<a id="test-btn" class="btn btn-primary">Test</a>
-            <button class="btn btn-primary btn-lg text-uppercase pull-right" id="send-feedback">Submit Feedback</button>
+            <button type="submit" class="btn btn-primary btn-lg text-uppercase pull-right">Submit Feedback</button>
 
           </form>
         </div>

@@ -136,6 +136,22 @@ $(function () {
 			self.toggleClass('expanded');
 			$('.accordion-' + id).toggle();
 		});
+
+		$('#feedback-form').on('submit', function(event) {
+			event.preventDefault();
+			var params = $(this).serializeObject();
+			params._token = window.token;
+			console.log(params);
+			Company.sendFeedback(params, function success(data) {
+				pageMssg('Thank you for your feedback.', 'success');
+			},
+			function error(xhr) {
+				var data = JSON.parse(xhr.responseText);
+
+				if(data.errors.length > 0) pageMssg(data.errors[0]);
+				else pageMssg('Sorry, unfortunately we cannot send your feedback right now');
+			});
+		});
 	}
 });
 
