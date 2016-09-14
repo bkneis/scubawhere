@@ -72,6 +72,7 @@ class CreditService {
 	private function getBookingCredits($between_dates)
 	{
 		return $this->company_model->bookings()
+								   ->where('status', '=', 'confirmed')
 							 	   ->whereBetween('created_at', $between_dates)
 							 	   ->count();
 	}
