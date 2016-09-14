@@ -44,6 +44,8 @@ class Customer extends Ardent {
 		'height'          => ''
 	);
 
+	public $appends = array('unsubscribed');
+
 	public function beforeSave()
 	{
 		if( isset($this->firstname) )
@@ -90,6 +92,18 @@ class Customer extends Ardent {
 
 		if( isset($this->height) )
 			$this->height = Helper::sanitiseString($this->height);
+	}
+
+	public function getUnsubscribedAttribute()
+	{
+		if(isset($this->crmSubscription()->first()->subscribed))
+		{
+			return ($this->crmSubscription()->first()->subscribed == 0) ? true : false;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public function company()

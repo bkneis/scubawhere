@@ -113,6 +113,20 @@ class CustomerController extends Controller {
 			}
 		}
 
+		$unsubscribe = Input::only('unsubscribe');
+		$subscription_data = array();
+		$subscription_data['token'] = 'USERACCEPTED';
+		if((int) $unsubscribe == 1)
+		{
+			$subscription_data['subscribed'] = 0;
+		}
+		else
+		{
+			$subscription_data['subscribed'] = 1;
+		}
+		$subscription = new CrmSubscription($subscription_data);
+		$customer->crmSubscription()->save($subscription);
+
 		return Response::json( array('status' => 'OK. Customer created', 'id' => $customer->id), 201 ); // 201 Created
 	}
 
@@ -166,6 +180,19 @@ class CustomerController extends Controller {
 			}
 		}
 
+		$unsubscribe = Input::only('unsubscribe');
+		$subscription_data = array();
+		$subscription_data['token'] = 'USERACCEPTED';
+		if((int) $unsubscribe == 1)
+		{
+			$subscription_data['subscribed'] = 0;
+		}
+		else
+		{
+			$subscription_data['subscribed'] = 1;
+		}
+		$customer->crmSubscription()->update($subscription_data);
+
 		return Response::json( array('status' => 'OK. Customer updated.'), 200 ); // 200 OK
 	}
 
@@ -190,7 +217,11 @@ class CustomerController extends Controller {
 		$bytes_written = File::put($csv_path, "");
 		if($bytes_written === false)
 		{
-			return Response::json(array('status' => 'Ooops, Something seems to have gone wrong. Please try upload your customer data again. If the problem persists, please contact support@scubawhere.com.'), 500);
+			return Response::json(
+				array('status' => 'Ooops, Something seems to have gone wrong. Please try upload '.
+					'your customer data again. If the problem persists, please contact '.
+					'support@scubawhere.com.')
+				, 500);
 		}
 
 		foreach($customer_data as $line_num => $customer)
