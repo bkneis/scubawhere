@@ -2031,6 +2031,7 @@ function showModalAccommodationSelection(accommodation) {
                                 }
 								var eventObject = {
                                     id: id,
+									uuid : Math.random(),
 									start: start,
 									end : start,
 									title: '<strong>' + (utilisation[1] - utilisation[0]) + '</strong> available',
@@ -2072,6 +2073,7 @@ function showModalAccommodationSelection(accommodation) {
 								return;
 
 							var eventObject = {
+								uuid : Math.random(),
 								start: start,
 								end : end,
 								title: detail.customer.firstname + ' | ' + title,
@@ -2086,6 +2088,7 @@ function showModalAccommodationSelection(accommodation) {
                         // Loop through existing accommodations booked and display for refrence
                         _.each(booking.accommodations, function(obj) {
                             var eventObject = {
+								uuid : Math.random(),
                                 start: moment(obj.pivot.start),
                                 end: moment(obj.pivot.end),
                                 title: 'Already booked',
@@ -2129,27 +2132,36 @@ function showModalAccommodationSelection(accommodation) {
 
 				},
                 eventClick: function(eventObject) {
+					console.log('ev', eventObject);
                     if(eventObject.readonly != undefined)
                         return false;
-                    $(this).css('background-color', 'purple');
 
 					if(_.contains(window.selectedAccommodations, eventObject))
 					{
-						window.selectedAccommodations = _.filter(window.selectedAccommodations, function(obj) { 
-							return obj.start._i !== eventObject.start._i; 
-						});
+						/*window.selectedAccommodations = _.filter(window.selectedAccommodations, function(obj) { 
+							//return ((obj.start._i !== eventObject.start._i) && (obj.id !== eventObject.id)); 
+							return obj.uid == eventObject.uuid;
+						});*/
+						for(var i in window.selectedAccommodations)
+						{
+							if(window.selectedAccommodations[i].uuid === eventObject.uuid)
+							{
+								window.selectedAccommodations.splice(i, 1);
+							}
+						}
 						$(this).css('background-color', eventObject.color);
 					}
 					else
 					{
                     	window.selectedAccommodations.push(eventObject);
+                    	$(this).css('background-color', 'purple');
 					}
+					console.log('win acoms', window.selectedAccommodations);
                 }
 			});
 		},
 		onFinishModal: function() {
-            addAccommodationToBooking(window.selectedAccommodations, this.accommodation.id);
-            window.selectedAccommodations = [];
+            addAccommodationToBooking(window.selectedAccommodations);
 			$('#modal-accommodation-selection').remove();
 		},
 	});
@@ -2230,7 +2242,7 @@ function updatePackagedAccommodationsList() {
 }
 
 
-function addAccommodationToBooking(eventObjects, accommodation_id)
+function addAccommodationToBooking(eventObjects)
 {
     if(eventObjects.length < 1) return;
 
@@ -2238,7 +2250,8 @@ function addAccommodationToBooking(eventObjects, accommodation_id)
         if(obj.end === null) obj.end = moment(obj.start).add(24, 'hours').format();
         return {
             start : moment(obj.start).format(),
-            end   : moment(obj.end).format()
+            end   : moment(obj.end).format(),
+			id    : obj.id
         };
     });
 
@@ -2251,7 +2264,8 @@ function addAccommodationToBooking(eventObjects, accommodation_id)
         return {
             start   : moment(obj.pivot.start).format(),
             end     : moment(obj.pivot.end).format(),
-            promise : $.Deferred() 
+            promise : $.Deferred(),
+			id      : obj.id
         };
     });
 
@@ -2259,7 +2273,7 @@ function addAccommodationToBooking(eventObjects, accommodation_id)
         var params = {
             _token            : window.token,
             booking_id        : booking.id,
-            accommodation_id  : accommodation_id,
+            accommodation_id  : obj.id,
             customer_id       : customer_id
         };
         params.start = obj.start;
@@ -2276,10 +2290,8 @@ function addAccommodationToBooking(eventObjects, accommodation_id)
     $.when.apply($, remove_promises).done(function() {
         
         all_nights = existing_nights.concat(new_nights);
-
         all_nights = _.sortBy(all_nights, function(obj) { return obj.start; });
 
-        console.log('all nights', all_nights);
         
         for(var i = 0; i < (all_nights.length - 1); i++)
         {
@@ -2297,30 +2309,42 @@ function addAccommodationToBooking(eventObjects, accommodation_id)
             }
         }
 
-        console.log('after all nights', all_nights);
+		_.each(all_nights, function(obj) {
+			obj.promise = $.Deferred();
+		});
 
+		var successMsg = '';
 
         _.each(all_nights, function(obj) {
             var params = {
                 _token           : window.token,
                 booking_id       : booking.id,
-                accommodation_id : accommodation_id,
+                accommodation_id : obj.id,
                 customer_id      : customer_id
             };
             params.start = obj.start;
             params.end = obj.end;
-            console.log('params before', params);
             
             booking.addAccommodation(params, function success(status, packagefacade_id) {
                 booking.store();
-                pageMssg(status, 'success');
+                //pageMssg(status, 'success');
+				successMsg = status;
                 drawBasket();
+				obj.promise.resolve();
             }, function error(xhr) {
                 var data = JSON.parse(xhr.responseText);
                 if(data.errors) pageMssg(data.errors[0], 'danger');
+				obj.promise.resolve();
             });
 
         });
+
+		var add_promises = _.map(all_nights, function(obj) { return obj.promise; });
+
+		$.when.apply($, add_promises).done(function() {
+			window.selectedAccommodations = [];
+			if(successMsg !== '') pageMssg(successMsg, 'success');
+		});
 
     });
 }
