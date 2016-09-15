@@ -237,18 +237,11 @@ class CrmCampaignController extends Controller
 
             // Create customer subscriptions
 			// @todo remove this and include an eager loaded relationship with the call to customers
-            $customer_subscription = CrmSubscription::where('customer_id', '=', $customer->id)->first();
-            if (is_null($customer_subscription)) {
-                $subscription_data = [];
-                $subscription_data['customer_id'] = $customer->id;
-                $subscription_data['token'] = str_random(50);
+            //$customer_subscription = CrmSubscription::where('customer_id', '=', $customer->id)->first();
+			$subscription_data = [];
+			$subscription_data['token'] = str_random(50);
+			$customer->crmSubscription()->update($subscription_data);
 
-                $customer_subscription = new CrmSubscription($subscription_data);
-                if (!$customer_subscription->validate()) {
-                    return Response::json(array('errors' => $customer_subscription->errors()->all()), 406); // 406 Not Acceptable
-                }
-                $customer_subscription->save();
-            }
 
             // add the token api to the scubawhere image
             $token_api = Request::root() . '/crm_tracking/scubaimage?campaign_id=' . $campaign->id . '&customer_id=' . $customer->id . '&token=' . $new_token->token;

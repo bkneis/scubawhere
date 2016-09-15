@@ -209,6 +209,7 @@ class CustomerController extends Controller {
 		$customer_data = $data['customerData'];
 
 		$imported_customers = array();
+		$imported_subscriptions = array();
 
 		$errors = array();
 
@@ -273,11 +274,32 @@ class CustomerController extends Controller {
 			else
 			{
 				array_push($imported_customers, $new_customer);
+
+				$subscription_data = array();
+				$subscription_data['customer_id'] = $new_customer->id;
+				$subscription_data['token'] = 'USERACCEPTED';
+				$subscription_data['subscribed'] = 0;
+				$subscription = new CrmSubscription($subscription_data);
+				if(!$subscription->validate())
+				{
+					return Response::json(
+								array('errors' => 
+									array('Oops, Something has gone wrong. We cannot create your customers email subscription.')
+								), 500);
+				}
+				else
+				{
+					array_push($imported_subscriptions, $subscription);
+				}
 			}
 
 		}
 
 		Context::get()->customers()->saveMany($imported_customers);
+		foreach($imported_subscriptions as $obj) 
+		{
+			$obj->save();
+		}
 
 		return Response::json( array('status' => 'OK. Customers imported.', 'errors' => $errors, 'bytres' => $bytes_written), 200 ); // 200 OK
 
