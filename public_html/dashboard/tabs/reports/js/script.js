@@ -549,19 +549,19 @@ function filterReport(reportType, value)
 					{
 						results.push(booking);
 						price = booking.decimal_price || booking.real_decimal_price;
-						totalRevenue = parseFloat(price);
+						totalRevenue += parseFloat(price);
 					}
 					else if(booking.source == null & value == "agent") 
 					{
 						results.push(booking);
 						price = booking.real_decimal_price || booking.decimal_price;
 						price = (parseFloat(booking.decimal_price) - decRound(parseFloat(price) * parseFloat(booking.agent.commission) / 100, 2)).toFixed(2);
-						totalRevenue = parseFloat(price);
+						totalRevenue += parseFloat(price);
 					}
 				});
 
 				var results2 = {bookings : results};
-				results2.totals = { revenue : totalRevenue };
+				results2.totals = { revenue : totalRevenue.toFixed(2) };
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
 				createDataTable();
