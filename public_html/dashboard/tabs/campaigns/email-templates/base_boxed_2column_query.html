@@ -1369,11 +1369,35 @@
 
     $('.uploadable-file').fileupload({
         url: '/api/campaign/upload-image',
-        maxFileSize: 500000,
+		add : function(e, data) {
+			var uploadErrors = [];
+			var acceptFileTypes = /^image\/(jpe?g|png)$/i;
+			console.log('add', data);
+			if(data.originalFiles[0]['type'] && !acceptFileTypes.test(data.originalFiles[0]['type']))
+			{
+				uploadErrors.push('Not an accepted file type.');
+			}
+			if(data.originalFiles[0]['size'] && data.originalFiles[0]['size'] > 500000)
+			{
+				uploadErrors.push('The file size is too large.');
+			}
+			if(uploadErrors.length > 0)
+			{
+				alert(uploadErrors.join("\n"));
+			}
+			else
+			{
+				data.submit();
+			}
+		},
         done: function (e, data) {
             $('#' + $(this).attr('data-image-id')).attr('src', data.result.filepath);
             console.log('data', data.result);
-        }
+        },
+		fail : function(e, data) {
+			var res = JSON.parse(data.jqXHR.responseText);
+			alert(res.errors);
+		}
     });
 </script>
 
