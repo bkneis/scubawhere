@@ -72,7 +72,7 @@ Handlebars.registerHelper('getNetAmount', function() {
 	var price = this.real_decimal_price || this.decimal_price;
 
 	return (parseFloat(this.decimal_price) - decRound(parseFloat(price) * parseFloat(this.agent.commission) / 100, 2)).toFixed(2);
-})
+});
 
 Handlebars.registerHelper('sourceName', function() {
 	switch(this.source) {
@@ -185,7 +185,6 @@ function getReport(reportType, callback) {
 			Report.getPaymentGateways(function success(data) {
 				$("#report-filters").empty().append( filter({gateways : data}) );
 			});
-
 
 			Report.getPayments(dates, function success(data) {
 				Report.getRefunds(dates, function success(data2) {
@@ -486,13 +485,19 @@ function filterReport(reportType, value)
 			else
 			{
 				var results = [];
+				var totalRevenue = 0;
 				_.each(window.transactions, function(transaction) {
-					if(parseInt(transaction.paymentgateway_id) == value) results.push(transaction);
+					if(parseInt(transaction.paymentgateway_id) == value) 
+					{
+						results.push(transaction);
+						totalRevenue += parseFloat(transaction.amount);
+					}
 				});
 
 				var data = {
-					transactions: results,
-					total: window.totalTransactionsRevenue
+					transactions : results,
+					total        : window.totalTransactionsRevenue,
+					totalRevenue : totalRevenue.toFixed(2)
 				};
 
 				console.log(data);
@@ -537,14 +542,26 @@ function filterReport(reportType, value)
 			else
 			{
 				var results = [];
+				var totalRevenue = 0;
+				var price;
 				_.each(window.bookings.bookings, function(booking) {
-					// console.log(booking.source);
-					if(booking.source == value) results.push(booking);
-					else if(booking.source == null & value == "agent") results.push(booking);
+					if(booking.source == value) 
+					{
+						results.push(booking);
+						price = booking.decimal_price || booking.real_decimal_price;
+						totalRevenue = parseFloat(price);
+					}
+					else if(booking.source == null & value == "agent") 
+					{
+						results.push(booking);
+						price = booking.real_decimal_price || booking.decimal_price;
+						price = (parseFloat(booking.decimal_price) - decRound(parseFloat(price) * parseFloat(booking.agent.commission) / 100, 2)).toFixed(2);
+						totalRevenue = parseFloat(price);
+					}
 				});
 
-				// console.log(results);
 				var results2 = {bookings : results};
+				results2.totals = { revenue : totalRevenue };
 				report = Handlebars.compile($("#booking-history-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
 				createDataTable();
@@ -557,16 +574,26 @@ function filterReport(reportType, value)
 			else
 			{
 				var results = [];
+				var totalAssigned = 0;
+				var totoalCapacity = 0;
 				_.each(window.utlisations.utilisation, function(trip) {
-					// console.log(trip);
-					if(trip.name == value) results.push(trip);
+					if(trip.name == value)
+					{
+						results.push(trip);
+						totalAssigned += parseInt(trip.assigned);
+						totoalCapacity += parseInt(trip.capacity);
+					}
 				});
 
-				// console.log(results);
 				var results2 = {utilisation : results};
+				results2.utilisation_total = {
+					capacity : totoalCapacity,
+					assigned : totalAssigned
+				};
 				report = Handlebars.compile($("#utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
-				$("#utilisation-summary").css('display', 'none');
+				$("#utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+				//$("#utilisation-summary").css('display', 'none');
 				createDataTable();
 			}
 
@@ -577,16 +604,26 @@ function filterReport(reportType, value)
 			else
 			{
 				var results = [];
+				var totalAssigned = 0;
+				var totoalCapacity = 0;
 				_.each(window.classUtlisations.utilisation, function(training) {
-					// console.log(trip);
-					if(training.name == value) results.push(training);
+					if(training.name == value)
+					{
+						results.push(training);
+						totalAssigned += parseInt(training.assigned);
+						totoalCapacity += parseInt(training.capacity);
+					}
 				});
 
-				// console.log(results);
 				var results2 = {utilisation : results};
+				results2.utilisation_total = {
+					capacity : totoalCapacity,
+					assigned : totalAssigned
+				};
 				report = Handlebars.compile($("#class-utilisation-report-template").html());
 				$("#reports").empty().append( report({entries : results2}) );
-				$("#class-utilisation-summary").css('display', 'none');
+				$("#class-utilisation-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+				//$("#class-utilisation-summary").css('display', 'none');
 				createDataTable();
 			}
 
