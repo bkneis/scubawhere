@@ -253,7 +253,7 @@ class CrmCampaignController extends Controller
             $email_html = str_replace('{{number_of_dives}}', $customer->number_of_dives, $email_html);
             $email_html = str_replace('{{birthday}}', $customer->birthday, $email_html);
 
-            $unsubscribe_link = Request::root() . '/crm_tracking/unsubscribe?customer_id=' . $customer->id . '&campaign_id=' . $campaign->id . '&token=' . $customer_subscription->token;
+            $unsubscribe_link = Request::root() . '/crm_tracking/unsubscribe?customer_id=' . $customer->id . '&campaign_id=' . $campaign->id . '&token=' . $subscription_data['token'];
             $email_html = str_replace('{{unsubscribe_link}}', $unsubscribe_link, $email_html);
 
             $link_tracker_data = [];

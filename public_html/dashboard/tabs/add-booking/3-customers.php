@@ -88,7 +88,7 @@
 								<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
 							</div>
 							<div class="col-md-6" style="margin-top:30px;">
-								<input type="checkbox" id="unsubscribe" name="unsubscribe" value="1">
+								<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true">
 								<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
 							</div>
 						</div>
@@ -306,7 +306,7 @@
 			<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years" value="{{birthday}}">
 		</div>
 		<div class="col-md-6" style="margin-top:30px;">
-			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="1" {{#if unsubscribed}}checked{{/if}}>
+			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true" {{#if unsubscribed}}checked{{/if}}>
 			<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
 		</div>
 	</div>
