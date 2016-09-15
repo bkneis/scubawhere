@@ -244,15 +244,15 @@
                             <p id="num-unsubscribed" class="text-center">No. unsubscribed</p>
                         </a>
                     </div>
-                    <table id="campaign-analytics-table" class="bluethead">
+                    <table id="campaign-analytics-table" class="bluethead" style="width:100%">
                         <thead>
                             <tr class="bg-primary">
-                                <th style="width:50%">Customer Name</th>
-                                <th style="width:50%">Customer Email</th>
-                                <th style="width:10%">Opened Count</th>
+                                <th>Customer Name</th>
+                                <th>Customer Email</th>
+                                <th>Opened Count</th>
                                 <th>Customer ID</th>
-                                <th style="width:10%">Unsubscriptions</th>
-                                <th style="width:40%">Last Opened</th>
+                                <th>Unsubscriptions</th>
+                                <th>Last Opened</th>
                             </tr>
                         </thead>
                         <tbody class="sw-blue-table">

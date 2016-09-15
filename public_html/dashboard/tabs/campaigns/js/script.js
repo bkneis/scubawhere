@@ -194,7 +194,8 @@ function showEmailAnalytics(id) {
 function getLinkAnalytics (customer_id, data) {
     var accordian = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;"><tr><p><strong>Link Analytics</strong></p></tr>';
     var customer_clicks = 0;
-    for(var i = 0; i < (data.length - 1); i++)
+	console.log(data);
+    for(var i = 0; i < data.length; i++)
     {
         customer_clicks = 0;
         for(var j in data[i].analytics)
