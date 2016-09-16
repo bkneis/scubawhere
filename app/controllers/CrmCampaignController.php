@@ -118,6 +118,7 @@ class CrmCampaignController extends Controller
 		{
 			$customers = Context::get()->customers()
 									   ->whereNotNull('email')
+									   ->where('email', '!=', '')
 									   ->get();
 		} 
 		elseif ((int) $data['is_campaign'] == 0) 
@@ -163,6 +164,7 @@ class CrmCampaignController extends Controller
                 $query->whereIn('certificates.id', $rules['certs']);
             })
 			->whereNotNull('email')
+			->where('email', '!=', '')
             ->with('crmSubscription')
             ->get();
 
@@ -173,6 +175,7 @@ class CrmCampaignController extends Controller
             })
             ->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) @todo add in training
             ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
+			->where('email', '!=', '')
 			->whereNotNull('email')
             ->with('crmSubscription')
             ->get();
