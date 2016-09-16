@@ -28,12 +28,23 @@ Handlebars.registerHelper('sumPayed', function() {
 Handlebars.registerHelper('sumRefunded', function() {
 	return this.sums.refunded;
 });
+/*Handlebars.registerHelper("remainingPayBar", function() {
+	console.log('t', this);
+	var price;
+	if(this.absolute_price !== null)
+	{
+		price = this.absolute_price;
+	}
+	else
+	{
+		price = this.decimal_price;
+	}
 
-Handlebars.registerHelper("remainingPayBar", function() {
 	if(this.decimal_price === "0.00") return '';
 
 	var sum          = this.sums.have;
 	var remainingPay = this.sums.payable;
+
 	var percentage   = this.sums.have / this.decimal_price;
 
 	if(remainingPay == 0) remainingPay = '';
@@ -51,6 +62,37 @@ Handlebars.registerHelper("remainingPayBar", function() {
 	html += '</div>';
 	html += '<div class="percentage-width-marker"></div>';
 	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + this.decimal_price  + '</div>';
+
+	return new Handlebars.SafeString(html);
+});*/
+
+Handlebars.registerHelper("remainingPayBar", function() {
+	var price;
+	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
+	else 							 price = this.decimal_price;
+
+	if(price === "0.00") return '';
+
+	var sum          = this.sums.have;
+	var remainingPay = this.sums.payable;
+
+	var percentage   = this.sums.have / price;
+
+	if(remainingPay == 0) remainingPay = '';
+	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
+
+	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
+	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
+	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
+
+	var html = '';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
+	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
+	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
+	html += '	<span class="percentage-left">' + remainingPay + '</span>';
+	html += '</div>';
+	html += '<div class="percentage-width-marker"></div>';
+	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + price  + '</div>';
 
 	return new Handlebars.SafeString(html);
 });

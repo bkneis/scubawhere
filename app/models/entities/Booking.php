@@ -19,7 +19,7 @@ class Booking extends Ardent {
 		'comment'
 	);
 
-	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local');
+	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local', 'absolute_price');
 
 	public $loadTrashedAccommodations = true;
 
@@ -57,6 +57,16 @@ class Booking extends Ardent {
 			/* $currency->getDecimalMark() */ '.', // decimal seperator
 			/* $currency->getThousandsSeperator() */ ''
 		);
+	}
+
+	public function getAbsolutePriceAttribute()
+	{
+		$this->load('agent');
+		if($this->agent)
+		{
+			if($this->agent->terms == 'deposit') return $this->decimal_price * (1 - ($this->agent->commission / 100));
+		}
+		return null;
 	}
 
 	public function getRealDecimalPriceAttribute()

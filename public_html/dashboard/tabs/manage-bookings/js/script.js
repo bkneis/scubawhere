@@ -106,11 +106,14 @@ Handlebars.registerHelper('arrivalDate', function() {
 });
 
 Handlebars.registerHelper('price', function() {
+	var price;
+	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
+	else 							 price = this.decimal_price;
 	if(this.status === 'cancelled') {
-		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + this.decimal_price + '</del> ' + (this.cancellation_fee));
+		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + price + '</del> ' + (this.cancellation_fee));
 	}
 
-	return window.company.currency.symbol + " " + this.decimal_price;
+	return window.company.currency.symbol + " " + price;
 });
 
 Handlebars.registerHelper('sumPaid', function() {
@@ -118,11 +121,16 @@ Handlebars.registerHelper('sumPaid', function() {
 });
 
 Handlebars.registerHelper("remainingPay", function() {
-	if(this.decimal_price === "0.00") return '';
+	var price;
+	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
+	else 							 price = this.decimal_price;
+
+	if(price === "0.00") return '';
 
 	var sum          = this.sums.have;
 	var remainingPay = this.sums.payable;
-	var percentage   = this.sums.have / this.decimal_price;
+
+	var percentage   = this.sums.have / price;
 
 	if(remainingPay == 0) remainingPay = '';
 	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
@@ -138,7 +146,7 @@ Handlebars.registerHelper("remainingPay", function() {
 	html += '	<span class="percentage-left">' + remainingPay + '</span>';
 	html += '</div>';
 	html += '<div class="percentage-width-marker"></div>';
-	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + this.decimal_price  + '</div>';
+	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + price  + '</div>';
 
 	return new Handlebars.SafeString(html);
 });
@@ -275,7 +283,7 @@ function renderBookingList(bookings, display) {
 
 	var results = _.filter(bookings, function(booking) {
 
-		if(booking.agent !== null)
+		/*if(booking.agent !== null)
 		{
 			if(booking.agent.terms === 'deposit')
 			{
@@ -283,7 +291,7 @@ function renderBookingList(bookings, display) {
 				net_price = Math.round(net_price * 100) / 100;
 				booking.decimal_price = net_price;	
 			}
-		}
+		}*/
 		booking.sums = {};
 		Booking.prototype.calculateSums.call(booking);
 		Booking.prototype.setStatus.call(booking);
