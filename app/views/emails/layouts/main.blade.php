@@ -180,15 +180,15 @@
 
     @font-face {
       font-family: 'Open Sans';
-      src: url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.eot");
-      src: url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.woff2") format('woff2'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.woff") format('woff'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.ttf") format('truetype'), url("http://rms.scubawhere.app/../fonts/opensans-bold-webfont.svg#open_sansbold") format('svg');
+      src: url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.eot");
+      src: url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.woff2") format('woff2'), url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.woff") format('woff'), url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.ttf") format('truetype'), url("http://rms.scubawhere.com/common/fonts/opensans-bold-webfont.svg#open_sansbold") format('svg');
       font-weight: bold;
       font-style: normal;
     }
     @font-face {
       font-family: 'Open Sans';
-      src: url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.eot");
-      src: url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.woff2") format('woff2'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.woff") format('woff'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.ttf") format('truetype'), url("http://rms.scubawhere.app/../fonts/opensans-regular-webfont.svg#open_sansregular") format('svg');
+      src: url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.eot");
+      src: url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.eot#iefix") format('embedded-opentype'), url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.woff2") format('woff2'), url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.woff") format('woff'), url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.ttf") format('truetype'), url("http://rms.scubawhere.com/common/fonts/opensans-regular-webfont.svg#open_sansregular") format('svg');
       font-weight: normal;
       font-style: normal;
     }
