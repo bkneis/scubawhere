@@ -68,8 +68,15 @@ Handlebars.registerHelper('sumRefunded', function() {
 
 Handlebars.registerHelper("remainingPayBar", function() {
 	var price;
-	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
-	else 							 price = this.decimal_price;
+	if(this.absolute_price) 
+	{
+		if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
+		else 							 price = this.decimal_price;
+	}
+	else
+	{
+		price = this.decimal_price;
+	}
 
 	if(price === "0.00") return '';
 

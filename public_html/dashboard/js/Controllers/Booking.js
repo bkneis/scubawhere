@@ -1044,11 +1044,12 @@ Booking.prototype.calculateSums = function() {
 
 	this.sums.have = (this.sums.payed - this.sums.refunded).toFixed(2);
 
-	if(this.absolute_price !== null)
+	if(this.absolute_price)
 	{
-		this.sums.payable = (this.absolute_price - this.sums.have).toFixed(2);
+		if(this.absolute_price !== null) this.sums.payable = (this.absolute_price - this.sums.have).toFixed(2);
+		else 							 this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
 	}
-	else
+	else 
 	{
 		this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
 	}
