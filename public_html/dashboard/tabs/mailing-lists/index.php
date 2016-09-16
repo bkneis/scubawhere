@@ -116,7 +116,7 @@
                     <h4 class="modal-title">Customers</h4>
                 </div>
                 <div class="modal-body">
-                    <table id="group-customers-table" class="bluethead">
+                    <table id="group-customers-table" class="bluethead" style="width:100%">
                         <thead>
                             <tr class="bg-primary">
                                 <th style="width:35%">Customer Name</th>
