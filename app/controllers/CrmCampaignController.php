@@ -162,6 +162,7 @@ class CrmCampaignController extends Controller
             $certificates_customers = Context::get()->customers()->whereHas('certificates', function ($query) use ($rules) {
                 $query->whereIn('certificates.id', $rules['certs']);
             })
+			->whereNotNull('email')
             ->with('crmSubscription')
             ->get();
 
@@ -172,6 +173,7 @@ class CrmCampaignController extends Controller
             })
             ->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) @todo add in training
             ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
+			->whereNotNull('email')
             ->with('crmSubscription')
             ->get();
 
