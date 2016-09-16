@@ -171,7 +171,7 @@
             <thead>
               <tr>
                 <th style="color:#313131">Booking Ref</th>
-                <th style="color:#313131">Booking Status</th>
+                <th style="color:#313131">Booking Paid / Booking Amount</th>
                 <th style="color:#313131">Name</th>
                 <th style="color:#313131">Phone Number</th>
                 <th style="color:#313131">Ticket</th>
@@ -190,8 +190,8 @@
   <script type="text/x-handlebars-template" id="customer-details-template">
     {{#each customers}}
       <tr>
-		<td>{{pivot.reference}}</td>
-		<td>{{pivot.status}}</td>
+		<td><a class="view-booking">{{pivot.reference}}</a></td>
+		<td>{{getRemainingBalance pivot}}</td>
         <td>{{{firstname}}} {{{lastname}}}</td>
         <td>{{phone}}</td>
 		{{#if pivot.ticket_id}}

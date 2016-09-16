@@ -198,7 +198,7 @@
 				  <thead>
 					  <tr>
 						<th style="color:#313131">Booking Ref</th>
-						<th style="color:#313131">Status</th>
+						<th style="color:#313131; width: 15%">Payments made</th>
 						<th style="color:#313131;">Name</th>
 						<th style="color:#313131"><span style="display: none;">Country</span></th>
 						<th style="color:#313131">Phone</th>
@@ -223,7 +223,7 @@
          				<thead>
          			<tr>
          				<th style="color:#313131">Booking Ref</th>
-						<th style="color:#313131">Status</th>
+						<th style="color:#313131; width:15%;">Payments made</th>
          				<th style="color:#313131">Name</th>
          				<th style="color:#313131"><span style="display: none;">Country</span></th>
          				<th style="color:#313131">Phone</th>

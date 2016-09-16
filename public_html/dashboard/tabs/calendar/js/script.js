@@ -968,6 +968,14 @@ function customerData(customer) {
     this._booking_id = customer.pivot.booking_id;
     this._notes = customer.pivot.notes || "-";
 	this._status = customer.pivot.status;
+	this._price;
+	if(customer.pivot.absolute_price !== null) this._price = customer.pivot.absolute_price.toFixed(2);
+	else 									   this._price = customer.pivot.decimal_price;
+
+	this.amount_paid = 0;
+	_.each(customer.pivot.payments, function(obj) {
+		this.amount_paid += parseFloat(obj.amount);
+	});
 
     this.name = function() {
         return this._name;
@@ -1014,7 +1022,7 @@ function customerData(customer) {
     };
 
 	this.status = function() {
-		return this._status;
+		return window.company.currency.symbol + ' ' + this.amount_paid + ' / ' + window.company.currency.symbol + ' ' + this._price;
 	};
 }
 

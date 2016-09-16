@@ -26,6 +26,21 @@ Handlebars.registerHelper('getCourseName', function(id) {
 	return window.courses[id].name;
 });
 
+Handlebars.registerHelper('getRemainingBalance', function(pivot) {
+	var price;
+	if(pivot.absolute_price !== null) price = pivot.absolute_price.toFixed(2);
+	else 							  price = pivot.decimal_price;
+
+	var payments = 0;
+	_.each(pivot.payments, function(obj) {
+		payments += parseFloat(obj.amount);
+	});
+
+	payments = payments.toFixed(2);
+
+	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + payments + ' / ' + window.company.currency.symbol + ' ' + price);
+});
+
 Handlebars.registerHelper("tripFinish", function() {
 	var startDate = friendlyDate(this.start);
 
@@ -150,6 +165,17 @@ $(function () {
 
 				if(data.errors.length > 0) pageMssg(data.errors[0]);
 				else pageMssg('Sorry, unfortunately we cannot send your feedback right now');
+			});
+		});
+
+		$('#wrapper').on('click', '.view-booking', function(event) {
+			// Load booking data and redirect to add-booking tab
+			Booking.getByRef($(this).html(), function success(object) {
+				window.booking      = object;
+				// window.booking.mode = 'view'; // Should be default behavior
+				window.clickedEdit  = true;
+
+				window.location.hash = 'add-booking';
 			});
 		});
 	}
