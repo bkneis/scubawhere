@@ -535,4 +535,15 @@ class Booking extends Ardent {
 
 		$this->decimal_price = $sum;
 	}
+
+	public static function boot() {
+		Eloquent::boot(); // as parent refers to Ardent we refrence Eloquent directly
+
+		static::deleting(function($booking) {
+			$booking->bookingdetails()->delete();
+			$booking->pick_ups()->delete();
+			$booking->accommodations()->detach();
+		});
+	}
+
 }

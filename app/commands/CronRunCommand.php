@@ -146,6 +146,16 @@ class CronRunCommand extends Command {
 			*/
 		});
 
+		$this->everyThirtyMinutes(function()
+		{
+			$q = DB::select(DB::raw('select now() as time'));
+			$test_time = date('Y-m-d H:i:s', 
+							strtotime('-1 hour -30 minutes', strtotime($q[0]->time)));
+			Booking::where('status', '=', 'initialised')
+					->where('created_at', '<', $test_time)
+					->delete();
+		});
+
 		$this->hourly(function()
 		{
 			Artisan::call('auth:clear-reminders');
