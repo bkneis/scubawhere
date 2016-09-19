@@ -40,9 +40,11 @@ function RegisterService(company_repo) {
 			success_html  = '<img src="/common/img/scubawhere_logo.svg">';
 			success_html += '<h1>RMS Operator Sign Up</h1>';
 			success_html += '<p style="width:280px" class="text-success"> Successful. Thank you for registering with ';
-			success_html += 'scubawhereRMS. You will recieve an email within 48 hours with confirmation';
-			success_html += 'of your account</p>';
+			success_html += 'scubawhereRMS. You can now login into your new account.</p>';
 			$('#registerForm').html(success_html);
+			setTimeout(function() {
+				window.location.href = '/login';
+			}, 2000);
 		},
 		function error(xhr) {
 			var data = JSON.parse(xhr.responseText);

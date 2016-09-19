@@ -9,7 +9,7 @@ class Credit extends Ardent {
 	public static $rules = array(
 		'booking_credits'	=> 'integer',
 		'email_credits'		=> 'integer',
-		'renewal_date'		=> 'required|date'
+		'renewal_date'		=> 'date' // @todo should the renewal_date or trial_date be requird
 	);
 
 	public function company()

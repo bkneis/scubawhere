@@ -60,7 +60,8 @@ class CreditService {
 	 */
 	public function getRenewalDate()
 	{
-		return $this->credit_repo->get('renewal_date');
+		$dates = $this->credit_repo->gets(['renewal_date', 'trial_date']);
+		return $dates['renewal_date'] ? $dates['renewal_date'] : $dates['trial_date'];
 	}
 
 	/**

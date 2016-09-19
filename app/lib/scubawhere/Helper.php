@@ -19,6 +19,11 @@ class Helper
 		return new \DateTime( 'now', new \DateTimeZone( Context::get()->timezone ) );
 	}
 
+	public static function convertToLocalTime($date)
+	{
+		return new \DateTime( $date, new \DateTimeZone( Context::get()->timezone ) );
+	}
+
 	/**
 	 * Check if date lies in the past (local time)
 	 * @param  string  $datestring  The datestring to test

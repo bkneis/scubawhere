@@ -26,12 +26,18 @@ class RegisterController extends Controller {
 		);
 
 		$today = new DateTime();
-		$renewal_date = $today->add(new \DateInterval('P1Y'));
+		$trial_date = $today->add(new \DateInterval('P2W'));
+		//$renewal_date = $today->add(new \DateInterval('P1Y'));
 
-		$credit_data = array('renewal_date' => $renewal_date->format('Y-m-d H:i:s'));
+		$credit_data = array('trial_date' => $trial_date->format('Y-m-d H:i:s'));
+		//$credit_data = array('renewal_date' => $renewal_date->format('Y-m-d H:i:s'));
+
+		$password = Hash::make(Input::get('password'));
 
 		$company = new Company($data);
+		$company->verified = 1;
 		$user    = new User($userData);
+		$user->password = $password;
 		$credit  = new Credit($credit_data);
 
 		// Mass assigned insert with automatic validation
