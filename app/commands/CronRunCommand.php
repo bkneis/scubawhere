@@ -146,14 +146,44 @@ class CronRunCommand extends Command {
 			*/
 		});
 
+		/**
+		 * 1. Calculate time that is 30 minutes ago using the mysql server's time
+		 * 2. Get all bookings that have been initialised and are older than 30 minutes
+		 * 3. Filter through those booking and get any that are being edited (thier refrence appends a _)
+		 * 4. Remove any bookings that are being edited from the array to be deleted
+		 * 5. Delete the rest of the old initialised bookings
+		 *
+		 * @todo Find out why the created_at timestamps are always behing by 1 hour
+		 */
 		$this->everyThirtyMinutes(function()
 		{
 			$q = DB::select(DB::raw('select now() as time'));
 			$test_time = date('Y-m-d H:i:s', 
 							strtotime('-1 hour -30 minutes', strtotime($q[0]->time)));
-			Booking::where('status', '=', 'initialised')
-					->where('created_at', '<', $test_time)
-					->delete();
+			$bookings_refs = Booking::select('reference')
+									->where('status', '=', 'initialised')
+									->where('created_at', '<', $test_time)
+									->get()
+									->map(function($obj) {
+										return $obj->reference;
+									});
+
+			$edit_bookings_refs = $bookings_refs->map(function($obj) {
+													return $obj . '_';
+												})
+												->toArray();
+
+			$edit_bookings_refs = Booking::select('reference')
+										 ->whereIn('reference', $edit_bookings_refs)
+										 ->get()
+										 ->map(function($obj) {
+											 return substr($obj->reference, 0, -1);
+										 })
+										 ->toArray();
+
+			$delete_bookings_refs = array_diff($bookings_refs->toArray(), $edit_bookings_refs);
+
+			Booking::whereIn('reference', $delete_bookings_refs)->delete();
 		});
 
 		$this->hourly(function()
