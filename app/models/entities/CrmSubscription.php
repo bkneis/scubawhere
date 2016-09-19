@@ -8,7 +8,6 @@ class CrmSubscription extends Ardent {
 	protected $fillable = array('id', 'company_id', 'customer_id', 'token', 'subscribed', 'company_id');
 
 	public static $rules = array(
-		'customer_id'       => 'required',
         'token'             => 'required'
 	);
 

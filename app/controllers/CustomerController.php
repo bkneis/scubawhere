@@ -236,8 +236,8 @@ class CustomerController extends Controller {
 					{
 						if(!empty($customer[$index]))
 						{
-							//var_dump($attr, $index, $customer);
-							$new_customer_data[$attr] = $customer[$index];
+							// Remove whitespace
+							$new_customer_data[$attr] = preg_replace('/\s+/', '', $customer[$index]);
 						}
 					}
 				}
@@ -274,31 +274,27 @@ class CustomerController extends Controller {
 			else
 			{
 				array_push($imported_customers, $new_customer);
-
-				$subscription_data = array();
-				$subscription_data['customer_id'] = $new_customer->id;
-				$subscription_data['token'] = 'USERACCEPTED';
-				$subscription_data['subscribed'] = 0;
-				$subscription = new CrmSubscription($subscription_data);
-				if(!$subscription->validate())
-				{
-					return Response::json(
-								array('errors' => 
-									array('Oops, Something has gone wrong. We cannot create your customers email subscription.')
-								), 500);
-				}
-				else
-				{
-					array_push($imported_subscriptions, $subscription);
-				}
 			}
 
 		}
 
-		Context::get()->customers()->saveMany($imported_customers);
-		foreach($imported_subscriptions as $obj) 
+		$customers = Context::get()->customers()->saveMany($imported_customers);
+
+		$subscription_data = array();
+		$subscription_data['token'] = 'USERACCEPTED';
+		$subscription_data['subscribed'] = 1;
+		
+		foreach($customers as $obj) 
 		{
-			$obj->save();
+			$subscription = new CrmSubscription($subscription_data);
+			if(!$subscription->validate())
+			{
+				return Response::json(
+							array('errors' => 
+								array('Oops, Something has gone wrong. We cannot create your customers email subscription.')
+							), 500);
+			}
+			$obj->crmSubscription()->save($subscription);
 		}
 
 		return Response::json( array('status' => 'OK. Customers imported.', 'errors' => $errors, 'bytres' => $bytes_written), 200 ); // 200 OK
