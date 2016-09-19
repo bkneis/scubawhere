@@ -26,7 +26,7 @@ class RegisterController extends Controller {
 		);
 
 		$today = new DateTime();
-		$trial_date = $today->add(new \DateInterval('P2W'));
+		$trial_date = $today->add(new \DateInterval('P1M'));
 		//$renewal_date = $today->add(new \DateInterval('P1Y'));
 
 		$credit_data = array('trial_date' => $trial_date->format('Y-m-d H:i:s'));
