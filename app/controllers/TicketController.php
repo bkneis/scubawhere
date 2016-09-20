@@ -327,6 +327,9 @@ class TicketController extends Controller {
 		 * 3. If there are valid (not cancelled) bookings, log all of their refrences and return a conflict
 		 * 4. Check if the ticket is used in any packages, if so, remove the ticket from them
 		 * 5. Delete the ticket and its associated prices
+		 *
+		 * @todo This can be improved by removing the second call to the db to get the booking status by returning
+		 * 		 and object from the map containing the status and reference
 		 */
 		try
 		{
