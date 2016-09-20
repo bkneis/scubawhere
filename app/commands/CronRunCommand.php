@@ -132,7 +132,7 @@ class CronRunCommand extends Command {
 			$affectedRows = Booking::where('status', null)
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
-			$this->messages[] = $affectedRows . ' abandoned bookings deleted';
+			//$this->messages[] = $affectedRows . ' abandoned bookings deleted';
 
 			/**
 			 * Delete all expired bookings older than 24h
@@ -184,6 +184,8 @@ class CronRunCommand extends Command {
 			$delete_bookings_refs = array_diff($bookings_refs->toArray(), $edit_bookings_refs);
 
 			Booking::whereIn('reference', $delete_bookings_refs)->delete();
+
+			$this->messages[] = count($delete_bookings_refs) . ' abandoned bookings deleted';
 		});
 
 		$this->hourly(function()
