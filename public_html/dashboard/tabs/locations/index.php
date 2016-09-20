@@ -143,7 +143,7 @@
 			}
 
 			var key = '';
-			if(window.location.host === 'scubawhere.com') key = '&key=AIzaSyAzTfKvssUjEK4Reyg3RD7lBAT6vGZG4hk';
+			if(window.location.host === 'rms.scubawhere.com') key = '&key=AIzaSyAzTfKvssUjEK4Reyg3RD7lBAT6vGZG4hk';
 
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
