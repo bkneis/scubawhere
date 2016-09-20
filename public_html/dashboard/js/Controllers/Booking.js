@@ -59,9 +59,15 @@ Booking.get = function(id, successFn) {
  * @param {integer} id The ID of the wanted booking
  * @param {function} successFn Recieves new Booking object as first and only parameter
  */
-Booking.getByRef = function(reference, successFn) {
-	$.get("/api/booking", {ref: reference}, function(data) {
-		successFn( new Booking(data) );
+Booking.getByRef = function(reference, successFn, errorFn) {
+	$.ajax({
+		type    : 'GET',
+		url     : '/api/booking',
+		data    : { ref: reference },
+		success : function(data) {
+			successFn(new Booking(data));
+		},
+		error   : errorFn
 	});
 };
 
