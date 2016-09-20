@@ -114,7 +114,10 @@ $(function(){
 });
 
 function initPriceDatepickers() {
+	var today = new Date();
+	today.setDate(today.getDate() -1); // @todo create global options for moment to use the DO's time zone
 	$('input.datepicker').not('.datepicker-initiated').addClass('datepicker-initiated').datetimepicker({
+		minDate: today,
 		pickDate: true,
 		pickTime: false,
 		icons: {
