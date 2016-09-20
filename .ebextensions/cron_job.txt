@@ -1,0 +1,1 @@
+*/5 * * * * /usr/bin/php /var/app/current/artisan cron:run >/dev/null 2>&1
