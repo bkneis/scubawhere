@@ -156,9 +156,11 @@ $(function () {
 			event.preventDefault();
 			var params = $(this).serializeObject();
 			params._token = window.token;
-			console.log(params);
+			var form = $(this);
 			Company.sendFeedback(params, function success(data) {
 				pageMssg('Thank you for your feedback.', 'success');
+				console.log(this);
+				form.trigger('reset');	
 			},
 			function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
