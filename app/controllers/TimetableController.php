@@ -22,6 +22,84 @@ class TimetableController extends Controller {
 		return Context::get()->timetables()->get();
 	}
 
+	private function isBoatAvailable($boat_id, $start_dates, $duration)
+	{	
+		// Check if the boat is already being used during the submitted time
+
+		$duration_hours   = floor($duration);
+		$duration_minutes = round( ($duration - $duration_hours) * 60 );
+		$end_dates = array();
+		foreach($start_dates as &$obj) 
+		{
+			$end_date = new DateTime($obj->format('Y-m-d H:i:s'));
+			$end_date->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+			$end_date->format('Y-m-d H:i:s');
+			array_push($end_dates, $end_date);
+		}
+
+		usort($start_dates, function($a, $b) 
+		{
+			if($a == $b) return 0;
+			return $a < $b ? -1 : 1;
+		});
+
+		usort($end_dates, function($a, $b) 
+		{
+			if($a == $b) return 0;
+			return $a < $b ? -1 : 1;
+		});
+
+		$overlappingSessions = Context::get()->departures()
+			->with('trip')
+			->where('boat_id', '=', $boat_id)
+			->where('start', '>=', $start_dates[0]->format('Y-m-d H:i:s'))
+			->where('start', '<=', $end_dates[0]->format('Y-m-d H:i:s'))
+			->get();
+
+		$available = true;
+		$overlappingSessions->each(function($obj) use ($start_dates, $end_dates, &$available)
+		{
+			$duration_hours   = floor($obj->trip->duration);
+			$duration_minutes = round( ($obj->trip->duration - $duration_hours) * 60 );
+			$start = new DateTime($obj->start);
+			$end = clone $start;
+			$end->add(new DateInterval('PT' . $duration_hours . 'H' . $duration_minutes . 'M'));
+
+			// perform checks to see if they clash	
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($start <= $start_dates[$i] && $end >= $end_dates[$i]) 
+				{
+					$available = false;
+					return false;
+				}
+				//else if($end <= $start_dates[$i]) break;
+			}
+
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($start >= $start_dates[$i] && $start <= $end_dates[$i])
+				{
+					$available = false;
+					return false;
+				}
+				//else if($end <= $start_dates[$i]) break;
+			}
+
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($end >= $start_dates[$i] && $end <= $end_dates[$i])
+				{
+					$available = false;
+					return false;
+				}
+				//else if($end <= $start_dates[$i]) break;
+			}
+		});
+
+		return $available;	
+	}
+
 	public function postAdd()
 	{
 		$data = Input::only('schedule');
@@ -29,7 +107,7 @@ class TimetableController extends Controller {
 		try
 		{
 			if( !Input::get('session_id') ) throw new ModelNotFoundException();
-			$departure = Context::get()->departures()->where('sessions.id', Input::get('session_id') )->firstOrFail(array('sessions.*'));
+			$departure = Context::get()->departures()->with('trip')->where('sessions.id', Input::get('session_id') )->firstOrFail(array('sessions.*'));
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -137,8 +215,10 @@ class TimetableController extends Controller {
 		///////////////////////////////////////////////////////////////////////////
 
 		$now = new DateTime;
+		$start_dates = array();
 		foreach($sessionDates as &$date)
 		{
+			array_push($start_dates, $date);
 			$date = array(
 				'trip_id'      => $departure->trip_id,
 				'start'        => $date,
@@ -149,6 +229,15 @@ class TimetableController extends Controller {
 			);
 		}
 
+		if(!$this->isBoatAvailable($departure->boat_id, $start_dates, $departure->trip->duration))
+		{
+			$departure->timetable()->dissociate($timetable);
+			$timetable->delete();
+			return Response::json(
+				array('errors' => array('The timetable could not be created as their are future departures that are using the boat.')
+			), 409);
+		}
+
 		try
 		{
 			DB::table('sessions')->insert( $sessionDates );
@@ -157,6 +246,12 @@ class TimetableController extends Controller {
 		{
 			return Response::json( array('errors' => array('departure->trip_id: '.$departure->trip_id, $e->getSql(), $e->getBindings())), 500 ); // 500 Internal Server Error
 		}
+
+		//$timetable = Context::get()->timetables()->save($timetable);
+
+		// Update the referenced session object's timetable ID
+		//$departure->timetable()->associate( $timetable );
+		//$departure->save();
 
 		return Response::json( array(
 			'status'   => 'OK. Timetable and trips created',
