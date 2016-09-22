@@ -344,6 +344,7 @@ window.selectedAccommodations = [];
 window.promises.loadedAgents = $.Deferred();
 Agent.getAllAgents(function(data){
 	window.agents = _.indexBy(data, 'id');
+	window.agents = _.filter(window.agents, function(obj) { return obj.terms !== 'banned'; });
 	$("#agents-list").html(agentTemplate({agents: window.agents}));
 	window.promises.loadedAgents.resolve();
 });
