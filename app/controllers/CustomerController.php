@@ -121,10 +121,10 @@ class CustomerController extends Controller {
 			}
 		}
 
-		$unsubscribe = Input::only('unsubscribe');
+		$unsubscribe = Input::get('unsubscribe');
 		$subscription_data = array();
 		$subscription_data['token'] = 'USERACCEPTED';
-		if($unsubscribe == 'true')
+		if($unsubscribe === 'true')
 		{
 			$subscription_data['subscribed'] = 0;
 		}
@@ -188,10 +188,10 @@ class CustomerController extends Controller {
 			}
 		}
 
-		$unsubscribe = Input::only('unsubscribe');
+		$unsubscribe = Input::get('unsubscribe');
 		$subscription_data = array();
 		$subscription_data['token'] = 'USERACCEPTED';
-		if($unsubscribe == 'true')
+		if($unsubscribe === 'true')
 		{
 			$subscription_data['subscribed'] = 0;
 		}

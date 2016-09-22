@@ -65,20 +65,28 @@ class CrmGroupController extends Controller
             }
         }
 
-		$certificates_customers = Context::get()->customers()->with('tokens')->whereHas('certificates', function($query) use ($rules){
-			$query->whereIn('certificates.id', $rules['certs']);
-		})->get();//->lists('email', 'firstname', 'lastname', 'id');
+		$certificates_customers = Context::get()->customers()
+			->with('tokens')
+			->whereHas('certificates', function($query) use ($rules){
+				$query->whereIn('certificates.id', $rules['certs']);
+			})
+			->get();//->lists('email', 'firstname', 'lastname', 'id');
 
 		$customers = array_merge($customers, array($certificates_customers));
 
-		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
-			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
-		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
-		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->with('tokens')->get();//->lists('email', 'firstname', 'lastname', 'id');
+		$booked_customers = Context::get()->bookingdetails()
+			->whereHas('booking', function($query) use($rules) {
+				$query->where('status', Booking::$counted); // changed confirmed to completed when soren pushes it
+			})
+			->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
+			->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
+			->with('tokens')
+			->get();//->lists('email', 'firstname', 'lastname', 'id');
 
 		$customers = array_merge($customers, array($booked_customers));
 		$customers = array_unique($customers);
         $customers = $customers[0]; // second index is empty array?
+		$customers = $customers->filter(function($obj) { return !$obj->unsubscribed; });
 
         foreach($customers as $customer)
         {
@@ -95,6 +103,7 @@ class CrmGroupController extends Controller
         return Response::json($customers, 200);
     }
 
+	// @deprecated
     public function getCustomers()
     {
         $group_id = Input::only('id');
@@ -129,16 +138,23 @@ class CrmGroupController extends Controller
             }
         }
 
-		$certificates_customers = Context::get()->customers()->whereHas('certificates', function($query) use ($rules){
-			$query->whereIn('certificates.id', $rules['certs']);
-		})->get();//->lists('email', 'firstname', 'lastname', 'id');
+		$certificates_customers = Context::get()->customers()
+			->whereHas('certificates', function($query) use ($rules){
+				$query->whereIn('certificates.id', $rules['certs']);
+			})
+			->with(['crmSubscription' => function($q) {
+				$val = 1;
+				$q->where('subscribed', '=', $val);	
+			}])->get();//->lists('email', 'firstname', 'lastname', 'id');
 
 		$customers = array_merge($customers, array($certificates_customers));
 
-		$booked_customers = Context::get()->bookingdetails()->whereHas('booking', function($query) use($rules) {
-			$query->where('status', 'confirmed'); // changed confirmed to completed when soren pushes it
-		})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
-		->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')->get();//->lists('email', 'firstname', 'lastname', 'id');
+		$booked_customers = Context::get()->bookingdetails()
+			->whereHas('booking', function($query) use($rules) {
+				$query->where('status', Booking::$counted); // changed confirmed to completed when soren pushes it
+			})->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) ADD WHEN SOREN ADDS TRAINING IS TO DETAILS
+			->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
+			->get();//->lists('email', 'firstname', 'lastname', 'id');
 
 		$customers = array_merge($customers, array($booked_customers));
 		$customers = array_unique($customers);
