@@ -51,6 +51,14 @@ var Customer = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	getLastImportFileUrl : function(handleData) {
+		$.ajax({
+			type    : 'GET',
+			url     : '/api/customer/last-import-errors',
+			success : handleData
+		});
 	}
 
 };

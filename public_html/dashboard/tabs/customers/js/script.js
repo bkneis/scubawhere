@@ -292,6 +292,13 @@ $(function () {
         reader.onerror = errorCSVFile;
     });
 
+	sModelImportCustomers.on('click', '#btn-download-error-file', function(event) {
+		event.preventDefault();
+		Customer.getLastImportFileUrl(function success(data) {
+			window.open(data.url, '_self');
+		});
+	});
+
     /*sModelImportCustomers.on('click', '#btn-download-error-file', function(event) {
         event.preventDefault();
         Customer.getLastImportErrorFile(

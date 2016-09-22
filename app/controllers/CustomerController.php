@@ -1,8 +1,16 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ScubaWhere\Context;
+use ScubaWhere\Services\ObjectStoreService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller {
+
+	protected $object_store_service;
+
+	public function __construct(ObjectStoreService $object_store_service)
+	{
+		$this->object_store_service = $object_store_service;
+	}
 
 	public function getIndex()
 	{
@@ -293,6 +301,8 @@ class CustomerController extends Controller {
 
 		}
 
+		$this->object_store_service->uploadCustomerCSV($csv_path);
+
 		$customers = Context::get()->customers()->saveMany($imported_customers);
 
 		$subscription_data = array();
@@ -322,18 +332,16 @@ class CustomerController extends Controller {
 	 */
 	public function getLastImportErrors()
 	{
+		$url = $this->object_store_service->getCustomerCSVUrl();
 
-		$csv_path = storage_path() . "/customer_imports/" . Context::get()->name . ".csv";
-
-		if(File::exists($csv_path))
+		if($url) 
 		{
-			$file = File::get($csv_path);
-			$headers = array('Content-Type' => 'text/csv');
-			return Response::download($csv_path, 'invalid_import_data.csv', $headers);
+			return Response::json(array('url' => $url), 200);
 		}
 		else
 		{
-			return Response::json(array('status' => 'BAD REQUEST. Apologies, something has gone wrong and we cant seem to find the file right now.'), 500);
+			return Response::json(
+				array('status' => 'BAD REQUEST. Apologies, something has gone wrong and we cant seem to find the file right now.'), 500);
 		}
 
 	}

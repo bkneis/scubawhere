@@ -20,11 +20,24 @@ class ObjectStoreService {
 		if(!$file->isValid()) throw new InvalidInputException(array('Uploaded file is not valid'));
 		
 		$save_path = storage_path() . '/scubawhere/' . Context::get()->name . '/';
-		$dest_path = 'sw-rms-terms';
+		$dest_path = 'sw-rms-terms-conditions';
 		$filename = Context::get()->name . '/' . 'terms.pdf';
 		$tmp_name = 'terms.pdf';
-		$this->object_store_repo->uploadFile($file, $filename, $tmp_name, $save_path, $dest_path);
+		$this->object_store_repo->uploadFile($file, $filename, $tmp_name, $save_path, $dest_path, 'application/pdf');
 	}
+
+	public function uploadCustomerCSV($file_path)
+	{
+		if(!$file_path) throw new InvalidInputException(array('Please upload a file.'));
+
+		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-customer-imports', 'customer-imports.csv', 'text/csv');
+	}
+
+	public function getCustomerCSVUrl()
+	{
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-customer-imports', 'customer-imports.csv', '+15 minutes');
+	}
+
 
 	public function uploadEmailImage($image)
 	{
@@ -33,12 +46,12 @@ class ObjectStoreService {
 		if(!$image->isValid()) throw new InvalidInputException('Uploaded file is not validate');
 
 		$save_path = storage_path() . '/scubawhere/crm/images/' . Context::get()->name . '/';
-		$storage_path = 'sw-rms-crm-photos';
+		$storage_path = 'sw-rms-crm-images';
 		
         $o_filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
         $filename = Context::get()->name . $o_filename . str_random(20) . '.' . $image->getClientOriginalExtension();
 
-		$url = $this->object_store_repo->uploadFile($image, $filename, $filename, $save_path, $storage_path);
+		$url = $this->object_store_repo->uploadFile($image, $filename, $filename, $save_path, $storage_path, 'image/jpeg');
 
 		return $url;	
 	}
