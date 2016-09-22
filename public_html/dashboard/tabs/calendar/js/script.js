@@ -971,9 +971,14 @@ function customerData(customer) {
 	this._price = customer.pivot.decimal_price;
 
 	var paid = 0;
+
 	_.each(customer.pivot.payments, function(obj) {
 		paid += parseFloat(obj.amount);
 	});
+	_.each(customer.pivot.refunds, function(obj) {
+		paid -= parseFloat(obj.amount);
+	});
+
 	this.amount_paid = paid;
 
     this.name = function() {

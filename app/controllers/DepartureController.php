@@ -44,7 +44,7 @@ class DepartureController extends Controller {
 			{
 				$query->whereIn('status', Booking::$counted);
 			})
-			->with('booking.payments', 'customer')
+			->with('booking.payments', 'booking.refunds', 'customer')
 			->get();
 
 		// Now, we build an array of customers
@@ -68,6 +68,8 @@ class DepartureController extends Controller {
 			$customer->pivot->decimal_price = $detail->booking->decimal_price;
 
 			$customer->pivot->payments = $detail->booking->payments;
+
+			$customer->pivot->refund = $detail->booking->refunds;
 
 			// Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
 			unset($customer->pivot->customer);

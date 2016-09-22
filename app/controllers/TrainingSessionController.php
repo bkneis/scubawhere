@@ -38,7 +38,7 @@ class TrainingSessionController extends Controller
             ->whereHas('booking', function ($query) {
                 $query->whereIn('status', Booking::$counted);
             })
-            ->with('booking.payments', 'customer')
+            ->with('booking.payments', 'booking.refunds', 'customer')
             ->get();
 
         // Now, we build an array of customers
@@ -61,6 +61,8 @@ class TrainingSessionController extends Controller
 			$customer->pivot->decimal_price = $detail->booking->decimal_price;
 
 			$customer->pivot->payments = $detail->booking->payments;
+
+			$customer->pivot->refunds = $detail->booking->refunds;
 
             // Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
             unset($customer->pivot->customer);

@@ -34,6 +34,10 @@ Handlebars.registerHelper('getRemainingBalance', function(pivot) {
 		payments += parseFloat(obj.amount);
 	});
 
+	_.each(pivot.refunds, function(obj) {
+		payments -= parseFloat(obj.amount);
+	});
+
 	payments = payments.toFixed(2);
 
 	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + payments + ' / ' + window.company.currency.symbol + ' ' + price);
