@@ -1,8 +1,9 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use ScubaWhere\CrmMailer;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RefundController extends Controller {
 
@@ -95,6 +96,8 @@ class RefundController extends Controller {
 		}
 
 		$refund = $booking->refunds()->save($refund);
+
+		CrmMailer::sendRefundConf($refund);
 
 		return Response::json( array('status' => 'OK. Refund added', 'refund' => $refund), 201 ); // 201 Created
 	}

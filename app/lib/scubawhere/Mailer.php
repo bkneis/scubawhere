@@ -15,6 +15,8 @@ interface CrmMailerInterface
 
 	public static function sendTransactionConf($payment_id);
 
+	public static function sendRefundConf($refund_obj);
+
 	public static function sendRegisterConf($user);
 }
 
@@ -97,13 +99,49 @@ class CrmMailer implements CrmMailerInterface
 		$booking = $payment->booking;
 
 		# 2. Generate email HTML
-		$html = \View::make('emails.transaction', ['company' => Context::get(), 'payment' => $payment, 'siteUrl' => \Config::get('app.url')])->render();
+		$html = \View::make('emails.transaction', ['company' => Context::get(), 'payment' => $payment])->render();
 
 		# 3. Send email via CrmCampaignController
 		\Request::replace([
 			'subject'          => Context::get()->name . ' Transaction confirmation',
 			'email_html'       => $html,
 			'name'             => 'Transaction Confirmation for ' . $booking->reference,
+			'sendallcustomers' => 0,
+			'is_campaign'      => 0,
+			'customer_id'      => $booking->lead_customer_id,
+		]);
+
+		$controller = $app->make('CrmCampaignController');
+		$request    = $controller->callAction('postAdd', []);
+
+		# 4. Check if request was successful
+		if($request->getStatusCode() !== 201)
+		{
+			$json = json_decode($request->getContent());
+			throw new \Exception('Email Sending Error: ' . $json->errors, 1);
+		}
+
+		return $request;
+	}
+
+	public static function sendRefundConf($refund_obj)
+	{
+		# 1. Get booking information
+		\Request::replace(["id" => $refund_obj->id]);
+
+		$app = app();
+		$controller = $app->make('RefundController');
+		$refund     = $controller->callAction('getIndex', []);
+		$booking    = $refund->booking;
+
+		# 2. Generate email HTML
+		$html = \View::make('emails.refund', ['company' => Context::get(), 'refund' => $refund])->render();
+
+		# 3. Send email via CrmCampaignController
+		\Request::replace([
+			'subject'          => Context::get()->name . ' Refund confirmation',
+			'email_html'       => $html,
+			'name'             => 'Refund Confirmation for ' . $booking->reference,
 			'sendallcustomers' => 0,
 			'is_campaign'      => 0,
 			'customer_id'      => $booking->lead_customer_id,

@@ -3133,6 +3133,7 @@ function redrawSessionsList(params) {
 	else
 		model = Class;
 
+	// Check if the filter is set to today, if so. Append the time to the filter params so that departed trips dont show
 	var today = new Date();
 	today = today.toDateString();
 	var after = new Date(params.after);

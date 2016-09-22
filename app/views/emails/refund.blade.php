@@ -1,7 +1,7 @@
 @extends('emails.layouts.main')
 
 @section('title')
-    <title>Transaction Confirmation</title>
+    <title>Refund Confirmation</title>
 @stop
 
 @section('content')
@@ -11,12 +11,12 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
             <td class="header-lg" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 32px;color: #4d4d4d;text-align: center;line-height: normal;border-collapse: collapse;font-weight: 700;padding: 35px 0 0;">
-              Your transaction confirmation
+              Your refund confirmation
             </td>
           </tr>
           <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
             <td class="free-text" style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 10px 60px 0 60px;width: 100% !important;">
-              A payment has been added to your booking. The details of the transaction are below. 
+              A refund has been added to your booking. The details of the refund are below. 
             </td>
           </tr>
           <tr style="font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
@@ -27,10 +27,10 @@
                     <table cellpadding="0" cellspacing="0" width="100%" style="font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
                       <tbody style="font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;"><tr style="font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                         <td style="padding-bottom: 30px;font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;">
-                          Booking Reference: {{$payment->booking->reference}}<br>
-                          Received At: {{$payment->received_at}}<br>
-                          Amount: {{$payment->currency->symbol}}{{$payment->amount}}<br>
-                          Type: {{$payment->paymentgateway->name}}<br>
+                          Booking Reference: {{$refund->booking->reference}}<br>
+                          Received At: {{$refund->received_at}}<br>
+                          Amount: {{$refund->currency->symbol}}{{$refund->amount}}<br>
+                          Type: {{$refund->paymentgateway->name}}<br>
                         </td>
                       </tr>
                       <tr style="font-family: 'Open Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
