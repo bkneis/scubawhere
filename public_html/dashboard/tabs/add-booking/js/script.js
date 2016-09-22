@@ -3133,6 +3133,12 @@ function redrawSessionsList(params) {
 	else
 		model = Class;
 
+	var today = new Date();
+	today = today.toDateString();
+	var after = new Date(params.after);
+	after = after.toDateString();
+	if(today === after) params.after = new Date().toUTCString();
+
 	model.filter(params, function(data) {
 		if(params.type === 'ticket') {
 			window.sessions = _.indexBy(data, 'id');
