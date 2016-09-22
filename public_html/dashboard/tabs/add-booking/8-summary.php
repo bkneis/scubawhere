@@ -411,6 +411,7 @@
 			</tr>
 
 			{{#compare status '!==' 'temporary'}}
+				{{!--{{#if isViewMode}}--}}
 				<tr>
 					<td align="center" valign="top" width="100%">
 						<center>
@@ -425,7 +426,7 @@
 												<td class="title-dark" width="50%"></td>
 											</tr>
 											<tr>
-												<td style="vertical-align: middle; border-right: 1px solid #ccc;">
+												<td id="option-buttons" style="vertical-align: middle; border-right: 1px solid #ccc;">
 													<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save For Later</button>
 													{{#unless price}}
 														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
@@ -474,7 +475,8 @@
 							</table>
 						</center>
 					</td>
-				</tr>
+					</tr>
+					{{!--{{/if}}--}}
 			{{/compare}}
 		</table>
 	</script>

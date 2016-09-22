@@ -188,79 +188,82 @@ function getReport(reportType, callback) {
 
 			Report.getPayments(dates, function success(data) {
 				Report.getRefunds(dates, function success(data2) {
-					var newData = _.sortBy(data.concat(data2), 'received_at');
-					for(var i = 0; i < data2.length; i++) {
-						data2[i].refund = true;
-					}
-					window.transactions = newData;
-
-					var totalCash   = 0,
-					    totalCredit = 0,
-					    totalCheque = 0,
-					    totalBank   = 0,
-					    totalOnline = 0,
-					    totalPaypal = 0;
-					for(var i = 0; i < newData.length; i++) {
-						switch(parseInt(newData[i].paymentgateway_id)) {
-							case(1) :
-								if(newData[i].refund) totalCash -= parseInt(newData[i].amount);
-								else                  totalCash += parseInt(newData[i].amount);
-								break;
-							case(2) :
-								if(newData[i].refund) totalCredit -= parseInt(newData[i].amount);
-								else                  totalCredit += parseInt(newData[i].amount);
-								break;
-							case(3) :
-								if(newData[i].refund) totalCheque -= parseInt(newData[i].amount);
-								else                  totalCheque += parseInt(newData[i].amount);
-								break;
-							case(4) :
-								if(newData[i].refund) totalBank -= parseInt(newData[i].amount);
-								else                  totalBank += parseInt(newData[i].amount);
-								break;
-							case(5) :
-								if(newData[i].refund) totalOnline -= parseInt(newData[i].amount);
-								else                  totalOnline += parseInt(newData[i].amount);
-								break;
-							case(6) :
-								if(newData[i].refund) totalPaypal -= parseInt(newData[i].amount);
-								else                  totalPaypal += parseInt(newData[i].amount);
-								break;
+					Report.getAgentDepositId(function success(agent_deposit_id) {
+						data = _.filter(data, function(obj) { return obj.paymentgateway_id !== parseInt(agent_deposit_id); });
+						var newData = _.sortBy(data.concat(data2), 'received_at');
+						for(var i = 0; i < data2.length; i++) {
+							data2[i].refund = true;
 						}
-					}
+						window.transactions = newData;
 
-					// Only respect positive totals
-					var total = Math.max(totalCash, 0)
-					          + Math.max(totalCredit, 0)
-					          + Math.max(totalCheque, 0)
-					          + Math.max(totalBank, 0)
-					          + Math.max(totalOnline, 0)
-					          + Math.max(totalPaypal, 0);
-					console.log(newData);
-					window.totalTransactionsRevenue = total;
-					var aggregateData = {
-						transactions: newData,
-						totalRevenue: total
-					};
-					$("#reports").html( report({entries : aggregateData}) );
-					// If the no positive totals are in this daterange, set total to 1 (division by zero is not possible) as it doesn't matter anyway as all totals are < 0
-					if(total === 0) total = 1;
+						var totalCash   = 0,
+							totalCredit = 0,
+							totalCheque = 0,
+							totalBank   = 0,
+							totalOnline = 0,
+							totalPaypal = 0;
+						for(var i = 0; i < newData.length; i++) {
+							switch(parseInt(newData[i].paymentgateway_id)) {
+								case(1) :
+									if(newData[i].refund) totalCash -= parseInt(newData[i].amount);
+									else                  totalCash += parseInt(newData[i].amount);
+									break;
+								case(2) :
+									if(newData[i].refund) totalCredit -= parseInt(newData[i].amount);
+									else                  totalCredit += parseInt(newData[i].amount);
+									break;
+								case(3) :
+									if(newData[i].refund) totalCheque -= parseInt(newData[i].amount);
+									else                  totalCheque += parseInt(newData[i].amount);
+									break;
+								case(4) :
+									if(newData[i].refund) totalBank -= parseInt(newData[i].amount);
+									else                  totalBank += parseInt(newData[i].amount);
+									break;
+								case(5) :
+									if(newData[i].refund) totalOnline -= parseInt(newData[i].amount);
+									else                  totalOnline += parseInt(newData[i].amount);
+									break;
+								case(6) :
+									if(newData[i].refund) totalPaypal -= parseInt(newData[i].amount);
+									else                  totalPaypal += parseInt(newData[i].amount);
+									break;
+							}
+						}
 
-					$("#transactions-totalCash"  ).text(window.company.currency.symbol + " " + totalCash);
-					$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
-					$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
-					$("#transactions-totalBank"  ).text(window.company.currency.symbol + " " + totalBank);
-					$("#transactions-totalOnline").text(window.company.currency.symbol + " " + totalOnline);
-					$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
+						// Only respect positive totals
+						var total = Math.max(totalCash, 0)
+								  + Math.max(totalCredit, 0)
+								  + Math.max(totalCheque, 0)
+								  + Math.max(totalBank, 0)
+								  + Math.max(totalOnline, 0)
+								  + Math.max(totalPaypal, 0);
+						console.log(newData);
+						window.totalTransactionsRevenue = total;
+						var aggregateData = {
+							transactions: newData,
+							totalRevenue: total
+						};
+						$("#reports").html( report({entries : aggregateData}) );
+						// If the no positive totals are in this daterange, set total to 1 (division by zero is not possible) as it doesn't matter anyway as all totals are < 0
+						if(total === 0) total = 1;
 
-					$("#transactions-cash-percentage"  ).css("width", ((Math.max(totalCash  , 0)/total) * 100) + "%");
-					$("#transactions-credit-percentage").css("width", ((Math.max(totalCredit, 0)/total) * 100) + "%");
-					$("#transactions-cheque-percentage").css("width", ((Math.max(totalCheque, 0)/total) * 100) + "%");
-					$("#transactions-bank-percentage"  ).css("width", ((Math.max(totalBank  , 0)/total) * 100) + "%");
-					$("#transactions-online-percentage").css("width", ((Math.max(totalOnline, 0)/total) * 100) + "%");
-					$("#transactions-paypal-percentage").css("width", ((Math.max(totalPaypal, 0)/total) * 100) + "%");
-					$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
-					if(newData.length != 0 && typeof callback === 'function') callback();
+						$("#transactions-totalCash"  ).text(window.company.currency.symbol + " " + totalCash);
+						$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
+						$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
+						$("#transactions-totalBank"  ).text(window.company.currency.symbol + " " + totalBank);
+						$("#transactions-totalOnline").text(window.company.currency.symbol + " " + totalOnline);
+						$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
+
+						$("#transactions-cash-percentage"  ).css("width", ((Math.max(totalCash  , 0)/total) * 100) + "%");
+						$("#transactions-credit-percentage").css("width", ((Math.max(totalCredit, 0)/total) * 100) + "%");
+						$("#transactions-cheque-percentage").css("width", ((Math.max(totalCheque, 0)/total) * 100) + "%");
+						$("#transactions-bank-percentage"  ).css("width", ((Math.max(totalBank  , 0)/total) * 100) + "%");
+						$("#transactions-online-percentage").css("width", ((Math.max(totalOnline, 0)/total) * 100) + "%");
+						$("#transactions-paypal-percentage").css("width", ((Math.max(totalPaypal, 0)/total) * 100) + "%");
+						$("#transactions-date-range").append(" from " + $("#start-date").val() + " until " + $("#end-date").val());
+						if(newData.length != 0 && typeof callback === 'function') callback();
+					});
 				});
 			});
 			break;

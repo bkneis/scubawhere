@@ -27,9 +27,7 @@ Handlebars.registerHelper('getCourseName', function(id) {
 });
 
 Handlebars.registerHelper('getRemainingBalance', function(pivot) {
-	var price;
-	if(pivot.absolute_price !== null) price = pivot.absolute_price.toFixed(2);
-	else 							  price = pivot.decimal_price;
+	var price = pivot.decimal_price;
 
 	var payments = 0;
 	_.each(pivot.payments, function(obj) {

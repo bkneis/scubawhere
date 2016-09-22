@@ -47,6 +47,11 @@ class PaymentController extends Controller
         return Paymentgateway::all();
     }
 
+	public function getAgentDepositId()
+	{
+		return Paymentgateway::where('name', 'Agent Deposit')->pluck('id');
+	}
+
     public function postAdd()
     {
         try {

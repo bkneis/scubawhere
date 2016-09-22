@@ -56,7 +56,7 @@ Handlebars.registerHelper('statusIcon', function() {
 			color = '#5cb85c';
 			tooltip = 'Confirmed, agent takes full amount';
 		}
-		else if(this.agent && this.agent.terms === 'deposit') {
+		/*else if(this.agent && this.agent.terms === 'deposit') {
 
 			var net_price = this.decimal_price * (1 - (this.agent.commission / 100));
 			net_price = Math.round(net_price * 100) / 100; // round to 2 decimals
@@ -74,7 +74,7 @@ Handlebars.registerHelper('statusIcon', function() {
 				color = '#d9534f';
 				tooltip = 'Confirmed, refund necessary';
 			}
-		}
+		}*/
 		else {
 			var percentage = this.sums.have / this.decimal_price;
 
@@ -125,9 +125,7 @@ Handlebars.registerHelper('arrivalDate', function() {
 });
 
 Handlebars.registerHelper('price', function() {
-	var price;
-	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
-	else 							 price = this.decimal_price;
+	var price = this.decimal_price;
 	if(this.status === 'cancelled') {
 		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + price + '</del> ' + (this.cancellation_fee));
 	}
@@ -140,9 +138,7 @@ Handlebars.registerHelper('sumPaid', function() {
 });
 
 Handlebars.registerHelper("remainingPay", function() {
-	var price;
-	if(this.absolute_price !== null) price = this.absolute_price.toFixed(2);
-	else 							 price = this.decimal_price;
+	var price = this.decimal_price;
 
 	if(price === "0.00") return '';
 

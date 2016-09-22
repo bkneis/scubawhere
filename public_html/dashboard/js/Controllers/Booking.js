@@ -826,7 +826,7 @@ Booking.prototype.confirm = function(params, successFn, errorFn) {
 			this.status = 'confirmed';
 			this.setStatus();
 
-			successFn(data.status);
+			successFn(data);
 		},
 		error: errorFn
 	});
@@ -1050,15 +1050,7 @@ Booking.prototype.calculateSums = function() {
 
 	this.sums.have = (this.sums.payed - this.sums.refunded).toFixed(2);
 
-	if(this.absolute_price)
-	{
-		if(this.absolute_price !== null) this.sums.payable = (this.absolute_price - this.sums.have).toFixed(2);
-		else 							 this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
-	}
-	else 
-	{
-		this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
-	}
+	this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
 
 	this.sums.refundable = (this.sums.have - this.cancellation_fee).toFixed(2);
 };

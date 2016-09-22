@@ -24,6 +24,10 @@ Handlebars.registerHelper("trimDate", function(date) {
     return date.substring(0, date.length - 14);
 });
 
+Handlebars.registerHelper('isViewMode', function() {
+	return window.booking.mode = 'view' ? true : false;
+});
+
 
 /**
  * Generate the free spaces percentage bar
@@ -212,7 +216,7 @@ function statusIcon(booking) {
 			color = '#5cb85c';
 			tooltip = 'Confirmed, agent takes full amount';
 		}
-		else if(booking.agent && booking.agent.terms === 'deposit') {
+		/*else if(booking.agent && booking.agent.terms === 'deposit') {
 
 			var net_price = booking.decimal_price * (1 - (booking.agent.commission / 100));
 			net_price = Math.round(net_price * 100) / 100; // round to 2 decimals
@@ -230,7 +234,7 @@ function statusIcon(booking) {
 				color = '#d9534f';
 				tooltip = 'Confirmed, refund necessary';
 			}
-		}
+		}*/
 		else {
 			var percentage = booking.sums.have / booking.decimal_price;
 
@@ -343,8 +347,8 @@ window.selectedAccommodations = [];
 
 window.promises.loadedAgents = $.Deferred();
 Agent.getAllAgents(function(data){
-	window.agents = _.indexBy(data, 'id');
-	window.agents = _.filter(window.agents, function(obj) { return obj.terms !== 'banned'; });
+	window.agents = _.filter(data, function(obj) { return obj.terms !== 'banned'; });
+	window.agents = _.indexBy(window.agents, 'id');
 	$("#agents-list").html(agentTemplate({agents: window.agents}));
 	window.promises.loadedAgents.resolve();
 });
@@ -2950,8 +2954,21 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 	var params = {};
 	params._token = window.token;
 
-	booking.confirm(params, function success(status) {
-		pageMssg(status, "success");
+	var self = this;
+
+	booking.confirm(params, function success(data) {
+		pageMssg(data.status, "success");
+
+		// If the booking was made by a deposit only agent, then allow the user to add a transaction and update the sums
+		if(data.deposit !== null)
+		{
+			data.deposit.paymentgateway = {};
+			data.deposit.paymentgateway.name = 'Agent Deposit'; // @todo this is abit of a hack, find out why window.paymentgateways isnt loaded
+			booking.payments.push(data.deposit);
+			booking.calculateSums();
+			$(self).remove();
+			$('#option-buttons').append('<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
+		}
 
 		// Update status on summary screen
 		$('#status').html(statusIcon(booking).string);

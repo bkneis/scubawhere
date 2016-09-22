@@ -1866,9 +1866,30 @@ class BookingController extends Controller
             return Response::json(array('errors' => $booking->errors()->all()), 406); // 406 Not Acceptable
         }
 
+		if($booking->agent_id !== null)
+		{
+			$agent = $booking->agent()->first(); // @note, should I use lazy loading, i.e. $booking->load('agent') here, any benefits?
+			if($agent->terms === 'deposit')
+			{
+				$data = array();
+				$data['currency_id'] = Context::get()->currency->id;
+				$data['amount'] = round($booking->decimal_price * ($agent->commission / 100), 2);
+				$data['paymentgateway_id'] = Paymentgateway::where('name', 'Agent Deposit')->pluck('id');
+				$data['received_at'] = Helper::localtime()->format('Y-m-d');	
+
+				$payment = new Payment($data);
+				if(!$payment->validate())
+					return Response::json(array('errors' => $payment->errors()->all()), 406);
+
+				$payment = $booking->payments()->save($payment);
+			}
+		}
+
         CrmMailer::sendBookingConf($booking->id); // ->id
 
-        return array('status' => 'OK. Booking confirmed.');
+		if(!$payment) $payment = null;
+
+        return array('status' => 'OK. Booking confirmed.', 'deposit' => $payment);
     }
 
     public function getValidate()

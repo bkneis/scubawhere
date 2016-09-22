@@ -12,6 +12,14 @@ var Report = {
 		});
 	},
 
+	getAgentDepositId: function(handleData) {
+		$.ajax({
+			url: '/api/payment/agent-deposit-id',
+			type: 'GET',
+			success: handleData
+		});
+	},
+
 	getRefunds : function(params, handleData) {
 		$.ajax({
 			url: '/api/refund/filter',

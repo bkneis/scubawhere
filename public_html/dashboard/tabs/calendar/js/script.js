@@ -968,14 +968,13 @@ function customerData(customer) {
     this._booking_id = customer.pivot.booking_id;
     this._notes = customer.pivot.notes || "-";
 	this._status = customer.pivot.status;
-	this._price;
-	if(customer.pivot.absolute_price !== null) this._price = customer.pivot.absolute_price.toFixed(2);
-	else 									   this._price = customer.pivot.decimal_price;
+	this._price = customer.pivot.decimal_price;
 
-	this.amount_paid = 0;
+	var paid = 0;
 	_.each(customer.pivot.payments, function(obj) {
-		this.amount_paid += parseFloat(obj.amount);
+		paid += parseFloat(obj.amount);
 	});
+	this.amount_paid = paid;
 
     this.name = function() {
         return this._name;
