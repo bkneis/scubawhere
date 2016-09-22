@@ -133,7 +133,7 @@
 					    {{#isLead this}}
 							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}} <small><span class="label label-warning">LEAD</span></small>
 						{{else}}
-							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}}{{#compare ../../mode 'edit'}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>{{/compare}}
+							<i class="fa fa-user fa-fw"></i>&nbsp; {{{firstname}}} {{{lastname}}}{{#compare ../mode 'edit'}} <small><span class="label label-unselected lead-customer" data-id="{{id}}">LEAD</span></small>{{/compare}}
 						{{/isLead}}
 						{{#compare ../mode 'edit'}}<a href="javascript:void(0);" class="remove-customer pull-right" data-id="{{id}}"><i class="fa fa-times fa-lg"></i></a>{{/compare}}
 					</p>
