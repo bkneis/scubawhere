@@ -314,6 +314,10 @@ function loadCSVFile(evt, columnData) {
     for (var i = 0; i < (allTextLines.length - 1); i++) {
         var data = allTextLines[i].split(',');
         var tarr = [];
+		// @note this is abit of a hack to remove empty lines
+		console.log('l', data.length);
+		console.log('v', data[0]);
+		if(data.length === 1 && data[0] === '') continue;
         for (var j = 0; j < data.length; j++) {
             tarr.push(data[j]);
         }
@@ -353,7 +357,12 @@ function loadCSVFile(evt, columnData) {
         },
         function error(xhr) {
             console.log(xhr);
-            alert(xhr.responseText);
+			var data = JSON.parse(xhr.responseText);
+			for(var i in data.errors)
+			{
+				pageMssg(data.errors[i], 'danger');
+			}
+
         }
     );
 }

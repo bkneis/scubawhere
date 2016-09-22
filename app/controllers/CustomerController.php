@@ -205,6 +205,21 @@ class CustomerController extends Controller {
 	public function postImportcsv()
 	{
 		$data = Input::all();
+
+		$messages = array(
+			'columns.required'      => 'Please specify which columns relate to your customers data',
+			'customerData.required' => 'Please upload a valid CSV file with your customer data, ensuring it abides by the formatting guidelines'
+		);
+
+		$rules = array(
+			'columns' => 'required',
+			'customerData' => 'required'
+		);
+
+		$validator = Validator::make($data, $rules, $messages);
+
+		if($validator->fails()) return Response::json(array('errors' => $validator->messages()->all()), 406);
+
 		$columns = $data['columns'];
 		$customer_data = $data['customerData'];
 

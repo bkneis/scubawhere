@@ -308,6 +308,9 @@
 <script type="x-handlebars-template" id="template-import-customers">
 
 	<form id="frm-import-customer-data">
+		<div class="yellow-helper">
+			Please note, you must specify every column that represents a value in your CSV file. Any other data needs to be removed prior to the upload. In addition, it is adviced to create or export the file using software supporting CSV, such as excel.
+		</div>
 		<div class="form-group">
 			<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>
 			<p>

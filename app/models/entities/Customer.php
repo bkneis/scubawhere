@@ -25,7 +25,7 @@ class Customer extends Ardent {
 	);
 
 	public static $rules = array(
-		'email'           => 'email',
+		'email'           => 'email|unique:customers',
 		'firstname'       => 'required',
 		'lastname'        => 'required',
 		'birthday'        => 'sometimes|date',
