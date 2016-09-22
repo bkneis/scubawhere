@@ -963,6 +963,8 @@ $('#booking-summary-column').on('click', '.remove-customer', function() {
 			});
 		}
 	}
+	$("#session-customers").html(sessionCustomersTemplate({customers:booking.selectedCustomers}));
+	$("#session-customers").children().first().addClass('active');
 });
 
 window.promises.loadedCustomers.done(function() {
