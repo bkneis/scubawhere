@@ -1129,19 +1129,29 @@ $('#session-tab').on('submit', '#session-filters', function(e) {
 	var params = $(this).serializeObject();
 	if( $('#session-tickets .active').length > 0 ) {
 		var data = $('#session-tickets .active').first().data();
+		$('#assign-no-dates').css('display', 'block');
 		if(data.type === 'ticket') {
 			params.ticket_id = data.id;
 
 			if(data.parent === 'package')
+			{
 				params.package_id = data.parentId;
+				$('#assign-no-dates').css('display', 'none');
+			}
 			else if(data.parentParent === 'package')
+			{
 				params.package_id = data.parentParentId;
+				$('#assign-no-dates').css('display', 'none');
+			}
 		}
 		else if(data.type === 'training') {
 			params.training_id = data.id;
 
 			if(data.parentParent === 'package')
+			{
 				params.package_id = data.parentParentId;
+				$('#assign-no-dates').css('display', 'none');
+			}
 		}
 		else {
 			pageMssg('ERROR Type could not be determined!', 'danger');
