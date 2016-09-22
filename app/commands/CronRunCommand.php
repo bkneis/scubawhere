@@ -137,13 +137,13 @@ class CronRunCommand extends Command {
 			/**
 			 * Delete all expired bookings older than 24h
 			 */
-			/*
+			
 			$before = date('Y-m-d H:i:s', time() - 24 * 60 * 60);
 			$affectedRows = Booking::where('status', 'expired')
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
 			$this->messages[] = $affectedRows . ' expired bookings deleted';
-			*/
+	
 		});
 
 		/**
