@@ -3098,11 +3098,24 @@ $(document).ready(function() {
 
 		booking.applyChanges({_token: window.token}, function success(status) {
 			pageMssg(status, 'success');
-
 			window.booking.mode = 'view';
 			window.clickedEdit  = true;
 
-			$(window).trigger('hashchange');
+			var resendConfirmation = confirm('Do you want to resend the booking confirmation?');
+
+			if(resendConfirmation)
+			{
+				booking.resendConfirmation(function success(data) {
+					pageMssg(data.status, 'success');
+					$(window).trigger('hashchange');
+				},
+				function error(xhr) {
+					var data = JSON.parse(xhr.responseText);
+					pageMssg(data.errors[0], 'danger');
+					$(window).trigger('hashchange');
+				});
+			}
+
 		}, function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
 			if(data.errors) pageMssg(data.errors[0], 'danger');

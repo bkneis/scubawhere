@@ -1083,6 +1083,22 @@ Booking.prototype.checkUnassigned = function() {
 	return false;
 };
 
+Booking.prototype.resendConfirmation = function(successFn, errorFn) {
+	var params = {
+		booking_id     : this.id,
+		_token         : window.token
+	};
+
+	$.ajax({
+		url     : '/api/booking/resend-confirmation',
+		type    : 'POST',
+		data    : params,
+		success : successFn,
+		error   : errorFn
+	});	
+};
+
+
 /*
  ********************************
  ******* PRIVATE FUNCTIONS ******

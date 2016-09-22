@@ -30,12 +30,12 @@ class ObjectStoreService {
 	{
 		if(!$file_path) throw new InvalidInputException(array('Please upload a file.'));
 
-		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-customer-imports', 'customer-imports.csv', 'text/csv');
+		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-customer-imports', Context::get()->name . 'customer-imports.csv', 'text/csv');
 	}
 
 	public function getCustomerCSVUrl()
 	{
-		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-customer-imports', 'customer-imports.csv', '+15 minutes');
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-customer-imports', Context::get()->name . 'customer-imports.csv', '+15 minutes');
 	}
 
 

@@ -2091,6 +2091,20 @@ class BookingController extends Controller
         ];
     }
 
+	public function postResendConfirmation()
+	{
+		$data = Input::only('booking_id');
+
+		$messages = array('booking_id.required' => 'The booking could not be found');
+		$rules = array('booking_id' => 'required');
+
+		$validator = Validator::make($data, $rules, $messages);
+		if($validator->fails()) return Response::json(array('errors' => $validator->errors()->all()), 406);
+
+		CrmMailer::sendBookingConf($data['booking_id']);
+		return Response::json(array('status' => 'OK. Booking confirmation resent'), 200);
+	}
+
     private function moreThan5DaysAgo($date)
     {
         $local_time = Helper::localTime();
