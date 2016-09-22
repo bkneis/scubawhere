@@ -826,6 +826,16 @@ class BookingController extends Controller
             }
         }
 
+        // Validate remaining class capacity on session
+		if($training_session)
+		{
+			$training_capacity = $training_session->getCapacityAttribute();
+			if($training_capacity[0] >= $training_capacity[1])
+			{
+                return Response::json(array('errors' => array('The class is already fully booked!')), 403); // 403 Forbidden
+			}
+		}
+
         // Validate that the ticket still fits into the package
         if ($ticket && $packagefacade && !$course) {
             // Check if the package still has space for the wanted ticket
