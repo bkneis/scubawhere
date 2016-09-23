@@ -712,30 +712,63 @@ class BookingController extends Controller
 				->whereHas('bookingdetails', function($query) use ($customer) {
 					$query->where('customer_id', $customer->id);
 				})
-                ->whereHas('bookingdetails.departure.trip', function ($query) use ($start_date, $end_date) {
-					$query->where(function($q) use ($start_date, $end_date) {
-						$q->where(function($sq) use ($start_date, $end_date) {
-							$sq->where('start', '<=', $start_date)
-							   ->where(
-									DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
-									'>=', $end_date
-							   );
-						})
-						->orWhere(function($sq) use ($start_date, $end_date) {
-							$sq->where('start', '>=', $start_date)
-							   ->where('start', '<=', $end_date);
-						})
-						->orWhere(function($sq) use ($start_date, $end_date) {
-							$sq->where(
-								DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
-								'>=' , $start_date
-								)
-								->where(
-									DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
-									'<=', $end_date
-								);
+				->where(function($tq) use ($start_date, $end_date, $departure, $training_session) {
+					if($departure)
+					{
+						$tq->whereHas('bookingdetails.departure.trip', function ($query) use ($start_date, $end_date) {
+							$query->where(function($q) use ($start_date, $end_date) {
+								$q->where(function($sq) use ($start_date, $end_date) {
+									$sq->where('start', '<=', $start_date)
+									   ->where(
+											DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+											'>=', $end_date
+									   );
+								})
+								->orWhere(function($sq) use ($start_date, $end_date) {
+									$sq->where('start', '>=', $start_date)
+									   ->where('start', '<=', $end_date);
+								})
+								->orWhere(function($sq) use ($start_date, $end_date) {
+									$sq->where(
+										DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+										'>=' , $start_date
+										)
+										->where(
+											DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+											'<=', $end_date
+										);
+								});
+							 });
 						});
-					 });
+					}
+					else if($training_session)
+					{
+						$tq->whereHas('bookingdetails.training_session.training', function ($query) use ($start_date, $end_date) {
+							$query->where(function($q) use ($start_date, $end_date) {
+								$q->where(function($sq) use ($start_date, $end_date) {
+									$sq->where('start', '<=', $start_date)
+									   ->where(
+											DB::raw("ADDTIME(start, CONCAT(CEIL(trainings.duration), ':', LPAD(FLOOR(trainings.duration*60 % 60),2,'0')))"), 
+											'>=', $end_date
+									   );
+								})
+								->orWhere(function($sq) use ($start_date, $end_date) {
+									$sq->where('start', '>=', $start_date)
+									   ->where('start', '<=', $end_date);
+								})
+								->orWhere(function($sq) use ($start_date, $end_date) {
+									$sq->where(
+										DB::raw("ADDTIME(start, CONCAT(CEIL(trainings.duration), ':', LPAD(FLOOR(trainings.duration*60 % 60),2,'0')))"), 
+										'>=' , $start_date
+										)
+										->where(
+											DB::raw("ADDTIME(start, CONCAT(CEIL(trainings.duration), ':', LPAD(FLOOR(trainings.duration*60 % 60),2,'0')))"), 
+											'<=', $end_date
+										);
+								});
+							 });
+						});
+					}
 				})
 				->exists();
 
