@@ -160,29 +160,37 @@ class CrmCampaignController extends Controller
                 }
             }
 
-            $certificates_customers = Context::get()->customers()->whereHas('certificates', function ($query) use ($rules) {
-                $query->whereIn('certificates.id', $rules['certs']);
-            })
-			->whereNotNull('email')
-			->where('email', '!=', '')
-            ->with('crmSubscription')
-            ->get();
+			$certificates_customers = Context::get()->customers()
+				->whereHas('certificates', function ($query) use ($rules) {
+                	$query->whereIn('certificates.id', $rules['certs']);
+            	})
+				->whereNotNull('email')
+				->where('email', '!=', '')
+				->with('crmSubscription')
+				->get();
 
-            $customers = array_merge($customers, array($certificates_customers));
+			$booked_customer_ids = Context::get()->bookingdetails()
+				->whereHas('booking', function ($query) use ($rules) {
+                	$query->whereIn('status', Booking::$counted); 
+				})
+				->whereIn('ticket_id', $rules['tickets'])
+				->orWhereIn('training_id', $rules['classes'])
+				->with('customer')
+				->get()
+				->map(function($obj) {
+					return $obj->customer->id;
+				})
+				->toArray();
 
-            $booked_customers = Context::get()->bookingdetails()->whereHas('booking', function ($query) use ($rules) {
-                $query->where('status', 'confirmed'); // @todo changed confirmed to completed when soren pushes it
-            })
-            ->whereIn('ticket_id', $rules['tickets']) //->orWhereIn('training_id', $rules['classes']) @todo add in training
-            ->leftJoin('customers', 'customers.id', '=', 'booking_details.customer_id')
-			->where('email', '!=', '')
-			->whereNotNull('email')
-            ->with('crmSubscription')
-            ->get();
+			$booked_customers = Context::get()->customers()
+				->whereIn('id', $booked_customer_ids)
+				->whereNotNull('email')
+				->where('email', '!=', '')
+				->with('crmSubscription')
+				->get();
 
-            $customers = array_merge($customers, array($booked_customers));
-            $customers = array_unique($customers);
-            $customers = $customers[0]; // second index is empty array?
+			$customers = $certificates_customers->merge($booked_customers)->unique();
+
         }
 
         $data['num_sent'] = sizeof($customers);
@@ -193,8 +201,6 @@ class CrmCampaignController extends Controller
         if (!$campaign->validate()) {
             return Response::json(array('errors' => $campaign->errors()->all()), 406); // 406 Not Acceptable
         }
-
-        //CrmMailer::save($campaign, (int) $data['sendallcustomers'], (int) $data['is_campaign']);
 
         $campaign = Context::get()->campaigns()->save($campaign);
 
