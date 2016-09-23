@@ -849,6 +849,8 @@ else {
 			},
 			function error(xhr) {
 				console.log(xhr);
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0], 'danger');
 			});
 		}
 		else {

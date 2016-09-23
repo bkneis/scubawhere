@@ -53,7 +53,7 @@ class TimetableController extends Controller {
 			->with('trip')
 			->where('boat_id', '=', $boat_id)
 			->where('start', '>=', $start_dates[0]->format('Y-m-d H:i:s'))
-			->where('start', '<=', $end_dates[0]->format('Y-m-d H:i:s'))
+			->where('start', '<=', $end_dates[count($end_dates) - 1]->format('Y-m-d H:i:s'))
 			->get();
 
 		$available = true;
@@ -71,9 +71,8 @@ class TimetableController extends Controller {
 				if($start <= $start_dates[$i] && $end >= $end_dates[$i]) 
 				{
 					$available = false;
-					return false;
+					return false; // @todo remove false, no need
 				}
-				//else if($end <= $start_dates[$i]) break;
 			}
 
 			for($i = 0; $i < count($start_dates); $i++)
@@ -83,7 +82,6 @@ class TimetableController extends Controller {
 					$available = false;
 					return false;
 				}
-				//else if($end <= $start_dates[$i]) break;
 			}
 
 			for($i = 0; $i < count($start_dates); $i++)
@@ -93,7 +91,6 @@ class TimetableController extends Controller {
 					$available = false;
 					return false;
 				}
-				//else if($end <= $start_dates[$i]) break;
 			}
 		});
 
