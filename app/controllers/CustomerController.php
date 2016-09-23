@@ -236,7 +236,7 @@ class CustomerController extends Controller {
 
 		$errors = array();
 
-		$csv_path = storage_path() . '/customer_imports/' . Context::get()->name . '.csv';
+		$csv_path = storage_path() . '/customer-imports-' . Context::get()->name . '.csv';
 
 		$bytes_written = File::put($csv_path, "");
 		if($bytes_written === false)
