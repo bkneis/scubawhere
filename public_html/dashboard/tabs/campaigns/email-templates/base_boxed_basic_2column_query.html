@@ -940,6 +940,12 @@
 		$('.uploadable-file').fileupload({
 			url: '/api/campaign/upload-image',
 			add : function(e, data) {
+				var self = this;
+				$(self).attr('disabled', true);
+				setTimeout(function() {
+					$(self).attr('disabled', false);
+				},1000);
+
 				var uploadErrors = [];
 				var acceptFileTypes = /^image\/(jpe?g|png)$/i;
 				console.log('add', data);
