@@ -175,13 +175,16 @@ function showEmailAnalytics(id) {
                 row.child.hide();
                 tr.removeClass('shown');
             }
-            else {
+            else 
+			{
                 // Open this row
-				if(data.link_analytics.length > 1)
+				row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
+				tr.addClass('shown');
+				/*if(data.link_analytics.length > 1)
 				{
 					row.child(getLinkAnalytics(row.data()[3], data.link_analytics)).show();
                 	tr.addClass('shown');
-				}
+				}*/
             }
         });
     },
