@@ -143,6 +143,37 @@ class CronRunCommand extends Command {
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
 			$this->messages[] = $affectedRows . ' expired bookings deleted';
+
+
+			$q = DB::select(DB::raw('select now() as time'));
+			$test_time = date('Y-m-d H:i:s', 
+							strtotime('-1 hour -30 minutes', strtotime($q[0]->time)));
+			$bookings_refs = Booking::select('reference')
+									->where('status', '=', 'initialised')
+									->where('created_at', '<', $test_time)
+									->get()
+									->map(function($obj) {
+										return $obj->reference;
+									});
+
+			$edit_bookings_refs = $bookings_refs->map(function($obj) {
+													return $obj . '_';
+												})
+												->toArray();
+
+			$edit_bookings_refs = Booking::select('reference')
+										 ->whereIn('reference', $edit_bookings_refs)
+										 ->get()
+										 ->map(function($obj) {
+											 return substr($obj->reference, 0, -1);
+										 })
+										 ->toArray();
+
+			$delete_bookings_refs = array_diff($bookings_refs->toArray(), $edit_bookings_refs);
+
+			Booking::whereIn('reference', $delete_bookings_refs)->delete();
+
+			$this->messages[] = count($delete_bookings_refs) . ' abandoned bookings deleted';
 	
 		});
 
