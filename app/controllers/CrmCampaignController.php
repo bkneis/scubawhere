@@ -30,7 +30,8 @@ class CrmCampaignController extends Controller
     
     public function getAll()
     {
-        return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->get();
+        //return Context::get()->campaigns()->with('tokens', 'groups', 'crmLinks')->get();
+        return Context::get()->campaigns()->with('groups')->get();
     }
 
     public function getAllWithTrashed()
