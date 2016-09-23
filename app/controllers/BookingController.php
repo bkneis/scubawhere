@@ -677,26 +677,72 @@ class BookingController extends Controller
             return Response::json(array('errors' => array('Cannot add details, because the class has already started!')), 403); // 403 Forbidden
         }
 
+		if($departure) $model = $departure;
+		else if($training_session) $model = $training_session;
+
         // Validate that the customer is not already booked for this session or training_session on another booking
-        if ($departure || $training_session) {
-            $check = Context::get()->bookings()
-                //->whereNotIn('id', array($booking->id))
+		if ($departure || $training_session) 
+		{
+			$start_date = new DateTime($model->start);
+			$end_date = clone $start_date;
+			$duration_hours   = floor($model->duration);
+			$duration_minutes = round( ($model->duration - $duration_hours) * 60 );
+			$end_date->add(new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M'));
+
+            /*$check = Context::get()->bookings()
                 ->whereIn('status', Booking::$counted)
                 ->whereHas('bookingdetails', function ($query) use ($customer, $departure, $training_session) {
-                    $query
-                        ->where('customer_id', $customer->id)
-                        ->where(function ($query) use ($departure, $training_session) {
-                            if ($departure) {
-                                $query->where('session_id', $departure->id);
-                            } elseif ($training_session) {
-                                $query->where('training_session_id', $training_session->id);
-                            }
-                        });
-                })->exists();
-            if ($check) {
-                $model = $departure ? 'trip' : 'class';
+                    $query->where('customer_id', $customer->id)
+                          ->where(function ($query) use ($departure, $training_session) {
+							  if ($departure) 
+							  {
+								  $query->where(
+                                  $query->where('session_id', $departure->id);
+							  } 
+							  elseif ($training_session) 
+							  {
+                                  $query->where('training_session_id', $training_session->id);
+                              }
+                          });
+				})
+				->exists();*/
 
-                return Response::json(array('errors' => array('The customer is already booked on this '.$model.' in another booking!')), 403); // 403 Forbidden
+            $check = Context::get()->bookings()
+                ->whereIn('status', Booking::$counted)
+				->whereHas('bookingdetails', function($query) use ($customer) {
+					$query->where('customer_id', $customer->id);
+				})
+                ->whereHas('bookingdetails.departure.trip', function ($query) use ($start_date, $end_date) {
+					$query->where(function($q) use ($start_date, $end_date) {
+						$q->where(function($sq) use ($start_date, $end_date) {
+							$sq->where('start', '<=', $start_date)
+							   ->where(
+									DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+									'>=', $end_date
+							   );
+						})
+						->orWhere(function($sq) use ($start_date, $end_date) {
+							$sq->where('start', '>=', $start_date)
+							   ->where('start', '<=', $end_date);
+						})
+						->orWhere(function($sq) use ($start_date, $end_date) {
+							$sq->where(
+								DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+								'>=' , $start_date
+								)
+								->where(
+									DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), 
+									'<=', $end_date
+								);
+						});
+					 });
+				})
+				->exists();
+
+			if ($check) 
+			{
+                $model = $departure ? 'trip' : 'class';
+                return Response::json(array('errors' => array('The customer is already booked on another '.$model.' during this time!')), 403); // 403 Forbidden
             }
         }
 

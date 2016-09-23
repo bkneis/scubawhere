@@ -514,12 +514,10 @@ class DepartureController extends Controller {
 				->orWhere(function($query) use ($tripStart, $tripEnd) {
 					$query->where('start', '>=', $tripStart)
 				  		  ->where('start', '<=', $tripEnd);
-
 				})
 				->orWhere(function($query) use ($tripStart, $tripEnd) {
 					$query->where(DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), '>=', $tripStart)
 				  		  ->where(DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), '<=', $tripEnd);
-
 				});
 			})
 			->exists();
