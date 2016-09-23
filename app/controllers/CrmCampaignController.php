@@ -233,7 +233,7 @@ class CrmCampaignController extends Controller
         foreach ($customers as $customer) {
             // If the customer has unsubscribed skip them and go to the next customer
 			if(isset($customer->crmSubscription->subscribed)) {
-				if ($customer->crmSubscription->subscribed === 0) {
+				if ($customer->crmSubscription->subscribed === 0 && (int) $data['is_campaign'] === 1) {
 					continue;
 				}
 			}
