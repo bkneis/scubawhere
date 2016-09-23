@@ -69,7 +69,7 @@ class DepartureController extends Controller {
 
 			$customer->pivot->payments = $detail->booking->payments;
 
-			$customer->pivot->refund = $detail->booking->refunds;
+			$customer->pivot->refunds = $detail->booking->refunds;
 
 			// Just need to unset the customer from the bookingdetail/pivot so we do not transfer redundant data
 			unset($customer->pivot->customer);
