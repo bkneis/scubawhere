@@ -88,10 +88,59 @@ class CronRunCommand extends Command {
 	{
 		$this->everyFiveMinutes(function()
 		{
+			$bookings = DB::select(DB::raw("SELECT bookings.id, bookings.reserved_until, bookings.status, companies.timezone FROM bookings 
+											JOIN companies WHERE bookings.company_id = companies.id 
+											AND bookings.status IN ('initialised', 'reserved');"
+										));
+
+			$ids_abandoned = array();
+			$ids_expired   = array();
+
+			foreach($bookings as $obj) 
+			{
+				$now = new DateTime('now', new DateTimeZone($obj->timezone));
+				$test = new DateTime($obj->reserved_until, new DateTimeZone($obj->timezone));
+				if($test < $now)
+				{
+					$obj->status === 'initialised' ? array_push($ids_abandoned, $obj->id) : array_push($ids_expired, $obj->id);
+				}
+			}
+
+			if(count($ids_abandoned) > 0)
+				DB::table('bookings')->whereIn('id', $ids_abandoned)->delete();
+			
+			if(count($ids_expired) > 0)
+				DB::table('bookings')->whereIn('id', $ids_expired)->update(array('status' => 'expired'));
+
+			$this->messages[] = count($ids_abandoned) . ' bookings abandoned were deleted';
+			$this->messages[] = count($ids_expired) . ' bookings expired';
+
+			/*$expired_bookings = DB::raw("SELECT * FROM bookings where 'status' = 'expired';");
+
+			$delete_ids = array();
+
+			foreach($expired_bookings as $obj) 
+			{
+				$now = DB::select(DB::raw('NOW()'));
+				$one_week_ago = new DateTime($now);
+				$one_week_ago->subtract('P1W');
+				$expired_time = new DateTime($obj->updated_at);
+				if($expired_time < $one_week_ago)
+				{
+					array_push($deleted_ids, $obj->id);	
+				}
+			}
+
+			$ids_str = implode(',', $delete_ids);
+			DB::raw("DELETE FROM bookings where id IN (?)", $ids_str);
+
+			$this->messages[] = count($delete_ids) . ' expired bookings have been deleted';*/
+
+		});
 			/**
 			 * Set overdue reserved bookings to status='expired'
 			 */
-			$bookings = Booking::whereIn('status', ['initialised', 'reserved'])->with('company')->get();
+			/*$bookings = Booking::whereIn('status', ['initialised', 'reserved'])->with('company')->get();
 
 			$ids_abandoned = array();
 			$ids_expired   = array();
@@ -110,7 +159,8 @@ class CronRunCommand extends Command {
 			{
 				// Create a string containing as many ?,?... as there are IDs
 				$clause = implode(',', array_fill(0, count($ids_abandoned), '?'));
-				DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_abandoned);
+				Booking::whereIn('id', $ids_abandoned)->delete();
+				//DB::update("UPDATE bookings SET `status` = NULL, `updated_at` = NOW() WHERE `id` IN (" . $clause . ");", $ids_abandoned);
 			}
 
 			if(count($ids_expired) > 0)
@@ -128,7 +178,7 @@ class CronRunCommand extends Command {
 			/**
 			 * Delete all abandoned bookings older than 1h
 			 */
-			$before = date('Y-m-d H:i:s', time() - 1 * 60 * 60);
+			/*$before = date('Y-m-d H:i:s', time() - 1 * 60 * 60);
 			$affectedRows = Booking::where('status', null)
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
@@ -138,7 +188,7 @@ class CronRunCommand extends Command {
 			 * Delete all expired bookings older than 24h
 			 */
 			
-			$before = date('Y-m-d H:i:s', time() - 24 * 60 * 60);
+			/*$before = date('Y-m-d H:i:s', time() - 24 * 60 * 60);
 			$affectedRows = Booking::where('status', 'expired')
 			                        ->where('updated_at', '<', $before)
 			                        ->delete();
@@ -174,8 +224,8 @@ class CronRunCommand extends Command {
 			Booking::whereIn('reference', $delete_bookings_refs)->delete();
 
 			$this->messages[] = count($delete_bookings_refs) . ' abandoned bookings deleted';
-	
-		});
+			*/
+		//});
 
 		/**
 		 * 1. Calculate time that is 30 minutes ago using the mysql server's time
@@ -188,7 +238,7 @@ class CronRunCommand extends Command {
 		 */
 		$this->everyThirtyMinutes(function()
 		{
-			$q = DB::select(DB::raw('select now() as time'));
+			/*$q = DB::select(DB::raw('select now() as time'));
 			$test_time = date('Y-m-d H:i:s', 
 							strtotime('-1 hour -30 minutes', strtotime($q[0]->time)));
 			$bookings_refs = Booking::select('reference')
@@ -216,7 +266,7 @@ class CronRunCommand extends Command {
 
 			Booking::whereIn('reference', $delete_bookings_refs)->delete();
 
-			$this->messages[] = count($delete_bookings_refs) . ' abandoned bookings deleted';
+			$this->messages[] = count($delete_bookings_refs) . ' abandoned bookings deleted';*/
 		});
 
 		$this->hourly(function()

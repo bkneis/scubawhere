@@ -11,6 +11,44 @@ class RegisterController extends Controller {
 	{
 		$this->object_store_service = $obj_store_service;
 	}
+
+	// This is a hotfix for the cron jobs and will be removed once our worker tier is finished
+	public function deleteExpiredBookings()
+	{
+		// Code goes here	
+		$bookings = DB::select(
+			DB::raw("SELECT bookings.id, bookings.reserved_until, bookings.status, companies.timezone 
+					 FROM bookings 
+					 JOIN companies WHERE bookings.company_id = companies.id 
+					 AND bookings.status IN ('initialised', 'reserved');"
+		));
+
+		$ids_abandoned = array();
+		$ids_expired   = array();
+
+		foreach($bookings as $obj) 
+		{
+			$now = new DateTime('now', new DateTimeZone($obj->timezone));
+			$test = new DateTime($obj->reserved_until, new DateTimeZone($obj->timezone));
+			if($test < $now)
+			{
+				$obj->status === 'initialised' ? array_push($ids_abandoned, $obj->id) : array_push($ids_expired, $obj->id);
+			}
+		}
+
+		if(count($ids_abandoned) > 0)
+			DB::table('bookings')->whereIn('id', $ids_abandoned)->delete();
+		
+		if(count($ids_expired) > 0)
+			DB::table('bookings')->whereIn('id', $ids_expired)->update(array('status' => 'expired'));
+
+		return Response::json(
+			array('status' => 'OK.', 
+				'num_deletes' => count($ids_abandoned), 
+				'num_expired' => count($ids_expired)
+			));
+
+	}
 	
 	public function postCompany()
 	{
