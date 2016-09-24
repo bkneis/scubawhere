@@ -13,7 +13,7 @@ class RegisterController extends Controller {
 	}
 
 	// This is a hotfix for the cron jobs and will be removed once our worker tier is finished
-	public function deleteExpiredBookings()
+	public function getDeleteExpiredBookings()
 	{
 		// Code goes here	
 		$bookings = DB::select(
