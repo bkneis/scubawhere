@@ -21,7 +21,7 @@ class Company extends Ardent {
 		'postcode'            => '', //'required',
 		'country_id'          => 'integer', //'required|integer',
 		'currency_id'         => 'integer|exists:currencies,id', // required
-		'business_email'      => 'email|unique:companies,business_email', // required
+		'business_email'      => 'email', //'email|unique:companies,business_email', // required
 		'business_phone'      => '', //'required',
 		'vat_number'          => '',
 		'registration_number' => '',
