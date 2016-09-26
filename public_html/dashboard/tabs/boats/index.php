@@ -86,7 +86,7 @@
 									<option value="{{id}}">{{name}}</option>
 								{{/each}}
 						</select>
-						Number of beds:
+						Number of beds in this cabin:
 						<input type="number" name="boatrooms[{{firstID boatrooms}}][capacity]" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 						<button class="btn btn-danger remove-room">&#215;</button>
 				</p>
