@@ -122,7 +122,8 @@ If you have any questions, comments or feedback, feel free to drop us a message 
 					{{#if isTrip}}
 					{{#if trip.boat_required}}
 						Boat for this session:&nbsp;
-						<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>
+						{{!--<select name="boat_id" class="boatSelect"{{#if session.timetable_id}} disabled{{else}}{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}{{/if}}>--}}
+						<select name="boat_id" class="boatSelect"{{#if session.deleted_at}} disabled{{else}}{{#if isPast}} disabled{{/if}}{{/if}}>
 							{{#each boats}}
 								{{#if deleted_at}}
 									{{#if selected}}
@@ -150,7 +151,7 @@ If you have any questions, comments or feedback, feel free to drop us a message 
 											For UPDATE, this will move all future versions regardless if they have been booked or not. For DELETE, this will <u>deactivate</u> all future versions that have been booked and delete the others.
 										</small>
 									</label>
-									<label><input type="radio" name="handle_timetable" value="only_this"> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
+									<label><input type="radio" name="handle_timetable" value="only_this" checked> <strong>No</strong>, just move/delete this one and leave the others where they are.</label>
 								</p>
 							</div>
 						{{else}}

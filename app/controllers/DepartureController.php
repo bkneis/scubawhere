@@ -455,7 +455,7 @@ class DepartureController extends Controller {
 
 		if($trip->boat_required)
 		{
-			if($this->isBoatAvailable($boat->id, $data['start'], $trip->duration))
+			if($this->isBoatAvailable($departure->id, $boat->id, $data['start'], $trip->duration))
 				return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
 
 			// Check if trip is overnight and if so, check if boat has boatrooms
@@ -473,7 +473,7 @@ class DepartureController extends Controller {
 		return Response::json( array('status' => 'OK. Trip scheduled', 'id' => $departure->id), 201 ); // 201 Created
 	}
 
-	private function isBoatAvailable($boat_id, $start, $duration)
+	private function isBoatAvailable($departure_id, $boat_id, $start, $duration)
 	{	
 		// Check if the boat is already being used during the submitted time
 		$tripStart = new DateTime( $start, new DateTimeZone( Context::get()->timezone ) );
@@ -486,24 +486,8 @@ class DepartureController extends Controller {
 		$tripStart = $tripStart->format('Y-m-d H:i:s');
 		$tripEnd   = $tripEnd->format('Y-m-d H:i:s');
 
-		/*$overlappingSessions = Context::get()->departures()
-			->with('trip')
-			->where('boat_id', $boat_id)
-			->where(function($q) use ($tripStart, $tripEnd) {
-				$q->where('start', '<=', $tripStart)
-				  ->where(DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), '>=', $tripEnd);
-			})
-			->orWhere(function($q) use ($tripStart, $tripEnd) {
-				$q->where('start', '>=', $tripStart)
-				  ->where('start', '<=', $tripEnd);
-			})
-			->orWhere(function($q) use ($tripStart, $tripEnd) {
-				$q->where(DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), '>=', $tripStart)
-				  ->where(DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), '<=', $tripEnd);
-			})
-			->exists();*/
-
 		$overlappingSessions = Context::get()->departures()
+			->where('sessions.id', '!=', $departure_id)
 			->with('trip')
 			->where('boat_id', $boat_id)
 			->where(function($q) use ($tripStart, $tripEnd) {
@@ -574,7 +558,7 @@ class DepartureController extends Controller {
 
 		}
 		// If the session is part of a timetable and has been changed, check if request sent instructions on what to do
-		elseif( Input::get('start') && Input::get('start') !== $departure->start)
+		elseif((Input::get('start') && Input::get('start') !== $departure->start) || Input::get('boat_id'))
 		{
 			switch( Input::get('handle_timetable') )
 			{
@@ -591,9 +575,28 @@ class DepartureController extends Controller {
 				case 'following':
 
 					// TODO Differenciate between "Yes, move everything anyway and notify customers" and "Clone booked sessions and deactivate old ones"
+					if(Input::get('boat_id')) $boat_id = Input::get('boat_id');
+					else					  $boat_id = $departure->boat_id;
 
-					if($this->isBoatAvailable($departure->boat_id, Input::get('start'), $departure->trip->duration))
-						return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
+					$start_dates = array();
+					$departures = Timetable::where('id', $departure->timetable_id)
+											->with('departures')
+											->get()
+											->each(function($obj) use (&$start_dates) {
+												foreach($obj->departures as $session) 
+												{
+													$date = new DateTime($session->start,
+																new DateTimeZone(Context::get()->timezone));
+													array_push($start_dates, $date);
+												}
+											});
+
+					//if($this->isBoatAvailable($boat_id, Input::get('start'), $departure->trip->duration))
+					if(!$this->isBoatAvailableTimetable($boat_id, $start_dates, $departure->trip->duration))
+					{
+						return Response::json( array('errors' => 
+							array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
+					}
 
 					// First, replicate the timetable
 					$timetable = $departure->timetable()->first()->replicate();
@@ -609,8 +612,11 @@ class DepartureController extends Controller {
 
 					// Single-Query MagicTM
 					DB::update(
-						"UPDATE `sessions` SET `timetable_id`=?, `start`=DATE_ADD(`start`, INTERVAL ? HOUR_MINUTE) WHERE `start`>=? AND `timetable_id`=?",
-						array( $timetable->id, $offsetSQL, $departure->start, $departure->timetable_id )
+						"UPDATE `sessions` SET `timetable_id`=?,
+						`start`=DATE_ADD(`start`, INTERVAL ? HOUR_MINUTE),
+						`boat_id`=?
+						WHERE `start`>=? AND `timetable_id`=?",
+						array( $timetable->id, $offsetSQL, $boat_id, $departure->start, $departure->timetable_id )
 					);
 
 					return array('status' => 'OK. All trips updated.');
@@ -626,7 +632,7 @@ class DepartureController extends Controller {
 			return array('status' => 'Nothing updated.');
 		}
 
-		if($this->isBoatAvailable($departure->boat_id, $departure->start, $departure->trip->duration))
+		if($this->isBoatAvailable($departure->id, $departure->boat_id, $departure->start, $departure->trip->duration))
 			return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
@@ -639,6 +645,81 @@ class DepartureController extends Controller {
 		}
 
 		return array('status' => 'OK. Trip updated.');
+	}
+
+	private function isBoatAvailableTimetable($boat_id, $start_dates, $duration)
+	{	
+		// Check if the boat is already being used during the submitted time
+
+		$duration_hours   = floor($duration);
+		$duration_minutes = round( ($duration - $duration_hours) * 60 );
+		$end_dates = array();
+		foreach($start_dates as &$obj) 
+		{
+			$end_date = new DateTime($obj->format('Y-m-d H:i:s'));
+			$end_date->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+			$end_date->format('Y-m-d H:i:s');
+			array_push($end_dates, $end_date);
+		}
+
+		usort($start_dates, function($a, $b) 
+		{
+			if($a == $b) return 0;
+			return $a < $b ? -1 : 1;
+		});
+
+		usort($end_dates, function($a, $b) 
+		{
+			if($a == $b) return 0;
+			return $a < $b ? -1 : 1;
+		});
+
+		$overlappingSessions = Context::get()->departures()
+			->with('trip')
+			->where('boat_id', '=', $boat_id)
+			->where('start', '>=', $start_dates[0]->format('Y-m-d H:i:s'))
+			->where('start', '<=', $end_dates[count($end_dates) - 1]->format('Y-m-d H:i:s'))
+			->get();
+
+		$available = true;
+		$overlappingSessions->each(function($obj) use ($start_dates, $end_dates, &$available)
+		{
+			$duration_hours   = floor($obj->trip->duration);
+			$duration_minutes = round( ($obj->trip->duration - $duration_hours) * 60 );
+			$start = new DateTime($obj->start);
+			$end = clone $start;
+			$end->add(new DateInterval('PT' . $duration_hours . 'H' . $duration_minutes . 'M'));
+
+			// perform checks to see if they clash	
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($start <= $start_dates[$i] && $end >= $end_dates[$i]) 
+				{
+					$available = false;
+					return false; // @todo remove false, no need
+				}
+			}
+
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($start >= $start_dates[$i] && $start <= $end_dates[$i])
+				{
+					$available = false;
+					return false;
+				}
+			}
+
+			for($i = 0; $i < count($start_dates); $i++)
+			{
+				if($end >= $start_dates[$i] && $end <= $end_dates[$i])
+				{
+					$available = false;
+					return false;
+				}
+			}
+		});
+
+		return $available;	
 	}
 
 	public function postDeactivate()

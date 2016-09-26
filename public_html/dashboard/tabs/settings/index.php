@@ -196,6 +196,10 @@
 				<div class="percentage-bar" style="background-color: #FFA500; width: {{getUtil emails.total emails.used}}%;">&nbsp</div>
 			</div>
 		</div>
+		<div class="form-row">
+			<label class="field-label">Running low on credits? Please click the button below to buy more</label>
+			<a href="http://scubawhere.com/bolt-ons" target="_blank" style="color:white;" class="btn btn-primary">Click here</a>
+		</div>
 	</script>
 
 	<script type="text/x-handlebars-template" id="errors-template">

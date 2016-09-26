@@ -231,7 +231,9 @@ class TimetableController extends Controller {
 			$departure->timetable()->dissociate($timetable);
 			$timetable->delete();
 			return Response::json(
-				array('errors' => array('The timetable could not be created as their are future departures that are using the boat.')
+				array('errors' => 
+					array('The timetable could not be created as their are future departures that are'.
+							'using the boat.')
 			), 409);
 		}
 
