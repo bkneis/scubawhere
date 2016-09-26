@@ -1139,6 +1139,7 @@ return array(
     'ChangeCrmLinkTrackerName' => $baseDir . '/app/database/migrations/2015_11_13_154803_change_crm_link_tracker_name.php',
     'ChangeCrmTokensToUseBigint' => $baseDir . '/app/database/migrations/2015_11_13_160150_change_crm_tokens_to_use_bigint.php',
     'ChangeDayAndMonthFieldsOnPricesTableIntoDateFields' => $baseDir . '/app/database/migrations/2014_11_03_131716_change_day_and_month_fields_on_prices_table_into_date_fields.php',
+    'ChangeDefaultCreditsOptions' => $baseDir . '/app/database/migrations/2016_09_26_123932_change_default_credits_options.php',
     'ChangeDurationToDecimal' => $baseDir . '/app/database/migrations/2015_01_24_172633_change_duration_to_decimal.php',
     'ChangeEquipmentPriceAddDuration' => $baseDir . '/app/database/migrations/2016_02_21_180238_change_equipment_price_add_duration.php',
     'ChangeEquipmentPriceDurationToFloat' => $baseDir . '/app/database/migrations/2016_02_21_175625_change_equipment_price_duration_to_float.php',
