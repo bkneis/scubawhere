@@ -108,11 +108,11 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
         	<div class="modal-header">
-        		<h4 class="modal-title">Welcome to scubawhere RMS</h4>
+        		<h4 class="modal-title">Welcome to scubawhereRMS</h4>
       		</div>
       		<div class="modal-body">
 				<p>
-					To get started, you need to configure scubawhereRMS to suit your business. We will take you through the setup, step by step, explaining each element on the pages to help you set the system up to your business needs.
+					To get started, you need to configure scubawhereRMS. We will take you through the setup, step by step, explaining each element on the pages to help you set the system up to your business needs.
 			  	</p>
 				<p>
 					<strong>So, let's get started!</strong>
