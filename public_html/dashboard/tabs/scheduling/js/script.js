@@ -5,6 +5,12 @@ if(window.company.initialised !== 1 && (!window.tourStart))
 	window.location.href = '#dashboard';
 }
 
+if(JSON.parse(sessionStorage.getItem('finishedTour')))
+{
+	$('#completed-tour-modal').modal('show');
+	sessionStorage.setItem('finishedTour', 'false');
+}
+
 Handlebars.registerHelper('date', function(datetime) {
 	return datetime.format('DD-MM-YYYY');
 });

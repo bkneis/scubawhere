@@ -44,6 +44,38 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="completed-tour-modal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Congratulations!</h4>
+				</div>
+				<div class="modal-body">
+					<p>
+Congratulations! You have successfully configured scubawhereRMS. You can re-visit all the tabs by clicking on the Management Tab of the menu bar on the left-hand side. Now, before you go any further, you have one last task to complete, scheduling your Trips and Classes! All you need to do is click on a Trip or Class, drag and drop it to a Calendar date.
+					</p>
+					<p>
+A pop-up will appear asking you to set what time your customers should arrive to check-in for their activity. Next, you'll be asked to select which boat you want to assign to the trip. If the trip is a shore-based diving trip, you will not see this option. Don't forget to click 'SAVE' when you are happy to continue.
+					</p>
+					<p>
+Once you have scheduled your first trip, click on it again. You will then have the ability to create a departure timetable! If you do not include an end date for the timetable, the timetable will be created for a default 18 months. Repeat the same process for Classes by selecting the Classes tab of the Scheduling window.
+					</p>
+					<p>
+						Now go explore all the other aspects of scubawhereRMS!
+					</p>
+					<p>
+If you have any questions, comments or feedback, feel free to drop us a message through the Feedback Form on the Dashboard or e-mail us at support@scubawhere.com.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="modalWindows" style="height: 0;">
 		<script type="text/x-handlebars-template" id="session-template">
 			<div id="modal-{{id}}" class="reveal-modal">

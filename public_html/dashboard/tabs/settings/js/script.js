@@ -146,6 +146,14 @@ $(function() {
 
 			//Clear error messages
 			$('.errors').remove();
+
+			// If the user is on the tour, redirect them to the next step
+			if(window.tourStart) 
+			{
+				setTimeout(function() {
+					$('#tour-next-step').click();
+				}, 1000);
+			}
 		},
 		function error(xhr) {
 			var data = JSON.parse(xhr.responseText);
