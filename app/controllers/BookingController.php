@@ -1867,6 +1867,8 @@ class BookingController extends Controller
             return Response::json(array('errors' => $booking->errors()->all()), 406); // 406 Not Acceptable
         }
 
+		if((int) Input::get('email')) CrmMailer::sendReservationConf($booking->id);
+
         return array('status' => 'OK. Booking reserved', 'reserved_until' => $booking->reserved_until);
     }
 

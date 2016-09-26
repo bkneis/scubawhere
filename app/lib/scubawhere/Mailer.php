@@ -12,6 +12,8 @@ interface CrmMailerInterface
 	public static function send($campaign, $customer, $email_html);
 
 	public static function sendBookingConf($booking_id);
+	
+	public static function sendReservationConf($booking_id);
 
 	public static function sendTransactionConf($payment_id);
 
@@ -69,6 +71,44 @@ class CrmMailer implements CrmMailerInterface
 			'subject'          => Context::get()->name . ' Booking Itinerary',
 			'email_html'       => $html,
 			'name'             => 'Booking Itinerary for ' . $booking->reference,
+			'sendallcustomers' => 0,
+			'is_campaign'      => 0,
+			'customer_id'      => $booking->lead_customer_id,
+		]);
+
+		$controller = $app->make('CrmCampaignController');
+		$request    = $controller->callAction('postAdd', []);
+
+		# 4. Check if request was successful
+		if($request->getStatusCode() !== 201)
+		{
+			$json = json_decode($request->getContent());
+			throw new \Exception('Email Sending Error: ' . $json->errors, 1);
+		}
+
+		return $request;
+
+	}
+
+	public static function sendReservationConf($booking_id)
+	{
+		# 1. Get booking information
+		\Request::replace(["id" => $booking_id]);
+
+		$app        = app();
+		$controller = $app->make('BookingController');
+		$booking    = $controller->callAction('getIndex', []);
+
+		# 2. Generate email HTML
+		$html = \View::make('emails.booking-reservation', 
+			['company' => Context::get(), 'booking' => $booking])
+			->render();
+
+		# 3. Send email via CrmCampaignController
+		\Request::replace([
+			'subject'          => Context::get()->name . ' Booking Reservation',
+			'email_html'       => $html,
+			'name'             => 'Booking Reservation for ' . $booking->reference,
 			'sendallcustomers' => 0,
 			'is_campaign'      => 0,
 			'customer_id'      => $booking->lead_customer_id,
