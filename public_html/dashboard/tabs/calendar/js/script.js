@@ -979,7 +979,7 @@ function customerData(customer) {
 		paid -= parseFloat(obj.amount);
 	});
 
-	this.amount_paid = paid;
+	this.amount_paid = paid.toFixed(2);
 
     this.name = function() {
         return this._name;
