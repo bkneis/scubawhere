@@ -12,12 +12,12 @@
 
 								<div class="form-row">
 									<label class="field-label">Main person of contact : </label>
-									<input type="text" name="contact" value="{{contact}}" class="form-control"></input>
+									<input type="text" name="contact" value="{{contact}}" class="form-control" required></input>
 								</div>
 
 								<div class="form-row">
 									<label class="field-label">Dive operator name : </label>
-									<input type="text" name="name" value="{{name}}" class="form-control">
+									<input type="text" name="name" value="{{name}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
@@ -46,7 +46,7 @@
 
 								<!--<div class="form-row">
 									<label class="field-label">Contact email address : </label>
-									<input type="text" name="email" value="{{email}}" class="form-control"></input>
+									<input type="text" name="email" value="{{email}}" class="form-control" required></input>
 								</div>-->
 
 								<!--<div class="form-row">
@@ -76,7 +76,7 @@
 
 								<div class="form-row">
 									<label class="field-label">Business Address 1 : </label>
-									<input type="text" name="address_1" value="{{address_1}}" class="form-control">
+									<input type="text" name="address_1" value="{{address_1}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
@@ -86,17 +86,17 @@
 
 								<div class="form-row">
 									<label class="field-label">City : </label>
-									<input type="text" name="city" value="{{city}}" class="form-control">
+									<input type="text" name="city" value="{{city}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
 									<label class="field-label">County / State : </label>
-									<input type="text" name="county" value="{{county}}" class="form-control">
+									<input type="text" name="county" value="{{county}}" class="form-control" required>
 								</div>
 
 								<div id="postcode-div" class="form-row">
 									<label class="field-label">Post code / zip code : </label>
-									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
+									<input type="text" name="postcode" value="{{postcode}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
