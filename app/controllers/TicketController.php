@@ -359,8 +359,14 @@ class TicketController extends Controller {
 								  ->whereIn('id', $booking_ids)
 								  ->get(['reference', 'status']);
 
+		$quotes = $bookings->map(function($obj) {
+			if($obj->status == 'saved') return $obj->id;
+		});
+
+		Context::get()->bookings()->whereIn('id', $quotes)->delete();
+
 		$bookings = $bookings->map(function($obj){
-			if($obj->status != 'cancelled') return $obj;	
+			if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;	
 		})->toArray();
 
 		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });

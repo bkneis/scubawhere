@@ -795,15 +795,26 @@ class DepartureController extends Controller {
 					$sessions = Context::get()->departures()
 						->where('start', '>=', $departure->start)
 						->where('timetable_id', $departure->timetable_id)
-						->with('bookingdetails')
+						->with('bookingdetails.booking')
 						->get();
 
 					$sessions->each( function($session)
 					{
-						if( $session->bookingdetails()->count() === 0 )
-							$session->forceDelete();
+						$bookings = $session->bookingdetails()->map(function($obj) {
+							if($obj->booking->status != 'saved' && $obj->booking->status != 'expired')
+								return $obj;
+						});
+						//if( $session->bookingdetails()->count() === 0 )
+						if($bookings->count() === 0) 
+						{
+							$session->delete();
+						}
 						else
-							$session->delete(); // SoftDelete
+						{	
+							return Response::json( 
+								array('errors' => 
+									array('Cannot delete trip. It has already been booked!')), 409 ); // 409 Conflict
+						}
 					});
 
 					return array('status' => 'OK. All trips either deleted or deactivated.');

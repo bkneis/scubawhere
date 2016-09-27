@@ -26,7 +26,7 @@ function TourManager() {
 				element   : '#credit-info',
 				title     : 'Account Credit Usage',
 				placement : 'right',
-				content   : 'Here you can see when your scubawhereRMS licence will automatically renew. how many booking and e-mail left you have remaining.',
+				content   : 'Here, you can see when your scubawhereRMS licence will automatically renew, how many booking and e-mail credits you have remaining.',
 				onShown	  : function(tour) { }
 			},
 			{
@@ -68,7 +68,7 @@ function TourManager() {
 				element   : '#save-company-info',
 				title     : 'Save and Finish your Settings',
 				placement : 'left',
-				content   : 'When you are finished and happy with the information provided, please click "End Tour" and then SAVE to continue.',
+				content   : "Click 'End Tour' and make sure you have completed all of the required fields. When you are ready, click 'SAVE' then click 'NEXT' to continue the Setup Wizard.",
 				onShown	  : function(tour) { }
 			}
 		],

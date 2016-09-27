@@ -311,15 +311,21 @@ class AccommodationController extends Controller {
             return Response::json(array('errors' => array('The accommodation could not be found.')), 404); // 404 Not Found
         }
 
+		$quotes = $accommodation->bookings
+								->map(function($obj) {
+									if($obj->status == 'saved') return $obj->id;
+								})
+								->toArray();
+
+		Context::get()->bookings()->whereIn('id', $quotes)->delete();
+
 		$bookings = $accommodation->bookings
 								  ->map(function($obj) {
-								       if($obj->status != 'cancelled') return $obj;
+								       if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;
 								   })
 								   ->toArray();
 
 		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
-
-		//return $bookings;
 
 		if($bookings)
 		{
