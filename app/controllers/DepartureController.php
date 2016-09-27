@@ -488,7 +488,7 @@ class DepartureController extends Controller {
 
 		$overlappingSessions = Context::get()->departures()
 			->where(function($q) use ($departure_id) {
-				if($departure_id !== null) $q->where('sessions.id', $departure_id);
+				if($departure_id !== null) $q->where('sessions.id', '!=', $departure_id);
 			})
 			//->where('sessions.id', '!=', $departure_id)
 			->with('trip')
