@@ -427,7 +427,7 @@
 											</tr>
 											<tr>
 												<td id="option-buttons" style="vertical-align: middle; border-right: 1px solid #ccc;">
-													<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save For Later</button>
+													<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save As Quote</button>
 													{{#unless price}}
 														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
 													{{else}}

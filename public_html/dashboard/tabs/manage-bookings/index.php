@@ -57,7 +57,7 @@
 							<button id="filter-reserved"  type="button" display="reserved"  class="btn btn-default btn-switch">
 								<i class="fa fa-clock-o fa-fw"></i> Reserved</button>
 							<button id="filter-saved"     type="button" display="saved"     class="btn btn-default btn-switch">
-								<i class="fa fa-floppy-o fa-fw"></i> Saved</button>
+								<i class="fa fa-floppy-o fa-fw"></i> Quotes</button>
 							<button id="filter-temporary" type="button" display="temporary" class="btn btn-default btn-switch">
 								<i class="fa fa-pencil fa-fw"></i> Edits</button>
 							<button id="filter-all"       type="button" display="all"       class="btn btn-default btn-switch">
