@@ -455,7 +455,7 @@ class DepartureController extends Controller {
 
 		if($trip->boat_required)
 		{
-			if($this->isBoatAvailable($departure->id, $boat->id, $data['start'], $trip->duration))
+			if($this->isBoatAvailable(null, $boat->id, $data['start'], $trip->duration))
 				return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
 
 			// Check if trip is overnight and if so, check if boat has boatrooms
@@ -487,7 +487,10 @@ class DepartureController extends Controller {
 		$tripEnd   = $tripEnd->format('Y-m-d H:i:s');
 
 		$overlappingSessions = Context::get()->departures()
-			->where('sessions.id', '!=', $departure_id)
+			->where(function($q) use ($departure_id) {
+				if($departure_id !== null) $q->where('sessions.id', $departure_id);
+			})
+			//->where('sessions.id', '!=', $departure_id)
 			->with('trip')
 			->where('boat_id', $boat_id)
 			->where(function($q) use ($tripStart, $tripEnd) {
