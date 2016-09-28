@@ -207,7 +207,8 @@ class AddonController extends Controller {
 
 		$quotes = $bookings->map(function($obj) {
 			if($obj->status == 'saved') return $obj->id;
-		});
+		})
+		->toArray();
 
 		Context::get()->bookings()->whereIn('id', $quotes)->delete();
 
