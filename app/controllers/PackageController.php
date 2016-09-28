@@ -313,7 +313,7 @@ class PackageController extends Controller {
 
 		$bookings = Context::get()->bookings()
 								  ->whereIn('id', $booking_ids)
-								  ->get(['reference', 'status']);
+								  ->get(['id', 'reference', 'status']);
 
 		$quotes = $bookings->map(function($obj) {
 			if($obj->status == 'saved') return $obj->id;
