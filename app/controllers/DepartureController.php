@@ -604,7 +604,7 @@ class DepartureController extends Controller {
 											});
 
 					//if($this->isBoatAvailable($boat_id, Input::get('start'), $departure->trip->duration))
-					if(!$this->isBoatAvailableTimetable($boat_id, $start_dates, $departure->trip->duration))
+					if(!$this->isBoatAvailableTimetable($departure->timetable_id, $boat_id, $start_dates, $departure->trip->duration))
 					{
 						return Response::json( array('errors' => 
 							array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
@@ -659,7 +659,7 @@ class DepartureController extends Controller {
 		return array('status' => 'OK. Trip updated.');
 	}
 
-	private function isBoatAvailableTimetable($boat_id, $start_dates, $duration)
+	private function isBoatAvailableTimetable($timetable_id, $boat_id, $start_dates, $duration)
 	{	
 		// Check if the boat is already being used during the submitted time
 
@@ -687,6 +687,7 @@ class DepartureController extends Controller {
 		});
 
 		$overlappingSessions = Context::get()->departures()
+			->where('timetable_id', '!=', $timetable_id)
 			->with('trip')
 			->where('boat_id', '=', $boat_id)
 			->where('start', '>=', $start_dates[0]->format('Y-m-d H:i:s'))
