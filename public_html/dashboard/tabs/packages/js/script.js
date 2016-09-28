@@ -256,7 +256,8 @@ $(function(){
 
 	$('#package-form-container').on('click', '.remove-package', function(event) {
     event.preventDefault();
-		var check = confirm('Do you really want to remove this package?');
+		//var check = confirm('Do you really want to remove this package?');
+        var check = confirm('WARNING! Deleting this package will mean it is removed from all associated quotes. Are you sure you wish to continue?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');

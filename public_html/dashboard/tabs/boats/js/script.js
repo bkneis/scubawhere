@@ -73,7 +73,9 @@ $(function() {
 
     $("#boat-form-container").on('click', '.remove-boat', function(event) {
         event.preventDefault();
-        var check = confirm('Do you really want to remove this boat?');
+        //var check = confirm('Do you really want to remove this boat?');
+        var check = confirm('WARNING! Deleting this boat will mean it is removed from all associated sessions and/or quotes. Are you sure you wish to continue?');
+		
         if (check) {
             // Show loading indicator
             $(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');

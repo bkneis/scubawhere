@@ -257,7 +257,7 @@ $(function () {
 	$('#ticket-form-container').on('click', '.remove-ticket', function(event) {
     	event.preventDefault();
         var deleteable = $('#update-ticket-form input[name=deleteable]').val()
-		var check;
+		/*var check;
         if(deleteable === 'true')
         {
             check = confirm('Do you really want to remove this ticket?');
@@ -265,7 +265,8 @@ $(function () {
         else 
         {
             check = confirm('This ticket has courses or package associated with it, if you delete it they might be affected, are you sure you wish to continue?');
-        }
+        }*/
+        var check = confirm('WARNING! Deleting this ticket will mean it is removed from all associated packages and/or quotes. Are you sure you wish to continue?');
 		if(check)
         {
 			// Show loading indicator

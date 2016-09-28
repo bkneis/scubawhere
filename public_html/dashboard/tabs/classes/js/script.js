@@ -129,11 +129,13 @@ $(function () {
 	$classFormContainer.on('click', '.remove-class', function(event) {
     	event.preventDefault();
         var deleteable = $('#update-class-form input[name=deleteable]').val();
-		var check;
+        var check = confirm('WARNING! Deleting this class will mean it is removed from all associated courses and/or quotes. Are you sure you wish to continue?');
+		/*var check;
         if(deleteable === "true")
             check = confirm('Do you really want to remove this class?');
         else
             check = confirm('If you delete this class then it will be removed from all courses associated with it, are you sure you wish to contiue?');
+		*/
 
 		if(check){
 			// Show loading indicator

@@ -154,11 +154,12 @@ $(function(){
 		event.preventDefault();
 	    var deletable = $('#update-accommodation-form input[name=force]').val();
        
-        var check;
-        if(deletable === "false")
+        var check = confirm('WARNING! Deleting this accommodation will mean it is removed from all associated packages and/or quotes. Are you sure you wish to continue?');
+        /*if(deletable === "false")
             check = confirm('If you delete this accommodation then it will be removed from all packages associated with it, are you sure you wish to contiue?');
         else
             check = confirm('Do you really want to remove this accommodation?');
+		*/
 
 		if(check){
 			// Show loading indicator

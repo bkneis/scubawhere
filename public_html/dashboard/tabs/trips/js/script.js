@@ -157,9 +157,11 @@ $(function(){
 	$tripFormContainer.on('click', '.remove-trip', function(event) {
         event.preventDefault();
         var deleteable = $('#update-trip-form input[name=deleteable]').val()
-		var check;
+		/*var check;
         if(deleteable === 'true') check = confirm('Do you really want to remove this trip?');
         else check = confirm('There are tickets associated with this trip, if you delete this trip, these tickets might be effected. Are you sure you wish to continue?');
+		*/
+        var check = confirm('WARNING! Deleting this trip will mean it is removed from all associated tickets, packages and/or quotes. Are you sure you wish to continue?');
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
