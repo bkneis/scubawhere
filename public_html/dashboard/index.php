@@ -1,5 +1,5 @@
 <?php
-// This comment will be removed next commit, it is just to test the new slack notifications
+// Thiis comment will be removed next commit, it is just to test the new slack notifications
 $HOST = $_SERVER['HTTP_HOST'];
 $PROTOCOL = 'http';
 	if(!empty($_SERVER['HTTPS'])) $PROTOCOL = 'https'; // http://php.net/manual/en/reserved.variables.server.php

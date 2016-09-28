@@ -1023,7 +1023,7 @@ function TourManager() {
 					localStorage.setItem('finishedTour', 'true');
                     setTimeout(function() {
                         window.location.hash = "#scheduling";
-                        //window.location.reload(true);
+                        window.location.reload(true);
                     }, 3000);
                 });
             });
