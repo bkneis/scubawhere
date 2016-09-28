@@ -566,17 +566,26 @@ class DepartureController extends Controller {
 			switch( Input::get('handle_timetable') )
 			{
 				case 'only_this':
-					// Remove this event from the timetable and set new time
-					$capacity = $departure->getCapacityAttribute();
-					if($capacity[0] > 0)
-						return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
+					if(Input::get('boat_id'))
+					{
+						if(!$departure->update(array('boat_id' => Input::get('boat_id'))))
+						{
+							return Response::json(array('errors' => $departure->errors()->all()), 406);
+						}
+						$departure->timetable_id = null;
+					}
+					if(Input::get('start') != $departure->start)
+					{
+						// Remove this event from the timetable and set new time
+						$capacity = $departure->getCapacityAttribute();
+						if($capacity[0] > 0)
+							return Response::json( array('errors' => array('The trip cannot be moved. It has already been booked.')), 409 ); // 409 Conflict
 
-					$departure->timetable_id = null;
-					$departure->start        = Input::get('start');
-
+						$departure->timetable_id = null;
+						$departure->start        = Input::get('start');
+					}
 				break;
 				case 'following':
-
 					// TODO Differenciate between "Yes, move everything anyway and notify customers" and "Clone booked sessions and deactivate old ones"
 					if(Input::get('boat_id')) $boat_id = Input::get('boat_id');
 					else					  $boat_id = $departure->boat_id;
