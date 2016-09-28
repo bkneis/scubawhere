@@ -83,7 +83,7 @@ function TourManager() {
 			{
 				element   : '#accommodations-list', // @todo find a way to float this centre screen
 				title	  : 'Managing Accommodations',
-				content   : 'Do you create reservations for accommodation that you own or take money for? If so, let us guide you through how to create accommodation. Otherwise, click "END TOUR" and then'
+				content   : "Do you create reservations for accommodation that you own or take money for? If so, let us guide you through how to create accommodation. Otherwise, click 'END TOUR' and then click 'NEXT STEP'."
 			},
 			{
 				element   : '#acom-name',
@@ -369,9 +369,9 @@ function TourManager() {
 			},
 			{
 				element   : '#locationsList',
-				title     : 'Select a loation',
+				title     : 'Selecting locations',
 				placement : 'left',
-				content   : 'Select the relevant tags for the trip too.',
+				content   : 'Select all the locations this trip visits.',
 				onShown	  : function(tour) {
                 	$('#locationsList').find('.location').filter(':first').click();
 				}
@@ -380,7 +380,7 @@ function TourManager() {
 				element   : '#tagsList',
 				title     : 'Adding tags',
 				placement : 'left',
-				content   : "Next, select any tags that describes what is offered in the trip. Lastly click 'Save' to create the trip.",
+				content   : "Select the relevant tags for the trip too.",
 				onShown	  : function(tour) {
 					$('#tagsList').find('.tag').filter(':first').click();
 				}
@@ -465,7 +465,7 @@ function TourManager() {
 				element   : '#tickets-boatrooms',
 				title     : 'Assigning Specific Boatrooms to a Boat',
 				placement : 'left',
-				content   : 'Dou can be even more specific to which cabin the ticket is applicable for too. Simply, check the checkbox for the cabin you want to limit this ticket too.',
+				content   : 'You can be even more specific to which cabin the ticket is applicable for too. Simply, check the checkbox for the cabin you want to limit this ticket too.',
 				onShow	  : function(tour) {
 					//$("#tickets-boats-checkbox").click();
 				},
@@ -606,7 +606,7 @@ function TourManager() {
 				element   : '#course-base', // @todo change this to course-classes
 				title     : 'Setting a Price',
 				placement : 'left',
-				content   : 'Enter how much the course will cost the customer. When setting this price, the cost for the included tickets will be overridden to enable you to.',
+				content   : 'Enter how much the course will cost the customer. When setting this price, the cost for the included tickets will be overridden to enable you to charge the customer to correct amount.',
 				onShown	  : function(tour) {
 					$('#acom-price').val(200);;
 				}
@@ -1020,10 +1020,10 @@ function TourManager() {
                 };
                 Company.initialise(params, function success(data) {
                     pageMssg("Thank you for following our wizard. Your system is now fully configured.", 'success');
+					localStorage.setItem('finishedTour', 'true');
                     setTimeout(function() {
-						sessionStorage.setItem('finishedTour', 'true');
                         window.location.hash = "#scheduling";
-                        window.location.reload(true);
+                        //window.location.reload(true);
                     }, 3000);
                 });
             });
