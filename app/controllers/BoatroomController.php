@@ -152,10 +152,22 @@ class BoatroomController extends Controller {
 			});
 			//return $booking_ids;
 			// @todo investigate how to remove this by using bookingdetails.booking.reference
-			$booking_refs = Context::get()->bookings()->whereIn('id', $booking_ids->toArray())->lists('reference');
-			foreach($booking_refs as $obj) 
+			$bookings = Context::get()->bookings()
+									  ->whereIn('id', $booking_ids->toArray())
+									  ->get(['reference', 'status', 'id']);
+
+			$quotes = $bookings->map(function($obj) { if($obj->status === 'saved') return $obj->id; })->toArray();
+
+			Booking::whereIn('id', $quotes)->delete();
+
+			$bookings = $bookings->filter(function($obj) {
+				if($obj->status != 'cancelled' && $obj->status != 'saved' && $obj->status != 'expired') return $obj;
+			})
+			->toArray();
+
+			foreach($bookings as $obj) 
 			{
-				$logger->append('Could not delete the cabin as it is used in the booking ' . $obj);
+				$logger->append('Could not delete the cabin as it is used in the booking [' . $obj['reference'] . ']');
 			}
 			return Response::json(
 						array('errors' => 
