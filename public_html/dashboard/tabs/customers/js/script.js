@@ -315,6 +315,8 @@ $(function () {
 function loadCSVFile(evt, columnData) {
 
     var csv = evt.target.result;
+	csv += '\n';
+	console.log('csv str', csv);
     // @todo minor - Move this file processing to backend. Javascript should just send the file not strings
     var allTextLines = csv.split(/\r\n|\n/);
     var lines = [];
@@ -383,7 +385,7 @@ function renderCustomerList(customers) {
 
     $('#customer-table-div').html(customerListItem({customers: customers}));
 
-    if (customers.length != 0) createDataTable();
+    if (!_.isEmpty(customers)) createDataTable();
 
 }
 
