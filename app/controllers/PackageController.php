@@ -322,11 +322,11 @@ class PackageController extends Controller {
 
 		Context::get()->bookings()->whereIn('id', $quotes)->delete();
 
-		$bookings = $bookings->map(function($obj){
+		$bookings = $bookings->filter(function($obj){
 			if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;	
 		})->toArray();
 
-		$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
+		//$bookings = array_filter($bookings, function($obj){ return !is_null($obj); });
 
 		if($bookings)
 		{
