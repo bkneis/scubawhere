@@ -64,6 +64,29 @@ function loadPickups() {
 	var params = { date : $("#date-select").val() };
 	Report.getPickupSchedule(params, function success(data) {
 		$("#pickup-table").empty().append( pickupList({ pickups : data.pick_ups }) );
+		if(data.pick_ups.length > 0) createDataTable();
+	});
+}
+
+function createDataTable() {
+	var date = $('#date-select').val();
+	var pickupTable = $('.reports-table').DataTable({
+        "pageLength": 10,
+		"dom": 'Bfrtlp',
+		"buttons": [
+			{
+				extend : 'excel',
+	   			title  : 'Pickup Schedule for ' + date	
+			},
+			{
+				extend : 'pdf',
+				title  : 'Pickup Schedule for ' + date
+			},
+			{
+				extend : 'print',
+				title  : 'Pickup Schedule for ' + date
+			}
+		]
 	});
 }
 
