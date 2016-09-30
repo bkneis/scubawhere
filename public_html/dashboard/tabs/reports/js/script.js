@@ -33,6 +33,10 @@ var colors = [
 var colorID = 0;
 var democolorID = 0;
 
+Handlebars.registerHelper('getGrossAmount', function(revenue, costs){
+	return revenue + costs;
+});
+
 Handlebars.registerHelper('getUtil', function(capacity, assigned){
 	if(capacity === assigned) return 0;
 	return Math.round((assigned/capacity) * 100);

@@ -146,7 +146,7 @@
 	</table>
 	<div class="text-right" style="font-weight: bold;">
 		<p>&nbsp;</p>
-		<h4>Total revenue: {{currency}} {{entries.totalRevenue}}</h4>
+		<h4>Total Revenue: {{currency}} {{entries.totalRevenue}}</h4>
 	</div>
 </script>
 <script type="text/x-handlebars-template" id="agents-report-template">
@@ -183,9 +183,10 @@
 
 	<div class="text-right" style="font-weight: bold;">
 		<p>&nbsp;</p>
-		<h4>Total commission: {{currency}} {{entries.totals.commission}}</h4>
-		<h4>Total revenue: {{currency}} {{entries.totals.revenue}}</h4>
-		<h4>Total invoicable: {{currency}} {{entries.totals.invoicable}}</h4>
+		<h4>Total Commission: {{currency}} {{entries.totals.commission}}</h4>
+		<h4>Total Net Revenue: {{currency}} {{entries.totals.revenue}}</h4>
+		<h4>Total Gross Revenue: {{currency}} {{getGrossAmount entries.totals.revenue entries.totals.commission}}</h4>
+		<h4>Total Invoicable: {{currency}} {{entries.totals.invoicable}}</h4>
 	</div>
 </script>
 <script type="text/x-handlebars-template" id="booking-history-report-template">
@@ -218,7 +219,7 @@
 
 	<div class="text-right" style="font-weight: bold;">
 		<p>&nbsp;</p>
-		<h4>Total revenue: {{currency}} {{entries.totals.revenue}}</h4>
+		<h4>Total Revenue: {{currency}} {{entries.totals.revenue}}</h4>
 	</div>
 </script>
 <script type="text/x-handlebars-template" id="utilisation-report-template">
