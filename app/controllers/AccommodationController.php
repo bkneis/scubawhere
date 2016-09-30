@@ -338,7 +338,7 @@ class AccommodationController extends Controller {
 			return Response::json(
 						array('errors' => 
 							array('The accommodation could not be deleted as it is booked in the future, 
-								   please visit the error logs tab to find how to delete it.')
+								   please visit the troubleshooting tab to find how to delete it.')
 						), 409); // Conflict
 		}
 

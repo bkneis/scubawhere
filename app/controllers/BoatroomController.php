@@ -171,7 +171,7 @@ class BoatroomController extends Controller {
 			}
 			return Response::json(
 						array('errors' => 
-							array('The cabin could not be delete, please visit the error logs for more information on how to resolve this.')
+							array('The cabin could not be delete, please visit the troubleshooting tab for more information on how to resolve this.')
 						), 409);
 		}
 

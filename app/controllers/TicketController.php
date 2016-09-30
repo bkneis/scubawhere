@@ -384,7 +384,7 @@ class TicketController extends Controller {
 			return Response::json(
 				array('errors' => 
 					array('The ticket could not be deleted as it is used in bookings in the future, '.
-						'Please visit the error logs for more info on how to delete it.')
+						'Please visit the troubleshooting tab for more info on how to delete it.')
 				), 409); // Conflict
 		}
 

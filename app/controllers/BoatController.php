@@ -229,7 +229,7 @@ class BoatController extends Controller {
 			}
 			return Response::json(
 						array('errors' => 
-							array('The boat has future departures associated to it, please visit the error logs tab to see more information on how to delete it.')
+							array('The boat has future departures associated to it, please visit the troubleshooting tab to see more information on how to delete it.')
 						), 409);
 		}
 		else

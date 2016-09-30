@@ -358,9 +358,9 @@ $PROTOCOL = 'http';
 				</li>
 
                 <li>
-                    <a href="#logs">
+                    <a href="#troubleshooting">
                         <i class="fa fa-exclamation fa-lg fa-fw"></i>
-                        <span>Logs</span>
+                        <span>Troubleshooting</span>
                     </a>
                 </li>
 			</ul>

@@ -252,7 +252,7 @@ class TripController extends Controller {
             }    
             return Response::json(
                         array('errors' =>
-                            array('The trip could not be deleted as it has tickets that require it, for more information on how to delete it, visit the error logs tab')
+                            array('The trip could not be deleted as it has tickets that require it, for more information on how to delete it, visit the troubleshooting tab')
                         ), 409);
         }
         // Check if the trip is scheduled for future departures
@@ -265,7 +265,7 @@ class TripController extends Controller {
             }
             return Response::json(
                         array('errors' =>
-                            array('The trip could not be deleted as it is scheduled for departure in the future, for more information on how to delete it, visit the error logs tab')
+                            array('The trip could not be deleted as it is scheduled for departure in the future, for more information on how to delete it, visit the troubleshooting tab')
                         ), 409);
         }
         // If no problems, unassign the trips to the tickets
