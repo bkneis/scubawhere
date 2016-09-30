@@ -50,7 +50,13 @@ class CrmTrackingController extends Controller {
                             ->with('crmSubscription')
                             ->first();
 
-        if(strcmp($data['token'], $customer->crm_subscription->token) === 0)
+		$customer->crm_subscription->subscribed = 0;
+		$customer->crm_subscription->unsubscribed_campaign_id = $data['campaign_id'];
+		$customer->crm_subscription->save();
+		return View::make('pages/email_unsubscribe'); // @todo , array('name' => $customer->name) add some customer details to pass the page
+
+		// @todo Allow tokens to be kept and not updated so previous email unsubscribe tokens will match
+        /*if(strcmp($data['token'], $customer->crm_subscription->token) === 0)
         {
             $customer->crm_subscription->subscribed = 0;
             $customer->crm_subscription->unsubscribed_campaign_id = $data['campaign_id'];
@@ -61,7 +67,7 @@ class CrmTrackingController extends Controller {
         {
             // @todo create an external error landing page to pass messages to
             return Response::json(array("error" => "Well this is embarrassing isn't it, there seems to be a mix up with our tokens so we could not unsubscribe you"), 406);
-        }
+		}*/
     }
     
 }
