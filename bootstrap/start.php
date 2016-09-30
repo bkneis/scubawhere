@@ -36,14 +36,16 @@ $app = new Illuminate\Foundation\Application;
 ));*/
 $env = $app->detectEnvironment(function() {
 
-	if($_SERVER['SERVER_NAME'] == 'scubawhererms-1.puzntmrpqp.eu-central-1.elasticbeanstalk.com')
+	/*if($_SERVER['SERVER_NAME'] == 'scubawhererms-1.puzntmrpqp.eu-central-1.elasticbeanstalk.com')
 	{
 		return 'production_aws';
 	}
 	elseif($_SERVER['AWS_ENV'] == 'dev')
 	{
 		return 'production_aws';
-	}
+	}*/
+
+	if(isset($_SERVER['AWS_ENV'])) return 'production_aws';
 
 	switch(gethostname()) {
 		case 'marvin':
