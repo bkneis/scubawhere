@@ -28,7 +28,7 @@ class AuthenticationController extends Controller {
 
 			$credit_info = Context::get()->credits()->first();
 
-			if($credit_info->renewal_date)
+			if(isset($credit_info->renewal_date))
 			{
 				if(Helper::convertToLocalTime($credit_info->renewal_date) < Helper::localtime())
 				{
