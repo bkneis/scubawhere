@@ -1,5 +1,6 @@
 <?php namespace ScubaWhere\Services;
 
+use ScubaWhere\Helper;
 use ScubaWhere\Repositories\LogRepoInterface;
 
 /**
@@ -16,9 +17,10 @@ class Logger
     protected $log_contents;
 
     public function __construct(LogRepoInterface $log_repo, $name)
-    {
+	{
+		$now = Helper::localTime();
         $this->log_repo = $log_repo;
-        $data = array('name' => $name);
+        $data = array('name' => $name . ' at ' .$now->format('Y-m-d H:i:s'));
         $this->log = $this->log_repo->create($data);
     }
 

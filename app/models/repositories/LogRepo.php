@@ -29,7 +29,7 @@ class LogRepo implements LogRepoInterface
 
     public function getAll()
     {
-        return $this->log_model->with('entries')->get();
+        return $this->log_model->with('entries')->orderBy('created_at', 'DESC')->get();
     }
 
     public function create($data)
