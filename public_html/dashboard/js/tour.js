@@ -792,6 +792,11 @@ function TourManager() {
 			settingsTour.goTo(0);	
 
             $("#tour-next-step").on("click", function() {
+				if(!window.hasCompletedSettings) 
+				{
+					pageMssg('Please complete and submit your information');
+					return;
+				}
                 if (window.currentStep.position <= 1) {
                     window.currentStep = {
                         tab: "#accommodations",

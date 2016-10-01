@@ -17,6 +17,8 @@ Handlebars.registerHelper('getUtil', function(capacity, assigned){
 
 $(function() {
 
+	window.hasCompletedSettings = false;
+
 	window.promises.agencies_loaded = $.Deferred();
 	window.promises.countries_loaded = $.Deferred();
 	window.promises.currencies_loaded = $.Deferred();
@@ -146,6 +148,8 @@ $(function() {
 
 			//Clear error messages
 			$('.errors').remove();
+
+			window.hasCompletedSettings = true;
 
 			// If the user is on the tour, redirect them to the next step
 			if(window.tourStart) 
