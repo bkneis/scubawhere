@@ -1147,6 +1147,7 @@ return array(
     'ChangeForeignKeyTrainingIdOnCoursesTable' => $baseDir . '/app/database/migrations/2015_03_16_134334_change_foreign_key_training_id_on_courses_table.php',
     'ChangeLatitudeAndLongitudeFieldsToDoupleType' => $baseDir . '/app/database/migrations/2015_02_11_015111_change_latitude_and_longitude_fields_to_douple_type.php',
     'ChangeNightsColumnToEndDateOnAccommodationBooking' => $baseDir . '/app/database/migrations/2014_11_21_194518_change_nights_column_to_end_date_on_accommodation_booking.php',
+    'ChangeOpenedAtToDatetime' => $baseDir . '/app/database/migrations/2016_10_01_111627_change_opened_at_to_datetime.php',
     'ChangePackageRelationsToPolymorphic' => $baseDir . '/app/database/migrations/2015_03_22_141010_change_package_relations_to_polymorphic.php',
     'ChangePasswordFieldOnUsersTableToNullableDefaultNull' => $baseDir . '/app/database/migrations/2015_12_12_073235_change_password_field_on_users_table_to_nullable_default_null.php',
     'ChangeTriptypesToTags' => $baseDir . '/app/database/migrations/2014_12_02_194157_change_triptypes_to_tags.php',

@@ -18,8 +18,8 @@ class CrmTrackingController extends Controller {
 			$now = new \DateTime( 'now', new \DateTimeZone( $token->customer->company->timezone ) );
             $token->opened += 1;
 			$token->opened_time = $now->format('Y-m-d H:i:s');
-            //$token->opened_time = Helper::localtime();
-            $token->save();
+			$token->save();
+			return $token->opened_time;
         }
         
         return;
@@ -37,7 +37,6 @@ class CrmTrackingController extends Controller {
         {
 			$now = new \DateTime( 'now', new \DateTimeZone( $token->customer->company->timezone ) );
             $tracker->count = $tracker->count + 1;
-            //$tracker->opened_time = time();
 			$tracker->opened_time = $now->format('Y-m-d H:i:s'); 
             $tracker->save();
         }
