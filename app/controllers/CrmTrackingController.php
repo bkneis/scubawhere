@@ -11,11 +11,14 @@ class CrmTrackingController extends Controller {
         $data['token'] = Input::get('token');
         
         $token_match = ['campaign_id' => $data['campaign_id'], 'token' => $data['token']];
-        $token = CrmToken::where($token_match)->first();
+        $token = CrmToken::where($token_match)->with('customer.company')->first();
 
-        if($token) {
+		if($token) 
+		{
+			$now = new \DateTime( 'now', new \DateTimeZone( $token->customer->company->timezone ) );
             $token->opened += 1;
-            $token->opened_time = Helper::localtime();
+			$token->opened_time = $now->format('Y-m-d H:i:s');
+            //$token->opened_time = Helper::localtime();
             $token->save();
         }
         
@@ -29,11 +32,13 @@ class CrmTrackingController extends Controller {
         $data['token'] = Input::get('token');
         
         $link_query = ['customer_id' => $data['customer_id'], 'token' => $data['token']];
-        $tracker = CrmLinkTracker::where($link_query)->first();
+        $tracker = CrmLinkTracker::where($link_query)->with('customer.company')->first();
         if($tracker)
         {
+			$now = new \DateTime( 'now', new \DateTimeZone( $token->customer->company->timezone ) );
             $tracker->count = $tracker->count + 1;
-            $tracker->opened_time = time();
+            //$tracker->opened_time = time();
+			$tracker->opened_time = $now->format('Y-m-d H:i:s'); 
             $tracker->save();
         }
         $link = CrmLink::findOrFail($data['link_id']);

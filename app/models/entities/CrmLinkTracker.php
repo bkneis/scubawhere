@@ -25,4 +25,9 @@ class CrmLinkTracker extends Ardent {
 		return $this->belongsTo('CrmLink');
 	}
 
+    public function customer()
+    {
+        return $this->belongsTo('Customer', 'customer_id');
+    }
+
 }
