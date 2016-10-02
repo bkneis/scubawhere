@@ -11,17 +11,17 @@
 							<div id="account-info" class="panel-body">
 
 								<div class="form-row">
-									<label class="field-label">Main person of contact : </label>
+									<label class="field-label">Main Person of Contact : </label>
 									<input type="text" name="contact" value="{{contact}}" class="form-control" required></input>
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Dive operator name : </label>
+									<label class="field-label">Dive Operator Name : </label>
 									<input type="text" name="name" value="{{name}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
-									<label id="business-website" class="field-label">Dive operator website : </label>
+									<label id="business-website" class="field-label">Dive Operator Website : </label>
 									<input type="text" name="website" placeholder="http://" value="{{website}}" class="form-control">
 								</div>
 
@@ -45,7 +45,7 @@
 								</div>
 
 								<!--<div class="form-row">
-									<label class="field-label">Contact email address : </label>
+									<label class="field-label">Contact Email Address : </label>
 									<input type="text" name="email" value="{{email}}" class="form-control" required></input>
 								</div>-->
 
@@ -57,7 +57,7 @@
 								<div id="credit-info"></div>
 
 								<!--<div id="start-tour-div" class="form-row">
-									<label class="field-label">Restart the tour : </label>
+									<label class="field-label">Restart the Tour : </label>
 									<a id="start-wizard" class="btn btn-default text-uppercase">Start wizard</a>
 								</div>-->
 
@@ -95,27 +95,27 @@
 								</div>
 
 								<div id="postcode-div" class="form-row">
-									<label class="field-label">Post code / zip code : </label>
+									<label class="field-label">Post Code / Zip Code : </label>
 									<input type="text" name="postcode" value="{{postcode}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Business phone : </label>
+									<label class="field-label">Business Phone : </label>
 									<input class="form-control" type="text" id="business_phone" name="business_phone" value="{{business_phone}}">
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Business email : </label>
+									<label class="field-label">Business Email : </label>
 									<input type="text" name="business_email" value="{{business_email}}" class="form-control">
 								</div>
 
 								<div id="legal-info" class="form-row">
-									<label class="field-label">Registration number : </label>
+									<label class="field-label">Registration Number : </label>
 									<input type="text" name="registration_number" value="{{registration_number}}" class="form-control">
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">VAT number : </label>
+									<label class="field-label">VAT Number : </label>
 									<input type="text" name="vat_number" value="{{vat_number}}" class="form-control">
 								</div>
 
@@ -134,7 +134,7 @@
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Upload terms file : </label>
+									<label class="field-label">Upload Terms and Conditions File : </label>
 									<input id="terms-file" style="margin-bottom:10px" type="file" accept="application/pdf">
 									
                                     <!--<input id="terms-file" name="terms_file" type="file" accept="application/pdf" />-->
