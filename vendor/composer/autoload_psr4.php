@@ -11,6 +11,7 @@ return array(
     'PhilipBrown\\Money\\' => array($vendorDir . '/philipbrown/money/src'),
     'Patchwork\\' => array($vendorDir . '/patchwork/utf8/src/Patchwork'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'Maknz\\Slack\\Laravel\\' => array($vendorDir . '/maknz/slack-laravel/src'),
     'Maknz\\Slack\\' => array($vendorDir . '/maknz/slack/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),

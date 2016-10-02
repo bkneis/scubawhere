@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eb4b23d2abc41d579d5630706c898b13",
-    "content-hash": "cf9fe710860171aa9010646b353f9859",
+    "hash": "ab96065b9fa24d9d5b4a3502616010a4",
+    "content-hash": "dc7baa0187f4200fc44464a81f5fc2c0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1493,6 +1493,47 @@
                 "slack"
             ],
             "time": "2015-06-03 03:35:16"
+        },
+        {
+            "name": "maknz/slack-laravel",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maknz/slack-laravel.git",
+                "reference": "d62741f731c963c71272159b38f8209ce57ff85b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maknz/slack-laravel/zipball/d62741f731c963c71272159b38f8209ce57ff85b",
+                "reference": "d62741f731c963c71272159b38f8209ce57ff85b",
+                "shasum": ""
+            },
+            "require": {
+                "maknz/slack": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Maknz\\Slack\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "maknz",
+                    "email": "github@mak.geek.nz"
+                }
+            ],
+            "description": "Laravel 4 and 5 integration for the maknz/slack package, including facades and service providers.",
+            "keywords": [
+                "laravel",
+                "slack"
+            ],
+            "time": "2016-06-25 06:08:23"
         },
         {
             "name": "mews/purifier",

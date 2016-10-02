@@ -3022,5 +3022,48 @@
             "laravel",
             "slack"
         ]
+    },
+    {
+        "name": "maknz/slack-laravel",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/maknz/slack-laravel.git",
+            "reference": "d62741f731c963c71272159b38f8209ce57ff85b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/maknz/slack-laravel/zipball/d62741f731c963c71272159b38f8209ce57ff85b",
+            "reference": "d62741f731c963c71272159b38f8209ce57ff85b",
+            "shasum": ""
+        },
+        "require": {
+            "maknz/slack": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2016-06-25 06:08:23",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Maknz\\Slack\\Laravel\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-2-Clause"
+        ],
+        "authors": [
+            {
+                "name": "maknz",
+                "email": "github@mak.geek.nz"
+            }
+        ],
+        "description": "Laravel 4 and 5 integration for the maknz/slack package, including facades and service providers.",
+        "keywords": [
+            "laravel",
+            "slack"
+        ]
     }
 ]

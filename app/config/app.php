@@ -130,6 +130,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
 		'Mews\Purifier\PurifierServiceProvider',
+		'Maknz\Slack\Laravel\ServiceProvider',
 
 		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
         'ScubaWhere\Repositories\LogRepoServiceProvider',
@@ -203,6 +204,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 
 		'Purifier'        => 'Mews\Purifier\Facades\Purifier',
+		'Slack' => 'Maknz\Slack\Laravel\Facade',
 
 	),
 

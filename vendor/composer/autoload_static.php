@@ -8,10 +8,10 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
 {
     public static $files = array (
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
         'fad373d645dd668e85d44ccf3c38fbd6' => __DIR__ . '/..' . '/guzzlehttp/streams/src/functions.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
         '154e0d165f5fe76e8e9695179d0a7345' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '3919eeb97e98d4648304477f8ef734ba' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Crypt/Random.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
     );
@@ -30,6 +30,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Maknz\\Slack\\Laravel\\' => 20,
             'Maknz\\Slack\\' => 12,
         ),
         'L' => 
@@ -68,6 +69,10 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Maknz\\Slack\\Laravel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maknz/slack-laravel/src',
         ),
         'Maknz\\Slack\\' => 
         array (
@@ -3143,6 +3148,10 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'Maknz\\Slack\\AttachmentField' => __DIR__ . '/..' . '/maknz/slack/src/AttachmentField.php',
         'Maknz\\Slack\\Client' => __DIR__ . '/..' . '/maknz/slack/src/Client.php',
         'Maknz\\Slack\\Facades\\Slack' => __DIR__ . '/..' . '/maknz/slack/src/Facades/Slack.php',
+        'Maknz\\Slack\\Laravel\\Facade' => __DIR__ . '/..' . '/maknz/slack-laravel/src/Facade.php',
+        'Maknz\\Slack\\Laravel\\ServiceProvider' => __DIR__ . '/..' . '/maknz/slack-laravel/src/ServiceProvider.php',
+        'Maknz\\Slack\\Laravel\\ServiceProviderLaravel4' => __DIR__ . '/..' . '/maknz/slack-laravel/src/ServiceProviderLaravel4.php',
+        'Maknz\\Slack\\Laravel\\ServiceProviderLaravel5' => __DIR__ . '/..' . '/maknz/slack-laravel/src/ServiceProviderLaravel5.php',
         'Maknz\\Slack\\Message' => __DIR__ . '/..' . '/maknz/slack/src/Message.php',
         'Maknz\\Slack\\SlackServiceProvider' => __DIR__ . '/..' . '/maknz/slack/src/SlackServiceProvider.php',
         'Maknz\\Slack\\SlackServiceProviderLaravel4' => __DIR__ . '/..' . '/maknz/slack/src/SlackServiceProviderLaravel4.php',
