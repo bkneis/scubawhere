@@ -26,7 +26,7 @@ return [
   |
   */
 
-  'channel' => null, // #general
+  'channel' => null,
 
   /*
   |-------------------------------------------------------------
@@ -38,7 +38,7 @@ return [
   |
   */
 
-  'username' => null, // RMSbot
+  'username' => null,
 
   /*
   |-------------------------------------------------------------
@@ -51,7 +51,7 @@ return [
   |
   */
 
-  'icon' => null, // https://rms.scubawhere.com/img/Snorkel_Mask_Diving_48.png
+  'icon' => null,
 
   /*
   |-------------------------------------------------------------
@@ -107,7 +107,7 @@ return [
   |
   | Which attachment fields should be interpreted in Slack's Markdown-like
   | language. By default, Slack assumes that no fields in an attachment
-  | should be formatted as Markdown.
+  | should be formatted as Markdown. 
   |
   */
 

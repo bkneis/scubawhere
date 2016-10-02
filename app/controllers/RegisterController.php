@@ -97,9 +97,9 @@ class RegisterController extends Controller {
 
 		// Send notification to Slack if production RMS
 		//if(gethostname() === 'rms.scubawhere.com')
-		if(isset($_SERVER['AWS_ENV']))
-		{
-			Slack::attach([
+		//if(isset($_SERVER['AWS_ENV']))
+		//{
+			/*Slack::attach([
 				'color' => 'good',
 				'fields' => [
 				[
@@ -113,7 +113,34 @@ class RegisterController extends Controller {
 					'short' => true
 				]
 				]
-			])->send('New RMS registration! :smiley:');
+			])->send('New RMS registration! :smiley:');*/
+		//}
+		//
+		if(isset($_SERVER['AWS_ENV']))
+		{
+			$settings = [
+				 'username' => null,
+				 'channel' => null,
+				 'link_names' => false,
+				 'fields' => [
+				 [
+					'title' => 'Name',
+					'value' => $company->name,
+					'short' => true
+				 ],
+				 [
+					'title' => 'Contact',
+					'value' => $company->contact . ': ' . $company->business_email,
+					'short' => true
+				 ]
+				 ]
+			];
+
+			$client = new Maknz\Slack\Client('https://hooks.slack.com/services/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', $settings);
+
+			$client->send('New RMS registration!');
+			$client->send('Company Name : ' . $company->name . ',  Contact Name : ' . $company->contact);
+			$client->send('Email Address : ' . $user->email . ',  Phone number : ' . $user->phone);
 		}
 
 		//CrmMailer::sendRegisterConf($user); // todo use this without context
