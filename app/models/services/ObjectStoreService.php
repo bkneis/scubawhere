@@ -38,6 +38,10 @@ class ObjectStoreService {
 		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-customer-imports', Context::get()->name . 'customer-imports.csv', '+15 minutes');
 	}
 
+	public function getTermsUrl()
+	{
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-terms-conditions', Context::get()->name . '/terms.pdf', '+5 minutes');
+	}
 
 	public function uploadEmailImage($image)
 	{

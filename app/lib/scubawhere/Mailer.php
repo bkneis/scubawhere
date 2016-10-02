@@ -28,7 +28,7 @@ class CrmMailer implements CrmMailerInterface
 	{
 		// We need to assign variables required for the mail closure as the eloquent models aren't serializable (which is required of queuing)
 		$company = Context::get();
-		$terms_file = storage_path() . '/scubawhere/' . $company->name . '/terms.pdf';
+		$terms_file = storage_path() . '/scubawhere/' . $company->name . '-terms.pdf';
 		$email_to = $customer->email;
 		$name_to = $customer->name;
 		$subject = $campaign->subject;

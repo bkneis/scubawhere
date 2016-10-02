@@ -229,6 +229,17 @@ class CrmCampaignController extends Controller
             }
         }
 
+		try 
+		{
+			$terms_url = $this->object_store_service->getTermsUrl();
+			$file_path = storage_path() . '/scubawhere/' . Context::get()->name . '-terms.pdf';
+			file_put_contents($file_path, fopen($terms_url, 'r'));
+		}
+		catch(Exception $e)
+		{
+			
+		}
+
         // LOOP THROUGH CUSTOMER EMAILS AND SEND THEM EMAIL
         foreach ($customers as $customer) {
             // If the customer has unsubscribed skip them and go to the next customer
