@@ -96,7 +96,8 @@ class RegisterController extends Controller {
 		// Company and User have been created successfully
 
 		// Send notification to Slack if production RMS
-		if(gethostname() === 'rms.scubawhere.com')
+		//if(gethostname() === 'rms.scubawhere.com')
+		if(isset($_SERVER['AWS_ENV']))
 		{
 			Slack::attach([
 				'color' => 'good',
