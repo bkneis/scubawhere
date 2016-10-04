@@ -88,4 +88,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	]);
 });
 
-Route::controller('admin', 'AdminController');
+Route::group(array('before' => 'auth.admin'), function() 
+{
+	Route::controller('admin', 'AdminController');
+});

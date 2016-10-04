@@ -52,6 +52,11 @@ Route::filter('auth.basic', function()
 	return Auth::basic('username');
 });
 
+Route::filter('auth.admin', function()
+{
+	if(\ScubaWhere\Context::get()->name !== 'admin') return Redirect::to('/');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter
