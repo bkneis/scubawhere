@@ -5,14 +5,17 @@ use ScubaWhere\Context;
 use ScubaWhere\Services\CreditService;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use ScubaWhere\Services\ObjectStoreService;
 
 class CompanyController extends Controller {
 
 	protected $credit_service;
+	protected $object_store_service;
 
-	public function __construct(CreditService $credit_service)
+	public function __construct(CreditService $credit_service, ObjectStoreService $object_store_service)
 	{
 		$this->credit_service = $credit_service;
+		$this->object_store_service = $object_store_service;
 	}
 
 	public function getIndex()
@@ -239,9 +242,9 @@ class CompanyController extends Controller {
 	public function postHeartbeat()
 	{
 		## Set up file
-		$path = storage_path() . '/logs';
+		//$path = storage_path() . '/logs';
 
-		if (!file_exists($path))
+		/*if (!file_exists($path))
 		{
 			// Directory doesn't exist, try to create it
 			if (!mkdir($path, 0700, true))
@@ -249,12 +252,19 @@ class CompanyController extends Controller {
 
 			// Create default .gitignore, to ignore stored log files
 			file_put_contents($path . '/.gitignore', "*.log\n");
-		}
+		}*/
 
-		if (!is_writable($path))
-			throw new \Exception('Path "' . $path . '" is not writable.');
+		//if (!is_writable($path))
+			//throw new \Exception('Path "' . $path . '" is not writable.');
 
-		$file = $path . '/heartbeats.log';
+		//$file = $path . '/heartbeats.log';
+
+		$file = storage_path() . '/logs/heartbeats.log';
+
+		// Get the log file url from s3
+		$log_url = $this->object_store_service->getHeartbeatsLogUrl();
+		// Download the log file and save to $file
+		file_put_contents($file, fopen($log_url, 'r'));		
 
 		## Set up log line
 		$line = array();
@@ -286,6 +296,9 @@ class CompanyController extends Controller {
 
 		## Write log
 		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
+
+		// Upload the file to s3
+		$this->object_store_service->uploadHeartbeatsLog();
 	}
 
 	public function getNotifications()

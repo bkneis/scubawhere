@@ -33,6 +33,17 @@ class ObjectStoreService {
 		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-customer-imports', Context::get()->name . 'customer-imports.csv', 'text/csv');
 	}
 
+	public function uploadHeartbeatsLog()
+	{
+		$file_path = storage_path() . '/logs/heartbeats.log';
+		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-log', 'heartbeats.log', 'text/plain');
+	}
+
+	public function getHeartbeatsLogUrl()
+	{
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-log', 'heartbeats.log', '+5 minutes');
+	}
+
 	public function getCustomerCSVUrl()
 	{
 		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-customer-imports', Context::get()->name . 'customer-imports.csv', '+15 minutes');
