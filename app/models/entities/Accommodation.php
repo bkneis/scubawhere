@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Accommodation extends Ardent {
 
@@ -74,6 +74,11 @@ class Accommodation extends Ardent {
 
 		$this->decimal_price         = number_format($totalPrice, 2, '.', '');
 		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
+	}
+
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', '=', Context::get()->id);
 	}
 
 	public function bookings()

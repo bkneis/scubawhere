@@ -250,6 +250,11 @@ class Booking extends Ardent {
 		else return $query->where('reference', '=', $ref)->first();
 	}
 
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', '=', Context::get()->id);
+	}
+
 	public function decimal_price()
 	{
 		// TODO Tombstone
