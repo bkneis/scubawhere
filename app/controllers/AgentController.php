@@ -1,28 +1,63 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Context;
+use ScubaWhere\Services\AgentService;
+use ScubaWhere\Exceptions\NotFoundException;
+use ScubaWhere\Exceptions\InvalidInputException;
 
-class AgentController extends Controller
-{
-    public function getIndex()
-    {
-        try {
-            if (!Input::get('id')) {
-                throw new ModelNotFoundException();
-            }
+class AgentController extends Controller {
 
-            return Context::get()->agents()->findOrFail(Input::get('id'));
-        } catch (ModelNotFoundException $e) {
-            return Response::json(array('errors' => array('The agent could not be found.')), 404); // 404 Not Found
-        }
+    /**
+     * Service to manage agents
+     * \ScubaWhere\Services\AgentService
+     */
+    protected $agent_service;
+
+    /**
+     * @param AgentService Injected using laravel's IOC container
+     */
+    public function __construct(AgentService $agent_service) {
+        $this->agent_service = $agent_service;
     }
 
+    /**
+     * /api/agent
+     * Get a single agent by ID
+     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @return json Agent model
+     */
+    public function getIndex() 
+    {
+        $id = Input::get('id');
+        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        return $this->agent_service->get($id);
+    }
+
+    /**
+     * /api/agent/all
+     * Get all agents belonging to a company
+     * @return array Collection Agent models
+     */
     public function getAll()
     {
-        return Context::get()->agents()->get();
+        return $this->agent_service->getAll();
     }
 
+    /**
+     * /api/agent/all-with-trashed
+     * Get all agents belonging to a company including soft deleted models
+     * @return array Collection Agent models
+     */
+    public function getAllWithTrashed()
+    {
+        return $this->agent_service->getAllWithTrashed();
+    }
+
+    /**
+     * /api/agent/add
+     * Create a new agent
+     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @return \Illuminate\Http\Response 201 Created with newly created agent
+     */
     public function postAdd()
     {
         $data = Input::only(
@@ -38,29 +73,20 @@ class AgentController extends Controller
             'commission',
             'terms'
         );
-
-        $agent = new Agent($data);
-
-        if (!$agent->validate()) {
-            return Response::json(array('errors' => $agent->errors()->all()), 406); // 406 Not Acceptable
-        }
-
-        $agent = Context::get()->agents()->save($agent);
-
-        return Response::json(array('status' => 'OK. Agent created', 'id' => $agent->id), 201); // 201 Created
+       
+        $agent = $this->agent_service->create($data);
+        return Response::json(array('status' => 'OK. Agent created', 'model' => $agent), 201); // 201 Created
     }
 
+    /**
+     * /api/agent/edit
+     * Edit an existing agent
+     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @return \Illuminate\Http\Response 200 Success with updated agent
+     */
     public function postEdit()
     {
-        try {
-            if (!Input::get('id')) {
-                throw new ModelNotFoundException();
-            }
-            $agent = Context::get()->agents()->findOrFail(Input::get('id'));
-        } catch (ModelNotFoundException $e) {
-            return Response::json(array('errors' => array('The agent could not be found.')), 404); // 404 Not Found
-        }
-
+        $id = Input::get('id');
         $data = Input::only(
             'name',
             'website',
@@ -75,22 +101,23 @@ class AgentController extends Controller
             'terms'
         );
 
-        if (!$agent->update($data)) {
-            return Response::json(array('errors' => $agent->errors()->all()), 406); // 406 Not Acceptable
-        }
-
-        return Response::json(array('status' => 'OK. Agent updated.'), 200); // 200 OK
+        $agent = $this->agent_service->update($id, $data);
+        return Response::json(array('status' => 'OK. Agent updated', 'model' => $agent), 200); // 200 Success
     }
 
+    /**
+     * /api/agent/delete
+     * Delete an agent and remove it from any quotes or packages
+     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws Exception
+     * @return \Illuminate\Http\Response 200 Success
+     */
     public function postDelete()
     {
-        try {
-            if(!Input::get('id'))
-                throw new ModelNotFoundException();
-            $agent = Context::get()->agents()->findOrFail(Input::get('id'));
-            $agent->delete();
-        } catch (ModelNotFoundException $e) {
-            return Response::json(array('errors' => array('The agent could not be found.')), 404); // 404 Not Found
-        }
+        $id = Input::get('id');
+        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        $this->agent_service->delete($id);
+        return Response::json(array('status' => 'OK. Agent deleted'), 200); // 200 Success
     }
+
 }

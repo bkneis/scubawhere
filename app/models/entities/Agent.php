@@ -1,7 +1,8 @@
 <?php
 
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
 
 class Agent extends Ardent {
 	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at');
@@ -39,6 +40,11 @@ class Agent extends Ardent {
 
 		if( isset($this->billing_phone) )
 			$this->billing_phone = Helper::sanitiseString($this->billing_phone);
+	}
+
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', '=', Context::get()->id);
 	}
 
 	public function bookings()
