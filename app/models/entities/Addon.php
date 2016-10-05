@@ -77,6 +77,11 @@ class Addon extends Ardent {
 		return Context::get()->currency;
 	}
 
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', '=', Context::get()->id);
+	}
+
 	/*public function bookings()
 	{
 		return $this->belongsToMany('Bookingdetail')
