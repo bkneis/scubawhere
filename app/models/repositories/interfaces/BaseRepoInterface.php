@@ -11,9 +11,9 @@ interface BaseRepoInterface
 
     public function getWhere($column, $value);
 
-    public function create($input);
+    public function create($data);
 
-    public function update($id);
+    public function update($id, $data);
 
     public function delete($id);
 
