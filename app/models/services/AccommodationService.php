@@ -5,6 +5,7 @@ namespace ScubaWhere\Services;
 use ScubaWhere\Helper;
 use ScubaWhere\Context;
 use ScubaWhere\Services\LogService;
+use ScubaWhere\Services\PriceService;
 use ScubaWhere\Exceptions\ConflictException;
 use ScubaWhere\Exceptions\BadRequestException;
 use ScubaWhere\Exceptions\InvalidInputException;
@@ -25,12 +26,20 @@ class AccommodationService {
 	protected $log_service;
 
 	/**
+	 * Service used to validate and associate prices
+	 * \ScubaWhere\Services\PriceService
+	 */
+	protected $price_service;
+
+	/**
 	 * @param AccommodationRepoInterface Injected using \ScubaWhere\Repositories\AccommodationRepoServiceProvider
 	 * @param LogService                 Injected using laravel's IOC container
+	 * @param PriceService               Injected using laravel's IOC container
 	 */
-	public function __construct(AccommodationRepoInterface $accommodation_repo, LogService $log_service) {
+	public function __construct(AccommodationRepoInterface $accommodation_repo, LogService $log_service, PriceService $price_service) {
 		$this->accommodation_repo = $accommodation_repo;
 		$this->log_service = $log_service;
+		$this->price_service = $price_service;
 	}
 
 	/**
@@ -145,70 +154,6 @@ class AccommodationService {
 	}
 
 	/**
-	 * Validate the base prices and seasonal prices and ensure they are in correct format
-	 * @param  array $base_prices
-	 * @param  array $prices
-	 * @throws \ScubaWhere\BadRequestException
-	 * @return array The formatted base and seasonal prices
-	 */
-	private function validatePrices($base_prices, $prices) 
-	{
-		if($base_prices)
-		{
-	        if(!is_array($base_prices)) throw new BadRequestException(['The "base_prices" value must be of type array!']);
-
-	        // Filter out empty and existing prices
-	        $base_prices = Helper::cleanPriceArray($base_prices);
-
-	        // Check if 'prices' input array is now empty
-	        if (empty($base_prices)) throw new BadRequestException(['You must submit at least one base price!']);
-    	}
-    	else
-    	{
-    		$base_prices = false;
-    	}
-
-        if ($prices) 
-        {
-            if(!is_array($prices)) throw new BadRequestException(['The "prices" value must be of type array!']);
-
-            // Filter out empty and existing prices
-            $prices = Helper::cleanPriceArray($prices);
-
-            // Check if 'prices' input array is now empty
-            if (empty($prices)) $prices = false;
-        } 
-        else 
-        {
-            $prices = false;
-        }
-
-        return array('base' => $base_prices, 'seasonal' => $prices);
-	}
-
-	/**
-	 * Save the base or seasonal price and associate it to the accommodation
-	 * @param  \Illuminate\Database\Eloquent\Model $accommodation Accommodation to associate prices to
-	 * @param  array $prices The prices to associate
-	 * @param  bool $is_base True if the prices are base prices
-	 * @return \Illuminate\Database\Eloquent\Model $accommodation
-	 */
-	private function associatePrices($accommodation, $prices, $is_base) 
-	{
-        $prices = Helper::normaliseArray($prices);
-        foreach ($prices as &$price) 
-        {
-            $price = new \Price($price);
-			if(!$price->validate()) throw new InvalidInputException($price->errors()->all());
-        }
-
-        if($is_base) $accommodation->basePrices()->saveMany($prices);
-        else         $accommodation->prices()->saveMany($prices);
-
-        return $accommodation;
-	}
-
-	/**
 	 * Validate, create and save the accommodation and prices to the database
 	 * @param  [type] $data        [description]
 	 * @param  [type] $base_prices [description]
@@ -217,11 +162,11 @@ class AccommodationService {
 	 */
 	public function create($data, $base_prices, $prices) 
 	{
-		$prices = $this->validatePrices($base_prices, $prices);
+		$prices = $this->price_service->validatePrices($base_prices, $prices);
 		$accommodation = $this->accommodation_repo->create($data);
 
-        $this->associatePrices($accommodation, $prices['base'], true);
-        if($prices['seasonal']) $this->associatePrices($accommodation, $prices['seasonal'], false);
+        $this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
+        if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
 
         return $accommodation;
 	}
@@ -236,11 +181,11 @@ class AccommodationService {
 	 */
 	public function update($id, $data, $base_prices, $prices) 
 	{
-    	$prices = $this->validatePrices($base_prices, $prices);
+    	$prices = $this->price_service->validatePrices($base_prices, $prices);
     	$accommodation = $this->accommodation_repo->update($id, $data);
 
-    	if($prices['base']) $this->associatePrices($accommodation, $prices['base'], true);
-    	if($prices['seasonal']) $this->associatePrices($accommodation, $prices['seasonal'], false);
+    	if($prices['base']) $this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
+    	if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
 
     	return $accommodation;
 	}
@@ -255,7 +200,7 @@ class AccommodationService {
 	 */
 	public function delete($id)
 	{
-		$accommodation = Context::get()->accommodations()
+		$accommodation = \Accommodation::onlyOwners()
 			->with(['bookings' => function($q) {
 				$q->where('accommodation_booking.start', '>=', Helper::localtime());
 			}])
@@ -267,7 +212,7 @@ class AccommodationService {
 			})
 			->toArray();
 
-		\Booking::where('company_id', '=', Context::get()->id)->whereIn('id', $quotes)->delete();
+		\Booking::onlyOwners()->whereIn('id', $quotes)->delete();
 
 		$bookings = $accommodation->bookings
 			->filter(function($obj) {
@@ -297,11 +242,11 @@ class AccommodationService {
 				foreach($packages as $obj) 
 				{
                     //$accommodation->packages()->detach($obj->id);
-                    DB::table('packageables')
+                    \DB::table('packageables')
                         ->where('packageable_type', 'Accommodation')
                         ->where('packageable_id', $accommodation->id)
                         ->where('package_id', $obj->id)
-                        ->update(array('deleted_at' => DB::raw('NOW()')));    
+                        ->update(array('deleted_at' => \DB::raw('NOW()')));    
                 }
                 $accommodation->save();
             }

@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AccommodationRepo implements AccommodationRepoInterface {
 
-    // \Company 
-    // Eloquent model that acts as the root model to associate assets to
+    /** 
+     * Eloquent model that acts as the root model to associate assets to
+     * \Company 
+    */ 
     protected $company_model;
     
     public function __construct() {
@@ -30,7 +32,7 @@ class AccommodationRepo implements AccommodationRepoInterface {
      * @return \Illuminate\Database\Eloquent\Collection Eloquent collection with all accommodations for a company including soft deleted models
      */
     public function allWithTrashed() {
-        return \Accommodation::where('company_id', '=', $this->company_model->id)->with('basePrices', 'prices')->get();
+        return \Accommodation::where('company_id', '=', $this->company_model->id)->with('basePrices', 'prices')->withTrashed()->get();
     }
 
     /**
