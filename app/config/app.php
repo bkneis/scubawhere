@@ -135,7 +135,8 @@ return array(
 		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
         'ScubaWhere\Repositories\LogRepoServiceProvider',
 		'ScubaWhere\Repositories\CreditRepoServiceProvider',
-		'ScubaWhere\Repositories\CustomerRepoServiceProvider'
+		'ScubaWhere\Repositories\CustomerRepoServiceProvider',
+		'ScubaWhere\Repositories\AccommodationRepoServiceProvider'
 
 	),
 
