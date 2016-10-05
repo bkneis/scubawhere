@@ -12,3 +12,4 @@
 */
 
 Artisan::add(new CronRunCommand);
+Artisan::add(new nightrider);
