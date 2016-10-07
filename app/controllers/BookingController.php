@@ -1975,10 +1975,12 @@ class BookingController extends Controller
 				$payment = $booking->payments()->save($payment);
 			}
 		}
+        else
+        {
+            $payment = null;
+        }
 
-        CrmMailer::sendBookingConf($booking->id); // ->id
-
-		if(!$payment) $payment = null;
+        CrmMailer::sendBookingConf($booking->id);
 
         return array('status' => 'OK. Booking confirmed.', 'deposit' => $payment);
     }
