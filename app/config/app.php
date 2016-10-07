@@ -141,7 +141,14 @@ return array(
 		'ScubaWhere\Repositories\AddonRepoServiceProvider',
 		'ScubaWhere\Repositories\AgentRepoServiceProvider',
 		'ScubaWhere\Repositories\TrainingRepoServiceProvider',
-		'ScubaWhere\Repositories\CourseRepoServiceProvider'
+		'ScubaWhere\Repositories\CourseRepoServiceProvider',
+		'ScubaWhere\Repositories\LocationRepoServiceProvider',
+		'ScubaWhere\Repositories\BoatroomRepoServiceProvider',
+		'ScubaWhere\Repositories\BoatRepoServiceProvider',
+		'ScubaWhere\Repositories\TripRepoServiceProvider',
+		'ScubaWhere\Repositories\TicketRepoServiceProvider',
+		'ScubaWhere\Repositories\PackageRepoServiceProvider'
+
 	),
 
 	/*
