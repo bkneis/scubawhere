@@ -1,6 +1,7 @@
 <?php
 
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -34,6 +35,11 @@ class Boat extends Ardent {
 	{
 		return !($this->departures()->where('start', '>', Helper::localTime())
 									->exists());
+	}
+
+	public function scopeOnlyOwners($query) 
+	{
+		return $query->where('company_id', '=', Context::get()->id);	
 	}
 
 	public function company()
