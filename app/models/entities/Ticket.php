@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Ticket extends Ardent {
 	use SoftDeletingTrait;
@@ -82,6 +83,11 @@ class Ticket extends Ardent {
 		     ->first();
 
 		$this->decimal_price = $price->decimal_price;
+	}
+
+	public function scopeOnlyOwners($query) 
+	{
+		return $query->where('company_id', '=', Context::get()->id);
 	}
 
 	public function bookings()
