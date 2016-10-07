@@ -8,7 +8,7 @@ use ScubaWhere\Repositories\TrainingRepoInterface;
 use ScubaWhere\Exceptions\InvalidInputException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class TrainingRepo implements TrainingRepoInterface {
+class TrainingRepo extends BaseRepo implements TrainingRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
@@ -30,7 +30,7 @@ class TrainingRepo implements TrainingRepoInterface {
 
     /**
      * Get all trainings for a company including soft deleted models
-     * @return \Illuminate\Database\Eloquent\Collection Eloquent collection with all trainings for a company including soft deleted models
+     * @return \Illuminate\Database\Eloquent\Collection 
      */
     public function allWithTrashed() {
         return \Training::onlyOwners()->withTrashed()->get();
@@ -40,7 +40,7 @@ class TrainingRepo implements TrainingRepoInterface {
      * Get an training for a company from its id
      * @param  int   ID of the training
      * @throws \Illuminate\Database\Eloquent\ModelNotFound
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an training for a company
+     * @return \Training
      */
     public function get($id) {
         return \Training::onlyOwners()->findOrFail($id);
@@ -50,17 +50,27 @@ class TrainingRepo implements TrainingRepoInterface {
      * Get an training for a company by a specified column and value
      * @param  string Column name to search by
      * @param  mixed  Value to match the training
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an training for a company
+     * @return \Training
      */
     public function getWhere($column, $value) {
         return \Training::onlyOwners()->where($column, $value)->get();
     }
 
     /**
+     * Get an training for a company with specified relationships
+     * @param  int    ID of the training
+     * @param  array  Relationships to retrieve with the model
+     * @return \Training
+     */
+    public function getWith($id, $relations) {
+        return \Training::onlyOwners()->with($relations)->findOrFail($id);
+    }
+
+    /**
      * Create an training and associate it with its company
      * @param array Information about the training to save
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an training for a company
+     * @return \Training
      */
     public function create($data) {
         $training = new \Training($data);
@@ -75,7 +85,7 @@ class TrainingRepo implements TrainingRepoInterface {
      * @param  int   ID of the training
      * @param  array Data to update the training with
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an training for a company
+     * @return \Training
      */
     public function update($id, $data) {
         $training = $this->get($id);

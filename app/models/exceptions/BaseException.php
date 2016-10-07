@@ -1,8 +1,10 @@
-<?php namespace ScubaWhere\Exceptions;
+<?php 
+
+namespace ScubaWhere\Exceptions;
 
 use Exception;
 
 abstract class BaseException extends Exception
 {
-	abstract function response();
+	public abstract function response();
 }

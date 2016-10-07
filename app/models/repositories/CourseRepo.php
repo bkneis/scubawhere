@@ -7,11 +7,11 @@ use ScubaWhere\Exceptions;
 use ScubaWhere\Repositories\CourseRepoInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CourseRepo implements CourseRepoInterface {
+class CourseRepo extends BaseRepo implements CourseRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
-     * \Company 
+     * @var \Company 
     */ 
     protected $company_model;
     
@@ -39,7 +39,7 @@ class CourseRepo implements CourseRepoInterface {
      * Get an course for a company from its id
      * @param  int   ID of the course
      * @throws \Illuminate\Database\Eloquent\ModelNotFound
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an course for a company
+     * @return \Course
      */
     public function get($id) {
         return \Course::onlyOwners()->with('trainings', 'tickets', 'basePrices', 'prices')->findOrFail($id);
@@ -49,17 +49,27 @@ class CourseRepo implements CourseRepoInterface {
      * Get an course for a company by a specified column and value
      * @param  string Column name to search by
      * @param  mixed  Value to match the course
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an course for a company
+     * @return \Course
      */
     public function getWhere($column, $value) {
         return \Course::onlyOwners()->where($column, $value)->with('trainings', 'tickets', 'basePrices', 'prices')->get();
     }
 
     /**
+     * Get a course for a company with specified relationships
+     * @param  int    ID of the course
+     * @param  array  Relationships to retrieve with the model
+     * @return \Course
+     */
+    public function getWith($id, $relations) {
+        return \Course::onlyOwners()->with($relations)->findOrFail($id);
+    }
+
+    /**
      * Create an course and associate it with its company
      * @param array Information about the course to save
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an course for a company
+     * @return \Course
      */
     public function create($data) {
         $course = new \Course($data);
@@ -74,7 +84,7 @@ class CourseRepo implements CourseRepoInterface {
      * @param  int   ID of the course
      * @param  array Data to update the course with
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an course for a company
+     * @return \Course
      */
     public function update($id, $data) {
         $course = $this->get($id);

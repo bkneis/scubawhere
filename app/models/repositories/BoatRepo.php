@@ -8,7 +8,7 @@ use ScubaWhere\Repositories\BoatRepoInterface;
 use ScubaWhere\Exceptions\InvalidInputException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class BoatRepo implements BoatRepoInterface {
+class BoatRepo extends BaseRepo implements BoatRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
@@ -22,7 +22,7 @@ class BoatRepo implements BoatRepoInterface {
 
     /**
      * Get all boats for a company
-     * @return \Illuminate\Database\Eloquent\Collection Eloquent collection with all boats for a company
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function all() {
         return \Boat::onlyOwners()->with('boatrooms')->get();
@@ -30,7 +30,7 @@ class BoatRepo implements BoatRepoInterface {
 
     /**
      * Get all boats for a company including soft deleted models
-     * @return \Illuminate\Database\Eloquent\Collection Eloquent collection with all boats for a company including soft deleted models
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function allWithTrashed() {
         return \Boat::onlyOwners()->with('boatrooms')->withTrashed()->get();
@@ -40,7 +40,7 @@ class BoatRepo implements BoatRepoInterface {
      * Get an boat for a company from its id
      * @param  int   ID of the boat
      * @throws \Illuminate\Database\Eloquent\ModelNotFound
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an boat for a company
+     * @return \Boat
      */
     public function get($id) {
         return \Boat::onlyOwners()->with('boatrooms')->findOrFail($id);
@@ -50,17 +50,27 @@ class BoatRepo implements BoatRepoInterface {
      * Get an boat for a company by a specified column and value
      * @param  string Column name to search by
      * @param  mixed  Value to match the boat
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an boat for a company
+     * @return \Boat
      */
     public function getWhere($column, $value) {
         return \Boat::onlyOwners()->where($column, $value)->with('boatrooms')->get();
     }
 
     /**
+     * Get an boat for a company with specified relationships
+     * @param  int    ID of the accommodation
+     * @param  array  Relationships to retrieve with the model
+     * @return \Boat
+     */
+    public function getWith($id, $relations) {
+        return \Boat::onlyOwners()->with($relations)->findOrFail($id);
+    }
+
+    /**
      * Create an boat and associate it with its company
      * @param array Information about the boat to save
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an boat for a company
+     * @return \Boat
      */
     public function create($data) {
         $boat = new \Boat($data);
@@ -75,7 +85,7 @@ class BoatRepo implements BoatRepoInterface {
      * @param  int   ID of the boat
      * @param  array Data to update the boat with
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an boat for a company
+     * @return \Boat
      */
     public function update($id, $data) {
         $boat = $this->get($id);

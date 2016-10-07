@@ -1,4 +1,6 @@
-<?php namespace ScubaWhere\Exceptions;
+<?php 
+
+namespace ScubaWhere\Exceptions;
 
 use ScubaWhere\Exceptions\BaseException;
 use Illuminate\Support\Facades\Request;

@@ -135,7 +135,6 @@ return array(
 		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
         'ScubaWhere\Repositories\LogRepoServiceProvider',
 		'ScubaWhere\Repositories\CreditRepoServiceProvider',
-		'ScubaWhere\Repositories\CustomerRepoServiceProvider',
 		'ScubaWhere\Repositories\AccommodationRepoServiceProvider',
 		'ScubaWhere\Repositories\PriceRepoServiceProvider',
 		'ScubaWhere\Repositories\AddonRepoServiceProvider',
@@ -216,7 +215,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 
 		'Purifier'        => 'Mews\Purifier\Facades\Purifier',
-		'Slack' => 'Maknz\Slack\Laravel\Facade',
+		'Slack'           => 'Maknz\Slack\Laravel\Facade',
 
 	),
 

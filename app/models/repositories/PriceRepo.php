@@ -6,11 +6,11 @@ use ScubaWhere\Context;
 use ScubaWhere\Exceptions\MethodNotSupportedException;
 use ScubaWhere\Repositories\PriceRepoInterface;
 
-class PriceRepo implements PriceRepoInterface {
+class PriceRepo extends BaseRepo implements PriceRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
-     * \Company 
+     * @var \Company 
      */ 
     protected $company_model;
     
@@ -50,6 +50,16 @@ class PriceRepo implements PriceRepoInterface {
      */
     public function getWhere($column, $value) {
         return \Price::where($column, '=', $value)->get();
+    }
+
+    /**
+     * Get an accommodation for a company with specified relationships
+     * @param  int    ID of the accommodation
+     * @param  array  Relationships to retrieve with the model
+     * @return \Price
+     */
+    public function getWith($id, $relations) {
+        return \Price::with($relations)->findOrFail($id);
     }
 
     /**

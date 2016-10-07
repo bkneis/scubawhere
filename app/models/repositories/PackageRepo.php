@@ -9,7 +9,7 @@ use ScubaWhere\Exceptions\InvalidInputException;
 use ScubaWhere\Repositories\PackageRepoInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class PackageRepo implements PackageRepoInterface {
+class PackageRepo extends BaseRepo implements PackageRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to

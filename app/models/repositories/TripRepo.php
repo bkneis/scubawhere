@@ -8,7 +8,7 @@ use ScubaWhere\Exceptions\InvalidInputException;
 use ScubaWhere\Repositories\TripRepoInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class TripRepo implements TripRepoInterface {
+class TripRepo extends BaseRepo implements TripRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
@@ -60,6 +60,16 @@ class TripRepo implements TripRepoInterface {
      */
     public function getWhere($column, $value) {
         return \Trip::onlyOwners()->where($column, $value)->with('locations', 'tags', 'tickets')->get();
+    }
+
+    /**
+     * Get a trip for a company with specified relationships
+     * @param  int    ID of the trip
+     * @param  array  Relationships to retrieve with the model
+     * @return \Trip 
+     */
+    public function getWith($id, $relations) {
+        return \Trip::onlyOwners()->with($relations)->findOrFail($id);
     }
 
     /**

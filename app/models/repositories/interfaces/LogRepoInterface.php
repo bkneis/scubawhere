@@ -1,4 +1,6 @@
-<?php namespace ScubaWhere\Repositories;
+<?php 
+
+namespace ScubaWhere\Repositories;
 
 /**
  * Interface: LogRepoInterface

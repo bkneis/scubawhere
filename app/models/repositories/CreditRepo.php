@@ -1,4 +1,6 @@
-<?php namespace ScubaWhere\Repositories;
+<?php 
+
+namespace ScubaWhere\Repositories;
 
 use ScubaWhere\Context;
 
@@ -8,14 +10,7 @@ class CreditRepo implements CreditRepoInterface {
 	{
 		$this->company_model = Context::get();
 	}
-
-	/*public function get($columns)
-	{
-		$attrs = implode(',', $columns);
-		dd($attrs);
-		return Context::get()->credits()->get($attrs);
-	}*/
-
+	
 	public function get($column)
 	{
 		// @todo this doesnt feel right, why does it return an array, utsl the first func

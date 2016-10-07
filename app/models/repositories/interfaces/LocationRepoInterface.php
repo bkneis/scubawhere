@@ -2,6 +2,10 @@
 
 namespace ScubaWhere\Repositories;
 
-use ScubaWhere\Repositories\BaseRepoInterface;
+interface LocationRepoInterface {
 
-interface LocationRepoInterface extends BaseRepoInterface {}
+	public function create($data);
+
+	public function update($id, $description);
+
+}

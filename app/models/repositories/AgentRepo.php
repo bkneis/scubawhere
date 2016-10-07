@@ -8,11 +8,11 @@ use ScubaWhere\Repositories\AgentRepoInterface;
 use ScubaWhere\Exceptions\InvalidInputException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AgentRepo implements AgentRepoInterface {
+class AgentRepo extends BaseRepo implements AgentRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
-     * \Company 
+     * @var \Company 
     */ 
     protected $company_model;
     
@@ -40,7 +40,7 @@ class AgentRepo implements AgentRepoInterface {
      * Get an agents for a company from its id
      * @param  int   ID of the agent
      * @throws \Illuminate\Database\Eloquent\ModelNotFound
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an agent for a company
+     * @return \Agent
      */
     public function get($id) {
         return \Agent::onlyOwners()->findOrFail($id);
@@ -50,17 +50,27 @@ class AgentRepo implements AgentRepoInterface {
      * Get an agent for a company by a specified column and value
      * @param  string Column name to search by
      * @param  mixed  Value to match the agent
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an agent for a company
+     * @return \Agent
      */
     public function getWhere($column, $value) {
         return \Agent::onlyOwners()->where($column, '=', $value)->get();
     }
 
     /**
+     * Get an agent for a company with specified relationships
+     * @param  int    ID of the agent
+     * @param  array  Relationships to retrieve with the model
+     * @return \Agent
+     */
+    public function getWith($id, $relations) {
+        return \Agent::onlyOwners()->with($relations)->findOrFail($id);
+    }
+
+    /**
      * Create an agent and associate it with its company
      * @param array Information about the agent to save
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an agent for a company
+     * @return \Agent
      */
     public function create($data) {
         $agent = new \Agent($data);
@@ -75,7 +85,7 @@ class AgentRepo implements AgentRepoInterface {
      * @param  int   ID of the agent
      * @param  array Data to update the agent with
      * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Database\Eloquent\Model Eloquent model of an agent for a company
+     * @return \Agent
      */
     public function update($id, $data) {
         $agent = $this->get($id);

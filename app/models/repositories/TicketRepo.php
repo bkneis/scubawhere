@@ -8,7 +8,7 @@ use ScubaWhere\Exceptions\InvalidInputException;
 use ScubaWhere\Repositories\TicketRepoInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class TicketRepo implements TicketRepoInterface {
+class TicketRepo extends BaseRepo implements TicketRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
@@ -54,6 +54,16 @@ class TicketRepo implements TicketRepoInterface {
      */
     public function getWhere($column, $value) {
         return \Ticket::onlyOwners()->where($column, $value)->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();
+    }
+
+    /**
+     * Get an ticket for a company with specified relationships
+     * @param  int    ID of the ticket
+     * @param  array  Relationships to retrieve with the model
+     * @return \Ticket 
+     */
+    public function getWith($id, $relations) {
+        return \Ticket::onlyOwners()->with($relations)->findOrFail($id);
     }
 
     public function getAvailable() 
