@@ -65,7 +65,7 @@ class CourseService {
      * @param int ID of the course
      * @return \Illuminate\Database\Eloquent\Collection Eloquent collection with all courses for a company including soft deleted models
      */
-	public function getAllWithTrashed($id) {
+	public function getAllWithTrashed() {
 		return $this->course_repo->allWithTrashed();
 	}
 
