@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Trip extends Ardent {
 	use SoftDeletingTrait;
@@ -41,6 +42,11 @@ class Trip extends Ardent {
 	public function getDeletableAttribute()
 	{
 		return !($this->tickets()->withTrashed()->exists() || $this->departures()->withTrashed()->exists());
+	}
+
+	public function scopeOnlyOwners($query) 
+	{
+		return $query->where('company_id', '=', Context::get()->id);			
 	}
 
 	public function company()
