@@ -1,7 +1,7 @@
 <?php
 
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use LaravelBook\Ardent\Ardent;
 
 class Location extends Ardent {
 	protected $guarded = array('id', 'created_at', 'updated_at');
