@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use ScubaWhere\Helper;
+use ScubaWhere\Context;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Boatroom extends Ardent {
 	use SoftDeletingTrait;
@@ -28,6 +29,11 @@ class Boatroom extends Ardent {
 
 		if( isset($this->photo) )
 			$this->photo = Helper::sanitiseString($this->photo);
+	}
+
+	public function scopeOnlyOwners($query) 
+	{
+		return $query->where('company_id', '=', Context::get()->id);
 	}
 
 	public function getDeleteableAttribute()

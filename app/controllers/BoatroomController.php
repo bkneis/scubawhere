@@ -1,202 +1,108 @@
 <?php
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\Services\LogService;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Support\Facades\Response;
+use ScubaWhere\Services\BoatroomService;
+use ScubaWhere\Exceptions\NotFoundException;
+use ScubaWhere\Exceptions\InvalidInputException;
 
 class BoatroomController extends Controller {
 
-	protected $logging_service;
+    /**
+     * Service to manage boatrooms
+     * \ScubaWhere\Services\BoatroomService
+     */
+    protected $boatroom_service;
 
-	public function __construct(LogService $logging_service)
-	{
-		$this->logging_service = $logging_service;
-	}
+    /**
+     * Response Object to create http responses
+     * @var \Illuminate\Support\Facades\Response
+     */
+    protected $response;
 
-	public function getIndex()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Context::get()->boatrooms()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
-		}
-	}
+    /**
+     * @param BoatroomService Injected using laravel's IOC container
+     */
+    public function __construct(BoatroomService $boatroom_service, Response $response) {
+        $this->boatroom_service = $boatroom_service;
+        $this->response = $response;
+    }
 
-	public function getAll()
-	{
-		return Context::get()->boatrooms()->get();
-	}
+    /**
+     * /api/boatroom
+     * Get a single boatroom by ID
+     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @return json Boatroom model
+     */
+    public function getIndex() 
+    {
+        $id = Input::get('id');
+        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        return $this->boatroom_service->get($id);
+    }
 
-	public function postAdd()
-	{
-		$data = Input::only(
-			'name',
-			'description'
-		);
+    /**
+     * /api/boatroom/all
+     * Get all boatrooms belonging to a company
+     * @return array Collection Boatroom models
+     */
+    public function getAll()
+    {
+        return $this->boatroom_service->getAll();
+    }
 
-		$boatroom = new Boatroom($data);
+    /**
+     * /api/boatroom/all-with-trashed
+     * Get all boatrooms belonging to a company including soft deleted models
+     * @return array Collection Boatroom models
+     */
+    public function getAllWithTrashed()
+    {
+        return $this->boatroom_service->getAllWithTrashed();
+    }
 
-		if( !$boatroom->validate() )
-		{
-			return Response::json( array('errors' => $boatroom->errors()->all()), 406 ); // 406 Not Acceptable
-		}
+    /**
+     * /api/boatroom/add
+     * Create a new boatroom
+     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @return \Illuminate\Http\Response 201 Created with newly created boatroom
+     */
+    public function postAdd()
+    {
+        $data = Input::only('name', 'description');
+       
+        $boatroom = $this->boatroom_service->create($data);
+        return $this->response->json(array('status' => 'OK. Boatroom created', 'model' => $boatroom), 201); // 201 Created
+    }
 
-		$boatroom = Context::get()->boatrooms()->save($boatroom);
+    /**
+     * /api/boatroom/edit
+     * Edit an existing boatroom
+     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @return \Illuminate\Http\Response 200 Success with updated boatroom
+     */
+    public function postEdit()
+    {
+        $id = Input::get('id');
+        $data = Input::only('name', 'description');
 
-		return Response::json( array('status' => 'OK. Cabin created', 'id' => $boatroom->id), 201 ); // 201 Created
-	}
+        $boatroom = $this->boatroom_service->update($id, $data);
+        return $this->response->json(array('status' => 'OK. Boatroom updated', 'model' => $boatroom), 200); // 200 Success
+    }
 
-	public function postEdit()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
-		}
+    /**
+     * /api/boatroom/delete
+     * Delete an boatroom and remove it from any quotes or packages
+     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws Exception
+     * @return \Illuminate\Http\Response 200 Success
+     */
+    public function postDelete()
+    {
+        $id = Input::get('id');
+        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
 
-		$data = Input::only(
-			'name',
-			'description'
-		);
-
-		if( !$boatroom->update($data) )
-		{
-			return Response::json( array('errors' => $boatroom->errors()->all()), 406 ); // 406 Not Acceptable
-		}
-
-		return Response::json( array('status' => 'OK. Cabin updated'), 200 ); // 200 OK
-	}
-
-	/*
-	public function postDeactivate()
-	{
-
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Context::get()->boatrooms()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$boatroom->delete();
-
-		return array('status' => 'OK. Cabin deactivated');
-	}
-
-	public function postRestore()
-	{
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Context::get()->boatrooms()->onlyTrashed()->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$boatroom->restore();
-
-		return array('status' => 'OK. Cabin restored');
-	}
-	*/
-
-	public function postDelete()
-	{
-		/**
-		 * 1 - Retrieve the boatroom.
-		 * 2 - Get any future booking's reference code. This needs to be done through booking details as cabins are not
-		 * directly related to bookings.
-		 * 3 - If there are future bookings, create an error log and add entries telling the user which bookings must be changed 
-		 * 4 - Check if the boatroom has any tickets or boats associated to it
-		 * (5) - If so, soft delete their pivot tables, DO NOT DETACH. As past bookings may need to refrence previous states
-		 * 6 - Soft delete the boat, @todo if there are no bookings in the past, force delete it. But this adds computation
-		 * to the API. Maybe a cron job should be in charge of that. Or push a notification to a queue.
-		 */
-		try
-		{
-			if( !Input::get('id') ) throw new ModelNotFoundException();
-			$boatroom = Context::get()->boatrooms()->with('boats', 'tickets', 'bookingdetails')->findOrFail( Input::get('id') );
-		}
-		catch(ModelNotFoundException $e)
-		{
-			return Response::json( array('errors' => array('The cabin could not be found.')), 404 ); // 404 Not Found
-		}
-
-		$future_bookings = $boatroom->bookingdetails()
-									->with(['booking' => function($q) {
-										return $q->select('id');
-									}])
-									->whereHas('departure', function($query) {
-										return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-									})
-									->get();
-
-		if(!$future_bookings->isEmpty())
-		{
-			$logger = $this->logging_service->create('Attempting to delete the boatroom ' . $boatroom->name);
-			$booking_ids = $future_bookings->map(function($obj) {
-				return $obj->booking_id;
-			});
-			//return $booking_ids;
-			// @todo investigate how to remove this by using bookingdetails.booking.reference
-			$bookings = Context::get()->bookings()
-									  ->whereIn('id', $booking_ids->toArray())
-									  ->get(['reference', 'status', 'id']);
-
-			$quotes = $bookings->map(function($obj) { if($obj->status === 'saved') return $obj->id; })->toArray();
-
-			Booking::whereIn('id', $quotes)->delete();
-
-			$bookings = $bookings->filter(function($obj) {
-				if($obj->status != 'cancelled' && $obj->status != 'saved' && $obj->status != 'expired') return $obj;
-			})
-			->toArray();
-
-			foreach($bookings as $obj) 
-			{
-				$logger->append('Could not delete the cabin as it is used in the booking [' . $obj['reference'] . ']');
-			}
-			return Response::json(
-						array('errors' => 
-							array('The cabin could not be delete, please visit the troubleshooting tab for more information on how to resolve this.')
-						), 409);
-		}
-
-		if(!$boatroom->deleteable)
-		{
-			foreach($boatroom->tickets as $obj) 
-			{
-				DB::table('ticketables')
-					->where('ticketable_type', 'Boatroom')
-					->where('ticketable_id', $boatroom->id)
-					->where('ticket_id', $obj->id)
-					->update(array('deleted_at' => DB::raw('NOW()')));    
-			}	
-			foreach($boatroom->boats as $obj) 
-			{
-				DB::table('boat_boatroom')
-					->where('boat_id', $obj->id)
-					->where('boatroom_id', $boatroom->id)
-					->update(array('deleted_at' => DB::raw('NOW()')));    
-			}
-		}
-
-		$boatroom->delete();
-
-		return array('status' => 'Ok. Cabin deleted'); // todo, change this to proper json response, but needs to be fixed in the front end first
-	}
+        $this->boatroom_service->delete($id);
+        return $this->response->json(array('status' => 'OK. Boatroom deleted'), 200); // 200 Success
+    }
 
 }
