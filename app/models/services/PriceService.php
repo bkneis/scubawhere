@@ -10,7 +10,7 @@ class PriceService {
 
 	/** 
 	 *	Repository to access the accommodation models
-	 *	\ScubaWhere\Repositories\AccommodationRepo
+	 *	@var \ScubaWhere\Repositories\AccommodationRepo
 	 */
 	protected $price_repo;
 
