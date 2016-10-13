@@ -712,7 +712,10 @@ class BookingController extends Controller
 				->whereHas('bookingdetails', function($query) use ($customer) {
 					$query->where('customer_id', $customer->id);
 				})
-				->where(function($tq) use ($start_date, $end_date, $departure, $training_session) {
+				->where(function($tq) use ($start_date, $end_date, $departure, $training_session, $customer) {
+                    $tq->whereHas('bookingdetails', function($query) use ($customer) {
+                        $query->where('customer_id', '=', $customer->id);
+                    });
 					if($departure)
 					{
 						$tq->whereHas('bookingdetails.departure.trip', function ($query) use ($start_date, $end_date) {
@@ -770,9 +773,25 @@ class BookingController extends Controller
 						});
 					}
 				})
-				->exists();
+                ->get();
+                //dd($check->toArray());
+				//->exists();
+      
+            $check->load('bookingdetails');
 
-			if ($check) 
+            $details = [];
+  
+            $check->map(function($obj) use ($customer, $details) {
+                foreach($obj->bookingdetails as $detail) {
+                    $details[] = $detail;
+                }
+            });
+
+            $check = array_filter($details, function($obj) use ($customer){
+                if($obj->customer_id == $customer->id) return $obj;
+            });
+
+			if (count($check) > 0) 
 			{
                 $model = $departure ? 'trip' : 'class';
                 return Response::json(array('errors' => array('The customer is already booked on another '.$model.' during this time!')), 403); // 403 Forbidden
