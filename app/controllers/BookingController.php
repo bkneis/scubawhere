@@ -967,7 +967,15 @@ class BookingController extends Controller
                 ->where('booking_id', $booking->id)
                 ->count();
 
-            if ($bookedTicketsQuantity >= $course->tickets()->where('id', $ticket->id)->first()->pivot->quantity) {
+            $num_course_tickets = $booking
+                ->bookingdetails()
+                ->where('course_id', '=', $course->id)
+                ->where('ticket_id', '=', $ticket->id)
+                ->count();
+
+            $num_course_tickets++;
+
+            if ($bookedTicketsQuantity >= ($course->tickets()->where('id', $ticket->id)->first()->pivot->quantity * $num_course_tickets)) {
                 return Response::json(['errors' => ['The ticket cannot be assigned because the course\'s limit for the ticket is reached.']], 403);
             } // 403 Forbidden
         }
@@ -983,7 +991,15 @@ class BookingController extends Controller
                 })
                 ->count();
 
-            if ($bookedTrainingsQuantity >= $training->pivot->quantity) {
+            $num_course_trainings = $booking
+                ->bookingdetails()
+                ->where('course_id', '=', $course->id)
+                ->where('training_id', '=', $training->id)
+                ->count();
+
+            $num_course_trainings++;
+
+            if ($bookedTrainingsQuantity >= ($training->pivot->quantity * $num_course_trainings)) {
                 return Response::json(['errors' => ['The class cannot be assigned because the course\'s limit for the class is reached.']], 403);
             } // 403 Forbidden
         }
