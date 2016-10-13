@@ -159,6 +159,11 @@ class TrainingController extends Controller
 								'Please visit the troubleshooting tab for more info on how to delete it.')
 						), 409); // Conflict
 		}
+		else
+		{
+			// If their are not future booking made for the sessions using that class, then delete those sessions
+			$future_sessions = TrainingSession::where('training_id', '=', Input::get('id'))->delete();
+		}
 
 		if(!$training->getDeleteableAttribute()) 
 		{
