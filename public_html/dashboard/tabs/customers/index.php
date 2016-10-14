@@ -130,6 +130,10 @@
 			<label for="number_of_dives" class="control-label">Number of dives</label>
 			<input type="number" min="0" step="1" name="number_of_dives" class="form-control" value="{{number_of_dives}}">
 		</div>
+		<div class="col-md-4">
+			<label for="cylinder_size" class="control-label">Cylinder Size</label>
+			<input type="text" name="cylinder_size" class="form-control" value="{{cylinder_size}}">
+		</div>
 	</div>
 	<div class="form-group">
 		<div class="col-md-4">
