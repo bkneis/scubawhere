@@ -209,6 +209,7 @@
 						<th style="color:#313131">Fins</th>
 						<th style="color:#313131">BCD</th>
 						<th style="color:#313131">Wetsuit</th>
+                  <th style="color:#313131">Cylinder Size</th>
 					</tr>
 				</thead>
 				<tbody id="customers-table">
@@ -234,6 +235,7 @@
          				<th style="color:#313131">Fins</th>
          				<th style="color:#313131">BCD</th>
          				<th style="color:#313131">Wetsuit</th>
+                     <th style="color:#313131">Cylinder Size</th>
          			</tr>
          	</thead>
          	<tbody id="customers-table">

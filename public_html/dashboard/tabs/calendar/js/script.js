@@ -452,6 +452,10 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'height'
+                },
+                {
+                    data: null,
+                    render: 'cylinder_size'
                 }],
 				"dom": 'Bfrtlp',
 				"buttons": [
@@ -540,6 +544,10 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'height'
+                },
+                {
+                    data: null,
+                    render: 'cylinder_size'
                 }],
                 "dom": 'T<"clear">lfrtip',
                 "tableTools": {
@@ -980,6 +988,8 @@ function customerData(customer) {
 	this._status = customer.pivot.status;
 	this._price = customer.pivot.decimal_price;
 
+    this._cylinder_size = customer.cylinder_size || '-';
+
 	var paid = 0;
 
 	_.each(customer.pivot.payments, function(obj) {
@@ -1043,6 +1053,10 @@ function customerData(customer) {
     this.lastDive = function() {
         return this._lastDive;
     };
+
+    this.cylinder_size = function() {
+        return this._cylinder_size;
+    }
 
     this.reference = function() {
         return '<a href="javascript:void(0);" onclick="editBooking(' + this._booking_id + ', this);">' + this._reference + '</a>';
