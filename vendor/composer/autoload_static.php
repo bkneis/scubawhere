@@ -362,6 +362,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'AddParentIdToBookingsTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_11_07_123530_add_parent_id_to_bookings_table.php',
         'AddPickUpDateFieldToBookingsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_11_27_114937_add_pick_up_date_field_to_bookings_table.php',
         'AddPickUpsTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_10_29_130004_add_pick_ups_table.php',
+        'AddQualificationNumberAndCylinderSizeToCustomersTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_10_14_090504_add_qualification_number_and_cylinder_size_to_customers_table.php',
         'AddQuantityColumnToAddonBookingdetailPivotTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_10_14_010948_add_quantity_column_to_addon_bookingdetail_pivot_table.php',
         'AddQuantityFieldToPickUpsTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_12_07_152924_add_quantity_field_to_pick_ups_table.php',
         'AddRecievedAtColumnToPaymentsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_12_01_003730_add_recieved_at_column_to_payments_table.php',

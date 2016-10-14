@@ -203,6 +203,7 @@
 						<th style="color:#313131"><span style="display: none;">Country</span></th>
 						<th style="color:#313131">Phone</th>
 						<th style="color:#313131">Ticket</th>
+                  <th style="color:#313131">Addons</th>
 						<th style="color:#313131">Last Dive</th>
 						<th style="color:#313131; width:15%;">Notes</th>
 						<th style="color:#313131">Fins</th>

@@ -38,7 +38,7 @@ class TrainingSessionController extends Controller
             ->whereHas('booking', function ($query) {
                 $query->whereIn('status', Booking::$counted);
             })
-            ->with('booking.payments', 'booking.refunds', 'customer')
+            ->with('booking.payments', 'booking.refunds', 'customer', 'addons')
             ->get();
 
         // Now, we build an array of customers

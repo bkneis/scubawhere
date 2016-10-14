@@ -21,7 +21,8 @@ class Customer extends Ardent {
 		'number_of_dives',
 		'chest_size',
 		'shoe_size',
-		'height'
+		'height',
+		'notes'
 	);
 
 	public static $rules = array(

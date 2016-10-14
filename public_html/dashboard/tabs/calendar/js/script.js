@@ -397,6 +397,7 @@ function showModalWindowManifest(id, type) {
     if (type == 'trip') {
         window.sw.manifestTemplateD = Handlebars.compile($("#manifest-template").html());
         Session.getAllCustomers(params, function success(data) {
+            console.log('data', data);
             //showModalWindowManifest(data);
             //var customer = Handlebars.compile( $("#customer-rows-template").html() );
             //$("#customers-table").append(customer({customers : data.customers}));
@@ -433,6 +434,9 @@ function showModalWindowManifest(id, type) {
                 }, {
                     data: null,
                     render: 'ticket'
+                },{
+                    data: null,
+                    render: 'addons'
                 }, {
 					data: null,
 					render: 'lastDive'
@@ -950,9 +954,15 @@ function addTripFilter(value) {
 }
 
 function customerData(customer) {
+    console.log('cust', customer);
     this._name = customer.firstname + ' ' + customer.lastname;
     this._phone = customer.phone;
-    this._country = window.countries[customer.country_id].abbreviation;
+    if(customer.country_id !== null) {
+        this._country = window.countries[customer.country_id].abbreviation;
+    }
+    else {
+        this._country = '';
+    }
     if (customer.pivot.ticket_id != null) {
         this._ticket = window.tickets[customer.pivot.ticket_id].name;
     }
@@ -981,6 +991,19 @@ function customerData(customer) {
 
 	this.amount_paid = paid.toFixed(2);
 
+    var addons = [];
+
+    for(var i = 0; i < customer.pivot.addons.length; i++) {
+        addons.push(customer.pivot.addons[i].name);
+    }
+
+    if(addons.length > 0) {
+        this._addons = addons.join(', ');
+    }
+    else {
+        this._addons = '-';
+    }
+
     this.name = function() {
         return this._name;
     };
@@ -996,6 +1019,10 @@ function customerData(customer) {
     this.ticket = function() {
         return this._ticket;
     };
+
+    this.addons = function() {
+        return this._addons;
+    }
 
     this.course = function() {
         return this._course;

@@ -145,6 +145,18 @@
 			<input type="text" name="height" class="form-control" value="{{height}}">
 		</div>
 	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<label for="notes" class="control-label">Notes :</label>
+			<textarea 
+				width="100%" 
+				name="notes" 
+				class="form-control" 
+				placeholder="Here you can add useful information about your customer such as a diving qualification number, alergies etc.">
+				{{notes}}
+			</textarea>
+		</div>
+	</div>
 </script>
 
 <script type="text/x-handlebars-template" id="certificates-template">
