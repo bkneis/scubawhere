@@ -1,49 +1,48 @@
 <?php
 
 use Illuminate\Support\Facades\Response;
-use ScubaWhere\Services\BoatroomService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\BoatroomService;
+use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 
 class BoatroomController extends Controller {
 
-    /**
-     * Service to manage boatrooms
-     * \ScubaWhere\Services\BoatroomService
-     */
+    /** @var \Scubawhere\Services\BoatroomService */
     protected $boatroom_service;
 
     /**
      * Response Object to create http responses
+     *
      * @var \Illuminate\Support\Facades\Response
      */
     protected $response;
 
-    /**
-     * @param BoatroomService Injected using laravel's IOC container
-     */
     public function __construct(BoatroomService $boatroom_service, Response $response) {
         $this->boatroom_service = $boatroom_service;
         $this->response = $response;
     }
 
     /**
-     * /api/boatroom
      * Get a single boatroom by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @return json Boatroom model
+     *
+     * @api /api/boatroom
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
+     *
+     * @return \Scubawhere\Entities\Boatroom
      */
     public function getIndex() 
     {
         $id = Input::get('id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        if(!$id) throw new HttpNotAcceptable(__CLASS__.__METHOD__, ['Please provide an ID.']);
         return $this->boatroom_service->get($id);
     }
 
     /**
-     * /api/boatroom/all
      * Get all boatrooms belonging to a company
-     * @return array Collection Boatroom models
+     *
+     * @api /api/boatroom/all
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {
@@ -51,9 +50,11 @@ class BoatroomController extends Controller {
     }
 
     /**
-     * /api/boatroom/all-with-trashed
      * Get all boatrooms belonging to a company including soft deleted models
-     * @return array Collection Boatroom models
+     *
+     * @api /api/boatroom/all-with-trashed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWithTrashed()
     {
@@ -61,10 +62,13 @@ class BoatroomController extends Controller {
     }
 
     /**
-     * /api/boatroom/add
      * Create a new boatroom
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 201 Created with newly created boatroom
+     *
+     * @api /api/boatroom/add
+     *
+     * @throws \Scubawhere\Exceptions\InvalidInputException
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAdd()
     {
@@ -75,10 +79,13 @@ class BoatroomController extends Controller {
     }
 
     /**
-     * /api/boatroom/edit
      * Edit an existing boatroom
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success with updated boatroom
+     *
+     * @api /api/boatroom/edit
+     *
+     * @throws \Scubawhere\Exceptions\InvalidInputException
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postEdit()
     {
@@ -90,16 +97,19 @@ class BoatroomController extends Controller {
     }
 
     /**
-     * /api/boatroom/delete
      * Delete an boatroom and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @var /api/boatroom/delete
+     *
+     * @throws \Scubawhere\Exceptions\NotFoundException
+     * @throws \Exception
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDelete()
     {
         $id = Input::get('id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        if(!$id) throw new HttpNotAcceptable(__CLASS__.__METHOD__, ['Please provide an ID.']);
 
         $this->boatroom_service->delete($id);
         return $this->response->json(array('status' => 'OK. Boatroom deleted'), 200); // 200 Success

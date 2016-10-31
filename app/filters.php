@@ -22,7 +22,7 @@ App::before(function($request)
 Route::matched(function($route, $request)
 {
 	if(!Auth::guest())
-		ScubaWhere\Context::set(Auth::user()->company);
+		\Scubawhere\Context::set(Auth::user()->company);
 });
 
 App::after(function($request, $response)
@@ -54,7 +54,7 @@ Route::filter('auth.basic', function()
 
 Route::filter('auth.admin', function()
 {
-	if(\ScubaWhere\Context::get()->name !== 'admin') return Redirect::to('/');
+	if(\Scubawhere\Context::get()->name !== 'admin') return Redirect::to('/');
 });
 
 /*

@@ -1,37 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Response;
-use ScubaWhere\Services\BoatService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\BoatService;
 
 class BoatController extends Controller {
 
-    /**
-     * Service to manage boats
-     * \ScubaWhere\Services\BoatService
-     */
+    /** @var \Scubawhere\Services\BoatService */
     protected $boat_service;
 
     /**
      * Response Object to create http responses
+     *
      * @var \Illuminate\Support\Facades\Response
      */
     protected $response;
 
-    /**
-     * @param BoatService Injected using laravel's IOC container
-     */
     public function __construct(BoatService $boat_service, Response $response) {
         $this->boat_service = $boat_service;
         $this->response = $response;
     }
 
     /**
-     * /api/boat
      * Get a single boat by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @return json Boat model
+     *
+     * @api /api/boat
+     *
+     * @throws \Scubawhere\Exceptions\NotFoundException
+     *
+     * @return \Scubawhere\Entities\Boat
      */
     public function getIndex() 
     {
@@ -42,9 +38,11 @@ class BoatController extends Controller {
     }
 
     /**
-     * /api/boat/all
      * Get all boats belonging to a company
-     * @return array Collection Boat models
+     *
+     * @api /api/boat/all
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {
@@ -52,9 +50,11 @@ class BoatController extends Controller {
     }
 
     /**
-     * /api/boat/all-with-trashed
      * Get all boats belonging to a company including soft deleted models
-     * @return array Collection Boat models
+     *
+     * @api /api/boat/all-with-trashed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWithTrashed()
     {
@@ -62,10 +62,13 @@ class BoatController extends Controller {
     }
 
     /**
-     * /api/boat/add
      * Create a new boat
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 201 Created with newly created boat
+     *
+     * @api /api/boat/add
+     *
+     * @throws \Scubawhere\Exceptions\InvalidInputException
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAdd()
     {
@@ -81,10 +84,13 @@ class BoatController extends Controller {
     }
 
     /**
-     * /api/boat/edit
      * Edit an existing boat
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success with updated boat
+     *
+     * @api /api/boat/edit
+     *
+     * @throws \Scubawhere\Exceptions\InvalidInputException
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postEdit()
     {
@@ -101,11 +107,14 @@ class BoatController extends Controller {
     }
 
     /**
-     * /api/boat/delete
      * Delete an boat and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     *
+     * @api /api/boat/delete
+     *
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDelete()
     {

@@ -1,50 +1,53 @@
 <?php
 
+use Scubawhere\Entities\Tag;
 use Illuminate\Support\Facades\Response;
-use ScubaWhere\Services\LocationService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\LocationService;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class LocationController extends Controller {
 
-    /**
-     * Service to manage locations
-     * @var \ScubaWhere\Services\LocationService
-     */
+    /** @var \Scubawhere\Services\LocationService */
     protected $location_service;
 
     /**
      * Response Object to create http responses
+     *
      * @var \Illuminate\Support\Facades\Response
      */
     protected $response;
 
-    /**
-     * @param LocationService Injected using laravel's IOC container
-     * @param Response        Injected using laravel's IOC container
-     */
     public function __construct(LocationService $location_service, Response $response) {
         $this->location_service = $location_service;
         $this->response         = $response;
     }
 
     /**
-     * /api/location
      * Get a single location by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @return json Location model
+     *
+     * @api /api/location
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     *
+     * @return \Scubawhere\Entities\Location
      */
     public function getIndex() 
     {
         $id = Input::get('id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an ID.']);
+        }
+
         return $this->location_service->get($id);
     }
 
     /**
-     * /api/location/all
      * Get all locations belonging to a company
-     * @return array Collection Location models
+     *
+     * @api /api/location/all
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {
@@ -52,9 +55,11 @@ class LocationController extends Controller {
     }
 
     /**
-     * /api/location/all-with-trashed
      * Get all locations belonging to a company including soft deleted models
-     * @return array Collection Location models
+     *
+     * @api /api/location/all-with-trashed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWithTrashed()
     {
@@ -62,9 +67,11 @@ class LocationController extends Controller {
     }
 
     /**
-     * /api/location/tags
      * Get all available tags associated to any location
-     * @return array Collection of Tag models
+     *
+     * @api /api/location/tags
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getTags()
     {
@@ -72,15 +79,19 @@ class LocationController extends Controller {
     }
 
     /**
-     * /api/location/add
      * Create a new location
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 201 Created with newly created location
+     *
+     * @api /api/location/add
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAdd()
     {
         $data = Input::only('name', 'description', 'latitude', 'longitude');
         $tags = Input::get('tags', false);
+        
         if( !$tags || empty($tags) ) {
             $tags = false;
         }
@@ -90,9 +101,12 @@ class LocationController extends Controller {
     }
 
     /**
-     * /api/location/edit
      * Edit an existing location
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     *
+     * @api /api/location/edit
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
+     *
      * @return \Illuminate\Http\Response 200 Success with updated location
      */
     public function postUpdate()
@@ -105,45 +119,66 @@ class LocationController extends Controller {
     }
 
     /**
-     * /api/location/delete
      * Delete an location and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @api /api/location/delete
+     *
+     * @throws \Scubawhere\Exceptions\NotFoundException
+     * @throws \Exception
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDelete()
     {
         $id = Input::get('location_id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__ . __METHOD__, ['Please provide a location ID.']);
+        }
         $this->location_service->delete($id);
-        return $this->response->json(array('status' => 'OK. Location deleted'), 200); // 200 Success
+
+        return $this->response->json(array('status' => 'OK. Location deleted'), 200);
     }
 
     /**
-     * /api/location/attach
      * Attach a location to a company
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @api /api/location/attach
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAttach()
     {
         $id = Input::get('location_id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID']);
-        $locaion = $this->location_service->attach($id);
+
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide a location ID']);
+        }
+        $this->location_service->attach($id);
+
         return $this->response->json(array('status' => 'The location has been attached to your profile.'), 200);
     }
 
     /**
-     * /api/location/dettach
      * Dettach a location to a company
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @api /api/location/dettach
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDetach()
     {
         $id = Input::get('location_id');
-        if(!$id) throw new InvalidInputException(['Please provide an ID']);
-        $locaion = $this->location_service->dettach($id);
+
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an ID']);
+        }
+        $this->location_service->dettach($id);
+
         return $this->response->json(array('status' => 'The location has been dettached to your profile.'), 200);
     }
 

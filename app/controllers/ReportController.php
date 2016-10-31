@@ -1,6 +1,6 @@
 <?php
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
+use Scubawhere\Helper;
+use Scubawhere\Context;
 
 class ReportController extends Controller {
 

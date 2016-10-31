@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\Entities\Booking;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TrainingSessionController extends Controller
 {

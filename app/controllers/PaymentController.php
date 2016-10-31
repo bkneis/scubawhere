@@ -1,9 +1,11 @@
 <?php
 
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Payment;
+use Scubawhere\Entities\Paymentgateway;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
 
 class PaymentController extends Controller
 {

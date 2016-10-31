@@ -1,7 +1,11 @@
 <?php
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
+
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Refund;
+use Scubawhere\Entities\Payment;
+use Scubawhere\Entities\Paymentgateway;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

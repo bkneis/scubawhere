@@ -1,6 +1,6 @@
 <?php
-use ScubaWhere\Context;
-use ScubaWhere\Services\ObjectStoreService;
+use Scubawhere\Context;
+use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller {

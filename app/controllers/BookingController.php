@@ -1,9 +1,11 @@
 <?php
 
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Bookingdetail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
 
 class BookingController extends Controller
 {

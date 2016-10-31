@@ -1,50 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Response;
-use ScubaWhere\Services\PackageService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\PackageService;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class PackageController extends Controller {
 
-    /**
-     * Service to manage packages
-     * @var \ScubaWhere\Services\PackageService
-     */
+    /** @var \Scubawhere\Services\PackageService */
     protected $package_service;
 
     /**
      * Response Object to create http responses
+     *
      * @var \Illuminate\Support\Facades\Response
      */
     protected $response;
 
-    /**
-     * @param PackageService Injected using laravel's IOC container
-     * @param Response       Injected using laravel's IOC container
-     */
     public function __construct(PackageService $package_service, Response $response) {
         $this->package_service = $package_service;
         $this->response = $response;
     }
 
     /**
-     * /api/package
      * Get a single package by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @return json Package model
+     *
+     * @api /api/package
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     *
+     * @return \Scubawhere\Entities\Package
      */
     public function getIndex() 
     {
         $id = Input::get('id');
-        //if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide a package ID.']);
+        }
+
         return $this->package_service->get($id);
     }
 
     /**
-     * /api/package/all
      * Get all packages belonging to a company
-     * @return array Collection Package models
+     *
+     * @api /api/package/all
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {
@@ -52,9 +54,11 @@ class PackageController extends Controller {
     }
 
     /**
-     * /api/package/all-with-trashed
      * Get all packages belonging to a company including soft deleted models
-     * @return array Collection Package models
+     *
+     * @api /api/package/all-with-trashed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWithTrashed()
     {
@@ -62,9 +66,11 @@ class PackageController extends Controller {
     }
 
     /**
-     * /api/package/only-available
      * Get all packages belonging to a company
-     * @return array Collection Package models
+     *
+     * @api /api/package/only-available
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getOnlyAvailable()
     {
@@ -72,10 +78,11 @@ class PackageController extends Controller {
     }
 
     /**
-     * /api/package/add
      * Create a new package
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 201 Created with newly created package
+     *
+     * @api /api/package/add
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAdd()
     {
@@ -92,10 +99,11 @@ class PackageController extends Controller {
     }
 
     /**
-     * /api/package/edit
      * Edit an existing package
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success with updated package
+     *
+     * @api /api/package/edit
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postEdit()
     {
@@ -113,16 +121,22 @@ class PackageController extends Controller {
     }
 
     /**
-     * /api/package/delete
      * Delete an package and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
-     * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @api /api/package/delete
+     *
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     * @throws \Scubawhere\Exceptions\Http\HttpNotFound
+     * @throws \Exception
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDelete()
     {
         $id = Input::get('id');
-        //if(!$id) throw new InvalidInputException(['Please provide an ID.']);
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide a package ID.']);
+        }
         
         $this->package_service->delete($id);
         return $this->response->json(array('status' => 'OK. Package deleted'), 200); // 200 Success

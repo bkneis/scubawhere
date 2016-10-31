@@ -322,7 +322,7 @@ $PROTOCOL = 'http';
 							<a href="#tickets">Tickets</a>
 						</li>
 						<li>
-							<a href="#trips">Trips (Open Water)</a>
+							<a href="#trips">Trips</a>
 						</li>
 					</ul>
 				</li>

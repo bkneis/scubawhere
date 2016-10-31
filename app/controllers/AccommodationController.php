@@ -1,14 +1,14 @@
 <?php
 
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Services\AccommodationService;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Exceptions\NotFoundException;
+use Scubawhere\Services\AccommodationService;
+use Scubawhere\Exceptions\InvalidInputException;
 
 class AccommodationController extends Controller {
 
     /**
      * Service to manage accommodations
-     * \ScubaWhere\Services\AccommodationService
+     * \Scubawhere\Services\AccommodationService
      */
     protected $accommodation_service;
 
@@ -22,7 +22,7 @@ class AccommodationController extends Controller {
     /**
      * /api/accommodation
      * Get a single accommodation by ID
-     * @throws \ScubaWhere\Exceptions\NotFOundException
+     * @throws \Scubawhere\Exceptions\NotFOundException
      * @return json Accommodation model
      */
     public function getIndex() 
@@ -59,7 +59,7 @@ class AccommodationController extends Controller {
     /**
      * /api/accommodation/filter
      * Get all accommodations belonging to a company
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @return array Collection Accommodation models
      */
     public function getFilter()
@@ -79,7 +79,7 @@ class AccommodationController extends Controller {
     /**
      * /api/accommodation/add
      * Create a new accommodation
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 201 Created with newly created accommodation
      */
     public function postAdd()
@@ -100,7 +100,7 @@ class AccommodationController extends Controller {
     /**
      * /api/accommodation/edit
      * Edit an existing accommodation
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 200 Success with updated accommodation
      */
     public function postEdit()
@@ -120,7 +120,7 @@ class AccommodationController extends Controller {
     /**
      * /api/accommodation/delete
      * Delete an accommodation and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @throws Exception
      * @return \Illuminate\Http\Response 200 Success
      */

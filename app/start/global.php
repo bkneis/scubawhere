@@ -49,8 +49,11 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 
 App::error(function(Exception $exception, $code)
 {
-	if($exception instanceof \ScubaWhere\Exceptions\BaseException)
-	{
+	if($exception instanceof \Scubawhere\Exceptions\BaseException) {
+		return $exception->response();
+	}
+
+	if($exception instanceof \Scubawhere\Exceptions\Http\HttpBaseException) {
 		return $exception->response();
 	}
 
@@ -124,7 +127,7 @@ Validator::extend('valid_currency', function($attribute, $value, $parameters)
 
 Validator::extend('after_local_now', function($attribute, $value, $parameters)
 {
-	return !ScubaWhere\Helper::isPast($value);
+	return !Scubawhere\Helper::isPast($value);
 }, ':attribute datetime must be in the future');
 
 Validator::extend('time', function($attribute, $value, $parameters)

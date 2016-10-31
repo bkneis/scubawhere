@@ -1,10 +1,12 @@
 <?php
 
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\CrmToken;
+use Scubawhere\Entities\CrmCampaign;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Services\ObjectStoreService;
+use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CrmCampaignController extends Controller

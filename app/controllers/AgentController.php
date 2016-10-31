@@ -1,14 +1,14 @@
 <?php
 
-use ScubaWhere\Services\AgentService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\AgentService;
+use Scubawhere\Exceptions\NotFoundException;
+use Scubawhere\Exceptions\InvalidInputException;
 
 class AgentController extends Controller {
 
     /**
      * Service to manage agents
-     * \ScubaWhere\Services\AgentService
+     * \Scubawhere\Services\AgentService
      */
     protected $agent_service;
 
@@ -22,7 +22,7 @@ class AgentController extends Controller {
     /**
      * /api/agent
      * Get a single agent by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @return json Agent model
      */
     public function getIndex() 
@@ -55,7 +55,7 @@ class AgentController extends Controller {
     /**
      * /api/agent/add
      * Create a new agent
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 201 Created with newly created agent
      */
     public function postAdd()
@@ -81,7 +81,7 @@ class AgentController extends Controller {
     /**
      * /api/agent/edit
      * Edit an existing agent
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 200 Success with updated agent
      */
     public function postEdit()
@@ -108,7 +108,7 @@ class AgentController extends Controller {
     /**
      * /api/agent/delete
      * Delete an agent and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @throws Exception
      * @return \Illuminate\Http\Response 200 Success
      */

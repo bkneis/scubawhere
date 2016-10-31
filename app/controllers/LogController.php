@@ -1,6 +1,6 @@
 <?php 
 
-use ScubaWhere\Services\LogService;
+use Scubawhere\Services\LogService;
 
 class LogController extends Controller
 {

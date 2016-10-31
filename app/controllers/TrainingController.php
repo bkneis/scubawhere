@@ -1,14 +1,14 @@
 <?php
 
-use ScubaWhere\Services\TrainingService;
-use ScubaWhere\Exceptions\NotFoundException;
-use ScubaWhere\Exceptions\InvalidInputException;
+use Scubawhere\Services\TrainingService;
+use Scubawhere\Exceptions\NotFoundException;
+use Scubawhere\Exceptions\InvalidInputException;
 
 class TrainingController extends Controller {
 
     /**
      * Service to manage trainings
-     * \ScubaWhere\Services\TrainingService
+     * \Scubawhere\Services\TrainingService
      */
     protected $training_service;
 
@@ -22,7 +22,7 @@ class TrainingController extends Controller {
     /**
      * /api/training
      * Get a single training by ID
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @return json Training model
      */
     public function getIndex() 
@@ -55,7 +55,7 @@ class TrainingController extends Controller {
     /**
      * /api/training/add
      * Create a new training
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 201 Created with newly created training
      */
     public function postAdd()
@@ -69,7 +69,7 @@ class TrainingController extends Controller {
     /**
      * /api/training/edit
      * Edit an existing training
-     * @throws \ScubaWhere\Exceptions\InvalidInputException
+     * @throws \Scubawhere\Exceptions\InvalidInputException
      * @return \Illuminate\Http\Response 200 Success with updated training
      */
     public function postEdit()
@@ -84,7 +84,7 @@ class TrainingController extends Controller {
     /**
      * /api/training/delete
      * Delete an training and remove it from any quotes or packages
-     * @throws \ScubaWhere\Exceptions\NotFoundException
+     * @throws \Scubawhere\Exceptions\NotFoundException
      * @throws Exception
      * @return \Illuminate\Http\Response 200 Success
      */

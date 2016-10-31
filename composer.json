@@ -21,19 +21,14 @@
 		"classmap": [
 			"app/commands",
 			"app/controllers",
-			"app/models",
-			"app/models/entities",
-			"app/models/exceptions",
-			"app/models/repositories",
-			"app/models/repositories/interfaces",
-			"app/models/services",
-			"app/models/providers",
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
-			"app/tests/",
-			"app/lib"
-		]
+			"app/tests/"
+		],
+		"psr-4": {
+			"Scubawhere\\": "app/Scubawhere"
+		}
 	},
 	"scripts": {
 		"post-install-cmd": [

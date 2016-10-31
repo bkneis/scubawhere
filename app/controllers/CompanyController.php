@@ -1,11 +1,10 @@
 <?php
 
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\Services\CreditService;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Services\ObjectStoreService;
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\Entities\Location;
+use Scubawhere\Services\CreditService;
+use Scubawhere\Services\ObjectStoreService;
 
 class CompanyController extends Controller {
 
@@ -237,6 +236,21 @@ class CompanyController extends Controller {
 					->from($company->business_email, $company->name);
 			// $message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('Feedback');
 		});
+	}
+
+	/**
+	 * info
+	 * tab, time, button_clicks, mouse_movement
+	 */
+	public function postUsageInfo()
+	{
+		$data = Input::only('info');
+
+		$data['ip'] = Request::getClientIp();
+
+		$this->usageService->log($data);
+
+		return Resonse::json(200);
 	}
 
 	public function postHeartbeat()
