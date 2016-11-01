@@ -3,6 +3,7 @@
 namespace Scubawhere\Strategies;
 
 use Scubawhere\Context;
+use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Bookingdetail;
 
 class RevenueReportGenerator implements ReportGeneratorInterface {
