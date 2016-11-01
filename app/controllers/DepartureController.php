@@ -1,8 +1,10 @@
 <?php
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Scubawhere\Helper;
 use Scubawhere\Context;
+use Scubawhere\Entities\Booking;
 
 class DepartureController extends Controller {
 

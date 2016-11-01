@@ -3,11 +3,13 @@
 namespace Scubawhere\Strategies;
 
 use Scubawhere\Context;
-use Scubawhere\Entities\Departure;
+use Scubawhere\Exceptions\Http\HttpInternalServerError;
 
 class UtilisationReportGenerator extends BaseReportGenerator implements ReportGeneratorInterface {
 
 	private $relations;
+	private $relation;
+	private $bookable;
 
 	protected $type;
 
@@ -19,35 +21,31 @@ class UtilisationReportGenerator extends BaseReportGenerator implements ReportGe
 	private function getData($before, $after)
 	{
 		$model = null;
-		$relation = null;
-		$bookable = null;
 
 		if($this->type === 'sessions') 
 		{
-			//$model         = Departure::onlyOwners();
-			$model           = Context::get()->departures();
-			$relation        = 'trip';
-			$bookable        = 'ticket';
-			$this->relations = 'trips';
+			$model                 = Context::get()->departures();
+			$this->relation        = 'trip';
+			$this->bookable        = 'ticket';
+			$this->relations       = 'trips';
 		}
 		elseif($this->type === 'trainings') 
 		{
-			//$model         = \TrainingSessions::onlyOwners();
-			$model           = Context::get()->training_sessions();
-			$relation        = 'training';
-			$bookable        = 'course';
-			$this->relations = 'courses';
+			$model                 = Context::get()->training_sessions();
+			$this->relation        = 'training';
+			$this->bookable        = 'course';
+			$this->relations       = 'courses';
 		}
 		else
 		{
-			throw new InternalServerErrorException();
+			throw new HttpInternalServerError(__CLASS__.__METHOD__);
 		}
 
 		return $model->whereBetween('start', [$after, $before])->with(
-			$relation,
+			$this->relation,
 			'bookingdetails',
 				'bookingdetails.booking',
-				'bookingdetails.' . $bookable
+				'bookingdetails.' . $this->bookable
 		)->orderBy('start')->get();
 	}
 
@@ -63,7 +61,7 @@ class UtilisationReportGenerator extends BaseReportGenerator implements ReportGe
 
 			$utilisation[$i] = [
 				'date'        => $departure->start,
-				'name'        => $departure->trip->name,
+				'name'        => $departure->{$this->relation}->name,
 				$relations    => [],
 				'assigned'    => 0,
 				'unassigned'  => $max,
@@ -76,11 +74,11 @@ class UtilisationReportGenerator extends BaseReportGenerator implements ReportGe
 
 				$utilisation[$i]['assigned']++;
 
-				if(empty($utilisation[$i][$relations][$detail->ticket->name])) {
-					$utilisation[$i][$relations][$detail->ticket->name] = 1;
+				if(empty($utilisation[$i][$relations][$detail->{$this->bookable}->name])) {
+					$utilisation[$i][$relations][$detail->{$this->bookable}->name] = 1;
 				}
 				else {
-					$utilisation[$i][$relations][$detail->ticket->name]++;
+					$utilisation[$i][$relations][$detail->{$this->bookable}->name]++;
 				}
 
 				$utilisation[$i]['unassigned']--;

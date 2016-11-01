@@ -1,45 +1,48 @@
 <?php
 
-use Scubawhere\Exceptions\NotFoundException;
+use Scubawhere\Exceptions\Http\HttpNotFound;
 use Scubawhere\Services\AccommodationService;
-use Scubawhere\Exceptions\InvalidInputException;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class AccommodationController extends Controller {
 
-    /**
-     * Service to manage accommodations
-     * \Scubawhere\Services\AccommodationService
-     */
+    /** @var \Scubawhere\Services\AccommodationService */
     protected $accommodation_service;
 
-    /**
-     * @param AccommodationService Injected using laravel's IOC container
-     */
     public function __construct(AccommodationService $accommodation_service) {
         $this->accommodation_service = $accommodation_service;
     }
 
     /**
-     * /api/accommodation
      * Get a single accommodation by ID
-     * @throws \Scubawhere\Exceptions\NotFOundException
-     * @return json Accommodation model
+     *
+     * @api /api/accommodation
+     *
+     * @throws HttpNotFound
+     *
+     * @return \Scubawhere\Entities\Accommodation
      */
     public function getIndex() 
     {
         $data = Input::get('id');
+
         $rules = array('id' => 'required');
         $messages = array('id.required' => 'The accommodation could not be found.');
         $validator = Validator::make(Input::all(), $rules, $messages);
-        if($validator->fails()) throw new NotFoundException($validator->errors()->all());
+
+        if($validator->fails()) {
+            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
 
         return $this->accommodation_service->get($data);
     }
 
     /**
-     * /api/accommodation/all
      * Get all accommodations belonging to a company
-     * @return array Collection Accommodation models
+     *
+     * @api /api/accommodation/all
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {
@@ -47,9 +50,11 @@ class AccommodationController extends Controller {
     }
 
     /**
-     * /api/accommodation/all-with-trashed
      * Get all accommodations belonging to a company including soft deleted models
-     * @return array Collection Accommodation models
+     *
+     * @api /api/accommodation/all-with-trashed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWithTrashed()
     {
@@ -57,78 +62,109 @@ class AccommodationController extends Controller {
     }
 
     /**
-     * /api/accommodation/filter
      * Get all accommodations belonging to a company
-     * @throws \Scubawhere\Exceptions\NotFoundException
+     *
+     * @api /api/accommodation/filter
+     *
+     * @throws HttpNotFound
+     *
      * @return array Collection Accommodation models
      */
     public function getFilter()
     {
         $data = Input::only('after', 'before', 'accommodation_id');
+
         $rules = array(
             'after' => 'date|required_with:before',
             'before' => 'date',
             'accommodation_id' => 'integer|min:1'
         );
         $validator = Validator::make($data, $rules);
-        if($validator->fails()) throw new NotFoundException($validator->errors()->all());
+
+        if($validator->fails()) {
+            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
 
         return $this->accommodation_service->getFilter($data);
     }
 
     /**
-     * /api/accommodation/add
      * Create a new accommodation
-     * @throws \Scubawhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 201 Created with newly created accommodation
+     *
+     * @api /api/accommodation/add
+     *
+     * @throws HttpUnprocessableEntity
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postAdd()
     {
         $data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
+
         $rules = array(
             'name'        => 'required',
             'capacity'    => 'required',
             'base_prices' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
-        if($validator->fails()) throw new InvalidInputException($validator->errors()->all());
+
+        if($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
 
         $accommodation = $this->accommodation_service->create($data, Input::get('base_prices'), Input::get('prices'));
+
         return Response::json(array('status' => 'OK. Accommodation created', 'model' => $accommodation->load('basePrices', 'prices')), 201); // 201 Created
     }
 
     /**
-     * /api/accommodation/edit
      * Edit an existing accommodation
-     * @throws \Scubawhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success with updated accommodation
+     *
+     * @api /api/accommodation/edit
+     *
+     * @throws HttpUnprocessableEntity
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postEdit()
     {
         $data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
+
         $rules = array(
             'name' => 'required',
             'capacity' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
-        if($validator->fails()) throw new InvalidInputException($validator->errors()->all());
+
+        if($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
 
         $accommodation = $this->accommodation_service->update(Input::get('id'), $data, Input::get('base_prices'), Input::get('prices'));
-        return Response::json(array('status' => 'OK. Accommodation updated', 'model' => $accommodation->load('basePrices', 'prices')), 200); // 200 Success
+
+        return Response::json(array('status' => 'OK. Accommodation updated', 'model' => $accommodation->load('basePrices', 'prices')), 200);
     }
 
     /**
-     * /api/accommodation/delete
      * Delete an accommodation and remove it from any quotes or packages
-     * @throws \Scubawhere\Exceptions\NotFoundException
+     *
+     * @api /api/accommodation/delete
+     *
+     * @throws HttpNotFound
      * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postDelete()
     {
         $id = Input::get('id');
-        if(!$id) throw new NotFoundException(['The Accommodation was not found']);
+
+        if(!$id) {
+            throw new HttpNotFound(__CLASS__.__METHOD__, ['The Accommodation was not found']);
+        }
+
         $this->accommodation_service->delete($id);
+
         return Response::json(array('status' => 'OK. Accommodation deleted'), 200); // 200 Success
     }
 

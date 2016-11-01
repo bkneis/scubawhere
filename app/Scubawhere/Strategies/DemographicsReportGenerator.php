@@ -2,9 +2,12 @@
 
 namespace Scubawhere\Strategies;
 
+use PhilipBrown\Money\Currency;
+use Scubawhere\Context;
+
 class DemographicsReportGenerator implements ReportGeneratorInterface {
 
-	public function getBookingsByAge()
+	public function getBookingsByAge($beforeUTC, $afterUTC)
 	{
 		return DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
@@ -15,7 +18,7 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 			->get();
 	}
 
-	private function getBookingsByCountry()
+	private function getBookingsByCountry($beforeUTC, $afterUTC)
 	{
 		return DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
@@ -29,7 +32,7 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 
 	}
 
-	private function getBookingsByCertification()
+	private function getBookingsByCertification($beforeUTC, $afterUTC)
 	{
 		return DB::table('bookings')
 		    ->join('customers', 'bookings.lead_customer_id', '=', 'customers.id')
@@ -42,9 +45,9 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 		    ->get();
 	}
 
-	private function calculateAgeDemographic()
+	private function calculateAgeDemographic($beforeUTC, $afterUTC)
 	{
-		$sql = $this->getBookingsByAge();
+		$sql = $this->getBookingsByAge($beforeUTC, $afterUTC);
 
 		$ages = [];
 		$ages['0-15']    = 0;
@@ -77,9 +80,9 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 		return $ages;
 	}
 
-	private function calculateCountryDemographic($currency)
+	private function calculateCountryDemographic($beforeUTC, $afterUTC, $currency)
 	{
-		$sql = $this->getBookingsByCountry();
+		$sql = $this->getBookingsByCountry($beforeUTC, $afterUTC);
 
 		$countries = [];
 
@@ -94,9 +97,9 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 		return $countries;
 	}
 
-	private function calculateCertificationDemographic($currency)
+	private function calculateCertificationDemographic($beforeUTC, $afterUTC, $currency)
 	{
-		$sql = $this->getBookingsByCertification();
+		$sql = $this->getBookingsByCertification($beforeUTC, $afterUTC);
 
 		$certificates = [];
 		$cert_list = Certificate::lists('name', 'id'); // Produces [id => name] array
@@ -114,11 +117,11 @@ class DemographicsReportGenerator implements ReportGeneratorInterface {
 	public function createReport($before, $after) 
 	{
 		$RESULT = [];
-		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
-		$RESULT['age_revenue']         = $this->calculateAgeDemographic();
-		$RESULT['country_revenue']     = $this->calculateCountryDemographic($currency);
-		$RESULT['certificate_revenue'] = $this->calculateCertificationDemographic($currency);
+		$RESULT['age_revenue']         = $this->calculateAgeDemographic($before, $after);
+		$RESULT['country_revenue']     = $this->calculateCountryDemographic($before, $after, $currency);
+		$RESULT['certificate_revenue'] = $this->calculateCertificationDemographic($before, $after, $currency);
 
 		return $RESULT;	
 	}

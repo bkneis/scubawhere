@@ -2,9 +2,12 @@
 
 namespace Scubawhere\Strategies;
 
+use Scubawhere\Context;
+use PhilipBrown\Money\Currency;
+
 class SourcesReportGenerator extends BaseReportGenerator implements ReportGeneratorInterface {
 
-	private function getFrequencyOfBooking()
+	private function getFrequencyOfBooking($beforeUTC, $afterUTC)
 	{
 		// Generate frequency of booking sources
 		$sql = "SELECT source, COUNT(*) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
@@ -17,10 +20,10 @@ class SourcesReportGenerator extends BaseReportGenerator implements ReportGenera
 			$sources[$name] = $object->{'COUNT(*)'};
 		}
 
-		return $source;
+		return $sources;
 	}
 
-	private function getRevenueForSources($currency)
+	private function getRevenueForSources($beforeUTC, $afterUTC, $currency)
 	{
 		// Generate revenue per booking source
 		$sql = "SELECT source, SUM(price) FROM bookings WHERE company_id=? AND status='confirmed' AND created_at BETWEEN ? AND ? GROUP BY source";
@@ -42,11 +45,11 @@ class SourcesReportGenerator extends BaseReportGenerator implements ReportGenera
 	public function createReport($before, $after) 
 	{
 		$RESULT = array();
-		$currency = new PhilipBrown\Money\Currency( Context::get()->currency->code );
+		$currency = new Currency( Context::get()->currency->code );
 
-		$RESULT['daterange'] = $this->getDates();
-		$RESULT['source_frequency'] = $this->getFrequencyOfBooking();
-		$RESULT['source_revenue'] = $this->getRevenueForSources($curency);
+		$RESULT['daterange'] = $this->getDates($before, $after);
+		$RESULT['source_frequency'] = $this->getFrequencyOfBooking($before, $after);
+		$RESULT['source_revenue'] = $this->getRevenueForSources($before, $after, $currency);
 
 		return $RESULT;	
 	}
