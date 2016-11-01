@@ -780,9 +780,9 @@ var selectedCustomerTemplate          = Handlebars.compile($("#selected-customer
 var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
 var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 
-$('[data-target="#customer-tab"]').on('show.bs.tab', function (e) {
+/*$('[data-target="#customer-tab"]').on('show.bs.tab', function (e) {
 	$("#add-customer-countries").find('#country_id').select2("val", company.country_id);
-});
+});*/
 
 $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(function() {
 	$('#customer-tab').on('change', '#existing-customers', function() {
@@ -868,9 +868,9 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	if( window.customers[id].country_id ) {
 		$('#edit-customer-countries').find('#country_id').select2("val", window.customers[id].country_id);
 	}
-	else {
+	/*else {
 		$('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
-	}
+	}*/
 
 	$('#edit-customer-agencies').find('#selected-certificates').empty();
 

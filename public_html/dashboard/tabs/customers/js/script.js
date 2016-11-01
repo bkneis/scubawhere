@@ -477,9 +477,9 @@ function editDetails(id) {
     if (id && customer.country_id) {
         $('#edit-customer-countries').find('#country_id').select2("val", customer.country_id);
     }
-    else {
+    /*else {
         $('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
-    }
+    }*/
 }
 
 function emailCustomer(id) {

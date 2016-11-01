@@ -1,5 +1,8 @@
 <?php
+
 use Scubawhere\Context;
+use Scubawhere\Entities\Customer;
+use Scubawhere\Entities\CrmSubscription;
 use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

@@ -89,6 +89,7 @@
 	<div id="modalWindows" style="height: 0;"></div>
 
 	<script id="countries-template" type="text/x-handlebars-template">
+		<option value="">Choose country...</option>
 		{{#each countries}}
 			<option value="{{id}}">{{{name}}}</option>
 		{{/each}}
