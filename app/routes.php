@@ -49,8 +49,8 @@ Route::get('logout', 'AuthenticationController@getLogout');
 |
 */
 Route::controllers([
-	'password' => 'PasswordController',
-	'register' => 'RegisterController',
+	'password'     => 'PasswordController',
+	'register'     => 'RegisterController',
     'crm_tracking' => 'CrmTrackingController'
 ]);
 
