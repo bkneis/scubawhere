@@ -218,7 +218,7 @@ class CompanyController extends Controller {
 			return Response::json(['errors' => ['A tab and issue is required.']], 406); // 406 Not Acceptable
 
 		Mail::send('emails.feedback', array('company' => Context::get(), 'feedback' => $data), function($message) {
-			$message->to('thomas@scubawhere.com', 'Thomas Paris')->subject('scubawhereRMS Feedback');
+			$message->to('support@scubawhere.com', 'Support')->subject('scubawhereRMS Feedback');
 		});
 	}
 
