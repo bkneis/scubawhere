@@ -2,6 +2,10 @@ var LOADER = '<div class="loader" style="left: 50%; margin-left: -13px; margin-t
 
 $(function(){
 
+	if(!(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))){
+		pageMssg('Our system detects that you are not using google chrome. So that we can give you the best experience possible, please download the latest google chrome :)', 'warning', true);
+	}
+
 	//click function used for in tab switch
 	//content is loaded into section
 	$('#guts').delegate(".switch-option", "click", function(){
