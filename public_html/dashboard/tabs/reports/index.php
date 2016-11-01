@@ -58,7 +58,7 @@
 				<tr{{#if refund}} style="color: red;"{{/if}}>
 					<td>{{received_at}}</td>
 					<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
-					<td>{{booking.reference}}</td>
+					<td><a class="view-booking">{{booking.reference}}</a></td>
 					<td>{{paymentgateway.name}}{{#if refund}} REFUND{{/if}}</td>
 					<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
 				</tr>
@@ -168,7 +168,7 @@
 				<tr>
 					<td>{{getDate created_at_local}}</td>
 					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-					<td>{{reference}}</td>
+					<a class="view-booking">{{reference}}</a>
 					<td>{{{agent.name}}}</td>
 					<td>{{agent_reference}}</td>
 					<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>

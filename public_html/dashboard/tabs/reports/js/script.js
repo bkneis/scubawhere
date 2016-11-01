@@ -134,6 +134,20 @@ $(function() {
 		democolorID = 0;
 	});
 
+	$('#reports').on('click', '.view-booking', function() {
+		var booking_ref = $(this).html();
+		Booking.getByRef(booking_ref, function success(object) {
+				window.booking      = object;
+				// window.booking.mode = 'view'; // Should be default behavior
+				window.clickedEdit  = true;
+
+				window.location.hash = 'add-booking';
+			},
+			function(xhr) {
+				pageMssg('The booking cannot be viewed as it is already deleted');
+			});
+	});
+
 	getReport(report_type, createDataTable);
 
 });
