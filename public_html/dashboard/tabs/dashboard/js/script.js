@@ -89,13 +89,21 @@ $(function () {
 
 		var nextSessionTemplates = Handlebars.compile($('#today-session-template').html());
 
-		var gotCourses = $.Deferred();
-		var gotTickets = $.Deferred();
-		var gotSessions = $.Deferred();
+		var gotCourses   = $.Deferred();
+		var gotTickets   = $.Deferred();
+		var gotSessions  = $.Deferred();
+		var gotCountries = $.Deferred();
 
-		Course.getAllWithTrashed(function success(data) {
-			window.courses = _.indexBy(data, 'id');
-			gotCourses.resolve();
+		$.get("/api/country/all", function success(data) {
+			window.countries = _.indexBy(data, 'id');
+			gotCountries.resolve();
+		});
+
+		$.when(gotCountries).done(function() {
+			Course.getAllWithTrashed(function success(data) {
+				window.courses = _.indexBy(data, 'id');
+				gotCourses.resolve();
+			});
 		});
 
 		$.when(gotCourses).done(function() {
@@ -237,30 +245,273 @@ function startWizard()
 	});
 }
 
-/*function displayFBStats() {
+function showModalWindowManifest(id, type) {
+	// Create the modal window from manifest-template
+	var params = {
+		id: id
+	};
+	if (type == 'trip') {
+		window.sw.manifestTemplateD = Handlebars.compile($("#manifest-template").html());
+		Session.getAllCustomers(params, function success(data) {
+			//showModalWindowManifest(data);
+			//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+			//$("#customers-table").append(customer({customers : data.customers}));
+			$('#modalWindows')
+				.append(window.sw.manifestTemplateD(data)) // Create the modal
+				.children('#modal-' + data.id) // Directly find it and use it
+				.reveal({ // Open modal window | Options:
+					animation: 'fadeAndPop', // fade, fadeAndPop, none
+					animationSpeed: 300, // how fast animtions are
+					closeOnBackgroundClick: true, // if you click background will modal close?
+					dismissModalClass: 'close-modal', // the class of a button or element that will close an open modal
+					onFinishModal: function() {
+						$('#modal-' + data.id).remove();
+					}
+				});
 
-	if(window.facebook.status == "connected") {
-		socialMedia = Handlebars.compile($('#social-media-template').html());
-		FB.api(
-        "/292265320876159/insights",
-        {
-          'period' : 'week'
-        },
-        function (response) {
-          if (response && !response.error) {
-            //console.log(response);
-            window.facebook.stats = [
-              {title : response.data[1].title, data : response.data[1].values[2].value},
-              {title : response.data[54].title, data : response.data[54].values[2].value},
-              {title : response.data[29].title, data : response.data[29].values[2].value}
-            ];
-            $('#social-media-stats').empty().append(socialMedia({facebook : window.facebook.stats}));
-          }
-        }
-    );
+			var table = $('#customer-data-table').DataTable({
+				"pageLength": 10,
+				columns: [{
+					data: null,
+					render: 'reference'
+				}, {
+					data: null,
+					render: 'status'
+				}, {
+					data: null,
+					render: 'name'
+				}, {
+					data: null,
+					render: 'country'
+				}, {
+					data: null,
+					render: 'phone'
+				}, {
+					data: null,
+					render: 'ticket'
+				}, {
+					data: null,
+					render: 'lastDive'
+				}, {
+					data: null,
+					render: 'notes'
+				}, {
+					data: null,
+					render: 'shoe'
+				}, {
+					data: null,
+					render: 'chest'
+				}, {
+					data: null,
+					render: 'height'
+				}],
+				"dom": 'Bfrtlp',
+				"buttons": [
+					{
+						extend : 'excel',
+						title  : getFileName('trip', data)
+					},
+					{
+						extend : 'pdf',
+						title  : getFileName('trip', data)
+					},
+					{
+						extend : 'print',
+						title  : getFileName('trip', data)
+					}
+				]
+			});
+
+			$.when(
+				window.promises.loadedCountries,
+				window.promises.loadedCourses,
+				window.promises.loadedTickets
+			).done(function() {
+				for (var i = 0; i < data.customers.length; i++) {
+					table.row.add(new customerData(data.customers[i]));
+				};
+
+				table.draw();
+			});
+		});
 	} else {
-		$('#social-media-stats').html('<p><strong>Please log into your facebook via settings to view you social media statistics</strong></p>');
+		window.sw.manifestTemplateDC = Handlebars.compile($("#class-manifest-template").html());
+		Class.getAllCustomers(params, function success(data) {
+			//showModalWindowManifest(data);
+			//var customer = Handlebars.compile( $("#customer-rows-template").html() );
+			//$("#customers-table").append(customer({customers : data.customers}));
+			$('#modalWindows')
+				.append(window.sw.manifestTemplateDC(data)) // Create the modal
+				.children('#modal-' + data.id) // Directly find it and use it
+				.reveal({ // Open modal window | Options:
+					animation: 'fadeAndPop', // fade, fadeAndPop, none
+					animationSpeed: 300, // how fast animtions are
+					closeOnBackgroundClick: true, // if you click background will modal close?
+					dismissModalClass: 'close-modal', // the class of a button or element that will close an open modal
+					onFinishModal: function() {
+						$('#modal-' + data.id).remove();
+					}
+				});
+
+			var table = $('#customer-data-table').DataTable({
+				"paging": false,
+				"ordering": false,
+				"info": false,
+				"pageLength": 10,
+				"searching": false,
+				columns: [{
+					data: null,
+					render: 'reference'
+				}, {
+					data: null,
+					render: 'status'
+				}, {
+					data: null,
+					render: 'name'
+				}, {
+					data: null,
+					render: 'country'
+				}, {
+					data: null,
+					render: 'phone'
+				}, {
+					data: null,
+					render: 'course'
+				}, {
+					data: null,
+					render: 'lastDive'
+				}, {
+					data: null,
+					render: 'notes'
+				}, {
+					data: null,
+					render: 'shoe'
+				}, {
+					data: null,
+					render: 'chest'
+				}, {
+					data: null,
+					render: 'height'
+				}],
+				"dom": 'Bfrtlp',
+				"buttons": [
+					{
+						extend : 'excel',
+						title  : getFileName('training', data)
+					},
+					{
+						extend : 'pdf',
+						title  : getFileName('training', data)
+					},
+					{
+						extend : 'print',
+						title  : getFileName('training', data)
+					}
+				]
+			});
+
+			$.when(
+				window.promises.loadedCountries,
+				window.promises.loadedCourses,
+				window.promises.loadedTickets
+			).done(function() {
+				for (var i = 0; i < data.customers.length; i++) {
+					table.row.add(new customerData(data.customers[i]));
+				};
+
+				table.draw();
+			});
+		});
+	}
+}
+
+function customerData(customer) {
+	this._name = customer.firstname + ' ' + customer.lastname;
+	this._phone = customer.phone;
+	this._country = window.countries[customer.country_id].abbreviation;
+	if (customer.pivot.ticket_id != null) {
+		this._ticket = window.tickets[customer.pivot.ticket_id].name;
+	}
+	if (customer.pivot.course_id != null) {
+		this._course = window.courses[customer.pivot.course_id].name;
 	}
 
-}*/
+	this._chest = customer.chest_size || "-";
+	this._shoe = customer.shoe_size || "-";
+	this._height = customer.height || "-";
+	this._lastDive = customer.last_dive || "-";
+	this._reference = customer.pivot.reference;
+	this._booking_id = customer.pivot.booking_id;
+	this._notes = customer.pivot.notes || "-";
+	this._status = customer.pivot.status;
+	this._price = customer.pivot.decimal_price;
 
+	var paid = 0;
+
+	_.each(customer.pivot.payments, function(obj) {
+		paid += parseFloat(obj.amount);
+	});
+	_.each(customer.pivot.refunds, function(obj) {
+		paid -= parseFloat(obj.amount);
+	});
+
+	this.amount_paid = paid.toFixed(2);
+
+	this.name = function() {
+		return this._name;
+	};
+
+	this.phone = function() {
+		return this._phone + '&nbsp;'; // The forced space at the end makes the phone number be recognised as a string in Excel (instead of a number, when exporting via DataTable's CSV/Excel export)
+	};
+
+	this.country = function() {
+		return this._country;
+	};
+
+	this.ticket = function() {
+		return this._ticket;
+	};
+
+	this.course = function() {
+		return this._course;
+	};
+
+	this.chest = function() {
+		return this._chest;
+	};
+
+	this.shoe = function() {
+		return this._shoe;
+	};
+
+	this.height = function() {
+		return this._height;
+	};
+
+	this.lastDive = function() {
+		return this._lastDive;
+	};
+
+	this.reference = function() {
+		return '<a href="javascript:void(0);" onclick="editBooking(' + this._booking_id + ', this);">' + this._reference + '</a>';
+	};
+
+	this.notes = function() {
+		return this._notes;
+	};
+
+	this.status = function() {
+		return window.company.currency.symbol + ' ' + this.amount_paid + ' / ' + window.company.currency.symbol + ' ' + this._price;
+	};
+}
+
+function getFileName(type, data) {
+	var name;
+	if(type === 'trip') {
+		name = data.trip.name;
+	} else {
+		name = data.training.name;
+	}
+	return name + ' Trip Manifest - ' + data.start;
+}
