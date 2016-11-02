@@ -26,6 +26,19 @@ class Logger
         $this->log = $this->log_repo->create($data);
     }
 
+    public function getId()
+    {
+        return $this->log->id;
+    }
+
+    /**
+     * Add a new LogEntry to the log
+     *
+     * @todo Instead of inserting the log to the DB, it should append to an array and then implement a save method
+     * to reduce the numnber of DB calls
+     *
+     * @param $data
+     */
     public function append($data)
     {
         $this->log_repo->addEntry($this->log->id, $data);
@@ -36,6 +49,9 @@ class Logger
         // todo
     }
 
+    /**
+     * Delete the log and all of its entries
+     */
     public function delete()
     {
         $this->log_repo->delete($this->log->id);

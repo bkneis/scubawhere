@@ -87,7 +87,11 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      * @return \Scubawhere\Entities\Accommodation
      */
     public function getWhere(array $query, array $relations = [], $fail = true) {
-        $accommodation = Accommodation::onlyOwners()->where($query)->with($relations)->find();
+        $accommodation = Accommodation::onlyOwners()->where(function ($q) use ($query) {
+            foreach ($query as $obj) {
+                $q->where($obj[0], $obj[1], $obj[2]);
+            }
+        })->with($relations)->get();
 
         if($accommodation === null && $fail) {
             throw new HttpNotFound(__CLASS__ . __FUNCTION__, ['The accommodation could not be found']);

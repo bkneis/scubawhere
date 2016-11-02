@@ -199,7 +199,7 @@ class BoatService {
 					'timetable is ' . $trip[0]->start . '. Please assign a diffrent boat to the timetable or delete the timetable in order to delete the boat.');	
 			}
 			throw new ConflictException(
-				['The boat has future departures associated to it, please visit the troubleshooting tab to see more information on how to delete it.']);
+				['The boat has future departures associated to it, please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> to see more information on how to delete it.']);
 		}
 		else
 		{

@@ -23,6 +23,18 @@ var LogService = function(log_repo) {
         console.log( xhr );
     };
 
+	let getUrlParam = function(name, url) {
+		if (!url) {
+			url = window.location.href;
+		}
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+
 	this.viewBooking = function(booking_ref) {
 		// Load booking data and redirect to add-booking tab
 		Booking.getByRef(booking_ref, function success(object) {
@@ -40,7 +52,6 @@ var LogService = function(log_repo) {
 	this.renderLinks = function(description)
 	{
 		let refs = description.match(/[^[\]]+(?=])/g);
-		console.log(refs);
 		let html = '<li>' + description + '</li>';
 		_.each(refs, function(obj) {
 			let str = '[' + obj + ']';
@@ -67,5 +78,12 @@ var LogService = function(log_repo) {
             alert(xhr.responseText);
         });
     };
+
+	this.renderLog = function() {
+		let id = getUrlParam('id');
+		if(id) {
+			this.renderEditForm( parseInt(id) );
+		}
+	}
 
 };

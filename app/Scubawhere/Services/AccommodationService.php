@@ -69,11 +69,11 @@ class AccommodationService {
 	}
 
 	/**
-	* Validate the 'before' and 'after' date to ensure they do cross over and set the default to today + 1 month if not set
+	 * Validate the 'before' and 'after' date to ensure they do cross over and set the default to today + 1 month if not set
 	 *
-	* @param  array $data Contains a 'before' and 'after' index with date strings
+	 * @param  array $data Contains a 'before' and 'after' index with date strings
 	 *
-	* @return array $data The same $data variable with the modified before and after
+	 * @return array $data The same $data variable with the modified before and after
 	*/
 	private function validateFilterDates(array $data)
 	{
@@ -123,7 +123,7 @@ class AccommodationService {
 		$query = [];
 
 		if(!empty($data['accommodation_id'])) {
-			$query = array('id', '=', $data['accommodation_id']);
+			$query = array(array('id', '=', $data['accommodation_id']));
 		}
 
 		$accommodations = $this->accommodation_repo->getWhere($query);
@@ -166,11 +166,11 @@ class AccommodationService {
 	/**
 	 * Validate, create and save the accommodation and prices to the database
 	 *
-	 * @param  [type] $data        [description]
-	 * @param  [type] $base_prices [description]
-	 * @param  [type] $prices      [description]
+	 * @param array $data        [description]
+	 * @param array $base_prices [description]
+	 * @param array $prices      [description]
 	 *
-	 * @return [type]              [description]
+	 * @return \Scubawhere\Entities\Accommodation
 	 */
 	public function create($data, $base_prices, $prices) 
 	{
@@ -240,9 +240,10 @@ class AccommodationService {
 			foreach($bookings as $obj) {
 				$logger->append('The accommodation is used in the booking ' . '['.$obj['reference'].']');
 			}
-			throw new ConflictException(
-				['The accommodation could not be deleted as it is booked in the future, 
-								   please visit the troubleshooting tab to find how to delete it.']);
+			throw new ConflictException([
+					'The accommodation could not be deleted as it is booked in the future, '.
+					'please <a href="#troubleshooting?id=' . $logger->getId() . '">click here</a> to find how to delete it.'
+				]);
 		}
 
         // Check if the user wants to delete accommodation even when in packages

@@ -153,7 +153,7 @@ class CourseService {
 			}
 			throw new HttpConflict(__CLASS__ . __METHOD__,
 				['The course could not be deleted as it is used in bookings in the future, '.
-						'Please visit the troubleshooting tab for more info on how to delete it.']);
+						'Please please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> for more info on how to delete it.']);
 		}
 
         if(!$course->getDeleteableAttribute())

@@ -234,7 +234,7 @@
 			<strong>There are a few problems with the form:</strong>
 			<ul>
 				{{#each errors}}
-					<li>{{this}}</li>
+					<li>{{{this}}}</li>
 				{{/each}}
 			</ul>
 		</div>

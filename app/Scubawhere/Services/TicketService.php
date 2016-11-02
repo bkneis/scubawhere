@@ -254,8 +254,10 @@ class TicketService {
                     $logger->append('The ticket can not be deleted as the course ' . $obj->name .
                     	' requires atleast one ticket or class, please delete or edit the course so that the ticket can be deleted');
                 }
-                throw new ConflictException(
-                	['The ticket cannot be deleted as it has courses that depend on it, please visit the error logs tab to see more information on how to fix this.']); 
+                throw new ConflictException([
+					'The ticket cannot be deleted as it has courses that depend on it, '.
+					'please please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> to see more information on how to fix this.'
+				]);
             }
             // Otherwise soft delete the pivots to the courses
             else

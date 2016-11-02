@@ -8,8 +8,8 @@ if(window.company.initialised !== 1)
 
 $(function() {
 
-    let log_repo = new LogRepo();
-    let log_service = new LogService(log_repo);
+    let log_repo     = new LogRepo();
+    let log_service  = new LogService(log_repo);
     let log_observer = new LogObserver(log_service);
 
 	let listRendered = $.Deferred();
@@ -20,6 +20,7 @@ $(function() {
 
 	$.when(listRendered).then(function() {
 		log_service.renderEditForm();
+		log_service.renderLog();
 	});
 
 	/**

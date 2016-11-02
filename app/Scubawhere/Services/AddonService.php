@@ -13,12 +13,14 @@ class AddonService {
 
 	/**
 	 * Service used to log issues to trouble shooting when waterfall deleting
+	 *
 	 * @var \Scubawhere\Services\LogService
 	 */
 	protected $log_service;
 
 	/**
 	 * Service used to validate and associate prices
+	 *
 	 * @var \Scubawhere\Services\PriceService
 	 */
 	protected $price_service;
@@ -164,7 +166,7 @@ class AddonService {
 			}
 			throw new ConflictException(
 				['The addon could not be deleted as it is used in bookings in the future, '.
-						'Please visit the troubleshooting tab for more info on how to delete it.']);
+						'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> for more info on how to delete it.']);
 		}
 
         // STEP 5.

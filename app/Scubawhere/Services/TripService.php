@@ -155,8 +155,10 @@ class TripService {
             {
                 $logger->append('The ticket ' . $prob->name . ' uses soley this trip, please assign the ticket a diffrent trip to delete');
             }
-            throw new HttpConflict(__CLASS__.__METHOD__,
-            	['The trip could not be deleted as it has tickets that require it, for more information on how to delete it, visit the troubleshooting tab']);
+            throw new HttpConflict(__CLASS__.__METHOD__, [
+				'The trip could not be deleted as it has tickets that require it,',
+				'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> for more information on how to delete it.'
+			]);
         }
         // Check if the trip is scheduled for future departures
         elseif(sizeof($trip->departures) > 0)
@@ -166,8 +168,10 @@ class TripService {
             {
                 $logger->append('The trip is scheduled to depart on ' . $obj->start . ', please delete the departure in scheduleing or edit it to use a diffrent trip');
             }
-            throw new HttpConflict(__CLASS__.__METHOD__,
-            	['The trip could not be deleted as it is scheduled for departure in the future, for more information on how to delete it, visit the troubleshooting tab']);
+            throw new HttpConflict(__CLASS__.__METHOD__, [
+				'The trip could not be deleted as it is scheduled for departure in the future, '.
+				'please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a>for more information on how to delete it.'
+			]);
         }
         // If no problems, unassign the trips to the tickets
         else 

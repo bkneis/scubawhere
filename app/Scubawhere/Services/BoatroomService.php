@@ -143,7 +143,7 @@ class BoatroomService {
 			}
 
 			throw new ConflictException(
-				['The cabin could not be delete, please visit the troubleshooting tab for more information on how to resolve this.']);
+				['The cabin could not be delete, please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> for more information on how to resolve this.']);
 		}
 
 		if(!$boatroom->deleteable)

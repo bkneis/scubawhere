@@ -147,7 +147,7 @@ class TrainingService {
 
 			throw new HttpConflict(__CLASS__.__METHOD__,
 				['The class could not be deleted as it is used in bookings in the future, '.
-								'Please visit the troubleshooting tab for more info on how to delete it.']);
+								'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a>for more info on how to delete it.']);
 		}
 		// STEP 6.
 		if(!$training->getDeleteableAttribute()) 
@@ -179,7 +179,7 @@ class TrainingService {
 				}
 				throw new HttpConflict(__CLASS__.__METHOD__,
 					['The class could not be deleted as it is assigned to a course, '.
-							'please visit the error logs to view how to correct it before deleting it']);
+							'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> to view how to correct it before deleting it']);
 			}
         }
         // STEP 9.
