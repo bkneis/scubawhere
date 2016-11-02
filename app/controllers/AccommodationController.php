@@ -63,11 +63,8 @@ class AccommodationController extends Controller {
 
     /**
      * Get all accommodations belonging to a company
-     *
      * @api /api/accommodation/filter
-     *
      * @throws HttpNotFound
-     *
      * @return array Collection Accommodation models
      */
     public function getFilter()
@@ -86,6 +83,34 @@ class AccommodationController extends Controller {
         }
 
         return $this->accommodation_service->getFilter($data);
+    }
+
+    /**
+     * Retrieve a manifest for an accommodation
+     *
+     * @api /accommodation/manifest
+     * @return \Illuminate\Http\JsonResponse
+     * @throws HttpUnprocessableEntity
+     */
+    public function getManifest()
+    {
+        $data = Input::only('id', 'date');
+
+        $rules = array(
+            'id'   => 'required|integer',
+            'date' => 'required|date'
+        );
+
+        $validator = Validator::make($data, $rules);
+
+        if($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
+
+        return Response::json(array(
+            'status' => 'Success. Manifest retrieved',
+            'data'   => $this->accommodation_service->getManifest($data['id'], $data['date'])
+        ), 200);
     }
 
     /**

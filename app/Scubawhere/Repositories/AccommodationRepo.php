@@ -126,6 +126,53 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
     }
 
     /**
+     * Get all the bookings for an accommodation for a specific date.
+     *
+     * @note Ok, so this function got extremely annoying. Basically I wanted to get the sum of the refunds with the rest of the data
+     * in the first DB call. But as their is no unique id in the accommodation_booking table, when summing the amount of payments, it
+     * would sum them twice, once when joining the payments, then again when getting the refunds.
+     *
+     * @ref http://stackoverflow.com/questions/7699269/mysql-two-left-joins-double-counting
+     *
+     * @todo Find a way to get the sum of the refunds in the first database call, as at the moment it is looping through each booking for each refund :/
+     *
+     * @param int    $id
+     * @param array $dates
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getBookings($id, array $dates)
+    {
+        $data = \DB::table('accommodation_booking')
+            ->select('accommodation_booking.booking_id', 'customer_id', 'bookings.*', 'customers.*', \DB::raw('SUM(payments.amount) as paid')/*, \DB::raw('SUM(refunds.amount) as refunded')*/)
+            ->join('bookings', 'bookings.id', '=', 'accommodation_booking.booking_id')
+            ->join('customers', 'customers.id', '=', 'customer_id')
+            ->join('payments', 'payments.booking_id', '=', 'accommodation_booking.booking_id')
+            ->where('accommodation_id', $id)
+            ->whereBetween('start', $dates)
+            ->get();
+
+        $refunds = \DB::table('refunds')
+            ->selectRaw('booking_id, SUM(amount) as refunded')
+            ->whereIn('booking_id', array_map(function ($obj) { return $obj->booking_id; }, $data))
+            ->get();
+
+        foreach ($refunds as $obj) {
+            $index = null;
+            foreach ($data as $key => $val) {
+                if($val->booking_id == $obj->booking_id) {
+                    $index = $key;
+                }
+            }
+            if(!is_null($index)) {
+                $data[$index]->refunded = $obj->refunded;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Create an accommodation and associate it with its company
      *
      * @param array $data

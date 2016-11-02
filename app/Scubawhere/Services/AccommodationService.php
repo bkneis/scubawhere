@@ -2,11 +2,8 @@
 
 namespace Scubawhere\Services;
 
-use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Booking;
-use Scubawhere\Services\LogService;
-use Scubawhere\Services\PriceService;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\AccommodationRepoInterface;
 
@@ -121,19 +118,11 @@ class AccommodationService {
         $result = array();
 
 		$query = [];
-
 		if(!empty($data['accommodation_id'])) {
 			$query = array(array('id', '=', $data['accommodation_id']));
 		}
 
 		$accommodations = $this->accommodation_repo->getWhere($query);
-
-        /*$accommodations = Context::get()->accommodations()->where(function ($query) use ($data) {
-            if (!empty($data['accommodation_id'])) {
-                $query->where('id', $data['accommodation_id']);
-            }
-        })
-        ->get();*/
 
         if(!$accommodations->isEmpty())
         {
@@ -161,6 +150,61 @@ class AccommodationService {
         }
 
         return $result;
+	}
+
+	/**
+	 * Transform the data retrieved by the database into a manifest
+	 *
+	 * @param $data Collected from the database
+	 *
+	 * @return array Formatted array to be used as the manifest
+	 */
+	private function transformManifest($data)
+	{
+		return array(
+			'booking' => array(
+				'ref'   => $data->reference,
+				'paid'  => ((int) $data->paid - (int) $data->refunded),
+				'price' => $data->price
+			),
+			'customer' => array(
+				'firstname'    => $data->firstname,
+				'lastname'     => $data->lastname,
+				'country'      => $data->country_id,
+				'phone'        => $data->phone,
+				'last_dive'    => $data->last_dive,
+				'fin_size'     => $data->shoe_size,
+				'bcd_size'     => $data->chest_size,
+				'wetsuit_size' => $data->height,
+				'notes'        => $data->notes
+			)
+		);
+	}
+
+	/**
+	 * Create a manifest of al the bookings in a night for an accommodation
+	 * 
+	 * @param int    $id   ID of the accommodation
+	 * @param string $date Date string of the date to get the manifest for
+	 *
+	 * @return array
+	 */
+	public function getManifest($id, $date)
+	{
+		$before = new \DateTime($date);
+		$after  = $before->add(new \DateInterval('P1D'));
+		$before = $before->format('Y:m:d H:i:s');
+		$after  = $after->format('Y:m:d H:i:s');
+
+		$data = $this->accommodation_repo->getBookings($id, [$before, $after]);
+
+		$manifest = [];
+		foreach($data as $obj) {
+			array_push($manifest, $this->transformManifest($obj));
+		}
+
+		return $manifest;
+
 	}
 
 	/**
