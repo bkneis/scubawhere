@@ -50,5 +50,15 @@ var Accommodation = {
 			success: handleData,
 			error: errorFn
 		});
+	},
+
+	getManifest : function(params, handleData, errorFn) {
+		$.ajax({
+			type: 'GET',
+			url : '/api/accommodation/manifest',
+			data : params,
+			success : handleData,
+			error : errorFn
+		});
 	}
 };

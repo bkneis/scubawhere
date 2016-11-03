@@ -162,6 +162,10 @@
          							{{/unless}}
          					</td>
          			</tr>
+					<tr>
+						<td><strong>Customer Information</strong></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{accommodation_id}}, 'accommodation', '{{convertDate start}}')">View manifest</a></td>
+					</tr>
          	</table>
          	<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
          </div>
@@ -241,6 +245,26 @@
          		<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
          </div>
       </script>
+	   <script type="text/x-handlebars-template" id="accommodation-manifest-template">
+		   <div id="modal-{{accommodation.id}}-{{jFriendly accommodation.date}}" class="reveal-modal xxlarge">
+			   <h3>{{{accommodation.name}}} - Accommodation Manifest</h3>
+			   <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
+				   <thead>
+				   <tr>
+					   <th style="color:#313131">Booking Ref</th>
+					   <th style="color:#313131; width:15%;">Payments made</th>
+					   <th style="color:#313131">Name</th>
+					   <th style="color:#313131"><span style="display: none;">Country</span></th>
+					   <th style="color:#313131">Phone</th>
+					   <th style="color:#313131">Notes</th>
+				   </tr>
+				   </thead>
+				   <tbody id="customers-table">
+				   </tbody>
+			   </table>
+			   <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+		   </div>
+	   </script>
       <script type="text/x-handlebars-template" id="customer-rows-template">
          {{#each customers}}
          	<tr>

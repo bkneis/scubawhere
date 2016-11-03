@@ -156,21 +156,21 @@ class AccommodationService {
 	 * Transform the data retrieved by the database into a manifest
 	 *
 	 * @param $data Collected from the database
-	 *
 	 * @return array Formatted array to be used as the manifest
 	 */
 	private function transformManifest($data)
 	{
 		return array(
 			'booking' => array(
-				'ref'   => $data->reference,
-				'paid'  => ((int) $data->paid - (int) $data->refunded),
-				'price' => $data->price
+				'id'        => $data->booking_id,
+				'reference' => $data->reference,
+				'paid'      => isset($data->refunded) ? (int) $data->paid - (int) $data->refunded : (int) $data->paid,
+				'price'     => $data->price
 			),
 			'customer' => array(
 				'firstname'    => $data->firstname,
 				'lastname'     => $data->lastname,
-				'country'      => $data->country_id,
+				'country_id'   => $data->country_id,
 				'phone'        => $data->phone,
 				'last_dive'    => $data->last_dive,
 				'fin_size'     => $data->shoe_size,
@@ -186,22 +186,31 @@ class AccommodationService {
 	 * 
 	 * @param int    $id   ID of the accommodation
 	 * @param string $date Date string of the date to get the manifest for
-	 *
 	 * @return array
 	 */
 	public function getManifest($id, $date)
 	{
-		$before = new \DateTime($date);
-		$after  = $before->add(new \DateInterval('P1D'));
-		$before = $before->format('Y:m:d H:i:s');
-		$after  = $after->format('Y:m:d H:i:s');
+		$date = new \DateTime($date);
+		//$after = clone $before;
+		//$after  = $after->add(new \DateInterval('P1D'));
+		$date = $date->format('Y:m:d');
+		//return $date;
+		//$after  = $after->format('Y:m:d H:i:s');
 
-		$data = $this->accommodation_repo->getBookings($id, [$before, $after]);
-
+		$data = $this->accommodation_repo->getBookings($id, $date);
+		//return $data;
 		$manifest = [];
+		$manifest['bookings'] = [];
 		foreach($data as $obj) {
-			array_push($manifest, $this->transformManifest($obj));
+			if($obj->booking_id !== null) {
+				array_push($manifest['bookings'], $this->transformManifest($obj));
+			}
 		}
+		$manifest['accommodation'] = array(
+			'id'   => $data[0]->accommodation_id,
+			'name' => $data[0]->name,
+			'date' => $date
+		);
 
 		return $manifest;
 

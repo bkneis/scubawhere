@@ -137,19 +137,22 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      * @todo Find a way to get the sum of the refunds in the first database call, as at the moment it is looping through each booking for each refund :/
      *
      * @param int    $id
-     * @param array $dates
+     * @param string $date
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getBookings($id, array $dates)
+    public function getBookings($id, $date)
     {
         $data = \DB::table('accommodation_booking')
-            ->select('accommodation_booking.booking_id', 'customer_id', 'bookings.*', 'customers.*', \DB::raw('SUM(payments.amount) as paid')/*, \DB::raw('SUM(refunds.amount) as refunded')*/)
+            ->select(\DB::raw('accommodations.id as accommodation_id'), 'accommodations.name', 'accommodation_booking.booking_id', 'customer_id', 'bookings.*', 'customers.*', \DB::raw('SUM(payments.amount) as paid')/*, \DB::raw('SUM(refunds.amount) as refunded')*/)
             ->join('bookings', 'bookings.id', '=', 'accommodation_booking.booking_id')
             ->join('customers', 'customers.id', '=', 'customer_id')
             ->join('payments', 'payments.booking_id', '=', 'accommodation_booking.booking_id')
+            ->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
             ->where('accommodation_id', $id)
-            ->whereBetween('start', $dates)
+            ->where('start', '<=', $date)
+            ->where('end', '>=', $date)
+            //->whereBetween($date, ['start', 'end'])
             ->get();
 
         $refunds = \DB::table('refunds')
@@ -158,14 +161,10 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
             ->get();
 
         foreach ($refunds as $obj) {
-            $index = null;
             foreach ($data as $key => $val) {
                 if($val->booking_id == $obj->booking_id) {
-                    $index = $key;
+                    $data[$key]->refunded = $obj->refunded;
                 }
-            }
-            if(!is_null($index)) {
-                $data[$index]->refunded = $obj->refunded;
             }
         }
 
