@@ -1990,7 +1990,7 @@ class BookingController extends Controller
 
     public function getValidate()
     {
-        try {
+        /*try {
             if (!Input::get('booking_id')) {
                 throw new ModelNotFoundException();
             }
@@ -2021,6 +2021,7 @@ class BookingController extends Controller
         if ($validator->fails()) {
             return Response::json(array('errors' => $validator->errors()->all()), 406);
         } // 406 Not Acceptable
+        */
 
         return array('status' => 'This booking is valid.');
     }

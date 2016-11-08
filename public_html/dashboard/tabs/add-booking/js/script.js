@@ -899,6 +899,16 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
 });
 
+$('#new-customer').on('click', '.add-dummy-email', function() {
+	console.log('click');
+	$('#customer-email.form-email').val('spam@scubawhere.com');
+});
+
+$('#edit-customer-modal').on('click', '.add-dummy-email', function() {
+	console.log('click');
+	$('#customer-email.template-email').val('spam@scubawhere.com');
+});
+
 $('#booking-summary-column').on('click', '.remove-customer', function() {
 	var id = $(this).data('id');
 
@@ -1088,7 +1098,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
-	if(!booking.lead_customer.phone) {
+	/*if(!booking.lead_customer.phone) {
 		pageMssg("The lead customer requires a phone number!", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
@@ -1097,7 +1107,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		pageMssg("The lead customer requires a country!", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
-	}
+	}*/
 });
 
 /*

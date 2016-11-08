@@ -70,16 +70,16 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-5">
-								<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
-								<input id="customer-email" name="email" class="form-control" placeholder="@">
+								<label for="email" class="control-label">Email</label>
+								<input id="customer-email" name="email" class="form-control form-email" placeholder="@">
 							</div>
-							<div class="col-md-3">
-								<label for="phone" class="control-label">Dialling Code <span class="text-danger">*</span></label>
-								<input type="text" name="dialling_code" class="form-control" placeholder="+44">
+							<div class="col-md-2">
+								<label>&nbsp;</label><br>
+								<button type="button" class="btn btn-primary add-dummy-email" style="width: 100%;">Add Dummy Email</button>
 							</div>
-							<div class="col-md-4">
-								<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
-								<input type="text" name="phone" class="form-control" placeholder="02071234567">
+							<div class="col-md-5" style="margin-top:30px;">
+								<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true">
+								<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
 							</div>
 						</div>
 						<div class="form-group">
@@ -87,9 +87,13 @@
 								<label for="birthday" class="control-label">Date of birth</label>
 								<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
 							</div>
-							<div class="col-md-6" style="margin-top:30px;">
-								<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true">
-								<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
+							<div class="col-md-3">
+								<label for="phone" class="control-label">Dialling Code</label>
+								<input type="text" name="dialling_code" class="form-control" placeholder="+44">
+							</div>
+							<div class="col-md-4">
+								<label for="phone" class="control-label">Phone</label>
+								<input type="text" name="phone" class="form-control" placeholder="02071234567">
 							</div>
 						</div>
 						<div class="form-group">
@@ -291,13 +295,19 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-md-6">
+		<div class="col-md-12">
 			<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
-			<input id="customer-email" name="email" class="form-control" placeholder="@" value="{{{email}}}">
+			<input id="customer-email" name="email" class="form-control template-email" placeholder="@" value="{{{email}}}">
 		</div>
-		<div class="col-sm-6">
-			<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
-			<input type="text" name="phone" class="form-control" placeholder="02071234567" value="{{{phone}}}">
+	</div>
+	<div class="form-group">
+		<div class="col-md-6">
+			<label>&nbsp;</label><br>
+			<button type="button" class="btn btn-primary add-dummy-email" style="width: 100%;">Add Dummy Email</button>
+		</div>
+		<div class="col-md-6" style="margin-top:30px;">
+			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true" {{#if unsubscribed}}checked{{/if}}>
+			<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
 		</div>
 	</div>
 	<div class="form-group">
@@ -305,9 +315,9 @@
 			<label for="birthday" class="control-label">Date of birth</label>
 			<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years" value="{{birthday}}">
 		</div>
-		<div class="col-md-6" style="margin-top:30px;">
-			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true" {{#if unsubscribed}}checked{{/if}}>
-			<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
+		<div class="col-sm-6">
+			<label for="phone" class="control-label">Phone</label>
+			<input type="text" name="phone" class="form-control" placeholder="02071234567" value="{{{phone}}}">
 		</div>
 	</div>
 	<div class="form-group">
