@@ -128,3 +128,7 @@ public_html/phpinfo.php
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# Work in progress files
+app/Scubawhere/Decorators/Cacherepo.php
+public_html/dashboard/tabs/agents_new/*
