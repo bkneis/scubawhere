@@ -1,0 +1,5536 @@
+swagger: "2.0"
+
+info:
+  description: |
+    This is the documentation for scubawhere's RMS API. This API is only to be used by authorized parties with valid auth tokens. Please contact us at contact@scubawhere.com for more information on how to gain an api key.
+
+  version: "1.0.0"
+
+  title: Scubawhere API Documentation
+
+  termsOfService: http://rms.scubawhere.com/api/terms/
+
+  contact:
+    name: Bryan Kneis
+    email: bryan@scubawhere.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+host: dev.scubawhere.com
+
+basePath: /api
+
+schemes:
+  - https
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+
+paths:
+
+  # Accommodation Routes
+
+  /accommodation:
+    get:
+      tags:
+        - accommodation
+      description: Retrieve an accommodation by ID
+      operationId: findAccommodation
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: ID of the accommodation to be retrieved
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Accommodation'
+        '404':
+          description: Not found (No accommodation with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  /accommodations/all:
+    get:
+      tags:
+        - accommodation
+      description: Retrieve all accommodation
+      operationId: getAllAccommodations
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Accommodation'
+
+
+  /accommodations/all-with-trashed:
+    get:
+      tags:
+        - accommodation
+      summary: Retrieve all accommodation including any deleted models
+      operationId: getAllWithTrashedAccommodations
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Accommodation'
+
+
+  /accommodation/filter:
+    get:
+      tags:
+        - accommodation
+      summary: Get all the accommodations matching a filter
+      description: Get all the accommodations and their bookings between certain dates and / or an accommodation id
+      operationId: filterAccommodation
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: before
+          description: The date for the upper boundary of the dates
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: after
+          description: The date for the lower boundary of the dates
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: accommodation_id
+          description: ID Accommodation to filter by
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Accommodation'
+        '404':
+          description: Not found (No accommodation with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  /accommodation/add:
+    post:
+      tags:
+        - accommodation
+      description: Create an accommodation
+      operationId: addAccommodation
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          description: Name of the type of accommodation
+          required: true
+          type: string
+
+        - in: query
+          name: description
+          description: Description of the accommodation
+          required: false
+          type: string
+
+        - in: query
+          name: capacity
+          description: Number of beds in the accommodation
+          required: true
+          type: integer
+          format: int64
+
+        - in: query
+          name: base_prices
+          description: Price of the accommodation and the dates of when the price is applicable
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Accommodation'
+
+        '404':
+          description: Not found (No accommodation exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  /accommodation/edit:
+    put:
+      tags:
+        - accommodation
+      summary: Update an Accommodation
+      description: Updates the accommodation by id using the specified fields
+      operationId: updateAccommodation
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: id
+          description: ID of the Accommodation to be updated
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          description: Name of the Accommodation
+          required: false
+          type: string
+        - in: query
+          name: capacity
+          description: Number of rooms the accommodation holds
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Accommodation'
+
+        '404':
+          description: Not found (No accommodation exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  /accommodation/delete:
+    delete:
+      tags:
+        - accommodation
+      summary: Delete an accommodation by ID
+      operationId: deleteAccommodation
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: body
+          description: ID of the accommodation
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Accommodation'
+        '404':
+          description: Not found (No accommodation exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Addon Routes
+
+  /addon:
+    get:
+      tags:
+        - addon
+      summary: Retrieve an addon by ID
+      operationId: getAddon
+      parameters:
+        - in: query
+          name: id
+          description: ID of the addon to be retrieved
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              addon:
+                $ref: '#/definitions/Addon'
+        '404':
+          description: Not found (No addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /addon/all:
+    get:
+      tags:
+        - addon
+      summary: Retrieve all addons
+      operationId: getAllAddons
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Addon'
+
+  /addon/all-with-trashed:
+    get:
+      tags:
+        - addon
+      summary: Retrieve all addons including any deleted models
+      operationId: getAllWithTrashedAddons
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Addon'
+
+  /addon/add:
+    post:
+      tags:
+        - addon
+      summary: Create a new addon
+      operationId: addAddon
+      parameters:
+        - in: query
+          name: name
+          description: Name of the type of addon
+          required: true
+          type: string
+        - in: query
+          name: description
+          description: Description of the addon
+          required: false
+          type: string
+        - in: query
+          name: base_prices
+          description: Prices for addon
+          required: true
+          type: integer
+          format: int64
+
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Addon'
+        '422':
+          description: Unprocessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /addon/edit:
+    put:
+      tags:
+        - addon
+      summary: Update an Addon
+      description: Updates the addon by id using the specified fields
+      operationId: updateAddon
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: id
+          description: ID of the Addon to be updated
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          description: Name of the Addon
+          required: false
+          type: string
+        - in: query
+          name: description
+          description: Description of the Addon
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              accommodation:
+                $ref: '#/definitions/Addon'
+        '404':
+          description: Not found (No addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /addon/delete:
+    delete:
+      tags:
+        - addon
+      summary: Delete an addon by ID
+      operationId: deleteAddon
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: body
+          description: ID of the Addon
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Agent Routes
+
+  /agent:
+    get:
+      tags:
+        - agent
+      summary: Retrieve an agent by ID
+      operationId: getAgent
+      parameters:
+        - in: query
+          name: id
+          description: ID of the agent to be retrieved
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Agent'
+        '404':
+          description: Not found (No agent with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /agent/all:
+    get:
+      tags:
+        - agent
+      summary: Retrieve all agents
+      operationId: getAllAgents
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Agent'
+
+  /agent/all-with-trashed:
+    get:
+      tags:
+        - agent
+      summary: Retrieve all agents including any deleted models
+      operationId: getAllWithTrashedAgents
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Agent'
+
+  /agent/add:
+    post:
+      tags:
+        - agent
+      summary: Create a new agent
+      operationId: createAgent
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: website
+          required: false
+          type: string
+          format: url
+        - in: query
+          name: branch_name
+          required: true
+          type: string
+        - in: query
+          name: branch_address
+          required: true
+          type: string
+        - in: query
+          name: branch_phone
+          required: true
+          type: string
+        - in: query
+          name: branch_email
+          required: true
+          type: string
+          format: email
+        - in: query
+          name: billing_address
+          required: false
+          type: string
+        - in: query
+          name: billing_phone
+          required: false
+          type: string
+        - in: query
+          name: billing_email
+          required: false
+          type: string
+          format: email
+        - in: query
+          name: commission
+          required: true
+          type: number
+          format: float
+        - in: query
+          name: terms
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Agent'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /agent/edit:
+    post:
+      tags:
+        - accommodation
+      summary: Create a new agent
+      operationId: editAgent
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: website
+          required: false
+          type: string
+          format: url
+        - in: query
+          name: branch_name
+          required: true
+          type: string
+        - in: query
+          name: branch_address
+          required: true
+          type: string
+        - in: query
+          name: branch_phone
+          required: true
+          type: string
+        - in: query
+          name: branch_email
+          required: true
+          type: string
+          format: email
+        - in: query
+          name: billing_address
+          required: false
+          type: string
+        - in: query
+          name: billing_phone
+          required: false
+          type: string
+        - in: query
+          name: billing_email
+          required: false
+          type: string
+          format: email
+        - in: query
+          name: commission
+          required: true
+          type: number
+          format: float
+        - in: query
+          name: terms
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Agent'
+        '404':
+          description: Not found (No agent with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /agent/delete:
+    delete:
+      tags:
+        - agent
+      summary: Delete an agent by ID
+      operationId: deleteAgent
+      parameters:
+        - in: query
+          name: id
+          description: ID of the Agent
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Boat Routes
+
+  /boat:
+    get:
+      tags:
+        - boat
+      summary: Retrieve a boat by ID
+      operationId: getBoat
+      parameters:
+        - in: query
+          name: id
+          description: ID of the boat to be retrieved
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Boat'
+        '404':
+          description: Not found (No boat with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boat/all:
+    get:
+      tags:
+        - boat
+      summary: Retrieve all boats
+      operationId: getAllBoats
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Boat'
+
+  /boat/all-with-trashed:
+    get:
+      tags:
+        - boat
+      summary: Retrieve all agents including any deleted models
+      operationId: getAllWithTrashedBoats
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Boat'
+
+  /boat/add:
+    post:
+      tags:
+        - boat
+      summary: Create a new boat
+      operationId: createBoat
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: capacity
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: boatrooms
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Boat'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boat/edit:
+    post:
+      tags:
+        - boat
+      summary: Update a boat by ID
+      operationId: editBoat
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: capacity
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: boatrooms
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Agent'
+        '404':
+          description: Not found (No agent with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boat/delete:
+    delete:
+      tags:
+        - boat
+      summary: Delete a boat by ID
+      operationId: deleteBoat
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No boat exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Boatroom Routes
+
+  /boatroom:
+    get:
+      tags:
+        - boatroom
+      summary: Retrieve a boatroom by ID
+      operationId: getBoatroom
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Boatroom'
+        '404':
+          description: Not found (No boat with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boatroom/all:
+    get:
+      tags:
+        - boatroom
+      summary: Retrieve all boatrooms
+      operationId: getAllBoatrooms
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Boatroom'
+
+  /boatroom/all-with-trashed:
+    get:
+      tags:
+        - boatroom
+      summary: Retrieve all boatrooms including any deleted models
+      operationId: getAllWithTrashedBoatrooms
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Boatroom'
+
+  /boatroom/add:
+    post:
+      tags:
+        - boatroom
+      summary: Create a new boatroom
+      operationId: createBoatroom
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Boatroom'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boatroom/edit:
+    post:
+      tags:
+        - boatroom
+      summary: Update a boatroom by ID
+      operationId: editBoatroom
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Boatroom'
+        '404':
+          description: Not found (No boatroom with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /boatroom/delete:
+    delete:
+      tags:
+        - boatroom
+      summary: Delete a boatroom by ID
+      operationId: deleteBoatroom
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No boatroom exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Booking Routes
+
+  /booking:
+    get:
+      tags:
+        - booking
+      summary: Retrieve a booking by ID
+      operationId: getBooking
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Booking'
+        '404':
+          description: Not found (No booking with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/all:
+    get:
+      tags:
+        - booking
+      summary: Retrieve all bookings
+      operationId: getAllBookings
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Booking'
+
+  /booking/all-with-trashed:
+    get:
+      tags:
+        - booking
+      summary: Retrieve all bookings including any deleted models
+      operationId: getAllWithTrashedBookings
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Booking'
+
+  /booking/today:
+    get:
+      tags:
+        - booking
+      summary: Get all bookings made today
+      operationId: getTodaysBookings
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              bookings:
+                type: array
+                items:
+                  $ref: '#/definitions/Booking'
+
+  /booking/tommorow:
+    get:
+      tags:
+        - booking
+      summary: Get all bookings made today
+      operationId: getTommorowsBookings
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              bookings:
+                type: array
+                items:
+                  $ref: '#/definitions/Booking'
+
+  /booking/filter:
+    get:
+      tags:
+        - booking
+      summary: Get all bookings matching a filter
+      operationId: filterBookings
+      parameters:
+        - in: query
+          name: reference
+          required: false
+          type: string
+        - in: query
+          name: date
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: lastname
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              bookings:
+                type: array
+                items:
+                  $ref: '#/definitions/Booking'
+        '422':
+          description: Unprocessable Entity (One or more of the paramters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/customer:
+    get:
+      tags:
+        - booking
+      summary: Get all bookings for a customer
+      operationId: getCustomerBookings
+      parameters:
+        - in: query
+          name: customer_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              bookings:
+                type: array
+                items:
+                  $ref: '#/definitions/Booking'
+        '404':
+          description: Not found (No customer with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (ID was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/init:
+    post:
+      tags:
+        - booking
+      summary: Create a new empty booking
+      operationId: initBooking
+      parameters:
+        - in: query
+          name: source
+          required: true
+          type: string
+        - in: query
+          name: agent_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: agent_reference
+          required: false
+          type: string
+      responses:
+        '201':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              id:
+                type: integer
+                format: int64
+              reference:
+                type: string
+              agent:
+                $ref: '#/definitions/Agent'
+        '404':
+          description: Not found (No agent exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/add-detail:
+    post:
+      tags:
+        - booking
+      summary: Add a package / course / ticket with its session to the booking
+      operationId: addBookingDetail
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: customer_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: ticket_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: session_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: boatroom_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: training_session_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: temporary
+          required: false
+          type: boolean
+        - in: query
+          name: package_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: packagefacade_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: course_id
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              id:
+                type: integer
+                format: int64
+              addons:
+                type: array
+                items:
+                  $ref: '#/definitions/Addon'
+              decimal_price:
+                type: string
+              boatroom_id:
+                type: integer
+                format: int64
+              package_decimal_price:
+                type: string
+              course_decimal_price:
+                type: string
+              ticket_decimal_price:
+                type: string
+              packagefacade_id:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/remove-detail:
+    post:
+      tags:
+        - booking
+      summary: Remove a detail from a booking
+      operationId: removeBookingDetail
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: bookingdetail_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              decimal_price:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/set-lead:
+    post:
+      tags:
+        - booking
+      summary: Set the lead customer for a booking
+      operationId: setLeadCustomer
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: customer_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No booking or customer exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/add-addon:
+    post:
+      tags:
+        - booking
+      summary: Attach an addon to a trip of a booking
+      operationId: attachAddon
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: bookingdetail_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: addon_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: quantity
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: packagefacade_id
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              decimal_price:
+                type: string
+              addon_decimal_price:
+                type: string
+        '404':
+          description: Not found (No booking or addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/remove-addon:
+    post:
+      tags:
+        - booking
+      summary: Dettach an addon to a trip of a booking
+      operationId: dettachAddon
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: bookingdetail_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: addon_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: packagefacade_id
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              decimal_price:
+                type: string
+        '404':
+          description: Not found (No booking or addon exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/add-accommodation:
+    post:
+      tags:
+        - booking
+      summary: Attach an accommodation booking to a booking
+      operationId: attachAccommodation
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: accommodation_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: customer_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: start
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: end
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource was created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              decimal_price:
+                type: string
+              accommodation_decimal_price:
+                type: string
+              packageafacde_id:
+                type: integer
+                format: int64
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/remove-accommodation:
+    post:
+      tags:
+        - booking
+      summary: Dettach an accommodation booking to a booking
+      operationId: dettachAccommodation
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: accommodation_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: customer_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: start
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource was dettached)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              decimal_price:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/edit-info:
+    post:
+      tags:
+        - booking
+      summary: Edit the information related to a booking
+      operationId: editBookingInfo
+      parameters:
+        - in: query
+          name: booking_id
+          type: integer
+          format: int64
+        - in: query
+          name: discount
+          type: number
+          format: double
+        - in: query
+          name: comment
+          type: string
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              price:
+                type: integer
+                format: int32
+              decimal_price:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/add-pickup:
+    post:
+      tags:
+        - booking
+      summary: Attach a pickup location for a booking
+      operationId: attachPickup
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: location
+          required: true
+          type: string
+        - in: query
+          name: date
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: time
+          required: true
+          type: string
+          format: time
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              pickup:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/remove-pickup:
+    post:
+      tags:
+        - booking
+      summary: Dettach a pickup location for a booking
+      operationId: dettachPickup
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: id
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/reserve:
+    post:
+      tags:
+        - booking
+      summary: Reserve a booking and its sessions capcity until a set date
+      operationId: reserveBooking
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: reserved_until
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              reserved_until:
+                type: string
+                format: date
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+        '422':
+          description: Unprocessable Entity (Parameters was not provided / invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/save:
+    post:
+      tags:
+        - booking
+      summary: Save a booking as a quote and release all capacity of sessions
+      operationId: saveBooking
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/cancel:
+    post:
+      tags:
+        - booking
+      summary: Cancel a booking
+      operationId: cancelBooking
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/confirm:
+    post:
+      tags:
+        - booking
+      summary: Confirm a booking and all of its sessions and notify the lead customer
+      operationId: confirmBooking
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              deposit:
+                type: integer
+                format: int32
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/payments:
+    get:
+      tags:
+        - booking
+      summary: Retrieve all payments made for a booking
+      operationId: getPayments
+      parameters:
+        - in: query
+          name: booking_id
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              payments:
+                type: array
+                items:
+                  $ref: '#/definitions/Payment'
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/refunds:
+    get:
+      tags:
+        - booking
+      summary: Retrieve all refunds for a booking
+      operationId: getRefunds
+      parameters:
+        - in: query
+          name: booking_id
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              refunds:
+                type: array
+                items:
+                  $ref: '#/definitions/Refund'
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/resend-confirmation:
+    post:
+      tags:
+        - booking
+      summary: Resend the confirmation email to the lead customer
+      operationId: resendConfirmation
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No booking exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /booking/delete:
+    delete:
+      tags:
+        - booking
+      summary: Delete a booking by ID
+      operationId: deleteBooking
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No boatroom exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Company Routes
+
+  /company/update:
+    post:
+      tags:
+        - company
+      summary: Update the companies information
+      operationId: updateCompany
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: contact
+          required: false
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: name
+          required: false
+          type: string
+        - in: query
+          name: address_1
+          required: false
+          type: string
+        - in: query
+          name: address_2
+          required: false
+          type: string
+        - in: query
+          name: city
+          required: false
+          type: string
+        - in: query
+          name: county
+          required: false
+          type: string
+        - in: query
+          name: postcode
+          required: false
+          type: string
+        - in: query
+          name: country_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: currency_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: business_phone
+          required: false
+          type: string
+        - in: query
+          name: business_email
+          required: false
+          type: string
+          format: email
+        - in: query
+          name: vat_number
+          required: false
+          type: string
+        - in: query
+          name: registration_number
+          required: false
+          type: string
+        - in: query
+          name: website
+          required: false
+          type: string
+          format: url
+      responses:
+        '200':
+          description: Success (Resource was updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              company:
+                $ref: '#/definitions/Company'
+        '404':
+          description: Not found (No company exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /company/locations:
+    get:
+      tags:
+        - company
+      summary: Retrieve the locations this Dive Centre uses
+      operationId: getLocations
+      parameters:
+        - in: query
+          name: latitude
+          required: true
+          type: string
+          format: latitude
+        - in: query
+          name: longitude
+          required: true
+          type: string
+          format: longitude
+        - in: query
+          name: limit
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              locations:
+                type: array
+                items:
+                  $ref: '#/definitions/Location'
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /company/add-location:
+    post:
+      tags:
+        - company
+      summary: Attach a location to a company
+      operationId: attachLocations
+      parameters:
+        - in: query
+          name: name
+          type: string
+        - in: query
+          name: description
+          type: string
+        - in: query
+          name: latitude
+          type: number
+          format: float
+        - in: query
+          name: longitude
+          type: number
+          format: float
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              id:
+                type: integer
+                format: int64
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /company/pick-up-schedule:
+    get:
+      tags:
+        - company
+      summary: Retrieve the pick up schedule for a date
+      operationId: getPickupSchedule
+      parameters:
+        - in: query
+          name: date
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              date:
+                type: string
+                format: date
+              pick_ups:
+                type: array
+                items:
+                  $ref: '#/definitions/Pickup'
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  # Course Routes
+  /course:
+    get:
+      tags:
+        - course
+      summary: Retrieve a course by ID
+      operationId: getCourse
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              course:
+                $ref: '#/definitions/Course'
+        '404':
+          description: Not found (No course exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /course/all:
+        get:
+          tags:
+            - course
+          summary: Retrieve all courses including any deleted models
+          operationId: getAllCourses
+          responses:
+            '200':
+              description: Success
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/Course'
+
+  /course/all-with-trashed:
+      get:
+        tags:
+          - course
+        summary: Retrieve all courses including any deleted models
+        operationId: getAllWithTrashedCourses
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Course'
+
+  /course/add:
+      post:
+        tags:
+          - course
+        summary: Create a new course
+        operationId: createCourse
+        parameters:
+          - in: query
+            name: name
+            required: true
+            type: string
+          - in: query
+            name: description
+            required: true
+            type: string
+          - in: query
+            name: capacity
+            required: true
+            type: integer
+            format: int32
+          - in: query
+            name: certificate_id
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: tickets
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+          - in: query
+            name: trainings
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+          - in: query
+            name: prices
+            required: true
+            type: array
+            items:
+              type: number
+              format: double
+        responses:
+          '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Course'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /course/edit:
+      post:
+        tags:
+          - course
+        summary: Update a course by ID
+        operationId: editCourse
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+          - in: query
+            name: name
+            required: true
+            type: string
+          - in: query
+            name: description
+            required: true
+            type: string
+          - in: query
+            name: capacity
+            required: true
+            type: integer
+            format: int32
+          - in: query
+            name: certificate_id
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: tickets
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+          - in: query
+            name: trainings
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                agent:
+                  $ref: '#/definitions/Course'
+          '404':
+            description: Not found (No boatroom with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /course/delete:
+      delete:
+        tags:
+          - course
+        summary: Delete a course by ID
+        operationId: deleteCourse
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was deleted)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+          '404':
+            description: Not found (No boatroom exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+# Customer Routes
+  /customer:
+    get:
+      tags:
+        - customer
+      summary: Retrieve a customer by ID
+      operationId: getCustomer
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              course:
+                $ref: '#/definitions/Customer'
+        '404':
+          description: Not found (No course exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unproccessable Entity (One or more of the parameters was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /customer/all:
+        get:
+          tags:
+            - customer
+          summary: Retrieve all customers
+          operationId: getAllCustomers
+          responses:
+            '200':
+              description: Success
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/Customer'
+
+  /customer/all-with-trashed:
+      get:
+        tags:
+          - customers
+        summary: Retrieve all customer including any deleted models
+        operationId: getAllWithTrashedCustomers
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Customer'
+
+  /customer/add:
+      post:
+        tags:
+          - customer
+        summary: Create a new customer
+        operationId: createCustomer
+        parameters:
+          - in: query
+            name: email
+            required: true
+            type: string
+            format: email
+          - in: query
+            name: firstname
+            required: true
+            type: string
+          - in: query
+            name: lastname
+            required: true
+            type: string
+            format: int32
+          - in: query
+            name: birthday
+            required: false
+            type: string
+            format: date
+          - in: query
+            name: gender
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: address_1
+            required: false
+            type: string
+          - in: query
+            name: address_2
+            required: false
+            type: string
+          - in: query
+            name: city
+            required: false
+            type: string
+          - in: query
+            name: county
+            required: false
+            type: string
+          - in: query
+            name: postcode
+            required: false
+            type: string
+          - in: query
+            name: country_id
+            required: false
+            type: integer
+            format: int64
+          - in: query
+            name: phone
+            required: false
+            type: string
+          - in: query
+            name: last_dive
+            required: false
+            type: string
+            format: date
+          - in: query
+            name: number_of_dives
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: chest_size
+            required: false
+            type: string
+          - in: query
+            name: show_size
+            required: false
+            type: string
+          - in: query
+            name: height
+            required: false
+            type: string
+          - in: query
+            name: certificates
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Customer'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /customer/edit:
+      post:
+        tags:
+          - customer
+        summary: Update a customer by ID
+        operationId: editCustomer
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+          - in: query
+            name: email
+            required: false
+            type: string
+            format: email
+          - in: query
+            name: firstname
+            required: false
+            type: string
+          - in: query
+            name: lastname
+            required: false
+            type: string
+            format: int32
+          - in: query
+            name: birthday
+            required: false
+            type: string
+            format: date
+          - in: query
+            name: gender
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: address_1
+            required: false
+            type: string
+          - in: query
+            name: address_2
+            required: false
+            type: string
+          - in: query
+            name: city
+            required: false
+            type: string
+          - in: query
+            name: county
+            required: false
+            type: string
+          - in: query
+            name: postcode
+            required: false
+            type: string
+          - in: query
+            name: country_id
+            required: false
+            type: integer
+            format: int64
+          - in: query
+            name: phone
+            required: false
+            type: string
+          - in: query
+            name: last_dive
+            required: false
+            type: string
+            format: date
+          - in: query
+            name: number_of_dives
+            required: false
+            type: integer
+            format: int32
+          - in: query
+            name: chest_size
+            required: false
+            type: string
+          - in: query
+            name: show_size
+            required: false
+            type: string
+          - in: query
+            name: height
+            required: false
+            type: string
+          - in: query
+            name: certificates
+            required: false
+            type: array
+            items:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Success (Resource updated)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                agent:
+                  $ref: '#/definitions/Customer'
+          '404':
+            description: Not found (No customer with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /customer/delete:
+      delete:
+        tags:
+          - customer
+        summary: Delete a customer by ID
+        operationId: deleteCustomer
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was deleted)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+          '404':
+            description: Not found (No customer exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  # Departure Routes
+
+  /session:
+      get:
+        tags:
+          - session
+        summary: Retrieve a session by ID
+        operationId: getSession
+        parameters:
+          - in: query
+            name: id
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was found)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Session'
+          '404':
+            description: Not found (No session exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+          '422':
+            description: Unproccessable Entity (One or more of the parameters was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /session/all:
+        get:
+          tags:
+            - session
+          summary: Retrieve all sessions including any deleted models
+          operationId: getAllSessions
+          responses:
+            '200':
+              description: Success
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/Session'
+
+  /session/all-with-trashed:
+      get:
+        tags:
+          - session
+        summary: Retrieve all sessions including any deleted models
+        operationId: getAllWithTrashedSessions
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Session'
+
+  /session/filter:
+    get:
+      tags:
+        - session
+      summary: Retrieve all of tsessions that match a filter
+      operationId: filterSessions
+      parameters:
+        - in: query
+          name: after
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: before
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: trip_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: ticket_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: package_id
+          required: false
+          type: integer
+          format: int64
+        - in: query
+          name: course_id
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              sessions:
+                type: array
+                items:
+                  $ref: '#/definitions/Session'
+
+  /session/today:
+    get:
+      tags:
+        - session
+      summary: Retrieve all of todays sessions
+      operationId: getTodaySessions
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              sessions:
+                type: array
+                items:
+                  $ref: '#/definitions/Session'
+
+  /session/tommorow:
+      get:
+        tags:
+          - session
+        summary: Retrieve all of tommorows sessions
+        operationId: getTommorowSessions
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                sessions:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Session'
+
+  /session/manifest:
+    get:
+      tags:
+        - session
+      summary: Retrieve the customer manifest for this session
+      operationId: getManifest
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Session'
+
+
+  /session/add:
+      post:
+        tags:
+          - session
+        summary: Create a new session
+        operationId: createSession
+        parameters:
+          - in: query
+            name: start
+            required: true
+            type: string
+            format: date
+          - in: query
+            name: boat_id
+            required: false
+            type: integer
+            format: int64
+          - in: query
+            name: trip_id
+            required: false
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Session'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /session/edit:
+      post:
+        tags:
+          - session
+        summary: Update a session by ID
+        operationId: editSession
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+          - in: query
+            name: start
+            required: true
+            type: string
+            format: date
+          - in: query
+            name: boat_id
+            required: false
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource created)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                agent:
+                  $ref: '#/definitions/Session'
+          '404':
+            description: Not found (No session with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+          '422':
+            description: Unprocessable Entity (One or more parameter was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /session/delete:
+      delete:
+        tags:
+          - session
+        summary: Delete a session by ID
+        operationId: deleteSession
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was deleted)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+          '404':
+            description: Not found (No session exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+
+  #---------------------------------------------------
+  # Location Routes
+  #---------------------------------------------------
+  /location:
+    get:
+      tags:
+        - locations
+      summary: Retrieve a location by its ID
+      operationId: getLocation
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              location:
+                $ref: '#/definitions/Location'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /location/all:
+    get:
+      tags:
+        - location
+      summary: Retrieve all locations associated with the company
+      operationId: getAllLocations
+      responses:
+        '200':
+          description: Success (Resources found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+
+  /location/tags:
+    get:
+      tags:
+        - location
+      summary: Retrieve all tags associated to all locations
+      operationId: getLocationTags
+      responses:
+        '200':
+          description: Success (Resources found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+
+  /location/add:
+    post:
+      tags:
+        - location
+      summary: Create a location
+      operationId: createLocation
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: latitude
+          required: false
+          type: number
+          format: float
+        - in: query
+          name: longitude
+          required: false
+          type: number
+          format: float
+        - in: query
+          name: tags
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resources found)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /location/edit:
+    put:
+      tags:
+        - location
+      summary: Update a location
+      operationId: updateLocation
+      parameters:
+        - in: query
+          name: location_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: description
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No session exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /location/attach:
+    post:
+      tags:
+        - location
+      summary: Attach a location to a company
+      operationId: attachLocation
+      parameters:
+        - in: query
+          name: location_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No location exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /location/dettach:
+    post:
+      tags:
+        - location
+      summary: Dettach a location to a company
+      operationId: dettachLocation
+      parameters:
+        - in: query
+          name: location_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource updated)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No location exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Package Routes
+  #------------------------------------------------
+  /package:
+      get:
+        tags:
+          - package
+        summary: Retrieve a package by ID
+        operationId: getPackage
+        parameters:
+          - in: query
+            name: id
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was found)
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                course:
+                  $ref: '#/definitions/Package'
+          '404':
+            description: Not found (No package exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+          '422':
+            description: Unproccessable Entity (One or more of the parameters was invalid)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /package/all:
+    get:
+      tags:
+        - package
+      summary: Retrieve all packages including any deleted models
+      operationId: getAllPackages
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Package'
+
+  /package/all-with-trashed:
+    get:
+      tags:
+        - package
+      summary: Retrieve all packages including any deleted models
+      operationId: getAllWithTrashedPackages
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Package'
+
+  /package/add:
+    post:
+      tags:
+        - package
+      summary: Create a new package
+      operationId: createPackage
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: available_from
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: available_until
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: tickets
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: courses
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: accommodations
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: addons
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: prices
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              course:
+                $ref: '#/definitions/Package'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /package/edit:
+    post:
+      tags:
+        - package
+      summary: Update a package by ID
+      operationId: editPackage
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: available_from
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: available_until
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: tickets
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: courses
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: accommodations
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: addons
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: prices
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Package'
+        '404':
+          description: Not found (No boatroom with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /package/delete:
+    delete:
+      tags:
+        - package
+      summary: Delete a package by ID
+      operationId: deletePackage
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No package exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Payment Routes
+  #------------------------------------------------
+  /payment:
+    get:
+      tags:
+        - payment
+      summary: Retrieve a payment by ID
+      operationId: getPayment
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was found)
+          schema:
+            type: object
+            properties:
+              payment:
+                  $ref: '#/definitions/Payment'
+        '404':
+          description: Not found (No payment exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /payment/all:
+    get:
+      tags:
+        - payment
+      summary: Retrieve all payments made
+      operationId: getAllPayments
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Payment'
+
+  /payment/filter:
+    get:
+      tags:
+        - payment
+      summary: Retrieve all payments that match a filter
+      operationId: filterPayments
+      parameters:
+        - in: query
+          name: after
+          description: Date of the earliest payment
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: before
+          description: Date of the latest payment to be retrieved
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              payments:
+                type: array
+                items:
+                  $ref: '#/definitions/Payment'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /payment/paymentgateways:
+    get:
+      tags:
+        - payment
+      summary: Retrieve all the payment gateways
+      operationId: getPaymentGateways
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              paymentgateways:
+                type: array
+                items:
+                  $ref: '#/definitions/Payment'
+
+  /payment/add:
+    post:
+      tags:
+        - payment
+      summary: Create a new payment
+      operationId: addPayment
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: paymentgateway_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: amount
+          required: true
+          type: number
+          format: float
+      responses:
+        '201':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              payment:
+                $ref: '#/definitions/Payment'
+
+
+  #------------------------------------------------
+  # Refund Routes
+  #------------------------------------------------
+  /refund:
+      get:
+        tags:
+          - refund
+        summary: Retrieve a refund by ID
+        operationId: getRefund
+        parameters:
+          - in: query
+            name: id
+            required: true
+            type: integer
+            format: int64
+        responses:
+          '200':
+            description: Success (Resource was found)
+            schema:
+              type: object
+              properties:
+                refund:
+                  $ref: '#/definitions/Refund'
+          '404':
+            description: Not found (No payment exists with the ID provided)
+            schema:
+              $ref: '#/definitions/errorModel'
+
+  /refund/all:
+    get:
+      tags:
+        - refund
+      summary: Retrieve all refunds made
+      operationId: getAllRefunds
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              payments:
+                type: array
+                items:
+                  $ref: '#/definitions/Refund'
+
+  /refund/filter:
+    get:
+      tags:
+        - refund
+      summary: Retrieve all refunds that match a filter
+      operationId: filterRefunds
+      parameters:
+        - in: query
+          name: after
+          description: Date of the earliest payment
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: before
+          description: Date of the latest payment to be retrieved
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              refunds:
+                type: array
+                items:
+                  $ref: '#/definitions/Payment'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /refund/add:
+    post:
+      tags:
+        - refund
+      summary: Create a new refund
+      operationId: addRefund
+      parameters:
+        - in: query
+          name: booking_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: paymentgateway_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: amount
+          required: true
+          type: number
+          format: float
+      responses:
+        '201':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              refund:
+                $ref: '#/definitions/Refund'
+
+
+  #------------------------------------------------
+  # Report Routes
+  #------------------------------------------------
+  /report/utilisation:
+    get:
+      tags:
+        - report
+      summary: Get a report containing the utilisation of all trips between the specified dates
+      operationId: getUtilisationReport
+      parameters:
+        - in: query
+          name: after
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: before
+          required: true
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              daterange:
+                $ref: '#/definitions/DateRange'
+              utilisation:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date
+                  name:
+                    type: string
+                    format: date
+                  relations:
+                    type: array
+                    items:
+                      type: integer
+                      format: int32
+                  assigned:
+                    type: integer
+                    format: int32
+                  unassigned:
+                    type: integer
+                    format: int32
+                  capacity:
+                    type: integer
+                    format: int32
+              utilisation_totals:
+                type: object
+                properties:
+                  assigned:
+                    type: integer
+                    format: int32
+                  unassigned:
+                    type: integer
+                    format: int32
+                  capacity:
+                    type: integer
+                    format: int32
+                  relations:
+                    type: array
+                    items:
+                      type: integer
+                      format: int32
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /report/training-utilisation:
+    get:
+      tags:
+        - report
+      summary: Get a report containing the utilisation of all classes between the specified dates
+      operationId: getTrainingUtilisationReport
+      parameters:
+        - in: query
+          name: after
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: before
+          required: true
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              daterange:
+                $ref: '#/definitions/DateRange'
+              utilisation:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date
+                  name:
+                    type: string
+                    format: date
+                  relations:
+                    type: array
+                    items:
+                      type: integer
+                      format: int32
+                  assigned:
+                    type: integer
+                    format: int32
+                  unassigned:
+                    type: integer
+                    format: int32
+                  capacity:
+                    type: integer
+                    format: int32
+              utilisation_totals:
+                type: object
+                properties:
+                  assigned:
+                    type: integer
+                    format: int32
+                  unassigned:
+                    type: integer
+                    format: int32
+                  capacity:
+                    type: integer
+                    format: int32
+                  relations:
+                    type: array
+                    items:
+                      type: integer
+                      format: int32
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /report/sources:
+    get:
+      tags:
+        - report
+      summary: Get a report about the distribution of revenue between the diffrent source of bookings
+      operationId: getSourcesReport
+      parameters:
+        - in: query
+          name: after
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: before
+          required: true
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: object
+            properties:
+              daterange:
+                $ref: '#/definitions/DateRange'
+              source_frequency:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+              source_revenue:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /report/revenue-streams:
+    get:
+      tags:
+        - report
+      summary: Get a report containing the distribution of revenue made from all the tickets, packages, courses, addons, accommodations
+      operationId: getRevenueStreamReport
+      parameters:
+        - in: query
+          name: after
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: before
+          required: true
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource found)
+          schema:
+            type: object
+            properties:
+              daterange:
+                $ref: '#/definitions/DateRange'
+              accommodations:
+                $ref: '#/definitions/ReportEntry'
+              accommodation_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+              addons:
+                $ref: '#/definitions/ReportEntry'
+              addons_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+              courses:
+                $ref: '#/definitions/ReportEntry'
+              courses_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+              fees:
+                $ref: '#/definitions/ReportEntry'
+              fees_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+              packages:
+                $ref: '#/definitions/ReportEntry'
+              package_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+              tickets:
+                $ref: '#/definitions/ReportEntry'
+              ticket_toal:
+                $ref: '#/definitions/ReportEntryTotal'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Schedule Routes
+  #------------------------------------------------
+  /schedule:
+    get:
+      tags:
+        - schedule
+      summary: Retrieve a schedule by ID
+      operationId: getSchedule
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/Schedule'
+        '404':
+          description: Not Found (No schedule with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /schedule/all:
+    get:
+      tags:
+        - schedule
+      summary: Retrieve all of the schedules for classes
+      operationId: getAllSchedules
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Schedule'
+
+  /schedule/add:
+    get:
+      tags:
+        - schedule
+      summary: Create a new schedule for classes
+      operationId: addSchedule
+      parameters:
+        - in: query
+          name: schedule
+          required: true
+          type: string
+          format: json
+        - in: query
+          name: training_session_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: until
+          required: false
+          type: string
+          format: date
+      responses:
+        '201':
+          description: Success (Resource Created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              schedule:
+                $ref: '#/definitions/Schedule'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Ticket Routes
+  #------------------------------------------------
+  /ticket:
+    get:
+      tags:
+        - ticket
+      summary: Retrieve a ticket by ID
+      operationId: getTicket
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/Ticket'
+        '404':
+          description: Not Found (No schedule with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /ticket/all:
+    get:
+      tags:
+        - ticket
+      summary: Retrieve all tickets
+      operationId: getAllTickets
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Ticket'
+
+  /ticket/all-with-trashed:
+    get:
+      tags:
+        - ticket
+      summary: Retrieve all tickets
+      operationId: getAllWithTrashedTickets
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Ticket'
+
+  /ticket/only-available:
+    get:
+      tags:
+        - ticket
+      summary: Retrieve all tickets that are available to booked today
+      operationId: getAllAvailableTickets
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Ticket'
+
+  /ticket/add:
+    post:
+      tags:
+        - ticket
+      summary: Create a new ticket
+      operationId: addTicket
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: available_from
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: available_until
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: only_packaged
+          required: false
+          type: boolean
+        - in: query
+          name: trips
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: body
+          name: prices
+          required: true
+          schema:
+            $ref: '#/definitions/BasePrice'
+        - in: query
+          name: boats
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: boatrooms
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Success (Resource Created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              ticket:
+                $ref: '#/definitions/Ticket'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /ticket/edit:
+    put:
+      tags:
+        - ticket
+      summary: Update an existing ticket
+      operationId: editTicket
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: available_from
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: available_until
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: only_packaged
+          required: false
+          type: boolean
+        - in: query
+          name: trips
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: body
+          name: prices
+          required: true
+          schema:
+            $ref: '#/definitions/BasePrice'
+        - in: query
+          name: boats
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: boatrooms
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Success (Resource Created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              ticket:
+                $ref: '#/definitions/Ticket'
+        '404':
+          description: Not Found (No schedule with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /ticket/delete:
+    delete:
+      tags:
+        - ticket
+      summary: Delete a ticket
+      operationId: deleteTicket
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+      responses:
+        '201':
+          description: Success (Resource Created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              ticket:
+                $ref: '#/definitions/Ticket'
+        '404':
+          description: Not Found (No schedule with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  #------------------------------------------------
+  # Timetable Routes
+  #------------------------------------------------
+  /timetable:
+    get:
+      tags:
+        - timetable
+      summary: Retrieve a timetable by ID
+      operationId: getTimetable
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/Timetable'
+        '404':
+          description: Not Found (No timetable with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /timetable/all:
+    get:
+      tags:
+        - timetable
+      summary: Retrieve all of the timetables for sessions
+      operationId: getAllTimetables
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Timetable'
+
+  /timetable/add:
+    get:
+      tags:
+        - timetable
+      summary: Create a new timetable for sessions
+      operationId: addTimetable
+      parameters:
+        - in: query
+          name: schedule
+          required: true
+          type: string
+          format: json
+        - in: query
+          name: session_id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: until
+          required: false
+          type: string
+          format: date
+      responses:
+        '201':
+          description: Success (Resource Created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              schedule:
+                $ref: '#/definitions/Timetable'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Training Routes
+  #------------------------------------------------
+  /class:
+    get:
+      tags:
+        - class
+      summary: Retrieve a class by ID
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/Training'
+        '404':
+          description: Not Found (No timetable with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class/all:
+      get:
+        tags:
+          - class
+        summary: Retrieve all classes including any deleted models
+        operationId: getAllClass
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Training'
+
+  /class/all-with-trashed:
+    get:
+      tags:
+        - class
+      summary: Retrieve all classes including any deleted models
+      operationId: getAllWithTrashedClass
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Training'
+
+  /class/add:
+    post:
+      tags:
+        - class
+      summary: Create a new class
+      operationId: createClass
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: duration
+          required: true
+          type: number
+          format: float
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              course:
+                $ref: '#/definitions/Training'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class/edit:
+    post:
+      tags:
+        - class
+      summary: Update a class by ID
+      operationId: editClass
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: float
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: duration
+          required: true
+          type: number
+          format: float
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Training'
+        '404':
+          description: Not found (No boatroom with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class/delete:
+    delete:
+      tags:
+        - class
+      summary: Delete a class by ID
+      operationId: deleteClass
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No package exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Training Session Routes
+  #------------------------------------------------
+  /class-session:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve a class session by ID
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/TrainingSession'
+        '404':
+          description: Not Found (No timetable with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/all:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve all class sessions including any deleted models
+      operationId: getAllClassSessions
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TrainingSession'
+
+  /class-session/all-with-trashed:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve all class sessions including any deleted models
+      operationId: getAllWithTrashedClassSessions
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TrainingSession'
+
+  /class-session/filter:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve all class sessions that match a filter
+      operationId: filterClassSession
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TrainingSession'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/today:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve all class sessions that start today
+      operationId: getTodaysClassSession
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TrainingSession'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/tommorow:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve all class sessions that start tommorow
+      operationId: getTommorowsClassSession
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TrainingSession'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/manifest:
+    get:
+      tags:
+        - class-session
+      summary: Retrieve the customer manifest for a class session
+      operationId: getClassSessionManifest
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+              $ref: '#/definitions/TrainingSessionManifest'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/add:
+    post:
+      tags:
+        - class-session
+      summary: Create a new class session
+      operationId: createClassSession
+      parameters:
+        - in: query
+          name: start
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: training_id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              class-session:
+                $ref: '#/definitions/TrainingSession'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/edit:
+    post:
+      tags:
+        - class-session
+      summary: Update a class session by ID
+      operationId: editClassSession
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: float
+        - in: query
+          name: start
+          required: true
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/TrainingSession'
+        '404':
+          description: Not found (No boatroom with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /class-session/delete:
+    delete:
+      tags:
+        - class-session
+      summary: Delete a class session by ID
+      operationId: deleteClasssession
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No package exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+  #------------------------------------------------
+  # Trip Routes
+  #------------------------------------------------
+  /trip:
+    get:
+      tags:
+        - trip
+      summary: Retrieve a trip by ID
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource Found)
+          schema:
+            $ref: '#/definitions/Trip'
+        '404':
+          description: Not Found (No timetable with that ID exists)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /trip/all:
+    get:
+      tags:
+        - trip
+      summary: Retrieve all trips including any deleted models
+      operationId: getAllTrips
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Trip'
+
+  /trip/all-with-trashed:
+    get:
+      tags:
+        - trip
+      summary: Retrieve all trips including any deleted models
+      operationId: getAllWithTrashedTrips
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Trip'
+
+  /trip/add:
+    post:
+      tags:
+        - trip
+      summary: Create a new trip
+      operationId: createTrip
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: duration
+          required: true
+          type: number
+          format: float
+        - in: query
+          name: boat_required
+          required: false
+          type: boolean
+        - in: query
+          name: locations
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: tags
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              course:
+                $ref: '#/definitions/Trip'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /trip/edit:
+    post:
+      tags:
+        - trip
+      summary: Update a trip by ID
+      operationId: editTrip
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: description
+          required: false
+          type: string
+        - in: query
+          name: duration
+          required: true
+          type: number
+          format: float
+        - in: query
+          name: boat_required
+          required: false
+          type: boolean
+        - in: query
+          name: locations
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+        - in: query
+          name: tags
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success (Resource created)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              agent:
+                $ref: '#/definitions/Trip'
+        '404':
+          description: Not found (No boatroom with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+        '422':
+          description: Unprocessable Entity (One or more parameter was invalid)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  /trip/delete:
+    delete:
+      tags:
+        - trip
+      summary: Delete a trip by ID
+      operationId: deleteTrip
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success (Resource was deleted)
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        '404':
+          description: Not found (No package exists with the ID provided)
+          schema:
+            $ref: '#/definitions/errorModel'
+
+
+#-------------------------------------------------
+# Security
+#-------------------------------------------------
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+# -------------------------------------------------
+# Models
+# -------------------------------------------------
+definitions:
+
+  Accommodation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      capacity:
+        type: integer
+        format: int64
+      base_prices:
+        $ref: "#/definitions/BasePrice"
+
+  Addon:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      base_prices:
+        $ref: "#/definitions/BasePrice"
+
+  Agent:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      website:
+        type: string
+        format: url
+      branch_name:
+        type: string
+      branch_address:
+        type: string
+      branch_phone:
+        type: string
+        format: phone
+      branch_email:
+        type: string
+        format: email
+      billing_address:
+        type: string
+      billing_phone:
+        type: string
+        format: phone
+      billing_email:
+        type: string
+        format: email
+      commission:
+        type: number
+        format: double
+      terms:
+        type: string
+
+  Boat:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      capacity:
+        type: integer
+        format: int32
+
+  Boatroom:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+
+  Booking:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      reference:
+        type: string
+      lead_customer_id:
+        type: integer
+        format: int64
+      agent_id:
+        type: integer
+        format: int64
+      agent_reference:
+        type: string
+      source:
+        type: string
+      price:
+        type: integer
+        format: int64
+      discount:
+        type: integer
+        format: int32
+      status:
+        type: string
+      reserved_until:
+        type: string
+        format: date
+      cancellation_fee:
+        type: integer
+        format: int64
+      comment:
+        type: string
+      parent_id:
+        type: integer
+        format: int64
+      decimal_price:
+        type: string
+      real_decimal_price:
+        type: string
+      arrival_date:
+        type: string
+        format: date
+      created_at_local:
+        type: string
+        format: date
+      lead_customer:
+        $ref: '#/definitions/Customer'
+      payments:
+        type: array
+        items:
+          $ref: '#/definitions/Payment'
+      refunds:
+        type: array
+        items:
+          $ref: '#/definitions/Refund'
+
+  BasePrice:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      owner_id:
+        type: integer
+        format: int64
+      owner_type:
+        type: string
+      price:
+        type: integer
+        format: int64
+      from:
+        type: string
+        format: date
+      until:
+        type: string
+        format: date
+      decimal_price:
+        type: integer
+        format: int64
+
+  Company:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      address_1:
+        type: string
+      address_2:
+        type: string
+      city:
+        type: string
+      county:
+        type: string
+      postcode:
+        type: string
+      country_id:
+        type: integer
+        format: int64
+      currency_id:
+        type: integer
+        format: int64
+      business_email:
+        type: string
+        format: email
+      business_phone:
+        type: string
+      vat_number:
+        type: string
+      registration_number:
+        type: string
+      latitude:
+        type: number
+        format: float
+      longitude:
+        type: number
+        format: float
+      timezone:
+        type: string
+      contact:
+        type: string
+      website:
+        type: string
+        format: url
+
+  Country:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      countinent_id:
+        type: integer
+        format: int64
+      currency_id:
+        type: integer
+        format: int64
+      abbreviation:
+        type: string
+      name:
+        type: string
+
+  Course:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      capacity:
+        type: integer
+        format: int32
+      certificate_id:
+        type: integer
+        format: int64
+
+  Currency:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      code:
+        type: string
+      name:
+        type: string
+      symbol:
+        type: string
+
+  Customer:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      email:
+        type: string
+        format: email
+      firstname:
+        type: string
+      lastname:
+        type: string
+      verified:
+        type: integer
+        format: int32
+      birthday:
+        type: string
+        format: date
+      gender:
+        type: integer
+        format: int32
+      address_1:
+        type: string
+      address_2:
+        type: string
+      city:
+        type: string
+      county:
+        type: string
+      postcode:
+        type: string
+      country_id:
+        type: integer
+        format: int64
+      phone:
+        type: string
+      last_dive:
+        type: string
+        format: date
+      number_of_dives:
+        type: integer
+        format: int32
+      chest_size:
+        type: string
+      shoe_size:
+        type: string
+      height:
+        type: string
+      cylinder_size:
+        type: string
+      notes:
+        type: string
+      unsubscribed:
+        type: boolean
+      country:
+        $ref: '#/definitions/Country'
+
+  DateRange:
+    type: object
+    properties:
+      after:
+        type: string
+        format: date
+      before:
+        type: string
+        format: date
+
+  errorModel:
+    type: object
+    required:
+      - message
+      - errors
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+        items:
+          type: string
+
+  Location:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      latitude:
+        type: number
+        format: float
+      longitude:
+        type: number
+        format: float
+
+  Package:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      available_from:
+        type: string
+        format: date
+      available_until:
+        type: string
+        format: date
+      decimal_price:
+        type: string
+      trips:
+        type: array
+        items:
+          $ref: '#/definitions/Ticket'
+      courses:
+        type: array
+        items:
+          $ref: '#/definitions/Course'
+      accommodations:
+        type: array
+        items:
+          $ref: '#/definitions/Accommodation'
+
+  Payment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      booking_id:
+        type: integer
+        format: int64
+      amount:
+        type: string
+      currency_id:
+        type: integer
+        format: int64
+      payment_gateway_id:
+        type: integer
+        format: int64
+      received_at:
+        type: string
+        format: date
+      payment_gateway:
+        $ref: '#/definitions/PaymentGateway'
+      currency:
+        $ref: '#/definitions/Currency'
+
+  PaymentGateway:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+
+  Pickup:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      booking_id:
+        type: integer
+        format: int64
+      location:
+        type: string
+      date:
+        type: string
+        format: date
+      time:
+        type: string
+        format: 'date-time'
+      quantity:
+        type: integer
+        format: int32
+
+  Refund:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      booking_id:
+        type: integer
+        format: int64
+      amount:
+        type: string
+      currency_id:
+        type: integer
+        format: int64
+      payment_gateway_id:
+        type: integer
+        format: int64
+      received_at:
+        type: string
+        format: date
+      payment_gateway:
+        $ref: '#/definitions/PaymentGateway'
+      currency:
+        $ref: '#/definitions/Currency'
+
+  ReportEntry:
+    type: object
+    properties:
+      name:
+        type: string
+      quantity:
+        type: integer
+        format: int32
+      revenue:
+        type: integer
+        format: int64
+
+  ReportEntryTotal:
+    type: object
+    properties:
+      quantity:
+        type: integer
+        format: int32
+      revenue:
+        type: integer
+        format: int64
+
+  Session:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      trip:
+        $ref: '#/definitions/Trip'
+      start:
+        type: string
+        format: date
+      boat:
+        $ref: '#/definitions/Boat'
+      timetable_id:
+        type: integer
+        format: int64
+
+  Schedule:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      weeks:
+        type: string
+      schedule:
+        type: string
+
+  Ticket:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      only_packaged:
+        type: boolean
+      available_from:
+        type: string
+        format: date
+      available_until:
+        type: string
+        format: date
+      trips:
+        type: array
+        items:
+          $ref: '#/definitions/Trip'
+
+  Timetable:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      weeks:
+        type: integer
+        format: int32
+      schedule:
+        type: string
+        format: json
+
+  Training:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      duration:
+        type: number
+        format: float
+
+  TrainingSession:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      start:
+        type: string
+        format: date
+      schedule_id:
+        type: integer
+        format: int64
+      capacity:
+        type: integer
+        format: int32
+      class:
+        $ref: '#/definitions/Training'
+
+  TrainingSessionManifest:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      training_id:
+        type: integer
+        format: int64
+      start:
+        type: string
+        format: date
+      schedule_id:
+        type: integer
+        format: int64
+      customers:
+        type: array
+        items:
+          $ref: '#/definitions/Customer'
+      capacity:
+        type: object
+        properties:
+          booked:
+            type: integer
+          capacity:
+            type: integer
+
+  Trip:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      duration:
+        type: integer
+        format: double
+      locations:
+        type: array
+        items:
+          $ref: '#/definitions/Location'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/Tag'
+
+  Tag:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
