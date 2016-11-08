@@ -81,14 +81,12 @@ class ReportController extends Controller {
 		return $this->report_service->generate('demographics', $before, $after);
 	}
 
+	/**
+	 * @todo This should really accept a parameter of the type of report to create i.e. accommodations, summary (totals) or packages
+	 * @return array
+	 */
 	public function getRevenueStreams()
 	{
-		/**
-		 * Allowed input parameter
-		 * after  {date string}
-		 * before {date string}
-		 */
-
 		$after  = Input::get('after', null);
 		$before = Input::get('before', null);
 
