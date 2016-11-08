@@ -103,6 +103,9 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
 	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
 
+	<!-- testing with -->
+	<script src="https://unpkg.com/vue@2.0.5/dist/vue.js"></script>
+
 	<!-- scubawhere files -->
 	<script type="text/javascript">
 		// Set scubawhere namespace
