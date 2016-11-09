@@ -133,6 +133,10 @@ Handlebars.registerHelper('price', function() {
 	return window.company.currency.symbol + " " + price;
 });
 
+Handlebars.registerHelper('prettyPrice', function(price) {
+	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + price);
+})
+
 Handlebars.registerHelper('sumPaid', function() {
 	return this.sums.have;
 });
@@ -174,6 +178,9 @@ Handlebars.registerHelper('addTransactionButton', function(id) {
 		return '';
 
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
+});
+Handlebars.registerHelper('invoiceButton', function(id) {
+	return new Handlebars.SafeString('<button onclick="viewInvoices(' + id + ')" class="btn btn-success"><i class="fa fa-file fa-fw"></i> Invoices</button> ');
 });
 Handlebars.registerHelper('viewButton', function(id) {
 	// The edit button should always be available, because it also works as an info button, to see the booking details
@@ -277,6 +284,160 @@ $(function() {
 	});
 
 });
+
+function extractCustomers(details) {
+	var customers = [];
+	for(var i in details) {
+		var customer = {
+			id   : details[i].customer.id,
+			name : details[i].customer.firstname + ' ' + details[i].customer.lastname
+		};
+		if(_.findWhere(customers, customer) == null) {
+			customers.push(customer);
+		}
+	}
+	return customers;
+}
+
+function generateCustomerList(customers) {
+	$('#customers-list').empty();
+	for(var i in customers) {
+		$('#customers-list').append('<option value="' + customers[i].id + '">' + customers[i].name + '</option>');
+	}
+}
+
+/**
+ * @todo move these two functions to global helper file
+ */
+function isset(obj) {
+	return !(obj === undefined || obj === null || obj === [] || obj === {});
+}
+
+function singularify(str) {
+	return str.substring(0, str.length - 1);
+}
+
+function calcNumNights(accomm) {
+	return ' ( ' + parseInt(parseFloat(accomm.decimal_price) / parseFloat(accomm.decimal_price_per_day)).toString() + ' nights)';
+}
+
+function generateInvoice(customer_id, details) {
+	var invoice   = {
+		accommodations : [],
+		addons         : [],
+		tickets        : [],
+		courses        : [],
+		packages       : [],
+		total          : 0
+	};
+
+	var bookables = ['tickets', 'courses', 'packages'];
+
+	/*
+	 * Calculate all of the accommodations
+	 * This needs to be seperate from the rest as the accommodations are not held in the booking details array
+	 */
+	if(isset(window.currentBookingSelected.accommodations)) {
+		_.each(window.currentBookingSelected.accommodations, function(accomm) {
+			if(accomm.customer.id !== customer_id) {
+				return;
+			}
+			var accomm_name = accomm.name + calcNumNights(accomm);
+			invoice.accommodations.push({
+				name  : accomm_name,
+				price : parseFloat(accomm.decimal_price)
+			});
+		})
+	}
+
+	for(var i in details) {
+		// Only generate invoice for a specific customer
+		if(details[i].customer_id !== customer_id) {
+			continue;
+		}
+		/*
+		 * Calculate all of the addons
+		 * This needs to be seperate from the bookables array loop as the addons themeselves are in an array
+		 */
+		if(isset(details[i].addons)) {
+			_.each(details[i].addons, function(addon) {
+				invoice.addons.push({
+					name  : addon.name,
+					price : parseFloat(addon.decimal_price)
+				});
+			})
+		}
+		// Calculate all of the booked entities
+		_.each(bookables, function(val) {
+			var key = singularify(val);
+			if(isset(details[i][key])) {
+				invoice[val].push({
+					name  : details[i][key].name,
+					price : parseFloat(details[i][key].decimal_price)
+				})
+			}
+		});
+	}
+	// Calculate the totals
+	for(var k in invoice) {
+		for(var l in invoice[k]) {
+			invoice.total += invoice[k][l].price;
+		}
+	}
+	console.log(invoice);
+	return invoice;
+}
+
+function getFileName(ref) {
+	return $('#customers-list').find(":selected").text() + ' booking invoice (' + ref + ')';
+}
+
+function loadCustomerInvoice(customer_id) {
+	customer_id = parseInt(customer_id);
+	var invoiceTemplate = Handlebars.compile($('#invoice-template').html());
+	var invoice = generateInvoice(customer_id, window.currentBookingSelected.bookingdetails);
+	$('#invoice-container').empty().append(invoiceTemplate(invoice));
+	$('#tbl-customer-invoice').DataTable({
+		"pageLength": 50,
+		"dom": 'Bt',
+		"bSort" : false,
+		"buttons": [
+			{
+				extend : 'print',
+				title  : getFileName(window.currentBookingSelected.reference)
+			}
+		]
+	});
+}
+
+function viewInvoices(id) {
+	var customerInvoiceTemplate = Handlebars.compile($('#customer-invoice-template').html());
+	Booking.get(id, function (data) {
+		window.currentBookingSelected = data;
+		$('#modalWindows')
+			.append( customerInvoiceTemplate({ reference : data.reference}) )
+			.children('#modal-customer-invoice')
+			.reveal({
+				animation: 'fadeAndPop',
+				animationSpeed: 300,
+				closeOnBackgroundClick: true,
+				dismissModalClass: 'close-modal',
+				onOpenedModal: function() {
+					var customers = extractCustomers(data.bookingdetails);
+					generateCustomerList(customers);
+					if(customers.length > 1) {
+						loadCustomerInvoice(customers[0].id);
+					} else {
+						$('#invoice-container').empty().append('<h1 style="text-align: center">No customers available</h1>')
+					}
+				},
+				onFinishModal: function() {
+					$('#modal-customer-invoice').remove();   // Remove the modal from the DOM
+				}
+			});
+		//$('#view-invoices-modal').modal('show');
+	});
+}
 
 function emailCustomer(id) {
 
