@@ -3087,6 +3087,8 @@ $(document).ready(function() {
 				// Remove local data
 				booking.clearStorage();
 
+				window.skipSavedBooking = true;
+
 				window.location.hash = '#manage-bookings';
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -3117,11 +3119,13 @@ $(document).ready(function() {
 			{
 				booking.resendConfirmation(function success(data) {
 					pageMssg(data.status, 'success');
+					window.skipSavedBooking = true;
 					$(window).trigger('hashchange');
 				},
 				function error(xhr) {
 					var data = JSON.parse(xhr.responseText);
 					pageMssg(data.errors[0], 'danger');
+					window.skipSavedBooking = true;
 					$(window).trigger('hashchange');
 				});
 			}
