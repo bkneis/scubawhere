@@ -104,7 +104,7 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
 
 	<!-- testing with -->
-	<script src="https://unpkg.com/vue@2.0.5/dist/vue.js"></script>
+	<script src="/js/vue.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -226,6 +226,14 @@ $PROTOCOL = 'http';
 						<i class="fa fa-pencil fa-lg fa-fw"></i>
 						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
+					</a>
+				</li>
+
+				<li>
+					<a href="#availability">
+						<i class="fa fa-calendar fa-lg fa-fw"></i>
+						<!-- <i class="fa fa-pencil-square-o"></i> -->
+						<span>Availability</span>
 					</a>
 				</li>
 

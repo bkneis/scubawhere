@@ -110,15 +110,14 @@ class AccommodationService {
 	 *
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function getFilter($data) 
+	public function getFilter($data)
 	{
         $data = $this->validateFilterDates($data);
 
         $current_date = clone $data['after'];
         $result = array();
 
-		$query = [];
-		if(!empty($data['accommodation_id'])) {
+		$query = [];if(!empty($data['accommodation_id'])) {
 			$query = array(array('id', '=', $data['accommodation_id']));
 		}
 
@@ -214,6 +213,24 @@ class AccommodationService {
 
 		return $manifest;
 
+	}
+
+
+	public function getAvailability(array $dates)
+	{
+		$data = \DB::table('accommodation_booking')
+			->select('accommodations.id', 'booking_id', 'customer_id', 'start', 'end', 'packagefacade_id', 'firstname', 'lastname', 'name')
+			->join('customers', 'customers.id', '=', 'accommodation_booking.customer_id')
+			->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
+			->where('start', '<=', $dates['before'])
+			->where('end', '>=', $dates['after'])
+			->get();
+
+		return \Booking::whereHas('accommodations', function ($q) {
+
+		});
+
+		return $this->accommodation_repo->getBookings($dates['after'], $dates['before']);
 	}
 
 	/**

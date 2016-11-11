@@ -105,7 +105,6 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	]);
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | Admin Routes 

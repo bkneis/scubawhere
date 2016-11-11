@@ -1,0 +1,12 @@
+.ExcelTable {
+    text-align: center;
+}
+
+.ExcelTable_Row {
+    border: 1px solid #0c0c0c;
+    text-align: center;
+}
+
+.ExcelTable_Date {
+    width: 20%;
+}

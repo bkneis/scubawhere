@@ -304,6 +304,8 @@ class CustomerController extends Controller {
 
 		}
 
+		//return Response::json($imported_customers, 200);
+
 		$this->object_store_service->uploadCustomerCSV($csv_path);
 
 		$customers = Context::get()->customers()->saveMany($imported_customers);

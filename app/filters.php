@@ -95,3 +95,15 @@ Route::filter('csrf', function()
 		return Response::json(['errors' => ['TokenMismatchException: ' . $message]], 401); // 401 Unauthorized
 	}
 });
+
+Route::filter('auth.token', function() {
+	$api_token = Request::header('api_token');
+	if(is_null($api_token)) {
+		return Response::json(['errors' => ['ApiTokenMissingException : The api_token is not present in the request header']], 401);
+	}
+	$company = Company::where('api_token', $api_token)->first();
+	if(is_null($company)) {
+		return Response::json(['errors' => ['ApiNotValidException : The api_token is not valid in the request header']], 401);
+	}
+	Context::set($company);
+});
