@@ -60,7 +60,7 @@
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
+								{{!--<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>--}}
 							</div>
 
 							<div class="form-row prices"{{#if only_packaged}} style="display: none;"{{/if}} id="tickets-seasonal">

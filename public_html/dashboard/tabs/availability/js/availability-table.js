@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /** @var AvailabilityService */
 var availabilityService;
 /** @var DateService */
@@ -39,13 +41,13 @@ Vue.component('availability-table', {
     },
 
     methods : {
-        calcStyle : function(accomm_id, date) {
+        calcStyle : function (accomm_id, date) {
             return availabilityService.calcStyle(accomm_id, date);
         },
-        getCustomer : function(accomm_id, date) {
+        getCustomer : function (accomm_id, date) {
             return availabilityService.getCustomerName(accomm_id, date);
         },
-        showBookingInfo : function(accomm_id, date) {
+        showBookingInfo : function (accomm_id, date) {
             return availabilityService.showBookingModal(accomm_id, date);
         }
     },
@@ -55,7 +57,7 @@ Vue.component('availability-table', {
      * and data with the new filter.
      */
     watch : {
-        filterDate : function(newVal, oldVal) {
+        filterDate : function (newVal, oldVal) {
             let date = new Date(newVal);
             let oldDate = new Date(oldVal);
             if(!date.isSameMonth(oldDate)) {
