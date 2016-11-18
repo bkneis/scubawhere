@@ -72,19 +72,6 @@ class AuthenticationController extends Controller {
 		}
 	}
 
-	public function getTest()
-	{
-		//return $_SERVER['SERVER_NAME'];
-		try{
-			$db = DB::connection()->getDatabaseName();
-		}catch(Exception $e){
-			//return $e->getMessage();
-			return array('host' => $_SERVER['RDS_HOSTNAME'], 'e' => $e->getMessage(), 'env' => App::environment());
-		}
-		return array('host' => RDS_HOSTNAME, 'user' => RDS_USERNAME, 'pass' => RDS_DB_NAME, 'db' => $db, 'env' => App::environment());
-		//return $db;
-	}
-
 	public function getLogout()
 	{
 		Auth::logout();
