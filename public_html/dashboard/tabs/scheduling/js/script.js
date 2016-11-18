@@ -910,6 +910,27 @@ else {
 		else $('#trip-class-list').html(tripsTemplate({trips: window.trips}));
 		initDraggables();
 	});
+
+	$("#jump-to-date").on('change', '#jump-date', function(event) {
+		event.preventDefault();
+		var date = $("#jump-date").val();
+		var jumpDate = $.fullCalendar.moment(date);
+		$("#calendar").fullCalendar('gotoDate', jumpDate);
+		$("#remove-jump").css('display', 'inline');
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up: 'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+		clearBtn: true
+	});
+
 });
 
 function createCalendarEntry(eventObject) {
