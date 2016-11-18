@@ -1,4 +1,6 @@
 <?php
+
+use Scubawhere\Entities\Currency;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CurrencyController extends Controller {
