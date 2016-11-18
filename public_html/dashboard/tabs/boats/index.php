@@ -94,7 +94,7 @@
 			<script type="text/x-handlebars-template" id="show-room-template">
 				<p>
 						<span class="boatroom-name">{{name}}</span>
-						Number of Beds:
+						Passenger Capacity of this cabin : 
 						<input type="number" name="boatrooms[{{id}}][capacity]" value="{{pivot.capacity}}" placeholder="0" style="width: 100px;" min="0">
 						<button class="btn btn-danger remove-room">&#215;</button>
 				</p>

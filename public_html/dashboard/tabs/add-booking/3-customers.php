@@ -87,11 +87,11 @@
 								<label for="birthday" class="control-label">Date of birth</label>
 								<input type="text" id="birthday" name="birthday" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<label for="phone" class="control-label">Dialling Code</label>
 								<input type="text" name="dialling_code" class="form-control" placeholder="+44">
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-5">
 								<label for="phone" class="control-label">Phone</label>
 								<input type="text" name="phone" class="form-control" placeholder="02071234567">
 							</div>
