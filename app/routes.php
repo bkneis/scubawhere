@@ -54,6 +54,19 @@ Route::controllers([
     'crm_tracking' => 'CrmTrackingController'
 ]);
 
+/*Route::group(array('before' => 'api-web-auth'), function() {
+
+	Route::get('token', function()
+	{
+		return Session::getToken();
+	});
+
+	Route::controllers([
+		'accommodation' => 'AccommodationController'
+	]);
+
+});*/
+
 
 /*
 |--------------------------------------------------------------------------
