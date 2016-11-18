@@ -1265,6 +1265,7 @@ return array(
     'CreateTripTriptypeTable' => $baseDir . '/app/database/migrations/2014_02_17_020748_create_trip_triptype_table.php',
     'CreateTripsTable' => $baseDir . '/app/database/migrations/2014_02_17_020733_create_trips_table.php',
     'CreateTriptypesTable' => $baseDir . '/app/database/migrations/2014_02_17_020706_create_triptypes_table.php',
+    'CreateUserCompanyTable' => $baseDir . '/app/database/migrations/2016_11_18_143810_create_user_company_table.php',
     'CreateUsersTable' => $baseDir . '/app/database/migrations/2015_11_03_121624_create_users_table.php',
     'CrmCampaignController' => $baseDir . '/app/controllers/CrmCampaignController.php',
     'CrmGroupController' => $baseDir . '/app/controllers/CrmGroupController.php',

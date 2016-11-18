@@ -21,8 +21,13 @@ App::before(function($request)
 
 Route::matched(function($route, $request)
 {
-	if(!Auth::guest())
+	if(!Auth::guest()) {
+		\Scubawhere\Context::set(Auth::user()->getActiveCompany());
+	}
+	/*
+	 * if(!Auth::guest())
 		\Scubawhere\Context::set(Auth::user()->company);
+	 */
 });
 
 App::after(function($request, $response)

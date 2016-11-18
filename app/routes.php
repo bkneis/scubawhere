@@ -114,7 +114,8 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'session'           => 'DepartureController',
 		'ticket'            => 'TicketController',
 		'timetable'         => 'TimetableController',
-		'trip'              => 'TripController'
+		'trip'              => 'TripController',
+		'user'              => 'UserController'
 	]);
 });
 

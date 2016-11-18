@@ -1581,6 +1581,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'CreateTripTriptypeTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_02_17_020748_create_trip_triptype_table.php',
         'CreateTripsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_02_17_020733_create_trips_table.php',
         'CreateTriptypesTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_02_17_020706_create_triptypes_table.php',
+        'CreateUserCompanyTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_11_18_143810_create_user_company_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_11_03_121624_create_users_table.php',
         'CrmCampaignController' => __DIR__ . '/../..' . '/app/controllers/CrmCampaignController.php',
         'CrmGroupController' => __DIR__ . '/../..' . '/app/controllers/CrmGroupController.php',
