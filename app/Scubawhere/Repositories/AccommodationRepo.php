@@ -142,41 +142,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getBookings($after, $before, $id = null)
-    {
-        $data = \DB::table('accommodation_booking')
-            ->select(\DB::raw('accommodations.id as accommodation_id'), 'accommodations.name', 'accommodation_booking.booking_id', 'customer_id', 'bookings.*', 'customers.*', \DB::raw('SUM(payments.amount) as paid')/*, \DB::raw('SUM(refunds.amount) as refunded')*/)
-            ->join('bookings', 'bookings.id', '=', 'accommodation_booking.booking_id')
-            ->join('customers', 'customers.id', '=', 'customer_id')
-            ->join('payments', 'payments.booking_id', '=', 'accommodation_booking.booking_id')
-            ->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
-            ->where(function ($q) use ($id) {
-                if(!is_null($id)) {
-                    $q->where('accommodation_id', $id);
-                }
-            })
-            ->where('start', '<=', $before)
-            ->where('end', '>=', $after)
-            ->get();
-
-        $refunds = \DB::table('refunds')
-            ->selectRaw('booking_id, SUM(amount) as refunded')
-            ->whereIn('booking_id', array_map(function ($obj) { return $obj->booking_id; }, $data))
-            ->get();
-
-        foreach ($refunds as $obj) {
-            foreach ($data as $key => $val) {
-                if($val->booking_id == $obj->booking_id) {
-                    $data[$key]->refunded = $obj->refunded;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /*
-     * public function getBookings($id, $date)
+    public function getBookings($id, $after, $before)
     {
         $data = \DB::table('accommodation_booking')
             ->select(\DB::raw('accommodations.id as accommodation_id'), 'accommodations.name', 'accommodation_booking.booking_id', 'customer_id', 'bookings.*', 'customers.*', \DB::raw('SUM(payments.amount) as paid'))
@@ -185,9 +151,8 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
             ->join('payments', 'payments.booking_id', '=', 'accommodation_booking.booking_id')
             ->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
             ->where('accommodation_id', $id)
-            ->where('start', '<=', $date)
-            ->where('end', '>=', $date)
-                //->whereBetween($date, ['start', 'end'])
+            ->where('start', '<=', $after)
+            ->where('end', '>=', $before)
             ->get();
 
             $refunds = \DB::table('refunds')
@@ -196,16 +161,30 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
             ->get();
 
             foreach ($refunds as $obj) {
-            foreach ($data as $key => $val) {
-            if($val->booking_id == $obj->booking_id) {
-            $data[$key]->refunded = $obj->refunded;
-            }
-            }
+                foreach ($data as $key => $val) {
+                    if($val->booking_id == $obj->booking_id) {
+                        $data[$key]->refunded = $obj->refunded;
+                    }
+                }
             }
 
             return $data;
       }
-     */
+    
+    public function getAvailability(array $dates, $id = null)
+    {
+        return Accommodation::onlyOwners()
+            ->where(function ($q) use ($id) {
+                if(!is_null($id)) {
+                    $q->where('id', '=', $id);
+                }
+            })
+            ->with(['bookings' => function ($q) use ($dates) {
+                $q->where('start', '<=', $dates['before'])
+                    ->where('end', '>=', $dates['after']);
+            }, 'bookings.payments', 'bookings.refunds', 'bookings.lead_customer'])
+            ->get();
+    }
 
     /**
      * Create an accommodation and associate it with its company

@@ -1,5 +1,12 @@
 .ExcelTable {
     text-align: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.ExcelTable td {
+    min-width: 150px;
 }
 
 .ExcelTable_Row {
@@ -9,4 +16,9 @@
 
 .ExcelTable_Date {
     width: 20%;
+}
+
+.ExcelTable_Header {
+    font-size: 18px;
+    text-transform: uppercase;
 }

@@ -60,5 +60,15 @@ var Accommodation = {
 			success : handleData,
 			error : errorFn
 		});
+	},
+
+	getAvailability : function(params, handleData, errorFn) {
+		$.ajax({
+			type    : 'GET',
+			url     : '/api/accommodation/availability',
+			data    : params,
+			success : handleData,
+			error   : errorFn
+		});
 	}
 };

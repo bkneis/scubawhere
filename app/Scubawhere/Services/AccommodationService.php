@@ -3,6 +3,7 @@
 namespace Scubawhere\Services;
 
 use Scubawhere\Context;
+use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Booking;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\AccommodationRepoInterface;
@@ -218,19 +219,13 @@ class AccommodationService {
 
 	public function getAvailability(array $dates)
 	{
-		$data = \DB::table('accommodation_booking')
-			->select('accommodations.id', 'booking_id', 'customer_id', 'start', 'end', 'packagefacade_id', 'firstname', 'lastname', 'name')
-			->join('customers', 'customers.id', '=', 'accommodation_booking.customer_id')
-			->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
-			->where('start', '<=', $dates['before'])
-			->where('end', '>=', $dates['after'])
-			->get();
+		// Convert the dates into a fomat mySQl can compare
+		$before = new \DateTime($dates['before']);
+		$before = $before->format('Y-m-d H:i:s');
+		$after  = new \DateTime($dates['after']);
+		$after  = $after->format('Y-m-d H:i:s');
 
-		return \Booking::whereHas('accommodations', function ($q) {
-
-		});
-
-		return $this->accommodation_repo->getBookings($dates['after'], $dates['before']);
+		return $this->accommodation_repo->getAvailability(['before' => $before, 'after' => $after]);
 	}
 
 	/**
