@@ -4,17 +4,22 @@ use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Location;
 use Scubawhere\Services\CreditService;
+use Scubawhere\Services\DomainService;
 use Scubawhere\Services\ObjectStoreService;
+use Scubawhere\Exceptions\Http;
 
 class CompanyController extends Controller {
 
 	protected $credit_service;
 	protected $object_store_service;
 
-	public function __construct(CreditService $credit_service, ObjectStoreService $object_store_service)
+	public function __construct(CreditService $credit_service,
+								ObjectStoreService $object_store_service,
+								DomainService $domain_service)
 	{
-		$this->credit_service = $credit_service;
+		$this->credit_service       = $credit_service;
 		$this->object_store_service = $object_store_service;
+		$this->domain_service       = $domain_service;
 	}
 
 	public function getIndex()
@@ -394,5 +399,23 @@ class CompanyController extends Controller {
 	public function getCredits()
 	{
 		return Response::json($this->credit_service->getCredits(), 200);
+	}
+
+	/**
+	 * Create the company's subdomain for the front facing portal
+	 *
+	 * @api /company/set-subdomain
+	 * @return mixed
+	 * @throws HttpPreconditionFailed
+	 * @throws HttpUnprocessableEntity
+	 */
+	public function postSetSubdomain()
+	{
+		$subdomain = Input::get('subdomain');
+		if(is_null($subdomain)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The sub domain field is required']);
+		}
+		$this->domain_service->createSubdomain($subdomain);
+		return Response::json(array('status' => 'OK. Your subdomain has been created'), 200);
 	}
 }
