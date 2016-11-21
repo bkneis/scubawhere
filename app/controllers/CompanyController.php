@@ -2,6 +2,7 @@
 
 use Scubawhere\Helper;
 use Scubawhere\Context;
+use Scubawhere\Entities\Country;
 use Scubawhere\Repositories\UserRepo;
 use Scubawhere\Entities\Location;
 use Scubawhere\Services\CreditService;
@@ -32,7 +33,7 @@ class CompanyController extends Controller {
 
 	public function postUpdate()
 	{
-		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website');
+		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website', 'alias');
 
 		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
@@ -75,6 +76,10 @@ class CompanyController extends Controller {
 		}
 
 		$company = Context::get();
+
+		if(is_null($company->alias)) {
+			$this->postSetSubdomain($data['alias']);
+		}
 
 		// Mass assigned insert with automatic validation
 		$company->fill($data);
@@ -408,13 +413,14 @@ class CompanyController extends Controller {
 	 * Create the company's subdomain for the front facing portal
 	 *
 	 * @api /company/set-subdomain
+	 * @param string $subdomain
 	 * @return mixed
 	 * @throws HttpPreconditionFailed
 	 * @throws HttpUnprocessableEntity
 	 */
-	public function postSetSubdomain()
+	public function postSetSubdomain($subdomain)
 	{
-		$subdomain = Input::get('subdomain');
+		//$subdomain = Input::get('subdomain');
 		if(is_null($subdomain)) {
 			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The sub domain field is required']);
 		}
