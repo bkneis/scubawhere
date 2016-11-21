@@ -72,6 +72,8 @@ $PROTOCOL = 'http';
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />-->
 	<link rel="stylesheet" type="text/css" href="/common/css/dataTables.bootstrap.min.css" />
 
+	<link rel="stylesheet" type="text/css" href="/css/nav.css">
+
 	<!-- jQuery -->
 	<script src="/common/js/jquery/jquery-1.12.3.min.js"></script>
 
@@ -105,6 +107,7 @@ $PROTOCOL = 'http';
 
 	<!-- testing with -->
 	<script src="/js/vue.js"></script>
+	<script src="/js/components/EventHub.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -170,30 +173,46 @@ $PROTOCOL = 'http';
 	<meta http-equiv="X-UA-Compatible" content="IE=9">
 
 </head>
-<body>
+<body id="app">
 	<div id="nav">
 		<div id="nav-wrapper">
 			<h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>
 
-			<button class="btn btn-default pull-right" id="logout">Logout</button>
+			<!--<button class="btn btn-default pull-right" id="logout">Logout</button>-->
 
-			<div class="nav-opt pull-right"><a href="#settings" class="username"></a></div>
+			<!--<div class="nav-opt pull-right"><a href="#settings" class="username"></a></div>-->
 
 			<div class="pull-right">
-				<select>
-					<option>Longbok</option>
-					<option>Koh phi phi</option>
-					<option>Gili trawangan</option>
-				</select>
+				<!--<companies-list></companies-list>-->
 			</div>
 
-			<!--<div class="notifications pull-right">
-				<i style="padding-left:8px; padding-top:9px; cursor:pointer" class="fa fa-bell fa-lg fa-fw"></i>
-				<div id="notification-messages" style="border: 2px solid #34495e;" class="messages">
-				</div>
-			</div>-->
+			<companies-list></companies-list>
+
 		</div>
 	</div>
+
+	<template type="text/x-template" id="companies-list">
+		<div class="dropdown pull-right"
+			 style="margin-top: 5px;"
+			 v-if="companiesLoaded">
+			<span class="dropbtn">
+				<i class="fa fa-user" style="padding-right: 5px;"></i>
+				{{currentCompany.name}}
+				<i style="padding-left: 5px; padding-right: 10px;" class="fa fa-caret-down" aria-hidden="true"></i>
+			</span>
+			<div id="myDropdown" class="dropdown-content" style="margin-top: 10px;">
+				<span v-if="companies.length > 1">
+					<a href="#">Switch to : </a>
+					<a v-for="company in companies"
+					   v-if="company.id !== selectedCompany"
+					   @click="switchCompany(company.id)">{{company.name}}</a>
+					<hr>
+				</span>
+				<a href="#settings">Settings</a>
+				<a href="/api/logout" @click="logout()">Logout</a>
+			</div>
+		</div>
+	</template>
 
 	<script type="text/x-handlebars-template" id="notification-message-template">
 		{{#each notifications}}
@@ -224,7 +243,6 @@ $PROTOCOL = 'http';
 				<li>
 					<a href="#add-booking">
 						<i class="fa fa-plus fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-plus-square-o"></i> -->
 						<span>Add Booking</span>
 					</a>
 				</li>
@@ -232,7 +250,6 @@ $PROTOCOL = 'http';
 				<li>
 					<a href="#manage-bookings">
 						<i class="fa fa-pencil fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Manage Bookings</span>
 					</a>
 				</li>
@@ -240,16 +257,12 @@ $PROTOCOL = 'http';
 				<li>
 					<a href="#availability">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-pencil-square-o"></i> -->
 						<span>Availability</span>
 					</a>
 				</li>
 
 				<li>
 					<div>
-						<!-- <i class="fa fa-briefcase"></i> -->
-						<!-- <i class="fa fa-bullhorn"></i> -->
-						<!-- <i class="fa fa-paper-plane"></i> -->
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Calendar</span>
 						<span class="caret"></span>
@@ -277,37 +290,24 @@ $PROTOCOL = 'http';
 						<li>
 							<a href="#customers">My Customers</a>
 						</li>
-						<?php // if(gethostname() === 'rms.scubawhere.com') { ?>
-							<!-- Additional CRM features will appear here -->
-						<?php // } else { ?>
-							<li>
-								<a href="#mailing-lists">My Mailing Lists</a>
-							</li>
-							<li>
-								<a href="#campaigns">My Campaigns</a>
-							</li>
-                            <!--<li>
-								<a href="#automated-emails">Automated Emails</a>
-							</li>-->
-						<?php // } ?>
+						<li>
+							<a href="#mailing-lists">My Mailing Lists</a>
+						</li>
+						<li>
+							<a href="#campaigns">My Campaigns</a>
+						</li>
 					</ul>
 				</li>
 
 				<li>
 					<a href="#reports">
-						<!-- <i class="fa fa-university"></i> -->
 						<i class="fa fa-line-chart fa-lg fa-fw"></i>
-						<!-- <i class="fa fa-usd"></i> -->
-						<!-- <i class="fa fa-file-text-o"></i> -->
 						<span>Reports</span>
 					</a>
 				</li>
 
 				<li>
 					<div>
-						<!-- <i class="fa fa-briefcase"></i> -->
-						<!-- <i class="fa fa-bullhorn"></i> -->
-						<!-- <i class="fa fa-paper-plane"></i> -->
 						<i class="fa fa-sitemap fa-lg fa-fw"></i>
 						<span>Management</span>
 						<span class="caret"></span>
@@ -345,22 +345,6 @@ $PROTOCOL = 'http';
 						</li>
 					</ul>
 				</li>
-                
-                <!--<li>
-					<div>
-						<!-- <i class="fa fa-briefcase"></i> -->
-						<!-- <i class="fa fa-bullhorn"></i> -->
-						<!-- <i class="fa fa-paper-plane"></i> -->
-						<!--<i class="fa fa-anchor fa-lg fa-fw"></i>
-						<span>Rentals</span>
-						<span class="caret"></span>
-					</div>
-					<ul id="equipment-submenu">
-						<li>
-							<a href="#equipment">Equipment</a>
-						</li>
-					</ul>
-				</li>-->
 
 				<!--<li>
 					<a href="https://scubawhere.zendesk.com" target="_blank">
@@ -370,11 +354,27 @@ $PROTOCOL = 'http';
 				</li>-->
 
 				<li>
+					<div>
+						<i class="fa fa-cog fa-lg fa-fw"></i>
+						<span>Settings</span>
+						<span class="caret"></span>
+					</div>
+					<ul id="crm-submenu">
+						<li>
+							<a href="#settings">Account</a>
+						</li>
+						<li>
+							<a href="#settings-users">Users</a>
+						</li>
+					</ul>
+				</li>
+
+				<!--<li>
 					<a href="#settings">
 						<i class="fa fa-cog fa-lg fa-fw"></i>
 						<span>Settings</span>
 					</a>
-				</li>
+				</li>-->
 
                 <li>
                     <a href="#troubleshooting">
@@ -397,3 +397,7 @@ $PROTOCOL = 'http';
 	</div>
 </body>
 </html>
+
+<script type="text/javascript" src="js/Repositories/UserRepo.js"></script>
+<script type="text/javascript" src="js/components/companies-list.js"></script>
+<script type="text/javascript" src="js/main2.js"></script>

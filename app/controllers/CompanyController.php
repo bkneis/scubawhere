@@ -2,6 +2,7 @@
 
 use Scubawhere\Helper;
 use Scubawhere\Context;
+use Scubawhere\Repositories\UserRepo;
 use Scubawhere\Entities\Location;
 use Scubawhere\Services\CreditService;
 use Scubawhere\Services\DomainService;
@@ -15,11 +16,13 @@ class CompanyController extends Controller {
 
 	public function __construct(CreditService $credit_service,
 								ObjectStoreService $object_store_service,
-								DomainService $domain_service)
+								DomainService $domain_service,
+								UserRepo $user_repo)
 	{
 		$this->credit_service       = $credit_service;
 		$this->object_store_service = $object_store_service;
 		$this->domain_service       = $domain_service;
+		$this->user_repo            = $user_repo;
 	}
 
 	public function getIndex()
@@ -417,5 +420,21 @@ class CompanyController extends Controller {
 		}
 		$this->domain_service->createSubdomain($subdomain);
 		return Response::json(array('status' => 'OK. Your subdomain has been created'), 200);
+	}
+
+	/**
+	 * Retrieve all of the users related to a company
+	 *
+	 * @api GET /company/users
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getUsers()
+	{
+		$users = $this->user_repo->getUsersInContext();
+
+		return Response::json(array(
+			'status' => 'success',
+			'data' => array('users' => $users)
+		, 200));
 	}
 }
