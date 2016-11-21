@@ -117,6 +117,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'trip'              => 'TripController',
 		'user'              => 'UserController'
 	]);
+
+	Route::resource('user', 'UserController',
+		array('only' => 'store'));
+
 });
 
 /*

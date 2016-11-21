@@ -2,10 +2,11 @@
 
 namespace Scubawhere\Entities;
 
+use Scubawhere\Context;
+use LaravelBook\Ardent\Ardent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
-use LaravelBook\Ardent\Ardent;
 
 class User extends Ardent implements UserInterface, RemindableInterface
 {
@@ -40,6 +41,11 @@ class User extends Ardent implements UserInterface, RemindableInterface
 	public function companies()
 	{
 		return $this->belongsToMany('\Scubawhere\Entities\Company', 'user_company');
+	}
+
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', Context::get()->id);
 	}
 
 	/**
