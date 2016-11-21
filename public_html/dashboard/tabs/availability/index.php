@@ -9,8 +9,8 @@
                     <h4 class="panel-title">Availability Filters</h4>
                     <i class="fa fa-minus pull-right" data-toggle="collapse" data-target="#filters-container"></i>
                 </div>
-                <div id="filters-container" class="panel-body collapse in">
-                    <div id="jump-to-date" class="form-row">
+                <div id="filters-container" class="panel-body collapse in row">
+                    <div id="jump-to-date" class="form-row col-sm-6">
                         <div class="input-group">
                             <label class="input-group-addon">Jump to : </label>
                             <input style="width:200px; float:left;"

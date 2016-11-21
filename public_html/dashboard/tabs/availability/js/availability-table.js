@@ -35,7 +35,7 @@ Vue.component('availability-table', {
      * and pass through an instance of vue so that it can proxy data back
      * to the component.
      */
-    created : function() {
+    created : function () {
         availabilityService = new AvailabilityService(this, dateService);
         availabilityService.refreshTable();
     },
@@ -60,7 +60,7 @@ Vue.component('availability-table', {
         filterDate : function (newVal, oldVal) {
             let date = new Date(newVal);
             let oldDate = new Date(oldVal);
-            if(!date.isSameMonth(oldDate)) {
+            if (!date.isSameMonth(oldDate)) {
                 availabilityService.refreshTable(date.getFullYear(), date.getMonth());
             }
         }

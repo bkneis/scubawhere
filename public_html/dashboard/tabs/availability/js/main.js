@@ -34,10 +34,18 @@ new Vue({
 
     data : function() {
         return {
-            date : moment(new Date().toString()).format('YYYY-MM-DD')
+            date : moment(new Date().toString()).format('YYYY-MM-DD'),
+            companies : []
         }
     },
 
+    created : function() {
+        let vm = this;
+        userRepo.getCompanies(function (data) {
+            vm.companies = data;
+        });
+    },
+    
     /**
      * Once the el is compiled and replaced, attach the jquery handlers for the datetimepicker plugin.
      *
@@ -68,6 +76,7 @@ new Vue({
 
         /**
          * Allow the user to use the up / down keys to render prev and next month
+         * @todo move this to vue
          */
         $(document).keydown(function(e) {
             if (e.which === 40 || e.which === 38) { // 40 = down, 38 = up

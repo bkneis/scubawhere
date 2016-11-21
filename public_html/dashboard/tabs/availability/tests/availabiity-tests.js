@@ -16,6 +16,7 @@ function getFakeAccommodationAvailabilityData() {
     }
     return data;
 }
+
 describe('Test suite for the availabiity service', function() {
 
     // @todo mock this
