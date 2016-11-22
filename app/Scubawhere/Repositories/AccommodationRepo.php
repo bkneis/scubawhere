@@ -1,11 +1,13 @@
-<?php 
+<?php
 
 namespace Scubawhere\Repositories;
 
 use Scubawhere\Context;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Helper;
 use Scubawhere\Entities\Accommodation;
 use Scubawhere\Exceptions\Http\HttpNotFound;
+use Illuminate\Database\Eloquent\Collection;
 use Scubawhere\Exceptions\InvalidInputException;
 
 /**
@@ -21,26 +23,26 @@ use Scubawhere\Exceptions\InvalidInputException;
  */
 class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
 
-    /** 
+    /**
      * Eloquent model that acts as the root model to associate assets to
      *
      * @var \Scubawhere\Entities\Company
-    */ 
+    */
     protected $company_model;
-    
+
     public function __construct() {
         $this->company_model = Context::get();
     }
 
     /**
      * Get all accommodations for a company
-     * 
+     *
      * @param array $relations
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function all(array $relations = []) {
-        return Accommodation::onlyOwners()->with($relations)->get();
+        return Accommodation::with($relations)->get();
     }
 
     /**
@@ -51,7 +53,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function allWithTrashed(array $relations = []) {
-        return Accommodation::onlyOwners()->with($relations)->withTrashed()->get();
+        return Accommodation::with($relations)->withTrashed()->get();
     }
 
     /**
@@ -66,7 +68,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      * @return \Scubawhere\Entities\Accommodation
      */
     public function get($id, array $relations = [], $fail = true) {
-        $accommodation = Accommodation::onlyOwners()->with($relations)->find($id);
+        $accommodation = Accommodation::with($relations)->find($id);
 
         if($accommodation === null && $fail) {
             throw new HttpNotFound(__CLASS__ . __FUNCTION__, ['The accommodation could not be found']);
@@ -87,7 +89,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      * @return \Scubawhere\Entities\Accommodation
      */
     public function getWhere(array $query, array $relations = [], $fail = true) {
-        $accommodation = Accommodation::onlyOwners()->where(function ($q) use ($query) {
+        $accommodation = Accommodation::where(function ($q) use ($query) {
             foreach ($query as $obj) {
                 $q->where($obj[0], $obj[1], $obj[2]);
             }
@@ -112,8 +114,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      */
     public function getUsedInFutureBookings($id, $fail = true)
     {
-        $accommodation = Accommodation::onlyOwners()
-            ->with(['bookings' => function($q) {
+        $accommodation = Accommodation::with(['bookings' => function($q) {
                 $q->where('accommodation_booking.start', '>=', Helper::localtime());
             }])
             ->find($id);
@@ -170,11 +171,19 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
 
             return $data;
       }
-    
+
+    /**
+     * Get the availability of the accommodations and their booking information
+     *
+     * @todo Replace the function above with this
+     *
+     * @param array $dates
+     * @param null $id
+     * @return Collection
+     */
     public function getAvailability(array $dates, $id = null)
     {
-        return Accommodation::onlyOwners()
-            ->where(function ($q) use ($id) {
+        return Accommodation::where(function ($q) use ($id) {
                 if(!is_null($id)) {
                     $q->where('id', '=', $id);
                 }
@@ -195,7 +204,8 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      *
      * @return \Scubawhere\Entities\Accommodation
      */
-    public function create(array $data) {
+    public function create(array $data)
+    {
         $accommodation = new Accommodation($data);
 
         if (!$accommodation->validate()) {
@@ -203,6 +213,15 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
         }
 
         return $this->company_model->accommodations()->save($accommodation);
+    }
+
+    public function update($id, array $data)
+    {
+        $accommodation = $this->get($id);
+        if(!$accommodation->update($data)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $accommodation->errors()->all());
+        }
+        return $accommodation;
     }
 
 }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 class Accommodation extends Ardent {
 
 	use SoftDeletingTrait;
+	use Owneable;
 
 	protected $dates = ['deleted_at'];
 
@@ -78,10 +79,10 @@ class Accommodation extends Ardent {
 		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
 	}
 
-	public function scopeOnlyOwners($query)
+	/*public function scopeOnlyOwners($query)
 	{
 		return $query->where('company_id', '=', Context::get()->id);
-	}
+	}*/
 
 	public function bookings()
 	{
