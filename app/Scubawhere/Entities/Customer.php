@@ -108,6 +108,11 @@ class Customer extends Ardent {
 		}
 	}
 
+	public function getName()
+	{
+		return $this->firstname . ' ' . $this->lastname;
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('\Scubawhere\Entities\Company');

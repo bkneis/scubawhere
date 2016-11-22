@@ -237,6 +237,12 @@ class Booking extends Ardent {
 		);
 	}
 
+	public function getPrice()
+	{
+		// @note when we upgrade to php7, use ??
+		return $this->real_decimal_price ? $this->real_decimal_price : $this->decimal_price;
+	}
+
 	/*
 	public function setNumberOfCustomersAttribute()
 	{
