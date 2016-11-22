@@ -158,7 +158,7 @@ class TrainingRepo extends BaseRepo implements TrainingRepoInterface {
      * @return \ScubaWhere\Entities\Training
      */
     public function update($id, array $data, $fail = true) {
-        $training = $this->get($id, $fail);
+        $training = $this->get($id, [], $fail);
 
         if(!$training->update($data)) {
             throw new HttpNotAcceptable(__CLASS__ . __METHOD__, [$training->errors()->all()]);

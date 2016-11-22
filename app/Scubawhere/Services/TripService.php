@@ -4,6 +4,7 @@ namespace Scubawhere\Services;
 
 use Scubawhere\Helper;
 use Scubawhere\Entities\Trip;
+use Scubawhere\Entities\Ticket;
 use Scubawhere\Exceptions\Http\HttpConflict;
 use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 use Scubawhere\Repositories\TripRepoInterface;
@@ -59,10 +60,11 @@ class TripService {
 	 * Validate, create and save the trip and prices to the database
 	 *
 	 * @param array $data Data to autofill trip model
-	 *
-	 * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
-	 *
-	 * @return \Scubawhere\Entities\Trip
+	 * @param array $locations
+	 * @param array $tags
+	 * 
+	 * @return Trip
+	 * @throws HttpNotAcceptable
 	 */
 	public function create(array $data, array $locations, array $tags)
 	{

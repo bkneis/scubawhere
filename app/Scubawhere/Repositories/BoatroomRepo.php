@@ -5,6 +5,7 @@ namespace Scubawhere\Repositories;
 use Scubawhere\Context;
 use Scubawhere\Exceptions\Http\HttpNotFound;
 use Scubawhere\Entities\Boatroom;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Exceptions\InvalidInputException;
 
 /**
@@ -104,7 +105,8 @@ class BoatroomRepo extends BaseRepo implements BoatroomRepoInterface {
      *
      * @return \ScubaWhere\Entities\Boatroom
      */
-    public function create($data) {
+    public function create($data)
+    {
         $boatroom = new Boatroom($data);
 
         if (!$boatroom->validate()) {
@@ -112,6 +114,25 @@ class BoatroomRepo extends BaseRepo implements BoatroomRepoInterface {
         }
 
         return $this->company_model->boatrooms()->save($boatroom);
+    }
+
+    /**
+     * Update a boatroom
+     *
+     * @param int   $id
+     * @param array $data
+     *
+     * @return Boatroom
+     * @throws HttpNotFound
+     * @throws HttpUnprocessableEntity
+     */
+    public function update($id, $data)
+    {
+        $boatroom = $this->get($id);
+        if(!$boatroom->update($data)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $boatroom->errors()->all());
+        }
+        return $boatroom;
     }
 
 }

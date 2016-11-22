@@ -85,7 +85,7 @@ class CourseController extends Controller {
     /**
      * Edit an existing course
      *
-     * @api /api/course/edit
+     * @api POST /api/course/edit
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -93,8 +93,13 @@ class CourseController extends Controller {
     {
         $id = Input::get('id');
         $data = Input::only('name', 'description', 'capacity', 'certificate_id');
-        $base_prices = Input::get('base_prices');
-        $prices = Input::get('prices');
+        $base_prices = Input::get('base_prices', []);
+        $prices = Input::get('prices', []);
+
+        // @todo add validation decorators to services instead of in here
+        if($data['certificate_id'] === '') {
+            unset($data['certificate_id']);
+        }
 
         $course = $this->course_service->update($id, $data, $base_prices, $prices);
         return Response::json(array('status' => 'OK. Course updated', 'model' => $course), 200); // 200 Success
@@ -113,7 +118,9 @@ class CourseController extends Controller {
     public function postDelete()
     {
         $id = Input::get('id');
-        if(!$id) throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an course ID.']);
+        if(!$id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an course ID.']);
+        }
         $this->course_service->delete($id);
         return Response::json(array('status' => 'OK. Course deleted'), 200); // 200 Success
     }

@@ -127,10 +127,10 @@ class AgentRepo extends BaseRepo implements AgentRepoInterface {
      * @return \ScubaWhere\Entities\Agent
      */
     public function update($id, array $data, $fail = true) {
-        $addon = $this->get($id, $fail);
+        $addon = $this->get($id, [], $fail);
 
         if(!$addon->update($data)) {
-            throw new HttpNotAcceptable(__CLASS__ . __METHOD__, [$addon->errors()->all()]);
+            throw new HttpNotAcceptable(__CLASS__ . __METHOD__, $addon->errors()->all());
         }
 
         return $addon;

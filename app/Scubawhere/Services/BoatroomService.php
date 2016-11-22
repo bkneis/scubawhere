@@ -4,7 +4,7 @@ namespace Scubawhere\Services;
 
 use Scubawhere\Helper;
 use Scubawhere\Context;
-use Scubawhere\Services\LogService;
+use Scubawhere\Entities\Booking;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\BoatroomRepoInterface;
 
@@ -119,7 +119,7 @@ class BoatroomService {
 
 		if(!$future_bookings->isEmpty())
 		{
-			$logger = $this->logging_service->create('Attempting to delete the boatroom ' . $boatroom->name);
+			$logger = $this->log_service->create('Attempting to delete the boatroom ' . $boatroom->name);
 			$booking_ids = $future_bookings->map(function($obj) {
 				return $obj->booking_id;
 			});
