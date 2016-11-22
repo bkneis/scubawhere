@@ -1,8 +1,8 @@
 {
   "name": "scubawhere-rms",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "authors": [
-    "Jonathan Lambert <jonathan@scubawhere.com>"
+    "Bryan Kneis <bryan@scubawhere.com>"
   ],
   "description": "Scuba Diving Reservation Management System",
   "main": "index.php",
