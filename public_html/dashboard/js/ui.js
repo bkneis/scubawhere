@@ -4,19 +4,37 @@ var hashHistory = [];
 
 $(window).on('hashchange', function(e) {
 	hashHistory.push(window.location.hash);
-	if(hashHistory.length > 2) {
-		hashHistory.splice(0,hashHistory.length-2)
+	if (hashHistory.length > 2) {
+		hashHistory.splice(0,hashHistory.length-2);
 	}
 	if(!window.skipSavedBooking) {
 		if(hashHistory[0] === '#add-booking') {
-			if(!confirm('Would you like to save this booking as a quote to return to later?')) {
-				// delete the booking
-				window.booking = {};
-			}
+			bootbox.confirm({
+				title   : 'Save booking?',
+				message : 'Would you like to save that booking to return to later?',
+				buttons : {
+					cancel : {
+						label : 'No',
+						class : 'btn-danger'
+					},
+					confirm : {
+						label : 'Yes',
+						class : 'btn-success'
+					}
+				},
+				callback : function (result) {
+					if(!result) {
+						window.booking = {};
+					}
+				}
+			});
 		}
 	}
 	if(window.location.hash === '#add-booking') {
 		if(typeof window.booking !== 'undefined' && !(_.isEmpty(window.booking))) {
+			window.booking.mode   = 'edit';
+			window.booking.status = 'temporary';
+			window.clickedEdit  = true;
 			Booking.startEditing(window.booking.id, function success(object) {
 				window.booking.mode   = 'edit';
 				window.booking.status = 'temporary';
