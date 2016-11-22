@@ -105,6 +105,8 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
 	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
 
+	<script src="/common/js/bootbox.min.js"></script>
+
 	<!-- testing with -->
 	<script src="/js/vue.js"></script>
 	<script src="/js/components/EventHub.js"></script>
