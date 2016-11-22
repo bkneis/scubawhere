@@ -133,7 +133,7 @@ $(function() {
                     showModalWindowCourse(eventObject);*/
                 //console.log(calendarOptions.calendarDisplay);
                 //console.log(eventObject);
-            },
+            }
         });
     });
 
