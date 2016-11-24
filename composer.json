@@ -15,7 +15,8 @@
 		"backup-manager/laravel": "^1.0",
 		"maknz/slack": "^1.7",
 		"aws/aws-sdk-php": "2.*",
-		"maknz/slack-laravel": "^1.0"
+		"maknz/slack-laravel": "^1.0",
+		"WebChemistry/Invoice": "^1.1"
 	},
 	"autoload": {
 		"classmap": [
@@ -24,7 +25,8 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
-			"app/tests/"
+			"app/tests/",
+			"app/Scubawhere/Providers"
 		],
 		"psr-4": {
 			"Scubawhere\\": "app/Scubawhere"
