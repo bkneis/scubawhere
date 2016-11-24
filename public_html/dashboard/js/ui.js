@@ -32,9 +32,9 @@ $(window).on('hashchange', function(e) {
 	}
 	if(window.location.hash === '#add-booking') {
 		if(typeof window.booking !== 'undefined' && !(_.isEmpty(window.booking))) {
-			window.booking.mode   = 'edit';
-			window.booking.status = 'temporary';
-			window.clickedEdit  = true;
+			//window.booking.mode   = 'edit';
+			//window.booking.status = 'temporary';
+			//window.clickedEdit  = true;
 			Booking.startEditing(window.booking.id, function success(object) {
 				window.booking.mode   = 'edit';
 				window.booking.status = 'temporary';
