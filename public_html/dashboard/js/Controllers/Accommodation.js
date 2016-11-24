@@ -29,7 +29,7 @@ var Accommodation = {
 	update : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "PUT",
-			url: "/api/accommodation/" + params[7].value,
+			url: "/api/accommodation/" + params[params.length - 2].value,
 			data: params,
 			success: handleData,
 			error: errorFn

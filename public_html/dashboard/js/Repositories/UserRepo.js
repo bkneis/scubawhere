@@ -75,7 +75,7 @@ function UserRepo() {
 
         $.ajax({
             type    : 'PUT',
-            url     : '/api/user',
+            url     : '/api/user/1',
             data    : params,
             success : successFn,
             error   : errorFn

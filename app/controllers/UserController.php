@@ -119,7 +119,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      * @throws HttpUnprocessableEntity
      */
-    public function update()
+    public function update($id)
     {
         $data = Input::only(
             'username',

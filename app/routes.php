@@ -114,7 +114,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'ticket'            => 'TicketController',
 		'timetable'         => 'TimetableController',
 		'trip'              => 'TripController',
-		'user'              => 'UserController'
+		//'user'              => 'UserController'
 	]);
 
 	// @todo move this to manifest resource controller
@@ -127,6 +127,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	Route::resource('manifest', 'ManifestController',
 		array('only' => array('index'))
 	);
+
+	Route::get('user/companies', 'UserController@getCompanies');
+	Route::get('user/active-company', 'UserController@getActiveCompany');
+	Route::post('user/switch-company', 'UserController@postSwitchCompany');
 
 	Route::resource('user', 'UserController',
 		array('only' => array('store', 'update'))

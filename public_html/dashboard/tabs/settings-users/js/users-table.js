@@ -29,14 +29,16 @@ Vue.component('users-table', {
 
         resetPassword : function () {
             userRepo.resetPassword(function (res) {
-                pageMssg(res.status, 'success');
+                pageMssg('Success. Please check your email and follow the link to reset your password', 'success');
             },
             function (xhr) {
                 pageMssg('Oh oh, there seems to have been a mistake. We cannot complete your operation, please try again soon.', 'danger');
             });
         },
 
-        updateInfo : function () {
+        updateInfo : function (user) {
+            var editUserTemplate = Handlebars.compile($('#edit-user-info-template').html());
+            $('#edit-user-fields').empty().append(editUserTemplate(user));
             $('#modal-update-user').modal('show');
         }
 

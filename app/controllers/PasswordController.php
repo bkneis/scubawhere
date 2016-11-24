@@ -17,12 +17,13 @@ class PasswordController extends Controller {
 	 */
 	public function postRemind()
 	{
-		$response = Password::remind(Input::only('email'), function($message)
+		$email = Auth::user()->email;
+		$response = Password::remind(array('email' => $email), function($message)
 		{
 			if( Input::has('welcome'))
 				$message->subject('Welcome to scubawhereRMS!');
 			else
-				$message->subject('scubawhereRMS password reset');
+				$message->subject('scubawhere password reset');
 		});
 
 		switch( $response )

@@ -7,10 +7,6 @@ new Vue({
         return {
             show : false
         };
-    },
-
-    components : {
-        modal : VueStrap.modal
     }
 
 });
@@ -21,6 +17,8 @@ $('#email-customer-form').on('submit', function (event) {
     var params = $(this).serializeArray();
     userRepo.update(params, function (res) {
         pageMssg(res.status, 'success');
+        $('#modal-update-user').modal('hide');
+        location.reload();
     },
     function (xhr) {
         console.log(xhr);

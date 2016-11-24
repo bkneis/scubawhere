@@ -16,12 +16,25 @@ class User extends Ardent implements UserInterface, RemindableInterface
 
 	protected $hidden = array('password');
 
-	public static $rules = array(
-		'username' => 'sometimes|required|alpha_dash|between:4,64|unique:users,username',
-		'password' => 'size:60',
-		'email'    => 'required|email|unique:users,email',
-		'phone'    => '', //'required',
-	);
+	/**
+	 * Dynmically generate rules so that unique values can be surpassed when updating
+	 *
+	 * @param int   $id    If updating, supply the ID of the user
+	 * @param array $merge Any additional rules being added at runtime
+	 * @return array
+	 */
+	public static function rules($id = 0, $merge = [])
+	{
+		return array_merge(
+			[
+				'username' => 'sometimes|required|alpha_dash|between:4,64|unique:users,username' . ($id ? ",$id" : ''),
+				'password' => 'size:60',
+				'email'    => 'required|email|unique:users,email' . ($id ? ",$id,id" : '') ,
+				'phone'    => '',
+			],
+			$merge
+		);
+	}
 
 	/**
 	 * The default company for the user.

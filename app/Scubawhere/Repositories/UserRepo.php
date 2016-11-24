@@ -4,6 +4,7 @@ namespace Scubawhere\Repositories;
 
 use Scubawhere\Context;
 use Scubawhere\Entities\User;
+use Scubawhere\Exceptions\Http\HttpUnauthorized;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 
@@ -46,11 +47,20 @@ class UserRepo
 
     public function update($data)
     {
-        $user = Auth::user();
+        $user = \Auth::user();
 
-        if(!$user->update($data)) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $user->errors()->all());
+        /*if($id !== $user->id) {
+            throw new HttpUnauthorized(__CLASS__.__METHOD__, ['Unauthroized. You cannot update a user that is not you']);
+        }*/
+
+        $user->fill($data);
+
+        $validator = \Validator::make($data, User::rules($user->id));
+        if($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
+
+        $user->save();
 
         return $user;
     }
