@@ -17,7 +17,15 @@ class UserRepo
      */
     public function getUsersInContext()
     {
-        return User::onlyOwners()->get();
+        $users = User::onlyOwners()->get();
+        $current_user_id = \Auth::user()->id;
+        foreach ($users as $user) {
+            if($user->id === $current_user_id) {
+                $user->active = true;
+                break;
+            }
+        }
+        return $users;
     }
 
     public function create($data, $password)
@@ -32,6 +40,17 @@ class UserRepo
         }
 
         Context::get()->users()->save($user);
+
+        return $user;
+    }
+
+    public function update($data)
+    {
+        $user = Auth::user();
+
+        if(!$user->update($data)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $user->errors()->all());
+        }
 
         return $user;
     }

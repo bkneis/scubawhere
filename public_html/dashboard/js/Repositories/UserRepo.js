@@ -57,4 +57,29 @@ function UserRepo() {
         });
     };
 
+    this.resetPassword = function (successFn, errorFn) {
+        var params = {
+            _token : window.token
+        };
+        $.ajax({
+            type    : 'POST',
+            url     : '/api/password/remind',
+            data    : params,
+            success : successFn,
+            error   : errorFn
+        });
+    };
+
+    this.update = function (params, successFn, errorFn) {
+        params._token = window.token;
+
+        $.ajax({
+            type    : 'PUT',
+            url     : '/api/user',
+            data    : params,
+            success : successFn,
+            error   : errorFn
+        });
+    };
+
 }

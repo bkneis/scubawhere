@@ -13,10 +13,44 @@
                         <add-user-form></add-user-form>
                     </div>
 
+                    <button @click="show = true">dsfdsfdsf</button>
+
                     <users-table></users-table>
 
                 </div>
             </div>
+        </div>
+    </div>
+
+    <modal title="Zoom Modal" :show.sync="show" effect="zoom" width="400">
+        <div slot="modal-body" class="modal-body">dsfsdfsdf</div>
+    </modal>
+
+</div>
+
+<div class="modal fade" id="modal-update-user">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Update User Info</h4>
+            </div>
+            <form id="email-customer-form" class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <label>Username : </label>
+                        <input type="text" name="username">
+                    </div>
+                    <div class="form-row">
+                        <label>Email : </label>
+                        <input type="text" name="email">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">UPDATE</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -53,6 +87,7 @@
                 <th>Email</th>
                 <th>Password</th>
                 <th>Registration Date</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -61,6 +96,18 @@
                 <td>{{user.email}}</td>
                 <td>.................</td>
                 <td>{{user.created_at}}</td>
+                <td>
+                    <button class="btn btn-info"
+                            v-if="user.active"
+                            @click="resetPassword()">
+                        Reset Password
+                    </button>
+                    <button class="btn btn-primary"
+                            v-if="user.active"
+                            @click="updateInfo()">
+                        Update Info
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>

@@ -24,8 +24,20 @@ Vue.component('users-table', {
     methods : {
 
         addUser : function (user) {
-            console.log(user);
             this.users.push(user);
+        },
+
+        resetPassword : function () {
+            userRepo.resetPassword(function (res) {
+                pageMssg(res.status, 'success');
+            },
+            function (xhr) {
+                pageMssg('Oh oh, there seems to have been a mistake. We cannot complete your operation, please try again soon.', 'danger');
+            });
+        },
+
+        updateInfo : function () {
+            $('#modal-update-user').modal('show');
         }
 
     }

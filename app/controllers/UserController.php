@@ -107,8 +107,30 @@ class UserController extends Controller
 
         return Response::json(array(
             'status' => 'OK. User created successfully',
-            'data' => array('user' => $user)
+            'data'   => array('user' => $user)
         , 200));
 
+    }
+
+    /**
+     * Update the current logged in users information
+     *
+     * @api PUT/PATCH /user
+     * @return \Illuminate\Http\Response
+     * @throws HttpUnprocessableEntity
+     */
+    public function update()
+    {
+        $data = Input::only(
+            'username',
+            'email'
+        );
+
+        $user = $this->user_repo->update($data);
+
+        return Response::json(array(
+            'status' => 'OK. User has been updated',
+            'data'   => $user
+        ));
     }
 }
