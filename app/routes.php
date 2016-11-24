@@ -86,7 +86,6 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	});
 
 	Route::controllers([
-		'accommodation'     => 'AccommodationController',
 		'addon'             => 'AddonController',
 		'agent'             => 'AgentController',
 		'agency'            => 'AgencyController',
@@ -118,8 +117,20 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'user'              => 'UserController'
 	]);
 
+	// @todo move this to manifest resource controller
+	Route::get('accommodation/availability', 'AccommodationController@getAvailability');
+
+	Route::resource('accommodation', 'AccommodationController',
+		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
+	);
+
+	Route::resource('manifest', 'ManifestController',
+		array('only' => array('index'))
+	);
+
 	Route::resource('user', 'UserController',
-		array('only' => 'store'));
+		array('only' => array('store', 'update'))
+	);
 
 });
 

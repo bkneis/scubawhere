@@ -115,7 +115,7 @@ $(function(){
 		// Show loading indicator
 		$('#update-accommodation').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Accommodation.update( $('#update-accommodation-form').serialize(), function success(data) {
+		Accommodation.update( $('#update-accommodation-form').serializeArray(), function success(data) {
 
 			pageMssg(data.status, true);
 

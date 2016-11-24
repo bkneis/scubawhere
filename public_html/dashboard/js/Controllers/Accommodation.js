@@ -1,31 +1,35 @@
 var Accommodation = {
 
 	get : function(params, handleData) {
-		$.get("/api/accommodation", params, handleData);
+		$.get("/api/accommodation/" + params.id, handleData);
 	},
 
 	getAll : function(handleData) {
-		$.get("/api/accommodation/all", handleData);
+		$.get("/api/accommodation", handleData);
 	},
 
 	getAllWithTrashed : function(handleData) {
-		$.get("/api/accommodation/all-with-trashed", handleData);
+		var param = {
+			with_deleted : true
+		};
+		$.get("/api/accommodation", param, handleData);
 	},
 
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/accommodation/add",
+			url: "/api/accommodation",
 			data: params,
 			success: handleData,
 			error: errorFn
 		});
 	},
 
+	// @todo change the params[7] to dynamically get the ID
 	update : function(params, handleData, errorFn) {
 		$.ajax({
-			type: "POST",
-			url: "/api/accommodation/edit",
+			type: "PUT",
+			url: "/api/accommodation/" + params[7].value,
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -34,8 +38,8 @@ var Accommodation = {
 
 	delete : function(params, handleData, errorFn){
 		$.ajax({
-			type: "POST",
-			url: "/api/accommodation/delete",
+			type: "DELETE",
+			url: "/api/accommodation/" + params.id,
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -45,7 +49,7 @@ var Accommodation = {
 	filter : function(params, handleData, errorFn){
 		$.ajax({
 			type: "GET",
-			url: "/api/accommodation/filter",
+			url: "/api/accommodation",
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -53,9 +57,10 @@ var Accommodation = {
 	},
 
 	getManifest : function(params, handleData, errorFn) {
+		params.type = 'accommodation';
 		$.ajax({
 			type: 'GET',
-			url : '/api/accommodation/manifest',
+			url : '/api/manifest',
 			data : params,
 			success : handleData,
 			error : errorFn
