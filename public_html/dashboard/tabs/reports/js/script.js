@@ -474,6 +474,13 @@ function getReport(reportType, callback) {
 
 			break;
 
+		case('cancellations'):
+			$("#report-title").empty().append("Cancellations Report");
+			Report.getCancellations(dates, function (res) {
+				report = Handlebars.compile($('#cancellations-report-template').html());
+				$("#reports").empty().append( report({bookings : res.data.report}) );
+			});
+
 
 	}
 

@@ -18,7 +18,10 @@ class Booking extends Ardent {
 		'status',
 		'reserved_until',
 		'cancellation_fee',
-		'comment'
+		'comment',
+		'cancel_reason',
+		'discount_reason',
+		'cancelled_at'
 	);
 
 	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local', 'absolute_price');
@@ -37,7 +40,8 @@ class Booking extends Ardent {
 		'status'           => 'in:initialised,saved,reserved,expired,confirmed,on hold,cancelled,temporary',
 		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
-		'comment'          => ''
+		'comment'          => '',
+		'cancelled_at'     => 'date'
 	);
 
 	public function beforeSave()

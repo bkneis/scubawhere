@@ -30,6 +30,12 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 		$bookingdetails->load('booking.agent');
 	}
 
+	/**
+	 * @todo Break this down more into other functions
+	 * @param $before
+	 * @param $after
+	 * @return array
+	 */
 	public function createReport($before, $after) 
 	{
 		$RESULT = array();

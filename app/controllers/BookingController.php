@@ -1923,7 +1923,16 @@ class BookingController extends Controller
             return Response::json(array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403); // 403 Forbidden
         }
 
-        if (!$booking->update(array('status' => 'cancelled', 'reserved' => null, 'cancellation_fee' => Input::get('cancellation_fee')))) {
+        $cancelled_date = Helper::localTime();
+        $cancelled_date = $cancelled_date->format('Y-m-d H:i:s');
+
+        if (!$booking->update(array(
+            'status'           => 'cancelled',
+            'reserved'         => null,
+            'cancellation_fee' => Input::get('cancellation_fee'),
+            'cancel_reason'    => Input::get('cancel_reason'),
+            'cancelled_at'     => $cancelled_date
+        ))) {
             return Response::json(array('errors' => $booking->errors()->all()), 406); // 406 Not Acceptable
         }
 

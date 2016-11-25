@@ -6,6 +6,7 @@ use Scubawhere\Strategies\SourcesReportGenerator;
 use Scubawhere\Strategies\RevenueReportGenerator;
 use Scubawhere\Strategies\UtilisationReportGenerator;
 use Scubawhere\Strategies\DemographicsReportGenerator;
+use Scubawhere\Strategies\CancellationsReportGenerator;
 
 class ReportService {
 
@@ -27,6 +28,12 @@ class ReportService {
 				break;
 			case 'revenue':
 				$generator = new RevenueReportGenerator;
+				break;
+			case 'cancellations':
+				$generator = new CancellationsReportGenerator('cancellation');
+				break;
+			case 'discounts':
+				$generator = new CancellationsReportGenerator('discounts');
 				break;
 		}
 		return $generator->createReport($before, $after);
