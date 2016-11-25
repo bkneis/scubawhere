@@ -1,8 +1,8 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Scubawhere\Helper;
+
 use Scubawhere\Context;
+use Scubawhere\Entities\CrmTemplate;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class CrmTemplateController extends Controller {
     
@@ -45,4 +45,17 @@ class CrmTemplateController extends Controller {
         
         return Response::json( array('status' => '<b>OK</b> Email template has been updated'), 201 ); // 201 Created 
     }
+
+	public function postDelete()
+	{
+		$id = Input::get('id');
+		if(is_null($id)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The ID field is required']);
+		}
+		$template = CrmTemplate::onlyOwners()->findOrFail($id);
+		$template->delete();
+		return Response::json(array(
+			'status' => 'Success. Email template deleted'
+		));
+	}
 }

@@ -2,8 +2,9 @@
 
 namespace Scubawhere\Entities;
 
-use LaravelBook\Ardent\Ardent;
 use Scubawhere\Helper;
+use Scubawhere\Context;
+use LaravelBook\Ardent\Ardent;
 
 class CrmTemplate extends Ardent {
 
@@ -17,6 +18,11 @@ class CrmTemplate extends Ardent {
 	public function beforeSave( $forced ) // MAYBE REMOVE
 	{
 		if( isset($this->name) ) $this->name = Helper::sanitiseString($this->name);
+	}
+
+	public static function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', '=', Context::get()->id);
 	}
 
 	public function company()

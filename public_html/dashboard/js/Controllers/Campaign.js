@@ -47,6 +47,20 @@ var Campaign = {
 			error: errorFn
 		});
     },
+
+	deleteTemplate : function (id, handleData, errorFn) {
+		var params = {
+			_token : window.token,
+			id     : id
+		};
+		$.ajax({
+			type: "POST",
+			url: "/api/campaign_template/delete",
+			data: params,
+			success: handleData,
+			error: errorFn
+		});
+	},
     
     getAllTemplates : function(handleData) {
         $.get("/api/campaign_template/all", handleData);

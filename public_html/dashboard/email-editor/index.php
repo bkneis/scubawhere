@@ -90,16 +90,18 @@
     <iframe id="email-template-editor" style="position: fixed; border: none; top: 50px; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; padding-bottom: 120px"></iframe>
 
     <div style="position: fixed; bottom: 0; width: 100%; height:80px" class="alert-warning clearfix">
-        <div class="pull-left">
-            <p style="padding: 30px 0 0 30px"><strong>Please note : Maximum upload image size is 500 KB and only supports PNG and JPG file types</strong></p>
-        </div>
-        <div class="alert pull-right">
-            <div class="pull-right">
-                <button id="send-email" class="btn btn-primary btn-lg pull-right">SEND</button>
-                <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
-                <button id="update-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px; display:none;">Update Template</button>
-                <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
-                <!--<button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>-->
+        <div class="row">
+            <div class="col-md-6 alert pull-right">
+                <div class="pull-right">
+                    <button id="send-email" class="btn btn-primary btn-lg pull-right">SEND</button>
+                    <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
+                    <button id="update-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px; display:none;">Update Template</button>
+                    <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
+                    <!--<button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>-->
+                </div>
+            </div>
+            <div class="col-md-6 pull-left">
+                <p style="padding: 30px 0 0 30px"><strong>Please note : Maximum upload image size is 500 KB and only supports PNG and JPG file types</strong></p>
             </div>
         </div>
     </div>
@@ -136,6 +138,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger remove-template">Delete Template</button>
                         <button id="select-email-template" type="submit" class="btn btn-primary">Use Template</button>
                     </div>
                 </div>
