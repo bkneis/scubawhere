@@ -161,7 +161,44 @@ function createDataTable() {
 	// Check if table contains any data
 	if($('.reports-table tbody tr').first().children('td').length === 1) return false;
 
-	$('.reports-table').dataTable({
+	var tbl = $('.reports-table');
+
+	var settings = {
+		"pageLength": 10,
+		"dom": 'Bfrtlp',
+		"buttons": [
+			{
+				extend : 'excel',
+				title  : getFileName()
+			},
+			{
+				extend : 'pdf',
+				title  : getFileName(),
+				orientation: 'landscape',
+				customize : function(doc) {
+					var colCount = new Array();
+					$(tbl).find('tbody tr:first-child td').each(function () {
+						if ($(this).attr('colspan')) {
+							for (var i=1;i<=$(this).attr('colspan');$i++) {
+								colCount.push('*');
+							}
+						} else {
+							colCount.push('*');
+						}
+					});
+					doc.content[1].table.widths = colCount;
+				}
+			},
+			{
+				extend : 'print',
+				title  : getFileName()
+			}
+		]
+	};
+
+	tbl.dataTable(settings);
+
+	/*$('.reports-table').dataTable({
         "pageLength": 10,
 		"dom": 'Bfrtlp',
 		"buttons": [
@@ -171,14 +208,15 @@ function createDataTable() {
 			},
 			{
 				extend : 'pdf',
-				title  : getFileName()
+				title  : getFileName(),
+				orientation: 'landscape'
 			},
 			{
 				extend : 'print',
 				title  : getFileName()
 			}
 		]
-	});
+	});*/
 }
 
 function getDates() {

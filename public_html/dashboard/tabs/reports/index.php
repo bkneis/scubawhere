@@ -55,6 +55,8 @@
 					<th>Reference</th>
 					<th>Type</th>
 					<th>Amount</th>
+					<th>Card Ref</th>
+					<th>Notes</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -65,6 +67,8 @@
 						<td><a class="view-booking">{{booking.reference}}</a></td>
 						<td>{{paymentgateway.name}}{{#if refund}} REFUND{{/if}}</td>
 						<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
+						<td>{{card_ref}}</td>
+						<td>{{notes}}</td>
 					</tr>
 				{{else}}
 					<tr><td colspan="5" class="text-center">There are no transactions between these dates</td></tr>

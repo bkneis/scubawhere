@@ -1475,8 +1475,12 @@ input, textarea, select, table, thead, li {
     border-radius: 4px;
 }
 
+/* remove arrows from number inputs */
 input.no-arrows[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+/* center the datatbles content */
+th.dt-center, td.dt-center { text-align: center; }
