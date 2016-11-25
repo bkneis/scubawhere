@@ -85,7 +85,11 @@ Handlebars.registerHelper('sourceName', function() {
 		case 'facetoface': return 'In Person';
 		default: return new Handlebars.SafeString('Agent - ' + this.agent.name);
 	}
-})
+});
+
+Handlebars.registerHelper('convertPrice', function (price) {
+	return new Handlebars.SafeString((price / 100).toFixed(2));
+});
 
 $(function() {
 
@@ -153,7 +157,7 @@ $(function() {
 });
 
 function getFileName() {
-	return report_type + ' report for ' + $('#start-date').val() + ' - ' + $('#end-date').val(); 	
+	return report_type + ' report for ' + $('#start-date').val() + ' - ' + $('#end-date').val();
 }
 
 function createDataTable() {
@@ -165,7 +169,7 @@ function createDataTable() {
 
 	var settings = {
 		"pageLength": 10,
-		"dom": 'Bfrtlp',
+		"dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
 		"buttons": [
 			{
 				extend : 'excel',
@@ -517,9 +521,18 @@ function getReport(reportType, callback) {
 			Report.getCancellations(dates, function (res) {
 				report = Handlebars.compile($('#cancellations-report-template').html());
 				$("#reports").empty().append( report({bookings : res.data.report}) );
+				createDataTable();
 			});
+			break;
 
-
+		case('discounts'):
+			$("#report-title").empty().append("Discounts Report");
+			Report.getDiscounts(dates, function (res) {
+				report = Handlebars.compile($('#discounts-report-template').html());
+				$("#reports").empty().append( report({bookings : res.data.report}) );
+				createDataTable();
+			});
+			break;
 	}
 
 }

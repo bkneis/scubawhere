@@ -107,6 +107,7 @@ class ReportController extends Controller {
 		}
 
 		$report = $this->report_service->generate('cancellations', $before, $after);
+
 		return Response::json(array(
 			'status' => 'Success. Report created',
 			'data'   => array('report' => $report)
@@ -125,6 +126,7 @@ class ReportController extends Controller {
 		}
 
 		$report = $this->report_service->generate('discounts', $before, $after);
+
 		return Response::json(array(
 			'status' => 'Success. Report created',
 			'data'   => array('report' => $report)

@@ -1484,3 +1484,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* center the datatbles content */
 th.dt-center, td.dt-center { text-align: center; }
+
+.dt-buttons {
+    padding-bottom: 5px;
+}

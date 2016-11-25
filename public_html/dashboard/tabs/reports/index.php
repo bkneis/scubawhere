@@ -14,7 +14,7 @@
 						<button type="button" data-report="class-utilisation" class="btn btn-default">Class Utilisation</button>
 						<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
 						<button type="button" data-report="cancellations" class="btn btn-default">Cancellations</button>
-						<button type="button" data-report="cancellations" class="btn btn-default">Discounts</button>
+						<button type="button" data-report="discounts" class="btn btn-default">Discounts</button>
 						<!--<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>-->
 					</div>
 				</div>
@@ -392,7 +392,7 @@
 						<td>{{created_at_local}}</td>
 						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
 						<td><a class="view-booking">{{reference}}</a></td>
-						<td>{{decimal_price}}</td>
+						<td>{{currency}} {{decimal_price}}</td>
 						<td>{{cancel_reason}}</td>
 						<td>{{cancelled_at}}</td>
 					</tr>
@@ -405,6 +405,40 @@
 		<div class="text-right" style="font-weight: bold;">
 			<p>&nbsp;</p>
 			<h4>Total cancellations : {{bookings.length}}</h4>
+		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="discounts-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>Date of Booking</th>
+				<th>Name</th>
+				<th>Reference</th>
+				<th>Amount Due</th>
+				<th>Discount</th>
+				<th>Reason</th>
+			</tr>
+			</thead>
+			<tbody>
+				{{#each bookings}}
+					<tr>
+						<td>{{created_at_local}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<td><a class="view-booking">{{reference}}</a></td>
+						<td>{{currency}} {{decimal_price}}</td>
+						<td>{{currency}} {{convertPrice discount}}</td>
+						<td>{{discount_reason}}</td>
+					</tr>
+				{{else}}
+					<tr><td colspan="6" class="text-center">There are no cancellations between these dates</td></tr>
+				{{/each}}
+			</tbody>
+
+		</table>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total discount bookings : {{bookings.length}}</h4>
 		</div>
 	</script>
 

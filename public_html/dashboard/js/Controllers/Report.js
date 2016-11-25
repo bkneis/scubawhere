@@ -94,7 +94,20 @@ var Report = {
 				var res = JSON.parse(xhr.responseText);
 				pageMssg(res.errors[0], 'danger');
 			}
-		})
+		});
+	},
+
+	getDiscounts : function (params, handleData) {
+		$.ajax({
+			url     : '/api/report/discounts',
+			data    : params,
+			success : handleData,
+			error   : function (xhr) {
+				console.log(xhr);
+				var res = JSON.parse(xhr.responseText);
+				pageMssg(res.errors[0], 'danger');
+			}
+		});
 	}
 
 };

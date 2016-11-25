@@ -2,6 +2,7 @@
 
 namespace Scubawhere\Services;
 
+use Scubawhere\Strategies\DiscountsReportGenerator;
 use Scubawhere\Strategies\SourcesReportGenerator;
 use Scubawhere\Strategies\RevenueReportGenerator;
 use Scubawhere\Strategies\UtilisationReportGenerator;
@@ -30,10 +31,10 @@ class ReportService {
 				$generator = new RevenueReportGenerator;
 				break;
 			case 'cancellations':
-				$generator = new CancellationsReportGenerator('cancellation');
+				$generator = new CancellationsReportGenerator;
 				break;
 			case 'discounts':
-				$generator = new CancellationsReportGenerator('discounts');
+				$generator = new DiscountsReportGenerator;
 				break;
 		}
 		return $generator->createReport($before, $after);
