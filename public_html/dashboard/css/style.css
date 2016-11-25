@@ -1474,3 +1474,9 @@ input[type=text] {
 input, textarea, select, table, thead, li {
     border-radius: 4px;
 }
+
+input.no-arrows[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

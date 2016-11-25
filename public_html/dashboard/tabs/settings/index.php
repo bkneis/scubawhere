@@ -111,7 +111,7 @@
 
 								<div class="form-row">
 									<label class="field-label">Business Email : </label>
-									<input type="text" name="business_email" value="{{business_email}}" class="form-control">
+									<input type="text" name="business_email" value="{{business_email}}" class="form-control" required>
 								</div>
 
 								<div id="legal-info" class="form-row">

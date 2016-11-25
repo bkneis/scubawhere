@@ -295,12 +295,14 @@
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Via</th>
+                <th>Ref</th>
               </tr>
               {{#each payments}}
               <tr>
                 <td>{{received_at}}</td>
                 <td>{{currency}} {{amount}}</td>
                 <td>{{paymentgateway.name}}</td>
+                <td>{{card_ref}}</td>
               </tr>
               {{/each}}
               {{#each refunds}}
@@ -308,6 +310,7 @@
                   <td>{{received_at}}</td>
                   <td class="text-danger">{{currency}} -{{amount}}</td>
                   <td>{{paymentgateway.name}} (refund)</td>
+                  <td>{{card_ref}}</td>
                 </tr>
                 {{/each}}
               <tr>

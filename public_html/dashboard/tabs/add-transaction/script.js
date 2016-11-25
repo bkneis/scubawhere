@@ -153,6 +153,14 @@ $(function() {
 		},
 	}); */
 
+	$('#wrapper').on('click', '.see-notes', function (event) {
+		event.preventDefault();
+		bootbox.alert({
+			title   : $(this).attr('data-type') + ' Notes',
+			message : $(this).attr('data-notes')
+		});
+	})
+
 	$('#wrapper').on('submit', '#add-payment-form', function(event) {
 		event.preventDefault();
 

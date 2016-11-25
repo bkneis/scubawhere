@@ -88,6 +88,9 @@ class PaymentController extends Controller
         // $data['received_at']       = Input::get('received_at');
         $data['received_at'] = Helper::localTime()->format('Y-m-d');
 
+        $data['card_ref'] = Input::get('card_ref');
+        $data['notes']    = Input::get('notes');
+
         // Check that received_at date lies in the past
         /* if(!Helper::isPast($data['received_at']))
             return Response::json( array('errors' => array('The received_at date must lie in the past.')), 406 ); // 406 Not Acceptable */

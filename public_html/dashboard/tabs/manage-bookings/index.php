@@ -269,6 +269,13 @@
 						</label>
 					</div>
 					<div class="form-group">
+						<label>
+							Cancellation Reason :
+						</label>
+						<textarea id="cancel_reason" style="width: 100%"></textarea>
+						<div class="clearfix"></div>
+					</div>
+					<div class="form-group">
 						<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
 						<button class="btn btn-primary pull-right cancel-booking">Cancel Booking</button>
 					</div>
@@ -315,12 +322,14 @@
 							<th>Date</th>
 							<th>Amount</th>
 							<th>Via</th>
+							<th>Ref</th>
 						</tr>
 						{{#each payments}}
 							<tr>
 								<td>{{received_at}}</td>
 								<td>{{currency}} {{amount}}</td>
 								<td>{{paymentgateway.name}}</td>
+								<td>{{card_ref}}</td>
 							</tr>
 						{{/each}}
 						{{#each refunds}}
@@ -328,6 +337,7 @@
 								<td>{{received_at}}</td>
 								<td class="text-danger">{{currency}} -{{amount}}</td>
 								<td>{{paymentgateway.name}} (refund)</td>
+								<td>{{card_ref}}</td>
 							</tr>
 						{{/each}}
 						<tr>

@@ -596,6 +596,8 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	}
 
 	params.cancellation_fee = cancellation_fee;
+	
+	params.cancel_reason = $('#cancel_reason').val();
 
 	// Cancel booking and reload list of bookings
 	Booking.cancel(params, function success(status) {

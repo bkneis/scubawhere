@@ -3,10 +3,10 @@
 namespace Scubawhere\Entities;
 
 use LaravelBook\Ardent\Ardent;
-use Scubawhere\Helper;
 
 class Refund extends Ardent {
-	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at');
+
+	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at', 'card_ref', 'notes');
 
 	public static $rules = array(
 		'amount'            => 'required|numeric|min:0.01',
