@@ -1,6 +1,7 @@
 // Check that the company has gone through the setup wizard
 if(window.company.initialised !== 1 && (!window.tourStart))
 {
+	window.skipSavedBooking = true;
 	window.location.href = '#dashboard';
 }
 
@@ -3245,6 +3246,7 @@ function addTransaction() {
 	}
 
 	window.clickedEdit = true;
+	window.skipSavedBooking = true;
 	window.location.hash = 'add-transaction';
 }
 

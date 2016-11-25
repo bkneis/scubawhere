@@ -8,7 +8,7 @@ $(window).on('hashchange', function(e) {
 		hashHistory.splice(0,hashHistory.length-2);
 	}
 	if(!window.skipSavedBooking) {
-		if(hashHistory[0] === '#add-booking') {
+		if(hashHistory[0] === '#add-booking' && window.booking.status !== 'temporary') {
 			bootbox.confirm({
 				title   : 'Save booking?',
 				message : 'Would you like to save that booking to return to later?',
@@ -29,6 +29,8 @@ $(window).on('hashchange', function(e) {
 				}
 			});
 		}
+	} else {
+		window.skipSavedBooking = false;
 	}
 	if(window.location.hash === '#add-booking') {
 		if(typeof window.booking !== 'undefined' && !(_.isEmpty(window.booking))) {
