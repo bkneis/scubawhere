@@ -9,10 +9,10 @@ class CrmGroup extends Ardent {
 
 	protected $fillable = array('name', 'description');
 
-	/*public static $rules = array(
+	public static $rules = array(
 		'name'        => 'required',
 		'description' => ''
-	);*/
+	);
 
 	public function beforeSave( $forced )
 	{

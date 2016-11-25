@@ -88,7 +88,8 @@ $(function() {
                 renderGroupEditForm();
             },
             function error(xhr) {
-                pageMssg(xhr.responseText);
+                var res = JSON.parse(xhr.responseText);
+                pageMssg(res.errors[0]);
                 console.log(xhr);
             });
     });
@@ -105,7 +106,8 @@ $(function() {
 			renderGroupList();
 		},
 		function error(xhr) {
-			pageMssg(xhr.responseText);
+            var res = JSON.parse(xhr.responseText);
+			pageMssg(res.errors[0]);
 			console.log(xhr);
 		});
     });
