@@ -23,6 +23,21 @@ Handlebars.registerHelper('getOutstanding', function(booking) {
     return parseFloat(price) - paid;
 });
 
+Handlebars.registerHelper('sourceString', function(source) {
+   switch(source) {
+       case('facetoface'):
+           return 'Walk in';
+       case('agent'):
+           return 'Agent booking';
+       case('phone'):
+           return 'Phone booking';
+       case('email'):
+           return 'Email enquiry';
+       default:
+           return '';
+   }
+});
+
 /**
  * The root vue instance for the availability tab
  *
@@ -95,6 +110,15 @@ new Vue({
                 date.setMonth(date.getMonth() + x);
                 self.date = moment(date.toString()).format('YYYY-MM-DD');
             }
+        });
+
+        $('#modalWindows').on('click', '.view-booking', function(event) {
+            // Load booking data and redirect to add-booking tab
+            Booking.getByRef($(this).html(), function success(object) {
+                window.booking      = object;
+                window.clickedEdit  = true;
+                window.location.hash = 'add-booking';
+            });
         });
     }
 

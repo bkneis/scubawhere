@@ -1,10 +1,10 @@
 <div id="wrapper" class="clearfix">
    <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-4">
          <div class="panel panel-default" id="calendar-filters">
             <div class="panel-heading">
                <h4 class="panel-title">Filters</h4>
-				<i class="fa fa-minus pull-right" data-toggle="collapse" data-target="#filters"></i>
+				<!--<i class="fa fa-minus pull-right" data-toggle="collapse" data-target="#filters"></i>-->
             </div>
             <div class="panel-body collapse in" id="filters">
                <div id="filter-types" class="btn-group" role="group">
@@ -90,9 +90,8 @@
          <!-- .panel -->
       </div>
       <!-- .col-md-4 -->
-   </div>
-	<div class="row">
-		<div class="col-md-12">
+
+		<div class="col-md-8">
 			<div id='calendar'></div>
 		</div>
    </div>
