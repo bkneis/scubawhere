@@ -20,6 +20,7 @@ class BookingController extends Controller
                 'agent',
                 'lead_customer',
                     'lead_customer.country',
+                'customers',
                 'bookingdetails',
                     'bookingdetails.customer',
                         'bookingdetails.customer.country',
