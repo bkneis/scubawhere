@@ -282,6 +282,13 @@ class Booking extends Ardent {
 		return $this->belongsToMany('\Scubawhere\Entities\Accommodation')->withPivot('customer_id', 'start', 'end', 'packagefacade_id')->withTimestamps();
 	}
 
+	/**
+	 * Get all the customer related to the booking
+	 *
+	 * @note should this filter out the lead_customer ?? Or maybe place a lead flag on the customer object
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
 	public function customers()
 	{
 		return $this->belongsToMany('\Scubawhere\Entities\Customer', 'booking_details')->withPivot('ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id')->withTimestamps();
