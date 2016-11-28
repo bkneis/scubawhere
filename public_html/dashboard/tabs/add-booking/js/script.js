@@ -3129,6 +3129,8 @@ $(document).ready(function() {
 					window.skipSavedBooking = true;
 					$(window).trigger('hashchange');
 				});
+			} else {
+				$(window).trigger('hashchange');
 			}
 
 		}, function error(xhr) {

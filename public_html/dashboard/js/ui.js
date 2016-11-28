@@ -8,7 +8,7 @@ $(window).on('hashchange', function(e) {
 		hashHistory.splice(0,hashHistory.length-2);
 	}
 	if(!window.skipSavedBooking) {
-		if(hashHistory[0] === '#add-booking' && window.booking.status !== 'temporary') {
+		if(hashHistory[0] === '#add-booking' && !(_.isEmpty(window.booking))) {
 			bootbox.confirm({
 				title   : 'Save booking?',
 				message : 'Would you like to save that booking to return to later?',
@@ -34,17 +34,11 @@ $(window).on('hashchange', function(e) {
 	}
 	if(window.location.hash === '#add-booking') {
 		if(typeof window.booking !== 'undefined' && !(_.isEmpty(window.booking))) {
-			//window.booking.mode   = 'edit';
-			//window.booking.status = 'temporary';
-			//window.clickedEdit  = true;
 			Booking.startEditing(window.booking.id, function success(object) {
+				window.booking = object;
 				window.booking.mode   = 'edit';
 				window.booking.status = 'temporary';
 				window.clickedEdit  = true;
-			}, function error(xhr) {
-				var data = JSON.parse(xhr.responseText);
-				if(data.errors) pageMssg(data.errors[0]);
-				$('.loader').remove();
 			});
 		}
 	}

@@ -2082,9 +2082,18 @@ class BookingController extends Controller
         }
 
         // Check if a dublicate is already in the DB
-        if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {
+        $edited_booking = DB::table('bookings')
+            ->where('reference', $booking->reference.'_')
+            ->first();
+
+        //var_dump($edited_booking);
+        if(!is_null($edited_booking)) {
+            return Response::json($edited_booking);
+        }
+
+        /*if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {
             return Response::json(['errors' => ['This booking is already being edited. Cancel the edit and then try again.']], 412);
-        } // 412 Precondition Failed
+        } // 412 Precondition Failed*/
 
         // Dublicate bookings table entry to get new bookingID
         $old_booking = DB::table('bookings')->find($booking->id);
