@@ -80,7 +80,7 @@
 										{{#if bookingdetails}}
 											<tr>
 												<td class="title-dark">
-													 Trips & Classes
+													 Items Booked
 												</td>
 												<td class="title-dark" width="100"></td>
 												<td class="title-dark" width="100"></td>
