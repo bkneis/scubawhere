@@ -264,10 +264,10 @@ class TrainingSessionController extends Controller
     {
         $data = Input::only('start');
 
-        $isPast = Helper::isPast($data['start']);
+        /*$isPast = Helper::isPast($data['start']);
         if ($isPast) {
             return Response::json(array('errors' => array('Classes cannot be scheduled in the past.')), 403);
-        } // 403 Forbidden
+        } // 403 Forbidden*/
 
         try {
             if (!Input::has('training_id')) {
@@ -300,10 +300,10 @@ class TrainingSessionController extends Controller
             return Response::json(array('errors' => array('The class could not be found.')), 404); // 404 Not Found
         }
 
-        $isPast = Helper::isPast($training_session->start);
+        /*$isPast = Helper::isPast($training_session->start);
         if (!empty($training_session->deleted_at) || $isPast) {
             return Response::json(array('errors' => array('Past or deactivated classes cannot be updated.')), 412);
-        } // 412 Precondition Failed
+        } // 412 Precondition Failed */
 
         if (empty($training_session->schedule_id)) {
             if (Input::has('start')) {

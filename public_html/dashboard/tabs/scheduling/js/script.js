@@ -244,10 +244,10 @@ $(function() {
 		drop: function(date) { // This function is called when something is dropped
 
 			// Check if the dropped-on date is in the past
-			if( moment().startOf('day').diff(date) > 0 ) {
+			/*if( moment().startOf('day').diff(date) > 0 ) {
 				pageMssg('Sessions cannot be created in the past.', 'info');
 				return false;
-			}
+			}*/
 
 			// Retrieve the dropped element's stored Event Object
 			var originalEventObject = $(this).data('eventObject');
@@ -996,10 +996,12 @@ function showModalWindow(eventObject) {
 
 	// Check if session lies in the past
 	if(typeof eventObject.isPast === 'undefined')
-		if( (eventObject.isNew && moment().startOf('day').diff(eventObject.start) > 0) || (!eventObject.isNew && moment().diff(eventObject.start) > 0) )
+		/*if( (eventObject.isNew && moment().startOf('day').diff(eventObject.start) > 0) || (!eventObject.isNew && moment().diff(eventObject.start) > 0) )
 			eventObject.isPast = true;
 		else
-			eventObject.isPast = false;
+			eventObject.isPast = false;*/
+
+		eventObject.isPast = false;
 
 		$('#modalWindows')
 	.append( window.sw.sessionTemplate(eventObject) )        // Create the modal

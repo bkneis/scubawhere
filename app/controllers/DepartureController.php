@@ -428,9 +428,10 @@ class DepartureController extends Controller {
 	{
 		$data = Input::only('start', 'boat_id');
 
-		$isPast = Helper::isPast( $data['start'] );
+		/*$isPast = Helper::isPast( $data['start'] );
 		if( $isPast )
 			return Response::json( array('errors' => array('Trips cannot be scheduled in the past.')), 403 ); // 403 Forbidden
+		*/
 
 		try
 		{
@@ -529,9 +530,10 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = Helper::isPast( $departure->start );
+		/*$isPast = Helper::isPast( $departure->start );
 		if( !empty($departure->deleted_at) || $isPast )
 			return Response::json( array('errors' => array('Past or deactivated trips cannot be updated.')), 412 ); // 412 Precondition Failed
+		*/
 
 		if( empty($departure->timetable_id) )
 		{
