@@ -94,7 +94,7 @@
 										<i class="fa fa-exclamation-triangle fa-3x fa-fw pull-left"></i>
 										<p class="pull-left">
 											<strong>No trips available!</strong><br>
-											Please go to <a href="#trips">Trips (Open Water)</a> to define open water trips.
+											Please go to <a href="#trips">Trips</a> to define open water trips.
 										</p>
 									</div>
 								{{/each}}
