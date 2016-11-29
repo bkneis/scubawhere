@@ -92,6 +92,7 @@ $(function() {
                 left: 'basicDay basicWeek month',
                 center: 'title',
             },
+			defaultView : 'basicWeek',
             timezone: false,
             firstDay: 1, // Set Monday as the first day of the week
             events: function(start, end, timezone, callback) {
@@ -115,6 +116,10 @@ $(function() {
                 // Needed for trip names with special characters in it (like ó, à, etc.)
                 element.find('.fc-title').html(event.title);
             },
+			eventAfterRender : function(event, element) {
+				$(element).css('height', '25px');
+				$(element).css('text-align', 'center');
+			},
             editable: false,
             droppable: false, // This allows things to be dropped onto the calendar
             eventClick: function(eventObject) {
