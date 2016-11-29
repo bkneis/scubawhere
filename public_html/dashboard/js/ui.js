@@ -2,7 +2,7 @@ var LOADER = '<div class="loader" style="left: 50%; margin-left: -13px; margin-t
 
 var hashHistory = [];
 
-$(window).on('hashchange', function(e) {
+/*$(window).on('hashchange', function(e) {
 	hashHistory.push(window.location.hash);
 	if (hashHistory.length > 2) {
 		hashHistory.splice(0,hashHistory.length-2);
@@ -42,7 +42,7 @@ $(window).on('hashchange', function(e) {
 			});
 		}
 	}
-});
+});*/
 
 $(function(){
 
