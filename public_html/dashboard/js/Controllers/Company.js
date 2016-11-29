@@ -68,4 +68,27 @@ var Company = {
 			global: false
 		});
 	},
+
+	getUsers : function (successFn, errorFn) {
+		let successCallback,
+			errorCallback;
+		if (typeof successFn === 'function') {
+			successCallback = successFn;
+		} else {
+			successCallback = function (data) {
+				successFn = data;
+			};
+		}
+		if(typeof errorFn !== 'function') {
+			errorCallback = function (xhr) {
+				console.log(xhr);
+			};
+		}
+		$.ajax({
+			type    : 'GET',
+			url     : '/api/company/users',
+			success : successCallback,
+			error   : errorCallback
+		});
+	}
 };

@@ -21,8 +21,13 @@ App::before(function($request)
 
 Route::matched(function($route, $request)
 {
-	if(!Auth::guest())
-		ScubaWhere\Context::set(Auth::user()->company);
+	if(!Auth::guest()) {
+		\Scubawhere\Context::set(Auth::user()->getActiveCompany());
+	}
+	/*
+	 * if(!Auth::guest())
+		\Scubawhere\Context::set(Auth::user()->company);
+	 */
 });
 
 App::after(function($request, $response)
@@ -46,15 +51,22 @@ Route::filter('auth', function()
 	if (Auth::guest()) return Response::json( array('errors' => array('Authorisation required. Please log in.')), 401 ); // 401 Unauthorized
 });
 
+function authFilter() {
+	if (Auth::guest()) return Response::json( array('errors' => array('Authorisation required. Please log in.')), 401 ); // 401 Unauthorized
+}
 
 Route::filter('auth.basic', function()
 {
 	return Auth::basic('username');
 });
 
+function authBasicFilter() {
+	return Auth::basic('username');
+}
+
 Route::filter('auth.admin', function()
 {
-	if(\ScubaWhere\Context::get()->name !== 'admin') return Redirect::to('/');
+	if(\Scubawhere\Context::get()->name !== 'admin') return Redirect::to('/');
 });
 
 /*
@@ -93,5 +105,55 @@ Route::filter('csrf', function()
 		$message = 'The CSRF token is ' . (!Input::has('_token') ? 'missing' : 'not valid') . '!';
 
 		return Response::json(['errors' => ['TokenMismatchException: ' . $message]], 401); // 401 Unauthorized
+	}
+});
+
+function csrfFilter() {
+	if ( Request::method() === 'POST' && !Symfony\Component\Security\Core\Util\StringUtils::equals(Session::token(), Input::get('_token')) )
+	{
+		// throw new Illuminate\Session\TokenMismatchException;
+
+		$message = 'The CSRF token is ' . (!Input::has('_token') ? 'missing' : 'not valid') . '!';
+
+		return Response::json(['errors' => ['TokenMismatchException: ' . $message]], 401); // 401 Unauthorized
+	}
+}
+
+Route::filter('auth.token', function() {
+	$api_token = Request::header('api_token');
+	if(is_null($api_token)) {
+		return false;
+	}
+	$company = Company::where('api_token', $api_token)->first();
+	if(is_null($company)) {
+		return Response::json(['errors' => ['ApiNotValidException : The api_token is not valid in the request header']], 401);
+	}
+	Context::set($company);
+});
+
+function tokenFilter() {
+	$api_token = Request::header('api_token');
+	var_dump(Request::header());
+	if(is_null($api_token)) {
+		return false;
+	}
+	$company = Company::where('api_token', $api_token)->first();
+	if(is_null($company)) {
+		return Response::json(['errors' => ['ApiNotValidException : The api_token is not valid in the request header']], 401);
+	}
+	Context::set($company);
+}
+
+Route::filter('api-web-auth', function() {
+	$val = call_user_func('tokenFilter');
+	if ($val === false) {
+		$val = call_user_func('authFilter');
+		if($val) return $val;
+		$val = call_user_func('authBasicFilter');
+		if($val) return $val;
+		$val = call_user_func('csrfFilter');
+		if($val) return $val;
+	} elseif ($val) {
+		return $val;
 	}
 });

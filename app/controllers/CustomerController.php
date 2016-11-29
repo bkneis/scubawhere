@@ -1,6 +1,9 @@
 <?php
-use ScubaWhere\Context;
-use ScubaWhere\Services\ObjectStoreService;
+
+use Scubawhere\Context;
+use Scubawhere\Entities\Customer;
+use Scubawhere\Entities\CrmSubscription;
+use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller {
@@ -304,6 +307,8 @@ class CustomerController extends Controller {
 			}
 
 		}
+
+		//return Response::json($imported_customers, 200);
 
 		$this->object_store_service->uploadCustomerCSV($csv_path);
 

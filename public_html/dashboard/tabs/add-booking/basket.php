@@ -279,4 +279,13 @@
 		{{/notEmptyObj}}
 
 	</ul>
+
+	<div style="position: fixed; width: 25%; bottom: 0; padding-right: 40px;" class="row tab-nav">
+		<div class="col-xs-6">
+			<button class="btn btn-primary btn-prev"{{#compare mode 'view'}} disabled="disabled"{{/compare}}><li class="fa fa-angle-left"></li> Prev</button>
+		</div>
+		<div class="col-xs-6">
+			<button class="btn btn-primary btn-next pull-right">Next <li class="fa fa-angle-right"></li></button>
+		</div>
+	</div>
 </script>

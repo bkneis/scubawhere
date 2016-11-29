@@ -1,0 +1,19 @@
+<?php 
+
+namespace Scubawhere\Exceptions;
+
+use Scubawhere\Exceptions\BaseException;
+use Illuminate\Support\Facades\Request;
+
+class MethodNotSupportedException extends BaseException {
+
+	protected $errors;
+
+    public function __construct($errors) {
+        $this->errors = ['Uh oh, we apologise. It seems like their is a failure somewhere.'];
+    }
+
+    public function response() {
+        return \Response::json(array('errors' => $this->errors), 500); // 500 Server Error
+    }
+}

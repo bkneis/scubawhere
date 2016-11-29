@@ -128,6 +128,114 @@
 		</div>
 	</div>
 
+	<script type="text/x-handlebars-template" id="customer-invoice-template">
+		<div class="reveal-modal" id="modal-customer-invoice">
+			<!--<div class="modal-dialog">
+				<div class="modal-content">-->
+					<div class="modal-header">
+						<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+						<h4 class="modal-title">Customer Invoices for booking {{reference}}</h4>
+					</div>
+					<div class="modal-body">
+						<label for="customers"><strong>Customer</strong> : </label>
+						<select id="customers-list" name="customers" onchange="loadCustomerInvoice(this.value)"></select>
+						<div class="clearfix" style="padding-bottom: 20px"></div>
+						<div id="invoice-container"></div>
+					</div>
+				<!--</div>
+			</div>-->
+		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="invoice-template">
+		<table id="tbl-customer-invoice" class="bluethead">
+			<thead>
+			<tr class="bg-primary">
+				<th>Name</th>
+				<th>Cost</th>
+				<th>Total</th>
+			</tr>
+			</thead>
+				<tbody id="tbl-invoice">
+					{{#if tickets.length}}
+						<tr class="accordion-header">
+							<td><strong>Tickets</strong></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{{/if}}
+					{{#each tickets}}
+						<tr>
+							<td>{{name}}</td>
+							<td>{{prettyPrice price}}</td>
+							<td></td>
+						</tr>
+					{{/each}}
+					{{#if courses.length}}
+						<tr class="accordion-header">
+							<td><strong>Courses</strong></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{{/if}}
+					{{#each courses}}
+						<tr>
+							<td>{{name}}</td>
+							<td>{{prettyPrice price}}</td>
+							<td></td>
+						</tr>
+					{{/each}}
+					{{#if packages.length}}
+						<tr class="accordion-header">
+							<td><strong>Packages</strong></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{{/if}}
+					{{#each packages}}
+						<tr>
+							<td>{{name}}</td>
+							<td>{{prettyPrice price}}</td>
+							<td></td>
+						</tr>
+					{{/each}}
+					{{#if addons.length}}
+						<tr class="accordion-header">
+							<td><strong>Addons</strong></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{{/if}}
+					{{#each addons}}
+						<tr>
+							<td>{{name}}</td>
+							<td>{{prettyPrice price}}</td>
+							<td></td>
+						</tr>
+					{{/each}}
+					{{#if accommodations.length}}
+						<tr class="accordion-header">
+							<td><strong>Accommodations</strong></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{{/if}}
+					{{#each accommodations}}
+						<tr>
+							<td>{{name}}</td>
+							<td>{{prettyPrice price}}</td>
+							<td></td>
+						</tr>
+					{{/each}}
+					<tr class="accordion-header">
+						<td></td>
+						<td></td>
+						<td><strong>{{prettyPrice total}}</strong></td>
+					</tr>
+				</tbody>
+		</table>
+	</script>
+
 	<script type="text/x-handlebars-template" id="cancellation-fee-template">
 		<div id="modal-cancellation-fee" class="reveal-modal">
 			{{#compare status '!==' 'temporary'}}
@@ -159,6 +267,13 @@
 							<input type="radio" name="thisorthat" value="no" checked>
 							No cancellation fee
 						</label>
+					</div>
+					<div class="form-group">
+						<label>
+							Cancellation Reason :
+						</label>
+						<textarea id="cancel_reason" style="width: 100%"></textarea>
+						<div class="clearfix"></div>
 					</div>
 					<div class="form-group">
 						<a class="btn btn-default pull-left close-modal" title="Abort">Abort</a>
@@ -207,12 +322,14 @@
 							<th>Date</th>
 							<th>Amount</th>
 							<th>Via</th>
+							<th>Ref</th>
 						</tr>
 						{{#each payments}}
 							<tr>
 								<td>{{received_at}}</td>
 								<td>{{currency}} {{amount}}</td>
 								<td>{{paymentgateway.name}}</td>
+								<td>{{card_ref}}</td>
 							</tr>
 						{{/each}}
 						{{#each refunds}}
@@ -220,6 +337,7 @@
 								<td>{{received_at}}</td>
 								<td class="text-danger">{{currency}} -{{amount}}</td>
 								<td>{{paymentgateway.name}} (refund)</td>
+								<td>{{card_ref}}</td>
 							</tr>
 						{{/each}}
 						<tr>
@@ -237,6 +355,7 @@
 				{{addTransactionButton id}}
 				{{viewButton id}}
 				{{editButton id}}
+				{{invoiceButton id}}
 
 				<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
 			</div>

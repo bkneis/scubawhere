@@ -85,7 +85,11 @@ Handlebars.registerHelper('sourceName', function() {
 		case 'facetoface': return 'In Person';
 		default: return new Handlebars.SafeString('Agent - ' + this.agent.name);
 	}
-})
+});
+
+Handlebars.registerHelper('convertPrice', function (price) {
+	return new Handlebars.SafeString((price / 100).toFixed(2));
+});
 
 $(function() {
 
@@ -134,12 +138,26 @@ $(function() {
 		democolorID = 0;
 	});
 
+	$('#reports').on('click', '.view-booking', function() {
+		var booking_ref = $(this).html();
+		Booking.getByRef(booking_ref, function success(object) {
+				window.booking      = object;
+				// window.booking.mode = 'view'; // Should be default behavior
+				window.clickedEdit  = true;
+
+				window.location.hash = 'add-booking';
+			},
+			function(xhr) {
+				pageMssg('The booking cannot be viewed as it is already deleted');
+			});
+	});
+
 	getReport(report_type, createDataTable);
 
 });
 
 function getFileName() {
-	return report_type + ' report for ' + $('#start-date').val() + ' - ' + $('#end-date').val(); 	
+	return report_type + ' report for ' + $('#start-date').val() + ' - ' + $('#end-date').val();
 }
 
 function createDataTable() {
@@ -147,7 +165,44 @@ function createDataTable() {
 	// Check if table contains any data
 	if($('.reports-table tbody tr').first().children('td').length === 1) return false;
 
-	$('.reports-table').dataTable({
+	var tbl = $('.reports-table');
+
+	var settings = {
+		"pageLength": 10,
+		"dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
+		"buttons": [
+			{
+				extend : 'excel',
+				title  : getFileName()
+			},
+			{
+				extend : 'pdf',
+				title  : getFileName(),
+				orientation: 'landscape',
+				customize : function(doc) {
+					var colCount = new Array();
+					$(tbl).find('tbody tr:first-child td').each(function () {
+						if ($(this).attr('colspan')) {
+							for (var i=1;i<=$(this).attr('colspan');$i++) {
+								colCount.push('*');
+							}
+						} else {
+							colCount.push('*');
+						}
+					});
+					doc.content[1].table.widths = colCount;
+				}
+			},
+			{
+				extend : 'print',
+				title  : getFileName()
+			}
+		]
+	};
+
+	tbl.dataTable(settings);
+
+	/*$('.reports-table').dataTable({
         "pageLength": 10,
 		"dom": 'Bfrtlp',
 		"buttons": [
@@ -157,14 +212,15 @@ function createDataTable() {
 			},
 			{
 				extend : 'pdf',
-				title  : getFileName()
+				title  : getFileName(),
+				orientation: 'landscape'
 			},
 			{
 				extend : 'print',
 				title  : getFileName()
 			}
 		]
-	});
+	});*/
 }
 
 function getDates() {
@@ -460,7 +516,23 @@ function getReport(reportType, callback) {
 
 			break;
 
+		case('cancellations'):
+			$("#report-title").empty().append("Cancellations Report");
+			Report.getCancellations(dates, function (res) {
+				report = Handlebars.compile($('#cancellations-report-template').html());
+				$("#reports").empty().append( report({bookings : res.data.report}) );
+				createDataTable();
+			});
+			break;
 
+		case('discounts'):
+			$("#report-title").empty().append("Discounts Report");
+			Report.getDiscounts(dates, function (res) {
+				report = Handlebars.compile($('#discounts-report-template').html());
+				$("#reports").empty().append( report({bookings : res.data.report}) );
+				createDataTable();
+			});
+			break;
 	}
 
 }

@@ -1,9 +1,11 @@
 <?php
 
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Payment;
+use Scubawhere\Entities\Paymentgateway;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
 
 class PaymentController extends Controller
 {
@@ -85,6 +87,9 @@ class PaymentController extends Controller
         $data['paymentgateway_id'] = Input::get('paymentgateway_id');
         // $data['received_at']       = Input::get('received_at');
         $data['received_at'] = Helper::localTime()->format('Y-m-d');
+
+        $data['card_ref'] = Input::get('card_ref');
+        $data['notes']    = Input::get('notes');
 
         // Check that received_at date lies in the past
         /* if(!Helper::isPast($data['received_at']))

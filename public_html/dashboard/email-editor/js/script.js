@@ -188,6 +188,21 @@ $(function () {
 
     showTemplates();
 
+    $('.remove-template').on('click', function () {
+        if(template_id !== undefined) {
+            Campaign.deleteTemplate(template_id, function (res) {
+                pageMssg('Success. Your template has been deleted', 'success');
+                showTemplates();
+                email_preview_frame.contentWindow.document.open();
+                email_preview_frame.contentWindow.document.write('');
+                email_preview_frame.contentWindow.document.close();
+            },
+            function (xhr) {
+                pageMssg('Oh oh. For some reason we cannot fufill your request right now. Please try again later.', 'danger');
+            });
+        }
+    });
+
 });
 
 function sendCampaign(params)

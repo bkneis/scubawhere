@@ -1,6 +1,54 @@
 var LOADER = '<div class="loader" style="left: 50%; margin-left: -13px; margin-top: 10em;"></div>';
 
+var hashHistory = [];
+
+$(window).on('hashchange', function(e) {
+	hashHistory.push(window.location.hash);
+	if (hashHistory.length > 2) {
+		hashHistory.splice(0,hashHistory.length-2);
+	}
+	if(!window.skipSavedBooking) {
+		if(hashHistory[0] === '#add-booking' && !(_.isEmpty(window.booking))) {
+			bootbox.confirm({
+				title   : 'Save booking?',
+				message : 'Would you like to save that booking to return to later?',
+				buttons : {
+					cancel : {
+						label : 'No',
+						class : 'btn-danger'
+					},
+					confirm : {
+						label : 'Yes',
+						class : 'btn-success'
+					}
+				},
+				callback : function (result) {
+					if(!result) {
+						window.booking = {};
+					}
+				}
+			});
+		}
+	} else {
+		window.skipSavedBooking = false;
+	}
+	if(window.location.hash === '#add-booking') {
+		if(typeof window.booking !== 'undefined' && !(_.isEmpty(window.booking))) {
+			Booking.startEditing(window.booking.id, function success(object) {
+				window.booking = object;
+				window.booking.mode   = 'edit';
+				window.booking.status = 'temporary';
+				window.clickedEdit  = true;
+			});
+		}
+	}
+});
+
 $(function(){
+
+	if(!(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))){
+		pageMssg('Our system detects that you are not using google chrome. So that we can give you the best experience possible, please download the latest google chrome :)', 'warning', true);
+	}
 
 	//click function used for in tab switch
 	//content is loaded into section

@@ -144,9 +144,10 @@ $(function() {
 	--------------------------*/
 	$('#calendar').fullCalendar({
 		header: {
-			left: '',
+            left: 'basicDay basicWeek month',
 			center: 'title',
 		},
+		defaultView : 'basicWeek',
 		timezone: false,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
@@ -233,6 +234,10 @@ $(function() {
 			// Intercept the event rendering to inject the non-html-escaped version of the title
 			// Needed for trip names with special characters in it (like ó, à, etc.)
 			element.find('.fc-title').html(event.title);
+		},
+		eventAfterRender : function(event, element) {
+			$(element).css('height', '25px');
+			$(element).css('text-align', 'center');
 		},
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
@@ -910,6 +915,27 @@ else {
 		else $('#trip-class-list').html(tripsTemplate({trips: window.trips}));
 		initDraggables();
 	});
+
+	$("#jump-to-date").on('change', '#jump-date', function(event) {
+		event.preventDefault();
+		var date = $("#jump-date").val();
+		var jumpDate = $.fullCalendar.moment(date);
+		$("#calendar").fullCalendar('gotoDate', jumpDate);
+		$("#remove-jump").css('display', 'inline');
+	});
+
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up: 'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		},
+		clearBtn: true
+	});
+
 });
 
 function createCalendarEntry(eventObject) {

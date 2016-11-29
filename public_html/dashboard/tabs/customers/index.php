@@ -89,6 +89,7 @@
 	<div id="modalWindows" style="height: 0;"></div>
 
 	<script id="countries-template" type="text/x-handlebars-template">
+		<option value="">Choose country...</option>
 		{{#each countries}}
 			<option value="{{id}}">{{{name}}}</option>
 		{{/each}}
@@ -415,11 +416,11 @@
 	</div>
 	<div class="form-group">
 		<div class="col-md-6">
-			<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
+			<label for="email" class="control-label">Email</label>
 			<input id="customer-email" name="email" class="form-control" placeholder="@" value="{{{email}}}">
 		</div>
 		<div class="col-sm-6">
-			<label for="phone" class="control-label">Phone <span class="text-danger">*</span></label>
+			<label for="phone" class="control-label">Phone</label>
 			<input type="text" name="phone" class="form-control" placeholder="02071234567" value="{{{phone}}}">
 		</div>
 	</div>

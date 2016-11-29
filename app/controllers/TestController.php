@@ -1,6 +1,6 @@
 <?php
 
-use ScubaWhere\Context;
+use Scubawhere\Context;
 
 class TestController extends Controller
 {

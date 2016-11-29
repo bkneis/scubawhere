@@ -1,6 +1,7 @@
 // Check that the company has gone through the setup wizard
 if(window.company.initialised !== 1 && (!window.tourStart))
 {
+	window.skipSavedBooking = true;
 	window.location.href = '#dashboard';
 }
 
@@ -780,9 +781,9 @@ var selectedCustomerTemplate          = Handlebars.compile($("#selected-customer
 var editCustomerTemplate              = Handlebars.compile($("#edit-customer-template").html());
 var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 
-$('[data-target="#customer-tab"]').on('show.bs.tab', function (e) {
+/*$('[data-target="#customer-tab"]').on('show.bs.tab', function (e) {
 	$("#add-customer-countries").find('#country_id').select2("val", company.country_id);
-});
+});*/
 
 $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(function() {
 	$('#customer-tab').on('change', '#existing-customers', function() {
@@ -868,9 +869,9 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	if( window.customers[id].country_id ) {
 		$('#edit-customer-countries').find('#country_id').select2("val", window.customers[id].country_id);
 	}
-	else {
+	/*else {
 		$('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
-	}
+	}*/
 
 	$('#edit-customer-agencies').find('#selected-certificates').empty();
 
@@ -897,6 +898,16 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 
 	// Set the last_dive date
 	$('#edit-customer-modal').find('.last_dive').val(window.customers[id].last_dive);
+});
+
+$('#new-customer').on('click', '.add-dummy-email', function() {
+	console.log('click');
+	$('#customer-email.form-email').val('spam@scubawhere.com');
+});
+
+$('#edit-customer-modal').on('click', '.add-dummy-email', function() {
+	console.log('click');
+	$('#customer-email.template-email').val('spam@scubawhere.com');
 });
 
 $('#booking-summary-column').on('click', '.remove-customer', function() {
@@ -1088,7 +1099,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
 	}
-	if(!booking.lead_customer.phone) {
+	/*if(!booking.lead_customer.phone) {
 		pageMssg("The lead customer requires a phone number!", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
@@ -1097,7 +1108,7 @@ $('[data-target="#session-tab"]').on('show.bs.tab', function (e) {
 		pageMssg("The lead customer requires a country!", "danger");
 		$('[data-target="#session-tab"]').data('validated', false);
 		return false;
-	}
+	}*/
 });
 
 /*
@@ -3077,6 +3088,8 @@ $(document).ready(function() {
 				// Remove local data
 				booking.clearStorage();
 
+				window.skipSavedBooking = true;
+
 				window.location.hash = '#manage-bookings';
 			}, function error(xhr) {
 				var data = JSON.parse(xhr.responseText);
@@ -3107,13 +3120,17 @@ $(document).ready(function() {
 			{
 				booking.resendConfirmation(function success(data) {
 					pageMssg(data.status, 'success');
+					window.skipSavedBooking = true;
 					$(window).trigger('hashchange');
 				},
 				function error(xhr) {
 					var data = JSON.parse(xhr.responseText);
 					pageMssg(data.errors[0], 'danger');
+					window.skipSavedBooking = true;
 					$(window).trigger('hashchange');
 				});
+			} else {
+				$(window).trigger('hashchange');
 			}
 
 		}, function error(xhr) {
@@ -3231,6 +3248,7 @@ function addTransaction() {
 	}
 
 	window.clickedEdit = true;
+	window.skipSavedBooking = true;
 	window.location.hash = 'add-transaction';
 }
 

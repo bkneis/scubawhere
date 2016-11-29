@@ -1,7 +1,7 @@
 <?php
 // use Illuminate\Database\Eloquent\ModelNotFoundException;
-// use ScubaWhere\Helper;
-use ScubaWhere\Context;
+// use Scubawhere\Helper;
+use Scubawhere\Context;
 
 class SearchController extends Controller {
 

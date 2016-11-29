@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="accommodation-list-template">
 						<ul id="accommodation-list" class="entity-list">
 							{{#each accommodations}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{capacity}} | {{pricerange base_prices prices}}</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices prices}}</li>
 							{{else}}
 								<p id="no-accommodations">No accommodations available.</p>
 							{{/each}}
@@ -45,11 +45,11 @@
 							</div>
 
 							<div class="form-row" id="acom-base">
-								<p><strong>Set base prices for this accommodation:</strong></p>
+								<p><strong>Price per night :</strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								<button id="add-base-price" class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>
+								{{!--<button id="add-base-price" class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>--}}
 							</div>
 
 							<div class="form-row" id="acom-season">
@@ -70,10 +70,12 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="acom-rooms">
+							{{!--<div class="form-row" id="acom-rooms">
 								<label for="capacity" class="field-label">Number of Rooms : </label>
 								<input id="room-amount" type="number" name="capacity" value="{{capacity}}" style="width: 55px;" min="1" step="1">
-							</div>
+							</div>--}}
+
+							<input type="hidden" name="capacity" value="1">
 
 							{{#if update}}
 								<input type="hidden" name="id" value="{{id}}">
@@ -132,7 +134,7 @@
 			<strong>There are a few problems with the form:</strong>
 			<ul>
 				{{#each errors}}
-					<li>{{this}}</li>
+					<li>{{{this}}}</li>
 				{{/each}}
 			</ul>
 		</div>

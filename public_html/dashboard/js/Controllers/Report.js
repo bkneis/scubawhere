@@ -70,7 +70,7 @@ var Report = {
 
 	getPickupSchedule : function(params, handleData) {
 		$.ajax({
-			url: 'api/company/pick-up-schedule',
+			url: '/api/company/pick-up-schedule',
 			data: params,
 			success: handleData
 		});
@@ -78,9 +78,35 @@ var Report = {
 
 	getTicketsPackages : function(params, handleData) {
 		$.ajax({
-			url: 'api/report/revenue-streams',
-			data: params,
-			success: handleData
+			url     : '/api/report/revenue-streams',
+			data    : params,
+			success : handleData
+		});
+	},
+
+	getCancellations : function (params, handleData) {
+		$.ajax({
+			url     : '/api/report/cancellations',
+			data    : params,
+			success : handleData,
+			error   : function (xhr) {
+				console.log(xhr);
+				var res = JSON.parse(xhr.responseText);
+				pageMssg(res.errors[0], 'danger');
+			}
+		});
+	},
+
+	getDiscounts : function (params, handleData) {
+		$.ajax({
+			url     : '/api/report/discounts',
+			data    : params,
+			success : handleData,
+			error   : function (xhr) {
+				console.log(xhr);
+				var res = JSON.parse(xhr.responseText);
+				pageMssg(res.errors[0], 'danger');
+			}
 		});
 	}
 

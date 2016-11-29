@@ -1,8 +1,9 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Scubawhere\Context;
+use Scubawhere\Entities\CrmGroup;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CrmGroupController extends Controller 
 {

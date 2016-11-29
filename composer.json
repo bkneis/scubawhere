@@ -15,27 +15,22 @@
 		"backup-manager/laravel": "^1.0",
 		"maknz/slack": "^1.7",
 		"aws/aws-sdk-php": "2.*",
-		"maknz/slack-laravel": "^1.0"
+		"maknz/slack-laravel": "^1.0",
+		"WebChemistry/Invoice": "^1.1"
 	},
 	"autoload": {
 		"classmap": [
 			"app/commands",
 			"app/controllers",
-			"app/models",
-			"app/models/entities",
-			"app/models/exceptions",
-			"app/models/repositories",
-			"app/models/repositories/interfaces",
-			"app/models/repositories/crm",
-			"app/models/repositories/crm/interfaces",
-			"app/models/services",
-			"app/models/services/crm",
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
 			"app/tests/",
-			"app/lib"
-		]
+			"app/Scubawhere/Providers"
+		],
+		"psr-4": {
+			"Scubawhere\\": "app/Scubawhere"
+		}
 	},
 	"scripts": {
 		"post-install-cmd": [

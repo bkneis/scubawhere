@@ -1,5 +1,6 @@
 <?php
 
+use Scubawhere\Entities\Country;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CountryController extends Controller

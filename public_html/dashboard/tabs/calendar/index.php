@@ -4,8 +4,9 @@
          <div class="panel panel-default" id="calendar-filters">
             <div class="panel-heading">
                <h4 class="panel-title">Filters</h4>
+				<!--<i class="fa fa-minus pull-right" data-toggle="collapse" data-target="#filters"></i>-->
             </div>
-            <div class="panel-body" id="filters">
+            <div class="panel-body collapse in" id="filters">
                <div id="filter-types" class="btn-group" role="group">
                   <button id="filter-all"            display="all"            type="button" class="btn btn-default filter-type">All</button>
                   <button id="filter-trips"          display="trips"          type="button" class="btn btn-default filter-type btn-primary">Trips</button>
@@ -89,9 +90,10 @@
          <!-- .panel -->
       </div>
       <!-- .col-md-4 -->
-      <div class="col-md-8">
-         <div id='calendar'></div>
-      </div>
+
+		<div class="col-md-8">
+			<div id='calendar'></div>
+		</div>
    </div>
    <!-- .row -->
    <div id="modalWindows" style="height: 0;">
@@ -162,6 +164,10 @@
          							{{/unless}}
          					</td>
          			</tr>
+					<tr>
+						<td><strong>Customer Information</strong></td>
+						<td><a class="close-modal" title="Abort" onclick="showModalWindowManifest({{accommodation_id}}, 'accommodation', '{{convertDate start}}')">View manifest</a></td>
+					</tr>
          	</table>
          	<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
          </div>
@@ -244,6 +250,26 @@
          		<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
          </div>
       </script>
+	   <script type="text/x-handlebars-template" id="accommodation-manifest-template">
+		   <div id="modal-{{accommodation.id}}-{{jFriendly accommodation.date}}" class="reveal-modal xxlarge">
+			   <h3>{{{accommodation.name}}} - Accommodation Manifest</h3>
+			   <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
+				   <thead>
+				   <tr>
+					   <th style="color:#313131">Booking Ref</th>
+					   <th style="color:#313131; width:15%;">Payments made</th>
+					   <th style="color:#313131">Name</th>
+					   <th style="color:#313131"><span style="display: none;">Country</span></th>
+					   <th style="color:#313131">Phone</th>
+					   <th style="color:#313131">Notes</th>
+				   </tr>
+				   </thead>
+				   <tbody id="customers-table">
+				   </tbody>
+			   </table>
+			   <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+		   </div>
+	   </script>
       <script type="text/x-handlebars-template" id="customer-rows-template">
          {{#each customers}}
          	<tr>

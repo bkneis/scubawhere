@@ -5,14 +5,18 @@
 				<h4 id="report-title" class="panel-title">Transactions Report</h4>
 			</div>
 			<div class="panel-body">
-				<div id="report-type-btns" class="btn-group col-md-offset-1" role="group">
-					<button type="button" data-report="transactions" class="btn btn-default btn-primary">Transactions</button>
-					<button type="button" data-report="agents" class="btn btn-default">Agents</button>
-					<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
-					<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
-					<button type="button" data-report="class-utilisation" class="btn btn-default">Class Utilisation</button>
-					<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
-					<!--<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>-->
+				<div class="text-center">
+					<div id="report-type-btns" class="btn-group" role="group">
+						<button type="button" data-report="transactions" class="btn btn-default btn-primary">Transactions</button>
+						<button type="button" data-report="agents" class="btn btn-default">Agents</button>
+						<button type="button" data-report="booking-history" class="btn btn-default">Booking History</button>
+						<button type="button" data-report="utilisation" class="btn btn-default">Trip Utilisation</button>
+						<button type="button" data-report="class-utilisation" class="btn btn-default">Class Utilisation</button>
+						<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
+						<button type="button" data-report="cancellations" class="btn btn-default">Cancellations</button>
+						<button type="button" data-report="discounts" class="btn btn-default">Discounts</button>
+						<!--<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>-->
+					</div>
 				</div>
 
 				<div style="margin-top:20px"></div>
@@ -31,7 +35,7 @@
 						</div>
 					</div>
 					<div class="col-xs-6">
-						<div id="report-filters" class="pull-right"></div>
+						<div id="report-filters"></div>
 					</div>
 				</div>
 
@@ -42,212 +46,216 @@
 		</div>
 	</div>
 
-<script type="text/x-handlebars-template" id="transactions-report-template">
-	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th>Name</th>
-				<th>Reference</th>
-				<th>Type</th>
-				<th>Amount</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each entries.transactions}}
-				<tr{{#if refund}} style="color: red;"{{/if}}>
-					<td>{{received_at}}</td>
-					<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
-					<td>{{booking.reference}}</td>
-					<td>{{paymentgateway.name}}{{#if refund}} REFUND{{/if}}</td>
-					<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
-				</tr>
-			{{else}}
-				<tr><td colspan="5" class="text-center">There are no transactions between these dates</td></tr>
-			{{/each}}
-		</tbody>
-
-	</table>
-	<table id="transactions-summary">
-		<thead style="font-weight: bold;">
-			<tr>
-				<td></td>
-				<td></td>
-				<td class="pull-right" id="transactions-date-range">Revenue breakdown </td>
-				<td id="transactions-cash">
-					Cash
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-cash-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalCash" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td id="transactions-credit">
-					Credit card
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-credit-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalCredit" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td id="transactions-cheque">
-					Cheques
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-cheque-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalCheque" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td id="transactions-bank">
-					Bank
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-bank-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalBank" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td id="transactions-online">
-					Online
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-online-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalOnline" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td id="transactions-paypal">
-					Paypal
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div id="transactions-paypal-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
-						<span id="transactions-totalPaypal" class="percentage-left"></span>
-					</div>
-				</td>
-			</tr>
-		</thead>
-	</table>
-	<div class="text-right" style="font-weight: bold;">
-		<p>&nbsp;</p>
-		<h4>Total Revenue: {{currency}} {{entries.totalRevenue}}</h4>
-	</div>
-</script>
-<script type="text/x-handlebars-template" id="agents-report-template">
-	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th>Name</th>
-				<th>Reference</th>
-				<th>Agent Name</th>
-				<th>Agent Ref</th>
-				<th>Commission</th>
-				<th>Net</th>
-				<th>Gross</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each entries.bookings}}
+	<script type="text/x-handlebars-template" id="transactions-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
 				<tr>
-					<td>{{getDate created_at_local}}</td>
-					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-					<td>{{reference}}</td>
-					<td>{{{agent.name}}}</td>
-					<td>{{agent_reference}}</td>
-					<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>
-					<td>{{currency}} {{getNetAmount}}</td>
-					<td>{{currency}} {{decimal_price}}</td>
+					<th>Date</th>
+					<th>Name</th>
+					<th>Reference</th>
+					<th>Type</th>
+					<th>Amount</th>
+					<th>Card Ref</th>
+					<th>Notes</th>
 				</tr>
-			{{else}}
-				<tr><td colspan="8" class="text-center">There are no agent bookings between these dates</td></tr>
-			{{/each}}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{{#each entries.transactions}}
+					<tr{{#if refund}} style="color: red;"{{/if}}>
+						<td>{{received_at}}</td>
+						<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
+						<td><a class="view-booking">{{booking.reference}}</a></td>
+						<td>{{paymentgateway.name}}{{#if refund}} REFUND{{/if}}</td>
+						<td>{{#if refund}}- {{/if}}{{currency.symbol}} {{amount}}</td>
+						<td>{{card_ref}}</td>
+						<td>{{notes}}</td>
+					</tr>
+				{{else}}
+					<tr><td colspan="5" class="text-center">There are no transactions between these dates</td></tr>
+				{{/each}}
+			</tbody>
 
-	<div class="text-right" style="font-weight: bold;">
-		<p>&nbsp;</p>
-		<h4>Total Commission: {{currency}} {{entries.totals.commission}}</h4>
-		<h4>Total Net Revenue: {{currency}} {{entries.totals.revenue}}</h4>
-		<h4>Total Gross Revenue: {{currency}} {{getGrossAmount entries.totals.revenue entries.totals.commission}}</h4>
-		<h4>Total Invoicable: {{currency}} {{entries.totals.invoicable}}</h4>
-	</div>
-</script>
-<script type="text/x-handlebars-template" id="booking-history-report-template">
-	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th style="color:#313131">Date</th>
-				<th style="color:#313131">Name</th>
-				<th style="color:#313131">Reference</th>
-				<th style="color:#313131">Source</th>
-				<th style="color:#313131">Country</th>
-				<th style="color:#313131">Net Revenue</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each entries.bookings}}
+		</table>
+		<table id="transactions-summary">
+			<thead style="font-weight: bold;">
 				<tr>
-					<td>{{getDate created_at_local}}</td>
-					<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-					<td>{{reference}}</td>
-					<td>{{sourceName}}</td>
-					<td>{{getCountry lead_customer.country_id}}</td>
-					<td>{{currency}} {{#if agent}}{{getNetAmount}}{{else}}{{decimal_price}}{{/if}}</td>
+					<td></td>
+					<td></td>
+					<td class="pull-right" id="transactions-date-range">Revenue breakdown </td>
+					<td id="transactions-cash">
+						Cash
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-cash-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalCash" class="percentage-left"></span>
+						</div>
+					</td>
 				</tr>
-			{{else}}
-				<tr><td colspan="6" class="text-center">There are no bookings between these dates</td></tr>
-			{{/each}}
-		</tbody>
-	</table>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td id="transactions-credit">
+						Credit card
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-credit-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalCredit" class="percentage-left"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td id="transactions-cheque">
+						Cheques
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-cheque-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalCheque" class="percentage-left"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td id="transactions-bank">
+						Bank
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-bank-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalBank" class="percentage-left"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td id="transactions-online">
+						Online
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-online-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalOnline" class="percentage-left"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td id="transactions-paypal">
+						Paypal
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div id="transactions-paypal-percentage" class="percentage-bar" style="background-color: #5cb85c;">&nbsp;</div>
+							<span id="transactions-totalPaypal" class="percentage-left"></span>
+						</div>
+					</td>
+				</tr>
+			</thead>
+		</table>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total Revenue: {{currency}} {{entries.totalRevenue}}</h4>
+		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="agents-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Name</th>
+					<th>Reference</th>
+					<th>Agent Name</th>
+					<th>Agent Ref</th>
+					<th>Commission</th>
+					<th>Net</th>
+					<th>Gross</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each entries.bookings}}
+					<tr>
+						<td>{{getDate created_at_local}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<a class="view-booking">{{reference}}</a>
+						<td>{{{agent.name}}}</td>
+						<td>{{agent_reference}}</td>
+						<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>
+						<td>{{currency}} {{getNetAmount}}</td>
+						<td>{{currency}} {{decimal_price}}</td>
+					</tr>
+				{{else}}
+					<tr><td colspan="8" class="text-center">There are no agent bookings between these dates</td></tr>
+				{{/each}}
+			</tbody>
+		</table>
 
-	<div class="text-right" style="font-weight: bold;">
-		<p>&nbsp;</p>
-		<h4>Total Revenue: {{currency}} {{entries.totals.revenue}}</h4>
-	</div>
-</script>
-<script type="text/x-handlebars-template" id="utilisation-report-template">
-	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th style="color:#313131; width: 100px">Date</th>
-				<th style="color:#313131; width: 250px">Trip name</th>
-				<th style="color:#313131">Utilisation</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each entries.utilisation}}
-			<tr>
-				<td>{{getDate date}}</td>
-				<td>{{{name}}}</td>
-				<td>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total Commission: {{currency}} {{entries.totals.commission}}</h4>
+			<h4>Total Net Revenue: {{currency}} {{entries.totals.revenue}}</h4>
+			<h4>Total Gross Revenue: {{currency}} {{getGrossAmount entries.totals.revenue entries.totals.commission}}</h4>
+			<h4>Total Invoicable: {{currency}} {{entries.totals.invoicable}}</h4>
+		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="booking-history-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th style="color:#313131">Date</th>
+					<th style="color:#313131">Name</th>
+					<th style="color:#313131">Reference</th>
+					<th style="color:#313131">Source</th>
+					<th style="color:#313131">Country</th>
+					<th style="color:#313131">Net Revenue</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each entries.bookings}}
+					<tr>
+						<td>{{getDate created_at_local}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<td>{{reference}}</td>
+						<td>{{sourceName}}</td>
+						<td>{{getCountry lead_customer.country_id}}</td>
+						<td>{{currency}} {{#if agent}}{{getNetAmount}}{{else}}{{decimal_price}}{{/if}}</td>
+					</tr>
+				{{else}}
+					<tr><td colspan="6" class="text-center">There are no bookings between these dates</td></tr>
+				{{/each}}
+			</tbody>
+		</table>
 
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{assigned}}</div>
-						<span class="percentage-left">{{capacity}}</span>
-					</div>
-				</td>
-			</tr>
-			{{else}}
-			<tr><td colspan="3" class="text-center">There are no trips between these dates</td></tr>
-			{{/each}}
-		</tbody>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total Revenue: {{currency}} {{entries.totals.revenue}}</h4>
+		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="utilisation-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th style="color:#313131; width: 100px">Date</th>
+					<th style="color:#313131; width: 250px">Trip name</th>
+					<th style="color:#313131">Utilisation</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each entries.utilisation}}
+				<tr>
+					<td>{{getDate date}}</td>
+					<td>{{{name}}}</td>
+					<td>
+
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{assigned}}</div>
+							<span class="percentage-left">{{capacity}}</span>
+						</div>
+					</td>
+				</tr>
+				{{else}}
+				<tr><td colspan="3" class="text-center">There are no trips between these dates</td></tr>
+				{{/each}}
+			</tbody>
 		</table>
 		<table id="utilisation-summary">
 			<thead style="font-weight: bold;">
@@ -259,34 +267,35 @@
 							<span id="utilisation-total-capacity" class="percentage-left">{{entries.utilisation_total.capacity}}</span>
 						</div>
 					</td>
-				</thead>
-			</table>
+				</tr>
+			</thead>
+		</table>
 	</script>
 	<script type="text/x-handlebars-template" id="class-utilisation-report-template">
-	<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th style="color:#313131; width: 100px">Date</th>
-				<th style="color:#313131; width: 250px">Class name</th>
-				<th style="color:#313131">Utilisation</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each entries.utilisation}}
-			<tr>
-				<td>{{getDate date}}</td>
-				<td>{{{name}}}</td>
-				<td>
-					<div style="width:100%" class="percentage-bar-container bg-success border-success">
-						<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{assigned}}</div>
-						<span class="percentage-left">{{capacity}}</span>
-					</div>
-				</td>
-			</tr>
-			{{else}}
-			<tr><td colspan="3" class="text-center">There are no classes between these dates</td></tr>
-			{{/each}}
-		</tbody>
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th style="color:#313131; width: 100px">Date</th>
+					<th style="color:#313131; width: 250px">Class name</th>
+					<th style="color:#313131">Utilisation</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each entries.utilisation}}
+				<tr>
+					<td>{{getDate date}}</td>
+					<td>{{{name}}}</td>
+					<td>
+						<div style="width:100%" class="percentage-bar-container bg-success border-success">
+							<div class="percentage-bar" style="background-color: #5cb85c; width: {{getUtil capacity assigned}}%;">{{assigned}}</div>
+							<span class="percentage-left">{{capacity}}</span>
+						</div>
+					</td>
+				</tr>
+				{{else}}
+				<tr><td colspan="3" class="text-center">There are no classes between these dates</td></tr>
+				{{/each}}
+			</tbody>
 		</table>
 		<table id="class-utilisation-summary">
 			<thead style="font-weight: bold;">
@@ -298,71 +307,141 @@
 							<span id="class-utilisation-total-capacity" class="percentage-left">{{entries.utilisation_total.capacity}}</span>
 						</div>
 					</td>
-				</thead>
-			</table>
+				</tr>
+			</thead>
+		</table>
 	</script>
 	<script type="text/x-handlebars-template" id="revenue-report-template">
-	<div class="col-md-6 text-center">
-		<canvas id="revenue-chart" width="400" height="400"></canvas>
-	</div>
-	<div class="col-md-6">
-		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
-			<thead>
-				<tr>
-					<th style="color:#313131">Revenue Name</th>
-					<th style="color:#313131">Color</th>
-					<th style="color:#313131; text-align:center;">No. Sold</th>
-					<th style="color:#313131; text-align:center;">Total</th>
-				</tr>
-			</thead>
-			<tbody>
-				{{#each entries.streams}}
-				<tr>
-					<td>{{{name}}}</td>
-					<td style="width:20px;" bgcolor="{{statColor}}"></td>
-					<td style="text-align:center;">{{quantity}}</td>
-					<td style="text-align:center;">{{currency}} {{revenue}}</td>
-				</tr>
-				{{else}}
-				<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
-				{{/each}}
-			</tbody>
-		</table>
-
-		<div class="alert alert-warning">
-			<h4><!--<i class="fa fa-exclamation-triangle fa-fw"></i> -->About these numbers</h4>
-			<p>The revenue analysis is a <em><strong>qualitative</strong></em> report. Due to discounts being applied and rounded at different times for this report than when calculating the total price for a booking, the individual revenue numbers shown here can slightly differ from your actual revenue.</p>
-			<p>For accounting, please refer to the <em>transactions</em>, <em>agents</em> or <em>booking history</em> reports.</p>
+		<div class="col-md-6 text-center">
+			<canvas id="revenue-chart" width="400" height="400"></canvas>
 		</div>
-	</div>
-</script>
-<script type="text/x-handlebars-template" id="demographics-report-template">
-	<div class="col-md-6 text-center">
-		<canvas id="demographics-chart" width="400" height="400"></canvas>
-	</div>
-	<div class="col-md-6">
+		<div class="col-md-6">
+			<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th style="color:#313131">Revenue Name</th>
+						<th style="color:#313131">Color</th>
+						<th style="color:#313131; text-align:center;">No. Sold</th>
+						<th style="color:#313131; text-align:center;">Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each entries.streams}}
+					<tr>
+						<td>{{{name}}}</td>
+						<td style="width:20px;" bgcolor="{{statColor}}"></td>
+						<td style="text-align:center;">{{quantity}}</td>
+						<td style="text-align:center;">{{currency}} {{revenue}}</td>
+					</tr>
+					{{else}}
+					<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
+					{{/each}}
+				</tbody>
+			</table>
+
+			<div class="alert alert-warning">
+				<h4><!--<i class="fa fa-exclamation-triangle fa-fw"></i> -->About these numbers</h4>
+				<p>The revenue analysis is a <em><strong>qualitative</strong></em> report. Due to discounts being applied and rounded at different times for this report than when calculating the total price for a booking, the individual revenue numbers shown here can slightly differ from your actual revenue.</p>
+				<p>For accounting, please refer to the <em>transactions</em>, <em>agents</em> or <em>booking history</em> reports.</p>
+			</div>
+		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="demographics-report-template">
+		<div class="col-md-6 text-center">
+			<canvas id="demographics-chart" width="400" height="400"></canvas>
+		</div>
+		<div class="col-md-6">
+			<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th style="color:#313131">Country</th>
+						<th style="color:#313131">Color</th>
+						<th style="color:#313131; text-align:center;">Total Revenue</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each countries}}
+					<tr>
+						<td>{{@key}}</td>
+						<td style="width:20px;" id="{{getStatID @key}}-colour"></td>
+						<td style="text-align:center;">{{currency}} {{this}}</td>
+					</tr>
+					{{else}}
+					<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="cancellations-report-template">
 		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th style="color:#313131">Country</th>
-					<th style="color:#313131">Color</th>
-					<th style="color:#313131; text-align:center;">Total Revenue</th>
+					<th>Date of Booking</th>
+					<th>Name</th>
+					<th>Reference</th>
+					<th>Amount</th>
+					<th>Reason</th>
+					<th>Date of Cancellation</th>
 				</tr>
 			</thead>
 			<tbody>
-				{{#each countries}}
-				<tr>
-					<td>{{@key}}</td>
-					<td style="width:20px;" id="{{getStatID @key}}-colour"></td>
-					<td style="text-align:center;">{{currency}} {{this}}</td>
-				</tr>
+				{{#each bookings}}
+					<tr>
+						<td>{{created_at_local}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<td><a class="view-booking">{{reference}}</a></td>
+						<td>{{currency}} {{decimal_price}}</td>
+						<td>{{cancel_reason}}</td>
+						<td>{{cancelled_at}}</td>
+					</tr>
 				{{else}}
-				<tr><td colspan="3" class="text-center">There has been no revenue between these dates</td></tr>
+					<tr><td colspan="6" class="text-center">There are no cancellations between these dates</td></tr>
 				{{/each}}
 			</tbody>
+
 		</table>
-	</div>
-</script>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total cancellations : {{bookings.length}}</h4>
+		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="discounts-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>Date of Booking</th>
+				<th>Name</th>
+				<th>Reference</th>
+				<th>Amount Due</th>
+				<th>Discount</th>
+				<th>Reason</th>
+			</tr>
+			</thead>
+			<tbody>
+				{{#each bookings}}
+					<tr>
+						<td>{{created_at_local}}</td>
+						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
+						<td><a class="view-booking">{{reference}}</a></td>
+						<td>{{currency}} {{decimal_price}}</td>
+						<td>{{currency}} {{convertPrice discount}}</td>
+						<td>{{discount_reason}}</td>
+					</tr>
+				{{else}}
+					<tr><td colspan="6" class="text-center">There are no cancellations between these dates</td></tr>
+				{{/each}}
+			</tbody>
+
+		</table>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total discount bookings : {{bookings.length}}</h4>
+		</div>
+	</script>
+
 	<script type="text/x-handlebars-template" id="agents-filter-template">
 		<div class="input-group">
 			<label class="input-group-addon">Filter by : </label>

@@ -104,6 +104,20 @@
 							<div id="save-loader" class="loader"></div>
 						</div>
 
+						<div class="form-group">
+							<label class="col-sm-3 col-sm-offset-1 control-label">Card Ref : </label>
+							<div class="col-sm-6">
+								<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 col-sm-offset-1 control-label">Notes : </label>
+							<div class="col-sm-6">
+								<textarea name="notes" class="form-control">{{notes}}</textarea>
+							</div>
+						</div>
+
 						{{!--<div class="form-group">
 							<label class="col-sm-3 col-sm-offset-1 control-label">Received at</label>
 							<div class="col-sm-6">
@@ -144,6 +158,20 @@
 						<div id="save-loader" class="loader"></div>
 					</div>
 
+					<div class="form-group">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Card Ref : </label>
+						<div class="col-sm-6">
+							<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Notes : </label>
+						<div class="col-sm-6">
+							<textarea name="notes" class="form-control">{{notes}}</textarea>
+						</div>
+					</div>
+
 					{{!--<div class="form-group">
 						<label class="col-sm-3 col-sm-offset-1 control-label">Received at</label>
 						<div class="col-sm-6">
@@ -172,6 +200,8 @@
 								<th>Date</th>
 								<th>Amount</th>
 								<th>Via</th>
+								<th>Ref</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -180,6 +210,12 @@
 									<td>{{received_at}}</td>
 									<td>{{currency}} {{amount}}</td>
 									<td>{{paymentgateway.name}}</td>
+									<td>{{card_ref}}</td>
+									<td>
+										{{#if notes}}
+											<a href="#" class="see-notes" data-type="Payment" data-notes="{{notes}}">See Notes</a>
+										{{/if}}
+									</td>
 								</tr>
 							{{/each}}
 							{{#each refunds}}
@@ -187,6 +223,12 @@
 									<td>{{received_at}}</td>
 									<td class="text-danger">{{currency}} -{{amount}}</td>
 									<td>{{paymentgateway.name}} (refund)</td>
+									<td>{{card_ref}}</td>
+									<td>
+										{{#if notes}}
+											<a href="#" class="see-notes" data-type="Refund" data-notes="{{notes}}">See Notes</a>
+										{{/if}}
+									</td>
 								</tr>
 							{{/each}}
 						</tbody>

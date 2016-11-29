@@ -9,6 +9,13 @@
 					<div class="yellow-helper">
 						Please drag a trip onto a day on the calendar to activate it. To view more details on a trip, or create a repeating timetable, click on the event in the calendar
 					</div>
+					<div id="jump-to-date" class="form-row">
+						<div class="input-group">
+							<label class="input-group-addon">Jump to : </label>
+							<input style="width:200px; float:left;" id="jump-date" type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" name="jumpto" placeholder="YYYY-MM-DD">
+							<!--<button id="remove-jump" style="display:none;" class="btn btn-danger">Clear</button>-->
+						</div>
+					</div>
 					<div id="filter-types" class="btn-group" role="group" style="margin-bottom:10px;">
 					  <button id="filter-trips" display="trips" type="button" class="btn btn-default btn-primary filter-type">Trips</button>
 					  <button id="filter-classes" display="classes" type="button" class="btn btn-default filter-type">Classes</button>

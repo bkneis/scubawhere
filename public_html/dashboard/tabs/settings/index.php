@@ -56,6 +56,11 @@
 
 								<div id="credit-info"></div>
 
+								<div class="form-row">
+									<label class="field-label">Customer facing web portal :</label>
+									<input type="text" style="width: 30%;" name="alias" value="{{alias}}" {{#if alias}} disabled {{/if}}> .scubawhere.com
+								</div>
+
 								<!--<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the Tour : </label>
 									<a id="start-wizard" class="btn btn-default text-uppercase">Start wizard</a>
@@ -106,7 +111,7 @@
 
 								<div class="form-row">
 									<label class="field-label">Business Email : </label>
-									<input type="text" name="business_email" value="{{business_email}}" class="form-control">
+									<input type="text" name="business_email" value="{{business_email}}" class="form-control" required>
 								</div>
 
 								<div id="legal-info" class="form-row">

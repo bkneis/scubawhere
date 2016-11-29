@@ -318,14 +318,15 @@ function loadCSVFile(evt, columnData) {
 	csv += '\n';
 	console.log('csv str', csv);
     // @todo minor - Move this file processing to backend. Javascript should just send the file not strings
-    var allTextLines = csv.split(/\r\n|\n/);
+    //var allTextLines = csv.split(/\r\n|\n/);
+    var allTextLines = csv.split(/\r?\n/);
+    console.log('lines', allTextLines);
+    //var allTextLines = csv.split(/\n/);
     var lines = [];
     for (var i = 0; i < (allTextLines.length - 1); i++) {
         var data = allTextLines[i].split(',');
         var tarr = [];
 		// @note this is abit of a hack to remove empty lines
-		console.log('l', data.length);
-		console.log('v', data[0]);
 		if(data.length === 1 && data[0] === '') continue;
         for (var j = 0; j < data.length; j++) {
             tarr.push(data[j]);
@@ -354,10 +355,8 @@ function loadCSVFile(evt, columnData) {
         return;
     }
 
-    console.log('csv data', csvData);
     Customer.importCSV(csvData,
         function success(data) {
-            console.log(data);
             $('#import-customer-data-body').empty().append(templateImportErrors({errors : data.errors}));
 			Customer.getAllCustomers(function (data) {
 				window.customers = _.indexBy(data, 'id');
@@ -477,9 +476,9 @@ function editDetails(id) {
     if (id && customer.country_id) {
         $('#edit-customer-countries').find('#country_id').select2("val", customer.country_id);
     }
-    else {
+    /*else {
         $('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
-    }
+    }*/
 }
 
 function emailCustomer(id) {

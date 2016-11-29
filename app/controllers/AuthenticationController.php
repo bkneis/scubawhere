@@ -1,6 +1,7 @@
 <?php
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
+
+use Scubawhere\Helper;
+use Scubawhere\Context;
 
 class AuthenticationController extends Controller {
 
@@ -69,19 +70,6 @@ class AuthenticationController extends Controller {
 		{
 			return Response::json( array('errors' => array('Oops, something wasn\'t correct.')), 401 ); // 401 Unauthorized
 		}
-	}
-
-	public function getTest()
-	{
-		//return $_SERVER['SERVER_NAME'];
-		try{
-			$db = DB::connection()->getDatabaseName();
-		}catch(Exception $e){
-			//return $e->getMessage();
-			return array('host' => $_SERVER['RDS_HOSTNAME'], 'e' => $e->getMessage(), 'env' => App::environment());
-		}
-		return array('host' => RDS_HOSTNAME, 'user' => RDS_USERNAME, 'pass' => RDS_DB_NAME, 'db' => $db, 'env' => App::environment());
-		//return $db;
 	}
 
 	public function getLogout()

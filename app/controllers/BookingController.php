@@ -1,9 +1,12 @@
 <?php
 
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Bookingdetail;
+use Scubawhere\Entities\Customer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
-use ScubaWhere\CrmMailer;
 
 class BookingController extends Controller
 {
@@ -17,6 +20,7 @@ class BookingController extends Controller
                 'agent',
                 'lead_customer',
                     'lead_customer.country',
+                'customers',
                 'bookingdetails',
                     'bookingdetails.customer',
                         'bookingdetails.customer.country',
@@ -668,14 +672,14 @@ class BookingController extends Controller
         } // 406 Not Acceptable
 
         // Validate that the session start date has not already passed
-        if ($departure && Helper::isPast($departure->start)) {
+        /*if ($departure && Helper::isPast($departure->start)) {
             return Response::json(array('errors' => array('Cannot add details, because the trip has already departed!')), 403); // 403 Forbidden
         }
 
         // Validate that the training_session start date has not already passed
         if ($training_session && Helper::isPast($training_session->start)) {
             return Response::json(array('errors' => array('Cannot add details, because the class has already started!')), 403); // 403 Forbidden
-        }
+        } */
 
 		if($departure) $model = $departure;
 		else if($training_session) $model = $training_session;
@@ -1211,9 +1215,9 @@ class BookingController extends Controller
         if (!$bookingdetail->temporary) {
             $start = !empty($bookingdetail->departure) ? $bookingdetail->departure->start : $bookingdetail->training_session->start;
 
-            if (Helper::isPast($start)) {
+            /*if (Helper::isPast($start)) {
                 return Response::json(array('errors' => array('Cannot remove details, because the trip/class has already departed/started!')), 403); // 403 Forbidden
-            }
+            }*/
         }
 
         // Execute delete
@@ -1334,9 +1338,9 @@ class BookingController extends Controller
         } // 403 Forbidden
 
         // Check if trip departed more than 5 days ago
-        if ($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start)) {
+        /*if ($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start)) {
             return Response::json(array('errors' => array('The addon cannot be added because the trip departed more than 5 days ago.')), 403); // 403 Forbidden
-        }
+        }*/
 
         if (Input::has('packagefacade_id')) {
             try {
@@ -1454,9 +1458,9 @@ class BookingController extends Controller
         }
 
         // Check if trip departed more than 5 days ago
-        if ($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start)) {
+        /*if ($bookingdetail->departure && $this->moreThan5DaysAgo($bookingdetail->departure->start)) {
             return Response::json(array('errors' => array('The addon cannot be removed because the trip departed more than 5 days ago.')), 403); // 403 Forbidden
-        }
+        }*/
 
         $packagefacade_id = Input::get('packagefacade_id', null);
 
@@ -1573,10 +1577,10 @@ class BookingController extends Controller
         } // 400 Bad Request
 
         // Validate that the start and end dates are maximum 1 days ago
-        $now = Helper::localTime();
+        /*$now = Helper::localTime();
         if ($start->diff($now)->format('%R%a') > 1 || $end->diff($now)->format('%R%a') > 1) {
             return Response::json(['errors' => ['The start date can only be a maximum of 1 day ago.']], 400);
-        } // 400 Bad Request
+        } // 400 Bad Request */
 
         // Validate that the accommodation has not already been booked by the customer for the same day within the booking
         $alreadyBooked = $booking->accommodations()
@@ -1955,7 +1959,16 @@ class BookingController extends Controller
             return Response::json(array('errors' => array('The booking can not be cancelled anymore because it ended more than 5 days ago.')), 403); // 403 Forbidden
         }
 
-        if (!$booking->update(array('status' => 'cancelled', 'reserved' => null, 'cancellation_fee' => Input::get('cancellation_fee')))) {
+        $cancelled_date = Helper::localTime();
+        $cancelled_date = $cancelled_date->format('Y-m-d H:i:s');
+
+        if (!$booking->update(array(
+            'status'           => 'cancelled',
+            'reserved'         => null,
+            'cancellation_fee' => Input::get('cancellation_fee'),
+            'cancel_reason'    => Input::get('cancel_reason'),
+            'cancelled_at'     => $cancelled_date
+        ))) {
             return Response::json(array('errors' => $booking->errors()->all()), 406); // 406 Not Acceptable
         }
 
@@ -2010,17 +2023,19 @@ class BookingController extends Controller
 				$payment = $booking->payments()->save($payment);
 			}
 		}
+        else
+        {
+            $payment = null;
+        }
 
-        CrmMailer::sendBookingConf($booking->id); // ->id
-
-		if(!$payment) $payment = null;
+        CrmMailer::sendBookingConf($booking->id);
 
         return array('status' => 'OK. Booking confirmed.', 'deposit' => $payment);
     }
 
     public function getValidate()
     {
-        try {
+        /*try {
             if (!Input::get('booking_id')) {
                 throw new ModelNotFoundException();
             }
@@ -2051,6 +2066,7 @@ class BookingController extends Controller
         if ($validator->fails()) {
             return Response::json(array('errors' => $validator->errors()->all()), 406);
         } // 406 Not Acceptable
+        */
 
         return array('status' => 'This booking is valid.');
     }
@@ -2102,9 +2118,18 @@ class BookingController extends Controller
         }
 
         // Check if a dublicate is already in the DB
-        if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {
+        $edited_booking = DB::table('bookings')
+            ->where('reference', $booking->reference.'_')
+            ->first();
+
+        //var_dump($edited_booking);
+        if(!is_null($edited_booking)) {
+            return Response::json($edited_booking);
+        }
+
+        /*if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {
             return Response::json(['errors' => ['This booking is already being edited. Cancel the edit and then try again.']], 412);
-        } // 412 Precondition Failed
+        } // 412 Precondition Failed*/
 
         // Dublicate bookings table entry to get new bookingID
         $old_booking = DB::table('bookings')->find($booking->id);

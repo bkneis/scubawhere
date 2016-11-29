@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use ScubaWhere\Context;
+use Scubawhere\Context;
 
 class EquipmentController extends Controller {
 

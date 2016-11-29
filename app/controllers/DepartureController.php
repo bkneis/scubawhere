@@ -1,8 +1,10 @@
 <?php
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use ScubaWhere\Helper;
-use ScubaWhere\Context;
+use Scubawhere\Helper;
+use Scubawhere\Context;
+use Scubawhere\Entities\Booking;
 
 class DepartureController extends Controller {
 
@@ -810,22 +812,11 @@ class DepartureController extends Controller {
 						->with('bookingdetails.booking')
 						->get();
 
-					$sessions->each( function($session)
-					{
-						$bookings = $session->bookingdetails()->map(function($obj) {
-							if($obj->booking->status != 'saved' && $obj->booking->status != 'expired')
-								return $obj;
-						});
-						//if( $session->bookingdetails()->count() === 0 )
-						if($bookings->count() === 0) 
-						{
+					$sessions->each( function($session) {
+						if($session->bookingdetails()->count() === 0) {
+							$session->forceDelete();
+						} else {
 							$session->delete();
-						}
-						else
-						{	
-							return Response::json( 
-								array('errors' => 
-									array('Cannot delete trip. It has already been booked!')), 409 ); // 409 Conflict
 						}
 					});
 

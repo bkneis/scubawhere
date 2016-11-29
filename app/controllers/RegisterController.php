@@ -1,8 +1,8 @@
 <?php
 
-use ScubaWhere\Helper;
-use ScubaWhere\CrmMailer;
-use ScubaWhere\Services\ObjectStoreService;
+use Scubawhere\Helper;
+use Scubawhere\CrmMailer;
+use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RegisterController extends Controller {

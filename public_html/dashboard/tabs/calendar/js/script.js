@@ -92,6 +92,7 @@ $(function() {
                 left: 'basicDay basicWeek month',
                 center: 'title',
             },
+			defaultView : 'basicWeek',
             timezone: false,
             firstDay: 1, // Set Monday as the first day of the week
             events: function(start, end, timezone, callback) {
@@ -115,6 +116,10 @@ $(function() {
                 // Needed for trip names with special characters in it (like ó, à, etc.)
                 element.find('.fc-title').html(event.title);
             },
+			eventAfterRender : function(event, element) {
+				$(element).css('height', '25px');
+				$(element).css('text-align', 'center');
+			},
             editable: false,
             droppable: false, // This allows things to be dropped onto the calendar
             eventClick: function(eventObject) {
@@ -133,7 +138,7 @@ $(function() {
                     showModalWindowCourse(eventObject);*/
                 //console.log(calendarOptions.calendarDisplay);
                 //console.log(eventObject);
-            },
+            }
         });
     });
 
@@ -389,7 +394,7 @@ function getFileName(data) {
 	return data.trip.name + ' Trip Manifest - ' + data.start;
 }
 
-function showModalWindowManifest(id, type) {
+function showModalWindowManifest(id, type, date) {
     // Create the modal window from manifest-template
     var params = {
         id: id
@@ -486,7 +491,7 @@ function showModalWindowManifest(id, type) {
                 table.draw();
             });
         });
-    } else {
+    } else if (type === 'class') {
         window.sw.manifestTemplateDC = Handlebars.compile($("#class-manifest-template").html());
         Class.getAllCustomers(params, function success(data) {
             //showModalWindowManifest(data);
@@ -568,11 +573,88 @@ function showModalWindowManifest(id, type) {
             });
         });
     }
+    else if (type === 'accommodation') {
+        window.sw.manifestTemplateA = Handlebars.compile($("#accommodation-manifest-template").html());
+        params.date = date;
+        Accommodation.getManifest(params, function success(data) {
+            console.log(data);
+            console.log(jFriendly(data.data.accommodation.date));
+            //showModalWindowManifest(data);
+            //var customer = Handlebars.compile( $("#customer-rows-template").html() );
+            //$("#customers-table").append(customer({customers : data.customers}));
+            $('#modalWindows')
+                .append(window.sw.manifestTemplateA(data.data)) // Create the modal
+                .children('#modal-' + data.data.accommodation.id + '-' + jFriendly(data.data.accommodation.date)) // Directly find it and use it
+                .reveal({ // Open modal window | Options:
+                    animation: 'fadeAndPop', // fade, fadeAndPop, none
+                    animationSpeed: 300, // how fast animtions are
+                    closeOnBackgroundClick: true, // if you click background will modal close?
+                    dismissModalClass: 'close-modal', // the class of a button or element that will close an open modal
+                    onFinishModal: function() {
+                        $('#modal-' + data.data.accommodation.id + '-' + jFriendly(data.data.accommodation.date)).remove();
+                    }
+                });
+
+            var table = $('#customer-data-table').DataTable({
+                "pageLength": 10,
+                columns: [{
+                    data: null,
+                    render: 'reference'
+                }, {
+                    data: null,
+                    render: 'status'
+                }, {
+                    data: null,
+                    render: 'name'
+                }, {
+                    data: null,
+                    render: 'country'
+                }, {
+                    data: null,
+                    render: 'phone'
+                }, {
+                    data: null,
+                    render: 'notes'
+                }],
+                "dom": 'Bfrtlp',
+                "buttons": [
+                    {
+                        extend : 'excel',
+                        title  : 'dfdsfdf' //getFileName(data)
+                    },
+                    {
+                        extend : 'pdf',
+                        title  : 'dfdsfdf' // getFileName(data)
+                    },
+                    {
+                        extend : 'print',
+                        title  : 'dfdsfdf' // getFileName(data)
+                    }
+                ]
+            });
+
+            $.when(
+                window.promises.loadedCountries,
+                window.promises.loadedCourses,
+                window.promises.loadedTickets
+            ).done(function() {
+                for (var i = 0; i < data.data.bookings.length; i++) {
+                    table.row.add(new customerDataA(data.data.bookings[i]));
+                };
+
+                table.draw();
+            });
+        });
+    }
 }
 
 Handlebars.registerHelper('date', function(datetime) {
     return datetime.format('DD-MM-YYYY');
 });
+
+Handlebars.registerHelper('convertDate', function(ts) {
+    return new Date(ts).toDateString();
+})
 Handlebars.registerHelper('hours', function(datetime) {
     return datetime.format('HH');
 });
@@ -594,6 +676,15 @@ Handlebars.registerHelper('isWeekday', function(day) {
     else
         return '';
 });
+// @todo move this to global function
+Handlebars.registerHelper('jFriendly', function(str) {
+    return jFriendly(str);
+});
+
+function jFriendly(str) {
+    str = str.replace(/:/g, "-");
+    return str.replace(/\s/g, "");
+}
 
 function calcUtil(booked, capacity) {
     if (!capacity) return 0;
@@ -820,6 +911,7 @@ function getAllEvents(start, end, timezone, callback) {
                         start: start, // change start to readable text instead of moment
                         end: start,
                         id: randomString(),
+                        accommodation_id : id,
                         title: window.accommodations[id].name,
                         color: "#229930",
                         booked: util[0],
@@ -922,6 +1014,7 @@ function getAccomEvents(start, end, timezone, callback) {
                         start: start, // change start to readable text instead of moment
                         end: start,
                         id: randomString(),
+                        accommodation_id : id,
                         title: window.accommodations[id].name,
                         color: "#229930",
                         booked: util[0],
@@ -1069,6 +1162,42 @@ function customerData(customer) {
 	this.status = function() {
 		return window.company.currency.symbol + ' ' + this.amount_paid + ' / ' + window.company.currency.symbol + ' ' + this._price;
 	};
+}
+
+function customerDataA(data) {
+    this._name = data.customer.firstname + ' ' + data.customer.lastname;
+    this._phone = data.customer.phone;
+    this._country = window.countries[data.customer.country_id].abbreviation;
+
+    this._reference = data.booking.reference;
+    this._booking_id = data.booking.id;
+    this._notes = data.customer.notes || "-";
+    this._price = parseFloat(parseInt(data.booking.price) / 100);
+    this._amount_paid = parseFloat(parseInt(data.booking.paid) / 100);
+
+    this.name = function() {
+        return this._name;
+    };
+
+    this.phone = function() {
+        return this._phone + '&nbsp;'; // The forced space at the end makes the phone number be recognised as a string in Excel (instead of a number, when exporting via DataTable's CSV/Excel export)
+    };
+
+    this.country = function() {
+        return this._country;
+    };
+
+    this.reference = function() {
+        return '<a href="javascript:void(0);" onclick="editBooking(' + this._booking_id + ', this);">' + this._reference + '</a>';
+    };
+
+    this.notes = function() {
+        return this._notes;
+    };
+
+    this.status = function() {
+        return window.company.currency.symbol + ' ' + this._amount_paid + ' / ' + window.company.currency.symbol + ' ' + this._price;
+    };
 }
 
 function editBooking(booking_id, self) {

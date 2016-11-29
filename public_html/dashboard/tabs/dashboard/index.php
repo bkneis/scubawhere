@@ -1,5 +1,3 @@
-<!--<script type="text/javascript" src="js/social-media.js"></script>-->
-
 <div id="wrapper" class="clearfix">
   <div class="row" id="row1">
 
@@ -103,6 +101,8 @@
     </div>
   </div>
 
+  <div id="modalWindows" style="height: 0;"></div>
+
 <!-- Modal -->
 <div class="modal fade" id="modal-intro" tabindex="-1" role="dialog" aria-labelledby="Welcome to scubawhere RMS">
 	<div class="modal-dialog" role="document">
@@ -138,8 +138,9 @@
                 <th></th>
                 <th>Session</th>
                 <th>Boat</th>
-                <th>Utilisation</th>
+                <th>Availability</th>
                 <th>Date</th>
+                <th>Trip Manifest</th>
               </tr>
             </thead>
             <tbody id="sessions-list">
@@ -164,6 +165,7 @@
         <td>{{{boat.name}}}</td>
 		<td>{{getPer capacity}}</td>
         <td>{{friendlyDate start}} - {{tripFinish start trip.duration}}</td>
+        <td><a onclick="showModalWindowManifest({{id}}, {{#if trip}}'trip' {{else}}'training' {{/if}})">View Manifest</a> </td>
       </tr>
       <tr class="accordion-body accordion-{{id}}">
         <td colspan="9" style="overflow: auto;">
@@ -293,12 +295,14 @@
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Via</th>
+                <th>Ref</th>
               </tr>
               {{#each payments}}
               <tr>
                 <td>{{received_at}}</td>
                 <td>{{currency}} {{amount}}</td>
                 <td>{{paymentgateway.name}}</td>
+                <td>{{card_ref}}</td>
               </tr>
               {{/each}}
               {{#each refunds}}
@@ -306,6 +310,7 @@
                   <td>{{received_at}}</td>
                   <td class="text-danger">{{currency}} -{{amount}}</td>
                   <td>{{paymentgateway.name}} (refund)</td>
+                  <td>{{card_ref}}</td>
                 </tr>
                 {{/each}}
               <tr>
@@ -326,6 +331,58 @@
     {{else}}
       <tr><td colspan="7" style="text-align: center;">You have no bookings yet.</td></tr>
     {{/each}}
+  </script>
+
+  <script type="text/x-handlebars-template" id="manifest-template">
+    <div id="modal-{{id}}" class="reveal-modal xxlarge">
+      <h3>{{{trip.name}}} - Trip Manifest</h3>
+      <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
+        <thead>
+        <tr>
+          <th style="color:#313131">Booking Ref</th>
+          <th style="color:#313131; width: 20%">Payments made</th>
+          <th style="color:#313131;">Name</th>
+          <th style="color:#313131"><span style="display: none;">Country</span></th>
+          <th style="color:#313131">Phone</th>
+          <th style="color:#313131">Ticket</th>
+          <th style="color:#313131">Last Dive</th>
+          <th style="color:#313131; width:15%;">Notes</th>
+          <th style="color:#313131">Fins</th>
+          <th style="color:#313131">BCD</th>
+          <th style="color:#313131">Wetsuit</th>
+        </tr>
+        </thead>
+        <tbody id="customers-table">
+        </tbody>
+      </table>
+      <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars-template" id="class-manifest-template">
+    <div id="modal-{{id}}" class="reveal-modal xxlarge">
+      <h3>{{{training.name}}} - Class Manifest</h3>
+      <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
+        <thead>
+        <tr>
+          <th style="color:#313131">Booking Ref</th>
+          <th style="color:#313131; width:15%;">Payments made</th>
+          <th style="color:#313131">Name</th>
+          <th style="color:#313131"><span style="display: none;">Country</span></th>
+          <th style="color:#313131">Phone</th>
+          <th style="color:#313131">Course</th>
+          <th style="color:#313131">Last Dive</th>
+          <th style="color:#313131">Notes</th>
+          <th style="color:#313131">Fins</th>
+          <th style="color:#313131">BCD</th>
+          <th style="color:#313131">Wetsuit</th>
+        </tr>
+        </thead>
+        <tbody id="customers-table">
+        </tbody>
+      </table>
+      <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
+    </div>
   </script>
 
   <script src="/tabs/dashboard/js/script.js"></script>

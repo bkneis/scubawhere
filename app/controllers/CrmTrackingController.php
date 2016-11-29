@@ -1,5 +1,5 @@
 <?php
-use ScubaWhere\Helper;
+use Scubawhere\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CrmTrackingController extends Controller {

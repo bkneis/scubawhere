@@ -1,8 +1,9 @@
 <?php
 
+use Scubawhere\Entities\Agency;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-// use ScubaWhere\Helper;
+// use Scubawhere\Helper;
 
 class AgencyController extends Controller
 {

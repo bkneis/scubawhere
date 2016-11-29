@@ -45,11 +45,11 @@
 							</div>
 
 							<div class="form-row prices">
-								<p><strong>Set prices for this add-on:</strong></p>
+								<p><strong>Addon-on Price : </strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>
+								{{!--<button class="btn btn-default btn-sm add-base-price"> &plus; Add another price</button>--}}
 							</div>
 
 							<!--<div class="form-row" id="addon-compulsory-div">
@@ -115,7 +115,7 @@
 			<strong>There are a few problems with the form:</strong>
 			<ul>
 				{{#each errors}}
-					<li>{{this}}</li>
+					<li>{{{this}}}</li>
 				{{/each}}
 			</ul>
 		</div>

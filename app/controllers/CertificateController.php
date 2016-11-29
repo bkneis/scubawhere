@@ -1,5 +1,7 @@
 <?php
 
+use Scubawhere\Entities\Certificate;
+
 class CertificateController extends Controller
 {
     public function getIndex()

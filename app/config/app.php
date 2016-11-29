@@ -132,10 +132,21 @@ return array(
 		'Mews\Purifier\PurifierServiceProvider',
 		'Maknz\Slack\Laravel\ServiceProvider',
 
-		'ScubaWhere\Repositories\ObjectStoreRepoServiceProvider',
-        'ScubaWhere\Repositories\LogRepoServiceProvider',
-		'ScubaWhere\Repositories\CreditRepoServiceProvider',
-		'ScubaWhere\Repositories\CustomerRepoServiceProvider'
+		'Scubawhere\Repositories\ObjectStoreRepoServiceProvider',
+        'Scubawhere\Repositories\LogRepoServiceProvider',
+		'Scubawhere\Repositories\CreditRepoServiceProvider',
+		'Scubawhere\Repositories\AccommodationRepoServiceProvider',
+		'Scubawhere\Repositories\PriceRepoServiceProvider',
+		'Scubawhere\Repositories\AddonRepoServiceProvider',
+		'Scubawhere\Repositories\AgentRepoServiceProvider',
+		'Scubawhere\Repositories\TrainingRepoServiceProvider',
+		'Scubawhere\Repositories\CourseRepoServiceProvider',
+		'Scubawhere\Repositories\LocationRepoServiceProvider',
+		'Scubawhere\Repositories\BoatroomRepoServiceProvider',
+		'Scubawhere\Repositories\BoatRepoServiceProvider',
+		'Scubawhere\Repositories\TripRepoServiceProvider',
+		'Scubawhere\Repositories\TicketRepoServiceProvider',
+		'Scubawhere\Repositories\PackageRepoServiceProvider'
 
 	),
 
@@ -204,7 +215,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 
 		'Purifier'        => 'Mews\Purifier\Facades\Purifier',
-		'Slack' => 'Maknz\Slack\Laravel\Facade',
+		'Slack'           => 'Maknz\Slack\Laravel\Facade',
 
 	),
 
