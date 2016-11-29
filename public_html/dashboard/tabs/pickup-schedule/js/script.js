@@ -39,6 +39,17 @@ $(function() {
 		loadPickups();
 	});
 
+	$('#wrapper').on('click', '.view-booking', function(event) {
+		// Load booking data and redirect to add-booking tab
+		Booking.getByRef($(this).html(), function success(object) {
+			window.booking      = object;
+			// window.booking.mode = 'view'; // Should be default behavior
+			window.clickedEdit  = true;
+
+			window.location.hash = 'add-booking';
+		});
+	});
+
 });
 
 function getToday() {

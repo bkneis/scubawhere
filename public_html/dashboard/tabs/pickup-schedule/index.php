@@ -40,7 +40,7 @@
 	<script type="text/x-handlebars-template" id="pick-up-schedule-template">
 		{{#each pickups}}
 			<tr>
-				<td>{{booking.reference}}</td>
+				<td><a class="view-booking">{{booking.reference}}</a></td>
 				<td>{{{booking.lead_customer.firstname}}} {{{booking.lead_customer.lastname}}}</td>
 				<td>{{booking.lead_customer.phone}}</td>
 				<td>{{quantity}}</td>
