@@ -37,13 +37,15 @@
 					<div id="save-loader" class="loader"></div>
 				</button>
 
+				<a href="/register/" class="btn btn-success" id="register">Register Your Dive Centre</a>
+
 			</form>
 		</div>
 
 		<a href="/api/password/remind" class="forgot-password">Forgot your password?</a>
 	</div>
 
-    <footer><a href="/register/" class="bttn" id="register">Register Your Dive Centre</a></footer>
+    <!--<footer><a href="/register/" class="btn btn-primary btn-lg" id="register">Register Your Dive Centre</a></footer>-->
 
 </body>
 </html>
