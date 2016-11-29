@@ -47,7 +47,7 @@
     </div>
     <div class="form-row">
         <label>Email : </label>
-        <input type="text" name="email" value="{{email}}">
+        <input type="email" name="email" value="{{email}}">
     </div>
 </script>
 
@@ -65,7 +65,7 @@
                required
                v-model="password">
 
-        <input type="text"
+        <input type="email"
                style="width: 30%"
                placeholder="Email"
                required
