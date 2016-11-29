@@ -3,9 +3,11 @@
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\CrmMailer;
+use Scubawhere\Entities\Agency;
+use Scubawhere\Entities\CrmLink;
+use Scubawhere\Entities\Booking;
 use Scubawhere\Entities\CrmToken;
 use Scubawhere\Entities\CrmCampaign;
-use Illuminate\Database\QueryException;
 use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

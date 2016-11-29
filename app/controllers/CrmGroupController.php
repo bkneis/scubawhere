@@ -2,6 +2,7 @@
 
 use Scubawhere\Context;
 use Scubawhere\Entities\CrmGroup;
+use Scubawhere\Entities\CrmGroupRule;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
