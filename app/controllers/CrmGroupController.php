@@ -1,6 +1,8 @@
 <?php
 
 use Scubawhere\Context;
+use Scubawhere\Entities\Agency;
+use Scubawhere\Entities\Booking;
 use Scubawhere\Entities\CrmGroup;
 use Scubawhere\Entities\CrmGroupRule;
 use Illuminate\Database\QueryException;

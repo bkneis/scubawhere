@@ -113,14 +113,30 @@ $(function() {
     });
     
     groupCustomersTable = $('#group-customers-table').DataTable({
-        "paging":   false,
+        /*"paging":   false,
         "ordering": false,
-        "info":     false,
+        "info":     false,*/
         "columnDefs" : [
             {
                 "targets" : [2],
                 "visible" : false
-            }        
+            }
+        ],
+        "dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
+        "buttons": [
+            {
+                extend : 'excel',
+                title  : 'Mailing List'
+            },
+            {
+                extend : 'pdf',
+                title  : 'Mailing List',
+                orientation: 'landscape'
+            },
+            {
+                extend : 'print',
+                title  : 'Mailing List'
+            }
         ]
     });
 

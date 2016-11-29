@@ -634,15 +634,16 @@ function generateBookingDetails(id) {
 function createDataTable() {
 	var bookingTable = $('#bookings-table').DataTable({
         "pageLength": 10,
-		"dom": 'Bfrtlp',
+		"dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
 		"buttons": [
 			{
 				extend : 'excel',
-	   			title  : 'Bookings List' 	
+	   			title  : 'Bookings List'
 			},
 			{
 				extend : 'pdf',
-				title  : 'Bookings List'
+				title  : 'Bookings List',
+				orientation: 'landscape'
 			},
 			{
 				extend : 'print',

@@ -72,7 +72,7 @@ function createDataTable() {
 	var date = $('#date-select').val();
 	var pickupTable = $('.reports-table').DataTable({
         "pageLength": 10,
-		"dom": 'Bfrtlp',
+		"dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
 		"buttons": [
 			{
 				extend : 'excel',
@@ -80,7 +80,8 @@ function createDataTable() {
 			},
 			{
 				extend : 'pdf',
-				title  : 'Pickup Schedule for ' + date
+				title  : 'Pickup Schedule for ' + date,
+				orientation: 'landscape'
 			},
 			{
 				extend : 'print',

@@ -305,7 +305,7 @@ function showModalWindowManifest(id, type) {
 					data: null,
 					render: 'height'
 				}],
-				"dom": 'Bfrtlp',
+				"dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
 				"buttons": [
 					{
 						extend : 'excel',
@@ -313,7 +313,8 @@ function showModalWindowManifest(id, type) {
 					},
 					{
 						extend : 'pdf',
-						title  : getFileName('trip', data)
+						title  : getFileName('trip', data),
+						orientation: 'landscape'
 					},
 					{
 						extend : 'print',

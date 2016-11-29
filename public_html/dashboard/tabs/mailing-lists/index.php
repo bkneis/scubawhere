@@ -131,6 +131,7 @@
                             
                         </tbody>
                     </table>
+					<div style="margin-bottom: 40px"></div>
                 </div>
             </div>
         </div>

@@ -462,7 +462,7 @@ function showModalWindowManifest(id, type, date) {
                     data: null,
                     render: 'cylinder_size'
                 }],
-				"dom": 'Bfrtlp',
+                "dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
 				"buttons": [
 					{
 						extend : 'excel',
@@ -470,7 +470,21 @@ function showModalWindowManifest(id, type, date) {
 					},
 					{
 						extend : 'pdf',
-						title  : getFileName(data)
+						title  : getFileName(data),
+                        orientation: 'landscape',
+                        customize : function(doc) {
+                            var colCount = new Array();
+                            $(tbl).find('tbody tr:first-child td').each(function () {
+                                if ($(this).attr('colspan')) {
+                                    for (var i=1;i<=$(this).attr('colspan');$i++) {
+                                        colCount.push('*');
+                                    }
+                                } else {
+                                    colCount.push('*');
+                                }
+                            });
+                            doc.content[1].table.widths = colCount;
+                        }
 					},
 					{
 						extend : 'print',
@@ -554,10 +568,35 @@ function showModalWindowManifest(id, type, date) {
                     data: null,
                     render: 'cylinder_size'
                 }],
-                "dom": 'T<"clear">lfrtip',
-                "tableTools": {
-                    "sSwfPath": "/common/vendor/datatables-tabletools/swf/copy_csv_xls_pdf.swf"
-                }
+                "dom": '<"col-md-6 dt-buttons"B><"col-md-6"f>rt<"col-md-6"l><"col-md-6"p>',
+                "buttons": [
+                    {
+                        extend : 'excel',
+                        title  : getFileName()
+                    },
+                    {
+                        extend : 'pdf',
+                        title  : getFileName(),
+                        orientation: 'landscape',
+                        customize : function(doc) {
+                            var colCount = new Array();
+                            $(tbl).find('tbody tr:first-child td').each(function () {
+                                if ($(this).attr('colspan')) {
+                                    for (var i=1;i<=$(this).attr('colspan');$i++) {
+                                        colCount.push('*');
+                                    }
+                                } else {
+                                    colCount.push('*');
+                                }
+                            });
+                            doc.content[1].table.widths = colCount;
+                        }
+                    },
+                    {
+                        extend : 'print',
+                        title  : getFileName()
+                    }
+                ]
             });
 
             $.when(
