@@ -3,9 +3,10 @@
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\CrmMailer;
+use Scubawhere\Entities\PickUp;
 use Scubawhere\Entities\Booking;
-use Scubawhere\Entities\Bookingdetail;
 use Scubawhere\Entities\Customer;
+use Scubawhere\Entities\Bookingdetail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BookingController extends Controller
