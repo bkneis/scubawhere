@@ -9,7 +9,6 @@ class CustomerValidationServiceProvider extends ServiceProvider
 {
 	public function register()
 	{
-use 
 		$this->app->bind('Scubawhere\Decorators\CustomerValidationInterface', function($app)
 		{
 			return new CustomerServiceValidator();
