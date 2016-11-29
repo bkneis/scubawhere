@@ -2,9 +2,9 @@
 
 namespace Scubawhere\Entities;
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use LaravelBook\Ardent\Ardent;
 use Scubawhere\Context;
+use LaravelBook\Ardent\Ardent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Departure extends Ardent {
 	use SoftDeletingTrait;
@@ -77,12 +77,12 @@ class Departure extends Ardent {
 		if(empty($trip))
 			$trip = $this->trip;
 
-		$start = new DateTime($this->start, new DateTimeZone( Context::get()->timezone ));
+		$start = new \DateTime($this->start, new \DateTimeZone( Context::get()->timezone ));
 		$end   = clone $start;
 
 		$duration_hours   = floor($trip->duration);
 		$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
-		$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+		$end->add( new \DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
 		return $start->format('Y-m-d') !== $end->format('Y-m-d');
 	}

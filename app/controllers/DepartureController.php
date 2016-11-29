@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Departure;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DepartureController extends Controller {
 
@@ -136,7 +137,7 @@ class DepartureController extends Controller {
 		$data['with_full'] = Input::get('with_full', true);
 
 		// Transform parameter strings into DateTime objects
-		$data['after'] = new DateTime( $data['after'], new DateTimeZone( Context::get()->timezone ) ); // Defaults to NOW, when parameter is NULL
+		$data['after'] = new \DateTime( $data['after'], new \DateTimeZone( Context::get()->timezone ) ); // Defaults to NOW, when parameter is NULL
 		if( empty( $data['before'] ) )
 		{
 			/*
@@ -159,7 +160,7 @@ class DepartureController extends Controller {
 		else
 		{
 			// If a 'before' date is submitted, simply use it
-			$data['before'] = new DateTime( $data['before'], new DateTimeZone( Context::get()->timezone ) );
+			$data['before'] = new \DateTime( $data['before'], new \DateTimeZone( Context::get()->timezone ) );
 		}
 
 		if( isset($data['before']) && $data['after'] > $data['before'] )
@@ -480,7 +481,7 @@ class DepartureController extends Controller {
 	private function isBoatAvailable($departure_id, $boat_id, $start, $duration)
 	{	
 		// Check if the boat is already being used during the submitted time
-		$tripStart = new DateTime( $start, new DateTimeZone( Context::get()->timezone ) );
+		$tripStart = new \DateTime( $start, new \DateTimeZone( Context::get()->timezone ) );
 		$tripEnd   = clone $tripStart;
 
 		$duration_hours   = floor($duration);
@@ -601,8 +602,8 @@ class DepartureController extends Controller {
 											->each(function($obj) use (&$start_dates) {
 												foreach($obj->departures as $session) 
 												{
-													$date = new DateTime($session->start,
-																new DateTimeZone(Context::get()->timezone));
+													$date = new \DateTime($session->start,
+																new \DateTimeZone(Context::get()->timezone));
 													array_push($start_dates, $date);
 												}
 											});
@@ -618,11 +619,11 @@ class DepartureController extends Controller {
 					$timetable = $departure->timetable()->first()->replicate();
 					$timetable->save();
 
-					$start = new DateTime( Input::get('start') );
+					$start = new \DateTime( Input::get('start') );
 
 					// Update all following session with new time and timetable_id
 					// First, calculate offset between old_time and new_time
-					$offset    = new DateTime($departure->start);
+					$offset    = new \DateTime($departure->start);
 					$offset    = $offset->diff($start);
 					$offsetSQL = $offset->format('%h:%i'); // hours:minutes
 
@@ -672,7 +673,7 @@ class DepartureController extends Controller {
 		$end_dates = array();
 		foreach($start_dates as &$obj) 
 		{
-			$end_date = new DateTime($obj->format('Y-m-d H:i:s'));
+			$end_date = new \DateTime($obj->format('Y-m-d H:i:s'));
 			$end_date->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 			$end_date->format('Y-m-d H:i:s');
 			array_push($end_dates, $end_date);
@@ -703,7 +704,7 @@ class DepartureController extends Controller {
 		{
 			$duration_hours   = floor($obj->trip->duration);
 			$duration_minutes = round( ($obj->trip->duration - $duration_hours) * 60 );
-			$start = new DateTime($obj->start);
+			$start = new \DateTime($obj->start);
 			$end = clone $start;
 			$end->add(new DateInterval('PT' . $duration_hours . 'H' . $duration_minutes . 'M'));
 

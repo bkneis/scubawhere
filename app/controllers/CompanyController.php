@@ -3,12 +3,13 @@
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Country;
-use Scubawhere\Repositories\UserRepo;
+use Scubawhere\Entities\Booking;
 use Scubawhere\Entities\Location;
+use Scubawhere\Repositories\UserRepo;
 use Scubawhere\Services\CreditService;
 use Scubawhere\Services\DomainService;
 use Scubawhere\Services\ObjectStoreService;
-use Scubawhere\Exceptions\Http;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class CompanyController extends Controller {
 
