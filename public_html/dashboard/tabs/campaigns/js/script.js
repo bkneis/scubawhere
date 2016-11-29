@@ -157,7 +157,7 @@ function showEmailAnalytics(id) {
                 data.analytics[i].customer.email,
                 data.analytics[i].opened,
                 data.analytics[i].customer.id,
-                isCustomerUnsubscribed(data.analytics[i].customer.crm_subscription, data.analytics[i].campaign_id),
+                //isCustomerUnsubscribed(data.analytics[i].customer.crm_subscription, data.analytics[i].campaign_id),
                 opened_date
             ]);
         }
@@ -166,7 +166,7 @@ function showEmailAnalytics(id) {
         $('#total-emails-sent').html(data.total_sent + ' emails sent');
         $('#average-open-rate').html(parseInt((data.total_seen / data.total_sent) * 100) + ' %' + ' Avg Opened Rate');
         //$('#average-click-rate').html(parseInt((data.num_links_clicked/ data.total_sent) * 100) + ' % Avg Click Rate');
-        $('#num-unsubscribed').html(data.num_unsubscriptions + ' No. of unsubscribes');
+        //$('#num-unsubscribed').html(data.num_unsubscriptions + ' No. of unsubscribes');
 
         $('#campaign-analytics-table tr').on('click', function () {
             console.log('clicke');
