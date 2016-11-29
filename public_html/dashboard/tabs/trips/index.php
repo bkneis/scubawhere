@@ -36,7 +36,7 @@
 							        <span class="btn btn-danger pull-right remove-trip" style="color: white;">Remove</span>
                                 {{/if}}
 								<label class="field-label">Trip Name</label>
-								<input id="trip-name" type="text" name="name" value="{{{name}}}" style="width: 350px;">
+								<input id="trip-name" type="text" name="name" value="{{{name}}}">
 
 							</div>
 
