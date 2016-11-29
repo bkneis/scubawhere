@@ -234,7 +234,7 @@
 </script>
 
 <div class="modal fade" id="edit-customer-modal">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width: 760px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
