@@ -95,8 +95,9 @@ function AvailabilityService(vm, dateService) {
         };
         var self = this;
         Accommodation.getAvailability(params, function success(res) {
-            vm.accommodations = res.data;
-            vm.bookings       = self.extractBookings(res.data);
+            vm.accommodations          = res.data;
+            vm.promises.accommodations = true;
+            vm.bookings                = self.extractBookings(res.data);
         });
     };
 

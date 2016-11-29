@@ -46,7 +46,7 @@
 
 <template type="text/x-template" id="availability-table">
     <div class="inner">
-        <table class="ExcelTable">
+        <table class="ExcelTable" v-if="accommodations.length > 0">
             <thead>
                 <tr class="ExcelTable_Header">
                     <th class="ExcelTable_Row ExcelTable_headcol">Date</th>
@@ -68,6 +68,12 @@
                 </tr>
             </tbody>
         </table>
+        <div style="text-align: center"
+             v-if="! (accommodations.length > 0) && promises.accommodations">
+            <h1 style="vertical-align: middle;">
+                No accommodation available
+            </h1>
+        </div>
     </div>
 </template>
 

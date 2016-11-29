@@ -26,8 +26,11 @@ Vue.component('availability-table', {
         return {
             dates          : dateService.getDaysInMonth(),
             accommodations : [],
-            bookings       : []
-        }
+            bookings       : [],
+            promises       : {
+                accommodations : false
+            }
+        };
     },
 
     /**
