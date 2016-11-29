@@ -2946,6 +2946,7 @@ $('#summary-tab').on('click', '.save-booking', function() {
 
 	booking.save(params, function success(status) {
 		pageMssg("Booking saved successfully!", "success");
+		window.skipSavedBooking = true;
 
 		// Update status on summary screen
 		$('#status').html(statusIcon(booking).string);
@@ -2980,6 +2981,8 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 			$(self).remove();
 			$('#option-buttons').append('<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 		}
+
+		window.skipSavedBooking = true;
 
 		// Update status on summary screen
 		$('#status').html(statusIcon(booking).string);
