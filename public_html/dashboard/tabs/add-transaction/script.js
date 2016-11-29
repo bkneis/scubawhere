@@ -172,6 +172,7 @@ $(function() {
 
 		booking.addPayment(params, function success(status) {
 			pageMssg(status, true);
+			console.log(booking);
 			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
 			$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );

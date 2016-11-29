@@ -924,7 +924,7 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			var payment = data.payment;
-			payment.paymentgateway = window.paymentgateways[ payment.paymentgateway_id ];
+			payment.paymentgateway = _.find(window.paymentgateways, function(obj) { return obj.id === parseInt(payment.paymentgateway_id); });
 
 			this.payments.push(payment);
 
@@ -983,7 +983,8 @@ Booking.prototype.addRefund = function(params, successFn, errorFn) {
 		success: function(data) {
 
 			var refund = data.refund;
-			refund.paymentgateway = window.paymentgateways[ refund.paymentgateway_id ];
+			refund.paymentgateway = _.find(window.paymentgateways, function(obj) { return obj.id === parseInt(refund.paymentgateway_id); });
+			//refund.paymentgateway = window.paymentgateways[ refund.paymentgateway_id ];
 
 			this.refunds.push(refund);
 
