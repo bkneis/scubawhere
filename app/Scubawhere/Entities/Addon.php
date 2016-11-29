@@ -5,7 +5,6 @@ namespace Scubawhere\Entities;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
-use Scubawhere\Entities\Price;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Addon extends Ardent {
