@@ -144,9 +144,10 @@ $(function() {
 	--------------------------*/
 	$('#calendar').fullCalendar({
 		header: {
-			left: '',
+            left: 'basicDay basicWeek month',
 			center: 'title',
 		},
+		defaultView : 'basicWeek',
 		timezone: false,
 		firstDay: 1, // Set Monday as the first day of the week
 		events: function(start, end, timezone, callback) {
@@ -233,6 +234,10 @@ $(function() {
 			// Intercept the event rendering to inject the non-html-escaped version of the title
 			// Needed for trip names with special characters in it (like ó, à, etc.)
 			element.find('.fc-title').html(event.title);
+		},
+		eventAfterRender : function(event, element) {
+			$(element).css('height', '25px');
+			$(element).css('text-align', 'center');
 		},
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
