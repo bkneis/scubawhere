@@ -176,7 +176,7 @@
 								</div>
 								<div class="col-md-2">
 									<label>&nbsp;</label><br>
-									<button class="btn btn-success add-certificate" style="width: 100%;">Add</button>
+									<button class="btn btn-success add-certificate" style="width: 100%;">Add Cert</button>
 								</div>
 							</div>
 						</fieldset>
