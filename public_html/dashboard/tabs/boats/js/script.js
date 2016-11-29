@@ -206,7 +206,7 @@ $(function() {
                 /*renderBoatList(function() {
                 renderEditForm($('#update-boat-form input[name=id]').val())
             });*/
-                renderBoatList();
+                renderBoatList(renderEditForm);
                 $('#update-boat').prop('disabled', false);
                 $('.loader').remove();
             },
@@ -237,7 +237,7 @@ $(function() {
 			/*renderBoatList(function() {
 			renderRoomEditForm($('#update-boatroom-form input[name=id]').val());
 		});*/
-			renderBoatList();
+			renderBoatList(renderRoomEditForm);
 			$('.loader').remove();
 			$('#update-boatroom').prop('disabled', false);
 		},

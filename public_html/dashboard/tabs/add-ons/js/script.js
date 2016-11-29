@@ -122,7 +122,7 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			renderViews(data.model.id);
+			renderViews();
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);

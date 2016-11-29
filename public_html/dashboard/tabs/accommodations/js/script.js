@@ -123,7 +123,7 @@ $(function(){
 
 			window.accommodations[data.model.id] = data.model;
 
-			renderViews(data.model.id);
+			renderViews();
 		}, function error(xhr) {
 
 			var data = JSON.parse(xhr.responseText);

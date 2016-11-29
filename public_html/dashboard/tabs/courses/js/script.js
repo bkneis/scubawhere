@@ -157,7 +157,7 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			renderCourseList();
+			renderCourseList(renderEditForm);
 
 			$('.new_price').remove();
 

@@ -85,7 +85,7 @@ $(function(){
 
 			pageMssg(data.status, true);
 
-			renderAgentList();
+			renderAgentList(renderEditForm);
 
 			$('form').data('hasChanged', false);
 

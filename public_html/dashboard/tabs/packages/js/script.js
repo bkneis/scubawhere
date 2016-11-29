@@ -151,7 +151,7 @@ $(function(){
 
 			$('form').data('hasChanged', false);
 
-			renderPackageList();
+			renderPackageList(renderEditForm);
 
 			$('.new_price').remove();
 

@@ -113,7 +113,7 @@ $(function(){
 
 			pageMssg(data.status, true);
 
-			renderTripList();
+			renderTripList(renderEditForm);
 
 			$('form').data('hasChanged', false);
 

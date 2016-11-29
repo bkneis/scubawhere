@@ -176,7 +176,7 @@ $(function () {
 
 			$('form').data('hasChanged', false);
 
-			renderTicketList();
+			renderTicketList(renderEditForm);
 
 			$('.new_price').remove();
 
