@@ -82,6 +82,10 @@ class CompanyController extends Controller {
 			$this->postSetSubdomain($data['alias']);
 		}
 
+		if(is_null($data['alias'])) {
+			unset($data['alias']);
+		}
+
 		// Mass assigned insert with automatic validation
 		$company->fill($data);
 		if($company->updateUniques())
