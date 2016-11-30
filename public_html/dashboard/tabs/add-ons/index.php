@@ -35,17 +35,17 @@
 									<span class="btn btn-danger pull-right remove-addon">Remove</span>
 								{{/if}}
                                 <input type="hidden" name="deletable" value="{{deletable}}">
-								<label class="field-label">Add-on Name</label>
+								<label class="field-label">Add-on Name : <span class="text-danger">*</span></label>
 								<input id="addon-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Add-on Description</label>
+								<label class="field-label">Add-on Description : </label>
 								<textarea name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
 							<div class="form-row prices">
-								<p><strong>Addon-on Price : </strong></p>
+								<p><strong>Addon-on Price : <span class="text-danger">*</span></strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}

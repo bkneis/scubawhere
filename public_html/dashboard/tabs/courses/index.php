@@ -35,7 +35,7 @@
 									<span class="btn btn-danger pull-right remove-course">Remove</span>
 								{{/if}}
                                 <input type="hidden" name="deleteable" value="{{deleteable}}">
-								<label class="field-label">Course Name</label>
+								<label class="field-label">Course Name : <span class="text-danger">*</span></label>
 								<input id="course-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
@@ -59,7 +59,7 @@
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Course capacity</label>
+								<label class="field-label">Course capacity : <span class="text-danger">*</span></label>
 								<input id="course-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 							</div>
 
@@ -84,7 +84,7 @@
 							</div>
 
 							<div id="course-base" class="form-row">
-								<p><strong>Set base prices for this course:</strong></p>
+								<p><strong>Course price : <span class="text-danger">*</span></strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}

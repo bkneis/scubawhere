@@ -35,7 +35,7 @@
                                     <input type="hidden" name="deleteable" value="{{deleteable}}">
 							        <span class="btn btn-danger pull-right remove-trip" style="color: white;">Remove</span>
                                 {{/if}}
-								<label class="field-label">Trip Name</label>
+								<label class="field-label">Trip Name : <span class="text-danger">*</span></label>
 								<input id="trip-name" type="text" name="name" value="{{{name}}}">
 
 							</div>
@@ -47,7 +47,7 @@
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Trip Duration</label>
+								<label class="field-label">Trip Duration : <span class="text-danger">*</span></label>
 								<input type="number" min="1" step="0.1" name="duration" id="tripDuration" rows="3" cols="10" value="{{duration}}" style="width: 70px;"> hours
 								<strong><span id="readableDuration" style="margin-left: 2em;">{{readable duration}}</span></strong>
 								<button type="button" class="btn btn-primary btn-sm add1d" style="margin-left: 2em;">+1 day</button>
@@ -60,7 +60,7 @@
 							</div>
 
 							<div class="form-row" id="locationsList">
-								<h4>Select the locations that this trip will go to:</h4>
+								<h4>Select the locations that this trip will go to : <span class="text-danger">*</span></h4>
 								{{#each available_locations}}
 									<label class="location{{inArray id ../locations}}">
 										<input type="checkbox" name="locations[]" value="{{id}}"{{inArray id ../locations}} onchange="changeParent(this)">
@@ -79,7 +79,7 @@
 							</div>
 
 							<div class="form-row" id="tagsList">
-								<h4>Select the tags of this trip:</h4>
+								<h4>Select the tags of this trip : <span class="text-danger">*</span></h4>
 								{{#each available_tags}}
 									<label class="tag{{inArray id ../tags}}">
 										<input type="checkbox" name="tags[]" value="{{id}}"{{inArray id ../tags}} onchange="changeParent(this)">

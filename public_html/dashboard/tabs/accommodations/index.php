@@ -35,17 +35,17 @@
 									<span class="btn btn-danger pull-right remove-accommodation">Remove</span>
 								{{/if}}
                                 <input type="hidden" name="force" value="{{deletable}}">
-								<label for="name" class="field-label">Room Name</label>
+								<label for="name" class="field-label">Room Name : <span class="text-danger">*</span></label>
 								<input id="room-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">
-								<label for="description" class="field-label">Accommodation Description</label>
+								<label for="description" class="field-label">Accommodation Description : </label>
 								<textarea id="acom-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 							</div>
 
 							<div class="form-row" id="acom-base">
-								<p><strong>Price per night :</strong></p>
+								<p><strong>Price per night : <span class="text-danger">*</span></strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}

@@ -35,12 +35,12 @@
 									<span class="btn btn-danger pull-right remove-class">Remove</span>
 								{{/if}}
                                 <input type="hidden" name="deleteable" value="{{deleteable}}">
-								<label class="field-label">Class Name</label>
+								<label class="field-label">Class Name : <span class="text-danger">*</span></label>
 								<input id="class-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Class Duration</label>
+								<label class="field-label">Class Duration : <span class="text-danger">*</span></label>
 								<input type="number" min="1" step="0.1" name="duration" id="tripDuration" rows="3" cols="10" value="{{duration}}" style="width: 70px;"> hours
 								<strong><span id="readableDuration" style="margin-left: 2em;">{{readable duration}}</span></strong>
 								<a class="btn btn-primary btn-sm add1d" style="margin-left: 2em;">+1 day</a>

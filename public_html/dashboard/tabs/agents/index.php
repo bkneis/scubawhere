@@ -34,32 +34,32 @@
                                 <span class="btn btn-danger pull-right remove-agent">Remove</span>
                             {{/if}}
 							<div class="form-row">
-								<label class="field-label">Agent Name</label>
+								<label class="field-label">Agent Name : <span class="text-danger">*</span></label>
 								<input id="agent-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Agent&rsquo;s Website (Optional)</label>
+								<label class="field-label">Agent&rsquo;s Website</label>
 								<input id="agent-web" type="text" name="website" placeholder="http://" value="{{{website}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Branch Name</label>
+								<label class="field-label">Branch Name : <span class="text-danger">*</span></label>
 								<input id="branch-name" type="text" name="branch_name" value="{{{branch_name}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Branch Address</label>
+								<label class="field-label">Branch Address : <span class="text-danger">*</span></label>
 								<textarea id="branch-address" name="branch_address" rows="3" cols="10">{{{branch_address}}}</textarea>
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Branch Telephone</label>
+								<label class="field-label">Branch Telephone : </label>
 								<input id="branch-phone" type="text" name="branch_phone" placeholder="+00 000 ..." value="{{{branch_phone}}}">
 							</div>
 
 							<div class="form-row">
-								<label class="field-label">Branch E-Mail</label>
+								<label class="field-label">Branch E-Mail : </label>
 								<input id="branch-email" type="text" name="branch_email" placeholder="email@agent.com" value="{{{branch_email}}}">
 							</div>
 
@@ -88,12 +88,12 @@
 							</div>
 
 							<div class="form-row" id="commission-div">
-								<label class="field-label">Commission (%)</label>
+								<label class="field-label">Commission (%) : <span class="text-danger">*</span></label>
 								<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}">
 							</div>
 
 							<div id="terms-div" class="form-row">
-								<label class="field-label">Business Terms</label>
+								<label class="field-label">Business Terms : <span class="text-danger">*</span></label>
 								<select id="terms" name="terms">
 									<option>Please select..</option>
 									<option value="fullamount"{{selected 'fullamount'}}>Full Amount</option>

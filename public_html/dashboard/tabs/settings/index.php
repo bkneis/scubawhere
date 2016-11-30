@@ -11,12 +11,12 @@
 							<div id="account-info" class="panel-body">
 
 								<div class="form-row">
-									<label class="field-label">Main Person of Contact : </label>
-									<input type="text" name="contact" value="{{contact}}" class="form-control" required></input>
+									<label class="field-label">Main Person of Contact : <span class="text-danger">*</span></label>
+									<input type="text" name="contact" value="{{contact}}" class="form-control" required>
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Dive Operator Name : </label>
+									<label class="field-label">Dive Operator Name : <span class="text-danger">*</span></label>
 									<input type="text" name="name" value="{{name}}" class="form-control" required>
 								</div>
 
@@ -57,7 +57,7 @@
 								<div id="credit-info"></div>
 
 								<div id="subdomain-info" class="form-row">
-									<label class="field-label">Customer facing web portal :</label>
+									<label class="field-label">Customer facing web portal : </label>
 									<input type="text" style="width: 30%;" name="alias" value="{{alias}}" {{#if alias}} disabled {{/if}}> .scubawhere.com
 								</div>
 
@@ -125,14 +125,14 @@
 								</div>
 
 								<div class="form-row">
-									<label for="country_id">Country : </label>
+									<label for="country_id">Country : <span class="text-danger">*</span></label>
 									<select id="country_id" name="country_id" style="width: 100%;" required>
 										<option value="">Please select</option>
 									</select>
 								</div>
 
 								<div class="form-row">
-									<label for="currency_id">Currency : </label>
+									<label for="currency_id">Currency : <span class="text-danger">*</span></label>
 									<select id="currency_id" name="currency_id" style="width: 100%;" required>
 										<option value="">Please select</option>
 									</select>

@@ -49,7 +49,7 @@
 									<span class="btn btn-danger pull-right remove-boat">Remove</span>
 								{{/if}}
 									<div class="form-row">
-											<label class="field-label">Boat name</label>
+											<label class="field-label">Boat name : <span class="text-danger">*</span></label>
 											<input id="boat-name" type="text" name="name" value="{{{name}}}">
 									</div>
 									<div class="form-row">
@@ -57,7 +57,7 @@
 											<textarea id="boat-description" name="description" style="height: 243px;">{{{description}}}</textarea>
 									</div>
 									<div class="form-row">
-											<label class="field-label">Boat capacity</label>
+											<label class="field-label">Boat capacity : <span class="text-danger">*</span></label>
 											<input id="boat-capacity" type="number" name="capacity" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 									</div>
 									<div id="boat-cabins" class="form-row">
@@ -110,7 +110,7 @@
 										<span class="btn btn-danger pull-right remove-boatroom">Remove</span>
 									{{/if}}
 									<div class="form-row">
-											<label class="field-label">Cabin name</label>
+											<label class="field-label">Cabin name : <span class="text-danger">*</span></label>
 											<input type="text" name="name" value="{{{name}}}">
 									</div>
 									<div class="form-row">

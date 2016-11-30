@@ -34,7 +34,7 @@
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-package">Remove</span>
 								{{/if}}
-								<label class="field-label">Package Name</label>
+								<label class="field-label">Package Name : <span class="text-danger">*</span></label>
 								<input id="package-name" type="text" name="name" value="{{{name}}}">
 							</div>
 
@@ -86,7 +86,7 @@
 							</div>
 
 							<div id="package-base" class="form-row">
-								<p><strong>Set base prices for this package:</strong></p>
+								<p><strong>Package price : <span class="text-danger">*</span></strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}

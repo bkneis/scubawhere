@@ -34,7 +34,7 @@
 								{{#if update}}
 									<span class="btn btn-danger pull-right remove-customer-group">Remove</span>
 								{{/if}}
-								<label class="field-label">Group name</label>
+								<label class="field-label">Group name : <span class="text-danger">*</span></label>
 								<input id="group-name" type="text" name="name" value="{{{name}}}">
 							</div>
 

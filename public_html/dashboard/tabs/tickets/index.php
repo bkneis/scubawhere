@@ -34,7 +34,7 @@
 									<span class="btn btn-danger pull-right remove-ticket">Remove</span>
                                     <input type="hidden" name="deleteable" value="{{deleteable}}">
 								{{/if}}
-								<label class="field-label">Ticket Name</label>
+								<label class="field-label">Ticket Name : <span class="text-danger">*</span></label>
 								<input id="ticket-name" type="text" name="name" value="{{{name}}}">
 
 								{{!-- TODO Enable deletion of ticktes, including all necessary checks and propagation
@@ -56,7 +56,7 @@
 							</div>
 
 							<div class="form-row prices"{{#if only_packaged}} style="display: none;"{{/if}}>
-								<p><strong>Set base prices for this ticket:</strong></p>
+								<p><strong>Ticket price : <span class="text-danger">*</span></strong></p>
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
