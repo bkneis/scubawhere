@@ -4,6 +4,7 @@ use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Booking;
 use Illuminate\Database\QueryException;
+use Scubawhere\Entities\TrainingSession;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TrainingSessionController extends Controller
