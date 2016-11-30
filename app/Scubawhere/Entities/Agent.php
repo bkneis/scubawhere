@@ -11,7 +11,7 @@ class Agent extends Ardent {
 
 	public static $rules = array(
 		'name'            => 'required',
-		'website'         => 'active_url',
+		'website'         => 'url',
 		'branch_name'     => 'required',
 		'branch_address'  => 'required',
 		'branch_phone'    => '',
