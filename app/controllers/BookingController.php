@@ -7,6 +7,8 @@ use Scubawhere\Entities\PickUp;
 use Scubawhere\Entities\Booking;
 use Scubawhere\Entities\Customer;
 use Scubawhere\Entities\Bookingdetail;
+use Scubawhere\Entities\Paymentgateway;
+use Scubawhere\Entities\Payment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BookingController extends Controller
@@ -2006,6 +2008,8 @@ class BookingController extends Controller
             return Response::json(array('errors' => $booking->errors()->all()), 406); // 406 Not Acceptable
         }
 
+        $payment = null;
+
 		if($booking->agent_id !== null)
 		{
 			$agent = $booking->agent()->first(); // @note, should I use lazy loading, i.e. $booking->load('agent') here, any benefits?
@@ -2018,16 +2022,13 @@ class BookingController extends Controller
 				$data['received_at'] = Helper::localtime()->format('Y-m-d');	
 
 				$payment = new Payment($data);
-				if(!$payment->validate())
-					return Response::json(array('errors' => $payment->errors()->all()), 406);
+				if(!$payment->validate()) {
+                    return Response::json(array('errors' => $payment->errors()->all()), 406);
+                }
 
 				$payment = $booking->payments()->save($payment);
 			}
 		}
-        else
-        {
-            $payment = null;
-        }
 
         CrmMailer::sendBookingConf($booking->id);
 
