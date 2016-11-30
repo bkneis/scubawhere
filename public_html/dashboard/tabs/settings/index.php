@@ -56,7 +56,7 @@
 
 								<div id="credit-info"></div>
 
-								<div class="form-row">
+								<div id="subdomain-info" class="form-row">
 									<label class="field-label">Customer facing web portal :</label>
 									<input type="text" style="width: 30%;" name="alias" value="{{alias}}" {{#if alias}} disabled {{/if}}> .scubawhere.com
 								</div>

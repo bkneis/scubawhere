@@ -37,6 +37,13 @@ function TourManager() {
 				onShown	  : function(tour) { }
 			},
 			{
+				element   : '#subdomain-info',
+				title     : 'Customer facing website',
+				placement : 'right',
+				content   : 'Here you can setup the URL of your customer sign up page, this will be visible on the internet so your customers can fill in their information. Please note, this cannot be edited after it is set.',
+				onShown	  : function(tour) { }
+			},
+			{
 				element   : '#postcode-div',
 				title     : 'Locating your business',
 				placement : 'left',
