@@ -3,6 +3,7 @@
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Timetable;
 use Scubawhere\Entities\Departure;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

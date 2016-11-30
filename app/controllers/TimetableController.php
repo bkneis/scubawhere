@@ -1,6 +1,8 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use Scubawhere\Context;
+use Scubawhere\Entities\Timetable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TimetableController extends Controller {
 
