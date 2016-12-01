@@ -28,8 +28,7 @@ Vue.component('companies-list', {
                 type: "GET",
                 dataType: "json",
                 success: function(log) {
-                    location = '/';
-                    window.location.href = location;
+                    window.location.href = '/';
                 }
             });
         }
