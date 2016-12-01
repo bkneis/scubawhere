@@ -27,7 +27,7 @@
 
 				<span class="form-errors"></span>
 
-				<input style="width:280px;" type="text" name="contact" placeholder="Name" required>
+				<input style="width:280px;" type="text" name="contact" placeholder="Personal Contact Name" required>
 
 				<input style="width:280px;" type="text" name="email" placeholder="Email" required>
 
