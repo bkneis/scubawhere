@@ -26,7 +26,7 @@
 								</div>
 
 								<div id="agencies-list" class="form-row" style="overflow:auto;">
-									<label>Accepted Diving Instuitions</label>
+									<label>Select your Diving Associations : </label>
 									<div id="agencies">
 										{{#each agencies}}
 										<label class="certify">
