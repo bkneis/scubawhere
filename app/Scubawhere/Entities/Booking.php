@@ -153,11 +153,11 @@ class Booking extends Ardent {
 			$departures->sortByDesc(function($departure)
 			{
 				$trip             = $departure->trip;
-				$start            = new DateTime($departure->start);
+				$start            = new \DateTime($departure->start);
 				$end              = clone $start;
 				$duration_hours   = floor($trip->duration);
 				$duration_minutes = round( ($trip->duration - $duration_hours) * 60 );
-				$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+				$end->add( new \DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
 				$departure->end = $end;
 
@@ -172,11 +172,11 @@ class Booking extends Ardent {
 			$training_sessions->sortByDesc(function($training_session)
 			{
 				$class            = $training_session->training;
-				$start            = new DateTime($training_session->start);
+				$start            = new \DateTime($training_session->start);
 				$end              = clone $start;
 				$duration_hours   = floor($class->duration);
 				$duration_minutes = round( ($class->duration - $duration_hours) * 60 );
-				$end->add( new DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
+				$end->add( new \DateInterval('PT'.$duration_hours.'H'.$duration_minutes.'M') );
 
 				$training_session->end = $end;
 
@@ -187,7 +187,7 @@ class Booking extends Ardent {
 
 		$model = $this->accommodations()->orderBy('accommodation_booking.end', 'DESC')->first();
 		if(!empty($model))
-			$lastAccommodationEnd = new DateTime($model->pivot->start);
+			$lastAccommodationEnd = new \DateTime($model->pivot->start);
 
 		$dates = [$lastTripReturn, $lastClassReturn, $lastAccommodationEnd];
 		$dates = array_filter($dates);
@@ -424,9 +424,9 @@ class Booking extends Ardent {
 						})->first();
 
 						if($firstDetail->departure)
-							$detailStart = new DateTime($firstDetail->departure->start);
+							$detailStart = new \DateTime($firstDetail->departure->start);
 						elseif($firstDetail->training_session)
-							$detailStart = new DateTime($firstDetail->training_session->start);
+							$detailStart = new \DateTime($firstDetail->training_session->start);
 					}
 
 					$accommodations = $this->accommodations()->wherePivot('packagefacade_id', $detail->packagefacade_id)->get();
@@ -437,7 +437,7 @@ class Booking extends Ardent {
 							return $accommodation->pivot->start;
 						})->first();
 
-						$accommStart = new DateTime($firstAccommodation->pivot->start);
+						$accommStart = new \DateTime($firstAccommodation->pivot->start);
 					}
 
 					$dates = [$detailStart, $accommStart];
