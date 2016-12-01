@@ -18,6 +18,6 @@ class HttpBadRequest extends HttpBaseException
 
     public function response()
     {
-        return Response::json($this->errors, $this->code);
+        return Response::json(array('errors' => $this->errors), $this->code);
     }
 }
