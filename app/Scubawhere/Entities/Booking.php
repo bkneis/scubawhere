@@ -8,6 +8,7 @@ use Scubawhere\Helper;
 use Scubawhere\Context;
 
 class Booking extends Ardent {
+	
 	protected $fillable = array(
 		'lead_customer_id',
 		'agent_id',
