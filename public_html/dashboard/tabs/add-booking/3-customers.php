@@ -69,15 +69,11 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-5">
+							<div class="col-md-6">
 								<label for="email" class="control-label">Email</label>
 								<input id="customer-email" name="email" class="form-control form-email" placeholder="@">
 							</div>
-							<div class="col-md-2">
-								<label>&nbsp;</label><br>
-								<button type="button" class="btn btn-primary add-dummy-email" style="width: 100%;">Add Dummy Email</button>
-							</div>
-							<div class="col-md-5" style="margin-top:30px;">
+							<div class="col-md-6" style="margin-top:30px;">
 								<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true">
 								<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
 							</div>
@@ -305,15 +301,9 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
 			<input id="customer-email" name="email" class="form-control template-email" placeholder="@" value="{{{email}}}">
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-md-6">
-			<label>&nbsp;</label><br>
-			<button type="button" class="btn btn-primary add-dummy-email" style="width: 100%;">Add Dummy Email</button>
 		</div>
 		<div class="col-md-6" style="margin-top:30px;">
 			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true" {{#if unsubscribed}}checked{{/if}}>
