@@ -1136,7 +1136,11 @@ function customerData(customer) {
     var addons = [];
 
     for(var i = 0; i < customer.pivot.addons.length; i++) {
-        addons.push(customer.pivot.addons[i].name);
+        if (customer.pivot.addons[i].pivot.quantity > 1) {
+            addons.push(customer.pivot.addons[i].name + ' x ' + customer.pivot.addons[i].pivot.quantity.toString());
+        } else {
+            addons.push(customer.pivot.addons[i].name);
+        }
     }
 
     if(addons.length > 0) {
