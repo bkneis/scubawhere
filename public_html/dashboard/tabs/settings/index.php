@@ -81,7 +81,7 @@
 
 								<div class="form-row">
 									<label class="field-label">Business Address 1 : </label>
-									<input type="text" name="address_1" value="{{address_1}}" class="form-control" required>
+									<input type="text" name="address_1" value="{{address_1}}" class="form-control">
 								</div>
 
 								<div class="form-row">
@@ -91,17 +91,22 @@
 
 								<div class="form-row">
 									<label class="field-label">City : </label>
-									<input type="text" name="city" value="{{city}}" class="form-control" required>
+									<input type="text" name="city" value="{{city}}" class="form-control">
 								</div>
 
 								<div class="form-row">
 									<label class="field-label">County / State : </label>
-									<input type="text" name="county" value="{{county}}" class="form-control" required>
+									<input type="text" name="county" value="{{county}}" class="form-control">
 								</div>
 
 								<div id="postcode-div" class="form-row">
 									<label class="field-label">Post Code / Zip Code : </label>
-									<input type="text" name="postcode" value="{{postcode}}" class="form-control" required>
+									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
+								</div>
+
+								<div id="postcode-div" class="form-row">
+									<label class="field-label">Post Code / Zip Code : </label>
+									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
 								</div>
 
 								<div class="form-row">
