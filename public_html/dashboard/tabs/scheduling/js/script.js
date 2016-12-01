@@ -150,6 +150,10 @@ $(function() {
 		defaultView : 'basicWeek',
 		timezone: false,
 		firstDay: 1, // Set Monday as the first day of the week
+		businessHours : {
+			start : '00:00',
+			end   : '24:00'
+		},
 		events: function(start, end, timezone, callback) {
 
 			// Start loading indicator
@@ -950,7 +954,6 @@ function createCalendarEntry(eventObject) {
 		if( eventObject.textColor == '#000000') // black
 			eventObject.textColor = colorOpacity(eventObject.textColor, 0.3);
 	}
-
 	return eventObject;
 
 	// Render the event on the calendar

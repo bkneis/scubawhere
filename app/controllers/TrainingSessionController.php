@@ -238,6 +238,10 @@ class TrainingSessionController extends Controller
                     $options['after']->format('Y-m-d H:i:s'),
                     $options['before']->format('Y-m-d H:i:s'),
                 ));
+                $query->orWhereBetween(\DB::raw("ADDTIME(start, CONCAT(CEIL(trainings.duration), ':', LPAD(FLOOR(trainings.duration*60 % 60),2,'0')))"), array(
+                    $options['after']->format('Y-m-d H:i:s'),
+                    $options['before']->format('Y-m-d H:i:s')
+                ));
             } else {
                 $query->where('start', '>=', $options['after']->format('Y-m-d H:i:s'));
             }

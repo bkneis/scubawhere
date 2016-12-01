@@ -350,13 +350,18 @@ class DepartureController extends Controller {
 		// Filter by dates
 		->where(function($query) use ($options)
 		{
-			if(isset($options['before']))
+			if(isset($options['before'])) {
 				$query->whereBetween('start', array(
 					$options['after']->format('Y-m-d H:i:s'),
 					$options['before']->format('Y-m-d H:i:s')
 				));
-			else
+				$query->orWhereBetween(\DB::raw("ADDTIME(start, CONCAT(CEIL(trips.duration), ':', LPAD(FLOOR(trips.duration*60 % 60),2,'0')))"), array(
+					$options['after']->format('Y-m-d H:i:s'),
+					$options['before']->format('Y-m-d H:i:s')
+				));
+			} else {
 				$query->where('start', '>=', $options['after']->format('Y-m-d H:i:s'));
+			}
 		})
 		// Filter by available_for dates
 		->where(function($query) use ($available_for_from)
