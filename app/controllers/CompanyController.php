@@ -87,7 +87,7 @@ class CompanyController extends Controller {
 		}
 
 		// Mass assigned insert with automatic validation
-		$company->fill($data);
+		$company = $company->fill($data);
 		if($company->updateUniques())
 		{
 			if( Input::has('agencies') )
