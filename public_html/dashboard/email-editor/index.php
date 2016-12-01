@@ -116,8 +116,8 @@
                 </div>
                 <div class="modal-body">
                     <div id="template-types" class="btn-group" style="margin-bottom:10px" role="group">
-                        <button display="layout-options" type="button" class="btn btn-default btn-primary option-button">Layouts</button>
-                        <button display="template-options" type="button" class="btn btn-default option-button">My Templates</button>
+                        <button display="layout-options" type="button" class="btn btn-default btn-primary option-button">Example Layouts</button>
+                        <button display="template-options" type="button" class="btn btn-default option-button">My Saved Templates</button>
                     </div>
                     <!-- loop through templates-->
                     <div style="margin: 0 auto;">
