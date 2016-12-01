@@ -661,6 +661,8 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 
 	params.booking_id = this.id;
 
+	console.log(params);
+
 	$.ajax({
 		type: "POST",
 		url: "/api/booking/edit-info",

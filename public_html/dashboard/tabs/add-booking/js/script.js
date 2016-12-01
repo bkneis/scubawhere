@@ -29,6 +29,10 @@ Handlebars.registerHelper('isViewMode', function() {
 	return window.booking.mode = 'view' ? true : false;
 });
 
+Handlebars.registerHelper('decimalise', function (obj) {
+	return new Handlebars.SafeString(parseFloat(parseInt(obj) / 100));
+});
+
 
 /**
  * Generate the free spaces percentage bar
@@ -2773,6 +2777,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 
 	var params = $(this).serializeObject();
 	params._token = window.token;
+	console.log('params', params);
 
 	booking.editInfo(params, function success(status) {
 		pageMssg(status, 'success');
