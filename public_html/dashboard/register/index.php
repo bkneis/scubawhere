@@ -27,18 +27,20 @@
 
 				<span class="form-errors"></span>
 
+				</br>
+				<label for="contact">Personal Contact Name</label>
 				<input style="width:280px;" type="text" name="contact" placeholder="Personal Contact Name" required>
-
+				<label for="contact">Email</label>
 				<input style="width:280px;" type="text" name="email" placeholder="Email" required>
-
+				<label for="contact">Dive Operator Name</label>
 				<input style="width:280px;" type="text" name="name" placeholder="Dive Operator Name" required>
-
+				<label for="contact">Phone number</label>
 				<input style="width:280px;" type="text" name="phone" placeholder="Phone Number (Optional)">
-
+				<label for="contact">Username</label>
 				<input style="width:280px;" type="text" name="username" placeholder="Username" required>
-
+				<label for="contact">Password</label>
 				<input style="width:280px;" type="password" name="password" placeholder="Password" required>
-
+				<label for="contact">Re enter password</label>
 				<input style="width:280px;" type="password" name="repassword" placeholder="Re Enter Password" required>
 
 				<p style="font-size:14px; width:280px; font-style: italic;">
