@@ -1997,6 +1997,11 @@ $('#accommodation-tab').on('click', '.select-accommodation-dates', function(even
 	showModalAccommodationSelection(accommodation);
 });
 
+$('#modalWindows').on('click', '.save-accommodation-dates', function (event) {
+	console.log('dfdsf')
+	addAccommodationToBooking(window.selectedAccommodations);
+});
+
 
 function showModalAccommodationSelection(accommodation) {
 	// Create the modal window from accommodation-selection-template
@@ -2193,7 +2198,8 @@ function showModalAccommodationSelection(accommodation) {
 			});
 		},
 		onFinishModal: function() {
-            addAccommodationToBooking(window.selectedAccommodations);
+            //addAccommodationToBooking(window.selectedAccommodations);
+			window.selectedAccommodations = [];
 			$('#modal-accommodation-selection').remove();
 		},
 	});

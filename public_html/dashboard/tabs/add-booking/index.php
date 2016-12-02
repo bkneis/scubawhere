@@ -150,7 +150,7 @@
 
 				<div id="calendar"></div>
 
-				<button style="margin-top: 20px;" class="btn btn-lg btn-success close-modal pull-right">SAVE</button>
+				<button style="margin-top: 20px;" class="btn btn-lg btn-success close-modal pull-right save-accommodation-dates">SAVE</button>
 
 				<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 			</div>
