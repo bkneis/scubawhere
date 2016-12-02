@@ -210,12 +210,12 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab">
 												<h4 class="panel-title">
-													<a class="accordion-heading" data-toggle="collapse" href="#booking-summary-addons-{{../id}}">
+													<a class="accordion-heading" data-toggle="collapse" href="#booking-summary-addons-{{id}}">
 														<i class="fa fa-cubes fa-fw"></i>&nbsp; Addons <i class="fa fa-plus-square-o expand-icon pull-right"></i>
 													</a>
 												</h4>
 											</div>
-											<div id="booking-summary-addons-{{../id}}" class="panel-collapse collapse" role="tabpanel">
+											<div id="booking-summary-addons-{{id}}" class="panel-collapse collapse" role="tabpanel">
 												<div class="panel-body">
 													{{#each addons}}
 														<p>
