@@ -239,7 +239,7 @@ $(function() {
 
 		Booking.filter(params, function success(data) {
 			// Doesn't need sorting, because the server sorts DESC
-			renderBookingList(data);
+			renderBookingList(data, "all");
 
 			btn.html('Find Booking');
 		}, function error(xhr) {
