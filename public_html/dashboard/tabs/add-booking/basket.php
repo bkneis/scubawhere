@@ -13,7 +13,7 @@
 		<li class="list-group-item active">
 			<h4 class="list-group-item-heading">Summary<span class="pull-right">{{currency}} {{decimal_price}}</h4>
 			{{#compare discount '!==' '0.00'}}
-				<strong>Discount (included)</strong> <span class="pull-right">{{currency}} {{discount}}</span>
+				<strong>Discount (included)</strong> <span class="pull-right">{{currency}} {{decimalise discount}}</span>
 			{{/compare}}
 		</li>
 		<li class="list-group-item summary-references">

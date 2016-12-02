@@ -310,14 +310,14 @@ Handlebars.registerHelper('trimSeconds', function(date) {
 });
 
 Handlebars.registerHelper('reference', function() {
-	if(this.status === 'temporary')
+	if(this.status === 'temporary') {
 		return this.reference.substr(0, this.reference.length - 1);
-
+	}
 	return this.reference;
 });
 
 Handlebars.registerHelper('fullPrice', function() {
-	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
+	return (parseFloat(this.decimal_price) + parseFloat(this.discount / 100)).toFixed(2);
 });
 
 /* Handlebars.registerHelper('addonMultiplyPrice', function(decimal_price, quantity) {
@@ -2801,6 +2801,7 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	});
 });
 
+// taghere
 $('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
 	$discount_percentage = $(e.target);

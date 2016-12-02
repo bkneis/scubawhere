@@ -2126,9 +2126,10 @@ class BookingController extends Controller
             ->where('reference', $booking->reference.'_')
             ->first();
 
-        //var_dump($edited_booking);
         if(!is_null($edited_booking)) {
-            return Response::json($edited_booking);
+            Request::replace(['id' => $edited_booking->id]);
+            return $this->getIndex();
+            //return Response::json($edited_booking);
         }
 
         /*if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {

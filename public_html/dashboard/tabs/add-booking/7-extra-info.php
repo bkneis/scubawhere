@@ -24,7 +24,7 @@
 							</div>
 							<div class="input-group" style="width: 59%;">
 								<span class="input-group-addon"><i class="fa fa-money"></i></span>
-								<input type="text" class="form-control" id="discount" name="discount" value="{{discount}}" />
+								<input type="text" class="form-control" id="discount" name="discount" value="{{decimalise discount}}" />
 							</div>
 							<p style="margin-top: 5px; margin-bottom: 5px;">Full price: {{currency}} {{fullPrice}}</p>
 							<p style="margin-top: 5px;">Discounted price: <span id="discounted-price" style="font-weight: bold;"></span></p>
