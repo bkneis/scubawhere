@@ -461,6 +461,14 @@
 													</div>
 													<div class="form-group">
 														<div class="col-md-12">
+															<div class="btn-group pull-right">
+																<button type="button" class="btn btn-success add-reserve-day">+ 1 day</button>
+																<button type="button" class="btn btn-primary minus-reserve-day">- 1 day</button>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<div class="col-md-12">
 															<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
 														</div>
 													</div>

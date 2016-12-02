@@ -2962,6 +2962,18 @@ $('#summary-tab').on('click', '.save-booking', function() {
 
 });
 
+$('#summary-tab').on('click', '.add-reserve-day', function () {
+	var amount = parseInt($('#reserve-until').val());
+	$('#reserve-until').val(amount + 24);
+});
+
+$('#summary-tab').on('click', '.minus-reserve-day', function () {
+	var amount = parseInt($('#reserve-until').val());
+	if(amount > 24) {
+		$('#reserve-until').val(amount - 24);
+	}
+});
+
 $('#summary-tab').on('click', '.confirm-booking', function() {
 	if(booking.checkUnassigned()) {
 		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
