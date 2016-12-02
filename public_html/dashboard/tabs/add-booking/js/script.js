@@ -1273,17 +1273,19 @@ $('#session-tab').on('click', '.assign-session', function() {
 			var ticketBoatrooms = _.pluck(ticket.boatrooms, 'id');
 			var intersectingBoatrooms = [];
 
+			// @todo remove the code to do with auto selecting the boatroom, always allow
+			// the user to select it
 			if(boatBoatrooms.length === 1) {
-				submitAddDetail(params, data);
-				return;
+				//submitAddDetail(params, data);
+				//return;
 			}
 
 			if(ticketBoatrooms.length > 0) {
 				intersectingBoatrooms = _.intersection(boatBoatrooms, ticketBoatrooms);
 				if(intersectingBoatrooms.length === 1) {
 					boatroomDetermined = true;
-					submitAddDetail(params, data);
-					return;
+					//submitAddDetail(params, data);
+					//return;
 				}
 			}
 

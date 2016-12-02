@@ -868,6 +868,7 @@ class BookingController extends Controller
                     } // 403 Forbidden
 
                     if (count($intersect) === 1) {
+                        //var_dump($intersect);
                         $boatroom_id = $intersect[0];
                     }
                 }
