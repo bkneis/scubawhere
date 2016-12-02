@@ -81,13 +81,13 @@
 			<script type="text/x-handlebars-template" id="add-room-template">
 				<p>
 						<select class="room-type-select"
-							onchange="$(this).siblings('input').attr('name', 'boatrooms['+ $(this).val() +'][capacity]');">
+							onchange="$(this).siblings('input').attr('data-id', $(this).val());">
 								{{#each boatrooms}}
 									<option value="{{id}}">{{name}}</option>
 								{{/each}}
 						</select>
 						Number of beds in this cabin:
-						<input type="number" name="boatrooms[{{firstID boatrooms}}][capacity]" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
+						<input type="number" class="boatroom-input" data-id="{{firstID boatrooms}}" value="{{capacity}}" placeholder="0" style="width: 100px;" min="0">
 						<button class="btn btn-danger remove-room">&#215;</button>
 				</p>
 			</script>

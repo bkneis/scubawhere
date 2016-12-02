@@ -73,7 +73,7 @@ class BoatService {
 	{
 		$boat = $this->boat_repo->create($data);
 		if(!empty($boatrooms)) {
-            $boat->boatrooms()->sync( $boatrooms );
+			$boat->syncBoatrooms($boatrooms);
 		}
 		return $boat;
 	}

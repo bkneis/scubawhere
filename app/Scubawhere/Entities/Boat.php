@@ -68,4 +68,13 @@ class Boat extends Ardent {
 	{
 		return $this->hasMany('\Scubawhere\Entities\Departure')->where('start', '>', Helper::localTime());
 	}
+
+	public function syncBoatrooms($boatrooms)
+	{
+		// We need to loop through each boatroom and attach them individually as when using the sync
+		// method, the boatroom id's will write over each other due to them sharing the same key
+		foreach ($boatrooms as $boatroom) {
+			$this->boatrooms()->attach(array((int) $boatroom['id'] => array('capacity' => (int) $boatroom['capacity'])));
+		}
+	}
 }

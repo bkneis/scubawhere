@@ -140,9 +140,17 @@ $(function() {
     $("#boat-form-container").on('submit', '#add-boat-form', function(event) {
         event.preventDefault();
         $('#add-boat').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-        Boat.create($('#add-boat-form').serialize(), function success(data) {
+        var formData = $('#add-boat-form').serializeObject();
+        var boatrooms = [];
+        $('.boatroom-input').each(function () {
+            boatrooms.push({
+                id       : $(this).attr('data-id'),
+                capacity : $(this).val()
+            });
+        });
+        formData.boatrooms = boatrooms;
+        Boat.create(formData, function success(data) {
                 pageMssg(data.status, true);
-                //console.log(data);
 
                 $('form').data('hasChanged', false);
 
