@@ -425,7 +425,7 @@ function viewInvoices(id) {
 				onOpenedModal: function() {
 					var customers = extractCustomers(data.bookingdetails);
 					generateCustomerList(customers);
-					if(customers.length > 1) {
+					if(customers.length > 0) {
 						loadCustomerInvoice(customers[0].id);
 					} else {
 						$('#invoice-container').empty().append('<h1 style="text-align: center">No customers available</h1>')
