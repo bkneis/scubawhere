@@ -9,6 +9,7 @@ use Scubawhere\Entities\Customer;
 use Scubawhere\Entities\Bookingdetail;
 use Scubawhere\Entities\Paymentgateway;
 use Scubawhere\Entities\Payment;
+use Scubawhere\Entities\Packagefacade;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BookingController extends Controller
