@@ -789,7 +789,7 @@ class BookingController extends Controller
 
             $details = [];
   
-            $check->map(function($obj) use ($customer, $details) {
+            $check->map(function($obj) use ($customer, &$details) {
                 foreach($obj->bookingdetails as $detail) {
                     $details[] = $detail;
                 }
