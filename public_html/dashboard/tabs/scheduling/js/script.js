@@ -150,9 +150,12 @@ $(function() {
 		defaultView : 'basicWeek',
 		timezone: false,
 		firstDay: 1, // Set Monday as the first day of the week
-		businessHours : {
-			start : '00:00',
-			end   : '24:00'
+		eventConstraint : {
+			dow : [1, 2, 3, 4, 5, 6, 7],
+			businessHours : {
+				start : '00:00',
+				end   : '24:00'
+			}
 		},
 		events: function(start, end, timezone, callback) {
 

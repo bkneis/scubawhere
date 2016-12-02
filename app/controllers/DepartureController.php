@@ -760,10 +760,10 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = Helper::isPast( $departure->start );
+		/*$isPast = Helper::isPast( $departure->start );
 		if( $isPast )
 			return Response::json( array('errors' => array('Past trips cannot be deactivated.')), 412 ); // 412 Precondition Failed
-
+		*/
 
 		$departure->delete(); // SoftDelete
 
@@ -803,9 +803,10 @@ class DepartureController extends Controller {
 			return Response::json( array('errors' => array('The trip could not be found.')), 404 ); // 404 Not Found
 		}
 
-		$isPast = Helper::isPast( $departure->start );
+		/*$isPast = Helper::isPast( $departure->start );
 		if( $isPast )
 			return Response::json( array('errors' => array('Past trips cannot be deleted.')), 412 ); // 412 Precondition Failed
+		*/
 
 		if( $departure->timetable_id )
 		{

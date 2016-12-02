@@ -430,10 +430,10 @@ class TrainingSessionController extends Controller
             return Response::json(array('errors' => array('The class could not be found.')), 404); // 404 Not Found
         }
 
-        $isPast = Helper::isPast($training_session->start);
+        /*$isPast = Helper::isPast($training_session->start);
         if ($isPast) {
             return Response::json(array('errors' => array('Past classes cannot be deleted.')), 412);
-        } // 412 Precondition Failed
+        } // 412 Precondition Failed */
 
         if ($training_session->schedule_id) {
             switch (Input::get('handle_timetable')) {
