@@ -3217,14 +3217,17 @@ function redrawSessionsList(params) {
 						html += 	'<td>' + generateFreeSpacesBar(capacity, session.id).toString() + '</td>';
 						html += '</tr>';
 					});
+					console.log('sess', session);
 					html += '</table>';
-					$('.percentage-bar-container[data-id=' + session.id + ']').popover({
-						title: 'Free spaces by cabin',
-						content: html,
-						html: true,
-						placement: 'top',
-						trigger: 'hover',
-					});
+					if(session.boat.boatrooms.length > 0) {
+						$('.percentage-bar-container[data-id=' + session.id + ']').popover({
+							title: 'Free spaces by cabin',
+							content: html,
+							html: true,
+							placement: 'top',
+							trigger: 'hover',
+						});
+					}
 				});
 			});
 		}
