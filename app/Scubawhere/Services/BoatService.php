@@ -2,6 +2,7 @@
 
 namespace Scubawhere\Services;
 
+use Scubawhere\Entities\Booking;
 use Scubawhere\Helper;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\BoatRepoInterface;
@@ -81,8 +82,10 @@ class BoatService {
 	/**
 	 * Validate, update / save the boat to the database and update its associated boatrooms
 	 *
-	 * @todo I feel that this should be broken down abit more, some of the functionality
-	 * could belong to the Boat model and maybe some to the repo aswell
+	 * @todo Ok. So its 4 days before launch and we have come to the conclusion cabins need
+	 * to be one to one with boats. As this function and boats / boatrooms in general will be
+	 * changed soon I do not mind that this function is alitle expensive, as I am removing
+	 * the boatrooms then adding them again.
 	 *
 	 * @param int   $id           ID of the boat
 	 * @param array $data         Information about boat
@@ -94,70 +97,32 @@ class BoatService {
 	 */
 	public function update($id, array $data, array $boatrooms)
 	{
-    	$boat = $this->boat_repo->update($id, $data);
-    	if(!empty($boatrooms))
-    	{
-            $oldBoatrooms = array();
-            $boat->boatrooms()->get()->each(function($boatroom) use (&$oldBoatrooms)
-            {
-                $oldBoatrooms[$boatroom->id] = array('capacity' => $boatroom->pivot->capacity);
-            });
+		$boat = $this->boat_repo->update($id, $data);
+		/*$booking_details = $boat->boatrooms()
+			->has('bookingdetails')
+			->whereHas('bookingdetails.booking', function ($query) {
+				$query->whereIn('status', Booking::$counted);
+			})
+			->whereHas('bookingdetails.session', function ($query) use ($boat) {
+				$query->where('boat_id', '=', $boat->id);
+			})
+			->get()
+			->unique()
+			->toArray();
 
-            $newBoatrooms = $boatrooms;
-
-            // Foreach edited boatroom:
-            // 1. If removed, check if the boatroom is booked for future bookings
-            // 2. If capacity got smaller, check if the capacity is still enough for future bookings
-
-            $removedBoatrooms = array_diff_key($oldBoatrooms, $newBoatrooms);
-            $keptBoatrooms    = array_intersect_key($oldBoatrooms, $newBoatrooms);
-            $editedBoatrooms  = array();
-            
-            foreach($keptBoatrooms as $id => $boatroom)
-            {
-                if((int) $oldBoatrooms[$id]['capacity'] > (int) $newBoatrooms[$id]['capacity'])
-                    $editedBoatrooms[$id] = $boatroom;
-            }
-
-            // 1. case
-            foreach($removedBoatrooms as $id => $null)
-            {
-                //$boatroom = Boatroom::find($id);
-                $boatroom = $this->boatroom_repo->get($id);
-                if( $boatroom->bookingdetails()->whereHas('departure', function($query)
-                {
-                    return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-                })->count() > 0 )
-                	throw new ConflictException(['The cabin "' . $boatroom->name . '" can not be removed because it is booked for future sessions.']);
-            }
-
-            // 2. case
-            foreach($editedBoatrooms as $id => $null)
-            {
-            	$boatroom = $this->boatroom_repo->get($id);
-                //$boatroom = Boatroom::find($id);
-                $groupedSessions = $boatroom->bookingdetails()->whereHas('departure', function($query)
-                {
-                    return $query->where('start', '>=', Helper::localTime()->format('Y-m-d H:i:s'));
-                })->orderBy('session_id')->get();
-
-                foreach($groupedSessions as $sessions)
-                {
-                    if(count($sessions) > (int) $newBoatrooms[$id]['capacity'] )
-                    	throw new ConflictException(['The capacity of "' . $boatroom->name . '" can not be reduced below ' . count($sessions) . '.']);
-                }
-            }
-
-            // TODO Validate that boatrooms belong to logged in user
-            $boat->boatrooms()->sync( $newBoatrooms );
-
-    	} else {
-			// Remove all boatrooms from the boat
-			$boat->boatrooms()->detach();
+		$problem_boatrooms = [];
+		dd($booking_details);
+		if(count($booking_details) > 0) {
+			foreach ($booking_details as $booking_detail) {
+			}
+		}*/
+		$boat->boatrooms()->detach();
+		if(!empty($boatrooms)) {
+			$boat->syncBoatrooms($boatrooms);
 		}
-
 		return $boat;
 	}
+
 
 	/**
 	 * Remove the boat from the database.

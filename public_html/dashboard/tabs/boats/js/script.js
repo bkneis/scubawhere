@@ -141,14 +141,7 @@ $(function() {
         event.preventDefault();
         $('#add-boat').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
         var formData = $('#add-boat-form').serializeObject();
-        var boatrooms = [];
-        $('.boatroom-input').each(function () {
-            boatrooms.push({
-                id       : $(this).attr('data-id'),
-                capacity : $(this).val()
-            });
-        });
-        formData.boatrooms = boatrooms;
+        formData.boatrooms = extractBoatrooms();
         Boat.create(formData, function success(data) {
                 pageMssg(data.status, true);
 
@@ -205,7 +198,9 @@ $(function() {
     $("#boat-form-container").on('submit', '#update-boat-form', function(event) {
         event.preventDefault();
         $('#update-boat').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-        Boat.update($('#update-boat-form').serialize(), function success(data) {
+        var formData = $('#update-boat-form').serializeObject();
+        formData.boatrooms = extractBoatrooms();
+        Boat.update(formData, function success(data) {
                 pageMssg(data.status, true);
                 //console.log(data);
 
@@ -265,6 +260,17 @@ $(function() {
     });
 
 });
+
+function extractBoatrooms() {
+    var boatrooms = [];
+    $('.boatroom-input').each(function () {
+        boatrooms.push({
+            id       : $(this).attr('data-id'),
+            capacity : $(this).val()
+        });
+    });
+    return boatrooms;
+}
 
 function renderBoatList(callback) {
 
