@@ -356,7 +356,7 @@
 												<span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
 
 												{{#compare discount '!==' '0.00'}}
-													<span class="total-space">-{{discount}}</span><br />
+													<span class="total-space">-{{decimalise discount}}</span><br />
 												{{/compare}}
 
 												{{!-- <span class="total-space">$0.75</span><br /> --}}

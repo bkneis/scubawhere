@@ -30,7 +30,7 @@ Handlebars.registerHelper('isViewMode', function() {
 });
 
 Handlebars.registerHelper('decimalise', function (obj) {
-	return new Handlebars.SafeString(parseFloat(parseInt(obj) / 100));
+	return new Handlebars.SafeString(parseFloat(parseInt(obj) / 100).toFixed(2));
 });
 
 
@@ -141,7 +141,7 @@ Handlebars.registerHelper('UID', function() {
 
 Handlebars.registerHelper('decimal_price_without_discount_applied', function() {
 	if(this.discount === undefined) this.discount = "0.00";
-	return (parseFloat(this.decimal_price) + parseFloat(this.discount)).toFixed(2);
+	return (parseFloat(this.decimal_price) + (parseFloat(this.discount) / 100)).toFixed(2);
 });
 
 Handlebars.registerHelper('commission_percentage', function(agent_id) {
@@ -2806,7 +2806,7 @@ $('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
 	$discount_percentage = $(e.target);
 
-	var originalPrice = parseFloat(booking.decimal_price) + parseFloat(booking.discount);
+	var originalPrice = parseFloat(booking.decimal_price) + (parseFloat(booking.discount) / 100);
 
 	$discount.val( (originalPrice * $discount_percentage.val() / 100).toFixed(2) );
 
@@ -2819,7 +2819,7 @@ $('#extra-tab').on('change', '#discount', function(e) {
 
 	if($discount.val() === "") $discount.val('0.00');
 
-	var originalPrice = parseFloat(booking.decimal_price) + parseFloat(booking.discount);
+	var originalPrice = parseFloat(booking.decimal_price) + (parseFloat(booking.discount) / 100);
 
 	$discount.val(parseFloat($discount.val()).toFixed(2));
 

@@ -669,7 +669,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
-			if(params.discount)         this.discount         = params.discount;
+			if(params.discount)         this.discount         = params.discount * 100;
 			if(params.comment)          this.comment          = params.comment;
 
 			this.price         = data.price;
