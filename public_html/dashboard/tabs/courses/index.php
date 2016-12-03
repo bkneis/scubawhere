@@ -88,7 +88,7 @@
 								{{#each base_prices}}
 									{{> price_input}}
 								{{/each}}
-								{{!--<button class="btn btn-default btn-sm add-base-price"> &plus; Add another base price</button>--}}
+								<button class="btn btn-default btn-sm add-base-price"> &plus; Click here to add a price change for the future</button>
 							</div>
 
 							<div id="course-seasonal" class="form-row">
