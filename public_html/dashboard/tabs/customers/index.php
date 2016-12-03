@@ -216,12 +216,13 @@
 			<option value="firstname">First name</option>
 			<option value="lastname">Last name</option>
 			<option value="birthday">Birthday</option>
-			<option value="gender">Gender</option>
-			<option value="address">Address</option>
+			<option value="gender">Gender (1 for male, 2 for female, 3 for unknown)</option>
+			<option value="address_1">Address 1</option>
+			<option value="address_2">Address 2</option>
 			<option value="city">City</option>
 			<option value="county">County</option>
 			<option value="postcode">Post Code</option>
-			<option value="country">Country</option>
+			<option value="country_id">Country ID (Please contact us to get the list of ID's)</option>
 			<option value="phone">Phone Number</option>
 			<option value="last_dive">Last Dive</option>
 			<option value="num_of_dives">Number of Dives</option>
