@@ -91,7 +91,7 @@
 					<form role="form" id="add-payment-form" class="form-horizontal">
 
 						<div class="form-group">
-							<label class="col-sm-3 col-sm-offset-1 control-label">Amount</label>
+							<label class="col-sm-3 col-sm-offset-1 control-label">Amount : <span class="text-danger">*</span></label>
 							<div class="col-sm-6">
 								<div class="input-group">
 									<div class="input-group-addon">{{currency}}</div>
@@ -145,7 +145,7 @@
 				<form role="form" id="add-refund-form" class="form-horizontal">
 
 					<div class="form-group">
-						<label class="col-sm-3 col-sm-offset-1 control-label">Amount</label>
+						<label class="col-sm-3 col-sm-offset-1 control-label">Amount : <span class="text-danger">*</span></label>
 						<div class="col-sm-6">
 							<div class="input-group">
 								<div class="input-group-addon">{{currency}}</div>
@@ -241,7 +241,7 @@
 	</script>
 
 	<script type="text/x-handlebars-template" id="paymentgateways-select-template">
-		<label class="col-sm-3 col-sm-offset-1 control-label">Payment Gateway</label>
+		<label class="col-sm-4 control-label">Payment Gateway : <span class="text-danger">*</span></label>
 		<div class="col-sm-6">
 			<select name="paymentgateway_id" class="form-control">
 				{{#each paymentgateways}}
