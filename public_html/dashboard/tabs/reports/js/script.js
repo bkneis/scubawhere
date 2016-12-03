@@ -341,7 +341,7 @@ function getReport(reportType, callback) {
 				window.agentBookings = data;
 				report = Handlebars.compile($("#agents-report-template").html());
 				$("#reports").empty().append( report({entries : data}) );
-		 		if(data.bookings.length != 0 && typeof callback === 'function') callback();
+		 		if(data.bookings.length !== 0 && typeof callback === 'function') callback();
 			});
 			break;
 

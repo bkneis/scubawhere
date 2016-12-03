@@ -176,7 +176,7 @@
 					<tr>
 						<td>{{getDate created_at_local}}</td>
 						<td>{{{lead_customer.firstname}}} {{{lead_customer.lastname}}}</td>
-						<a class="view-booking">{{reference}}</a>
+						<td><a class="view-booking">{{reference}}</a></td>
 						<td>{{{agent.name}}}</td>
 						<td>{{agent_reference}}</td>
 						<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>
