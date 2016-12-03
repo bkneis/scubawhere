@@ -78,35 +78,42 @@
 								<h4 class="panel-title">Business Information</h4>
 							</div>
 							<div class="panel-body">
+								<div id="address-fields">
+									<div class="form-row">
+										<label class="field-label">Business Address 1 : </label>
+										<input type="text" name="address_1" value="{{address_1}}" class="form-control">
+									</div>
 
-								<div class="form-row">
-									<label class="field-label">Business Address 1 : </label>
-									<input type="text" name="address_1" value="{{address_1}}" class="form-control">
+									<div class="form-row">
+										<label class="field-label">Business Address 2 : </label>
+										<input type="text" name="address_2" value="{{address_2}}" class="form-control">
+									</div>
+
+									<div class="form-row">
+										<label class="field-label">City : </label>
+										<input type="text" name="city" value="{{city}}" class="form-control">
+									</div>
+
+									<div class="form-row">
+										<label class="field-label">County / State : </label>
+										<input type="text" name="county" value="{{county}}" class="form-control">
+									</div>
+
+									<div id="postcode-div" class="form-row">
+										<label class="field-label">Post Code / Zip Code : </label>
+										<input type="text" name="postcode" value="{{postcode}}" class="form-control">
+									</div>
+									<div id="postcode-div" class="form-row">
+										<label class="field-label">Post Code / Zip Code : </label>
+										<input type="text" name="postcode" value="{{postcode}}" class="form-control">
+									</div>
 								</div>
 
 								<div class="form-row">
-									<label class="field-label">Business Address 2 : </label>
-									<input type="text" name="address_2" value="{{address_2}}" class="form-control">
-								</div>
-
-								<div class="form-row">
-									<label class="field-label">City : </label>
-									<input type="text" name="city" value="{{city}}" class="form-control">
-								</div>
-
-								<div class="form-row">
-									<label class="field-label">County / State : </label>
-									<input type="text" name="county" value="{{county}}" class="form-control">
-								</div>
-
-								<div id="postcode-div" class="form-row">
-									<label class="field-label">Post Code / Zip Code : </label>
-									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
-								</div>
-
-								<div id="postcode-div" class="form-row">
-									<label class="field-label">Post Code / Zip Code : </label>
-									<input type="text" name="postcode" value="{{postcode}}" class="form-control">
+									<label class="field-label">Dont have a postcode / Cant find your address? : </label>
+									<a class="view-gmap">Click here to find your address</a>
+									<a style="display: none;" class="hide-gmap">Click here to manually enter your address</a>
+									<div id="gmap" style="height: 0px;"></div>
 								</div>
 
 								<div class="form-row">
@@ -188,6 +195,51 @@
 			</form>
 		</script>
 	</div>
+
+	<!-- Modal -->
+	<div id="view-map-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Modal Header</h4>
+				</div>
+				<div class="modal-body" style="height: 400px;">
+					<div id="gmap"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+		function loadGoogleMaps() {
+			console.log('Start loading');
+
+			if( window.google && google.maps ) {
+				console.log('Google Maps already loaded');
+				initMap();
+
+				return true;
+			}
+
+			var key = '';
+			if(window.location.host === 'rms.scubawhere.com') key = '&key=AIzaSyAzTfKvssUjEK4Reyg3RD7lBAT6vGZG4hk';
+
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = '//maps.googleapis.com/maps/api/js?v=3.exp&callback=initMap' + key;
+
+			document.body.appendChild(script);
+
+			console.log('Google Maps script appended');
+		}
+	</script>
 
 	<script type="text/x-handlebars-template" id="credit-info-template">
 		<div class="form-row">

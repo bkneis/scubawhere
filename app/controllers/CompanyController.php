@@ -36,7 +36,23 @@ class CompanyController extends Controller {
 	{
 		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website', 'alias');
 
-		if( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
+		if(Input::has('lat')) {
+			$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
+
+			$data['latitude']  = (double) Input::get('lat');
+			$data['longitude'] = (double) Input::get('lng');
+
+			$timezone = 'https://maps.googleapis.com/maps/api/timezone/json?location='.$data['latitude'].','.$data['longitude'].'&timestamp='.time().'&key='.$googleAPIKey;
+			$timezone = file_get_contents($timezone);
+			$timezone = json_decode($timezone);
+
+			if((string) $timezone->status === "OK") {
+				$data['timezone'] = (string) $timezone->timeZoneId;
+			}
+			else {
+				return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 );
+			}
+		} elseif( Input::has('address_1') || Input::has('address_2') || Input::has('postcode') || Input::has('city') || Input::has('county') )
 		{
 			//$country = Context::get()->country;
 			$country = Country::findOrFail($data['country_id']);
@@ -74,6 +90,8 @@ class CompanyController extends Controller {
 			{
 				return Response::json( array('errors' => array('Sorry, Google could not find the specified address.')), 406 ); // 406 Not Acceptable
 			}
+		} else {
+			return Response::json( array('errors' => array("Please either enter your address or click 'cant find your address?' and click on your location.")), 406 ); // 406 Not Acceptable
 		}
 
 		$company = Context::get();

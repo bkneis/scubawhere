@@ -5,6 +5,10 @@ if(window.company.initialised !== 1 && (!window.tourStart))
 
 var companyForm;
 var creditInfoTemplate;
+var companyMap;
+var companyMarkers = [];
+var companyLat;
+var companyLng;
 
 Handlebars.registerHelper('trimDate', function(date) {
 	return date.slice(0, -9);
@@ -49,6 +53,7 @@ $(function() {
 
 		
 		renderEditForm();
+		loadGoogleMaps();
 	});
 
 	/*$('#company-form-container').on('click', '#start-wizard', function(event) {
@@ -134,7 +139,12 @@ $(function() {
 
 		$('.update-settings').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		var params = form.serialize();
+		var params = form.serializeObject();
+
+		if(companyLat !== undefined) {
+			params.lat = companyLat;
+			params.lng = companyLng;
+		}
 		Company.update(params, function success(data) {
 			// Assign updated company data to window.company object
 			window.company = data.company;
@@ -202,7 +212,83 @@ $(function() {
 		});
 	});
 
+	$('#company-form-container').on('click', '.view-gmap', function (event) {
+		event.preventDefault();
+		showGmaps();
+	});
+
+	$('#company-form-container').on('click', '.hide-gmap', function (event) {
+		event.preventDefault();
+		hideGmaps();
+	});
+
 });
+
+function showGmaps() {
+	$('#address-fields').css('display', 'none');
+	$('.hide-gmap').css('display', 'inline');
+	$('.view-gmap').css('display', 'none');
+	$('#gmap').css('height', '400px');
+	google.maps.event.trigger(companyMap, "resize");
+}
+
+function hideGmaps() {
+	$('#address-fields').css('display', 'inline');
+	$('#gmap').css('height', '0');
+	$('.hide-gmap').css('display', 'none');
+	$('.view-gmap').css('display', 'inline');
+}
+
+function initMap() {
+	var mapOptions = {
+		zoom : 8,
+		center: new google.maps.LatLng(50.582847, 5.96848)
+		// center: new google.maps.LatLng(50.582847, 5.96848) // Somewhere around Aachen in Germany
+	};
+
+	companyMap = new google.maps.Map(document.getElementById('gmap'), mapOptions);
+
+	// Try HTML5 geolocation.
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+
+			companyMap.setCenter(pos);
+		});
+	}
+
+	google.maps.event.addListener(companyMap, 'click', function(event) {
+		var myLatlng = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+		var marker = new google.maps.Marker({
+			position: myLatlng,
+			title:"Hello World!"
+		});
+		companyLat = event.latLng.lat();
+		companyLng = event.latLng.lng();
+		marker.setMap(companyMap);
+		for(var i in companyMarkers) {
+			companyMarkers[i].setMap(null);
+		}
+		companyMarkers.push(marker);
+	});
+
+	if(window.company.latitude !== null) {
+		var myLatlng = new google.maps.LatLng(window.company.latitude, window.company.longitude);
+		var marker = new google.maps.Marker({
+			position: myLatlng,
+			title:"Hello World!"
+		});
+		marker.setMap(companyMap);
+		for(var i in companyMarkers) {
+			companyMarkers[i].setMap(null);
+		}
+		companyMarkers.push(marker);
+		showGmaps();
+	}
+}
 
 function renderCurrencyList() {
 	var currency_select_options = '';
