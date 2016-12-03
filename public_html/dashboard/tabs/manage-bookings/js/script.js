@@ -134,7 +134,7 @@ Handlebars.registerHelper('price', function() {
 });
 
 Handlebars.registerHelper('prettyPrice', function(price) {
-	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + price);
+	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + parseFloat(price).toFixed(2));
 })
 
 Handlebars.registerHelper('sumPaid', function() {
