@@ -308,12 +308,12 @@ function getReport(reportType, callback) {
 						// If the no positive totals are in this daterange, set total to 1 (division by zero is not possible) as it doesn't matter anyway as all totals are < 0
 						if(total === 0) total = 1;
 
-						$("#transactions-totalCash"  ).text(window.company.currency.symbol + " " + totalCash);
-						$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit);
-						$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque);
-						$("#transactions-totalBank"  ).text(window.company.currency.symbol + " " + totalBank);
-						$("#transactions-totalOnline").text(window.company.currency.symbol + " " + totalOnline);
-						$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal);
+						$("#transactions-totalCash"  ).text(window.company.currency.symbol + " " + totalCash.toFixed(2));
+						$("#transactions-totalCredit").text(window.company.currency.symbol + " " + totalCredit.toFixed(2));
+						$("#transactions-totalCheque").text(window.company.currency.symbol + " " + totalCheque.toFixed(2));
+						$("#transactions-totalBank"  ).text(window.company.currency.symbol + " " + totalBank.toFixed(2));
+						$("#transactions-totalOnline").text(window.company.currency.symbol + " " + totalOnline.toFixed(2));
+						$("#transactions-totalPaypal").text(window.company.currency.symbol + " " + totalPaypal.toFixed(2));
 
 						$("#transactions-cash-percentage"  ).css("width", ((Math.max(totalCash  , 0)/total) * 100) + "%");
 						$("#transactions-credit-percentage").css("width", ((Math.max(totalCredit, 0)/total) * 100) + "%");
@@ -415,47 +415,54 @@ function getReport(reportType, callback) {
 				_.each(data.tickets, function(ticket) {
 					ticket.statColor = assignColor("revenue");
 					ticket.type = "Tickets";
+					ticket.revenue = ticket.revenue.toFixed(2);
 					stats.streams.push(ticket);
 				});
 				_.each(data.packages, function(package) {
 					package.statColor = assignColor("revenue");
 					package.type = "Packages";
+					package.revenue = package.revenue.toFixed(2);
 					stats.streams.push(package);
 				});
 				_.each(data.courses, function(course) {
 					course.statColor = assignColor("revenue");
 					course.type = "Courses";
+					course.revenue = course.revenue.toFixed(2);
 					stats.streams.push(course);
 				});
 				_.each(data.addons, function(addon) {
 					addon.statColor = assignColor("revenue");
 					addon.type = "Addons";
+					addon.revenue = addon.revenue.toFixed(2);
 					stats.streams.push(addon);
 				});
 				_.each(data.fees, function(fee) {
 					fee.statColor = assignColor("revenue");
 					fee.type = "Fees";
+					fee.revenue = fee.revenue.toFixed(2);
 					stats.streams.push(fee);
 				});
 				_.each(data.accommodations, function(acom) {
 					acom.statColor = assignColor("revenue");
 					acom.type = "Accommodations";
+					acom.revenue = acom.revenue.toFixed(2);
 					stats.streams.push(acom);
 				});
-				stats.acomTotal    = data.accommodations_total.revenue;
-				stats.ticketTotal  = data.tickets_total.revenue;
-				stats.packageTotal = data.packages_total.revenue;
-				stats.courseTotal  = data.courses_total.revenue;
-				stats.addonTotal   = data.addons_total.revenue;
-				stats.feeTotal     = data.fees_total.revenue;
-				stats.total        = data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
-				data.courses_total.revenue + data.addons_total.revenue + data.fees_total.revenue;
-				stats.acomAmount = data.accommodations_total.quantity;
-				stats.ticketAmount = data.tickets_total.quantity;
-				stats.packageAmount = data.packages_total.quantity;
-				stats.courseAmount = data.courses_total.quantity;
-				stats.addonAmount = data.addons_total.quantity;
-				stats.feeAmount = data.fees_total.quantity;
+				stats.acomTotal    = parseFloat(data.accommodations_total.revenue).toFixed(2);
+				stats.ticketTotal  = parseFloat(data.tickets_total.revenue).toFixed(2);
+				stats.packageTotal = parseFloat(data.packages_total.revenue).toFixed(2);
+				stats.courseTotal  = parseFloat(data.courses_total.revenue).toFixed(2);
+				stats.addonTotal   = parseFloat(data.addons_total.revenue).toFixed(2);
+				stats.feeTotal     = parseFloat(data.fees_total.revenue).toFixed(2);
+				stats.total        = parseFloat(data.accommodations_total.revenue + data.tickets_total.revenue + data.packages_total.revenue +
+				data.courses_total.revenue + data.addons_total.revenue + data.fees_total.revenue).toFixed(2);
+				stats.acomAmount = parseFloat(data.accommodations_total.quantity).toFixed(2);
+				stats.ticketAmount = parseFloat(data.tickets_total.quantity).toFixed(2);
+				stats.packageAmount = parseFloat(data.packages_total.quantity).toFixed(2);
+				stats.courseAmount = parseFloat(data.courses_total.quantity).toFixed(2);
+				stats.addonAmount = parseFloat(data.addons_total.quantity).toFixed(2);
+				stats.feeAmount = parseFloat(data.fees_total.quantity).toFixed(2);
+				console.log('stats', stats);
 				// console.log(stats);
 				window.revenueAnalysis = stats;
 				report = Handlebars.compile($("#revenue-report-template").html());
