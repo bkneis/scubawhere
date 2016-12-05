@@ -321,7 +321,7 @@
 
 	<form id="frm-import-customer-data">
 		<div class="yellow-helper">
-			Please note, you must specify every column that represents a value in your CSV file. Any other data needs to be removed prior to the upload. In addition, it is adviced to create or export the file using software supporting CSV, such as excel.
+			Warning! This is a beta feature in the system, please contact us at support@scubawhere.com for more information on how to use this tool.
 		</div>
 		<div class="form-group">
 			<p><strong>Step 1 : </strong> Please upload a csv file containing your customer data</p>
