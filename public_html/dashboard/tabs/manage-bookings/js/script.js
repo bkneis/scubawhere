@@ -127,7 +127,7 @@ Handlebars.registerHelper('arrivalDate', function() {
 Handlebars.registerHelper('price', function() {
 	var price = this.decimal_price;
 	if(this.status === 'cancelled') {
-		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + price + '</del> ' + (this.cancellation_fee));
+		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + price + '</del> ' + parseFloat(parseInt(this.cancellation_fee) / 100).toFixed(2));
 	}
 
 	return window.company.currency.symbol + " " + price;

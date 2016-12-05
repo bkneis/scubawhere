@@ -25,6 +25,10 @@ Handlebars.registerHelper('sumPayed', function() {
 	return this.sums.payed;
 });
 
+Handlebars.registerHelper('decimalise', function (num) {
+	return new Handlebars.SafeString(parseFloat(parseInt(num) / 100).toFixed(2));
+});
+
 Handlebars.registerHelper('sumRefunded', function() {
 	return this.sums.refunded;
 });
@@ -100,14 +104,49 @@ Handlebars.registerHelper("remainingPay", function() {
 });
 
 Handlebars.registerHelper("necessaryRefundFormated", function() {
-	if(this.sums.refundable > 0)
+	if(parseFloat(this.sums.refundable) >= 0) {
 		return new Handlebars.SafeString('<strong class="text-danger">' + window.company.currency.symbol + ' ' + this.sums.refundable + '</strong>');
-
-	return new Handlebars.SafeString('<strong class="text-success">' + window.company.currency.symbol + ' ' + this.sums.refundable + '</strong>');
+	}
+	var refundable = this.sums.refundable.toString();
+	return new Handlebars.SafeString('<strong class="text-success">' + window.company.currency.symbol + ' ' + refundable.substring(1) + '</strong>');
 });
 
 Handlebars.registerHelper("necessaryRefund", function() {
 	return this.sums.refundable;
+});
+
+Handlebars.registerHelper('remainingFee', function () {
+	if(parseFloat(this.sums.refundable) >= 0) {
+		return parseFloat(this.sums.refundable).toFixed(2);
+	}
+	return parseFloat(this.sums.refundable - (2 * parseFloat(this.sums.refundable))).toFixed(2);
+});
+
+Handlebars.registerHelper('necessaryTransaction', function () {
+	if(parseFloat(this.sums.refundable) > 0) {
+		return new Handlebars.SafeString('Necessary refund');
+	}
+	return new Handlebars.SafeString('Necessary payment');
+});
+
+Handlebars.registerHelper('ifRequiresRefund', function (opts) {
+	if(parseFloat(this.sums.refundable) > 0) {
+		return opts.fn(this);
+	}
+	return opts.inverse(this);
+});
+
+Handlebars.registerHelper('ifRequiresPayment', function (opts) {
+	if(this.status === 'cancelled') {
+		if(parseFloat(this.sums.refundable) >= 0) {
+			return opts.inverse(this);
+		}
+	} else {
+		if(parseFloat(this.sums.have) >= parseFloat(this.sums.payable)) {
+			return opts.inverse(this);
+		}
+	}
+	return opts.fn(this);
 });
 
 $(function() {

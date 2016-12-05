@@ -75,9 +75,9 @@ class PaymentController extends Controller
         }
 
         // Validate that the booking is not cancelled or on hold
-        if (in_array($booking->status, ['cancelled', 'on hold'])) {
+        /*if (in_array($booking->status, ['cancelled', 'on hold'])) {
             return Response::json(array('errors' => array('Cannot add payment, because the booking is '.$booking->status.'.')), 403);
-        } // 403 Forbidden
+        } // 403 Forbidden*/
 
         // For now, just use the company's currency
         $data['currency_id'] = Context::get()->currency->id;
@@ -122,15 +122,17 @@ class PaymentController extends Controller
 
         CrmMailer::sendTransactionConf($payment);
 
-        if ($booking->status !== 'confirmed') {
-            $booking->status = 'confirmed';
-            $booking->reserved_until = null;
-            if (!$booking->save()) {
-                return Response::json(array('errors' => $booking->errors()->all()), 500);
-            } // 500 Internal Server Error
+        if($booking->status !== 'cancelled') {
+            if ($booking->status !== 'confirmed') {
+                $booking->status = 'confirmed';
+                $booking->reserved_until = null;
+                if (!$booking->save()) {
+                    return Response::json(array('errors' => $booking->errors()->all()), 500);
+                } // 500 Internal Server Error
 
-            //Helper::sendBookingConfirmation($booking->id);
-            CrmMailer::sendBookingConf($booking->id);
+                //Helper::sendBookingConfirmation($booking->id);
+                CrmMailer::sendBookingConf($booking->id);
+            }
         }
 
         // Send Payment Confirmation
@@ -140,6 +142,6 @@ class PaymentController extends Controller
             $message->to($lead->email, $lead->firstname . ' ' . $lead->lastname)->subject('Payment Recieved');
         }); */
 
-        return Response::json(array('status' => 'OK. Payment added', 'payment' => $payment), 201); // 201 Created
+        return Response::json(array('status' => 'OK. Payment added', 'payment' => $payment, 'booking_status' => $booking->status), 201); // 201 Created
     }
 }

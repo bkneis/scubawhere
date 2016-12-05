@@ -930,7 +930,7 @@ Booking.prototype.addPayment = function(params, successFn, errorFn) {
 
 			this.payments.push(payment);
 
-			this.status = 'confirmed';
+			this.status = data.booking_status;
 			this.setStatus();
 
 			this.calculateSums();
@@ -1055,7 +1055,7 @@ Booking.prototype.calculateSums = function() {
 
 	this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
 
-	this.sums.refundable = (this.sums.have - this.cancellation_fee).toFixed(2);
+	this.sums.refundable = (this.sums.have - parseFloat(parseInt(this.cancellation_fee) / 100)).toFixed(2);
 };
 
 Booking.prototype.setStatus = function() {

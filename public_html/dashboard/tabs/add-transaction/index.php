@@ -66,12 +66,12 @@
 								Cancellation fee
 							</td>
 							<td>
-								{{currency}} {{cancellation_fee}}
+								{{currency}} {{decimalise cancellation_fee}}
 							</td>
 						</tr>
 						<tr>
 							<td style="vertical-align: top; font-weight: bold;">
-								Necessary refund
+								{{necessaryTransaction}}
 							</td>
 							<td style="border-top: 3px double;">
 								{{necessaryRefundFormated}}
@@ -87,7 +87,7 @@
 				<h3 class="panel-title">Add Payment</h3>
 			</div>
 			<div class="panel-body" id="add-payment-panel">
-				{{#unless cancelled}}
+				{{#ifRequiresPayment}}
 					<form role="form" id="add-payment-form" class="form-horizontal">
 
 						<div class="form-group">
@@ -95,7 +95,12 @@
 							<div class="col-sm-6">
 								<div class="input-group">
 									<div class="input-group-addon">{{currency}}</div>
-									<input name="amount" type="number" min="0.01" max="{{remainingPay}}" step="0.01" placeholder="0.00" class="form-control" value="{{remainingPay}}">
+									{{#compare status '!==' 'cancelled'}}
+										<input name="amount" type="number" min="0.01" max="{{remainingPay}}" step="0.01" placeholder="0.00" class="form-control" value="{{remainingPay}}">
+									{{/compare}}
+									{{#compare status '==' 'cancelled'}}
+										<input name="amount" type="number" min="0.01" max="{{remainingFee}}" step="0.01" placeholder="0.00" class="form-control" value="{{remainingFee}}">
+									{{/compare}}
 								</div>
 							</div>
 						</div>
@@ -132,8 +137,8 @@
 						</div>
 					</form>
 				{{else}}
-					<h5 class="text-muted text-center text-normal" style="margin-bottom: 1.4em;">Adding payments is not allowed because the booking is cancelled.</h5>
-				{{/unless}}
+					<h5 class="text-muted text-center text-normal" style="margin-bottom: 1.4em;">Adding payments is not allowed because the booking does not require any.</h5>
+				{{/ifRequiresPayment}}
 			</div>
 		</div>
 
@@ -149,7 +154,11 @@
 						<div class="col-sm-6">
 							<div class="input-group">
 								<div class="input-group-addon">{{currency}}</div>
-								<input name="amount" type="number" min="0.01" max="{{necessaryRefund}}" step="0.01" placeholder="0.00" class="form-control" value="{{necessaryRefund}}">
+								{{#ifRequiresRefund}}
+									<input name="amount" type="number" min="0.01" max="{{necessaryRefund}}" step="0.01" placeholder="0.00" class="form-control" value="{{necessaryRefund}}">
+								{{else}}
+									<input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" class="form-control">
+								{{/ifRequiresRefund}}
 							</div>
 						</div>
 					</div>

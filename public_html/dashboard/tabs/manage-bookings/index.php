@@ -344,6 +344,7 @@
 							<td></td>
 							<td class="table-sum">{{currency}} {{sumPaid}}</td>
 							<td>{{#unless cancelled}}{{remainingPay}}{{/unless}}</td>
+							<td></td>
 						</tr>
 					</table>
 				{{else}}
