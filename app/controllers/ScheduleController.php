@@ -1,6 +1,8 @@
 <?php
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use Scubawhere\Context;
+use Scubawhere\Entities\Schedule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ScheduleController extends Controller {
 
