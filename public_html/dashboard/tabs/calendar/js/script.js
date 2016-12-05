@@ -613,7 +613,7 @@ function showModalWindowManifest(id, type, date) {
             ).done(function() {
                 for (var i = 0; i < data.customers.length; i++) {
                     table.row.add(new customerData(data.customers[i]));
-                };
+                }
 
                 table.draw();
             });
@@ -622,22 +622,23 @@ function showModalWindowManifest(id, type, date) {
     else if (type === 'accommodation') {
         window.sw.manifestTemplateA = Handlebars.compile($("#accommodation-manifest-template").html());
         params.date = date;
-        Accommodation.getManifest(params, function success(data) {
-            console.log(data);
-            console.log(jFriendly(data.data.accommodation.date));
+        Accommodation.getManifest(params, function success(res) {
+            console.log(res);
+            var date = jFriendly(res.data.date);
+            console.log(date);
             //showModalWindowManifest(data);
             //var customer = Handlebars.compile( $("#customer-rows-template").html() );
             //$("#customers-table").append(customer({customers : data.customers}));
             $('#modalWindows')
-                .append(window.sw.manifestTemplateA(data.data)) // Create the modal
-                .children('#modal-' + data.data.accommodation.id + '-' + jFriendly(data.data.accommodation.date)) // Directly find it and use it
+                .append(window.sw.manifestTemplateA(res.data)) // Create the modal
+                .children('#modal-' + res.data.accommodation[0].id + '-' + date) // Directly find it and use it
                 .reveal({ // Open modal window | Options:
                     animation: 'fadeAndPop', // fade, fadeAndPop, none
                     animationSpeed: 300, // how fast animtions are
                     closeOnBackgroundClick: true, // if you click background will modal close?
                     dismissModalClass: 'close-modal', // the class of a button or element that will close an open modal
                     onFinishModal: function() {
-                        $('#modal-' + data.data.accommodation.id + '-' + jFriendly(data.data.accommodation.date)).remove();
+                        $('#modal-' + res.data.accommodation[0].id + '-' + date).remove();
                     }
                 });
 
@@ -666,15 +667,16 @@ function showModalWindowManifest(id, type, date) {
                 "buttons": [
                     {
                         extend : 'excel',
-                        title  : 'dfdsfdf' //getFileName(data)
+                        title  : res.data.accommodation[0].name + ' - Accommodation manifest ( ' + res.data.date + ' )'
                     },
                     {
                         extend : 'pdf',
-                        title  : 'dfdsfdf' // getFileName(data)
+                        title  : res.data.accommodation[0].name + ' - Accommodation manifest ( ' + res.data.date + ' )',
+                        orientation : 'landscape'
                     },
                     {
                         extend : 'print',
-                        title  : 'dfdsfdf' // getFileName(data)
+                        title  : res.data.accommodation[0].name + ' - Accommodation manifest ( ' + res.data.date + ' )'
                     }
                 ]
             });
@@ -684,9 +686,9 @@ function showModalWindowManifest(id, type, date) {
                 window.promises.loadedCourses,
                 window.promises.loadedTickets
             ).done(function() {
-                for (var i = 0; i < data.data.bookings.length; i++) {
-                    table.row.add(new customerDataA(data.data.bookings[i]));
-                };
+                for (var i = 0; i < res.data.accommodation[0].bookings.length; i++) {
+                    table.row.add(new customerDataA(res.data.accommodation[0].bookings[i]));
+                }
 
                 table.draw();
             });
@@ -728,8 +730,8 @@ Handlebars.registerHelper('jFriendly', function(str) {
 });
 
 function jFriendly(str) {
-    str = str.replace(/:/g, "-");
-    return str.replace(/\s/g, "");
+    var string = str.replace(/:/g, "-");
+    return string.replace(/\s/g, "");
 }
 
 function calcUtil(booked, capacity) {
@@ -1214,16 +1216,28 @@ function customerData(customer) {
 	};
 }
 
-function customerDataA(data) {
-    this._name = data.customer.firstname + ' ' + data.customer.lastname;
-    this._phone = data.customer.phone;
-    this._country = window.countries[data.customer.country_id].abbreviation;
+function calcPayments(payments) {
+    var paid = 0;
+    for(var i in payments) {
+        paid += parseFloat(payments[i].amount);
+    }
+    return paid;
+}
 
-    this._reference = data.booking.reference;
-    this._booking_id = data.booking.id;
-    this._notes = data.customer.notes || "-";
-    this._price = parseFloat(parseInt(data.booking.price) / 100);
-    this._amount_paid = parseFloat(parseInt(data.booking.paid) / 100);
+function customerDataA(data) {
+    this._name = data.lead_customer.firstname + ' ' + data.lead_customer.lastname;
+    this._phone = data.lead_customer.phone;
+    if(data.lead_customer.country_id !== null) {
+        this._country = window.countries[data.lead_customer.country_id].abbreviation;
+    } else {
+        this._country = '-';
+    }
+
+    this._reference = data.reference;
+    this._booking_id = data.id;
+    this._notes = data.comment || "-";
+    this._price = data.real_decimal_price ? data.real_decimal_price : data.decimal_price;
+    this._amount_paid = calcPayments(data.payments);
 
     this.name = function() {
         return this._name;

@@ -1,27 +1,28 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Scubawhere\Services\AccommodationService;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class ManifestController extends Controller
 {
-
     protected $request;
+    protected $accommodation_service;
 
-    public function __constrcutor(Request $request)
+    public function __construct(Request $request, AccommodationService $accommodation_service)
     {
-        $this->request = $request;
+        $this->request               = $request;
+        $this->accommodation_service = $accommodation_service;
     }
 
-    protected function getAccommodationManifest($dates)
+    protected function getAccommodationManifest($id, $date)
     {
         $rules = array(
-            'after'  => 'required|date',
-            'before' => 'required|date'
+            'id'    => 'required|integer',
+            'date'  => 'required|date'
         );
 
-        $validator = Validator::make($dates, $rules);
+        $validator = Validator::make(['id' => $id, 'date' => $date], $rules);
 
         if($validator->fails()) {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
@@ -29,7 +30,10 @@ class ManifestController extends Controller
 
         return Response::json(array(
             'status' => 'Sucess. Avaialability retrieved',
-            'data'   => $this->accommodation_service->getAvailability($dates)
+            'data'   => array(
+                'date'          => $date,
+                'accommodation' => $this->accommodation_service->getManifest($id, $date)
+            )
         ));
     }
 
@@ -40,15 +44,16 @@ class ManifestController extends Controller
 
     public function index()
     {
-        $type  = $this->request->only('type');
-        $dates = $this->request->only('after', 'before');
+        $type  = $this->request->get('type');
+        $id    = $this->request->get('id');
+        $date = $this->request->get('date');
 
         switch ($type) {
             case 'accommodation':
-                return $this->getAccommodationManifest($dates);
+                return $this->getAccommodationManifest($id, $date);
                 break;
             case 'trip':
-                return $this->getTripManifest($dates);
+                return $this->getTripManifest($date);
                 break;
             default:
                 throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The type field is required']);

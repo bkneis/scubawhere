@@ -190,14 +190,16 @@ class AccommodationService {
 	 */
 	public function getManifest($id, $date)
 	{
-		$date = new \DateTime($date);
-		//$after = clone $before;
-		//$after  = $after->add(new \DateInterval('P1D'));
-		$date = $date->format('Y:m:d');
+		$after = new \DateTime($date);
+		$before = clone $after;
+		$before  = $before->add(new \DateInterval('P1D'));
+		$after = $before->format('Y:m:d');
 		//return $date;
 		//$after  = $after->format('Y:m:d H:i:s');
 
-		$data = $this->accommodation_repo->getBookings($id, $date);
+		return $this->accommodation_repo->getAvailability(['before' => $before, 'after' => $after], $id);
+
+		$data = $this->accommodation_repo->getBookings($id, $after, $before);
 		//return $data;
 		$manifest = [];
 		$manifest['bookings'] = [];

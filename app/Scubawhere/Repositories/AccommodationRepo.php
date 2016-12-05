@@ -151,9 +151,9 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
             ->join('customers', 'customers.id', '=', 'customer_id')
             ->join('payments', 'payments.booking_id', '=', 'accommodation_booking.booking_id')
             ->join('accommodations', 'accommodations.id', '=', 'accommodation_booking.accommodation_id')
-            ->where('accommodation_id', $id)
-            ->where('start', '<=', $after)
-            ->where('end', '>=', $before)
+            ->where('accommodation_id', (int) $id)
+            ->where('start', '<=', $before)
+            ->where('end', '>=', $after)
             ->get();
 
             $refunds = \DB::table('refunds')

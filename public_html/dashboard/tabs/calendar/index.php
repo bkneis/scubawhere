@@ -251,8 +251,8 @@
          </div>
       </script>
 	   <script type="text/x-handlebars-template" id="accommodation-manifest-template">
-		   <div id="modal-{{accommodation.id}}-{{jFriendly accommodation.date}}" class="reveal-modal xxlarge">
-			   <h3>{{{accommodation.name}}} - Accommodation Manifest</h3>
+		   <div id="modal-{{accommodation.0.id}}-{{jFriendly date}}" class="reveal-modal xxlarge">
+			   <h3>{{{accommodation.0.name}}} - Accommodation Manifest</h3>
 			   <table style="margin-top: 2em;" id="customer-data-table" class="table table-striped">
 				   <thead>
 				   <tr>
