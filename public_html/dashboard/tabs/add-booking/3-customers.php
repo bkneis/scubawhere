@@ -70,7 +70,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-6">
-								<label for="email" class="control-label">Email</label>
+								<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
 								<input id="customer-email" name="email" class="form-control form-email" placeholder="@">
 							</div>
 							<div class="col-md-6" style="margin-top:30px;">
