@@ -264,7 +264,7 @@
 					</div>
 					<div class="form-group">
 						<label>
-							<input type="radio" name="thisorthat" value="no" checked>
+							<input type="radio" name="thisorthat" value="no">
 							No cancellation fee
 						</label>
 					</div>

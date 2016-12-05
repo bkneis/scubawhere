@@ -599,6 +599,12 @@ $('#modalWindows').on('submit', '.cancellation-form', function(event) {
 	
 	params.cancel_reason = $('#cancel_reason').val();
 
+	if (!($("input[type=radio]:checked").length > 0)) {
+		pageMssg('Please select a cancellation option', 'danger');
+		btn.html('Cancel Booking');
+		return;
+	}
+
 	// Cancel booking and reload list of bookings
 	Booking.cancel(params, function success(status) {
 
