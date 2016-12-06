@@ -238,7 +238,7 @@
 
 	<script type="text/x-handlebars-template" id="cancellation-fee-template">
 		<div id="modal-cancellation-fee" class="reveal-modal">
-			{{#compare status '!==' 'temporary'}}
+			{{!--{{#compare status '!==' 'temporary'}}--}}
 				<h4>Do you incurr a cancellation fee?</h4>
 
 				<form class="form cancellation-form">
@@ -280,7 +280,7 @@
 						<button class="btn btn-primary pull-right cancel-booking">Cancel Booking</button>
 					</div>
 				</form>
-			{{else}}
+			{{!--{{else}}
 				<h4>Really discard all changes?</h4>
 
 				<form class="form cancellation-form">
@@ -289,7 +289,7 @@
 						<button class="btn btn-primary pull-right cancel-booking">Discard changes</button>
 					</div>
 				</form>
-			{{/compare}}
+			{{/compare}}--}}
 
 			<a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
 		</div>
