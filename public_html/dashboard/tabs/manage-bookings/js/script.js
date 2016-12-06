@@ -171,11 +171,14 @@ Handlebars.registerHelper("remainingPay", function() {
 });
 
 Handlebars.registerHelper('addTransactionButton', function(id) {
-	if(this.agent && this.agent.terms === 'fullamount')
+	// I needed to remove this to ensure users can add transactions for cancelled booking with refunds
+	/*if(this.agent && this.agent.terms === 'fullamount') {
 		return '';
+	}*/
 
-	if(this.status === 'temporary')
+	if(this.status === 'temporary') {
 		return '';
+	}
 
 	return new Handlebars.SafeString('<button onclick="addTransaction(' + id + ', this);" class="btn btn-default"><i class="fa fa-credit-card fa-fw"></i> Transactions</button>');
 });
@@ -347,7 +350,7 @@ function generateInvoice(customer_id, details) {
 				name  : accomm_name,
 				price : parseFloat(accomm.decimal_price)
 			});
-		})
+		});
 	}
 
 	for(var i in details) {
@@ -365,16 +368,21 @@ function generateInvoice(customer_id, details) {
 					name  : addon.name,
 					price : parseFloat(addon.decimal_price)
 				});
-			})
+			});
 		}
 		// Calculate all of the booked entities
 		_.each(bookables, function(val) {
 			var key = singularify(val);
 			if(isset(details[i][key])) {
+				if(isset(details[i][key].only_packaged)) {
+					if(details[i][key].only_packaged === 1) {
+						return;
+					}
+				}
 				invoice[val].push({
 					name  : details[i][key].name,
 					price : parseFloat(details[i][key].decimal_price)
-				})
+				});
 			}
 		});
 	}
