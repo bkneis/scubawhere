@@ -34,6 +34,7 @@ var Ticket = {
 
 	getOnlyAvailable : function(handleData){
 		$.get("/api/ticket/only-available", function(data){
+			// @todo delete this now myaql driver is fixed
 			if(window.location.hostname === 'rms-test.scubawhere.com')
 				_.each(data, function(object) {
 					object.only_packaged = parseInt(object.only_packaged);
