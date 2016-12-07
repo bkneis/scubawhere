@@ -8,6 +8,7 @@ use Scubawhere\Entities\CrmLink;
 use Scubawhere\Entities\Booking;
 use Scubawhere\Entities\CrmToken;
 use Scubawhere\Entities\CrmCampaign;
+use Scubawhere\Entities\CrmLinkTracker;
 use Scubawhere\Services\ObjectStoreService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -78,8 +79,10 @@ class CrmCampaignController extends Controller
         // WOULD GETTING THE CRM_SUBSCRIPTIONS FROM CAMPAIGN ID BE MORE EFFECIENT THAN LOOPING THROUGH EXISITING DATA ???????
         $unsubscriptions = 0;
         foreach ($analytics as $analytic) {
-            if ($analytic->customer->crm_subscription->subscribed == 0) {
-                $unsubscriptions ++;
+            if(isset($analytic->customer->crm_subscription)) {
+                if ($analytic->customer->crm_subscription->subscribed == 0) {
+                    $unsubscriptions++;
+                }
             }
         }
 
