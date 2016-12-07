@@ -1,6 +1,9 @@
 <?php
-use Scubawhere\Helper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Scubawhere\Entities\CrmLink;
+use Scubawhere\Entities\Customer;
+use Scubawhere\Entities\CrmToken;
+use Scubawhere\Entities\CrmLinkTracker;
 
 class CrmTrackingController extends Controller {
 
@@ -35,7 +38,7 @@ class CrmTrackingController extends Controller {
         $tracker = CrmLinkTracker::where($link_query)->with('customer.company')->first();
         if($tracker)
         {
-			$now = new \DateTime( 'now', new \DateTimeZone( $token->customer->company->timezone ) );
+			$now = new \DateTime( 'now', new \DateTimeZone( $tracker->customer->company->timezone ) );
             $tracker->count = $tracker->count + 1;
 			$tracker->opened_time = $now->format('Y-m-d H:i:s'); 
             $tracker->save();
