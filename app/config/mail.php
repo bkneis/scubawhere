@@ -14,10 +14,8 @@ return array(
 	| Supported: "smtp", "mail", "sendmail"
 	|
 	*/
-
 	//'driver' => 'mandrill',
 	'driver' => 'mailgun',
-	// 'driver' => 'mail',
 
 	/*
 	|--------------------------------------------------------------------------
