@@ -256,12 +256,12 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<li>
+				<!--<li>
 					<a href="#availability">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Availability</span>
 					</a>
-				</li>
+				</li>-->
 
 				<li>
 					<div>
