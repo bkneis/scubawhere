@@ -93,16 +93,20 @@ function renderCampaignTable() {
                 var new_params= {};
                 new_params.email_html = data.email_html;
                 new_params.groups = [];
-                for(i in data.groups)
-                {
-                   new_params.groups.push(data.groups[i].id);
+                if(data.groups.length < 1) {
+                    new_params.sendallcustomers = 1;
+                } else {
+                    for(var i in data.groups)
+                    {
+                        new_params.groups.push(data.groups[i].id);
+                    }
+                    new_params.sendallcustomers = 0;
                 }
                 $('#btn-resend-campaign').on('click', function(event) {
                     event.preventDefault();
                     new_params.subject = $('#resend-email-subject').val();
                     new_params.name = $('#resend-campaign-name').val();
 					new_params.is_campaign = 1;
-					new_params.sendallcustomers = 0;
                     new_params._token = window.token;
                     sendCampaign(new_params);
                     renderCampaignTable();
