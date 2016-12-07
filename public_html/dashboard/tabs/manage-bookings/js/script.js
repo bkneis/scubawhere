@@ -217,7 +217,14 @@ $(function() {
 	Booking.getAll(function(data) {
 		// window.bookings = _.indexBy(data, 'id');
 		window.bookings = _.sortBy(data, function(booking) { return -booking.id; });
-		renderBookingList(window.bookings);
+
+		Course.getAll(function (data) {
+			window.courses = _.indexBy(data, 'id');
+			Package.getAllPackages(function (data) {
+				window.packages = _.indexBy(data, 'id');
+				renderBookingList(window.bookings);
+			});
+		});
 
 	});
 
@@ -334,7 +341,7 @@ function generateInvoice(customer_id, details) {
 		total          : 0
 	};
 
-	var bookables = ['tickets', 'courses', 'packages'];
+	var bookables = ['tickets'];
 
 	/*
 	 * Calculate all of the accommodations
@@ -353,17 +360,98 @@ function generateInvoice(customer_id, details) {
 		});
 	}
 
-	for(var i in details) {
+	var courseGroupings = [];
+
+	for (var j in details) {
+		if (details[j].course === null) {
+			continue;
+		}
+		var count = 0;
+		count += window.courses[details[j].course.id].tickets.length;
+		count += window.courses[details[j].course.id].trainings.length;
+
+		courseGroupings.push({
+			id :    details[j].course.id,
+			count : count
+		});
+	}
+	courseGroupings = _.uniq(courseGroupings, function(item, key, a) {
+		return item.a;
+	});
+	courseGroupings = _.indexBy(courseGroupings, 'id');
+
+	var allCourses = [];
+	for (var u in details) {
+		allCourses.push(details[u].course);
+	}
+
+	var keepCourses = [];
+	for (var j in courseGroupings) {
+		var courses = _.where(allCourses, {id : courseGroupings[j].id});
+		var keep = courses.length / courseGroupings[j].count;
+		for (var n = 0; n < keep; n++) {
+			keepCourses.push({
+				name  : courses[0].name,
+				price : courses[0].decimal_price,
+				id    : courses[0].id
+			});
+		}
+	}
+
+	var packageGroupings = [];
+
+	for (var m in details) {
+		if (details[m].packagefacade === null) {
+			continue;
+		}
+
+		var counter = 0;
+		if (window.packages[details[m].packagefacade.package.id].tickets !== null) {
+			counter += window.packages[details[m].packagefacade.package.id].tickets.length;
+		}
+		if (window.packages[details[m].packagefacade.package.id].courses !== null) {
+			counter += window.packages[details[m].packagefacade.package.id].courses.length;
+		}
+
+		packageGroupings.push({
+			id :    details[m].packagefacade.package.id,
+			count : counter
+		});
+	}
+	packageGroupings = _.uniq(packageGroupings, function(item, key, a) {
+		return item.a;
+	});
+	packageGroupings = _.indexBy(packageGroupings, 'id');
+
+	var allPackages = [];
+	for (var u in details) {
+		allPackages.push(details[u].packagefacade);
+	}
+
+	var keepPackages = [];
+	for (var j in packageGroupings) {
+		var packages = _.where(allPackages, {package_id : packageGroupings[j].id});
+		var keep = packages.length / packageGroupings[j].count;
+		for (var n = 0; n < keep; n++) {
+			keepPackages.push({
+				name  : packages[0].package.name,
+				price : packages[0].package.decimal_price,
+				id    : packages[0].package_id
+			});
+		}
+	}
+
+	for (var i in details) {
 		// Only generate invoice for a specific customer
-		if(details[i].customer_id !== customer_id) {
+		if (details[i].customer_id !== customer_id) {
 			continue;
 		}
 		/*
 		 * Calculate all of the addons
 		 * This needs to be seperate from the bookables array loop as the addons themeselves are in an array
 		 */
-		if(isset(details[i].addons)) {
-			_.each(details[i].addons, function(addon) {
+		if (isset(details[i].addons)) {
+			_.each(details[i].addons, function (addon) {
 				invoice.addons.push({
 					name  : addon.name,
 					price : parseFloat(addon.decimal_price)
@@ -371,28 +459,35 @@ function generateInvoice(customer_id, details) {
 			});
 		}
 		// Calculate all of the booked entities
-		_.each(bookables, function(val) {
+		_.each(bookables, function (val) {
 			var key = singularify(val);
-			if(isset(details[i][key])) {
-				if(isset(details[i][key].only_packaged)) {
-					if(details[i][key].only_packaged === 1) {
+			if (isset(details[i][key])) {
+				/*if (isset(details[i][key].only_packaged)) {
+					if (details[i][key].only_packaged === 1) {
 						return;
 					}
+				}*/
+				if(key === 'ticket' && (details[i].packagefacade !== null || details[i].course !== null)) {
+					return;
 				}
 				invoice[val].push({
 					name  : details[i][key].name,
-					price : parseFloat(details[i][key].decimal_price)
+					price : parseFloat(details[i][key].decimal_price),
+					id    : details[i][key].id
 				});
 			}
 		});
 	}
+
+	invoice.courses = keepCourses;
+	invoice.packages = keepPackages;
+
 	// Calculate the totals
-	for(var k in invoice) {
+	for (var k in invoice) {
 		for(var l in invoice[k]) {
-			invoice.total += invoice[k][l].price;
+			invoice.total += parseFloat(invoice[k][l].price);
 		}
 	}
-	console.log(invoice);
 	return invoice;
 }
 
