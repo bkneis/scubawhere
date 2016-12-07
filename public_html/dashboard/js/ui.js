@@ -1,7 +1,5 @@
 var LOADER = '<div class="loader" style="left: 50%; margin-left: -13px; margin-top: 10em;"></div>';
 
-var hashHistory = [];
-
 /*$(window).on('hashchange', function(e) {
 	hashHistory.push(window.location.hash);
 	if (hashHistory.length > 2) {
