@@ -238,6 +238,8 @@ $(function () {
                 arrival : arrival,
                 departure : departure
             }));
+
+            window.customers[res.data.customer.id] = res.data.customer;
         },
         function (xhr) {
             console.log(xhr);
@@ -252,8 +254,9 @@ $(function () {
             id          : self.attr('data-id'),
             customer_id : $('#customer_id').val()
         };
-        Customer.removeStay(params, function (data) {
+        Customer.removeStay(params, function (res) {
             self.parent().remove();
+            window.customers[res.data.customer.id] = res.data.customer;
         },
         function (xhr) {
             console.log(xhr);
@@ -498,6 +501,7 @@ function editDetails(id) {
                 name: certificate.name,
             }));
         });
+        $('#edit-customer-hotelstays').css('display', 'inline');
         $('#edit-customer-hotelstays').find('#known-hotelstays').empty();
         console.log('cust', customer);
         _.each(customer.stays, function (stay) {
@@ -513,7 +517,7 @@ function editDetails(id) {
         $("#edit-customer-details").html(editCustomerTemplate(customer));
         $("#customer-diving-information").html(customerDivingInformationTemplate({}));
     	$('#edit-customer-agencies').find('#selected-certificates').empty();
-        $('#edit-customer-hotelstays').find('#known-hotelstays').empty();
+        $('#edit-customer-hotelstays').css('display', 'none');
     }
 
     $('#edit-customer-modal').modal('show');

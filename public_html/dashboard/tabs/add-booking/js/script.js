@@ -346,6 +346,7 @@ var boatroomModalTemplate       = Handlebars.compile($("#boatroom-select-modal-t
 var pickUpListPartial           = Handlebars.compile($('#pick-up-list-partial').html());
 var bookingSummaryTemplate      = Handlebars.compile($("#booking-summary-template").html());
 var toolbarTemplate             = Handlebars.compile($("#toolbar-template").html());
+var knownHotelstaysTemplate     = Handlebars.compile($('#hotelstay-template').html());
 
 Handlebars.registerPartial('pick-up-list', pickUpListPartial);
 /**
@@ -867,6 +868,60 @@ $.when(window.promises.loadedCustomers, window.promises.loadedAgencies).done(fun
 				return certificate.id == certificate_dropdown.val();
 			}).name,
 		}));
+	});
+
+	$('#edit-customer-modal').on('click', '.add-hotelstay', function (event) {
+		event.preventDefault();
+		var name      = $('#hotel_name').val();
+		var address   = $('#hotel_address').val();
+		var arrival   = $('#hotel_arrival').val();
+		var departure = $('#hotel_departure').val();
+		if(name === '') {
+			pageMssg('Please provide a name for the accommodation', 'danger');
+			return false;
+		}
+		var params = {
+			name        : name,
+			address     : address,
+			arrival     : arrival,
+			departure   : departure,
+			customer_id : $('#customer_id').val()
+		};
+		Customer.addStay(params, function (res) {
+			$('#known-hotelstays').append(knownHotelstaysTemplate({
+				id   : res.data.stay.id,
+				name : name,
+				arrival : arrival,
+				departure : departure
+			}));
+			$('#hotel_name').val('');
+			$('#hotel_address').val('');
+			$('#hotel_arrival').val('');
+			$('#hotel_departure').val('');
+			window.customers[res.data.customer.id] = res.data.customer;
+		},
+		function (xhr) {
+			console.log(xhr);
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0], 'danger');
+		});
+	});
+
+	$('#edit-customer-modal').on('click', '.remove-hotelstay', function () {
+		var self = $(this);
+		var params = {
+			id          : self.attr('data-id'),
+			customer_id : $('#customer_id').val()
+		};
+		Customer.removeStay(params, function (res) {
+			self.parent().remove();
+			window.customers[res.data.customer.id] = res.data.customer;
+		},
+		function (xhr) {
+			console.log(xhr);
+			var data = JSON.parse(xhr.responseText);
+			pageMssg(data.errors[0], 'danger');
+		});
 	});
 
 	$('#customer-tab').on('click', '.remove-certificate', function() {
