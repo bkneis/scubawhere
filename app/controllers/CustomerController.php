@@ -2,17 +2,22 @@
 
 use Scubawhere\Context;
 use Scubawhere\Entities\Customer;
+use Scubawhere\Entities\Hotelstay;
 use Scubawhere\Entities\CrmSubscription;
 use Scubawhere\Services\ObjectStoreService;
+use Scubawhere\Repositories\CustomerRepoInterface;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller {
 
 	protected $object_store_service;
+	protected $customer_repo;
 
-	public function __construct(ObjectStoreService $object_store_service)
+	public function __construct(ObjectStoreService $object_store_service, CustomerRepoInterface $customer_repo)
 	{
 		$this->object_store_service = $object_store_service;
+		$this->customer_repo = $customer_repo;
 	}
 
 	public function getIndex()
@@ -20,7 +25,7 @@ class CustomerController extends Controller {
 		try
 		{
 			if( !Input::get('id') ) throw new ModelNotFoundException();
-			return Context::get()->customers()->with('certificates', 'certificates.agency')->findOrFail( Input::get('id') );
+			return Context::get()->customers()->with('stays', 'certificates', 'certificates.agency')->findOrFail( Input::get('id') );
 		}
 		catch(ModelNotFoundException $e)
 		{
@@ -30,7 +35,7 @@ class CustomerController extends Controller {
 
 	public function getAll()
 	{
-		return Context::get()->customers()->with('certificates', 'certificates.agency')->get();
+		return Context::get()->customers()->with('stays', 'certificates', 'certificates.agency')->get();
 	}
 
 	public function getFilter($from = 0, $take = 20)
@@ -355,5 +360,54 @@ class CustomerController extends Controller {
 				array('status' => 'BAD REQUEST. Apologies, something has gone wrong and we cant seem to find the file right now.'), 500);
 		}
 
+	}
+
+	public function postAddStay()
+	{
+		$data = Input::only('name', 'address', 'arrival', 'departure');
+
+		$customer_id = Input::get('customer_id');
+
+		if(is_null($data['name'])) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The hotel name is required']);
+		}
+
+		if(is_null($customer_id)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The customer id is required']);
+		}
+
+		$stay = new Hotelstay($data);
+
+		if(!$stay->validate()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $stay->errors()->all());
+		}
+
+		$stay->save();
+
+		$customer = $this->customer_repo->get((int) $customer_id);
+
+		$customer->stays()->attach($stay->id);
+
+		return Response::json(array('status' => 'OK. Hotel stay deleted', 'data' => array('stay' => $stay)));
+	}
+	
+	public function postRemoveStay()
+	{
+		$id          = Input::get('id');
+		$customer_id = Input::get('customer_id');
+
+		if(is_null($id)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The id is required']);
+		}
+
+		if(is_null($customer_id)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The id is required']);
+		}
+
+		$customer = $this->customer_repo->get((int) $customer_id);
+
+		$customer->stays()->detach((int) $id);
+
+		return Response::json(array('status' => 'OK. Hotel stay deleted'));
 	}
 }

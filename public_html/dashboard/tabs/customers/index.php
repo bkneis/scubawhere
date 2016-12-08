@@ -128,7 +128,7 @@
 </div>-->
 
 <script type="text/x-handlebars-template" id="customer-diving-information-template">
-	<h5>Diving Information</h5>
+	<h5>Diving Information <small> Keep your divers profile up to date</small></h5>
 	<div class="form-group">
 		<div class="col-md-4">
 			<label for="last_dive" class="control-label">Date of last dive</label>
@@ -177,6 +177,16 @@
 		<input type="checkbox" name="certificates[]" value="{{id}}" style="position: absolute; top: 0; left: -9999px;" checked="checked">
 		<strong>{{abbreviation}}</strong> - {{{name}}}
 		<i class="fa fa-times remove-certificate" style="cursor: pointer;"></i>
+	</div>
+</script>
+
+<script type="text/x-handlebars-template" id="hotelstay-template">
+	<div class="pull-left selected-certificate">
+		<input type="checkbox" name="hotelstays[]" style="position: absolute; top: 0; left: -9999px;" checked="checked">
+		<i class="fa fa-times remove-hotelstay" data-id="{{id}}" style="cursor: pointer;"></i>
+		<strong>{{name}}</strong>
+		<p>Arrival - {{arrival}}</p>
+		<p>Departure - {{departure}}</p>
 	</div>
 </script>
 
@@ -258,7 +268,7 @@
 					<fieldset id="edit-customer-countries">
 						<div class="form-group">
 							<div class="col-md-6">
-								<label for="country_id">Country <span class="text-danger">*</span></label></label>
+								<label for="country_id">Country <span class="text-danger">*</span></label>
 								<select id="country_id" name="country_id" class="form-control select2"></select>
 							</div>
 							<div class="col-md-6">
@@ -268,8 +278,39 @@
 						</div>
 					</fieldset>
 
+					<fieldset id="edit-customer-hotelstays">
+						<h5>Accommodation Details <small> Build a history of where your customer has stayed on their trips</small></h5>
+						<div class="form-group" style="margin-bottom: 0;">
+							<div class="col-md-12" id="known-hotelstays"></div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-5">
+								<label for="country_id">Name</label>
+								<input type="text" id="hotel_name" name="hotel_name" class="form-control">
+							</div>
+							<div class="col-md-5">
+								<label for="language_id">Address</label></label>
+								<input id="hotel_address" name="hotel_address" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-5">
+								<label for="arrival">Arival Date</label>
+								<input type="text" id="hotel_arrival" name="hotel_arrival" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
+							</div>
+							<div class="col-md-5">
+								<label for="departure">Departure Date</label></label>
+								<input type="text" id="hotel_departure" name="hotel_departure" class="form-control datepicker" data-date-format="YYYY-MM-DD" data-date-view-mode="years">
+							</div>
+							<div class="col-md-2">
+								<label>&nbsp;</label>
+								<button class="btn btn-success add-hotelstay" style="width: 100%;">Add Stay</button>
+							</div>
+						</div>
+					</fieldset>
+
 					<fieldset id="edit-customer-agencies">
-						<h5>Certificates</h5>
+						<h5>Certificates <small> Multiple certification can be added</small></h5>
 						<div class="form-group" style="margin-bottom: 0;">
 							<div class="col-md-12" id="selected-certificates">
 							</div>
@@ -286,7 +327,7 @@
 								</select>
 							</div>
 							<div class="col-md-2">
-								<label>&nbsp;</label><brselect>
+								<label>&nbsp;</label>
 								<button class="btn btn-success add-certificate" style="width: 100%;">Add Cert</button>
 							</div>
 						</div>
@@ -414,7 +455,7 @@
 </script>
 
 <script type="text/x-handlebars-template" id="edit-customer-template">
-	<input type="hidden" name="id" value="{{id}}">
+	<input type="hidden" id="customer_id" name="id" value="{{id}}">
 	<input type="hidden" name="mode" value="{{task}}">
 	<div class="form-group">
 		<div class="col-md-6">

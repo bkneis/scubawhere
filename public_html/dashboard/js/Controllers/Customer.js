@@ -59,6 +59,28 @@ var Customer = {
 			url     : '/api/customer/last-import-errors',
 			success : handleData
 		});
+	},
+
+	addStay : function (params, handleData, errorFn) {
+		params._token = window.token;
+		$.ajax({
+			type    : 'POST',
+			url     : '/api/customer/add-stay',
+			data    : params,
+			success : handleData,
+			error   : errorFn
+		});
+	},
+
+	removeStay : function (params, handleData, errorFn) {
+		params._token = window.token;
+		$.ajax({
+			type    : 'POST',
+			url     : '/api/customer/remove-stay',
+			data    : params,
+			success : handleData,
+			error   : errorFn
+		});
 	}
 
 };

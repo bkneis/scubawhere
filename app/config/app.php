@@ -147,7 +147,8 @@ return array(
 		'Scubawhere\Repositories\TripRepoServiceProvider',
 		'Scubawhere\Repositories\TicketRepoServiceProvider',
 		'Scubawhere\Repositories\PackageRepoServiceProvider',
-		'Scubawhere\Repositories\LanguageRepoServiceProvider'
+		'Scubawhere\Repositories\LanguageRepoServiceProvider',
+		'Scubawhere\Repositories\CustomerRepoServiceProvider'
 
 	),
 

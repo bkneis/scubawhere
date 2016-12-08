@@ -2,10 +2,12 @@
 
 namespace Scubawhere\Entities;
 
-use LaravelBook\Ardent\Ardent;
 use Scubawhere\Helper;
+use Scubawhere\Context;
+use LaravelBook\Ardent\Ardent;
 
 class Customer extends Ardent {
+
 	protected $fillable = array(
 		'email',
 		'firstname',
@@ -117,6 +119,11 @@ class Customer extends Ardent {
 		return $this->firstname . ' ' . $this->lastname;
 	}
 
+	public function scopeOnlyOwners($query)
+	{
+		return $query->where('company_id', Context::get()->id);
+	}
+
 	public function company()
 	{
 		return $this->belongsTo('\Scubawhere\Entities\Company');
@@ -165,5 +172,10 @@ class Customer extends Ardent {
 	public function language()
 	{
 		return $this->belongsTo('\Scubawhere\Entities\Language');
+	}
+
+	public function stays()
+	{
+		return $this->belongsToMany('\Scubawhere\Entities\Hotelstay');
 	}
 }

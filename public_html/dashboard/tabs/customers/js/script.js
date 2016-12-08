@@ -79,6 +79,7 @@ var agenciesTemplate = Handlebars.compile($("#agencies-template").html());
 var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 var certificatesTemplate = Handlebars.compile($("#certificates-template").html());
 var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
+var knownHotelstaysTemplate = Handlebars.compile($('#hotelstay-template').html());
 var templateColumnFormatSelect = Handlebars.compile($("#template-column-format-select").html());
 var templateImportErrors = Handlebars.compile($('#template-import-errors').html());
 var templateImpotCustomers = Handlebars.compile($('#template-import-customers').html());
@@ -211,6 +212,54 @@ $(function () {
                 return certificate.id == certificate_dropdown.val();
             }).name,
         }));
+    });
+    
+    $('#edit-customer-modal').on('click', '.add-hotelstay', function (event) {
+        event.preventDefault();
+        var name      = $('#hotel_name').val();
+        var address   = $('#hotel_address').val();
+        var arrival   = $('#hotel_arrival').val();
+        var departure = $('#hotel_departure').val();
+        if(name === '') {
+            pageMssg('Please provide a name for the accommodation', 'danger');
+            return false;
+        }
+        var params = {
+            name        : name,
+            address     : address,
+            arrival     : arrival,
+            departure   : departure,
+            customer_id : $('#customer_id').val()
+        };
+        Customer.addStay(params, function (res) {
+            $('#known-hotelstays').append(knownHotelstaysTemplate({
+                id   : res.data.stay.id,
+                name : name,
+                arrival : arrival,
+                departure : departure
+            }));
+        },
+        function (xhr) {
+            console.log(xhr);
+            var data = JSON.parse(xhr.responseText);
+            pageMssg(data.errors[0], 'danger');
+        });
+    });
+
+    $('#edit-customer-modal').on('click', '.remove-hotelstay', function () {
+        var self = $(this);
+        var params = {
+            id          : self.attr('data-id'),
+            customer_id : $('#customer_id').val()
+        };
+        Customer.removeStay(params, function (data) {
+            self.parent().remove();
+        },
+        function (xhr) {
+            console.log(xhr);
+            var data = JSON.parse(xhr.responseText);
+            pageMssg(data.errors[0], 'danger');
+        });
     });
 
     $('#edit-customer-modal').on('click', '.remove-certificate', function () {
@@ -449,11 +498,22 @@ function editDetails(id) {
                 name: certificate.name,
             }));
         });
+        $('#edit-customer-hotelstays').find('#known-hotelstays').empty();
+        console.log('cust', customer);
+        _.each(customer.stays, function (stay) {
+            $('#edit-customer-hotelstays').find('#known-hotelstays').append(knownHotelstaysTemplate({
+                id        : stay.id,
+                name      : stay.name,
+                arrival   : stay.arrival,
+                departure : stay.departure
+            }));
+        });
     }
     else {
         $("#edit-customer-details").html(editCustomerTemplate(customer));
         $("#customer-diving-information").html(customerDivingInformationTemplate({}));
     	$('#edit-customer-agencies').find('#selected-certificates').empty();
+        $('#edit-customer-hotelstays').find('#known-hotelstays').empty();
     }
 
     $('#edit-customer-modal').modal('show');
