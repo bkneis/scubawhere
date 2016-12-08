@@ -1787,12 +1787,27 @@ class BookingController extends Controller
 
         $data = Input::only(
             'discount',         // Should be decimal
+            'discount_reason',  // string
             'comment'           // Text
         );
 
-        if (empty($data['discount']) && $data['discount'] !== 0 && $data['discount'] !== '0') {
-            $data['discount'] = null;
+        // @todo Shall we delete the discount reason when 0 or allow the user to do it?
+        /*if (empty($data['discount']) && $data['discount'] !== 0 && $data['discount'] !== '0') {
+            //$data['discount'] = null;
+            unset($data['discount']);
         }
+
+        if(!isset($data['discount'])) {
+            unset($data['discount_reason']);
+        } elseif (is_null($data['discount'])) {
+            unset($data['discount']);
+        }
+
+        if(is_null($data['comment'])) {
+            unset($data['comment']);
+        }*/
+
+        $data = array_filter($data, function ($val) { return !(is_null($val)); });
 
         $oldDiscount = $booking->discount;
 

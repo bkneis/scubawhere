@@ -3,6 +3,7 @@ var Booking = function(data) {
 	// Defaults for new booking
 	this.decimal_price  = "0.00";
 	this.discount       = "0.00";
+	this.discount_reason = '';
 	this.lead_customer  = null;
 	this.bookingdetails = [];
 	this.accommodations = [];
@@ -669,8 +670,9 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 		data: params,
 		context: this,
 		success: function(data) {
-			if(params.discount)         this.discount         = params.discount * 100;
-			if(params.comment)          this.comment          = params.comment;
+			if(params.discount)        this.discount        = params.discount * 100;
+			if(params.comment)         this.comment         = params.comment;
+			if(params.discount_reason) this.discount_reason = params.discount_reason;
 
 			this.price         = data.price;
 			this.decimal_price = data.decimal_price;

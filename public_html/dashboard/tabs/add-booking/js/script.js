@@ -2801,6 +2801,30 @@ $('#extra-tab').on('submit', '#extra-form', function(e, data) {
 	});
 });
 
+$('#extra-tab').on('submit', '#comments-form', function(e, data) {
+	e.preventDefault();
+
+	var btn = $(this).find('[type="submit"]');
+	btn.html('<i class="fa fa-cog fa-spin"></i> Saving...');
+
+	var params = $(this).serializeObject();
+	params._token = window.token;
+	console.log('params', params);
+
+	booking.editInfo(params, function success(status) {
+		pageMssg(status, 'success');
+		btn.html('Save');
+
+		drawBasket();
+
+		if(typeof(data) !== 'undefined' && typeof(data.callback) === 'function') data.callback();
+	}, function error(xhr) {
+		var data = JSON.parse(xhr.responseText);
+		if(data.errors) pageMssg(data.errors[0], 'danger');
+		btn.html('Save');
+	});
+});
+
 // taghere
 $('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$discount            = $('#discount');
