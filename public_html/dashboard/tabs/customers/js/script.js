@@ -238,7 +238,10 @@ $(function () {
                 arrival : arrival,
                 departure : departure
             }));
-
+            $('#hotel_name').val('');
+            $('#hotel_address').val('');
+            $('#hotel_arrival').val('');
+            $('#hotel_departure').val('');
             window.customers[res.data.customer.id] = res.data.customer;
         },
         function (xhr) {
