@@ -955,6 +955,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	}*/
 
 	$('#edit-customer-agencies').find('#selected-certificates').empty();
+	$('#edit-customer-hotelstays').find('#known-hotelstays').empty();
 
 	// Display all selected certificates
 	_.each(window.customers[id].certificates, function(certificate) {
@@ -962,6 +963,15 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 			id: certificate.id,
 			abbreviation: certificate.agency.abbreviation,
 			name: certificate.name,
+		}));
+	});
+
+	_.each(window.customers[id].stays, function (stay) {
+		$('#edit-customer-hotelstays').find('#known-hotelstays').append(knownHotelstaysTemplate({
+			id        : stay.id,
+			name      : stay.name,
+			arrival   : stay.arrival,
+			departure : stay.departure
 		}));
 	});
 
