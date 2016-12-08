@@ -501,7 +501,7 @@ function editDetails(id) {
                 name: certificate.name,
             }));
         });
-        $('#edit-customer-hotelstays').css('display', 'inline');
+        $('#edit-customer-hotelstays').css('display', 'block');
         $('#edit-customer-hotelstays').find('#known-hotelstays').empty();
         console.log('cust', customer);
         _.each(customer.stays, function (stay) {
