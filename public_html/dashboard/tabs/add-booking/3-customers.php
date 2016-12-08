@@ -120,14 +120,23 @@
 						</div>
 						<fieldset id="add-customer-countries">
 							<div class="form-group">
-								<div class="col-md-8">
+								<div class="col-md-6">
 									<label for="country_id" class="control-label">Country <span class="text-danger">*</span></label>
-									<select id="country_id" name="country_id" class="form-control select2">
-									</select>
+									<select id="country_id" name="country_id" class="form-control select2"></select>
 								</div>
 								<script type="text/x-handlebars-template" id="countries-template">
 									<option value="">Choose country...</option>
 									{{#each countries}}
+										<option value="{{id}}">{{{name}}}</option>
+									{{/each}}
+								</script>
+								<div class="col-md-6">
+									<label for="language_id" class="control-label">Language</label>
+									<select id="language_id" name="language_id" class="form-control select2"></select>
+								</div>
+								<script type="text/x-handlebars-template" id="languages-template">
+									<option value="">Choose language...</option>
+									{{#each languages}}
 										<option value="{{id}}">{{{name}}}</option>
 									{{/each}}
 								</script>
@@ -241,10 +250,13 @@
 
 					<fieldset id="edit-customer-countries">
 						<div class="form-group">
-							<div class="col-md-8">
-								<label for="country_id">Country <span class="text-danger">*</span></label></label>
-								<select id="country_id" name="country_id" class="form-control select2">
-								</select>
+							<div class="col-md-6">
+								<label for="country_id">Country <span class="text-danger">*</span></label>
+								<select id="country_id" name="country_id" class="form-control select2"></select>
+							</div>
+							<div class="col-md-6">
+								<label for="language_id">Language</label>
+								<select id="language_id" name="language_id" class="form-control select2"></select>
 							</div>
 						</div>
 					</fieldset>

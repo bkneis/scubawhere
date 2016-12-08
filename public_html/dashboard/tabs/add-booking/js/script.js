@@ -113,7 +113,10 @@ Handlebars.registerHelper("countryName", function(id) {
 	if(typeof window.countries !== 'undefined')
 		return window.countries[id].name;
 	else {
-		window.promises.loadedCountries.done(function() {
+		$.when(
+			window.promises.loadedCountries,
+			window.promises.loadedLanguages
+		).done(function() {
 			var id = $('#countryPlaceholder').attr('data-id');
 			$('#countryPlaceholder').html(window.countries[id].name);
 		});
@@ -335,6 +338,7 @@ var addonsTemplate              = Handlebars.compile($("#addons-list-template").
 var accommodationsTemplate      = Handlebars.compile($("#accommodations-list-template").html());
 var customersTemplate           = Handlebars.compile($("#customers-list-template").html());
 var countriesTemplate           = Handlebars.compile($("#countries-template").html());
+var languagesTemplate           = Handlebars.compile($("#languages-template").html());
 var agenciesTemplate            = Handlebars.compile($("#agencies-template").html());
 var certificatesTemplate        = Handlebars.compile($("#certificates-template").html());
 var selectedCertificateTemplate = Handlebars.compile($("#selected-certificate-template").html());
@@ -400,6 +404,20 @@ if(typeof window.countries === 'undefined')
 else {
 	$("#add-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
 	$("#edit-customer-countries").find('#country_id').html(countriesTemplate({countries:window.countries}));
+	window.promises.loadedCountries.resolve();
+}
+
+window.promises.loadedLanguages = $.Deferred();
+if(typeof window.languages === 'undefined')
+	$.get("/api/language", function(data) {
+		window.languages = _.indexBy(data, 'id');
+		$("#add-customer-countries").find('#language_id').html(languagesTemplate({languages:window.languages}));
+		$("#edit-customer-countries").find('#language_id').html(languagesTemplate({languages:window.languages}));
+		window.promises.loadedCountries.resolve();
+	});
+else {
+	$("#add-customer-countries").find('#language_id').html(languagesTemplate({languages:window.languages}));
+	$("#edit-customer-countries").find('#language_id').html(languagesTemplate({languages:window.languages}));
 	window.promises.loadedCountries.resolve();
 }
 
@@ -863,6 +881,7 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 
 	// Enable select2 dropdown for edit-form dropdown fields
 	$('#edit-customer-countries').find('#country_id').select2();
+	$('#edit-customer-countries').find('#language_id').select2();
 	$('#edit-customer-agencies').find('#agency_id').select2();
 	$('#edit-customer-agencies').find('#certificate_id').select2();
 
@@ -872,6 +891,9 @@ $('#customer-tab').on('click', '.edit-customer', function() {
 	// Set the country dropdown to the customers country (if they have one)
 	if( window.customers[id].country_id ) {
 		$('#edit-customer-countries').find('#country_id').select2("val", window.customers[id].country_id);
+	}
+	if( window.customers[id].language_id ) {
+		$('#edit-customer-countries').find('#language_id').select2("val", window.customers[id].language_id);
 	}
 	/*else {
 		$('#edit-customer-countries').find('#country_id').select2("val", company.country_id);
@@ -1078,6 +1100,7 @@ $('#customer-tab').on('click', '.clear-form', function() {
 	form.find('#agency_id').select2("val", "");
 	form.find('#certificate_id').select2("val", "");
 	form.find('#country_id').select2("val", "");
+	form.find('#language_id').select2("val", "");
 });
 
 $('#booking-summary-column').on('click', '.lead-customer', function() {
@@ -3081,6 +3104,7 @@ $(document).ready(function() {
 	$('#existing-customers').select2();
 	$('#trips').select2();
 	$('#country_id').select2();
+	$('#language_id').select2();
 	$('#agency_id').select2();
 	$('#certificate_id').select2();
 
