@@ -142,7 +142,7 @@ Handlebars.registerHelper('ifRequiresPayment', function (opts) {
 			return opts.inverse(this);
 		}
 	} else {
-		if(parseFloat(this.sums.have) >= parseFloat(this.sums.payable)) {
+		if(parseFloat(this.sums.have) >= parseFloat(this.decimal_price)) {
 			return opts.inverse(this);
 		}
 	}
