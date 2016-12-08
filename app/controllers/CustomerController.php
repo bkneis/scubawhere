@@ -184,8 +184,8 @@ class CustomerController extends Controller {
 			'language_id'
 		);
 
-		$data = array_filter($data, function ($val) { return !(is_null($val)); });
-
+		$data = array_filter($data, function ($val) {return !(empty($val));});
+	
 		if( !$customer->update($data) )
 		{
 			return Response::json( array('errors' => $customer->errors()->all()), 406 ); // 406 Not Acceptable
