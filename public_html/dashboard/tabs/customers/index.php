@@ -229,6 +229,7 @@
 			<option value="chest_size">Chest Size</option>
 			<option value="show_size">Shoe Size</option>
 			<option value="height">Height</option>
+			<option value="notes">Notes</option>
 		</select>
 		<i class="fa fa-remove fa-lg remove-column" style="cursor: pointer"></i>
 	</p>
