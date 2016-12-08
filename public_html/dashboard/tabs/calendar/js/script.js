@@ -397,8 +397,14 @@ function showModalWindowCourse(eventObject) {
         });
 }
 
-function getFileName(data) {
-	return data.trip.name + ' Trip Manifest - ' + data.start;
+function getFileName(data, type) {
+    if(type === 'trip') {
+        return data.trip.name + ' Trip Manifest - ' + data.start;
+    } else if(type === 'class') {
+        return data.training.name + ' Class Manifest - ' + data.start;
+    } else {
+        return data.accommodation.name + ' Accommodation Manifest - ' + data.start;
+    }
 }
 
 function showModalWindowManifest(id, type, date) {
@@ -473,11 +479,11 @@ function showModalWindowManifest(id, type, date) {
 				"buttons": [
 					{
 						extend : 'excel',
-						title  : getFileName(data)	
+						title  : getFileName(data, 'trip')
 					},
 					{
 						extend : 'pdf',
-						title  : getFileName(data),
+						title  : getFileName(data, 'trip'),
                         orientation: 'landscape',
                         customize : function(doc) {
                             var colCount = new Array();
@@ -495,7 +501,7 @@ function showModalWindowManifest(id, type, date) {
 					},
 					{
 						extend : 'print',
-						title  : getFileName(data)
+						title  : getFileName(data, 'trip')
 					}
 				]
             });
@@ -579,11 +585,11 @@ function showModalWindowManifest(id, type, date) {
                 "buttons": [
                     {
                         extend : 'excel',
-                        title  : getFileName()
+                        title  : getFileName(data, 'class')
                     },
                     {
                         extend : 'pdf',
-                        title  : getFileName(),
+                        title  : getFileName(data, 'class'),
                         orientation: 'landscape',
                         customize : function(doc) {
                             var colCount = new Array();
@@ -601,7 +607,7 @@ function showModalWindowManifest(id, type, date) {
                     },
                     {
                         extend : 'print',
-                        title  : getFileName()
+                        title  : getFileName(data, 'class')
                     }
                 ]
             });

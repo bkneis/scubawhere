@@ -33,8 +33,8 @@
 
 					<div class="form-group">
 						<div class="col-md-12">
-							Comments:
-							<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?">{{comment}}</textarea>
+							Reason :
+							<textarea id="discount_reason" name="discount_reason" class="form-control" rows="3" placeholder="Any reason for discount?">{{discount_reason}}</textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -48,7 +48,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Pick-ups</h2>
+				<h2 class="panel-title">Pick-ups (Optional)</h2>
 			</div>
 			<div class="panel-body">
 				<div id="pick-up-list">
@@ -85,6 +85,27 @@
 					<div class="form-group" style="margin-bottom: 0;">
 						<div class="col-md-12">
 							<input type="submit" value="Add" class="btn btn-primary pull-right" style="margin-left:5px;">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Comments (Optional)</h2>
+			</div>
+			<div class="panel-body">
+				<form id="comments-form" class="form-horizontal">
+					<div class="form-group">
+						<div class="col-md-12">
+							Comments:
+							<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Any extra comments?">{{comment}}</textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary pull-right" style="margin-left:5px;">Save</button>
 						</div>
 					</div>
 				</form>
