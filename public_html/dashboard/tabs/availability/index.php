@@ -32,7 +32,27 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <availability-table :filter-date="date"></availability-table>
+                        <!--<availability-table :filter-date="date"></availability-table>-->
+                        <table id="availability-table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Accommodtion</th>
+                                    <th>12 / 03 / 16</th>
+                                    <th>13 / 03 / 16</th>
+                                    <th>14 / 03 / 16</th>
+                                    <th>15 / 03 / 16</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Single room 1</td>
+                                    <td>Bryan Kneis</td>
+                                    <td></td>
+                                    <td>Thomas Paris</td>
+                                    <td>Roy Gibbs</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

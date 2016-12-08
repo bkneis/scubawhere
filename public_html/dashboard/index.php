@@ -71,6 +71,7 @@ $PROTOCOL = 'http';
 	<!--<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />-->
 	<link rel="stylesheet" type="text/css" href="/common/css/dataTables.bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/fixedColumns.dataTables.min.css" />
 
 	<link rel="stylesheet" type="text/css" href="/css/nav.css">
 
@@ -104,6 +105,7 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
 	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
+	<script src="/common/js/dataTables.fixedColumns.min.js"></script>
 
 	<script src="/common/js/bootbox.min.js"></script>
 

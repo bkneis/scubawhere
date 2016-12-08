@@ -112,6 +112,10 @@ new Vue({
             }
         });
 
+        $('#availability-table').DataTable({
+            fixedColumns : true
+        });
+
         $('#modalWindows').on('click', '.view-booking', function(event) {
             // Load booking data and redirect to add-booking tab
             Booking.getByRef($(this).html(), function success(object) {
