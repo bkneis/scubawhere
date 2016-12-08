@@ -97,7 +97,8 @@ class CustomerController extends Controller {
 			'shoe_size',
 			'height',
 			'notes',
-			'cylinder_size'
+			'cylinder_size',
+			'language_id'
 		);
 
 		$customer = new Customer($data);
@@ -174,7 +175,8 @@ class CustomerController extends Controller {
 			'shoe_size',
 			'height',
 			'notes',
-			'cylinder_size'
+			'cylinder_size',
+			'language_id'
 		);
 
 		if( !$customer->update($data) )

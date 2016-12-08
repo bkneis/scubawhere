@@ -95,6 +95,13 @@
 		{{/each}}
 	</script>
 
+	<script id="languages-template" type="text/x-handlebars-template">
+		<option value="">Choose language...</option>
+		{{#each languages}}
+			<option value="{{id}}">{{{name}}}</option>
+		{{/each}}
+	</script>
+
 <!--<div class="modal fade" id="edit-customer-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -250,10 +257,13 @@
 
 					<fieldset id="edit-customer-countries">
 						<div class="form-group">
-							<div class="col-md-8">
+							<div class="col-md-6">
 								<label for="country_id">Country <span class="text-danger">*</span></label></label>
-								<select id="country_id" name="country_id" class="form-control select2">
-								</select>
+								<select id="country_id" name="country_id" class="form-control select2"></select>
+							</div>
+							<div class="col-md-6">
+								<label for="language_id">Language</label></label>
+								<select id="language_id" name="language_id" class="form-control select2"></select>
 							</div>
 						</div>
 					</fieldset>

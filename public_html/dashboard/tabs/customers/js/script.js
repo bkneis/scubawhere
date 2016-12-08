@@ -74,6 +74,7 @@ Handlebars.registerHelper('checkNull', function (value) {
 
 var editCustomerTemplate = Handlebars.compile($("#edit-customer-template").html());
 var countriesTemplate = Handlebars.compile($("#countries-template").html());
+var languagesTemplate = Handlebars.compile($("#languages-template").html());
 var agenciesTemplate = Handlebars.compile($("#agencies-template").html());
 var customerDivingInformationTemplate = Handlebars.compile($("#customer-diving-information-template").html());
 var certificatesTemplate = Handlebars.compile($("#certificates-template").html());
@@ -91,15 +92,19 @@ $(function () {
     $.get("/api/country/all", function success(data) {
         window.countries = _.indexBy(data, 'id');
 
-        Agency.getAll(function (data) {
-            window.agencies = _.indexBy(data, 'id');
-            Customer.getAllCustomers(function (data) {
+        $.get('/api/language', function success(data) {
+            window.languages = _.indexBy(data, 'id');
+            Agency.getAll(function (data) {
+                window.agencies = _.indexBy(data, 'id');
+                Customer.getAllCustomers(function (data) {
 
-                //console.log(data);
-                window.customers = _.indexBy(data, 'id');
-                renderCustomerList(window.customers);
+                    //console.log(data);
+                    window.customers = _.indexBy(data, 'id');
+                    renderCustomerList(window.customers);
 
+                });
             });
+
         });
 
     });
@@ -429,6 +434,7 @@ function editDetails(id) {
 
     if (id) {
         $('#country_id').val(customer.country_id);
+        $('#language_id').val(customer.language_id);
         $("#edit-customer-details").html(editCustomerTemplate(customer));
         $("#customer-diving-information").html(customerDivingInformationTemplate(customer));
 
@@ -453,6 +459,7 @@ function editDetails(id) {
     $('#edit-customer-modal').modal('show');
 
     $("#country_id").html(countriesTemplate({countries: window.countries}));
+    $("#language_id").html(languagesTemplate({languages: window.languages}));
 
     // Activate datepickers
     $('#edit-customer-modal .datepicker').datetimepicker({
@@ -469,12 +476,16 @@ function editDetails(id) {
 
     // Enable select2 dropdown for edit-form dropdown fields
     $('#edit-customer-countries').find('#country_id').select2();
+    $('#edit-customer-countries').find('#language_id').select2();
     $('#edit-customer-agencies').find('#agency_id').select2();
     $('#edit-customer-agencies').find('#certificate_id').select2();
 
     // Set correct country
     if (id && customer.country_id) {
         $('#edit-customer-countries').find('#country_id').select2("val", customer.country_id);
+    }
+    if (id && customer.language_id) {
+        $('#edit-customer-countries').find('#language_id').select2("val", customer.language_id);
     }
     /*else {
         $('#edit-customer-countries').find('#country_id').select2("val", company.country_id);

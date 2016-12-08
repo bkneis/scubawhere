@@ -136,6 +136,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		array('only' => array('store', 'update'))
 	);
 
+	Route::resource('language', 'LanguageController',
+		array('only' => array('show', 'index'))
+	);
+
 });
 
 /*

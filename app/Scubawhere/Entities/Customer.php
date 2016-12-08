@@ -25,7 +25,8 @@ class Customer extends Ardent {
 		'shoe_size',
 		'height',
 		'notes',
-		'cylinder_size'
+		'cylinder_size',
+		'language_id'
 	);
 
 	public static $rules = array(
@@ -45,7 +46,8 @@ class Customer extends Ardent {
 		'number_of_dives' => 'integer|min: 0',
 		'chest_size'      => '',
 		'shoe_size'       => '',
-		'height'          => ''
+		'height'          => '',
+		'language_id'     => 'integer'
 	);
 
 	public $appends = array('unsubscribed');
@@ -159,4 +161,9 @@ class Customer extends Ardent {
     {
         return $this->hasOne('\Scubawhere\Entities\CrmSubscription');
     }
+
+	public function language()
+	{
+		return $this->belongsTo('\Scubawhere\Entities\Language');
+	}
 }

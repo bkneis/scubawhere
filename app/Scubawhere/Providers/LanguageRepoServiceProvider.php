@@ -1,10 +1,16 @@
 <?php
 
+namespace Scubawhere\Repositories;
 
-namespace Scubawhere\Providers;
+use Illuminate\Support\ServiceProvider;
 
-
-class LanguageRepoServiceProvider
+class LanguageRepoServiceProvider extends ServiceProvider
 {
-
+    public function register()
+    {
+        $this->app->bind('Scubawhere\Repositories\LanguageRepoInterface', function($app)
+        {
+            return new LanguageRepo();
+        });
+    }
 }

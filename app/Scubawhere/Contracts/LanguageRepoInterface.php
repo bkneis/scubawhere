@@ -1,5 +1,6 @@
 <?php
-namespace Scubawhere\Contracts;
+
+namespace Scubawhere\Repositories;
 
 interface LanguageRepoInterface
 {
