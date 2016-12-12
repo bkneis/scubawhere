@@ -411,76 +411,78 @@
 			</tr>
 
 			<tr>
-				<td align="center" valign="top" width="100%">
-					<center>
-						<table cellpadding="0" cellspacing="0" width="600" class="w320">
-							<tr>
-								<td class="item-table">
-									<table cellspacing="0" cellpadding="0" width="100%">
-										<tr>
-											<td class="title-dark" width="50%">
-												 Options
-											</td>
-											<td class="title-dark" width="50%"></td>
-										</tr>
-										<tr>
-											<td id="option-buttons" style="vertical-align: middle; border-right: 1px solid #ccc;">
-												<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save As Quote</button>
-												{{#unless price}}
-													<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
-												{{else}}
-													{{#if agent_id}}
+				{{#compare status '!==' 'temporary'}}
+					<td align="center" valign="top" width="100%">
+						<center>
+							<table cellpadding="0" cellspacing="0" width="600" class="w320">
+								<tr>
+									<td class="item-table">
+										<table cellspacing="0" cellpadding="0" width="100%">
+											<tr>
+												<td class="title-dark" width="50%">
+													 Options
+												</td>
+												<td class="title-dark" width="50%"></td>
+											</tr>
+											<tr>
+												<td id="option-buttons" style="vertical-align: middle; border-right: 1px solid #ccc;">
+													<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save As Quote</button>
+													{{#unless price}}
 														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
 													{{else}}
-														<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
-													{{/if}}
-												{{/unless}}
-											</td>
-											<td>
-												<h4 class="text-center">Reserve Booking</h4>
-												<form id="reserve-booking" class="form-horizontal">
-													<div class="form-group">
-														<div class="radio col-md-12">
-															<label>
-																<input type="radio" name="email" id="email-yes" value="1" checked>
-																Send confirmation email to customer
-															</label>
-														</div>
-														<div class="radio col-md-12">
-															<label>
-																<input type="radio" name="email" id="email-no" value="0">
-																Do not send email
-															</label>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="reserve-until" class="col-sm-6 control-label">Reserve for (hours)</label>
-														<div class="col-md-6">
-															<input id="reserve-until" name="reserved_until" class="form-control" type="number" value="24">
-														</div>
-													</div>
-													<div class="form-group">
-														<div class="col-md-12">
-															<div class="btn-group pull-right">
-																<button type="button" class="btn btn-success add-reserve-day">+ 1 day</button>
-																<button type="button" class="btn btn-primary minus-reserve-day">- 1 day</button>
+														{{#if agent_id}}
+															<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+														{{else}}
+															<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
+														{{/if}}
+													{{/unless}}
+												</td>
+												<td>
+													<h4 class="text-center">Reserve Booking</h4>
+													<form id="reserve-booking" class="form-horizontal">
+														<div class="form-group">
+															<div class="radio col-md-12">
+																<label>
+																	<input type="radio" name="email" id="email-yes" value="1" checked>
+																	Send confirmation email to customer
+																</label>
+															</div>
+															<div class="radio col-md-12">
+																<label>
+																	<input type="radio" name="email" id="email-no" value="0">
+																	Do not send email
+																</label>
 															</div>
 														</div>
-													</div>
-													<div class="form-group">
-														<div class="col-md-12">
-															<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
+														<div class="form-group">
+															<label for="reserve-until" class="col-sm-6 control-label">Reserve for (hours)</label>
+															<div class="col-md-6">
+																<input id="reserve-until" name="reserved_until" class="form-control" type="number" value="24">
+															</div>
 														</div>
-													</div>
-												</form>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</center>
-				</td>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="btn-group pull-right">
+																	<button type="button" class="btn btn-success add-reserve-day">+ 1 day</button>
+																	<button type="button" class="btn btn-primary minus-reserve-day">- 1 day</button>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<div class="col-md-12">
+																<button class="btn btn-warning btn-block"><i class="fa fa-clock-o fa-fw"></i> Reserve</button>
+															</div>
+														</div>
+													</form>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</center>
+					</td>
+				{{/compare}}
 			</tr>
 		</table>
 	</script>
