@@ -101,7 +101,8 @@ class TrainingService {
 		 * 6. Check if the tickets belongs to any courses
 		 * 7. Check if any of the courses rely on the class (the class is the only session on the course)
 		 * (8). If any are a depedancy for the courses, log the courses and return a conflict
-		 * 9. Delete the class and return OK.
+		 * 9. Deactivate all sessions related to the class
+		 * 10. Delete the class and return OK.
 		 *
 		 * @todo
 		 * - Reduce the number of db transactions by joining the booking info with the booking details
@@ -114,8 +115,7 @@ class TrainingService {
 		$training = $this->training_repo->getUsedInFutureBookings($id);
 
 		// STEP 2.
-		foreach($training->courses as $obj) 
-		{
+		foreach ($training->courses as $obj) {
 			$ids = $obj->bookingdetails
 				->filter(function($obj) {
 					if($obj->training_session) {
@@ -132,14 +132,13 @@ class TrainingService {
 			->get(['reference', 'status']);
 
 		// STEP 4.
-		$bookings = $bookings->filter(function($obj){
+		$bookings = $bookings->filter(function ($obj) {
 			if($obj->status != 'cancelled') return $obj;	
 		})
 		->toArray();
 
 		// STEP 5.
-		if($bookings)
-		{
+		if ($bookings) {
 			$logger = $this->log_service->create('Attempting to delete the class, '. $training->name);
 			foreach($bookings as $obj) {
 				$logger->append('The class is used in the future in booking ' . '['.$obj['reference'].']');
@@ -150,31 +149,25 @@ class TrainingService {
 								'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a>for more info on how to delete it.']);
 		}
 		// STEP 6.
-		if(!$training->getDeleteableAttribute()) 
-		{
+		if (!$training->getDeleteableAttribute()) {
             $problem_courses = array();
-			foreach($training->courses as $obj) 
-			{
+			foreach ($training->courses as $obj) {
 				// STEP 7.
-				if($obj->tickets()->exists()) 
-				{
+				if ($obj->tickets()->exists()) {
                     \DB::table('course_training')
                         ->where('course_id', $obj->id)
                         ->where('training_id', $training->id)
                         ->update(array('deleted_at' => \DB::raw('NOW()')));    
                 }
-				else 
-				{
+				else {
                     array_push($problem_courses, $obj);
                 }
             }
             // STEP 8.
-			if(sizeof($problem_courses) > 0)
-			{
+			if (sizeof($problem_courses) > 0) {
                 $logger = $this->log_service->create('Attempting to delete the class ' . $training->name);
 
-				foreach($problem_courses as $prob) 
-				{
+				foreach ($problem_courses as $prob) {
 					$logger->append('The class can not be deleted becuase it belongs to the course ' . $prob->name . ', please assign a diffrent class or ticket to it');
 				}
 				throw new HttpConflict(__CLASS__.__METHOD__,
@@ -182,7 +175,14 @@ class TrainingService {
 							'Please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> to view how to correct it before deleting it']);
 			}
         }
-        // STEP 9.
+		// STEP 9.
+		$training->load(['training_sessions' => function ($q) {
+			$q->where('start', '>=', Helper::localTime());
+		}]);
+		foreach ($training->training_sessions as $session) {
+			$session->delete();
+		}
+        // STEP 10.
 		$training->delete();
 	}
 

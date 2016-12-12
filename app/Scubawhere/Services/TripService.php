@@ -187,6 +187,13 @@ class TripService {
             }
         }
 
+		$trip->load(['departures' => function ($q) {
+			$q->where('start', '>=', Helper::localTime());
+		}]);
+		foreach ($trip->departures as $departure) {
+			$departure->delete();
+		}
+
         $trip->delete();	
 	}
 
