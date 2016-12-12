@@ -354,7 +354,7 @@ function generateInvoice(customer_id, booking) {
 		}
 		accomm.name += calcNumNights(accomm);
 		return accomm;
-	})
+	});
 
 	// Generate booked items list (for the price table)
 	var packagesSummary = [];
@@ -394,7 +394,6 @@ function generateInvoice(customer_id, booking) {
 					addon.qtySummary = parseInt(addon.pivot.quantity);
 					addonsSummary[addon.id] = addon;
 				}
-				invoice.subTotal += parseFloat(addon.decimal_price);
 			}
 		});
 	});
@@ -407,10 +406,16 @@ function generateInvoice(customer_id, booking) {
 	// This is a hack as handlebars cannot interate over an array that uses malformed
 	// index's, i.e. courses can use index's such as 67-12 therefore we need to add them back.
 	var courses = [];
-	for(var i in invoice.courses) {
+	for (var i in invoice.courses) {
 		courses.push(invoice.courses[i]);
 	}
 	invoice.courses = courses;
+
+	// Calculate addons total and quantity
+	for (var j in invoice.addons) {
+		invoice.subTotal += parseFloat(invoice.addons[j].decimal_price) * invoice.addons[j].qtySummary;
+		invoice.addons[j].name += ' x ' + invoice.addons[j].qtySummary.toString();
+	}
 
 	// Calculate total and discounted amount
 	invoice.total    = (invoice.subTotal * (1 - (discountPercentage / 100))).toFixed(2);
