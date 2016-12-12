@@ -54,8 +54,8 @@ $(function () {
             Campaign.updateTemplate(params, function success(data) {
                 console.log(data);
                 pageMssg(data.status, true);
-                $('#update-email-template-modal').modal('hide');
-                window.location.href = "/#campaigns";
+                //$('#update-email-template-modal').modal('hide');
+                //window.location.href = "/#campaigns";
             },
             function error(xhr) {
                 console.log(xhr);
