@@ -58,14 +58,14 @@ $(function() {
 	window.trainings = {};
 
 	window.promises.loadedTrips = $.Deferred();
-	Trip.getAllTrips(function(data) { // async
+	Trip.getAllWithTrashed(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
 		$('#trip-class-list').append(tripsTemplate({trips: data}));
 		window.promises.loadedTrips.resolve();
 	});
 
 	window.promises.loadedClasses = $.Deferred();
-	Class.getAll(function(data) {
+	Class.getAllWithTrashed(function(data) {
 		window.trainings = _.indexBy(data, 'id');
 		window.promises.loadedClasses.resolve();
 	});
