@@ -35,7 +35,7 @@ $(function() {
 
     // 1. Get trips
     window.promises.loadedTrips = $.Deferred();
-    Trip.getAllTrips(function(data) { // async
+    Trip.getAllWithTrashed(function(data) { // async
         window.trips = _.indexBy(data, 'id');
         $("#trips-select").append(calendarOptions.tripsListTemplate({
             trips: data
@@ -50,13 +50,13 @@ $(function() {
     });
 
     window.promises.loadedClasses = $.Deferred();
-    Class.getAll(function(data) {
+    Class.getAllWithTrashed(function(data) {
         window.trainings = _.indexBy(data, 'id');
         window.promises.loadedClasses.resolve();
     });
 
     window.promises.loadedAccommodations = $.Deferred();
-    Accommodation.getAll(function(data) {
+    Accommodation.getAllWithTrashed(function(data) {
         window.accommodations = _.indexBy(data, 'id');
         window.promises.loadedAccommodations.resolve();
     });

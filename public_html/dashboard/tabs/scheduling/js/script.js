@@ -60,7 +60,7 @@ $(function() {
 	window.promises.loadedTrips = $.Deferred();
 	Trip.getAllWithTrashed(function(data) { // async
 		window.trips = _.indexBy(data, 'id');
-		$('#trip-class-list').append(tripsTemplate({trips: data}));
+		$('#trip-class-list').append(tripsTemplate({trips: extractActive(data)}));
 		window.promises.loadedTrips.resolve();
 	});
 
@@ -918,8 +918,8 @@ else {
 		display = $(this).attr("display");
 		console.log(display);
 		$("#filter-"+display).addClass("btn-primary");
-		if(display == "classes") $('#trip-class-list').html(classesTemplate({classes: window.trainings}));
-		else $('#trip-class-list').html(tripsTemplate({trips: window.trips}));
+		if(display == "classes") $('#trip-class-list').html(classesTemplate({classes: extractActive(window.trainings)}));
+		else $('#trip-class-list').html(tripsTemplate({trips: extractActive(window.trips)}));
 		initDraggables();
 	});
 
@@ -1080,4 +1080,8 @@ function checkOverlap(event) {
 	if (overlap.length){
 		alert("Overlap");
 	}
+}
+
+function extractActive(data) {
+	return _.filter(data, function (obj) { return obj.deleted_at === null; });
 }
