@@ -106,6 +106,8 @@ class CustomerController extends Controller {
 			'language_id'
 		);
 
+		$data = array_filter($data, function ($val) {return !(empty($val));});
+
 		$customer = new Customer($data);
 
 		if( !$customer->validate() )
