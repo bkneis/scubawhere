@@ -213,7 +213,7 @@ class TrainingSessionController extends Controller
           ticket and then (conditionally) to course.
         */
         // Someone will kill me for this someday. I'm afraid it will be me. But here it goes anyway:
-        $training_sessions = Context::get()->training_sessions()/*->withTrashed()*/->with(/*'bookings', */'training')
+        $training_sessions = Context::get()->training_sessions()->withTrashed()->with(/*'bookings', */'training')
         ->whereHas('training', function ($query) use ($training, $course) {
             $query
             ->where(function ($query) use ($training, $course) {
