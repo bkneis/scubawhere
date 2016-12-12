@@ -54,6 +54,7 @@ $PROTOCOL = 'http';
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<!--<link rel="stylesheet" type="text/css" href="/common/bootstrap/css/bootstrap.min.css" />-->
 
 	<!-- scubawhere styles -->
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
@@ -112,6 +113,7 @@ $PROTOCOL = 'http';
 	<!-- testing with -->
 	<script src="/js/vue.js"></script>
 	<script src="/js/components/EventHub.js"></script>
+	<script src="/js/components/modal.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -258,12 +260,12 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<!--<li>
+				<li>
 					<a href="#availability">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Availability</span>
 					</a>
-				</li>-->
+				</li>
 
 				<li>
 					<div>

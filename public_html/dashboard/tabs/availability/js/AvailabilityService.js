@@ -98,6 +98,9 @@ function AvailabilityService(vm, dateService) {
             vm.accommodations          = res.data;
             vm.promises.accommodations = true;
             vm.bookings                = self.extractBookings(res.data);
+            vm.$nextTick(function() {
+                $('#tbl-availability').DataTable();
+            });
         });
     };
 
@@ -107,8 +110,8 @@ function AvailabilityService(vm, dateService) {
      * @param year  Full year of the filter by date
      * @param month Month of the filter by date
      */
-    this.refreshTable = function(year, month) {
-        vm.dates = dateService.getDaysInMonth(year, month);
+    this.refreshTable = function(year, month, day) {
+        vm.dates = dateService.getDaysInMonth(year, month, day);
         let after = vm.dates[0].string;
         let before = _.last(vm.dates).string;
         availabilityService.bindAvailability(after, before);
@@ -128,16 +131,16 @@ function AvailabilityService(vm, dateService) {
         let css = '';
         let booking = vm.bookings[accomm_id][date];
         if(typeof booking !== 'undefined') {
-            if(booking.cost == booking.paid) {
+            if(booking.cost === booking.paid) {
                 css += ' background-color: grey;';
             } else {
                 css += ' background-color: yellow;';
             }
             if(!booking.top) {
-                css += ' border-top: none !important;';
+                css += ' border-left: none !important;';
             }
             if(!booking.bottom) {
-                css += ' border-bottom: none !important;';
+                css += ' border-right: none !important;';
             }
         } else {
             css = 'background-color: white';
@@ -157,7 +160,7 @@ function AvailabilityService(vm, dateService) {
             return vm.bookings[accomm_id][date].customer_name;
         }
         return '';
-    }
+    };
 
     /**
      * Display the modal showing the additional information of the accommodation booking.

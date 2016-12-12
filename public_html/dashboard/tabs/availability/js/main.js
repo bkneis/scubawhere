@@ -1,73 +1,27 @@
-Handlebars.registerHelper('total', function(arr, key) {
-    let total = 0;
-    _.each(arr, function(obj) {
-        total += parseFloat(obj[key]);
-    });
-    return total;
-});
-
-Handlebars.registerHelper('currencySymbol', function() {
-    return new Handlebars.SafeString(window.company.currency.symbol);
-});
-
-Handlebars.registerHelper('getPrice', function(booking) {
-    return booking.real_decimal_price ? booking.real_decimal_price : booking.decimal_price;
-});
-
-Handlebars.registerHelper('getOutstanding', function(booking) {
-    let price = booking.real_decimal_price ? booking.real_decimal_price : booking.decimal_price;
-    let paid = 0;
-    _.each(booking.payments, function(obj) {
-        paid += parseFloat(obj.amount);
-    });
-    return parseFloat(price) - paid;
-});
-
-Handlebars.registerHelper('sourceString', function(source) {
-   switch(source) {
-       case('facetoface'):
-           return 'Walk in';
-       case('agent'):
-           return 'Agent booking';
-       case('phone'):
-           return 'Phone booking';
-       case('email'):
-           return 'Email enquiry';
-       default:
-           return '';
-   }
-});
-
 /**
  * The root vue instance for the availability tab
  *
- * @todo use vue modals instead of reveal so that we do not need to use handlebars
+ * @beta
+ * @author Bryan Kneis
+ * @tab availability
  */
 new Vue({
 
-    el      : '#wrapper',
+    el : '#wrapper',
 
     data : function() {
         return {
-            date : moment(new Date().toString()).format('YYYY-MM-DD'),
-            companies : []
-        }
-    },
-
-    created : function() {
-        let vm = this;
-        userRepo.getCompanies(function (data) {
-            vm.companies = data;
-        });
+            date : moment(new Date().toString()).format('YYYY-MM-DD')
+        };
     },
     
     /**
      * Once the el is compiled and replaced, attach the jquery handlers for the datetimepicker plugin.
      *
      * @note The datetimepicker uses jquery events only, so vue cannot detect these events,
-     * hence why we need to explicity listen for them to proxy them back to vue.
+     * hence why we need to explicity listen for them to proxy them back to vue using plain old js events.
      *
-     * @todo https://github.com/Haixing-Hu/vue-datetime-picker implement this once vue is used globally
+     * @todo implement https://github.com/Haixing-Hu/vue-datetime-picker
      */
     mounted : function() {
         let self = this;
@@ -91,38 +45,27 @@ new Vue({
 
         /**
          * Allow the user to use the up / down keys to render prev and next month
-         * @todo move this to vue
+         *
+         * @todo Could this be conditionally attached to the app's root vue instance?
+         * I could have used vues @keyup but this would bind it to the table element,
+         * and I want it to be possible regardless of focused element.
          */
         $(document).keydown(function(e) {
-            if (e.which === 40 || e.which === 38) { // 40 = down, 38 = up
+            if (e.which === 37 || e.which === 39) { // 37 left, 39 right
                 e.preventDefault();
-                let x;
                 let selectDate = $('input.datepicker').val();
                 let date = new Date(selectDate);
-                if(date.getDate() == NaN) {
+                if (isNaN(date.getDate())) {
                     date = new Date();
                 }
-                if(e.which === 40) {
-                    x = 1;
+                if (e.which === 37) {
+                    date = date.removeDays(10);
                 } else {
-                    x = -1;
+                    date = date.addDays(10);
                 }
-                date.setMonth(date.getMonth() + x);
+                //date.setMonth(date.getMonth() + x);
                 self.date = moment(date.toString()).format('YYYY-MM-DD');
             }
-        });
-
-        $('#availability-table').DataTable({
-            fixedColumns : true
-        });
-
-        $('#modalWindows').on('click', '.view-booking', function(event) {
-            // Load booking data and redirect to add-booking tab
-            Booking.getByRef($(this).html(), function success(object) {
-                window.booking      = object;
-                window.clickedEdit  = true;
-                window.location.hash = 'add-booking';
-            });
         });
     }
 
