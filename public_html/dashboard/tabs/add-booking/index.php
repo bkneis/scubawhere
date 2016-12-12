@@ -143,6 +143,7 @@
 			<div id="modal-accommodation-selection" class="reveal-modal" style="width: 900px; margin-left: -500px; top: 50px;">
 
 				<h3>Accommodation Date Selection</h3>
+				<button class="btn btn-lg btn-success close-modal pull-right save-accommodation-dates">SAVE</button>
 				<p>
 					For: <strong>{{{name}}}</strong><br>
 					Maximum capacity: {{capacity}}
