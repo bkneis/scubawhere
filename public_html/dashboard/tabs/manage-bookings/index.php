@@ -167,7 +167,7 @@
 					{{#each tickets}}
 						<tr>
 							<td>{{name}}</td>
-							<td>{{prettyPrice price}}</td>
+							<td>{{decimal_price}}</td>
 							<td></td>
 						</tr>
 					{{/each}}
@@ -181,7 +181,7 @@
 					{{#each courses}}
 						<tr>
 							<td>{{name}}</td>
-							<td>{{prettyPrice price}}</td>
+							<td>{{decimal_price}}</td>
 							<td></td>
 						</tr>
 					{{/each}}
@@ -195,7 +195,7 @@
 					{{#each packages}}
 						<tr>
 							<td>{{name}}</td>
-							<td>{{prettyPrice price}}</td>
+							<td>{{decimal_price}}</td>
 							<td></td>
 						</tr>
 					{{/each}}
@@ -209,7 +209,7 @@
 					{{#each addons}}
 						<tr>
 							<td>{{name}}</td>
-							<td>{{prettyPrice price}}</td>
+							<td>{{decimal_price}}</td>
 							<td></td>
 						</tr>
 					{{/each}}
@@ -223,12 +223,22 @@
 					{{#each accommodations}}
 						<tr>
 							<td>{{name}}</td>
-							<td>{{prettyPrice price}}</td>
+							<td>{{decimal_price}}</td>
 							<td></td>
 						</tr>
 					{{/each}}
 					<tr class="accordion-header">
+						<td><strong>Sub Total</strong></td>
 						<td></td>
+						<td><strong>{{prettyPrice subTotal}}</strong></td>
+					</tr>
+					<tr class="accordion-header">
+						<td><strong>Discount percentage</strong></td>
+						<td></td>
+						<td><strong>{{discount}} %</strong></td>
+					</tr>
+					<tr class="accordion-header">
+						<td><strong>Total</strong></td>
 						<td></td>
 						<td><strong>{{prettyPrice total}}</strong></td>
 					</tr>

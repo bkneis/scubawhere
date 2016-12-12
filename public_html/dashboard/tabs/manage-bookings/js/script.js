@@ -331,7 +331,7 @@ function calcNumNights(accomm) {
 	return ' ( ' + parseInt(parseFloat(accomm.decimal_price) / parseFloat(accomm.decimal_price_per_day)).toString() + ' nights)';
 }
 
-function generateInvoice(customer_id, details) {
+function generateInvoice_old(customer_id, details) {
 	var invoice   = {
 		accommodations : [],
 		addons         : [],
@@ -491,6 +491,89 @@ function generateInvoice(customer_id, details) {
 	return invoice;
 }
 
+function generateInvoice(customer_id, booking) {
+
+	var discountPercentage = (booking.discount / booking.price) * 100;
+
+	var invoice = {};
+	// Sort bookingdetails by start date
+	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
+		if(detail.session)
+			return detail.session.start;
+		else if(detail.training_session)
+			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
+	});
+
+	// Sort accommodations by start date
+	/*invoice.accommodations = _.sortBy(booking.accommodations, function(accom) {
+		return accom.pivot.start;
+	});*/
+
+	// Generate booked items list (for the price table)
+	var packagesSummary = [];
+	var coursesSummary  = [];
+	var ticketsSummary  = [];
+	var addonsSummary   = [];
+	invoice.subTotal    = 0;
+	invoice.total       = 0;
+
+	_.each(booking.bookingdetails, function(detail) {
+		if (detail.customer_id !== customer_id) {
+			return;
+		}
+		if (detail.packagefacade) { // This catches NULL and UNDEFINED
+			if (!packagesSummary[detail.packagefacade.id]) {
+				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
+				invoice.subTotal += parseFloat(detail.packagefacade.package.decimal_price);
+			}
+		}
+		else if (detail.course) {
+			if (!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
+				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
+				invoice.subTotal += parseFloat(detail.course.decimal_price);
+			}
+		}
+		else if (detail.ticket) {
+			ticketsSummary.push(detail.ticket);
+			invoice.subTotal += parseFloat(detail.ticket.decimal_price);
+		}
+
+		_.each(detail.addons, function(addon) {
+			if (!addon.pivot.packagefacade_id) {
+				if (addonsSummary[addon.id]) {
+					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
+				}
+				else {
+					addon.qtySummary = parseInt(addon.pivot.quantity);
+					addonsSummary[addon.id] = addon;
+				}
+				invoice.subTotal += parseFloat(addon.decimal_price);
+			}
+		});
+	});
+
+	invoice.packages = packagesSummary;
+	invoice.courses  = coursesSummary;
+	invoice.tickets  = ticketsSummary;
+	invoice.addons   = addonsSummary;
+
+	// This is a hack as handlebars cannot interate over an array that uses malformed
+	// index's, i.e. courses can use index's such as 67-12 therefore we need to add them back.
+	var courses = [];
+	for(var i in invoice.courses) {
+		courses.push(invoice.courses[i]);
+	}
+	invoice.courses = courses;
+
+	// Calculate total and discounted amount
+	invoice.total    = (invoice.subTotal * (1 - (discountPercentage / 100))).toFixed(2);
+	invoice.discount = discountPercentage.toFixed(2);
+
+	return invoice;
+}
+
 function getFileName(ref) {
 	return $('#customers-list').find(":selected").text() + ' booking invoice (' + ref + ')';
 }
@@ -498,7 +581,8 @@ function getFileName(ref) {
 function loadCustomerInvoice(customer_id) {
 	customer_id = parseInt(customer_id);
 	var invoiceTemplate = Handlebars.compile($('#invoice-template').html());
-	var invoice = generateInvoice(customer_id, window.currentBookingSelected.bookingdetails);
+	//var invoice = generateInvoice(customer_id, window.currentBookingSelected.bookingdetails);
+	var invoice = generateInvoice(customer_id, window.currentBookingSelected);
 	$('#invoice-container').empty().append(invoiceTemplate(invoice));
 	$('#tbl-customer-invoice').DataTable({
 		"pageLength": 50,
