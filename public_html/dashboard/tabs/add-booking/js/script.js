@@ -1082,6 +1082,11 @@ window.promises.loadedCustomers.done(function() {
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
+		if ($('#edit_customer_medication').is(':checked')) {
+			params.medication = 1;
+		} else {
+			params.medication = 0;
+		}
 
 		Customer.updateCustomer(params, function success(data) {
 			pageMssg(data.status, 'success');
@@ -1120,6 +1125,11 @@ window.promises.loadedCustomers.done(function() {
 		var params = form.serializeObject();
 		params._token = window.token;
 		params.phone = (params.dialling_code).replace(/[^a-zA-Z 0-9]+/g, '') + ' ' + params.phone;
+		if ($('#add_customer_medication').is(':checked')) {
+			params.medication = 1;
+		} else {
+			params.medication = 0;
+		}
 
 		Customer.createCustomer(params, function success(data) {
 			pageMssg(data.status, 'success');

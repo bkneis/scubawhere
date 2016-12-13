@@ -94,6 +94,12 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-12">
+								<label for="online_source">Where did they here about us?</label>
+								<input type="text" name="online_source" class="form-control" placeholder="Google, magazine etc ...">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
 								<label for="address_1" class="control-label">Address 1</label>
 								<input type="text" name="address_1" class="form-control" placeholder="Address 1">
 							</div>
@@ -188,6 +194,12 @@
 
 						<fieldset>
 							<h5>Diving Information</h5>
+							<div class="form-group">
+								<div class="col-md-12">
+									<label for="medication" class="control-label">Is the customer currently taking any medication? :</label>
+									<input id="add_customer_medication" type="checkbox" name="medication" value="1">
+								</div>
+							</div>
 							<div class="form-group">
 								<div class="col-md-4">
 									<label for="last_dive" class="control-label">Date of last dive</label>
@@ -374,6 +386,12 @@
 	</div>
 	<div class="form-group">
 		<div class="col-md-12">
+			<label for="online_source">Where did they here about us?</label>
+			<input type="text" name="online_source" class="form-control" placeholder="Google, magazine etc ..." value="{{{online_source}}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
 			<label for="address_1" class="control-label">Address 1</label>
 			<input type="text" name="address_1" class="form-control" placeholder="Address 1" value="{{{address_1}}}">
 		</div>
@@ -401,6 +419,12 @@
 </script>
 <script type="text/x-handlebars-template" id="customer-diving-information-template">
 	<h5>Diving Information</h5>
+	<div class="form-group">
+		<div class="col-md-12">
+			<label for="medication" class="control-label">Is the customer currently taking any medication? :</label>
+			<input id="edit_customer_medication" type="checkbox" name="medication" value="1" {{#if medication}} checked {{/if}}>
+		</div>
+	</div>
 	<div class="form-group">
 		<div class="col-md-4">
 			<label for="last_dive" class="control-label">Date of last dive</label>
