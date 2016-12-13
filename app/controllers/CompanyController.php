@@ -81,14 +81,20 @@ class CompanyController extends Controller {
 				$timezone = file_get_contents($timezone);
 				$timezone = json_decode($timezone);
 
-				if((string) $timezone->status === "OK")
+				if((string) $timezone->status === "OK") {
 					$data['timezone'] = (string) $timezone->timeZoneId;
-				else
-					return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
+				}
+				else {
+					if (is_null(Context::get()->timezone)) {
+						return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
+					}
+				}
 			}
-			else
-			{
-				return Response::json( array('errors' => array('Sorry, Google could not find the specified address.')), 406 ); // 406 Not Acceptable
+			else {
+				if (is_null(Context::get()->timezone)) {
+					return Response::json( array('errors' => array('Sorry, Google could not determine your timezone.')), 406 ); // 406 Not Acceptable
+				}
+				//return Response::json( array('errors' => array('Sorry, Google could not find the specified address.')), 406 ); // 406 Not Acceptable
 			}
 		} else {
 			return Response::json( array('errors' => array("Please either enter your address or click 'cant find your address?' and click on your location.")), 406 ); // 406 Not Acceptable
