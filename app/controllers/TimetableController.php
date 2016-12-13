@@ -24,8 +24,12 @@ class TimetableController extends Controller {
 		return Context::get()->timetables()->get();
 	}
 
-	private function isBoatAvailable($boat_id, $start_dates, $duration)
-	{	
+	private function isBoatAvailable($boat_id, $start_dates, $duration, $boat_required)
+	{
+		if((int) $boat_required === 0) {
+			return true;
+		}
+
 		// Check if the boat is already being used during the submitted time
 
 		$duration_hours   = floor($duration);
@@ -228,7 +232,7 @@ class TimetableController extends Controller {
 			);
 		}
 
-		if(!$this->isBoatAvailable($departure->boat_id, $start_dates, $departure->trip->duration))
+		if(!$this->isBoatAvailable($departure->boat_id, $start_dates, $departure->trip->duration, $departure->trip->boat_required))
 		{
 			$departure->timetable()->dissociate($timetable);
 			$timetable->delete();
