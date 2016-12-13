@@ -331,7 +331,7 @@ function generateInvoice(customer_id, booking) {
 
 	console.log(booking);
 
-	var discountPercentage = (booking.discount / booking.price) * 100;
+	var discountPercentage = (booking.discount / (booking.price + booking.discount)) * 100;
 
 	var invoice = {};
 	// Sort bookingdetails by start date
