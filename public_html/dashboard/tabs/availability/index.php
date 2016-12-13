@@ -158,56 +158,6 @@
     </div><!-- /.modal -->
 </template>
 
-<script type="text/x-handlebars" id="modal-booking-info-template">
-    <div class="reveal-modal" id="modal-booking-info">
-        <div class="modal-header">
-            <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
-            <h4 class="modal-title">Customer info for booking {{reference}}</h4>
-        </div>
-        <div class="modal-body">
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Lead customer name : </td>
-                        <td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
-                    </tr>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Booking source : </td>
-                        <td>{{sourceString source}}</td>
-                    </tr>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Amount Paid : </td>
-                        <td>{{currencySymbol}} {{total payments 'amount'}}</td>
-                    </tr>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Total booking Price : </td>
-                        <td>{{currencySymbol}} {{getPrice this}}</td>
-                    </tr>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Outstanding : </td>
-                        <td>{{currencySymbol}} {{getOutstanding this}}</td>
-                    </tr>
-                    <tr class="InfoTable_Row">
-                        <td class="InfoTable_Title">Booking ref : </td>
-                        <td><a class="view-booking">{{reference}}</a></td>
-                    </tr>
-                    {{#each pickups}}
-                        <tr class="InfoTable_Row">
-                            <td class="InfoTable_Title">Pickup : </td>
-                            <td>{{location}} : {{time}}</td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</script>
 
 <link rel="stylesheet" type="text/css" href="/css/components/modal.css">
 <link rel="stylesheet" type="text/css" href="/css/components/availability-table.css">

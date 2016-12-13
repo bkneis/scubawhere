@@ -9,13 +9,7 @@
  * @constructor
  */
 function AvailabilityService(vm, dateService) {
-
-    /**
-     * Template used to display more info in a modal to the user
-     * @todo use the vue modal instead of handlebars
-     */
-    let bookingInfoModalTemplate = Handlebars.compile($('#modal-booking-info-template').html());
-
+    
     /**
      * Calculate the sum of all the payments
      *
@@ -160,34 +154,6 @@ function AvailabilityService(vm, dateService) {
             return vm.bookings[accomm_id][date].customer_name;
         }
         return '';
-    };
-
-    /**
-     * Display the modal showing the additional information of the accommodation booking.
-     *
-     * @param accomm_id
-     * @param date
-     */
-    this.showBookingModal = function(accomm_id, date) {
-        let booking = vm.bookings[accomm_id][date];
-        if(typeof booking === 'undefined') {
-            console.warn('Potentially unexpected behavoiur, a booking should be found');
-            return;
-        }
-        Booking.get(booking.id, function (data) {
-            $('#modalWindows')
-                .append( bookingInfoModalTemplate(data) )
-                .children('#modal-booking-info')
-                .reveal({
-                    animation: 'fadeAndPop',
-                    animationSpeed: 300,
-                    closeOnBackgroundClick: true,
-                    dismissModalClass: 'close-modal',
-                    onFinishModal: function() {
-                        $('#modal-booking-info').remove();
-                    }
-                });
-        });
     };
 
 }
