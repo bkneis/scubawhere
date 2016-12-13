@@ -54,6 +54,7 @@ $PROTOCOL = 'http';
 
 	<!--Bootstrap CSS-->
 	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<!--<link rel="stylesheet" type="text/css" href="/common/bootstrap/css/bootstrap.min.css" />-->
 
 	<!-- scubawhere styles -->
 	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
@@ -71,6 +72,7 @@ $PROTOCOL = 'http';
 	<!--<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />-->
 	<link rel="stylesheet" type="text/css" href="/common/css/dataTables.bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/common/css/fixedColumns.dataTables.min.css" />
 
 	<link rel="stylesheet" type="text/css" href="/css/nav.css">
 
@@ -104,12 +106,14 @@ $PROTOCOL = 'http';
 	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
 	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
+	<script src="/common/js/dataTables.fixedColumns.min.js"></script>
 
 	<script src="/common/js/bootbox.min.js"></script>
 
 	<!-- testing with -->
 	<script src="/js/vue.js"></script>
 	<script src="/js/components/EventHub.js"></script>
+	<script src="/js/components/modal.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -256,12 +260,12 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<!--<li>
+				<li>
 					<a href="#availability">
 						<i class="fa fa-calendar fa-lg fa-fw"></i>
 						<span>Availability</span>
 					</a>
-				</li>-->
+				</li>
 
 				<li>
 					<div>

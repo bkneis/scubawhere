@@ -36,13 +36,40 @@ function DateService() {
      * @param month
      * @returns {Array}
      */
-    this.getDaysInMonth = function(year, month) {
+    this.getDaysInMonth = function (year, month, day, len = 10) {
+        let date;
+        let range = [];
+
+        if (typeof year === 'number' && typeof month === 'number' && typeof day === 'number') {
+            date = new Date(year, month, day);
+        } else {
+            date = new Date();
+        }
+
+        for (let i = 0; i < len; i++) {
+            range.push({
+                // Key is used to find items in the array returned by the server by their index
+                key    : moment(new Date(date).toDateString()).format('YYYY-MM-DD').toString(),
+                // Date object so that we don't need to new up a date object using its string everytime we want to operate on it
+                obj    : new Date(date),
+                // Human readable date string
+                string : new Date(date).toDateString()
+            });
+            date = date.addDays(1);
+        }
+        console.log('range', range);
+        return range;
+    };
+    /*this.getDaysInMonth = function(year, month, day) {
         let date;
         let days = [];
-        var month;
 
         if(typeof year === 'number' && typeof month === 'number') {
-            date = new Date(year, month, 1);
+            if(typeof day === 'number') {
+                date = new Date(year, month, day);
+            } else {
+                date = new Date(year, month, 1);
+            }
         } else {
             date = new Date();
             date.setDate(1);
@@ -50,6 +77,9 @@ function DateService() {
 
         month = date.getMonth();
         while (date.getMonth() === month) {
+            if(days.length > 9) {
+                break;
+            }
             days.push({
                 string : new Date(date).toDateString(),
                 key    : moment(new Date(date).toDateString()).format('YYYY-MM-DD').toString()
@@ -58,7 +88,7 @@ function DateService() {
         }
 
         return days;
-    }
+    }*/
 
 }
 
@@ -71,6 +101,18 @@ function DateService() {
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf());
     dat.setDate(dat.getDate() + days);
+    return dat;
+};
+
+/**
+ * Helper function to remove days to a Date object
+ *
+ * @param integer days Number of days to add
+ * @returns {Date}
+ */
+Date.prototype.removeDays = function(days) {
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() - days);
     return dat;
 }
 
@@ -87,4 +129,4 @@ Date.prototype.isSameMonth = function(pDate) {
         this.getFullYear() === pDate.getFullYear() &&
         this.getMonth() === pDate.getMonth()
     );
-}
+};

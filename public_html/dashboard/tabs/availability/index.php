@@ -31,9 +31,7 @@
                     <h4 class="panel-title">Availability</h4>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive">
-                        <availability-table :filter-date="date"></availability-table>
-                    </div>
+                    <availability-table :filter-date="date"></availability-table>
                 </div>
             </div>
         </div>
@@ -46,44 +44,50 @@
 
 <template type="text/x-template" id="availability-table">
     <div class="inner">
-        <table class="ExcelTable" v-if="accommodations.length > 0">
+        <div class="text-center">
+            <div class="btn-group" role="group">
+                <button type="button"
+                        class="btn btn-default btn-primary"
+                        @click="goPrev()">
+                    <<
+                </button>
+                <button type="button"
+                        class="btn btn-default btn-primary"
+                        @click="goNext()">
+                    >>
+                </button>
+            </div>
+        </div>
+        <table id="tbl-availability" class="ExcelTable" v-if="accommodations.length > 0">
             <thead>
-                <tr class="ExcelTable_Header">
-                    <th class="ExcelTable_Row ExcelTable_headcol">Date</th>
-                    <th v-for="accomm in accommodations"
-                        class="ExcelTable_Row">
-                        {{accomm.name}}
-                    </th>
-                </tr>
+            <tr class="ExcelTable_Header">
+                <th class="ExcelTable_Row">Accommodation</th>
+                <th v-for="date in dates"
+                    class="ExcelTable_Row">
+                    {{date.key}}
+                </th>
+            </tr>
             </thead>
             <tbody>
-                <tr v-for="date in dates">
-                    <td class="ExcelTable_Row ExcelTable_headcol">{{date.string}}</td>
-                    <td v-for="accomm in accommodations"
-                        class="ExcelTable_Row"
-                        :style="calcStyle(accomm.id, date.key)"
-                        @click="showBookingInfo(accomm.id, date.key)">
-                        {{getCustomer(accomm.id, date.key)}}
-                    </td>
-                </tr>
+            <tr height="50" v-for="accomm in accommodations">
+                <td class="ExcelTable_Row"><strong>{{accomm.name}}</strong></td>
+                <td v-for="date in dates"
+                    class="ExcelTable_Row"
+                    :style="calcStyle(accomm.id, date.key)"
+                    @click="showBookingInfo(accomm.id, date.key)">
+                    {{getCustomer(accomm.id, date.key)}}
+                </td>
+            </tr>
             </tbody>
         </table>
         <div style="text-align: center"
-             v-if="! (accommodations.length > 0) && promises.accommodations">
+             v-if="!(accommodations.length > 0) && promises.accommodations">
             <h1 style="vertical-align: middle;">
                 No accommodation available
             </h1>
         </div>
-    </div>
-</template>
-
-<script type="text/x-handlebars" id="modal-booking-info-template">
-    <div class="reveal-modal" id="modal-booking-info">
-        <div class="modal-header">
-            <a class="close-reveal-modal close-modal" title="Abort">&#215;</a>
-            <h4 class="modal-title">Customer info for booking {{reference}}</h4>
-        </div>
-        <div class="modal-body">
+        <modal v-if="showCustomerInfo" :class="{ in : showCustomerInfo }">
+            <template slot="header">Customer info for booking {{selectedBooking.reference}}</template>
             <table>
                 <thead>
                     <tr>
@@ -94,39 +98,63 @@
                 <tbody>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Lead customer name : </td>
-                        <td>{{lead_customer.firstname}} {{lead_customer.lastname}}</td>
+                        <td>{{selectedBooking.lead_customer.firstname}} {{selectedBooking.lead_customer.lastname}}</td>
                     </tr>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Booking source : </td>
-                        <td>{{sourceString source}}</td>
+                        <td>{{bookingSource}}</td>
                     </tr>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Amount Paid : </td>
-                        <td>{{currencySymbol}} {{total payments 'amount'}}</td>
+                        <td>{{currencySymbol}} {{amountPaid}}</td>
                     </tr>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Total booking Price : </td>
-                        <td>{{currencySymbol}} {{getPrice this}}</td>
+                        <td>{{currencySymbol}} {{bookingPrice}}</td>
                     </tr>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Outstanding : </td>
-                        <td>{{currencySymbol}} {{getOutstanding this}}</td>
+                        <td>{{currencySymbol}} {{amountOutstanding}}</td>
                     </tr>
                     <tr class="InfoTable_Row">
                         <td class="InfoTable_Title">Booking ref : </td>
-                        <td><a class="view-booking">{{reference}}</a></td>
+                        <td>
+                            <a @click="viewBooking()">{{selectedBooking.reference}}</a>
+                        </td>
                     </tr>
-                    {{#each pickups}}
-                        <tr class="InfoTable_Row">
+                    <tr class="InfoTable_Row"
+                        v-for="pickup in selectedBooking.pickups">
                             <td class="InfoTable_Title">Pickup : </td>
-                            <td>{{location}} : {{time}}</td>
-                        </tr>
-                    {{/each}}
+                            <td>{{pickup.location}} : {{pickup.time}}</td>
+                    </tr>
                 </tbody>
             </table>
-        </div>
+        </modal>
     </div>
-</script>
+</template>
+
+<template id="modal-template">
+    <div id="modal" class="modal fade" tabindex="-1" role="dialog" style="display : block !important">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="closeCustomerModal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        <slot name="header"></slot>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <slot></slot>
+                </div>
+                <div class="modal-footer">
+                    <slot name="footer">
+                        <button type="button" class="btn btn-default" @click="closeCustomerModal">Close</button>
+                    </slot>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>
 
 <link rel="stylesheet" type="text/css" href="/css/components/modal.css">
 <link rel="stylesheet" type="text/css" href="/css/components/availability-table.css">
