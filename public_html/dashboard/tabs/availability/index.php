@@ -31,9 +31,7 @@
                     <h4 class="panel-title">Availability</h4>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive">
-                        <availability-table :filter-date="date"></availability-table>
-                    </div>
+                    <availability-table :filter-date="date"></availability-table>
                 </div>
             </div>
         </div>
@@ -72,7 +70,7 @@
             </thead>
             <tbody>
             <tr height="50" v-for="accomm in accommodations">
-                <td class="ExcelTable_Row">{{accomm.name}}</td>
+                <td class="ExcelTable_Row"><strong>{{accomm.name}}</strong></td>
                 <td v-for="date in dates"
                     class="ExcelTable_Row"
                     :style="calcStyle(accomm.id, date.key)"
@@ -157,7 +155,6 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </template>
-
 
 <link rel="stylesheet" type="text/css" href="/css/components/modal.css">
 <link rel="stylesheet" type="text/css" href="/css/components/availability-table.css">
