@@ -796,14 +796,24 @@ class BookingController extends Controller
                 }
             });
 
-            $check = array_filter($details, function($obj) use ($customer){
-                if($obj->customer_id == $customer->id) return $obj;
+            $check = array_filter($details, function($obj) use ($customer, $departure, $ticket, $training){
+                if ($obj->customer_id === $customer->id) {
+                    if (! is_null($departure)) {
+                        if ($obj->ticket_id === $ticket->id) {
+                            return $obj;
+                        }
+                    } else {
+                        if ($obj->training_id === $training->id) {
+                            return $obj;
+                        }
+                    }
+                }
             });
 
 			if (count($check) > 0) 
 			{
                 $model = $departure ? 'trip' : 'class';
-                return Response::json(array('errors' => array('The customer is already booked on another '.$model.' during this time!')), 403); // 403 Forbidden
+                return Response::json(array('errors' => array('The customer is already booked on another '.$model.' during this time!'), 'data' => $check), 403); // 403 Forbidden
             }
         }
 
