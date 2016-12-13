@@ -146,8 +146,13 @@ $(function () {
 
         var params = $(this).serializeObject();
         params._token = window.token;
-        params.medication = $('#customer_medication').is(':checked');
+        //params.medication = $('#customer_medication').is(':checked');
         //console.log(params);
+        if ($('#customer_medication').is(':checked')) {
+            params.medication = 1;
+        } else {
+            params.medication = 0;
+        }
 
         if (params.mode === 'edit') {
             delete params.mode;
