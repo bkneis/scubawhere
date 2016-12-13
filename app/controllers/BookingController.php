@@ -790,13 +790,13 @@ class BookingController extends Controller
 
             $details = [];
   
-            $check->map(function($obj) use ($customer, &$details) {
+            $check->map(function ($obj) use ($customer, &$details) {
                 foreach($obj->bookingdetails as $detail) {
                     $details[] = $detail;
                 }
             });
 
-            $check = array_filter($details, function($obj) use ($customer, $departure, $ticket, $training){
+            $check = array_filter($details, function ($obj) use ($customer, $departure, $ticket, $training) {
                 if ($obj->customer_id === $customer->id) {
                     if (! is_null($departure)) {
                         if ($obj->ticket_id === $ticket->id) {
