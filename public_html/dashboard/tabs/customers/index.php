@@ -130,6 +130,12 @@
 <script type="text/x-handlebars-template" id="customer-diving-information-template">
 	<h5>Diving Information <small> Keep your divers profile up to date</small></h5>
 	<div class="form-group">
+		<div class="col-md-12">
+			<label for="medication" class="control-label">Is the customer currently taking any medication? :</label>
+			<input id="customer_medication" type="checkbox" name="medication" value="1" {{#if medication}} checked {{/if}}>
+		</div>
+	</div>
+	<div class="form-group">
 		<div class="col-md-4">
 			<label for="last_dive" class="control-label">Date of last dive</label>
 			<input type="text" name="last_dive" class="form-control datepicker" data-date-format="YYYY-MM-DD" value="{{last_dive}}">
@@ -272,7 +278,7 @@
 								<select id="country_id" name="country_id" class="form-control select2"></select>
 							</div>
 							<div class="col-md-6">
-								<label for="language_id">Language</label></label>
+								<label for="language_id">Language</label>
 								<select id="language_id" name="language_id" class="form-control select2"></select>
 							</div>
 						</div>
@@ -485,6 +491,12 @@
 		<div class="col-md-6" style="margin-top:30px;">
 			<input type="checkbox" id="unsubscribe" name="unsubscribe" value="true" {{#if unsubscribed}}checked{{/if}}>
 			<label for="unsubscribe" class="control-label">Unsubscribe from email marketing? </label>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<label for="online_source">Where did they here about us?</label>
+			<input type="text" name="online_source" class="form-control" placeholder="Google, magazine etc ..." value="{{{online_source}}}">
 		</div>
 	</div>
 	<div class="form-group">

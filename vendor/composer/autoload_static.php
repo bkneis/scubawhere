@@ -371,6 +371,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'AddDeletedAtFieldToBoatroomsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_12_02_174659_add_deleted_at_field_to_boatrooms_table.php',
         'AddDeletedatToPackageableTable' => __DIR__ . '/../..' . '/app/database/migrations/2016_08_16_124451_add_deletedat_to_packageable_table.php',
         'AddDescriptionToCompanyLocationTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_02_20_205808_add_description_to_company_location_table.php',
+        'AddExtraFieldsToCustomers' => __DIR__ . '/../..' . '/app/database/migrations/2016_12_13_104716_add_extra_fields_to_customers.php',
         'AddForeignCompanyIdToAgentsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_05_21_102653_add_foreign_company_id_to_agents_table.php',
         'AddForeignKeysToBookingCustomerTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_05_21_103900_add_foreign_keys_to_booking_customer_table.php',
         'AddHtmlStringToCampaignsTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_10_03_165920_add_html_string_to_campaigns_table.php',

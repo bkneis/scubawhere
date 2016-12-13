@@ -146,6 +146,7 @@ $(function () {
 
         var params = $(this).serializeObject();
         params._token = window.token;
+        params.medication = $('#customer_medication').is(':checked');
         //console.log(params);
 
         if (params.mode === 'edit') {

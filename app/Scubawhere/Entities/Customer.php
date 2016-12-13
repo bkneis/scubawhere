@@ -28,7 +28,9 @@ class Customer extends Ardent {
 		'height',
 		'notes',
 		'cylinder_size',
-		'language_id'
+		'language_id',
+		'online_source',
+		'medication'
 	);
 
 	public static $rules = array(
@@ -49,7 +51,9 @@ class Customer extends Ardent {
 		'chest_size'      => '',
 		'shoe_size'       => '',
 		'height'          => '',
-		'language_id'     => 'integer'
+		'language_id'     => 'integer',
+		'online_source'   => '',
+		'medication'      => ''
 	);
 
 	public $appends = array('unsubscribed');

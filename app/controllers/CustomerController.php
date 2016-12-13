@@ -103,11 +103,13 @@ class CustomerController extends Controller {
 			'height',
 			'notes',
 			'cylinder_size',
-			'language_id'
+			'language_id',
+			'online_source',
+			'medication'
 		);
 
 		$data = array_filter($data, function ($val) {return !(empty($val));});
-
+		
 		$customer = new Customer($data);
 
 		if( !$customer->validate() )
@@ -183,7 +185,9 @@ class CustomerController extends Controller {
 			'height',
 			'notes',
 			'cylinder_size',
-			'language_id'
+			'language_id',
+			'online_source',
+			'medication'
 		);
 
 		$data = array_filter($data, function ($val) {return !(empty($val));});
