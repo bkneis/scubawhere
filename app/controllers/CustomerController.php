@@ -108,7 +108,7 @@ class CustomerController extends Controller {
 			'medication'
 		);
 
-		$data = array_filter($data, function ($val) {return !(empty($val));});
+		$data = array_filter($data, function ($val) {return (! is_null($val)) && ($val !== '');});
 		
 		$customer = new Customer($data);
 
@@ -190,8 +190,8 @@ class CustomerController extends Controller {
 			'medication'
 		);
 
-		$data = array_filter($data, function ($val) {return !(empty($val));});
-	
+		$data = array_filter($data, function ($val) {return (! is_null($val)) && ($val !== '');});
+
 		if( !$customer->update($data) )
 		{
 			return Response::json( array('errors' => $customer->errors()->all()), 406 ); // 406 Not Acceptable
