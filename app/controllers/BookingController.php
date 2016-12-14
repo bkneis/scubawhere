@@ -796,14 +796,14 @@ class BookingController extends Controller
                 }
             });
 
-            $check = array_filter($details, function ($obj) use ($customer, $departure, $ticket, $training) {
+            $check = array_filter($details, function ($obj) use ($customer, $departure, $training_session) {
                 if ($obj->customer_id === $customer->id) {
                     if (! is_null($departure)) {
-                        if ($obj->ticket_id === $ticket->id) {
+                        if ($obj->session_id === $departure->id) {
                             return $obj;
                         }
                     } else {
-                        if ($obj->training_id === $training->id) {
+                        if ($obj->training_session_id === $training_session->id) {
                             return $obj;
                         }
                     }
