@@ -256,7 +256,7 @@ $(function () {
 
 	$('#ticket-form-container').on('click', '.remove-ticket', function(event) {
     	event.preventDefault();
-        var deleteable = $('#update-ticket-form input[name=deleteable]').val()
+        var deleteable = $('#update-ticket-form input[name=deleteable]').val();
 		/*var check;
         if(deleteable === 'true')
         {
