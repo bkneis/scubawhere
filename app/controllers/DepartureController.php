@@ -465,9 +465,9 @@ class DepartureController extends Controller {
 
 		$departure = new Departure($data);
 
-		if($trip->boat_required)
+		if((int) $trip->boat_required === 1)
 		{
-			if($this->isBoatAvailable(null, $boat->id, $data['start'], $trip->duration))
+			if($this->isBoatAvailable(null, $boat->id, $data['start'], $trip->duration, $trip->boat_required))
 				return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
 
 			// Check if trip is overnight and if so, check if boat has boatrooms
@@ -485,8 +485,11 @@ class DepartureController extends Controller {
 		return Response::json( array('status' => 'OK. Trip scheduled', 'id' => $departure->id), 201 ); // 201 Created
 	}
 
-	private function isBoatAvailable($departure_id, $boat_id, $start, $duration)
-	{	
+	private function isBoatAvailable($departure_id, $boat_id, $start, $duration, $boat_required)
+	{
+		if ((int) $boat_required === 0) {
+			return false;
+		}
 		// Check if the boat is already being used during the submitted time
 		$tripStart = new \DateTime( $start, new \DateTimeZone( Context::get()->timezone ) );
 		$tripEnd   = clone $tripStart;
@@ -617,7 +620,7 @@ class DepartureController extends Controller {
 											});
 
 					//if($this->isBoatAvailable($boat_id, Input::get('start'), $departure->trip->duration))
-					if(!$this->isBoatAvailableTimetable($departure->timetable_id, $boat_id, $start_dates, $departure->trip->duration))
+					if(!$this->isBoatAvailableTimetable($departure->timetable_id, $boat_id, $start_dates, $departure->trip->duration, $departure->trip->boat_required))
 					{
 						return Response::json( array('errors' => 
 							array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
@@ -657,7 +660,7 @@ class DepartureController extends Controller {
 			return array('status' => 'Nothing updated.');
 		}
 
-		if($this->isBoatAvailable($departure->id, $departure->boat_id, $departure->start, $departure->trip->duration))
+		if($this->isBoatAvailable($departure->id, $departure->boat_id, $departure->start, $departure->trip->duration, $departure->trip->boat_required))
 			return Response::json( array('errors' => array('The boat is already being used at this time.')), 406); // 406 Not Acceptable
 
 		// Check if trip is overnight and if so, check if boat has boatrooms
@@ -672,8 +675,11 @@ class DepartureController extends Controller {
 		return array('status' => 'OK. Trip updated.');
 	}
 
-	private function isBoatAvailableTimetable($timetable_id, $boat_id, $start_dates, $duration)
-	{	
+	private function isBoatAvailableTimetable($timetable_id, $boat_id, $start_dates, $duration, $boat_required)
+	{
+		if ((int) $boat_required === 0) {
+			return true;
+		}
 		// Check if the boat is already being used during the submitted time
 
 		$duration_hours   = floor($duration);
