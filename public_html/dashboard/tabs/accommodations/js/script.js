@@ -33,7 +33,8 @@ Handlebars.registerHelper('pricerange', function(base_prices, prices) {
 	return window.company.currency.symbol + ' ' + min + ' - ' + max;
 });
 
-priceInputTemplate = Handlebars.templates['accommodationPriceInput'];
+//priceInputTemplate = Handlebars.templates.accommodationPriceInput;
+priceInputTemplate = Handlebars.compile($('#price-input-template').html());
 Handlebars.registerPartial('price_input', priceInputTemplate);
 
 window.sw.default_first_base_price = {
