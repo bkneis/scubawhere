@@ -1,28 +1,29 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
 abstract class ApiController extends Controller
 {
+    /* @var Response */
     protected $response;
 
-    public function __construct(\Illuminate\Http\Response $response)
+    /* @var Request */
+    protected $request;
+
+    public function __construct(Response $response, Request $request)
     {
         $this->response = $response;
+        $this->request  = $request;
     }
 
-    public function trimData(array $data)
+    public function validateInput(array $data, array $rules, array $messages = [])
     {
-        unset($data['company_id']);
-        unset($data['updated_at']);
-        unset($data['created_at']);
-        if(isset($data['deleted_at'])) unset($data['deleted_at']);
-        return $data;
-    }
+        $validator = Validator::make($data, $rules, $messages);
 
-    abstract public function transform();
-
-    public function transformCollection(\Illuminate\Database\Eloquent\Collection $collection)
-    {
-        return array_map([$this, 'transform'], $collection->toArray());
+        if($validator->fails()) {
+            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
     }
 
     public function responseOK(array $data)
