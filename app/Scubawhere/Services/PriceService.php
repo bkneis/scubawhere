@@ -46,7 +46,7 @@ class PriceService {
 	        $base_prices = Helper::cleanPriceArray($base_prices);
 
 	        // Check if 'prices' input array is now empty
-	        if (empty($base_prices)) throw new HttpBadRequest(__CLASS__.__METHOD__, ['You must submit at least one base price!']);
+	        //if (empty($base_prices)) throw new HttpBadRequest(__CLASS__.__METHOD__, ['You must submit at least one base price!']);
     	}
     	else
     	{
@@ -81,6 +81,9 @@ class PriceService {
 	public function associatePrices($model, $prices) 
 	{
 		$prices = Helper::normaliseArray($prices);
+		// Loop through the prices and categorize them into new, updated and deleted
+		// go through each and do with which you wish and always use prices for the relationship
+		// add to bookable trait the prices relationship and mark baseprice as redudant
         foreach ($prices as &$price) 
         {
         	$price = $this->price_repo->create($price);

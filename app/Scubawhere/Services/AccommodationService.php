@@ -5,8 +5,10 @@ namespace Scubawhere\Services;
 use Scubawhere\Context;
 use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Price;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\AccommodationRepoInterface;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class AccommodationService {
 
@@ -258,15 +260,47 @@ class AccommodationService {
 	 * @param  array $base_prices  Prices to associate to the accommodation model
 	 * @param  array $prices       Seasonal prices to
 	 *
-	 * @return [type]              [description]
+	 * @return Accommodation
 	 */
 	public function update($id, $data, $base_prices, $prices) 
 	{
     	$prices = $this->price_service->validatePrices($base_prices, $prices);
     	$accommodation = $this->accommodation_repo->update($id, $data);
 
-    	if($prices['base']) $this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
-    	if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
+		// Get existing price ids
+		$existing_prices = $accommodation->basePrices()->get()->getDictionary();
+
+		// deleted prices
+		$deleted_prices = array_diff_key($existing_prices, $base_prices);
+
+		// new prices
+		$new_prices = array_diff_key($base_prices, $existing_prices);
+
+		// updated prices
+		$updated_prices = array_intersect_key($existing_prices, $base_prices);
+
+		// Delete prices
+		Price::where('owner_type', 'Scubawhere\Entities\Accommodation')
+			->whereIn('id', array_keys($deleted_prices))
+			->delete();
+
+		// Create new prices
+		$new_prices_objs = [];
+		foreach ($new_prices as $price) {
+			// validate the price
+			$new_price = new Price($price);
+			if (!$new_price->validate()) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $new_price->errors()->all());
+			}
+			array_push($new_prices_objs, new Price($price));
+		}
+		$accommodation->prices()->saveMany($new_prices_objs);
+
+		foreach ($updated_prices as $price) {
+			if (!$price->update($base_prices[$price->id])) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $price->errors()->all());
+			}
+		}
 
     	return $accommodation;
 	}
