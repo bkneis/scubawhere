@@ -2,6 +2,7 @@
 
 namespace Scubawhere\Services;
 
+use Scubawhere\Entities\Addon;
 use Scubawhere\Entities\Booking;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\AddonRepoInterface;
@@ -9,18 +10,16 @@ use Scubawhere\Repositories\AddonRepoInterface;
 class AddonService {
 
 	/** @var \Scubawhere\Repositories\AddonRepo */
-	protected $addon_repo;
+	protected $addonRepo;
 
 	/**
 	 * Service used to log issues to trouble shooting when waterfall deleting
-	 *
 	 * @var \Scubawhere\Services\LogService
 	 */
 	protected $log_service;
 
 	/**
 	 * Service used to validate and associate prices
-	 *
 	 * @var \Scubawhere\Services\PriceService
 	 */
 	protected $price_service;
@@ -29,7 +28,7 @@ class AddonService {
 								LogService $log_service,
 								PriceService $price_service)
 	{
-		$this->addon_repo = $addon_repo;
+		$this->addonRepo = $addon_repo;
 		$this->log_service = $log_service;
 		$this->price_service = $price_service;
 	}
@@ -38,13 +37,11 @@ class AddonService {
      * Get an addon for a company from its id
 	 *
      * @param int $id
-	 *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-	 *
      * @return \Scubawhere\Entities\Addon
      */
 	public function get($id) {
-		return $this->addon_repo->get($id, ['basePrices']);
+		return $this->addonRepo->get($id, ['basePrices']);
 	}
 
 	/**
@@ -53,7 +50,7 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->addon_repo->all(['basePrices']);
+		return $this->addonRepo->all(['basePrices']);
 	}
 
 	/**
@@ -62,48 +59,38 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAllWithTrashed() {
-		return $this->addon_repo->allWithTrashed(['basePrices']);
+		return $this->addonRepo->allWithTrashed(['basePrices']);
 	}
 
 	/**
 	 * Validate, create and save the addon and prices to the database
 	 *
 	 * @note Prices is not yet implmeneted on the front end (27/10/16)
-	 *
 	 * @param array $data
-	 * @param array $base_prices
-	 * @param array $prices
-	 *
 	 * @return \Scubawhere\Entities\Addon
+	 * @throws \Scubawhere\Exceptions\Http\HttpBadRequest
 	 */
-	public function create(array $data, array $base_prices, array $prices)
+	public function create(array $data)
 	{
-		$prices = $this->price_service->validatePrices($base_prices, $prices);
-		$addon = $this->addon_repo->create($data);
-
-        $this->price_service->associatePrices($addon->basePrices(), $prices['base']);
-        $addon->load(['basePrices']);
-        return $addon;
+		return Addon::create($data)->syncPrices($data['prices']);
 	}
 
 	/**
 	 * Validate, update and save the addon and prices to the database
 	 *
-	 * @param  int   $id           ID of the addon
-	 * @param  array $data         Information about addon
-	 * @param  array $base_prices  Prices to associate to the addon model
-	 * @param  array $prices       Seasonal prices to
+	 * @param  int $id ID of the addon
+	 * @param  array $data Information about addon
+	 * @return Addon
+	 * @throws \Scubawhere\Exceptions\Http\HttpBadRequest
+	 * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
 	 *
-	 * @return \Scubawhere\Entities\Addon
 	 */
-	public function update($id, $data, $base_prices, $prices) 
+	public function update($id, $data) 
 	{
-    	$prices = $this->price_service->validatePrices($base_prices, $prices);
-		$addon = $this->addon_repo->update($id, $data);
-
-        if($prices['base']) $this->price_service->associatePrices($addon->basePrices(), $prices['base']);
-        $addon->load(['basePrices']);
-        return $addon;
+		return $this->addonRepo
+			->get($id)
+			->update($data)
+			->syncPrices($data['prices']);
 	}
 
 	/**
@@ -113,9 +100,7 @@ class AddonService {
 	 * future paid bookings associated to the addon, and the booking ids are then logged.
 	 * 
 	 * @throws \Scubawhere\Exceptions\ConflictException
-	 * 
 	 * @throws \Exception
-	 * 
 	 * @param  int $id ID of the addon
 	 */
 	public function delete($id)
@@ -130,7 +115,7 @@ class AddonService {
 		 */
 		
 		// STEP 1.
-		$addon = $this->addon_repo->getUsedInFutureBookings($id);
+		$addon = $this->addonRepo->getUsedInFutureBookings($id);
 
 		$booking_ids = $addon->bookingdetails->map(function($obj) {
 			if($obj->session != null || $obj->training_session != null) {
