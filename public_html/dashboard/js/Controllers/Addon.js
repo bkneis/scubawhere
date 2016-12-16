@@ -1,13 +1,13 @@
 var Addon = {
 
 	getAddon : function(params, handleData) {
-		$.get("/api/addon", params, function(data) {
+		$.get("/api/addon/" + params.id, function(data) {
 			handleData(data);
 		});
 	},
 
 	getAllAddons : function(handleData) {
-		$.get("/api/addon/all", function(data){
+		$.get("/api/addon", function(data){
 
 			if(window.location.hostname === 'rms-test.scubawhere.com')
 				_.each(data, function(object) {
@@ -21,17 +21,17 @@ var Addon = {
 	createAddon : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/addon/add",
+			url: "/api/addon",
 			data: params,
 			success: handleData,
 			error: errorFn
 		});
 	},
 
-	updateAddon : function(params, handleData, errorFn) {
+	updateAddon : function(id, params, handleData, errorFn) {
 		$.ajax({
-			type: "POST",
-			url: "/api/addon/edit",
+			type: "PUT",
+			url: "/api/addon/" + id,
 			data: params,
 			success: handleData,
 			error: errorFn
@@ -40,8 +40,8 @@ var Addon = {
 
 	deleteAddon : function(params, handleData, errorFn){
 		$.ajax({
-			type: "POST",
-			url: "/api/addon/delete",
+			type: "DELETE",
+			url: "/api/addon/" + params.id,
 			data: params,
 			success: handleData,
 			error: errorFn
