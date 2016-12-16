@@ -45,6 +45,11 @@ class Booking extends Ardent {
 		'cancelled_at'     => 'date'
 	);
 
+	public static function isActive($status)
+	{
+		return is_null(Booking::counted[$status]);
+	}
+
 	public function beforeSave()
 	{
 		if( isset($this->agent_reference) )
