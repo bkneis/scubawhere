@@ -47,7 +47,7 @@ class Booking extends Ardent {
 
 	public static function isActive($status)
 	{
-		return is_null(Booking::counted[$status]);
+		return isset(Booking::$counted[$status]);
 	}
 
 	public function beforeSave()

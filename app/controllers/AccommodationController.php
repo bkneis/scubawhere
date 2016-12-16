@@ -142,20 +142,20 @@ class AccommodationController extends Controller {
      */
     public function store()
     {
-        $data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
+        $data = Input::only('name', 'description', 'capacity', 'parent_id', 'prices'); // Please NEVER use parent_id in the front-end!
 
         $rules = array(
             'name'        => 'required',
             'capacity'    => 'required',
-            'base_prices' => 'required'
+            'prices'      => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($data, $rules);
 
         if($validator->fails()) {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
 
-        $accommodation = $this->accommodation_service->create($data, Input::get('base_prices'), Input::get('prices'));
+        $accommodation = $this->accommodation_service->create($data);
 
         return Response::json(array('status' => 'OK. Accommodation created', 'model' => $accommodation->load('basePrices', 'prices')), 201); // 201 Created
     }

@@ -2,6 +2,7 @@
 
 namespace Scubawhere\Entities;
 
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
@@ -86,6 +87,18 @@ class Accommodation extends Ardent {
 			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $this->errors()->all());
 		}
 		return $this;
+	}
+
+	public static function create(array $data)
+	{
+		$accommodation = new Accommodation($data);
+
+		if (!$accommodation->validate()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $accommodation->errors()->all());
+		}
+
+		Context::get()->accommodations()->save($accommodation);
+		return $accommodation;
 	}
 
 	public function removeFromPackages()

@@ -25,8 +25,8 @@ trait Bookable
             $this->load('bookings');
         }
         return $this->bookings
-            ->map(function ($obj) {
-                if($obj->status === 'saved') return $obj;
+            ->filter(function ($obj) {
+                return $obj->status === 'saved';
             });
     }
 
@@ -57,14 +57,47 @@ trait Bookable
      * could be seen as bad design but in my eyes, the model can update its own variables such
      * as the name etc. so why not its relationships.
      *
+     * After more investigation i found this, http://stackoverflow.com/questions/14157586/php-type-hinting-traits/14157842#14157842,
+     * it basically discussing using an interface for all objects that use the trait, then that way we can type hint
+     * the interface. Now there still exists the challenge of enforcing that the object inherits the interface when
+     * using the trait, but it atleast would give us some more protection?
+     * 
+     * @note Should these be in the price service??
+     *
      * @param array $prices
      * @return mixed
      * @throws HttpUnprocessableEntity
      */
     public function syncPrices(array $prices)
     {
-        // Get existing prices
-        $existing_prices = $this->prices()->get()->getDictionary();
+        // Go through prices and remove any that do not have an amount
+        $prices = array_filter($prices, function ($obj) {
+            return ! empty($obj['new_decimal_price']);
+        });
+        
+        // If the model's prices arent loaded, lazy load them
+        if (!isset($this->prices)) {
+            $this->load('prices');
+        }
+        if (!isset($this->basePrices)) {
+            $this->load('basePrices');
+        }
+        /*
+         * Fade in. It was a cold morning, there sat 2 young and nieve developers
+         * who didnt know there head from their arse. Programming away without a care
+         * in the world. 3 years later there is no a system with somewhat questioanble
+         * design decisions. Ok, joking aside, this really bugs me. Basically, when making the
+         * system originally there were 'base prices' and 'prices' where the later acted as
+         * seasonal price changes. It wasnt until we implmented them through the system we
+         * realised they were essentially the same :/ And would have been way better to just use
+         * a bool in the price such as 'is_base'.
+         * 
+         * So long story short, whenever dealing with prices, you must use basePrices and
+         * prices then combine them, due to the morph many relationship using the name
+         * of the calling function.
+         */
+        $existing_prices = $this->basePrices->getDictionary();
+        $existing_prices += $this->prices->getDictionary();
 
         // Calculate deleted prices
         $deleted_prices = array_diff_key($existing_prices, $prices);
@@ -74,7 +107,7 @@ trait Bookable
 
         // Calculate existing / updated prices
         $updated_prices = array_intersect_key($existing_prices, $prices);
-
+        
         // Delete prices
         Price::where('owner_type', get_class($this))
             ->whereIn('id', array_keys($deleted_prices))
@@ -90,6 +123,8 @@ trait Bookable
             }
             array_push($new_prices_objs, new Price($price));
         }
+        // Save the prices to 'prices', to reduce the number of prices that used the base price
+        // so that when we finally remove base prices, there is less data to move
         $this->prices()->saveMany($new_prices_objs);
 
         // Update existing prices
@@ -114,7 +149,12 @@ trait Bookable
 
     public function prices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until')->orderBy('from');
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->orderBy('from');
+    }
+    
+    public function basePrices()
+    {
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->orderBy('from');
     }
 
     public function customers()

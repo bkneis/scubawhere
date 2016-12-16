@@ -100,6 +100,7 @@
 				from <input type="text" name="prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
 			{{else}}
 				from <strong>the beginning of time</strong>
+				<input type="hidden" name="prices[{{id}}][from]" value="0000-00-00">
 			{{/unless}}
 
 			{{#unless isBase}}

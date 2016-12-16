@@ -5,11 +5,17 @@ namespace Scubawhere\Services;
 use Scubawhere\Context;
 use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Booking;
-use Scubawhere\Entities\Price;
 use Scubawhere\Exceptions\ConflictException;
 use Scubawhere\Repositories\AccommodationRepoInterface;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
+/**
+ * Service object to perform tasks related to accommodations.
+ * 
+ * @author Bryan Kneis
+ * @version 1.0.3
+ * @package Scubawhere\Services
+ */
 class AccommodationService {
 
 	/** @var \Scubawhere\Repositories\AccommodationRepo */
@@ -236,9 +242,12 @@ class AccommodationService {
 		 * function getWith() would be good. But then your left with getById() or even worse the
 		 * 2 combined, getByIdWith(). How about getBy(), then if the name of the variable is whats used to get
 		 * it, i.e. getBy($id) // using say 1, by then getBy($name) // say john as a string.
+		 * 
+		 * @todo Also, while im being picky. I need to allow the get command to either accept an array or a string
+		 * for single relationships. Im not bothereed about the performance loss of doing an is_array()
 		*/
     	return $this->accommodations
-			->get($id, 'prices')
+			->get($id, ['basePrices', 'prices'])
 			->update($data)
 			->syncPrices($data['prices']);
 	}
