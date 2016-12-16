@@ -44,9 +44,33 @@ class Logger
         $this->log_repo->addEntry($this->log->id, $data);
     }
 
+    /**
+     * Write to the log by iterating over the data and log using the template
+     *
+     * @param $template
+     * @param $data
+     * @param $key
+     * @return $this
+     */
+    public function write($template, $data, $key)
+    {
+        foreach ($data as $entry) {
+            // @todo replace the '?' with the $data[$key] 
+            $this->append($template);
+        }
+        
+        return $this;
+    }
+
+    public function save()
+    {
+        // @todo write the log contents to the DB
+        return $this;
+    }
+
     public function clear()
     {
-        // todo
+        // @todo
     }
 
     /**
