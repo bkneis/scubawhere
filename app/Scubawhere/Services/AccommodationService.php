@@ -171,13 +171,13 @@ class AccommodationService {
 	protected function formatDates(array $dates)
 	{
 		$dateStrings = [];
-		if ($dates['before']) {
+		if (isset($dates['after'])) {
 			$dateStrings['after'] = new \DateTime($dates['after']);
 			$dateStrings['before'] = clone $dateStrings['after'];
 			$before  = $dateStrings['before']->add(new \DateInterval('P1D'));
 			$dateStrings['after'] = $before->format('Y:m:d');
 		} else {
-			$dateStrings['before'] = new \DateTime($dates['before']);
+			$dateStrings['after'] = new \DateTime($dates['after']);
 			$dateStrings['before'] = $dateStrings['before']->format('Y-m-d H:i:s');
 			$dateStrings['after']  = new \DateTime($dates['after']);
 			$dateStrings['after']  = $dateStrings['before']->format('Y-m-d H:i:s');
@@ -208,18 +208,11 @@ class AccommodationService {
 	 */
 	public function create($data)
 	{
-		//$prices = $this->price_service->validatePrices($base_prices, $prices);
-		//$accommodation = $this->accommodations->create($data);
-
 		// Check that their is atleast one price given
 		if(empty($data['prices'])) {
 			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please submit atleast one price']);
 		}
-
 		return Accommodation::create($data)->syncPrices($data['prices']);
-
-        //$this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
-        //if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
 	}
 
 	/**
