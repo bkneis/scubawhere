@@ -32,7 +32,7 @@ class ManifestController extends Controller
             'status' => 'Sucess. Avaialability retrieved',
             'data'   => array(
                 'date'          => $date,
-                'accommodation' => $this->accommodation_service->getManifest($id, $date)
+                'accommodation' => $this->accommodation_service->getManifest(['after' => $date])
             )
         ));
     }
