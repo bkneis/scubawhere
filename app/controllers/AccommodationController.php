@@ -171,7 +171,7 @@ class AccommodationController extends Controller {
      */
     public function update($id)
     {
-        $data = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
+        $data = Input::only('name', 'description', 'capacity', 'parent_id', 'prices'); // Please NEVER use parent_id in the front-end!
 
         $rules = array(
             'name' => 'required',
@@ -183,7 +183,7 @@ class AccommodationController extends Controller {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
 
-        $accommodation = $this->accommodation_service->update($id, $data, Input::get('base_prices'), Input::get('prices'));
+        $accommodation = $this->accommodation_service->update($id, $data);
 
         return Response::json(array('status' => 'OK. Accommodation updated', 'model' => $accommodation->load('basePrices', 'prices')), 200);
     }

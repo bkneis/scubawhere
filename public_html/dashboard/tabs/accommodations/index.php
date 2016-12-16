@@ -94,16 +94,16 @@
 	<script type="text/x-handlebars-template" id="price-input-template">
 		<p{{#unless decimal_price}} class="new_price"{{/unless}}>
 			<span class="currency">{{currency}}</span>
-			<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
+			<input type="number" id="acom-price" name="prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
 
 			{{#unless isAlways}}
-				from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+				from <input type="text" name="prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
 			{{else}}
 				from <strong>the beginning of time</strong>
 			{{/unless}}
 
 			{{#unless isBase}}
-				until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+				until <input type="text" name="prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
 			{{/unless}}
 
 			<button class="btn btn-danger remove-price">&#215;</button>

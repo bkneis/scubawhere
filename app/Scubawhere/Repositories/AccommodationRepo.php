@@ -112,7 +112,7 @@ class AccommodationRepo extends BaseRepo implements AccommodationRepoInterface {
      *
      * @return \Scubawhere\Entities\Accommodation
      */
-    public function getUsedInFutureBookings($id, $fail = true)
+    public function getWithFutureBookings($id, $fail = true)
     {
         $accommodation = Accommodation::with(['bookings' => function($q) {
                 $q->where('accommodation_booking.start', '>=', Helper::localtime());

@@ -2,7 +2,6 @@
 
 namespace Scubawhere\Services;
 
-use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 use Scubawhere\Helper;
 use Scubawhere\Entities\Price;
 use Scubawhere\Exceptions\Http\HttpBadRequest;
@@ -46,7 +45,7 @@ class PriceService {
 	        $base_prices = Helper::cleanPriceArray($base_prices);
 
 	        // Check if 'prices' input array is now empty
-	        //if (empty($base_prices)) throw new HttpBadRequest(__CLASS__.__METHOD__, ['You must submit at least one base price!']);
+	        if (empty($base_prices)) throw new HttpBadRequest(__CLASS__.__METHOD__, ['You must submit at least one base price!']);
     	}
     	else
     	{

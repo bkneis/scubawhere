@@ -49,7 +49,7 @@ class Helper
 		return array_filter($prices, function($element, $id)
 		{
 			// Filter out every price that is either empty or has a numeric ID (already exists)
-			return !($element['new_decimal_price'] === '' || is_numeric($id));
+			return !($element['new_decimal_price'] === '');
 		}, ARRAY_FILTER_USE_BOTH);
 	}
 

@@ -13,7 +13,7 @@ use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 class AccommodationService {
 
 	/** @var \Scubawhere\Repositories\AccommodationRepo */
-	protected $accommodation_repo;
+	protected $accommodations;
 
 	/**
 	 * Service used to log issues to trouble shooting when waterfall deleting
@@ -34,7 +34,7 @@ class AccommodationService {
 								LogService                 $log_service,
 								PriceService               $price_service)
 	{
-		$this->accommodation_repo = $accommodation_repo;
+		$this->accommodations = $accommodation_repo;
 		$this->log_service = $log_service;
 		$this->price_service = $price_service;
 	}
@@ -47,7 +47,7 @@ class AccommodationService {
      * @return \Scubawhere\Entities\Accommodation
      */
 	public function get($id) {
-		return $this->accommodation_repo->get($id, ['prices', 'basePrices']);
+		return $this->accommodations->get($id, ['prices', 'basePrices']);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class AccommodationService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->accommodation_repo->all(['prices', 'basePrices']);
+		return $this->accommodations->all(['prices', 'basePrices']);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class AccommodationService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAllWithTrashed() {
-		return $this->accommodation_repo->allWithTrashed(['prices', 'basePrices']);
+		return $this->accommodations->allWithTrashed(['prices', 'basePrices']);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class AccommodationService {
 			$query = array(array('id', '=', $data['accommodation_id']));
 		}
 
-		$accommodations = $this->accommodation_repo->getWhere($query);
+		$accommodations = $this->accommodations->getWhere($query);
 
         if(!$accommodations->isEmpty())
         {
@@ -155,162 +155,108 @@ class AccommodationService {
 	}
 
 	/**
-	 * Transform the data retrieved by the database into a manifest
+	 * Create a manifest of al the bookings in a night for an accommodation
 	 *
-	 * @param $data Collected from the database
-	 * @return array Formatted array to be used as the manifest
+	 * @param array $dates
+	 * @return array
+	 * @internal param int $id ID of the accommodation
+	 * @internal param string $date Date string of the date to get the manifest for
 	 */
-	private function transformManifest($data)
+	public function getManifest(array $dates)
 	{
-		return array(
-			'booking' => array(
-				'id'        => $data->booking_id,
-				'reference' => $data->reference,
-				'paid'      => isset($data->refunded) ? (int) $data->paid - (int) $data->refunded : (int) $data->paid,
-				'price'     => $data->price
-			),
-			'customer' => array(
-				'firstname'    => $data->firstname,
-				'lastname'     => $data->lastname,
-				'country_id'   => $data->country_id,
-				'phone'        => $data->phone,
-				'last_dive'    => $data->last_dive,
-				'fin_size'     => $data->shoe_size,
-				'bcd_size'     => $data->chest_size,
-				'wetsuit_size' => $data->height,
-				'notes'        => $data->notes
-			)
-		);
+		$dates = $this->formatDates($dates);
+		return $this->accommodations->getAvailability($dates);
 	}
+
+	protected function formatDates(array $dates)
+	{
+		$dateStrings = [];
+		if ($dates['before']) {
+			$dateStrings['after'] = new \DateTime($dates['after']);
+			$dateStrings['before'] = clone $dateStrings['after'];
+			$before  = $dateStrings['before']->add(new \DateInterval('P1D'));
+			$dateStrings['after'] = $before->format('Y:m:d');
+		} else {
+			$dateStrings['before'] = new \DateTime($dates['before']);
+			$dateStrings['before'] = $dateStrings['before']->format('Y-m-d H:i:s');
+			$dateStrings['after']  = new \DateTime($dates['after']);
+			$dateStrings['after']  = $dateStrings['before']->format('Y-m-d H:i:s');
+		}
+		return $dateStrings;
+	}
+
 
 	/**
-	 * Create a manifest of al the bookings in a night for an accommodation
-	 * 
-	 * @param int    $id   ID of the accommodation
-	 * @param string $date Date string of the date to get the manifest for
-	 * @return array
+	 * @todo deprecate
+	 * @param array $dates
+	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function getManifest($id, $date)
-	{
-		$after = new \DateTime($date);
-		$before = clone $after;
-		$before  = $before->add(new \DateInterval('P1D'));
-		$after = $before->format('Y:m:d');
-		//return $date;
-		//$after  = $after->format('Y:m:d H:i:s');
-
-		return $this->accommodation_repo->getAvailability(['before' => $before, 'after' => $after], $id);
-
-		$data = $this->accommodation_repo->getBookings($id, $after, $before);
-		//return $data;
-		$manifest = [];
-		$manifest['bookings'] = [];
-		foreach($data as $obj) {
-			if($obj->booking_id !== null) {
-				array_push($manifest['bookings'], $this->transformManifest($obj));
-			}
-		}
-		$manifest['accommodation'] = array(
-			'id'   => $data[0]->accommodation_id,
-			'name' => $data[0]->name,
-			'date' => $date
-		);
-
-		return $manifest;
-
-	}
-
-
 	public function getAvailability(array $dates)
 	{
-		// Convert the dates into a fomat mySQl can compare
-		$before = new \DateTime($dates['before']);
-		$before = $before->format('Y-m-d H:i:s');
-		$after  = new \DateTime($dates['after']);
-		$after  = $after->format('Y-m-d H:i:s');
-
-		return $this->accommodation_repo->getAvailability(['before' => $before, 'after' => $after]);
+		$dates = $this->formatDates($dates);
+		return $this->accommodations->getAvailability($dates);
 	}
 
 	/**
 	 * Validate, create and save the accommodation and prices to the database
 	 *
-	 * @param array $data        [description]
-	 * @param array $base_prices [description]
-	 * @param array $prices      [description]
-	 *
-	 * @return \Scubawhere\Entities\Accommodation
+	 * @param array $data [description]
+	 * @return Accommodation
+	 * @throws HttpUnprocessableEntity
+	 * @internal param array $base_prices [description]
+	 * @internal param array $prices [description]
 	 */
-	public function create($data, $base_prices, $prices) 
+	public function create($data)
 	{
-		$prices = $this->price_service->validatePrices($base_prices, $prices);
-		$accommodation = $this->accommodation_repo->create($data);
+		//$prices = $this->price_service->validatePrices($base_prices, $prices);
+		//$accommodation = $this->accommodations->create($data);
 
-        $this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
-        if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
+		// Check that their is atleast one price given
+		if(empty($data['prices'])) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please submit atleast one price']);
+		}
 
-        return $accommodation;
+		return Accommodation::create($data)->syncPrices($data['prices']);
+
+        //$this->price_service->associatePrices($accommodation->basePrices(), $prices['base']);
+        //if($prices['seasonal']) $this->price_service->associatePrices($accommodation->prices(), $prices['seasonal']);
 	}
 
 	/**
 	 * Validate, update and save the accommodation and prices to the database
 	 *
-	 * @param  int   $id           ID of the accommodation
-	 * @param  array $data         Information about accommodation
-	 * @param  array $base_prices  Prices to associate to the accommodation model
-	 * @param  array $prices       Seasonal prices to
-	 *
+	 * @param  int $id ID of the accommodation
+	 * @param  array $data Information about accommodation
 	 * @return Accommodation
+	 * @throws HttpUnprocessableEntity
 	 */
-	public function update($id, $data, $base_prices, $prices) 
+	public function update($id, $data)
 	{
-    	$prices = $this->price_service->validatePrices($base_prices, $prices);
-    	$accommodation = $this->accommodation_repo->update($id, $data);
-
-		// Get existing price ids
-		$existing_prices = $accommodation->basePrices()->get()->getDictionary();
-
-		// deleted prices
-		$deleted_prices = array_diff_key($existing_prices, $base_prices);
-
-		// new prices
-		$new_prices = array_diff_key($base_prices, $existing_prices);
-
-		// updated prices
-		$updated_prices = array_intersect_key($existing_prices, $base_prices);
-
-		// Delete prices
-		Price::where('owner_type', 'Scubawhere\Entities\Accommodation')
-			->whereIn('id', array_keys($deleted_prices))
-			->delete();
-
-		// Create new prices
-		$new_prices_objs = [];
-		foreach ($new_prices as $price) {
-			// validate the price
-			$new_price = new Price($price);
-			if (!$new_price->validate()) {
-				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $new_price->errors()->all());
-			}
-			array_push($new_prices_objs, new Price($price));
-		}
-		$accommodation->prices()->saveMany($new_prices_objs);
-
-		foreach ($updated_prices as $price) {
-			if (!$price->update($base_prices[$price->id])) {
-				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $price->errors()->all());
-			}
+		// Check that their is atleast one price given
+		if(empty($data['prices'])) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please submit atleast one price']);
 		}
 
-    	return $accommodation;
+		/*
+ 		 * @note, can I make the get function look more natural? It reads oddly, get($id, 'prices')
+		 * its not immediately obvious what the string is (its a relationship) by maybe creating another
+		 * function getWith() would be good. But then your left with getById() or even worse the
+		 * 2 combined, getByIdWith(). How about getBy(), then if the name of the variable is whats used to get
+		 * it, i.e. getBy($id) // using say 1, by then getBy($name) // say john as a string.
+		*/
+    	return $this->accommodations
+			->get($id, 'prices')
+			->update($data)
+			->syncPrices($data['prices']);
 	}
 
 	/**
 	 * Remove the accommodation from the database.
 	 *
-	 * In addition delete any quotes or packages associated to it. This will fail if their are 
+	 * In addition delete any quotes or packages associated to it. This will fail if their are
 	 * future paid bookings associated to the accommodation, and the booking ids are then logged
 	 *
+	 * @return bool|null
 	 * @throws \Scubawhere\Exceptions\ConflictException
 	 * @throws \Exception
 	 *
@@ -318,56 +264,30 @@ class AccommodationService {
 	 */
 	public function delete($id)
 	{
-		$accommodation = $this->accommodation_repo->getUsedInFutureBookings($id);
-	
-		$quotes = $accommodation->bookings
-			->map(function($obj) {
-				if($obj->status == 'saved') return $obj->id;
-			})
-			->toArray();
+		// Get the accommodation with any future bookings using it
+		$accommodation = $this->accommodations->getWithFutureBookings($id);
 
-		Booking::onlyOwners()->whereIn('id', $quotes)->delete();
+		// Get the accommodation bookings that are either reserved, started or confirmed
+		$bookings = $accommodation->getActiveBookings();
 
-		$bookings = $accommodation->bookings
-			->filter(function($obj) {
-				if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;
-			})
-			->toArray();
+		// If there are any active bookings that are using the accommofation, log them and their
+		// booking reference and return a http conflict error
+		if (empty($bookings)) {
 
-		if($bookings)
-		{
-			$logger = $this->log_service->create('Attempting to delete the accommodation, ' 
-												 . $accommodation->name);
-			foreach($bookings as $obj) {
-				$logger->append('The accommodation is used in the booking ' . '['.$obj['reference'].']');
-			}
+			$logger = $this->log_service->create('Attempting to delete the accommodation, ' . $accommodation->name);
+			$logger->write('The accommodation is used in the booking ?', $bookings, ['reference'])->save();
 			throw new ConflictException([
 					'The accommodation could not be deleted as it is booked in the future, '.
-					'please <a href="#troubleshooting?id=' . $logger->getId() . '">click here</a> to find how to delete it.'
+					'please <a href="#troubleshooting?id=' . $logger->getId() . '">click here</a> to find how to delete it.', empty($bookings)
 				]);
 		}
 
-        // Check if the user wants to delete accommodation even when in packages
-		if(!$accommodation->getDeletableAttribute()) 
-		{
-			if ($accommodation->packages()->exists()) 
-			{
-                // Loop through each package and remove its pivot from packages
-                $packages = $accommodation->packages();
-				foreach($packages as $obj) 
-				{
-                    //$accommodation->packages()->detach($obj->id);
-                    \DB::table('packageables')
-                        ->where('packageable_type', 'Accommodation')
-                        ->where('packageable_id', $accommodation->id)
-                        ->where('package_id', $obj->id)
-                        ->update(array('deleted_at' => \DB::raw('NOW()')));    
-                }
-                $accommodation->save();
-            }
-        }
+		// Delete all quotes that use the accommodation
+		// @note feels kinda annoying I cant call delete on a collection, maybe i should add it ?
+		$accommodation->getQuotes()->each(function ($quote) { $quote->delete(); });
 
-        $accommodation->delete();
+		// Remove the accommodation from any packages that are using them, and then delete the package
+		return $accommodation->removeFromPackages()->delete();
 	}
 
 }

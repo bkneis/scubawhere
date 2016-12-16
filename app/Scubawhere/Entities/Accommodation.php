@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Accommodation extends Ardent {
 
-	use SoftDeletingTrait;
 	use Owneable;
+	use Bookable;
+	use SoftDeletingTrait;
 
 	protected $dates = ['deleted_at'];
 
@@ -77,6 +78,31 @@ class Accommodation extends Ardent {
 
 		$this->decimal_price         = number_format($totalPrice, 2, '.', '');
 		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
+	}
+
+	public function update(array $attributes = [])
+	{
+		if(!parent::update($attributes)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $this->errors()->all());
+		}
+		return $this;
+	}
+
+	public function removeFromPackages()
+	{
+		$packages = $this->packages();
+		if ($packages->exists()) {
+			\DB::table('packageables')
+				->where('packageable_type', 'Accommodation')
+				->where('packageable_id', $this->id)
+				->update(array('deleted_at' => \DB::raw('NOW()')));
+		}
+		return $this;
+	}
+
+	public function isDeleteable()
+	{
+		return !($this->packages()->exists());
 	}
 
 	/*public function scopeOnlyOwners($query)
