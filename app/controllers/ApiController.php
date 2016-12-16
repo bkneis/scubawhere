@@ -1,37 +1,40 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\Validator;
+use Illuminate\Routing\Controller;
 use Scubawhere\Exceptions\Http\HttpNotFound;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 abstract class ApiController extends Controller
 {
-    /* @var Response */
-    protected $response;
-
-    /* @var Request */
+    /**
+     * @var Request
+     */
     protected $request;
 
-    public function __construct(Response $response, Request $request, Validator $validator)
+    public function __construct(Request $request)
     {
-        $this->response  = $response;
-        $this->request   = $request;
-        $this->validator = $validator;
+        $this->request = $request;
     }
-
+    
     public function validateInput(array $data, array $rules, array $messages = [])
     {
-        $validator = $this->validator->make($data, $rules, $messages);
+        $validator = Validator::make($data, $rules, $messages);
 
         if($validator->fails()) {
-            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
     }
 
     public function responseOK(array $data)
     {
-        return $this->response->json($data, 200);
+        return new JsonResponse($data, 200);
+    }
+
+    public function responseCreated(array $data)
+    {
+        return new JsonResponse($data, 201);
     }
 
 }
