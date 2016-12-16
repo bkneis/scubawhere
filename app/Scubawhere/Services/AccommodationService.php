@@ -209,8 +209,6 @@ class AccommodationService {
 	 * @param array $data [description]
 	 * @return Accommodation
 	 * @throws HttpUnprocessableEntity
-	 * @internal param array $base_prices [description]
-	 * @internal param array $prices [description]
 	 */
 	public function create($data)
 	{
