@@ -2,11 +2,11 @@
 
 namespace Scubawhere\Repositories;
 
-use Scubawhere\Context;
 use Scubawhere\Helper;
-use Scubawhere\Exceptions\Http\HttpNotAcceptable;
-use Scubawhere\Exceptions\Http\HttpNotFound;
+use Scubawhere\Context;
 use Scubawhere\Entities\Addon;
+use Scubawhere\Exceptions\Http\HttpNotFound;
+use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 use Scubawhere\Exceptions\InvalidInputException;
 
 /**
@@ -41,7 +41,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function all(array $relations = []) {
-        return Addon::onlyOwners()->with($relations)->get();
+        return Addon::with($relations)->get();
     }
 
     /**
@@ -52,7 +52,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function allWithTrashed(array $relations = []) {
-        return Addon::onlyOwners()->with($relations)->withTrashed()->get();
+        return Addon::with($relations)->withTrashed()->get();
     }
 
     /**
@@ -67,7 +67,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @return \Scubawhere\Entities\Addon
      */
     public function get($id, array $relations = [], $fail = true) {
-        $addon = Addon::onlyOwners()->with($relations)->find($id);
+        $addon = Addon::with($relations)->find($id);
 
         if($addon === null && $fail) {
             throw new HttpNotFound(__CLASS__ . __METHOD__, ['The addon could not be found']);
@@ -88,7 +88,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @return \ScubaWhere\Entities\Addon
      */
     public function getWhere(array $query, array $relations = [], $fail = true) {
-        $addon = Addon::onlyOwners()->where($query)->with($relations)->get();
+        $addon = Addon::where($query)->with($relations)->get();
 
         if($addon === null && $fail) {
             throw new HttpNotFound(__CLASS__ . __METHOD__, ['The addon could not be found']);
@@ -113,8 +113,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      */
     public function getUsedInFutureBookings($id, $fail = true)
     {
-        $addon = Addon::onlyOwners()
-            ->with([
+        $addon = Addon::with([
                 'bookingdetails.session' => function($q) {
                     $q->where('start', '>=', Helper::localtime());
                 },
@@ -136,6 +135,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @param array $data Information about the addon to save
      *
      * @throws \Scubawhere\Exceptions\InvalidInputException
+     * @deprecated 
      *
      * @return \ScubaWhere\Entities\Addon
      */
@@ -157,13 +157,14 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      * @param bool  $fail Whether to fail or not
      *
      * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
+     * @deprecated 
      *
      * @return \ScubaWhere\Entities\Addon
      */
     public function update($id, array $data, $fail = true) {
         $addon = $this->get($id);
 
-        if(!$addon->update($data)) {
+        if(!$addon->update($data) && $fail) {
             throw new HttpNotAcceptable(__CLASS__ . __METHOD__, [$addon->errors()->all()]);
         }
 
