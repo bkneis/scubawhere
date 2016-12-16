@@ -86,7 +86,6 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	});
 
 	Route::controllers([
-		'addon'             => 'AddonController',
 		'agent'             => 'AgentController',
 		'agency'            => 'AgencyController',
 		'boat'              => 'BoatController',
@@ -126,6 +125,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 
 	Route::resource('manifest', 'ManifestController',
 		array('only' => array('index'))
+	);
+	
+	Route::resource('addon', 'AddonController',
+		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
 	);
 
 	Route::get('user/companies', 'UserController@getCompanies');

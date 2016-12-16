@@ -1,156 +1,122 @@
 <?php
 
+use Illuminate\Http\Request;
 use Scubawhere\Services\AddonService;
 use Scubawhere\Exceptions\Http\HttpNotFound;
-use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 
 /**
  * Class AddonController
  *
  * @todo Move all validation to the service layer
+ * @todo Compulsory is always 0 until we can safely remove it
  *
  * @api /api/addon
  * @author Bryan Kneis
  * @version 1.0
  */
-class AddonController extends Controller {
+class AddonController extends ApiController {
 
     /** @var \Scubawhere\Services\AddonService */
-    protected $addon_service;
+    protected $addonService;
 
-    public function __construct(AddonService $addon_service) {
-        $this->addon_service = $addon_service;
+    public function __construct(AddonService $addon_service, Request $request) 
+    {
+        $this->addonService = $addon_service;
+        parent::__construct($request);
     }
 
     /**
      * Get a single addon by ID
      *
-     * @api /api/addon
-     *
-     * @throws \Scubawhere\Exceptions\Http\HttpNotFound
-     *
+     * @api GET /api/addon/{id}
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws HttpNotFound
      */
-    public function getIndex() 
+    public function show($id) 
     {
-        $data = Input::get('id');
-
         $rules = array('id' => 'required');
-        $validator = Validator::make(Input::all(), $rules);
-
-        if($validator->fails()) {
-            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
-        return $this->addon_service->get($data);
+        $this->validateInput($id, $rules);
+        return $this->addonService->get($id);
     }
 
     /**
      * Get all addons belonging to a company
      *
-     * @api /api/addon/all
-     *
+     * @api GET /api/addon
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function index()
     {
-        return $this->addon_service->getAll();
-    }
-
-    /**
-     * Get all addons belonging to a company including soft deleted models
-     *
-     * @api /api/addon/all-with-trashed
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllWithTrashed()
-    {
-        return $this->addon_service->getAllWithTrashed();
+        $with_deleted = (bool) $this->request->get('with_deleted');
+        if ($with_deleted) {
+            return $this->addonService->getAllWithTrashed();
+        } else {
+            return $this->addonService->getAll();
+        }
     }
 
     /**
      * Create a new addon
      *
-     * @api /api/addon/add
-     *
+     * @api POST /api/addon
      * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postAdd()
+    public function store()
     {
-        $data        = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
-        $base_prices = Input::get('base_prices', []);
-        $prices      = Input::get('prices', []);
-        $data['compulsory'] = 0; // @todo Compulsory is always 0 until we can safely remove it
-
+        $data = $this->request->only('name', 'description', 'parent_id', 'prices');
+        $data['compulsory'] = 0; 
         $rules = array(
             'name'        => 'required',
-            'base_prices' => 'required'
+            'prices'      => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
-
-        if($validator->fails()) {
-            throw new HttpNotAcceptable(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
-        $addon = $this->addon_service->create($data, $base_prices, $prices);
-
-        return Response::json(array('status' => 'OK. Addon created', 'model' => $addon), 201);
+        
+        $this->validateInput($data, $rules);
+        $addon = $this->addonService->create($data);
+        
+        return $this->responseCreated(array('status' => 'Ok. Addon created', 'model' => $addon->load('prices')));
     }
 
     /**
      * Edit an existing addon
      *
-     * @api /api/addon/edit
-     *
-     * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
-     *
+     * @api PUT /api/addon
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
      */
-    public function postEdit()
+    public function update($id)
     {
-        $id          = Input::get('id');
-        $data        = Input::only('name', 'description', 'capacity', 'parent_id'); // Please NEVER use parent_id in the front-end!
-        $base_prices = Input::get('base_prices', []);
-        $prices      = Input::get('prices', []);
-
-        $data['compulsory'] = 0; // @todo Compulsory is always 0 until we can safely remove it
+        $data = $this->request->only('name', 'description', 'capacity', 'parent_id', 'prices');
+        $data['compulsory'] = 0; 
 
         $rules = array(
-            'name' => 'required',
+            'name'   => 'required',
+            'prices' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        
+        $this->validateInput($data, $rules);
+        $addon = $this->addonService->update($id, $data);
 
-        if($validator->fails()) {
-            throw new HttpNotAcceptable(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
-        $addon = $this->addon_service->update($id, $data, $base_prices, $prices);
-
-        return Response::json(array('status' => 'OK. Addon updated', 'model' => $addon), 200);
+        return $this->responseOK(array('status' => 'OK. Addon updated', 'model' => $addon->load('prices')));
     }
 
     /**
      * Delete an addon and remove it from any quotes or packages
      *
-     * @api /api/addon/delete
-     *
+     * @api DELETE /api/addon
      * @throws \Scubawhere\Exceptions\Http\HttpNotFound
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postDelete()
+    public function destroy($id)
     {
-        $id = Input::get('id');
-
         if(!$id) {
             throw new HttpNotFound(__CLASS__.__METHOD__, ['The Addon was not found']);
         }
-        $this->addon_service->delete($id);
-
-        return Response::json(array('status' => 'OK. Addon deleted'), 200);
+        $this->addonService->delete($id);
+        
+        return $this->responseOK(array('status' => 'OK. Addon deleted'));
     }
 
 }

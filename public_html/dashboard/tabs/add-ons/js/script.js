@@ -114,7 +114,7 @@ $(function(){
 		// Show loading indicator
 		$('#update-addon').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Addon.updateAddon( $('#update-addon-form').serialize(), function success(data) {
+		Addon.updateAddon($('#update-addon-form input[name="id"]').val(), $('#update-addon-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
