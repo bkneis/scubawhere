@@ -98,6 +98,7 @@ trait Bookable
          */
         $existing_prices = $this->basePrices->getDictionary();
         $existing_prices += $this->prices->getDictionary();
+        //$existing_prices = $this->prices->getDictionary();
 
         // Calculate deleted prices
         $deleted_prices = array_diff_key($existing_prices, $prices);
