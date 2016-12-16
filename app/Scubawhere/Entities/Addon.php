@@ -6,9 +6,12 @@ use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class Addon extends Ardent {
 
+	use Owneable;
+	use Bookable;
 	use SoftDeletingTrait;
 	
 	protected $dates = ['deleted_at'];
@@ -79,9 +82,24 @@ class Addon extends Ardent {
 		return Context::get()->currency;
 	}
 
-	public function scopeOnlyOwners($query)
+	public static function create(array $data)
 	{
-		return $query->where('company_id', '=', Context::get()->id);
+		$addon = new Addon($data);
+
+		if (!$addon->validate()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $addon->errors()->all());
+		}
+
+		Context::get()->addons()->save($addon);
+		return $addon;
+	}
+
+	public function update(array $data = [])
+	{
+		if (! parent::update($data)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $this->errors()->all());
+		}
+		return $this;
 	}
 
 	/*public function bookings()
@@ -110,9 +128,5 @@ class Addon extends Ardent {
 	{
 		return $this->morphToMany('\Scubawhere\Entities\Package', 'packageable')->withPivot('quantity')->withTimestamps();
 	}
-
-	public function basePrices()
-	{
-		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until')->orderBy('from');
-	}
+	
 }
