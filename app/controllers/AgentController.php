@@ -20,10 +20,11 @@ class AgentController extends Controller {
     }
 
     /**
-     * /api/agent
      * Get a single agent by ID
-     * @throws \Scubawhere\Exceptions\NotFoundException
-     * @return json Agent model
+     * 
+     * @api /api/agent
+     * @return json
+     * @throws InvalidInputException
      */
     public function getIndex() 
     {
