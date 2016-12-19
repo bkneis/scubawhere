@@ -7,7 +7,6 @@ use Scubawhere\Exceptions\Http\HttpNotFound;
 /**
  * Class AddonController
  *
- * @todo Move all validation to the service layer
  * @todo Compulsory is always 0 until we can safely remove it
  *
  * @api /api/addon
