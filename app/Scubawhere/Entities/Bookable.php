@@ -150,12 +150,12 @@ trait Bookable
 
     public function prices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->orderBy('from');
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until')->orderBy('from');
     }
     
     public function basePrices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->orderBy('from');
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until')->orderBy('from');
     }
 
     public function customers()
