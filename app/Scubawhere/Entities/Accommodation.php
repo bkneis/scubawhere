@@ -2,11 +2,11 @@
 
 namespace Scubawhere\Entities;
 
-use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class Accommodation extends Ardent {
 
@@ -138,7 +138,7 @@ class Accommodation extends Ardent {
 		return $this->belongsToMany('\Scubawhere\Entities\Customer', 'accommodation_booking')->withPivot('booking_id', 'start', 'end')->withTimestamps();
 	}
 
-	public function basePrices()
+	/*public function basePrices()
 	{
 		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until');
 	}
@@ -146,7 +146,7 @@ class Accommodation extends Ardent {
 	public function prices()
 	{
 		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until');
-	}
+	}*/
 
 	public function packages()
 	{
