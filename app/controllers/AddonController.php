@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Scubawhere\Services\AddonService;
 use Scubawhere\Exceptions\Http\HttpNotFound;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 /**
  * Class AddonController
@@ -11,11 +12,11 @@ use Scubawhere\Exceptions\Http\HttpNotFound;
  *
  * @api /api/addon
  * @author Bryan Kneis
- * @version 1.0
+ * @version 1.1
  */
 class AddonController extends ApiController {
 
-    /** @var \Scubawhere\Services\AddonService */
+    /** @var AddonService */
     protected $addonService;
 
     public function __construct(AddonService $addon_service, Request $request) 
@@ -27,15 +28,16 @@ class AddonController extends ApiController {
     /**
      * Get a single addon by ID
      *
-     * @api GET /api/addon/{id}
      * @param $id
+     * @api GET /api/addon/{id}
      * @return \Illuminate\Http\JsonResponse
-     * @throws HttpNotFound
+     * @throws HttpUnprocessableEntity
      */
     public function show($id) 
     {
-        $rules = array('id' => 'required');
-        $this->validateInput($id, $rules);
+        if (is_null($id)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The id field is required']);
+        }
         return $this->addonService->get($id);
     }
 
@@ -64,48 +66,51 @@ class AddonController extends ApiController {
      */
     public function store()
     {
-        $data = $this->request->only('name', 'description', 'parent_id', 'prices');
-        $data['compulsory'] = 0; 
         $rules = array(
             'name'        => 'required',
+            'description' => '',
+            'parent_id'   => '',
             'prices'      => 'required'
         );
         
-        $this->validateInput($data, $rules);
+        $data = $this->validateInput($rules);
+        
+        $data['compulsory'] = 0; 
         $addon = $this->addonService->create($data);
         
-        return $this->responseCreated(array('status' => 'Ok. Addon created', 'model' => $addon->load('prices')));
+        return $this->responseCreated('Ok. Addon created', $addon->load('prices'));
     }
 
     /**
      * Edit an existing addon
      *
-     * @api PUT /api/addon
      * @param $id
+     * @api PUT /api/addon/{id}
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
+     * @throws HttpUnprocessableEntity
      */
     public function update($id)
     {
-        $data = $this->request->only('name', 'description', 'capacity', 'parent_id', 'prices');
-        $data['compulsory'] = 0; 
-
         $rules = array(
-            'name'   => 'required',
-            'prices' => 'required'
+            'name'        => 'required',
+            'description' => '',
+            'capacity'    => '',
+            'parent_id'   => '',
+            'prices'      => 'required'
         );
         
-        $this->validateInput($data, $rules);
+        $data = $this->validateInput($rules);
+        $data['compulsory'] = 0; 
         $addon = $this->addonService->update($id, $data);
 
-        return $this->responseOK(array('status' => 'OK. Addon updated', 'model' => $addon->load('prices')));
+        return $this->responseOK('OK. Addon updated', array('model' => $addon->load('prices')));
     }
 
     /**
      * Delete an addon and remove it from any quotes or packages
      *
-     * @api DELETE /api/addon
      * @param $id
+     * @api DELETE /api/addon/{id}
      * @return \Illuminate\Http\JsonResponse
      * @throws HttpNotFound
      * @throws \Scubawhere\Exceptions\ConflictException
@@ -117,7 +122,7 @@ class AddonController extends ApiController {
         }
         $this->addonService->delete($id);
         
-        return $this->responseOK(array('status' => 'OK. Addon deleted'));
+        return $this->responseOK('OK. Addon deleted');
     }
 
 }
