@@ -271,7 +271,7 @@ function renderEditForm(id) {
 		addon.update = true;
 		addon.compulsory = parseInt( addon.compulsory );
 
-		_.each(addon.prices, function(value) {
+		_.each(addon.base_prices, function(value) {
 			value.isBase = true;
 
 			if(value.from == '0000-00-00')

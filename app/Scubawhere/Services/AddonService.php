@@ -50,7 +50,7 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->addonRepo->all(['prices']);
+		return $this->addonRepo->all(['basePrices']);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAllWithTrashed() {
-		return $this->addonRepo->allWithTrashed(['prices']);
+		return $this->addonRepo->allWithTrashed(['basePrices']);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class AddonService {
 	 */
 	public function create(array $data)
 	{
-		return Addon::create($data)->syncPrices($data['prices']);
+		return Addon::create($data)->syncPrices($data['basePrices']);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class AddonService {
 		return $this->addonRepo
 			->get($id)
 			->update($data)
-			->syncPrices($data['prices']);
+			->syncPrices($data['basePrices']);
 	}
 
 	/**
