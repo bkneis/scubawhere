@@ -2,14 +2,15 @@
 
 namespace Scubawhere\Entities;
 
-use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class Course extends Ardent {
 	
+	use Owneable;
 	use Bookable;
 	use SoftDeletingTrait;
 	
