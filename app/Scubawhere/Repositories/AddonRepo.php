@@ -111,7 +111,7 @@ class AddonRepo extends BaseRepo implements AddonRepoInterface {
      *
      * @return \Scubawhere\Entities\Addon
      */
-    public function getUsedInFutureBookings($id, $fail = true)
+    public function getWithFutureBookings($id, $fail = true)
     {
         $addon = Addon::with([
                 'bookingdetails.session' => function($q) {

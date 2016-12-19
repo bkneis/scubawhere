@@ -115,7 +115,7 @@ class AddonService {
 		 */
 		
 		// STEP 1.
-		$addon = $this->addonRepo->getUsedInFutureBookings($id);
+		$addon = $this->addonRepo->getWithFutureBookings($id);
 
 		$booking_ids = $addon->bookingdetails->map(function($obj) {
 			if($obj->session != null || $obj->training_session != null) {
