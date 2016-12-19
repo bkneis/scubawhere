@@ -3,7 +3,7 @@
 namespace Scubawhere\Repositories;
 
 interface CourseRepoInterface {
-
-	public function create($data);
-
+    
+    function getUsedInFutureBookings($id, $fail = true);
+    
 }
