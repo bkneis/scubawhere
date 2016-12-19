@@ -1,19 +1,19 @@
 var Course = {
 
-	get : function(params, handleData) {
-		$.get("/api/course", params, function(data) {
+	get : function(id, handleData) {
+		$.get("/api/course/" + id, function(data) {
 			handleData(data);
 		});
 	},
 
 	getAll : function(handleData) {
-		$.get("/api/course/all", function(data){
+		$.get("/api/course", function(data){
 			handleData(data);
 		});
 	},
-
+	
 	getAllWithTrashed : function(handleData) {
-		$.get("/api/course/all-with-trashed", function(data){
+		$.get("/api/course", { with_deleted : true }, function(data){
 			handleData(data);
 		});
 	},
@@ -21,27 +21,27 @@ var Course = {
 	create : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/course/add",
+			url: "/api/course",
 			data: params,
 			success: handleData,
 			error: errorFn
 		});
 	},
 
-	update : function(params, handleData, errorFn) {
+	update : function(id, params, handleData, errorFn) {
 		$.ajax({
-			type: "POST",
-			url: "/api/course/edit",
+			type: "PUT",
+			url: "/api/course/" + id,
 			data: params,
 			success: handleData,
 			error: errorFn
 		});
 	},
 
-	delete : function(params, handleData, errorFn) {
+	delete : function(id, params, handleData, errorFn) {
 		$.ajax({
-			type: "POST",
-			url: "/api/course/delete",
+			type: "DELETE",
+			url: "/api/course/" + id,
 			data: params,
 			success: handleData,
 			error: errorFn
