@@ -106,8 +106,10 @@ class AddonController extends ApiController {
      * Delete an addon and remove it from any quotes or packages
      *
      * @api DELETE /api/addon
-     * @throws \Scubawhere\Exceptions\Http\HttpNotFound
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws HttpNotFound
+     * @throws \Scubawhere\Exceptions\ConflictException
      */
     public function destroy($id)
     {
