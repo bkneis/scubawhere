@@ -98,7 +98,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'class-session'     => 'TrainingSessionController',
 		'company'           => 'CompanyController',
 		'country'           => 'CountryController',
-		'course'            => 'CourseController',
+		//'course'            => 'CourseController',
 		'currency'          => 'CurrencyController',
 		'customer'          => 'CustomerController',
 		'customer-group'    => 'CrmGroupController',
@@ -128,6 +128,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	);
 	
 	Route::resource('addon', 'AddonController',
+		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
+	);
+	
+	Route::resource('course', 'CourseController',
 		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
 	);
 
