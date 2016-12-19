@@ -271,21 +271,21 @@ function renderEditForm(id) {
 		addon.update = true;
 		addon.compulsory = parseInt( addon.compulsory );
 
-		_.each(addon.base_prices, function(value) {
+		_.each(addon.prices, function(value) {
 			value.isBase = true;
 
 			if(value.from == '0000-00-00')
 				value.isAlways = true;
 		});
 
-		if(_.size(addon.base_prices) === 0)
-			addon.base_prices = [window.sw.default_first_base_price];
+		if(_.size(addon.prices) === 0)
+			addon.prices = [window.sw.default_first_base_price];
 	}
 	else {
 		addon = {
 			task: 'add',
 			update: false,
-			base_prices: [ window.sw.default_first_base_price ],
+			prices: [ window.sw.default_first_base_price ],
 		};
 	}
 

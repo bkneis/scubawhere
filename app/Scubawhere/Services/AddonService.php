@@ -41,7 +41,7 @@ class AddonService {
      * @return \Scubawhere\Entities\Addon
      */
 	public function get($id) {
-		return $this->addonRepo->get($id, ['basePrices']);
+		return $this->addonRepo->get($id, ['prices']);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->addonRepo->all(['basePrices']);
+		return $this->addonRepo->all(['prices']);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class AddonService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAllWithTrashed() {
-		return $this->addonRepo->allWithTrashed(['basePrices']);
+		return $this->addonRepo->allWithTrashed(['prices']);
 	}
 
 	/**

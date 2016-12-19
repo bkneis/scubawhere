@@ -12,7 +12,7 @@
 					<script type="text/x-handlebars-template" id="addon-list-template">
 						<ul id="addon-list" class="entity-list">
 							{{#each addons}}
-								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange base_prices}}</li>
+								<li data-id="{{id}}"><strong>{{{name}}}</strong> | {{pricerange prices}}</li>
 							{{else}}
 								<p id="no-addons">No addons available.</p>
 							{{/each}}
@@ -46,7 +46,7 @@
 
 							<div class="form-row prices">
 								<p><strong>Addon-on Price : <span class="text-danger">*</span></strong></p>
-								{{#each base_prices}}
+								{{#each prices}}
 									{{> price_input}}
 								{{/each}}
 								<button class="btn btn-default btn-sm add-base-price"> &plus; Click here to add a price change for the future</button>
