@@ -1,128 +1,130 @@
 <?php
 
+use Illuminate\Http\Request;
 use Scubawhere\Services\CourseService;
 use Scubawhere\Exceptions\Http\HttpNotAcceptable;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
-class CourseController extends Controller {
+class CourseController extends ApiController{
 
-    /** @var \Scubawhere\Services\CourseService */
-    protected $course_service;
+    /** @var CourseService */
+    protected $courseService;
 
-    public function __construct(CourseService $course_service) {
-        $this->course_service = $course_service;
+    public function __construct(CourseService $courseService, Request $request) {
+        $this->courseService = $courseService;
+        parent::__construct($request);
     }
 
     /**
      * Get a single course by ID
      *
-     * @var /api/course
-     *
+     * @api GET /api/course/{id}
      * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
-     *
      * @return \Scubawhere\Entities\Course
      */
-    public function getIndex() 
+    public function show($id) 
     {
-        $id = Input::get('id');
-        if(!$id) throw new HttpNotAcceptable(__CLASS__.__METHOD__, ['Please provide an ID.']);
-        return $this->course_service->get($id);
+        if (!$id) {
+            throw new HttpNotAcceptable(__CLASS__.__METHOD__, ['Please provide an ID.']);
+        }
+        return $this->courseService->get($id);
     }
 
     /**
      * Get all courses belonging to a company
      *
-     * @api /api/course/all
-     *
+     * @api GET /api/course
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function index()
     {
-        return $this->course_service->getAll();
-    }
-
-    /**
-     * Get all courses belonging to a company including soft deleted models
-     *
-     * @api /api/course/all-with-trashed
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllWithTrashed()
-    {
-        return $this->course_service->getAllWithTrashed();
+        $with_deleted = (bool) $this->request->get('with_deleted');
+        
+        if ($with_deleted) {
+            return $this->courseService->getAllWithTrashed();
+        }
+        
+        return $this->courseService->getAll();
     }
 
     /**
      * Create a new course
      *
-     * @api /api/course/add
-     *
+     * @api POST /api/course
      * @throws \Scubawhere\Exceptions\Http\HttpNotAcceptable
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postAdd()
+    public function store()
     {
-        $data = Input::only('name', 'description', 'capacity', 'certificate_id');
-        $tickets = Input::get('tickets', []);
-        $trainings = Input::get('trainings', []);
-        $base_prices = Input::get('base_prices');
-        $prices = Input::get('prices');
-
-        if (empty($trainings) && empty($tickets)) {
-            throw new HttpNotAcceptable(__CLASS__.__METHOD__, ['Either a class or a ticket is required.']);
+        $rules = array(
+            'name'           => 'required',
+            'description'    => '',
+            'capacity'       => 'required',
+            'certificate_id' => '',
+            'prices'         => 'required',
+            'tickets'        => 'required_without_all:trainings',
+            'trainings'      => 'required_without_all:tickets'
+        );
+        
+        $data = $this->validateInput($rules);
+        
+        if($data['certificate_id'] === '') {
+            unset($data['certificate_id']);
+        } else {
+            $data['certificate_id'] = (int) $data['certificate_id'];
         }
-
-        if (empty($data['certificate_id'])) {
-            $data['certificate_id'] = null;
-        }
-       
-        $course = $this->course_service->create($data, $tickets, $trainings, $base_prices, $prices);
-        return Response::json(array('status' => 'OK. Course created', 'model' => $course), 201); // 201 Created
+        
+        $course = $this->courseService->create($data);
+        
+        return $this->responseCreated('Ok. Course created', $course);
     }
 
     /**
      * Edit an existing course
      *
-     * @api POST /api/course/edit
-     *
+     * @param $id
+     * @api PUT /api/course/{id}
      * @return \Illuminate\Http\JsonResponse
+     * @throws HttpUnprocessableEntity
      */
-    public function postEdit()
+    public function update($id)
     {
-        $id = Input::get('id');
-        $data = Input::only('name', 'description', 'capacity', 'certificate_id');
-        $base_prices = Input::get('base_prices', []);
-        $prices = Input::get('prices', []);
+        $rules = array(
+            'name'           => 'required',
+            'description'    => '',
+            'capacity'       => 'required',
+            'certificate_id' => '',
+            'prices'         => 'required'
+        );
+        
+        $data = $this->validateInput($rules);
 
-        // @todo add validation decorators to services instead of in here
         if($data['certificate_id'] === '') {
             unset($data['certificate_id']);
+        } else {
+            $data['certificate_id'] = (int) $data['certificate_id'];
         }
 
-        $course = $this->course_service->update($id, $data, $base_prices, $prices);
-        return Response::json(array('status' => 'OK. Course updated', 'model' => $course), 200); // 200 Success
+        $course = $this->courseService->update($id, $data);
+        return $this->responseOK('OK. Course updated', array('model' => $course));
     }
 
     /**
      * Delete an course and remove it from any quotes or packages
      *
+     * @param $id
      * @api /api/course/delete
-     *
-     * @throws \Scubawhere\Exceptions\Http\HttpUnprocessableEntity
-     * @throws \Exception
-     *
      * @return \Illuminate\Http\JsonResponse
+     * @throws HttpUnprocessableEntity
+     * @throws \Scubawhere\Exceptions\Http\HttpConflict
      */
-    public function postDelete()
+    public function destroy($id)
     {
-        $id = Input::get('id');
         if(!$id) {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an course ID.']);
         }
-        $this->course_service->delete($id);
-        return Response::json(array('status' => 'OK. Course deleted'), 200); // 200 Success
+        $this->courseService->delete($id);
+        return $this->responseOK('OK. Course deleted.');
     }
 
 }

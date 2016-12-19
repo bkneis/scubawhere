@@ -150,8 +150,10 @@ $(function(){
 		$('#update-course').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
 		$('#training_id').val(parseInt($("#class-select").val()));
+		
+		var id = $('#course-id').val();
 
-		Course.update( $('#update-course-form').serialize(), function success(data) {
+		Course.update(id, $('#update-course-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
@@ -308,9 +310,10 @@ $(function(){
 		if(check){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+			
+			var id = $('#course-id').val();
 
-			Course.delete({
-				'id'    : $('#update-course-form input[name=id]').val(),
+			Course.delete(id, {
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 

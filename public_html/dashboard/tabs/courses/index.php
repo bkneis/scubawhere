@@ -110,7 +110,7 @@
 							</div>
 
 							{{#if update}}
-								<input type="hidden" name="id" value="{{id}}">
+								<input type="hidden" id="course-id" name="id" value="{{id}}">
 							{{/if}}
 							<input type="hidden" name="_token">
 
@@ -193,39 +193,21 @@
 
 	<script type="text/x-handlebars-template" id="price-input-template">
 		<p{{#unless decimal_price}} class="new_price"{{/unless}}>
-			<span class="currency">{{currency}}</span>
-			{{#if decimal_price}}
-				<span class="amount">{{decimal_price}}</span>
-			{{else}}
-				<input type="number" id="acom-price" name="{{#if isBase}}base_{{/if}}prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" style="width: 100px;">
-			{{/if}}
+            <span class="currency">{{currency}}</span>
+            <input type="number" id="acom-price" name="prices[{{id}}][new_decimal_price]" placeholder="00.00" min="0" step="0.01" value="{{decimal_price}}" style="width: 100px;">
 
-			{{#unless isAlways}}
-				{{#if decimal_price}}
-					from <big>{{from}}</big>
-				{{else}}
-					from <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
-				{{/if}}
-			{{else}}
-				from <strong>the beginning of time</strong>
-				{{#unless decimal_price}}
-					<input type="hidden" name="{{#if isBase}}base_{{/if}}prices[{{id}}][from]" value="{{from}}">
-				{{/unless}}
-			{{/unless}}
+            {{#unless isAlways}}
+                from <input type="text" name="prices[{{id}}][from]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{from}}" style="width: 125px;">
+            {{else}}
+                from <strong>the beginning of time</strong>
+                <input type="hidden" name="prices[{{id}}][from]" value="0000-00-00">
+            {{/unless}}
 
-			{{#unless isBase}}
-				{{#if decimal_price}}
-					until <big>{{until}}</big>
-				{{else}}
-					until <input type="text" name="{{#if isBase}}base_{{/if}}prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
-				{{/if}}
-			{{/unless}}
+            {{#unless isBase}}
+                until <input type="text" name="prices[{{id}}][until]" class="datepicker" data-date-format="YYYY-MM-DD" value="{{until}}" style="width: 125px;">
+            {{/unless}}
 
-			{{#unless isAlways}}
-				{{#unless decimal_price}}
-					<button class="btn btn-danger remove-price">&#215;</button>
-				{{/unless}}
-			{{/unless}}
+            <button class="btn btn-danger remove-price">&#215;</button>
 		</p>
 	</script>
 
