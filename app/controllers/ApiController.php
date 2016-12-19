@@ -18,23 +18,47 @@ abstract class ApiController extends Controller
         $this->request = $request;
     }
     
-    public function validateInput(array $data, array $rules, array $messages = [])
+    /*public function validateInput(array $data, array $rules, array $messages = [])
     {
         $validator = Validator::make($data, $rules, $messages);
 
         if($validator->fails()) {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
+    }*/
+
+    public function validateInput(array $data, array $messages = [])
+    {
+        $input = Input::only(array_keys($data));
+        
+        $validator = Validator::make($input, $data, $messages);
+        
+        if ($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
+        
+        return $input;
     }
 
-    public function responseOK(array $data)
+    /**
+     * @param $status
+     * @param array $data
+     * @return JsonResponse
+     */
+    public function responseOK($status, array $data = [])
     {
-        return new JsonResponse($data, 200);
+        $res = array('status' => $status) + $data;
+        return new JsonResponse($res, 200);
     }
 
-    public function responseCreated(array $data)
+    /**
+     * @param $status
+     * @param $model
+     * @return JsonResponse
+     */
+    public function responseCreated($status, $model)
     {
-        return new JsonResponse($data, 201);
+        return new JsonResponse(array('status' => $status, 'model' => $model), 201);
     }
 
 }
