@@ -2,13 +2,17 @@
 
 namespace Scubawhere\Entities;
 
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class Course extends Ardent {
+	
+	use Bookable;
 	use SoftDeletingTrait;
+	
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = array('name', 'description', 'capacity', 'certificate_id');
@@ -57,16 +61,38 @@ class Course extends Ardent {
 
 		$this->decimal_price = $price->decimal_price;
 	}
+	
+	public static function create(array $data = [])
+	{
+		$course = new Course($data);
+		if (!$course->validate()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $course->errors()->all());
+		}
+		return Context::get()->courses()->save($course);
+	}
+
+	/**
+	 * @param array $data
+	 * @return $this
+	 * @throws HttpUnprocessableEntity
+     */
+	public function update(array $data = [])
+	{
+		if (! parent::update($data)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $this->errors()->all());
+		}
+		return $this;
+	}
 
 	public function scopeOnlyOwners($query)
 	{
 		return $query->where('company_id', '=', Context::get()->id);
 	}
 
-	public function bookingdetails()
+	/*public function bookingdetails()
 	{
 		return $this->hasMany('\Scubawhere\Entities\Bookingdetail');
-	}
+	}*/
 
 	public function company()
 	{
@@ -80,7 +106,7 @@ class Course extends Ardent {
                     ->withTimestamps();
 	}
 
-	public function basePrices()
+	/*public function basePrices()
 	{
 		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until');
 	}
@@ -88,7 +114,7 @@ class Course extends Ardent {
 	public function prices()
 	{
 		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until');
-	}
+	}*/
 
 	public function tickets()
 	{
@@ -101,4 +127,25 @@ class Course extends Ardent {
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
+
+	/**
+	 * Syncronise the tickets and trainings id's to a course.
+	 *
+	 * This function utilises laravel's sync method that ensures
+	 * the ids of the given array match the ones in the course_*
+	 * pivot tables.
+	 *
+	 * @param $data
+	 * @return $this
+     */
+	public function syncItems($data)
+	{
+		if (! is_null($data['tickets'])) {
+			$this->tickets()->sync($data['tickets']);
+		}
+		if (! is_null($data['trainings'])) {
+			$this->trainings()->sync($data['trainings']);
+		}
+		return $this;
+	}
 }
