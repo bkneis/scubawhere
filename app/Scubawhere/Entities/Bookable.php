@@ -6,26 +6,19 @@ use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 trait Bookable
 {
+    /**
+     * Helper function to determine if the entity is viable to include agent commission
+     * 
+     * @return bool
+     */
     public function isCommisioned()
     {
         return (bool) $this->commisionable;
     }
 
     /**
-     * @deprecated 
-     * @param $query
-     * @param $date
-     * @return mixed
-     */
-    public function getBookingPrice($query, $date)
-    {
-        return $query->where('owner_id', '=', $this->id)
-            ->where('owner_type', '=', $this->getMorphClass())
-            ->where('from', '>', $date)
-            ->where('to', '<', $date);
-    }
-
-    /**
+     * Calculate the price of the entity by determing which seasonal / base price applies
+     * 
      * @param $start
      * @param bool $limitBefore
      */
@@ -51,6 +44,13 @@ trait Bookable
         $this->decimal_price = $price->decimal_price;
     }
 
+    /**
+     * Get all bookings that are saved as quotes.
+     * 
+     * Quotes are just bookings that have the booking status 'saved'.
+     * 
+     * @return mixed
+     */
     public function getQuotes()
     {
         if (isset($this->bookings)) {
@@ -62,6 +62,13 @@ trait Bookable
             });
     }
 
+    /**
+     * Get all the bookings associated to the entity that are considered 'active'.
+     * 
+     * Active bookings are bookings that are either initialised, temporary (edited) or confirmed.
+     * 
+     * @return mixed
+     */
     public function getActiveBookings()
     {
         if (isset($this->bookings)) {
@@ -81,20 +88,12 @@ trait Bookable
      * the model that are not present in the prices array. This is mainly used when
      * editing bookable items such as packages, tickets etc.
      *
-     * @note Ok I like this function bar one thing, there is no current way to check
-     * that the model given to the function has access to a 'prices' relationship :/
-     * What if instead we used this function in the 'bookable' trait so that we can access
-     * the method via the model, i.e. $package->syncPrices($prices). I really like how this
-     * reads but should the model be responsible for updating its prices. I feel that this
-     * could be seen as bad design but in my eyes, the model can update its own variables such
-     * as the name etc. so why not its relationships.
-     *
      * After more investigation i found this, http://stackoverflow.com/questions/14157586/php-type-hinting-traits/14157842#14157842,
      * it basically discussing using an interface for all objects that use the trait, then that way we can type hint
      * the interface. Now there still exists the challenge of enforcing that the object inherits the interface when
      * using the trait, but it atleast would give us some more protection?
      * 
-     * @note Should these be in the price service??
+     * @todo Move this to the price service
      *
      * @param array $prices
      * @return mixed
@@ -114,23 +113,9 @@ trait Bookable
         if (!isset($this->basePrices)) {
             $this->load('basePrices');
         }
-        /*
-         * Fade in. It was a cold morning, there sat 2 young and nieve developers
-         * who didnt know there head from their arse. Programming away without a care
-         * in the world. 3 years later there is no a system with somewhat questioanble
-         * design decisions. Ok, joking aside, this really bugs me. Basically, when making the
-         * system originally there were 'base prices' and 'prices' where the later acted as
-         * seasonal price changes. It wasnt until we implmented them through the system we
-         * realised they were essentially the same :/ And would have been way better to just use
-         * a bool in the price such as 'is_base'.
-         * 
-         * So long story short, whenever dealing with prices, you must use basePrices and
-         * prices then combine them, due to the morph many relationship using the name
-         * of the calling function.
-         */
+        
         $existing_prices = $this->basePrices->getDictionary();
         $existing_prices += $this->prices->getDictionary();
-        //$existing_prices = $this->prices->getDictionary();
 
         // Calculate deleted prices
         $deleted_prices = array_diff_key($existing_prices, $prices);
@@ -170,26 +155,46 @@ trait Bookable
         return $this;
     }
 
+    /**
+     * @note Should I remove this as some bookable entities might not keep true to this relation?
+     * @return mixed
+     */
     public function booking()
     {
         return $this->hasMany('\Scubawhere\Entities\Booking');
     }
 
+    /**
+     * @return mixed
+     */
     public function bookingdetails()
     {
         return $this->hasMany('\Scubawhere\Entities\Bookingdetail');
     }
 
+    /**
+     * @return mixed
+     */
     public function prices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until')->orderBy('from');
-    }
-    
-    public function basePrices()
-    {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until')->orderBy('from');
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')
+            ->whereNotNull('until')
+            ->orderBy('from');
     }
 
+    /**
+     * @return mixed
+     */
+    public function basePrices()
+    {
+        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')
+            ->whereNull('until')
+            ->orderBy('from');
+    }
+
+    /**
+     * @return mixed
+     */
     public function customers()
     {
         return $this->hasManyThrough('\Scubawhere\Entities\Customer', 'Bookingdetail');
