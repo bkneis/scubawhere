@@ -8,4 +8,9 @@ trait Owneable
     {
         static::addGlobalScope(new OwnableScope);
     }
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
