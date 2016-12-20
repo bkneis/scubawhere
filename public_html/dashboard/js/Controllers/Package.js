@@ -1,25 +1,25 @@
 var Package = {
 
-	getPackage : function(params, handleData) {
-		$.get("/api/package", params, function(data) {
+	getPackage : function(id, handleData) {
+		$.get("/api/package/" + id, function(data) {
 			handleData(data);
 		});
 	},
 
 	getAllPackages : function(handleData) {
-		$.get("/api/package/all", function(data){
+		$.get("/api/package", function(data){
 			handleData(data);
 		});
 	},
 
 	getAllWithTrashed : function(handleData) {
-		$.get("/api/package/all-with-trashed", function(data){
+		$.get("/api/package", { with_deleted : true }, function(data){
 			handleData(data);
 		});
 	},
 
 	getOnlyAvailable : function(handleData) {
-		$.get("/api/package/only-available", function(data){
+		$.get("/api/package", { only_available : true }, function(data){
 			handleData(data);
 		});
 	},
@@ -27,30 +27,30 @@ var Package = {
 	createPackage : function(params, handleData, errorFn) {
 		$.ajax({
 			type: "POST",
-			url: "/api/package/add",
+			url: "/api/package",
 			data: params,
 			success: handleData,
 			error: errorFn
 		});
 	},
 
-	updatePackage : function(params, handleData, errorFn) {
+	updatePackage : function(id, params, handleData, errorFn) {
 		$.ajax({
-			type: "POST",
-			url: "/api/package/edit",
-			data: params,
-			success: handleData,
-			error: errorFn
+			type    : "PUT",
+			url     : "/api/package/" + id,
+			data    : params,
+			success : handleData,
+			error   : errorFn
 		});
 	},
 
-	deletePackage : function(params, handleData, errorFn){
+	deletePackage : function(id, params, handleData, errorFn){
 		$.ajax({
-			type: "POST",
-			url: "/api/package/delete",
-			data: params,
-			success: handleData,
-			error: errorFn
+			type    : "DELETE",
+			url     : "/api/package/" + id,
+			data    : params,
+			success : handleData,
+			error   : errorFn
 		});
 	}
 };

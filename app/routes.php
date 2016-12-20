@@ -104,7 +104,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'customer-group'    => 'CrmGroupController',
 		'location'          => 'LocationController',
         'log'               => 'LogController',
-		'package'           => 'PackageController',
+		//'package'           => 'PackageController',
 		'payment'           => 'PaymentController',
 		'refund'            => 'RefundController',
 		'report'            => 'ReportController',
@@ -132,6 +132,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	);
 	
 	Route::resource('course', 'CourseController',
+		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
+	);
+	
+	Route::resource('package', 'PackageController',
 		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
 	);
 
