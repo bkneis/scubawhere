@@ -144,8 +144,10 @@ $(function(){
 
 		// Show loading indicator
 		$('#update-package').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+		
+		var id = $('#update-package-form input[name=id]').val();
 
-		Package.updatePackage( $('#update-package-form').serialize(), function success(data) {
+		Package.updatePackage( id, $('#update-package-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
@@ -262,8 +264,9 @@ $(function(){
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-			Package.deletePackage({
-				'id'    : $('#update-package-form input[name=id]').val(),
+			var id = $('#update-package-form input[name=id]').val();
+			
+			Package.deletePackage(id, {
 				'_token': $('[name=_token]').val()
 			}, function success(data){
 
