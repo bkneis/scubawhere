@@ -81,8 +81,8 @@ class PackageController extends ApiController {
     /**
      * Edit an existing package
      *
-     * @api PUT /api/package
      * @param $id
+     * @api PUT /api/package
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      * @throws HttpUnprocessableEntity
@@ -115,9 +115,8 @@ class PackageController extends ApiController {
     /**
      * Delete an package and remove it from any quotes or packages
      *
-     * @api DELETE /api/package
-     *
      * @param $id
+     * @api DELETE /api/package
      * @return \Illuminate\Http\JsonResponse
      * @throws HttpUnprocessableEntity
      * @throws \Scubawhere\Exceptions\Http\HttpConflict
