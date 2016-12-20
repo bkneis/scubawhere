@@ -27,6 +27,13 @@ abstract class ApiController extends Controller
         }
     }*/
 
+    /**
+     * @deprecated 
+     * @param array $data
+     * @param array $messages
+     * @return mixed
+     * @throws HttpUnprocessableEntity
+     */
     public function validateInput(array $data, array $messages = [])
     {
         $input = Input::only(array_keys($data));
@@ -37,6 +44,19 @@ abstract class ApiController extends Controller
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
         }
         
+        return $input;
+    }
+    
+    public function validate(array $data, array $messages = [])
+    {
+        $input = Input::only(array_keys($data));
+
+        $validator = Validator::make($input, $data, $messages);
+
+        if ($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
+
         return $input;
     }
 
