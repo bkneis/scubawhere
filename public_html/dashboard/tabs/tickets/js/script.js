@@ -126,7 +126,7 @@ $(function () {
 		// Show loading indicator
 		$('#add-ticket').prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-		Ticket.createTicket( $('#add-ticket-form').serialize(), function success(data) {
+		Ticket.create( $('#add-ticket-form').serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
@@ -169,8 +169,10 @@ $(function () {
 		$('.errors').remove();
 
 		$('#update-ticket').prop('disabled', true).after('<div id="update-loader" class="loader"></div>');
+		
+		var id = $('#update-ticket-form input[name=id]').val();
 
-		Ticket.updateTicket($("#update-ticket-form").serialize(), function success(data) {
+		Ticket.update(id, $("#update-ticket-form").serialize(), function success(data) {
 
 			pageMssg(data.status, true);
 
@@ -271,9 +273,10 @@ $(function () {
         {
 			// Show loading indicator
 			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+			
+			var id = $('#update-ticket-form input[name=id]').val();
 
-			Ticket.deleteTicket({
-				'id'    : $('#update-ticket-form input[name=id]').val(),
+			Ticket.delete(id, {
 				'_token': $('[name=_token]').val()
 			}, function success(data) {
 
