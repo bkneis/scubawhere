@@ -6,12 +6,20 @@ use Scubawhere\Helper;
 use Scubawhere\Context;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class Ticket extends Ardent {
+	
+	use Owneable;
+	use Bookable;
 	use SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
+	use LimitedAvailability;
+	
+	protected $dates = array('deleted_at');
 
-	protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
+	//protected $guarded = array('id', 'company_id', 'created_at', 'updated_at', 'deleted_at');
+
+	protected $fillable = array('name', 'description', 'only_packaged', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
 	protected $hidden = array('parent_id');
 
@@ -30,11 +38,13 @@ class Ticket extends Ardent {
 
 	public function beforeSave()
 	{
-		if( isset($this->name) )
+		if ( isset($this->name) ) {
 			$this->name = Helper::sanitiseString($this->name);
+		}
 
-		if( isset($this->description) )
+		if ( isset($this->description) ) {
 			$this->description = Helper::sanitiseBasicTags($this->description);
+		}
     }
 
     public function getDeleteableAttribute()
@@ -42,54 +52,95 @@ class Ticket extends Ardent {
         return !($this->packages()->exists() || $this->courses()->exists());
     }
 
-	public function setAvailableFromAttribute($value)
+	/**
+	 * Associate any boats to the ticket if the ticket is limited to certain boats
+	 *
+	 * @param array $boats
+	 * @throws HttpUnprocessableEntity
+	 */
+	public function syncBoats($boats)
 	{
-		$value = trim($value);
-		$this->attributes['available_from'] = $value ?: null;
+		if(is_array($boats) && !empty($boats)) {
+			try {
+				$this->boats()->sync($boats);
+			} catch (\Exception $e) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Could not assign boats to the ticket, \'boats\' array is propably erroneous.']);
+			}
+		}
 	}
 
-	public function setAvailableUntilAttribute($value)
+	/**
+	 * Associate any boatrooms that the ticket is restricted to
+	 *
+	 * @param array $boatrooms
+	 * @throws HttpUnprocessableEntity
+	 */
+	public function syncBoatrooms($boatrooms)
 	{
-		$value = trim($value);
-		$this->attributes['available_until'] = $value ?: null;
+		if(is_array($boatrooms) && !empty($boatrooms)) {
+			try {
+				$this->boatrooms()->sync($boatrooms);
+			} catch (\Exception $e) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Could not assign locations to trip, \'tags\' array is propably erroneous.']);
+			}
+		}
 	}
 
-	public function setAvailableForFromAttribute($value)
+	/**
+	 * Associate all trips the ticket can be booked for
+	 *
+	 * @param array $trips
+	 * @throws HttpUnprocessableEntity
+	 */
+	public function syncTrips($trips)
 	{
-		$value = trim($value);
-		$this->attributes['available_for_from'] = $value ?: null;
+		if (is_array($trips) && !empty($trips)) {
+			try {
+				$this->trips()->sync($trips);
+			} catch (\Exception $e) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Could not assign locations to trip, \'tags\' array is propably erroneous.']);
+			}
+		}
 	}
 
-	public function setAvailableForUntilAttribute($value)
+	/**
+	 * Batch sync all the relationships of a ticket.
+	 * 
+	 * This method is mainly used when updating / creating a ticket from
+	 * the ticket service as it provides a nice and simple interface
+	 * 
+	 * @param $items
+	 * @return $this
+	 * @throws HttpUnprocessableEntity
+     */
+	public function syncItems($items)
 	{
-		$value = trim($value);
-		$this->attributes['available_for_until'] = $value ?: null;
+		$this->syncTrips($items['trips']);
+		$this->syncBoats($items['boats']);
+		$this->syncBoatrooms($items['boatrooms']);
+		return $this;
+	}
+	
+	public static function create(array $data = [])
+	{
+		$ticket = new Ticket($data);
+		if (!$ticket->validate()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $ticket->errors()->all());
+		}
+		return Context::get()->tickets()->save($ticket);
 	}
 
-	public function calculatePrice($start, $limitBefore = false) {
-		$price = Price::where(Price::$owner_id_column_name, $this->id)
-		     ->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Ticket')
-		     ->where('from', '<=', $start)
-		     ->where(function($query) use ($start)
-		     {
-		     	$query->whereNull('until')
-		     	      ->orWhere('until', '>=', $start);
-		     })
-		     ->where(function($query) use ($limitBefore)
-		     {
-		     	if($limitBefore)
-		     		$query->where('created_at', '<=', $limitBefore);
-		     })
-		     ->orderBy('id', 'DESC')
-			 ->withTrashed()
-		     ->first();
-
-		$this->decimal_price = $price->decimal_price;
-	}
-
-	public function scopeOnlyOwners($query) 
+	/**
+	 * @param array $data
+	 * @return $this
+	 * @throws HttpUnprocessableEntity
+	 */
+	public function update(array $data = [])
 	{
-		return $query->where('company_id', '=', Context::get()->id);
+		if (! parent::update($data)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $this->errors()->all());
+		}
+		return $this;
 	}
 
 	public function bookings()
@@ -97,16 +148,6 @@ class Ticket extends Ardent {
 		return $this->belongsToMany('\Scubawhere\Entities\Booking', 'booking_details')
 			->withPivot('session_id', 'package_id', 'customer_id', 'is_lead')
 			->withTimestamps();
-	}
-
-	public function bookingdetails()
-	{
-		return $this->hasMany('\Scubawhere\Entities\Bookingdetail');
-	}
-
-	public function company()
-	{
-		return $this->belongsTo('\Scubawhere\Entities\Company');
 	}
 
 	public function trips()
@@ -132,16 +173,6 @@ class Ticket extends Ardent {
 	public function packages()
 	{
 		return $this->morphToMany('\Scubawhere\Entities\Package', 'packageable')->withPivot('quantity')->withTimestamps();
-	}
-
-	public function basePrices()
-	{
-		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until');
-	}
-
-	public function prices()
-	{
-		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until');
 	}
 
 }
