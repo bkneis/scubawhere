@@ -3,6 +3,7 @@
 namespace Scubawhere\Services;
 
 use Scubawhere\Entities\Booking;
+use Scubawhere\Entities\Package;
 use Scubawhere\Exceptions\Http\HttpConflict;
 use Scubawhere\Repositories\PackageRepoInterface;
 
@@ -96,29 +97,23 @@ class PackageService {
 	 * Validate, create and save the package and prices to the database
 	 *
 	 * @param array $data Data to autofill package model
-	 *
 	 * @throws \Exception
-	 *
 	 * @return \Scubawhere\Entities\Package
 	 */
-	public function create(array $data, array $tickets, array $courses, array $accommodations, array $addons, array $base_prices, array $prices)
+	public function create(array $data)
 	{
-		try 
-		{
+		try {
 			\DB::beginTransaction();
 
-			$prices = $this->price_service->validatePrices($base_prices, $prices);
-			$package = $this->package_repo->create($data, $tickets, $courses, $accommodations, $addons);
-			
-			$this->price_service->associatePrices($package->basePrices(), $prices['base']);
-			if($prices['seasonal']) {
-				$this->price_service->associatePrices($package->prices(), $prices['seasonal']);
-			}
+			$package = Package::create($data)
+				->syncPrices($data['prices'])
+				->syncItems($data);
 			
 			\DB::commit();
 		}
 		catch(\Exception $e) {
 			\DB::rollback();
+			// @todo How to throw the correct http response and get the error message ??
 			throw $e;
 		}
 		return $package;
@@ -134,21 +129,17 @@ class PackageService {
 	 *
 	 * @return \Illuminate\Database\Eloquent\Model Eloquent model of the package
 	 */
-	public function update($id, $data, $tickets, $courses, $accommodations, $addons, $base_prices, $prices) 
+	public function update($id, $data) 
 	{
 		try 
 		{
 			\DB::beginTransaction();
 
-			$prices = $this->price_service->validatePrices($base_prices, $prices);
-			$package = $this->package_repo->update($id, $data, $tickets, $courses, $accommodations, $addons);
-
-			if($prices['base']) {
-				$this->price_service->associatePrices($package->basePrices(), $prices['base']);
-			}
-			if($prices['seasonal']) {
-				$this->price_service->associatePrices($package->prices(), $prices['seasonal']);
-			}
+			$package = $this->package_repo
+				->get($id)
+				->update($data)
+				->syncPrices($data['prices'])
+				->syncItems($data);
 
 			\DB::commit();
 		}
