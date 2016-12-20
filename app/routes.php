@@ -110,7 +110,7 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 		'report'            => 'ReportController',
 		'schedule'          => 'ScheduleController',
 		'session'           => 'DepartureController',
-		'ticket'            => 'TicketController',
+		//'ticket'            => 'TicketController',
 		'timetable'         => 'TimetableController',
 		'trip'              => 'TripController',
 		//'user'              => 'UserController'
@@ -136,6 +136,10 @@ Route::group(array('before' => 'auth|auth.basic|csrf'), function()
 	);
 	
 	Route::resource('package', 'PackageController',
+		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
+	);
+	
+	Route::resource('ticket', 'TicketController',
 		array('only' => array('show', 'index', 'store', 'update', 'destroy'))
 	);
 
