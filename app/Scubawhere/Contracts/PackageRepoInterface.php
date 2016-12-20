@@ -4,8 +4,8 @@ namespace Scubawhere\Repositories;
 
 interface PackageRepoInterface {
 
-	public function create(array $data, array $tickets, array $courses, array $accommodations, array $addons);
+    public function getAvailable();
 
-	public function update($id, array $data, array $tickets, array $courses, array $accommodations, array $addons, $fail = true);
+    public function getUsedInFutureBookings($id, $fail = true);
 
 }
