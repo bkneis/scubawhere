@@ -11,12 +11,44 @@ trait Bookable
         return (bool) $this->commisionable;
     }
 
+    /**
+     * @deprecated 
+     * @param $query
+     * @param $date
+     * @return mixed
+     */
     public function getBookingPrice($query, $date)
     {
         return $query->where('owner_id', '=', $this->id)
             ->where('owner_type', '=', $this->getMorphClass())
             ->where('from', '>', $date)
             ->where('to', '<', $date);
+    }
+
+    /**
+     * @param $start
+     * @param bool $limitBefore
+     */
+    public function calculatePrice($start, $limitBefore = false) 
+    {
+        $price = Price::where(Price::$owner_id_column_name, $this->id)
+            ->where(Price::$owner_type_column_name, get_class($this))
+            ->where('from', '<=', $start)
+            ->where(function($query) use ($start)
+            {
+                $query->whereNull('until')
+                    ->orWhere('until', '>=', $start);
+            })
+            ->where(function($query) use ($limitBefore)
+            {
+                if($limitBefore)
+                    $query->where('created_at', '<=', $limitBefore);
+            })
+            ->orderBy('id', 'DESC')
+            ->withTrashed()
+            ->first();
+
+        $this->decimal_price = $price->decimal_price;
     }
 
     public function getQuotes()
