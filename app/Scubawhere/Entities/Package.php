@@ -13,8 +13,9 @@ class Package extends Ardent {
 	use Owneable;
 	use Bookable;
 	use SoftDeletingTrait;
+	use LimitedAvailability;
 	
-	protected $dates = ['deleted_at'];
+	protected $dates = array('deleted_at');
 
 	protected $fillable = array('name', 'description', 'parent_id', 'available_from', 'available_until', 'available_for_from', 'available_for_until');
 
@@ -30,6 +31,9 @@ class Package extends Ardent {
 		'available_for_until' => 'date'
 	);
 
+	/**
+	 * Sanitise all HTML inputs and strip any HTML tags for string inputs
+	 */
 	public function beforeSave()
 	{
 		if( isset($this->name) )
@@ -39,52 +43,9 @@ class Package extends Ardent {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 	}
 
-	public function setAvailableFromAttribute($value)
-	{
-		$value = trim($value);
-		$this->attributes['available_from'] = $value ?: null;
-	}
-
-	public function setAvailableUntilAttribute($value)
-	{
-		$value = trim($value);
-		$this->attributes['available_until'] = $value ?: null;
-	}
-
-	public function setAvailableForFromAttribute($value)
-	{
-		$value = trim($value);
-		$this->attributes['available_for_from'] = $value ?: null;
-	}
-
-	public function setAvailableForUntilAttribute($value)
-	{
-		$value = trim($value);
-		$this->attributes['available_for_until'] = $value ?: null;
-	}
-
-	public function calculatePrice($start, $limitBefore = false) {
-		$price = Price::where(Price::$owner_id_column_name, $this->id)
-		     ->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Package')
-		     ->where('from', '<=', $start)
-		     ->where(function($query) use ($start)
-		     {
-		     	$query->whereNull('until')
-		     	      ->orWhere('until', '>=', $start);
-		     })
-		     ->where(function($query) use ($limitBefore)
-		     {
-		     	if($limitBefore)
-		     		$query->where('created_at', '<=', $limitBefore);
-		     })
-		     ->orderBy('id', 'DESC')
-			 ->withTrashed()
-		     ->first();
-
-		$this->decimal_price = $price->decimal_price;
-	}
-
     /**
+	 * Overload Eloquent's update method to return HTTP response on failure
+	 * 
      * @param array $data
      * @return $this
      * @throws HttpUnprocessableEntity
@@ -96,7 +57,15 @@ class Package extends Ardent {
         }
         return $this;
     }
-	
+
+	/**
+	 * Overload Eloquent's create method to also return a HTTP response on failure
+	 *
+	 * @param array $data
+	 * @return \Illuminate\Database\Eloquent\Model
+	 * @throws HttpUnprocessableEntity
+	 * @throws \Exception
+     */
 	public static function create(array $data = [])
 	{
 		$package = new Package($data);
@@ -106,41 +75,13 @@ class Package extends Ardent {
 		return Context::get()->packages()->save($package);
 	}
 
-	public function accommodations()
-	{
-        return $this->morphedByMany('\Scubawhere\Entities\Accommodation', 'packageable')
-                    ->withPivot('quantity')
-                    //->withTrashed()
-                    ->withTimestamps();
-	}
 
-	public function addons()
-	{
-		return $this->morphedByMany('\Scubawhere\Entities\Addon', 'packageable')->withPivot('quantity')->withTimestamps();
-	}
-
-	public function company()
-	{
-		return $this->belongsTo('\Scubawhere\Entities\Company');
-	}
-
-	public function courses()
-	{
-        return $this->morphedByMany('\Scubawhere\Entities\Course', 'packageable')
-                    ->withPivot('quantity')
-                    ->withTimestamps();
-	}
-
-	public function packagefacades()
-	{
-		return $this->hasMany('\Scubawhere\Entities\Packagefacade');
-	}
-
-	public function tickets()
-	{
-		return $this->morphedByMany('\Scubawhere\Entities\Ticket', 'packageable')->withPivot('quantity')->withTimestamps();
-	}
-
+	/**
+	 * Syncronise the addons related to this package to the given array
+	 * 
+	 * @param $tickets
+	 * @throws HttpUnprocessableEntity
+     */
 	public function syncTickets($tickets)
 	{
 		if(is_array($tickets) && !empty($tickets)) {
@@ -154,6 +95,12 @@ class Package extends Ardent {
 		}
 	}
 
+	/**
+	 * Syncronise the addons related to this package to the given array
+	 * 
+	 * @param $courses
+	 * @throws HttpUnprocessableEntity
+     */
 	public function syncCourses($courses)
 	{
 		if(is_array($courses) && !empty($courses)) {
@@ -167,6 +114,12 @@ class Package extends Ardent {
 		}
 	}
 
+	/**
+	 * Syncronise the addons related to this package to the given array
+	 * 
+	 * @param $accommodations
+	 * @throws HttpUnprocessableEntity
+     */
 	public function syncAccommodations($accommodations)
 	{
 		if(is_array($accommodations) && !empty($accommodations)) {
@@ -180,6 +133,12 @@ class Package extends Ardent {
 		}
 	}
 
+	/**
+	 * Syncronise the addons related to this package to the given array
+	 * 
+	 * @param $addons
+	 * @throws HttpUnprocessableEntity
+     */
 	public function syncAddons($addons)
 	{
 		if(is_array($addons) && !empty($addons)) {
@@ -193,6 +152,16 @@ class Package extends Ardent {
 		}
 	}
 
+	/**
+	 * Syncronise all the relations of the package with the given array.
+	 * 
+	 * This method is to simplify the interface of updating / creating a package
+	 * with all of its relationships.
+	 * 
+	 * @param array $items
+	 * @return $this
+	 * @throws HttpUnprocessableEntity
+     */
 	public function syncItems(array $items)
 	{
 		$this->syncAccommodations($items['accommodations']);
@@ -200,5 +169,70 @@ class Package extends Ardent {
 		$this->syncCourses($items['courses']);
 		$this->syncTickets($items['tickets']);
 		return $this;
+	}
+
+	/**
+	 * |--------------------------------------
+	 * | Eloquent relationships
+	 * |--------------------------------------
+	 */
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function accommodations()
+	{
+		return $this->morphedByMany(Accommodation::class, 'packageable')
+			->withPivot('quantity')
+			->withTimestamps();
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+	public function addons()
+	{
+		return $this->morphedByMany(Addon::class, 'packageable')
+			->withPivot('quantity')
+			->withTimestamps();
+	}
+
+	/**
+	 * Overload the relationship from the bookable trait as the package needs to be
+	 * accessed through the packagefacade
+	 * 
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function bookingdetails()
+	{
+		return $this->hasManyThrough(Bookingdetail::class, Packagefacade::class);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+	public function courses()
+	{
+		return $this->morphedByMany(Course::class, 'packageable')
+			->withPivot('quantity')
+			->withTimestamps();
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+	public function packagefacades()
+	{
+		return $this->hasMany(Package::class);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+	public function tickets()
+	{
+		return $this->morphedByMany(Ticket::class, 'packageable')
+			->withPivot('quantity')
+			->withTimestamps();
 	}
 }
