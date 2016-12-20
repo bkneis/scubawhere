@@ -12,40 +12,39 @@ use Scubawhere\Repositories\TicketRepoInterface;
 class TicketService {
 
 	/** @var \Scubawhere\Repositories\TicketRepo */
-	protected $ticket_repo;
+	protected $ticketRepo;
 
 	/**
 	 * Service used to log issues to trouble shooting when waterfall deleting
 	 *
 	 * @var \Scubawhere\Services\LogService
 	 */
-	protected $log_service;
+	protected $logService;
 
 	/**
 	 * Service used to validate and associate prices
 	 *
 	 * @var \Scubawhere\Services\PriceService
 	 */
-	protected $price_service;
+	protected $priceService;
 
-	public function __construct(TicketRepoInterface $ticket_repo,
-								LogService $log_service,
-								PriceService $price_service) 
+	public function __construct(TicketRepoInterface $ticketRepo,
+								LogService $logService,
+								PriceService $priceService) 
 	{
-		$this->ticket_repo = $ticket_repo;
-		$this->log_service = $log_service;
-		$this->price_service = $price_service;
+		$this->ticketRepo = $ticketRepo;
+		$this->logService = $logService;
+		$this->priceService = $priceService;
 	}
 
 	/**
      * Get an ticket for a company from its id
 	 *
      * @param int $id ID of the ticket
-	 *
      * @return \Scubawhere\Entities\Ticket
      */
 	public function get($id) {
-		return $this->ticket_repo->get($id, ['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
+		return $this->ticketRepo->get($id, ['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
 	}
 
 	/**
@@ -54,7 +53,7 @@ class TicketService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->ticket_repo->all(['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
+		return $this->ticketRepo->all(['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
 	}
 
 	/**
@@ -63,7 +62,7 @@ class TicketService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAllWithTrashed() {
-		return $this->ticket_repo->allWithTrashed(['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
+		return $this->ticketRepo->allWithTrashed(['boats', 'boatrooms', 'trips', 'basePrices', 'prices']);
 	}
 
 	/**
@@ -72,32 +71,23 @@ class TicketService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAvailable() {
-		return $this->ticket_repo->getAvailable();
+		return $this->ticketRepo->getAvailable();
 	}
 
 	/**
 	 * Validate, create and save the ticket and prices to the database
 	 *
 	 * @param array $data Data to autofill ticket model
-	 *
 	 * @throws \Exception
-	 *
 	 * @return \Scubawhere\Entities\Ticket
 	 */
-	public function create(array $data, array $trips, array $boats, array $boatrooms, array $base_prices, array $prices)
+	public function create(array $data)
 	{
 		\DB::beginTransaction();
-		try 
-		{
-			$ticket = $this->ticket_repo->create($data, $trips, $boats, $boatrooms);
-			if(!$data['only_packaged']) 
-			{
-				$prices = $this->price_service->validatePrices($base_prices, $prices);
-				$this->price_service->associatePrices($ticket->basePrices(), $prices['base']);
-
-				if($prices['seasonal']) {
-					$this->price_service->associatePrices($ticket->prices(), $prices['seasonal']);
-				}
+		try {
+			$ticket = Ticket::create($data)->syncItems($data);
+			if (!$data['only_packaged']) {
+				$ticket = $ticket->syncPrices($data['prices']);
 			}
 			\DB::commit();
 		}
@@ -111,30 +101,22 @@ class TicketService {
 	/**
 	 * Validate, update and save the ticket and prices to the database
 	 *
-	 * @param  int   $id           ID of the ticket
-	 * @param  array $data         Information about ticket
-	 *
+	 * @param  int   $id   ID of the ticket
+	 * @param  array $data Information about ticket
 	 * @throws \Exception
-	 *
 	 * @return \Illuminate\Database\Eloquent\Model Eloquent model of the ticket
 	 */
-	public function update($id, $data, $trips, $boats, $boatrooms, $base_prices, $prices) 
+	public function update($id, $data) 
 	{
 		\DB::beginTransaction();
-		try 
-		{
-			$ticket = $this->ticket_repo->update($id, $data, $trips, $boats, $boatrooms);
-			if(!$data['only_packaged']) 
-			{
-				$prices = $this->price_service->validatePrices($base_prices, $prices);
-
-				if($prices['base']) {
-					$this->price_service->associatePrices($ticket->basePrices(), $prices['base']);
-				}
-
-				if($prices['seasonal']) {
-					$this->price_service->associatePrices($ticket->prices(), $prices['seasonal']);
-				}
+		try {
+			$ticket = $this->ticketRepo
+				->get($id)
+				->update($data)
+				->syncItems($data);
+				
+			if(!$data['only_packaged']) {
+				$ticket = $ticket->syncPrices($data['prices']);
 			}
 			\DB::commit();
 		}
@@ -152,7 +134,6 @@ class TicketService {
 	 * future paid bookings associated to the ticket, and the booking ids are then logged.
 	 *
 	 * @param  int $id ID of the ticket
-	 *
 	 * @throws \Scubawhere\Exceptions\ConflictException
 	 * @throws \Exception
 	 */
@@ -169,8 +150,7 @@ class TicketService {
 		 * 		 and object from the map containing the status and reference
 		 */
 	
-        $ticket = Ticket::onlyOwners()
-			->with(['packages', 'courses',
+        $ticket = Ticket::with(['packages', 'courses',
 			'bookingdetails.session' => function($q) {
 				$q->where('start', '>=', Helper::localtime());
 			}])
@@ -200,7 +180,7 @@ class TicketService {
 
 		if($bookings)
 		{
-			$logger = $this->log_service->create('Attempting to delete the ticket, '
+			$logger = $this->logService->create('Attempting to delete the ticket, '
 												. $ticket->name);
 			foreach($bookings as $obj) 
 			{
@@ -247,7 +227,7 @@ class TicketService {
             // If there are courses that rely on the ticket, log the errors and respond with a conflidt (409)
             if(sizeof($problem_courses) > 0)
             {
-                $logger = $this->log_service
+                $logger = $this->logService
                                ->create('Attempting to delete the ticket ' . $ticket->name);
                 foreach($problem_courses as $obj) 
                 {
@@ -274,7 +254,7 @@ class TicketService {
         }
 
         $ticket->delete();
-        $this->price_service->delete('Ticket', $ticket->id);
+        $this->priceService->delete('Ticket', $ticket->id);
 	}
 
 }
