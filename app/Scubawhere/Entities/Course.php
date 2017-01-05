@@ -12,13 +12,11 @@ class Course extends Ardent {
 	
 	use Owneable;
 	use Bookable;
+	use Packageable;
 	use SoftDeletingTrait;
 	
 	protected $dates = array('deleted_at');
 	
-	/* @todo Remove this, its a waste of a trip to the DB */
-	public $appends = array('deleteable');
-
 	protected $fillable = array('name', 'description', 'capacity', 'certificate_id');
 
 	public static $rules = array(
@@ -39,12 +37,6 @@ class Course extends Ardent {
 		if (isset($this->description)) {
 			$this->description = Helper::sanitiseBasicTags($this->description);
 		}
-    }
-
-	/** @return bool */
-	public function getDeleteableAttribute()
-    {
-        return !($this->packages()->exists());
     }
 
 	/**
@@ -122,15 +114,5 @@ class Course extends Ardent {
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
-	
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function packages()
-	{
-		return $this->morphToMany('\Scubawhere\Entities\Package', 'packageable')
-			->withPivot('quantity')
-			->withTimestamps();
-	}
 
 }
