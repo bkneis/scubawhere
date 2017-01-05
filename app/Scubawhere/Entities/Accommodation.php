@@ -106,7 +106,7 @@ class Accommodation extends Ardent {
 		$packages = $this->packages();
 		if ($packages->exists()) {
 			\DB::table('packageables')
-				->where('packageable_type', 'Accommodation')
+				->where('packageable_type', Accommodation::class)
 				->where('packageable_id', $this->id)
 				->update(array('deleted_at' => \DB::raw('NOW()')));
 		}
@@ -118,14 +118,17 @@ class Accommodation extends Ardent {
 		return !($this->packages()->exists());
 	}
 
-	/*public function scopeOnlyOwners($query)
-	{
-		return $query->where('company_id', '=', Context::get()->id);
-	}*/
-
+	/**
+	 * Overload the bookable bookings relationship as accommodations have
+	 * a direct pivot table accommodation_bookings.
+	 * 
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
 	public function bookings()
 	{
-		return $this->belongsToMany('\Scubawhere\Entities\Booking')->withPivot('customer_id', 'start', 'end', 'packagefacade_id')->withTimestamps();
+		return $this->belongsToMany(Booking::class)
+			->withPivot('customer_id', 'start', 'end', 'packagefacade_id')
+			->withTimestamps();
 	}
 
 	public function company()
