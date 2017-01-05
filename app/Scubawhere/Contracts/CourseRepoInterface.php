@@ -4,6 +4,6 @@ namespace Scubawhere\Repositories;
 
 interface CourseRepoInterface {
     
-    function getUsedInFutureBookings($id, $fail = true);
+    function getWithFutureBookings($id, $fail = true);
     
 }

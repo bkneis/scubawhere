@@ -23,6 +23,7 @@ class CourseRepo extends EloquentRepo implements CourseRepoInterface {
 
     /** 
      * Eloquent model that acts as the root model to associate assets to
+     * 
      *
      * @var \ScubaWhere\Entities\Company
     */ 
@@ -43,7 +44,7 @@ class CourseRepo extends EloquentRepo implements CourseRepoInterface {
      *
      * @return mixed
      */
-    public function getUsedInFutureBookings($id, $fail = true)
+    public function getWithFutureBookings($id, $fail = true)
     {
         $course = Course::with([
             'packages',
