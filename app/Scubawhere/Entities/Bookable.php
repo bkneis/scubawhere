@@ -62,6 +62,12 @@ trait Bookable
             });
     }
 
+    public function deleteQuotes()
+    {
+        $this->getQuotes()->each(function ($course) { $course->delete(); });
+        return $this;
+    }
+
     /**
      * Get all the bookings associated to the entity that are considered 'active'.
      * 
@@ -154,14 +160,11 @@ trait Bookable
 
         return $this;
     }
-
-    /**
-     * @note Should I remove this as some bookable entities might not keep true to this relation?
-     * @return mixed
-     */
-    public function booking()
+    
+    public function bookings()
     {
-        return $this->hasMany('\Scubawhere\Entities\Booking');
+		return $this->belongsToMany('\Scubawhere\Entities\Booking', 'booking_details');
+        //return $this->hasManyThrough(Booking::class, Bookingdetail::class);
     }
 
     /**
@@ -169,15 +172,16 @@ trait Bookable
      */
     public function bookingdetails()
     {
-        return $this->hasMany('\Scubawhere\Entities\Bookingdetail');
+        return $this->hasMany(Bookingdetail::class);
     }
 
     /**
+     * @todo rename this seasonalPrices
      * @return mixed
      */
     public function prices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')
+        return $this->morphMany(Price::class, 'owner')
             ->whereNotNull('until')
             ->orderBy('from');
     }
@@ -187,9 +191,18 @@ trait Bookable
      */
     public function basePrices()
     {
-        return $this->morphMany('\Scubawhere\Entities\Price', 'owner')
+        return $this->morphMany(Price::class, 'owner')
             ->whereNull('until')
             ->orderBy('from');
+    }
+
+    /**
+     * @todo when prices() gets renamed, rename this to prices
+     * @return mixed
+     */
+    public function allPrices()
+    {
+        return $this->morphMany(Price::class, 'owner')->orderBy('from');
     }
 
     /**
@@ -197,6 +210,6 @@ trait Bookable
      */
     public function customers()
     {
-        return $this->hasManyThrough('\Scubawhere\Entities\Customer', 'Bookingdetail');
+        return $this->hasManyThrough(Customer::class, Bookingdetail::class); // 'Bookingdetail'
     }
 }
