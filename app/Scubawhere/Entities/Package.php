@@ -171,6 +171,15 @@ class Package extends Ardent {
 		return $this;
 	}
 
+	public function removeItem($type, $id)
+	{
+		return \DB::table('packageables')
+				->where('packageable_type', $type)
+				->where('packageable_id', $id)
+				->where('package_id', $this->id)
+				->update(array('deleted_at' => \DB::raw('NOW()')));
+	}
+
 	/**
 	 * |--------------------------------------
 	 * | Eloquent relationships
