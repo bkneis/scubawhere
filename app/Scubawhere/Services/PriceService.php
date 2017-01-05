@@ -2,6 +2,7 @@
 
 namespace Scubawhere\Services;
 
+use Illuminate\Database\Eloquent\Model;
 use Scubawhere\Helper;
 use Scubawhere\Entities\Price;
 use Scubawhere\Exceptions\Http\HttpBadRequest;
@@ -96,6 +97,62 @@ class PriceService {
 		Price::where(Price::$owner_id_column_name, $id)
 			->where(Price::$owner_type_column_name, $type)
 			->delete();
+	}
+
+	public function sync(Model $model, array $prices)
+	{
+		// Go through prices and remove any that do not have an amount
+		$prices = array_filter($prices, function ($obj) {
+			return ! empty($obj['new_decimal_price']);
+		});
+
+		// If the model's prices arent loaded, lazy load them
+		if (!isset($model->prices)) {
+			$model->load('prices');
+		}
+		if (!isset($model->basePrices)) {
+			$model->load('basePrices');
+		}
+
+		$existing_prices = $model->basePrices->getDictionary();
+		$existing_prices += $model->prices->getDictionary();
+
+		// Calculate deleted prices
+		$deleted_prices = array_diff_key($existing_prices, $prices);
+
+		// Calculate new prices
+		$new_prices = array_diff_key($prices, $existing_prices);
+
+		// Calculate existing / updated prices
+		$updated_prices = array_intersect_key($existing_prices, $prices);
+
+		// Delete prices
+		Price::where('owner_type', get_class($model))
+			->whereIn('id', array_keys($deleted_prices))
+			->delete();
+
+		// Create new prices
+		$new_prices_objs = [];
+		foreach ($new_prices as $price) {
+			// validate the price
+			$new_price = new Price($price);
+			if (!$new_price->validate()) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $new_price->errors()->all());
+			}
+			array_push($new_prices_objs, new Price($price));
+		}
+		// Save the prices to 'prices', to reduce the number of prices that used the base price
+		// so that when we finally remove base prices, there is less data to move
+		$model->prices()->saveMany($new_prices_objs);
+
+		// Update existing prices
+		foreach ($updated_prices as $price) {
+			if (!$price->update($prices[$price->id])) {
+				throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $price->errors()->all());
+			}
+		}
+
+		return $model;
 	}
 
 }

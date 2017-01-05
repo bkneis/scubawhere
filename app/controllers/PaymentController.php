@@ -27,6 +27,14 @@ class PaymentController extends Controller
         return Context::get()->payments()->with('currency', 'paymentgateway')->skip($from)->take($take)->get();
     }
 
+    public function getTest()
+    {
+        return DB::table('accommodations as a')
+            ->join('companies as c', 'c.id', '=', 'c.id')
+            ->select('a.id', 'c.name')
+            ->get();
+    }
+
     public function getFilter()
     {
         $after = Input::get('after', null);
