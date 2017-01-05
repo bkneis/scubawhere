@@ -109,33 +109,11 @@ class CourseService {
 	 */
 	public function delete($id)
 	{
-		$course = $this->courseRepo->getUsedInFutureBookings($id);
+		$course = $this->courseRepo->getWithFutureBookings($id);
+		
+		$bookings = $course->getActiveBookings();
 
-		$booking_ids = $course->bookingdetails
-			->map(function($obj) {
-				if($obj->session != null || $obj->training_session != null) {
-					return $obj->booking_id;
-				}
-			})
-			->toArray();
-
-		$bookings = Booking::onlyOwners()
-			->whereIn('id', $booking_ids)
-			->get(['id', 'reference', 'status']);
-
-		$quotes = $bookings->map(function($obj) {
-			if($obj->status == 'saved') return $obj->id;
-		})
-		->toArray();
-
-		Booking::onlyOwners()->whereIn('id', $quotes)->delete();
-
-		$bookings = $bookings->filter(function($obj){
-			if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;	
-		})->toArray();
-
-		if($bookings)
-		{
+		if (empty($bookings)) {
 			$logger = $this->log_service->create('Attempting to delete the course, ' . $course->name);
 			foreach($bookings as $obj) {
 				$logger->append('The course is used in the future in booking ' . '['.$obj['reference'].']');
@@ -145,20 +123,37 @@ class CourseService {
 						'Please please <a href="#troubleshooting?id='. $logger->getId() .'">click here</a> for more info on how to delete it.']);
 		}
 
-        if(!$course->getDeleteableAttribute())
-        {
-            foreach($course->packages as $obj) 
-            {
-                \DB::table('packageables')
-                    ->where('packageable_type', 'Course')
-                    ->where('packageable_id', $course->id)
-                    ->where('package_id', $obj->id)
-                    ->update(array('deleted_at' => \DB::raw('NOW()')));    
-            } 
-        }
-
-        $course->delete();
-        $this->price_service->delete('Course', $course->id);
+		$course->removeFromPackages()
+			->deleteQuotes()
+			->delete();
+		
+        $this->price_service->delete(get_class($course), $course->id);
 	}
+	
+	/**
+	 *
+	$booking_ids = $course->bookingdetails
+	->map(function($obj) {
+	if($obj->session != null || $obj->training_session != null) {
+	return $obj->booking_id;
+	}
+	})
+	->toArray();
+
+	$bookings = Booking::onlyOwners()
+	->whereIn('id', $booking_ids)
+	->get(['id', 'reference', 'status']);
+
+	$quotes = $bookings->map(function($obj) {
+	if($obj->status == 'saved') return $obj->id;
+	})
+	->toArray();
+
+	Booking::onlyOwners()->whereIn('id', $quotes)->delete();
+
+	$bookings = $bookings->filter(function($obj){
+	if($obj->status != 'cancelled' && $obj->status != 'saved') return $obj;	
+	})->toArray();
+	 */
 
 }
