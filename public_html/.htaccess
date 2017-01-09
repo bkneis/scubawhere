@@ -36,15 +36,15 @@ deny from 79.137.234.114
     ModPagespeed off
 </IfModule>
 
-<IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews
-    </IfModule>
-
-    RewriteEngine On
-
-    RewriteRule ^$ /blog/ [R=301,L]
-
-    ## Redirect all requests to /coming-soon/* to /blog/*
-    Redirect 301 /coming-soon /blog/
-</IfModule>
+#<IfModule mod_rewrite.c>
+#    <IfModule mod_negotiation.c>
+#        Options -MultiViews
+#    </IfModule>
+#
+#    RewriteEngine On
+#
+#    RewriteRule ^$ /blog/ [R=301,L]
+#
+#    ## Redirect all requests to /coming-soon/* to /blog/*
+#    Redirect 301 /coming-soon /blog/
+#</IfModule>
