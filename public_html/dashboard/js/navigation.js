@@ -73,6 +73,13 @@ $(function () {
 
 function changeHash(newHash) {
 
+    var newTabs = ['accommodations'];
+
+    if (newTabs.indexOf(newHash) !== -1) {
+        localStorage.setItem('navBridge.currentTab', newHash);
+        window.location.href = '/';
+    }
+
     var $mainContent = $("#content"),
         $pageWrap    = $("#page-wrap"),
         baseHeight   = 0,

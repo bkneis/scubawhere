@@ -52,6 +52,6 @@
 		{{/each}}
 	</script>
 
-	<script src="/common/js/jquery/jquery.datatables.min.js"></script>
-	<script type="text/javascript" src="tabs/pickup-schedule/js/script.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery.datatables.min.js"></script>
+	<script type="text/javascript" src="/dashboard/tabs/pickup-schedule/js/script.js"></script>
 </div>

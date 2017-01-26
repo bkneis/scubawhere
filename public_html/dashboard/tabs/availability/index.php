@@ -156,9 +156,9 @@
     </div><!-- /.modal -->
 </template>
 
-<link rel="stylesheet" type="text/css" href="/css/components/modal.css">
-<link rel="stylesheet" type="text/css" href="/css/components/availability-table.css">
-<script src="/tabs/availability/js/DateService.js"></script>
-<script src="/tabs/availability/js/AvailabilityService.js"></script>
-<script src="/tabs/availability/js/availability-table.js"></script>
-<script src="/tabs/availability/js/main.js"></script>
+<link rel="stylesheet" type="text/css" href="/dashboard/css/components/modal.css">
+<link rel="stylesheet" type="text/css" href="/dashboard/css/components/availability-table.css">
+<script src="/dashboard/tabs/availability/js/DateService.js"></script>
+<script src="/dashboard/tabs/availability/js/AvailabilityService.js"></script>
+<script src="/dashboard/tabs/availability/js/availability-table.js"></script>
+<script src="/dashboard/tabs/availability/js/main.js"></script>

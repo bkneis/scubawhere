@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Scubawhere\Exceptions\Http\HttpNotFound;
 use Scubawhere\Services\AccommodationService;
+use Scubawhere\Transformers\AccommodationTransformer;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class AccommodationController extends Controller {
@@ -12,11 +13,14 @@ class AccommodationController extends Controller {
 
     /** @var Request  */
     protected $request;
+    
+    protected $accommodationTransformer;
 
-    public function __construct(AccommodationService $accommodation_service, Request $request)
+    public function __construct(AccommodationService $accommodation_service, AccommodationTransformer $accommodationTransformer, Request $request)
     {
+        $this->transformer = $accommodationTransformer;
         $this->accommodation_service = $accommodation_service;
-        $this->request               = $request;
+        $this->request = $request;
     }
 
     /**
@@ -42,7 +46,7 @@ class AccommodationController extends Controller {
             throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
         }
 
-        return $this->accommodation_service->get($data);
+        return $this->transformer->transformMany($this->accommodation_service->get($data['id']));
     }
 
     /**
@@ -70,14 +74,14 @@ class AccommodationController extends Controller {
                 throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
             }
 
-            return $this->accommodation_service->getFilter($data);
+            return $this->transformer->transformMany($this->accommodation_service->getFilter($data));
         }
 
         $with_trashed = (bool) $this->request->get('with_deleted');
         if($with_trashed) {
-            return $this->accommodation_service->getAllWithTrashed();
+            return $this->transformer->transformMany($this->accommodation_service->getAllWithTrashed());
         }
-        return $this->accommodation_service->getAll();
+        return $this->transformer->transformMany($this->accommodation_service->getAll());
     }
 
     /**
@@ -157,7 +161,12 @@ class AccommodationController extends Controller {
 
         $accommodation = $this->accommodation_service->create($data);
 
-        return Response::json(array('status' => 'OK. Accommodation created', 'model' => $accommodation->load('basePrices', 'prices')), 201); // 201 Created
+
+        return Response::json(
+            array(
+                'status' => 'OK. Accommodation created',
+                'model' => $this->transformer->transform($accommodation->load('basePrices', 'prices'))
+            ), 201); // 201 Created
     }
 
     /**
@@ -185,7 +194,11 @@ class AccommodationController extends Controller {
 
         $accommodation = $this->accommodation_service->update($id, $data);
 
-        return Response::json(array('status' => 'OK. Accommodation updated', 'model' => $accommodation->load('basePrices', 'prices')), 200);
+        return Response::json(
+            array(
+                'status' => 'OK. Accommodation updated',
+                'model' => $this->transformer->transform($accommodation->load('basePrices', 'prices'))
+            ), 200);
     }
 
     /**

@@ -195,8 +195,8 @@
 		</div>
 	</script>
 
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
-    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
-	<script type="text/javascript" src="/js/tour.js"></script>
-	<script src="/tabs/tickets/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dashboard/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/dashboard/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/dashboard/js/tour.js"></script>
+	<script src="/dashboard/tabs/tickets/js/script.js"></script>
 </div>

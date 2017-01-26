@@ -159,17 +159,17 @@
 	</div>
 
 	<!--Styling (Temporary)-->
-	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
+	<link rel="stylesheet" href="/dashboard/tabs/add-booking/css/style.css" type="text/css" />
 
 	<!--Typeahead-->
-	<script type="text/javascript" src="/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/vendor/typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<!--Basil LocalStorage Wrapper-->
-	<script type="text/javascript" src="/common/vendor/basil.js/build/basil.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/vendor/basil.js/build/basil.min.js"></script>
 
-	<script src="/common/js/fullcalendar.min.js"></script>
+	<script src="/dashboard/common/js/fullcalendar.min.js"></script>
 
 	<!--My scripts-->
-	<script src="/tabs/add-booking/js/script.js"></script>
+	<script src="/dashboard/tabs/add-booking/js/script.js"></script>
 
 </div>

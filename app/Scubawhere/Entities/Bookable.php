@@ -3,6 +3,7 @@
 namespace Scubawhere\Entities;
 
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
+use Scubawhere\Repositories\PackageRepo;
 
 trait Bookable
 {
@@ -107,9 +108,13 @@ trait Bookable
      */
     public function syncPrices(array $prices)
     {
+        foreach ($prices as &$price) {
+            $price['new_decimal_price'] = $price['decimal_price'];
+            unset($price['decimal_price']);
+        }
         // Go through prices and remove any that do not have an amount
         $prices = array_filter($prices, function ($obj) {
-            return ! empty($obj['new_decimal_price']);
+            return ! empty($obj['new_decimal_price']); 
         });
         
         // If the model's prices arent loaded, lazy load them
@@ -160,11 +165,89 @@ trait Bookable
 
         return $this;
     }
+
+    /**
+     * New sync prices method, needed as the way the front end sends
+     * the prices needs to change. Affecting accommodations so far
+     */
+    public function syncPrices_new(array $prices)
+    {
+        // Go through prices and remove any that do not have an amount
+        $prices = array_filter($prices, function ($obj) {
+            return ! empty($obj['decimal_price']);
+        });
+
+        // If the model's prices aren't loaded, lazy load them
+        if (!isset($this->allPrices)) {
+            $this->load('allPrices');
+        }
+        
+        $newPrices = $updatedPrices = [];
+        
+        // If a price is submitted with an ID, then perform an update, otherwise
+        // it is a new price and should be created
+        foreach ($prices as $price) {
+            if (isset($price->id)) {
+                $updatedPrices[] = $price;
+            } else {
+                $newPrices[] = $price;
+            }
+        }
+
+        $updatedPrices = $this->allPrices->filter(function ($obj) use ($updatedPrices) {
+            return in_array($obj->id, $updatedPrices);
+        });
+        
+        // Determine any missing prices that were deleted
+        $deletedPrices = array_diff(
+            array_pluck($this->allPrices, 'id'),
+            array_pluck($updatedPrices, 'id')
+        );
+
+        // Delete prices
+        Price::where('owner_type', get_class($this))
+            ->whereIn('id', $deletedPrices)
+            ->delete();
+
+        // Create new prices
+        $new_prices_objs = [];
+        foreach ($newPrices as $price) {
+            $price['new_decimal_price'] = $price['decimal_price'];
+            unset($price['decimal_price']);
+            if (empty($price['until'])) {
+                unset($price['until']);
+            }
+            // validate the price
+            $new_price = new Price($price);
+            if (!$new_price->validate()) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $new_price->errors()->all());
+            }
+            array_push($new_prices_objs, new Price($price));
+        }
+        // Save the prices to 'prices', to reduce the number of prices that used the base price
+        // so that when we finally remove base prices, there is less data to move
+        $this->prices()->saveMany($new_prices_objs);
+
+        $prices = $this->allPrices->getDictionary();
+        // Update existing prices
+        foreach ($updatedPrices as $price) {
+            $price['new_decimal_price'] = $price['decimal_price'];
+            unset($price['decimal_price']);
+            if (empty($price['until'])) {
+                unset($price['until']);
+            }
+            //if (!$price->update($prices[$price->id])) {
+            if (!$prices[$price->id]->update($price)) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $price->errors()->all());
+            }
+        }
+
+        return $this;
+    }
     
     public function bookings()
     {
-		return $this->belongsToMany('\Scubawhere\Entities\Booking', 'booking_details');
-        //return $this->hasManyThrough(Booking::class, Bookingdetail::class);
+		return $this->belongsToMany(Booking::class, 'booking_details');
     }
 
     /**

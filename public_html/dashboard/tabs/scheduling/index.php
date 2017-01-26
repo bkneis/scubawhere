@@ -252,10 +252,10 @@ If you have any questions, comments or feedback, feel free to drop us a message 
 		</script>
 	</div>
 
-	<script src="/common/js/fullcalendar.min.js"></script>
+	<script src="/dashboard/common/js/fullcalendar.min.js"></script>
 
-	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
-	<script src="/common/js/jquery/jquery.ui.touch-punch.min.js"></script>
+	<script src="/dashboard/common/js/jquery/ui.min/jquery-ui.min.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery.ui.touch-punch.min.js"></script>
 
-	<script src="/tabs/scheduling/js/script.js"></script>
+	<script src="/dashboard/tabs/scheduling/js/script.js"></script>
 </div>

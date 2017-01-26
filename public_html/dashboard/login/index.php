@@ -4,23 +4,23 @@
 	<title>Scuba Where | Dive Centre Login</title>
 
 
-	<script src="/common/js/jquery/jquery.min.js"></script>
-	<script src="/common/js/jquery/ui.min/jquery-ui.min.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery.min.js"></script>
+	<script src="/dashboard/common/js/jquery/ui.min/jquery-ui.min.js"></script>
 
-	<script src="js/login.js"></script>
+	<script src="/dashboard/js/login.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css">
-	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css">
-	<link rel="stylesheet" type="text/css" href="/css/login-register.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/bootstrap-scubawhere.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/universal-styles.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/login-register.css">
 
-	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
+	<link rel="icon" type="image/ico" href="/dashboard/common/favicon.ico" />
 </head>
 <body>
 
 	<div id="login-wrapper">
 		<div id="login-form">
 			<form action="#" id="loginForm" method="post" accept-charset="utf-8">
-				<img src="/common/img/scubawhere_logo.svg">
+				<img src="/dashboard/common/img/scubawhere_logo.svg">
 				<h1>RMS Operator Login</h1>
 
 				<span class="form-error"></span>
@@ -37,7 +37,7 @@
 					<div id="save-loader" class="loader"></div>
 				</button>
 
-				<a href="/register/" class="btn btn-success" id="register">Register Your Dive Centre</a>
+				<a href="/dashboard/register/" class="btn btn-success" id="register">Register Your Dive Centre</a>
 
 			</form>
 		</div>

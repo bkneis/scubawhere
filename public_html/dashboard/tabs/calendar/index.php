@@ -283,9 +283,9 @@
          {{/each}}
       </script>
    </div>
-   <script src="/common/js/fullcalendar.min.js"></script>
-   <script type="text/javascript" src="/common/js/jquery/jquery.cookie.js"></script>
-   <script type="text/javascript" src="/common/js/jquery/jquery.collapsible.js"></script>
-   <script src="/tabs/calendar/js/script.js" type="text/javascript"></script>
+   <script src="/dashboard/common/js/fullcalendar.min.js"></script>
+   <script type="text/javascript" src="/dashboard/common/js/jquery/jquery.cookie.js"></script>
+   <script type="text/javascript" src="/dashboard/common/js/jquery/jquery.collapsible.js"></script>
+   <script src="/dashboard/tabs/calendar/js/script.js" type="text/javascript"></script>
 </div>
 

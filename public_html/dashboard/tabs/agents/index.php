@@ -127,8 +127,8 @@
 	</script>
 
 	<!--<script src="/tabs/agents/handlebars.runtime.js"></script>-->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
-    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
-	<script type="text/javascript" src="/js/tour.js"></script>
-	<script src="/tabs/agents/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dashboard/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/dashboard/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/dashboard/js/tour.js"></script>
+	<script src="/dashboard/tabs/agents/js/script.js"></script>
 </div>

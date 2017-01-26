@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../common/js/jquery/jquery.serialize-object.min.js"></script>
     <script type="text/javascript" src="../common/js/jquery/jquery.reveal.js"></script>
     <script type="text/javascript" src="../common/js/moment.min.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="/dashboard/js/script.js"></script>
 
     <!-- scubawhere files -->
     <script type="text/javascript">
@@ -47,8 +47,8 @@
         window.promises = {};
     </script>
 
-    <script type="text/javascript" src="/js/main.js"></script>
-    <script type="text/javascript" src="/js/ui.js"></script>
+    <script type="text/javascript" src="/dashboard/js/main.js"></script>
+    <script type="text/javascript" src="/dashboard/js/ui.js"></script>
 
     <!-- Controllers -->
     <script type="text/javascript" src="../js/Controllers/Campaign.js"></script>
@@ -71,7 +71,7 @@
 <body>
     <div id="nav">
         <div id="nav-wrapper">
-            <h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>
+            <h1 id="logo"><a href="/"><img src="/dashboard/common/img/Scubawhere_logo.png"></a></h1>
 
             <button class="btn btn-default pull-right" id="logout">Logout</button>
 
@@ -125,11 +125,11 @@
                             <ul id="layout-options-list" style="margin-right:10px" class="entity-list"></ul>
                         </div>
                         <div id="layout-options" style="width:35%; float:left; max-height:620px; overflow: auto" class="email-options-list">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/tabs/campaigns/email-templates/base_boxed_2column_query.html" src="/img/email-templates/email_template_1.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/tabs/campaigns/email-templates/base_boxed_3column_query.html" src="/img/email-templates/email_template_2.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/tabs/campaigns/email-templates/base_boxed_basic_body_image_query.html" src="/img/email-templates/email_template_3.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/tabs/campaigns/email-templates/base_boxed_basic_query.html" src="/img/email-templates/email_template_4.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/tabs/campaigns/email-templates/base_boxed_body_image_2column_query.html" src="/img/email-templates/email_template_5.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_2column_query.html" src="/img/email-templates/email_template_1.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_3column_query.html" src="/img/email-templates/email_template_2.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_body_image_query.html" src="/img/email-templates/email_template_3.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_query.html" src="/img/email-templates/email_template_4.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_body_image_2column_query.html" src="/img/email-templates/email_template_5.jpg">
                         </div>
                         <div style="width:65%; float:left">
                             <h4>Preview:</h4>
