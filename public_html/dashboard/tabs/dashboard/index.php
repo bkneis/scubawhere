@@ -385,6 +385,6 @@
     </div>
   </script>
 
-  <script src="/tabs/dashboard/js/script.js"></script>
-  <script src="/tabs/dashboard/js/bookings.js"></script>
+  <script src="/dashboard/tabs/dashboard/js/script.js"></script>
+  <script src="/dashboard/tabs/dashboard/js/bookings.js"></script>
 </div><!-- #wrapper -->

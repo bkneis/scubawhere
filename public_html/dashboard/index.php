@@ -50,70 +50,70 @@ $PROTOCOL = 'http';
 	<title>scubawhereRMS | Dashboard</title>
 
 	<!-- favicon -->
-	<link rel="icon" type="image/ico" href="/common/favicon.ico" />
+	<link rel="icon" type="image/ico" href="/dashboard/common/favicon.ico" />
 
 	<!--Bootstrap CSS-->
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-scubawhere.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/bootstrap-scubawhere.css" />
 	<!--<link rel="stylesheet" type="text/css" href="/common/bootstrap/css/bootstrap.min.css" />-->
 
 	<!-- scubawhere styles -->
-	<link rel="stylesheet" type="text/css" href="/common/css/universal-styles.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/universal-styles.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/style.css" />
 
 	<!-- Plugins -->
-	<link rel='stylesheet' type="text/css" href='/common/css/fullcalendar.min.css' />
-	<link rel="stylesheet" type="text/css" href="/common/css/jquery.reveal.css" />
-	<link rel="stylesheet" type="text/css" href="/common/vendor/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/bootstrap-datetimepicker.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/select2.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/select2-bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/introjs.css" />
-	<link rel="stylesheet" type="text/css" href="/common/vendor/nprogress/nprogress.css" />
+	<link rel='stylesheet' type="text/css" href='/dashboard/common/css/fullcalendar.min.css' />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/jquery.reveal.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/vendor/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/bootstrap-datetimepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/select2.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/select2-bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/introjs.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/vendor/nprogress/nprogress.css" />
 	<!--<link rel="stylesheet" type="text/css" href="/common/css/bootstrap.datatables.css" />
 	<link rel="stylesheet" type="text/css" href="/common/vendor/datatables-tabletools/css/dataTables.tableTools.css" />-->
-	<link rel="stylesheet" type="text/css" href="/common/css/dataTables.bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="/common/css/fixedColumns.dataTables.min.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/dataTables.bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/fixedColumns.dataTables.min.css" />
 
-	<link rel="stylesheet" type="text/css" href="/css/nav.css">
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/nav.css">
 
 	<!-- jQuery -->
-	<script src="/common/js/jquery/jquery-1.12.3.min.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery-1.12.3.min.js"></script>
 
 	<!--Bootstrap js-->
-	<script type="text/javascript" src="/common/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- other -->
 	<!--<script type="text/javascript" src="/common/js/handlebars.min.js"></script>-->
-	<script type="text/javascript" src="/common/vendor/handlebars/handlebars.min.js"></script>
-	<script type="text/javascript" src="/common/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="/common/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="/common/js/moment.min.js"></script>
-	<script type="text/javascript" src="/common/js/underscore-min.js"></script>
-	<script type="text/javascript" src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script type="text/javascript" src="/common/js/jquery/jquery.reveal.js"></script>
+	<script type="text/javascript" src="/dashboard/common/vendor/handlebars/handlebars.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/dashboard/common/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/moment.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/underscore-min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/jquery/jquery.reveal.js"></script>
 
 	<!--Datetimepicker-->
-	<script type="text/javascript" src="/common/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!--Select 2-->
-	<script type="text/javascript" src="/common/js/select2.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/select2.min.js"></script>
 
 	<!--nprogress bar-->
-	<script type="text/javascript" src="/common/vendor/nprogress/nprogress.js"></script>
+	<script type="text/javascript" src="/dashboard/common/vendor/nprogress/nprogress.js"></script>
 
 	<!-- Datatables -->
 	<!--<script type="text/javascript" src="/common/js/jquery/jquery.datatables.min.js"></script>
 	<script type="text/javascript" src="/common/js/bootstrap.datatables.js"></script>
 	<script type="text/javascript" src="/common/vendor/datatables-tabletools/js/dataTables.tableTools.js"></script>-->
-	<script type="text/javascript" src="/common/js/datatables.min.js"></script>
-	<script src="/common/js/dataTables.fixedColumns.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/datatables.min.js"></script>
+	<script src="/dashboard/common/js/dataTables.fixedColumns.min.js"></script>
 
-	<script src="/common/js/bootbox.min.js"></script>
+	<script src="/dashboard/common/js/bootbox.min.js"></script>
 
 	<!-- testing with -->
-	<script src="/js/vue.js"></script>
-	<script src="/js/components/EventHub.js"></script>
-	<script src="/js/components/modal.js"></script>
+	<script src="/dashboard/js/vue.js"></script>
+	<script src="/dashboard/js/components/EventHub.js"></script>
+	<script src="/dashboard/js/components/modal.js"></script>
 
 	<!-- scubawhere files -->
 	<script type="text/javascript">
@@ -126,37 +126,37 @@ $PROTOCOL = 'http';
 	<?php if(gethostname() === 'rms.scubawhere.com') { ?>
 		<script type="text/javascript" src="js/app.min.js"></script>
 	<?php } else { ?>
-		<script type="text/javascript" src="js/main.js"></script>
-		<script type="text/javascript" src="js/navigation.js"></script>
+		<script type="text/javascript" src="/dashboard/js/main.js"></script>
+		<script type="text/javascript" src="/dashboard/js/navigation.js"></script>
 		<!--<script type="text/javascript" src="js/tour.js"></script>-->
-		<script type="text/javascript" src="js/ui.js"></script>
-		<script type="text/javascript" src="js/validate.js"></script>
+		<script type="text/javascript" src="/dashboard/js/ui.js"></script>
+		<script type="text/javascript" src="/dashboard/js/validate.js"></script>
 
 		<!-- Load all front-end controllers -->
-		<script type="text/javascript" src="js/Controllers/Accommodation.js"></script>
-		<script type="text/javascript" src="js/Controllers/Addon.js"></script>
-		<script type="text/javascript" src="js/Controllers/Agency.js"></script>
-		<script type="text/javascript" src="js/Controllers/Agent.js"></script>
-		<script type="text/javascript" src="js/Controllers/Boat.js"></script>
-		<script type="text/javascript" src="js/Controllers/Boatroom.js"></script>
-		<script type="text/javascript" src="js/Controllers/Booking.js"></script>
-		<script type="text/javascript" src="js/Controllers/Class.js"></script>
-		<script type="text/javascript" src="js/Controllers/Company.js"></script>
-		<script type="text/javascript" src="js/Controllers/Course.js"></script>
-		<script type="text/javascript" src="js/Controllers/Customer.js"></script>
-		<script type="text/javascript" src="js/Controllers/Location.js"></script>
-		<script type="text/javascript" src="js/Controllers/Package.js"></script>
-		<script type="text/javascript" src="js/Controllers/Payment.js"></script>
-		<script type="text/javascript" src="js/Controllers/Refund.js"></script>
-		<script type="text/javascript" src="js/Controllers/Report.js"></script>
-		<script type="text/javascript" src="js/Controllers/Session.js"></script>
-		<script type="text/javascript" src="js/Controllers/Ticket.js"></script>
-		<script type="text/javascript" src="js/Controllers/Timetable.js"></script>
-		<script type="text/javascript" src="js/Controllers/Trip.js"></script>
-		<script type="text/javascript" src="js/Controllers/CustomerGroup.js"></script>
-		<script type="text/javascript" src="js/Controllers/Campaign.js"></script>
-		<script type="text/javascript" src="js/Controllers/Certificate.js"></script>
-        <script type="text/javascript" src="js/Controllers/Equipment.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Accommodation.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Addon.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Agency.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Agent.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Boat.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Boatroom.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Booking.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Class.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Company.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Course.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Customer.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Location.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Package.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Payment.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Refund.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Report.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Session.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Ticket.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Timetable.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Trip.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/CustomerGroup.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Campaign.js"></script>
+		<script type="text/javascript" src="/dashboard/js/Controllers/Certificate.js"></script>
+        <script type="text/javascript" src="/dashboard/js/Controllers/Equipment.js"></script>
 	<?php } ?>
 
 	<script type="text/javascript">
@@ -182,7 +182,7 @@ $PROTOCOL = 'http';
 <body id="app">
 	<div id="nav">
 		<div id="nav-wrapper">
-			<h1 id="logo"><a href="/"><img src="/common/img/Scubawhere_logo.png"></a></h1>
+			<h1 id="logo"><a href="/"><img src="/dashboard/common/img/Scubawhere_logo.png"></a></h1>
 
 			<!--<button class="btn btn-default pull-right" id="logout">Logout</button>-->
 
@@ -404,6 +404,6 @@ $PROTOCOL = 'http';
 </body>
 </html>
 
-<script type="text/javascript" src="js/Repositories/UserRepo.js"></script>
-<script type="text/javascript" src="js/components/companies-list.js"></script>
-<script type="text/javascript" src="js/main2.js"></script>
+<script type="text/javascript" src="/dashboard/js/Repositories/UserRepo.js"></script>
+<script type="text/javascript" src="/dashboard/js/components/companies-list.js"></script>
+<script type="text/javascript" src="/dashboard/js/main2.js"></script>

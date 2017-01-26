@@ -275,12 +275,12 @@
 		</div>
 	</script>
 
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap-tour-standalone.min.css">
-    <script type="text/javascript" src="/js/bootstrap-tour-standalone.min.js"></script>    
-	<script type="text/javascript" src="/js/tour.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dashboard/css/bootstrap-tour-standalone.min.css">
+    <script type="text/javascript" src="/dashboard/js/bootstrap-tour-standalone.min.js"></script>    
+	<script type="text/javascript" src="/dashboard/js/tour.js"></script>
 	<!--<script src="/tabs/campaigns/email-templates/js/jquery.min.js"></script>-->
 	<!--<script src="/tabs/campaigns/email-templates/js/jquery.ui.widget.js"></script>
 	<script src="/tabs/campaigns/email-templates/js/jquery.iframe-transport.js"></script>
 	<script src="/tabs/campaigns/email-templates/js/jquery.fileupload.js"></script>-->
-	<script src="/tabs/settings/js/script.js"></script>
+	<script src="/dashboard/tabs/settings/js/script.js"></script>
 </div>

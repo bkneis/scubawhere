@@ -109,6 +109,6 @@
     </table>
 </template>
 
-<script src="/tabs/settings-users/js/users-table.js"></script>
-<script src="/tabs/settings-users/js/add-user-form.js"></script>
-<script src="/tabs/settings-users/js/main.js"></script>
+<script src="/dashboard/tabs/settings-users/js/users-table.js"></script>
+<script src="/dashboard/tabs/settings-users/js/add-user-form.js"></script>
+<script src="/dashboard/tabs/settings-users/js/main.js"></script>

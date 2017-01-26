@@ -706,10 +706,10 @@
 
 
 
-	<link rel="stylesheet" href="/tabs/add-booking/css/style.css" type="text/css" />
+	<link rel="stylesheet" href="/dashboard/tabs/add-booking/css/style.css" type="text/css" />
 
-	<script src="/common/js/jquery/jquery.serialize-object.min.js"></script>
-	<script src="/common/js/jquery/jquery.reveal.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery.serialize-object.min.js"></script>
+	<script src="/dashboard/common/js/jquery/jquery.reveal.js"></script>
 
-	<script src="/tabs/customers/js/script.js"></script>
+	<script src="/dashboard/tabs/customers/js/script.js"></script>
 </div>

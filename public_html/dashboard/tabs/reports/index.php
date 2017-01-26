@@ -509,7 +509,7 @@
 		</div>
 	</script>
 
-	<script type="text/javascript" src="/common/js/Chart.js"></script>
-	<script type="text/javascript" src="tabs/reports/js/script.js"></script>
+	<script type="text/javascript" src="/dashboard/common/js/Chart.js"></script>
+	<script type="text/javascript" src="/dashboard/tabs/reports/js/script.js"></script>
 
 </div>

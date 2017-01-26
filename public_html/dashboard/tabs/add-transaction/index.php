@@ -261,7 +261,7 @@
 	</script>
 
 	<!--Basil LocalStorage Wrapper-->
-	<script type="text/javascript" src="/common/vendor/basil.js/build/basil.min.js"></script>
+	<script type="text/javascript" src="/dashboard/common/vendor/basil.js/build/basil.min.js"></script>
 
-	<script src="/tabs/add-transaction/script.js"></script>
+	<script src="/dashboard/tabs/add-transaction/script.js"></script>
 </div>

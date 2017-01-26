@@ -214,5 +214,5 @@
 		{{/each}}
 	</script>
 
-	<script src="/tabs/mailing-lists/js/script.js"></script>
+	<script src="/dashboard/tabs/mailing-lists/js/script.js"></script>
 </div>

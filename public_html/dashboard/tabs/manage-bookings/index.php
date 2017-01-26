@@ -376,5 +376,5 @@
 		{{/each}}
 	</script>
 
-	<script src="/tabs/manage-bookings/js/script.js"></script>
+	<script src="/dashboard/tabs/manage-bookings/js/script.js"></script>
 </div>

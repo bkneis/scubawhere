@@ -46,8 +46,8 @@
 		</div>
 	</div><!-- .row -->
     
-    <script src="js/Repositories/LogRepo.js"></script>
-    <script src="tabs/troubleshooting/js/LogService.js"></script>
-    <script src="tabs/troubleshooting/js/LogObserver.js"></script>
-    <script src="tabs/troubleshooting/js/main.js"></script>
+    <script src="/dashboard/js/Repositories/LogRepo.js"></script>
+    <script src="/dashboard/tabs/troubleshooting/js/LogService.js"></script>
+    <script src="/dashboard/tabs/troubleshooting/js/LogObserver.js"></script>
+    <script src="/dashboard/tabs/troubleshooting/js/main.js"></script>
 </div>

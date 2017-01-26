@@ -176,7 +176,7 @@
 	<option value="{{id}}">{{name}}</option>
 	{{/each}}
 </script>
-<script src="/tabs/campaigns/js/script.js"></script>
+<script src="/dashboard/tabs/campaigns/js/script.js"></script>
 </div>
     <div class="modal fade" id="save-email-template-modal">
         <div class="modal-dialog" style="width:40%">

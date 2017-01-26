@@ -116,5 +116,5 @@
 		</div>
 	</script>
 
-	<script src="/tabs/automated-emails/js/script.js"></script>
+	<script src="/dashboard/tabs/automated-emails/js/script.js"></script>
 </div>
