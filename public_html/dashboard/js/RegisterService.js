@@ -43,7 +43,7 @@ function RegisterService(company_repo) {
 			success_html += 'scubawhereRMS. You can now login into your new account.</p>';
 			$('#registerForm').html(success_html);
 			setTimeout(function() {
-				window.location.href = '/login';
+				window.location.href = '/dashboard/login';
 			}, 2000);
 		},
 		function error(xhr) {
