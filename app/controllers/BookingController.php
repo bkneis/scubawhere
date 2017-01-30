@@ -12,6 +12,7 @@ use Scubawhere\Entities\Payment;
 use Scubawhere\Entities\Packagefacade;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Scubawhere\Repositories\BookingDetailRepo;
 
 class BookingController extends Controller
 {
@@ -1248,6 +1249,36 @@ class BookingController extends Controller
         ); // 200 OK
     }
 
+    public function postOverrideItemPrice()
+    {
+        $data = Input::get('booking_id', 'bookingdetail_id', 'discount', 'item_id');
+
+        $rules = array(
+            'booking_id'       => 'required|integer',
+            'bookingdetail_id' => 'required|integer',
+            'price'            => 'required',
+            'item_id'          => 'required|integer'
+        );
+        
+        $validator = Validator::make($data, $rules);
+        
+        if ($validator->fails()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
+        }
+
+        $bookingdetailRepo = new BookingDetailRepo();
+
+        $bookingdetail = $bookingdetailRepo->get($data['bookingdetail_id']);
+
+        $bookingdetail->override_price = (int) ((float) $data['price'] * 100);
+        
+        if ($bookingdetail->save()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingdetail->errors()->all());
+        }
+        
+        return Response::json(array('status' => 'Success. The price has been overridden.', 'data' => $bookingdetail));
+    }
+
     public function postSetLead()
     {
         /*
@@ -2017,9 +2048,9 @@ class BookingController extends Controller
             return Response::json(array('errors' => array('The booking could not be found.')), 404); // 404 Not Found
         }
 
-        if ($booking->price != 0 && $booking->agent_id === null) {
+        /*if ($booking->price != 0 && $booking->agent_id === null) {
             return Response::json(array('errors' => array('The confirmation method is only allowed for bookings by a travel agent or free-of-charge bookings.')), 403);
-        } // 403 Forbidden
+        } // 403 Forbidden*/
 
         if ($booking->status === 'cancelled') {
             return Response::json(array('errors' => array('The booking cannot be confirmed, as it is cancelled.')), 409);
@@ -2061,6 +2092,34 @@ class BookingController extends Controller
         CrmMailer::sendBookingConf($booking->id);
 
         return array('status' => 'OK. Booking confirmed.', 'deposit' => $payment);
+    }
+
+    public function postChangeRef()
+    {
+        $data = Input::only('booking_id', 'ref');
+        
+        $rules = array(
+            'booking_id' => 'required|integer',
+            'ref'        => 'required'
+        );
+        
+        try {
+            if (!Input::get('booking_id')) {
+                throw new ModelNotFoundException();
+            }
+            $booking = Context::get()->bookings()->findOrFail(Input::get('booking_id'));
+        } catch (ModelNotFoundException $e) {
+            return Response::json(array('errors' => array('The booking could not be found.')), 404); // 404 Not Found
+        }
+        
+        $new_ref = array('agent_reference' => $data['ref']);
+        
+        if (!$booking->update($new_ref)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $booking->errors()->all());
+        }
+        
+        return Response::json(array('status' => 'Success. Booking reference has changed'));
+        
     }
 
     public function getValidate()

@@ -181,6 +181,18 @@ Booking.cancel = function(params, successFn, errorFn) {
 	});
 };
 
+Booking.changeRef = function(params, successFn, errorFn) {
+	
+	$.ajax({
+		type: 'POST',
+		url: '/api/booking/change-ref',
+		data: params,
+		success: successFn,
+		error: errorFn
+	});
+	
+};
+
 
 /*
  ********************************
