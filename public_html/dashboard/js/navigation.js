@@ -73,7 +73,7 @@ $(function () {
 
 function changeHash(newHash) {
 
-    var newTabs = ['accommodations'];
+    var newTabs = []; //['accommodations'];
 
     if (newTabs.indexOf(newHash) !== -1) {
         localStorage.setItem('navBridge.currentTab', newHash);
