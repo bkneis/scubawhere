@@ -54,7 +54,8 @@ class RegisterController extends Controller {
 	{
 		$data = Input::only(
 			'contact',
-			'name'
+			'name',
+			'source'
 		);
 
 		$userData = Input::only(

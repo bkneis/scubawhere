@@ -42,6 +42,13 @@
 				<input style="width:280px;" type="password" name="password" placeholder="Password" required>
 				<label for="contact">Re enter password</label>
 				<input style="width:280px;" type="password" name="repassword" placeholder="Re Enter Password" required>
+				<label for="source">Where did you hear about us?</label>
+				<select name="source">
+					<option value="website">scubawhere website</option>
+					<option value="google">Google</option>
+					<option value="social-media">Social Media</option>
+					<option value="contact">Direct Contact</option>
+				</select>
 
 				<p style="font-size:14px; width:280px; font-style: italic;">
 					By signing up, you agree to our 
