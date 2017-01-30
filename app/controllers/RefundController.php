@@ -98,6 +98,12 @@ class RefundController extends Controller {
 			return Response::json( array('errors' => array('The entered amount is more than the remaining refund.')), 406 ); // 406 Not Acceptable
 
 		$refund = new Refund($data);
+		
+		if (!empty(Input::get('date'))) {
+			$date = new \DateTime(Input::get('date'));
+			$date = $date->format('Y-m-d');
+			$refund->received_at = $date;
+		}
 
 		if( !$refund->validate() )
 		{

@@ -122,6 +122,12 @@ class PaymentController extends Controller
 
         $payment = new Payment($data);
 
+        if (!empty(Input::get('date'))) {
+            $date = new \DateTime(Input::get('date'));
+            $date = $date->format('Y-m-d');
+            $payment->received_at = $date;
+        }
+
         if (!$payment->validate()) {
             return Response::json(array('errors' => $payment->errors()->all()), 406); // 406 Not Acceptable
         }

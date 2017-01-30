@@ -169,9 +169,21 @@ $(function() {
 
 	bookingDetailsTemplate        = Handlebars.compile( $('#booking-details-template').html() );
 	paymentgatewaysSelectTemplate = Handlebars.compile( $('#paymentgateways-select-template').html() );
-
+	
 	$('#booking-details-container').html( bookingDetailsTemplate(booking) );
-
+	
+	$('input.datepicker').datetimepicker({
+		pickDate: true,
+		pickTime: false,
+		//defaultDate: new Date(),
+		icons: {
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up:   'fa fa-chevron-up',
+			down: 'fa fa-chevron-down'
+		}
+	});
+	
 	Payment.getAllPaymentgateways(function success(data) {
 		window.paymentgateways = _.indexBy(data, 'id');
 		window.paymentgateways = _.filter(window.paymentgateways, function(obj) { return obj.name !== 'Agent Deposit'; });

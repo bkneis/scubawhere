@@ -115,6 +115,13 @@
 								<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
 							</div>
 						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 col-sm-offset-1 control-label">Issue Date : </label>
+							<div class="col-sm-6">
+								<input name="date" type="text" class="form-control datepicker" value="{{date}}">
+							</div>
+						</div>
 
 						<div class="form-group">
 							<label class="col-sm-3 col-sm-offset-1 control-label">Notes : </label>
@@ -171,6 +178,13 @@
 						<label class="col-sm-3 col-sm-offset-1 control-label">Card Ref : </label>
 						<div class="col-sm-6">
 							<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Issue Date : </label>
+						<div class="col-sm-6">
+							<input name="date" type="text" class="form-control datepicker" value="{{date}}">
 						</div>
 					</div>
 
