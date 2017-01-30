@@ -12,11 +12,11 @@
     export default {
         props : {
             model : {},
-            entities : { default : [] }
+            entities : { default: () => [] }
         },
         data() {
             return {
-                selectedEntities : [{}]
+                selectedEntities : [ {} ]
             }
         },
         methods : {

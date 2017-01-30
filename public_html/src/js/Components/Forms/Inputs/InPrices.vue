@@ -35,26 +35,28 @@
     </div>
 </template>
 <script type="text/babel">
-    import DateTime from 'vue2-datetime-picker/src';
     import config from 'config.ts';
+    import DateTime from 'vue2-datetime-picker/src';
     import PriceService from 'Services/PriceService.ts';
 
     export default {
-        components : { DateTime },
-        props : {
-            label    : {},
-            value    : { default : [ PriceService.emptyPrice() ] },
-            required : {}
+        components: { DateTime },
+        props: {
+            label: {},
+            value: {
+                default: () => [ PriceService.emptyPrice() ]
+            },
+            required: {}
         },
         data() {
             return {
-                currency : window.company.currency.symbol,
-                datePickerOptions : { format : config.DATE_FORMAT }
+                currency: window.company.currency.symbol,
+                datePickerOptions: {format: config.DATE_FORMAT}
             }
         },
-        methods : {
+        methods: {
             removePrice(index) {
-                if(this.value.length > 1) {
+                if (this.value.length > 1) {
                     this.value.splice(index, 1);
                 }
             },
@@ -65,9 +67,11 @@
                 this.$emit('input', this.value);
             }
         },
-        computed : {
+        computed: {
             // @todo Change this to use this.$el.querySelector on inputs
-            isRequired() { return this.required && (this.value.length > 0); }
+            isRequired() {
+                return this.required && (this.value.length > 0);
+            }
         }
     }
 </script>

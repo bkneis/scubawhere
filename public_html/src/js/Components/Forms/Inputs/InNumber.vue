@@ -1,31 +1,23 @@
 <template>
     <div class="form-row">
-        <label v-if="label"
-               :for="name"
-               class="form-label">
+        <label v-if="label" :for="name" class="field-label">
             {{label}}
         </label>
         <input type="number"
                :name="name"
                :min="min"
                :max="max"
-               :placeholder="0.00">
+               :placeholder="placeholder">
     </div>
 </template>
 <script type="text/babel">
     export default {
-        props : ['name', 'min', 'max', 'placeholder'],
-        data() {
-            return {
-            }
-        },
-        computed : {
-            min() {
-                return this.min ? this.min : '0';
-            },
-            placeholder() {
-                return this.placeholder ? this.placeholder : '0.00';
-            }
+        props: {
+            label: {},
+            name: {},
+            min: { default: 0 },
+            max: {},
+            placeholder: { default: '00.00' }
         }
     }
 </script>

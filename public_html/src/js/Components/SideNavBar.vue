@@ -64,6 +64,8 @@
 
             <nav-menu :show="true" icon="fa-sitemap" name="Management">
                 <nav-link url="/accommodations" name="Accommodations"/>
+                <nav-link url="/addons" name="Addons"/>
+                <nav-link url="/agents" name="Agents"/>
                 <li>
                     <a href="/dashboard/#add-ons">Add-ons</a>
                 </li>

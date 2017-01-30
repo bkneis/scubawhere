@@ -14,7 +14,7 @@
                 :style="{width:width}"
                 role="alert"
         >
-            <button v-show="dismissable" type="button" class="close" @click="close">
+            <button v-show="dismissable" type="button" class="close" @click="show = false">
                 <span>&times;</span>
             </button>
             <slot/>
@@ -42,11 +42,6 @@
             },
             placement: {
                 type: String
-            }
-        },
-        methods : {
-            close() {
-                this.show = false;
             }
         }
     }
