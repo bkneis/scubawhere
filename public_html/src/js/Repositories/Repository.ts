@@ -8,7 +8,7 @@ export default class Repository implements IRepository {
     
     public resource : any;
     public resourceName : string;
-    
+
     constructor(resource : string)
     {
         this.resourceName = resource;
