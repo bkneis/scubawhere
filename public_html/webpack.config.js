@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
     entry: './src/js/main.js',
@@ -17,7 +17,7 @@ module.exports = {
                     loaders: {
                         // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
                         // the "scss" and "sass" values for the lang attribute to the right configs here.
-                        // other preprocessors should work out of the box, no loader config like this nessessary.
+                        // other preprocessors should work out of the box, no loader config like this necessary.
                         'scss': 'vue-style-loader!css-loader!sass-loader',
                         'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
                     }/*,
@@ -37,10 +37,7 @@ module.exports = {
             {
                 test: /\.ts$/,
                 exclude: /node_modules|vue\/src/,
-                loader: 'ts-loader'/*,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/]
-                }*/
+                loader: 'ts-loader'
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
@@ -66,11 +63,19 @@ module.exports = {
         hints: false
     },
     devtool: '#eval-source-map'
-}
+};
 
+/**
+ * Here we can configure any additional config as well as change the existing
+ * module.exports. I think it is better to change the config here to clearly show
+ * both the production and development config and their changes, instead of just
+ * using process.env.NODE_ENV === 'production' ? production config : dev config
+ */
 if (process.env.NODE_ENV === 'production') {
-    module.exports.devtool = '#source-map'
+    module.exports.devtool = '#source-map';
+    module.exports.output.filename = 'bundle-[hash:6].js';
     // http://vue-loader.vuejs.org/en/workflow/production.html
+    //noinspection JSUnresolvedFunction
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
@@ -86,5 +91,5 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.LoaderOptionsPlugin({
             minimize: true
         })
-    ])
+    ]);
 }
