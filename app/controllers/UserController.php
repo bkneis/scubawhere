@@ -24,6 +24,7 @@ class UserController extends Controller
         $companies = $user->companies()->select('id', 'name')->get();
         $active_id = \Cache::get($user->getActiveCompanyKey());
         if (is_null($active_id)) {
+            $user->load('company');
             $company = $user->company;
             $company->active = true;
             return array($company);
