@@ -21,7 +21,7 @@
         <a href="/api/password/remind" class="forgot-password">Forgot your password?</a>
     </div>
 </template>
-<style src="../../css/pages/login.css" scoped/>
+<style src="../../sass/pages/login.css" scoped/>
 <script type="text/babel">
     export default {
         name : 'LoginPage',
