@@ -28,14 +28,16 @@ class TicketRepo extends EloquentRepo implements TicketRepoInterface {
         $now = Helper::localTime();
         $now = $now->format('Y-m-d');
 
-        return Ticket::onlyOwners()
-            ->where(function($query) use ($now) {
-                $query->whereNull('available_from')->orWhere('available_from', '<=', $now);
+        return Ticket::where(function($query) use ($now) {
+                $query->whereNull('available_from')
+                    ->orWhere('available_from', '<=', $now);
             })
             ->where(function($query) use ($now) {
-                $query->whereNull('available_until')->orWhere('available_until', '>=', $now);
+                $query->whereNull('available_until')
+                    ->orWhere('available_until', '>=', $now);
             })
-            ->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')->get();    
+            ->with('boats', 'boatrooms', 'trips', 'basePrices', 'prices')
+            ->get();    
     }
 
 }
