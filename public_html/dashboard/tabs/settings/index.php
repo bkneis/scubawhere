@@ -60,6 +60,11 @@
 									<label class="field-label">Customer facing web portal : </label>
 									<input type="text" style="width: 30%;" name="alias" value="{{alias}}" {{#if alias}} disabled {{/if}}> .scubawhere.com
 								</div>
+								
+								<div class="form-row">
+									<label class="field-label">Custom booking reference (Max 3 characters) : </label>
+									<input type="text" style="width: 30%;" name="reference_base" value="{{reference_base}}" maxlength="3">
+								</div>
 
 								<!--<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the Tour : </label>

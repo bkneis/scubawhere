@@ -34,7 +34,7 @@ class CompanyController extends Controller {
 
 	public function postUpdate()
 	{
-		$data = Input::only('contact', 'description', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website', 'alias');
+		$data = Input::only('contact', 'description', 'reference_base', 'name', 'address_1', 'address_2', 'city', 'county', 'postcode','country_id', 'currency_id', 'business_phone', 'business_email', 'vat_number', 'registration_number', /*'phone',*/ 'website', 'alias');
 
 		if(Input::has('lat')) {
 			$googleAPIKey = 'AIzaSyDBX2LjGDdq2QlaGq0UJ9RcEHYdodJXCWk';
