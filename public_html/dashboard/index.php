@@ -25,7 +25,7 @@ $PROTOCOL = 'http';
 	// Check for the authentication cookie
 	if(!$_COOKIE["scubawhere_session"])
 	{
-		header("Location: " . $BASE_URL . "/login/");
+		header("Location: " . $BASE_URL . "/dashboard/login/");
 		exit();
 	}
 
@@ -39,7 +39,7 @@ $PROTOCOL = 'http';
 	$result = json_decode( $result );
 	if( empty($result->id) ) {
 		// Not logged in
-		header("Location: " . $BASE_URL . "/login/");
+		header("Location: " . $BASE_URL . "/dashboard/login/");
 		exit();
 	}
 ?>
@@ -260,12 +260,12 @@ $PROTOCOL = 'http';
 					</a>
 				</li>
 
-				<!--<li>
+				<li>
 					<a href="#availability">
-						<i class="fa fa-calendar fa-lg fa-fw"></i>
+						<i class="fa fa-calendar-o fa-lg fa-fw"></i>
 						<span>Availability</span>
 					</a>
-				</li>-->
+				</li>
 
 				<li>
 					<div>
