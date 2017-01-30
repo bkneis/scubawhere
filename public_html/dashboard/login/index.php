@@ -7,7 +7,7 @@
 	<script src="/dashboard/common/js/jquery/jquery.min.js"></script>
 	<script src="/dashboard/common/js/jquery/ui.min/jquery-ui.min.js"></script>
 
-	<script src="/dashboard/js/login.js"></script>
+	<script src="/dashboard/login/js/login.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/bootstrap-scubawhere.css">
 	<link rel="stylesheet" type="text/css" href="/dashboard/common/css/universal-styles.css">
