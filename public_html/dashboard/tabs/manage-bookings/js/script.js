@@ -205,6 +205,11 @@ Handlebars.registerHelper('cancelButton', function() {
 
 	return new Handlebars.SafeString('<button onclick="cancelBooking(' + this.id + ', \'' + this.status + '\', this);" class="btn btn-danger pull-right"' + disabled + '><i class="fa fa-times fa-fw"></i> ' + btnText + '</button>');
 });
+Handlebars.registerHelper('changeRefButton', function(id) {
+	if (this.agent !== null) {
+		return new Handlebars.SafeString('<button onclick="changeRef(' + id + ')" class="btn btn-warning"><i class="fa fa-pencil fa-fw"></i> Change Agent Ref</button> ');
+	}
+});
 
 //var display;
 
@@ -291,6 +296,24 @@ $(function() {
 
 		});
 
+	});
+	
+	$('#change-ref-modal').on('click', '#btn-change-ref', function () {
+		var params = {
+			booking_id: window.changeBookingRefId,
+			ref: $('#new-booking-ref').val(),
+			_token: window.token
+		};
+		
+		Booking.changeRef(params, function success(response) {
+			pageMssg(response.status, 'success');
+			renderBookingList(window.bookings);
+			$('#change-ref-modal').modal('hide');
+		},
+		function error(xhr) {
+			var error = (JSON.parse(xhr.responseText)).errors[0];
+			pageMssg(error, 'danger');
+		});
 	});
 
 });
@@ -711,4 +734,9 @@ function createDataTable() {
             tr.addClass('shown');
         }
     });
+}
+
+function changeRef(id) {
+	window.changeBookingRefId = id;
+	$('#change-ref-modal').modal('show');
 }

@@ -366,6 +366,7 @@
 				{{addTransactionButton id}}
 				{{viewButton id}}
 				{{editButton id}}
+				{{changeRefButton id}}
 				{{invoiceButton id}}
 
 				<a onclick="emailCustomer({{lead_customer.id}})"><button class="btn btn-default pull-right"><i class="fa fa-envelope fa-fw"></i> Email customer</button></a>
@@ -377,4 +378,22 @@
 	</script>
 
 	<script src="/dashboard/tabs/manage-bookings/js/script.js"></script>
+</div>
+<div class="modal fade" id="change-ref-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Change Agent Booking Reference</h4>
+			</div>
+			<div class="modal-body">
+				<label class="field-label">New reference : </label>
+				<input id="new-booking-ref" type="text" placeholder="New reference"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button id="btn-change-ref" class="btn btn-primary">Change Reference</button>
+			</div>
+		</div>
+	</div>
 </div>
