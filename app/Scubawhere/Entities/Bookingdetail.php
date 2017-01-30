@@ -6,7 +6,7 @@ use LaravelBook\Ardent\Ardent;
 
 class Bookingdetail extends Ardent {
 
-	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id', 'temporary');
+	protected $fillable = array('customer_id', 'is_lead', 'ticket_id', 'session_id', 'boatroom_id', 'packagefacade_id', 'course_id', 'training_session_id', 'temporary', 'override_price');
 
 	protected $table = 'booking_details';
 
@@ -20,6 +20,7 @@ class Bookingdetail extends Ardent {
 		'training_id'         => 'integer|min:1|required_with:training_session_id|required_without:ticket_id',
 		'training_session_id' => 'integer|min:1|required_without_all:session_id,temporary',
 		'temporary'           => 'boolean',
+		'override_price'      => ''
 	);
 
 	public function beforeSave()
