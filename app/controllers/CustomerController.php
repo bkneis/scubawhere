@@ -272,11 +272,18 @@ class CustomerController extends Controller {
 
 		foreach($customer_data as $line_num => $customer)
 		{
+			$qualification_id = null;
 			$new_customer_data = array();
 			foreach($columns as $index => $attr)
 			{
 				if(!empty($attr))
 				{
+					if ($attr === 'qualification_id') {
+						if (!empty($customer[$index])) {
+							$qualification_id = (int) $customer[$index];
+						}
+						continue;
+					}
 					if(array_key_exists($index, $customer))
 					{
 						if(!empty($customer[$index]))
@@ -318,7 +325,12 @@ class CustomerController extends Controller {
 			}
 			else
 			{
+				$new_customer = Context::get()->customers()->save($new_customer);
+				if (! is_null($qualification_id)) {
+					$new_customer->certificates()->sync([$qualification_id]);
+				}
 				array_push($imported_customers, $new_customer);
+				$qualification_id = null;
 			}
 
 		}
@@ -327,7 +339,8 @@ class CustomerController extends Controller {
 
 		$this->object_store_service->uploadCustomerCSV($csv_path);
 
-		$customers = Context::get()->customers()->saveMany($imported_customers);
+		//$customers = Context::get()->customers()->saveMany($imported_customers);
+		$customers = $imported_customers;
 
 		$subscription_data = array();
 		$subscription_data['token'] = 'USERACCEPTED';

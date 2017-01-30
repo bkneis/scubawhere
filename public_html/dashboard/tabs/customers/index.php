@@ -253,6 +253,7 @@
 			<option value="show_size">Shoe Size</option>
 			<option value="height">Height</option>
 			<option value="notes">Notes</option>
+			<option value="qualification_id">Qualification ID (Please contact us to get the list of IS's</option>
 		</select>
 		<i class="fa fa-remove fa-lg remove-column" style="cursor: pointer"></i>
 	</p>
