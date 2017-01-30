@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Accommodation Selection <small>Do you require any accommodation?</small></h2>
+			<h2>Accommodation Selection <small>If required, Please assign the customers to an accommodation.</small></h2>
 		</div>
 	</div>
 </div>
@@ -9,7 +9,7 @@
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select Customer</h2>
+				<h2 class="panel-title">Step 1 : Select Customer</h2>
 			</div>
 			<div class="panel-body">
 				<div class="list-group" id="accommodation-customers">
@@ -77,7 +77,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select Accommodation</h2>
+				<h2 class="panel-title">Step 2 : Select Accommodation</h2>
 			</div>
 			<div class="panel-body">
 				<ul class="list-group" id="accommodations-list">

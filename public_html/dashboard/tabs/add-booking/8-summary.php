@@ -262,6 +262,7 @@
 												 Price Breakdown
 											</td>
 											<td class="title-dark" width="100"></td>
+											<!--<td class="title-dark" width="100"></td>-->
 											<td class="title-dark" width="100"></td>
 										</tr>
 										{{#each packagesSummary}}
@@ -269,6 +270,9 @@
 												<td class="inner-item-col">
 													<i class="fa fa-tags fa-fw"></i> {{{name}}}
 												</td>
+												<!--<td>
+													<a href="#" data-id="{{id}}" data-bookingdetail-id="{{bookingdetail_id}}" class="override_price">Click here to override the price</a>
+												</td>-->
 												<td class="inner-item-col" style="text-align: right;">
 													x1
 												</td>
@@ -424,10 +428,12 @@
 												</td>
 												<td class="title-dark" width="50%"></td>
 											</tr>
-											<tr>
+											<tr id="options-menu">
 												<td id="option-buttons" style="vertical-align: middle; border-right: 1px solid #ccc;">
 													<button class="btn btn-success btn-block save-booking mb10"{{saveable}}><i class="fa fa-save fa-fw"></i> Save As Quote</button>
-													{{#unless price}}
+													<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
+													<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
+													{{!--{{#unless price}}
 														<button class="btn btn-primary btn-block confirm-booking mb10"><i class="fa fa-check fa-fw"></i> Confirm booking</button>
 													{{else}}
 														{{#if agent_id}}
@@ -435,9 +441,9 @@
 														{{else}}
 															<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>
 														{{/if}}
-													{{/unless}}
+													{{/unless}}--}}
 												</td>
-												<td>
+												<td id="reserve-buttons">
 													<h4 class="text-center">Reserve Booking</h4>
 													<form id="reserve-booking" class="form-horizontal">
 														<div class="form-group">
@@ -486,4 +492,22 @@
 			</tr>
 		</table>
 	</script>
+</div>
+<div class="modal fade" id="override-price-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Override Price</h4>
+			</div>
+            <div class="modal-body">
+				<label class="field-label">New Price : </label>
+				<input id="override-price" type="number" placeholder="00.00" min="0" step="0.01"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-override-price" class="btn btn-primary">Override Price</button>
+            </div>
+		</div>
+	</div>
 </div>

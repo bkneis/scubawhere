@@ -170,6 +170,7 @@
 	<script src="/dashboard/common/js/fullcalendar.min.js"></script>
 
 	<!--My scripts-->
+	<script src="/dashboard/tabs/add-booking/js/OverridePrice.js"></script>
 	<script src="/dashboard/tabs/add-booking/js/script.js"></script>
 
 </div>

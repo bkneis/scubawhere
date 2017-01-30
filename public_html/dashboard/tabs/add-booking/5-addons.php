@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Addon Selection <small>Do you require any addons?</small></h2>
+			<h2>Addon Selection <small>Please assign any addons you wish to include to the trips</small></h2>
 		</div>
 	</div>
 </div>
@@ -9,7 +9,7 @@
 	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select the trip</h2>
+				<h2 class="panel-title">Step 1 : Select the trip</h2>
 			</div>
 			<div class="panel-body">
 				<div class="list-group" id="addon-booking-details">
@@ -60,7 +60,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select Addons</h2>
+				<h2 class="panel-title">Step 2 : Select Addons</h2>
 			</div>
 			<div class="panel-body">
 				<ul class="list-group" id="addons-list">

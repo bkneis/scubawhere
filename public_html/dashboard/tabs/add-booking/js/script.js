@@ -3037,15 +3037,21 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 
 	_.each(booking.bookingdetails, function(detail) {
 		if(detail.packagefacade) { // This catches NULL and UNDEFINED
-			if(!packagesSummary[detail.packagefacade.id])
+			if(!packagesSummary[detail.packagefacade.id]) {
 				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
+				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
+			}
 		}
 		else if(detail.course) {
-			if(!coursesSummary[detail.customer.id + '-' + detail.course.id])
+			if(!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
 				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
+				coursesSummary[detail.customer.id + '-' + detail.course.id].bookingdetail_id = detail.id;
+			}
 		}
 		else if(detail.ticket) {
-			ticketsSummary.push(detail.ticket);
+			var ticket = detail.ticket;
+			ticket.bookingdetail_id = detail.id;
+			ticketsSummary.push(ticket);
 		}
 
 		_.each(detail.addons, function(addon) {
@@ -3055,6 +3061,7 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 				else {
 					addon.qtySummary = parseInt(addon.pivot.quantity);
 					addonsSummary[addon.id] = addon;
+					addonsSummary[addon.id].bookingdetail_id = detail.id;
 				}
 			}
 		});
@@ -3068,10 +3075,10 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	window.promises.loadedAgents.done(function() {
 		$('#summary-container').html(summaryTemplate(booking));
 
-		booking.packagesSummary = null;
-		booking.coursesSummary  = null;
-		booking.ticketsSummary  = null;
-		booking.addonsSummary   = null;
+		//booking.packagesSummary = null;
+		//booking.coursesSummary  = null;
+		//booking.ticketsSummary  = null;
+		//booking.addonsSummary   = null;
 	});
 });
 
@@ -3110,6 +3117,7 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 		pageMssg('Some items are still unassigned. Please assign or remove those items before continuing.', 'warning');
 		return false;
 	}
+	window.skipSavedBooking = true;
 
 	var params = {};
 	params._token = window.token;
@@ -3126,11 +3134,12 @@ $('#summary-tab').on('click', '.confirm-booking', function() {
 			data.deposit.paymentgateway.name = 'Agent Deposit'; // @todo this is abit of a hack, find out why window.paymentgateways isnt loaded
 			booking.payments.push(data.deposit);
 			booking.calculateSums();
-			$(self).remove();
-			$('#option-buttons').append('<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
+			//$(self).remove();
+			//$('#option-buttons').append('<button onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 		}
-
-		window.skipSavedBooking = true;
+		
+		$('#options-menu').empty();
+		$('#options-menu').append('<button style="margin-top: 20px;" onclick="addTransaction();" class="btn btn-primary btn-block add-transaction"><i class="fa fa-credit-card fa-fw"></i> Add Transaction</button>');
 
 		// Update status on summary screen
 		$('#status').html(statusIcon(booking).string);
@@ -3163,6 +3172,40 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 		if(data.errors) pageMssg(data.errors[0], "danger");
 	});
 
+});
+
+var overridePrice = {
+	bookingdetail_id: null,
+	item_id: null,
+	amount: null
+}
+
+$('#summary-tab').on('click', '.override_price', function (event) {
+	event.preventDefault();
+	overridePrice.bookingdetail_id = $(this).data('bookingdetail-id');
+	overridePrice.item_id = $(this).data('id');
+	overridePrice.item_type = $(this).data('type');
+	$('#override-price').val('');
+	$('#override-price-modal').modal('show');
+});
+
+$('#summary-tab').on('click', '#btn-override-price', function (event) {
+	event.preventDefault();
+	var params = {
+		amount: $('#override-price').val(),
+		bookingdetail_id: overridePrice.bookingdetail_id,
+		item_id: overridePrice.item_id,
+		booking_id: booking.id
+	};
+	
+	booking.overrideItemPrice(params, function (response) {
+		pageMssg(response.status, 'success');
+	},
+	function error (xhr) {
+		console.log(xhr);
+		var errors = (JSON.parse(xhr.responseText)).errors[0];
+		pageMssg(errors, 'danger');
+	});
 });
 
 /*

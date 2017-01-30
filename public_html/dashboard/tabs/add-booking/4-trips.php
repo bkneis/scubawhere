@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Trips & Classes <small>When would you like to go diving?</small></h2>
+			<h2>Trips & Classes <small>Please assign the customers to their trips</small></h2>
 		</div>
 	</div>
 </div>
@@ -9,7 +9,7 @@
 	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select Customer</h2>
+				<h2 class="panel-title">Step 1 : Select Customer</h2>
 			</div>
 			<div class="panel-body">
 				<div class="list-group" id="session-customers">
@@ -27,7 +27,7 @@
 	<div class="col-sm-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Select Ticket</h2>
+				<h2 class="panel-title">Step 2 : Select Ticket</h2>
 			</div>
 			<div class="panel-body">
 				<div class="list-group" id="session-tickets" data-toggle="buttons">
@@ -166,7 +166,7 @@
 		<div class="panel panel-default" id="sessions-panel">
 			<div class="panel-heading" style="padding-right: 5px;">
 				<button id="assign-no-dates" class="btn btn-sm btn-default pull-right assign-session" style="margin-top: -5px;" data-temporary="temporary">Add without date <i class="fa fa-fast-forward fa-fw"></i></button>
-				<h3 class="panel-title">Assign to Session</h3>
+				<h3 class="panel-title">Step 3 : Assign to a Session</h3>
 			</div>
 			<div class="panel-body">
 				<div class="row ">
