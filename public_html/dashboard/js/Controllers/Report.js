@@ -108,6 +108,19 @@ var Report = {
 				pageMssg(res.errors[0], 'danger');
 			}
 		});
+	},
+	
+	getSurcharges : function (params, handleData) {
+		$.ajax({
+			url     : '/api/report/surcharges',
+			data    : params,
+			success : handleData,
+			error   : function (xhr) {
+				console.log(xhr);
+				var res = JSON.parse(xhr.responseText);
+				pageMssg(res.errors[0], 'danger');
+			}
+		});
 	}
 
 };
