@@ -95,6 +95,11 @@ class PaymentController extends Controller
         $data['paymentgateway_id'] = Input::get('paymentgateway_id');
         // $data['received_at']       = Input::get('received_at');
         $data['received_at'] = Helper::localTime()->format('Y-m-d');
+        
+        $data['surcharge'] = Input::get('surcharge');
+        if (! is_null($data['surcharge'])) {
+            $data['surcharge'] = (int) $data['surcharge'];
+        }
 
         if(Input::get('card_ref') !== '0' && Input::get('card_ref') !== 0) {
             $data['card_ref'] = Input::get('card_ref');

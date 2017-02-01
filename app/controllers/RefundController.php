@@ -85,6 +85,11 @@ class RefundController extends Controller {
 			$data['card_ref'] = Input::get('card_ref');
 		}
 		$data['notes']    = Input::get('notes');
+		
+		$data['surcharge'] = Input::get('surcharge');
+		if (! is_null($data['surcharge'])) {
+			$data['surcharge'] = (int) $data['surcharge'];
+		}
 
 		// Check that received_at date lies in the past
 		/* if(!Helper::isPast($data['received_at']))
