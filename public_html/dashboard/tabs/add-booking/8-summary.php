@@ -341,12 +341,14 @@
 											</td>
 											<td class="item-col quantity" style="text-align: right; padding-right: 10px; border-top: 1px solid #cccccc;">
 												<span class="total-space">Subtotal</span><br />
-
+												
+												{{#compare totalSurcharged '!==' '0'}}
+													<span class="total-space">Credit Card Surcharge</span><br />
+												{{/compare}}
+												
 												{{#compare discount '!==' '0.00'}}
 													<span class="total-space">Discount</span><br />
 												{{/compare}}
-
-												{{!-- <span class="total-space">Tax</span><br /> --}}
 
 												{{#if agent_id}}
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Gross</span><br />
@@ -359,18 +361,20 @@
 											<td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
 												<span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
 
-												{{#compare discount '!==' '0.00'}}
-													<span class="total-space">-{{decimalise discount}}</span><br />
+												{{#compare totalSurcharged '!==' '0'}}
+													<span class="total-space">{{totalSurcharged}}</span><br />
 												{{/compare}}
 
-												{{!-- <span class="total-space">$0.75</span><br /> --}}
+												{{#compare discount '!==' '0.00'}}
+													<span class="total-space">- {{decimalise discount}}</span><br />
+												{{/compare}}
 
 												{{#if agent_id}}
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d;">{{currency}} {{decimal_price}}</span><br />
 													<span class="total-space">-{{commission_amount agent_id decimal_price}}</span><br />
 													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{commission_result agent_id decimal_price}}</span>
 												{{else}}
-													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{decimal_price}}</span>
+													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{totalSum}}</span>
 												{{/if}}
 											</td>
 										</tr>

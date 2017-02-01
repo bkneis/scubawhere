@@ -33,6 +33,13 @@ Handlebars.registerHelper('decimalise', function (obj) {
 	return new Handlebars.SafeString(parseFloat(parseInt(obj) / 100).toFixed(2));
 });
 
+Handlebars.registerHelper('totalSurcharged', function () {
+	return booking.sums.surcharge;
+});
+
+Handlebars.registerHelper('totalSum', function () {
+	return (parseFloat(booking.decimal_price) + parseFloat(booking.sums.surcharge)).toFixed(2);
+});
 
 /**
  * Generate the free spaces percentage bar
