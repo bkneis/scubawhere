@@ -540,6 +540,16 @@ function getReport(reportType, callback) {
 				createDataTable();
 			});
 			break;
+		
+		case('surcharges'):
+			$("#report-title").empty().append("Card Surcharges Report");
+			Report.getSurcharges(dates, function (res) {
+				report = Handlebars.compile($('#surcharges-report-template').html());
+				$("#reports").empty().append( report(res.data.report) );
+				createDataTable();
+			});
+			break;
+			
 	}
 
 }

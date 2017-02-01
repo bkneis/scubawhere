@@ -15,6 +15,7 @@
 						<button type="button" data-report="revenue" class="btn btn-default">Revenue Analysis</button>
 						<button type="button" data-report="cancellations" class="btn btn-default">Cancellations</button>
 						<button type="button" data-report="discounts" class="btn btn-default">Discounts</button>
+						<button type="button" data-report="surcharges" class="btn btn-default">Card Surcharges</button>
 						<!--<button type="button" data-report="demographics" class="btn btn-default">Demographics Analysis</button>-->
 					</div>
 				</div>
@@ -439,6 +440,41 @@
 		<div class="text-right" style="font-weight: bold;">
 			<p>&nbsp;</p>
 			<h4>Total discount bookings : {{bookings.length}}</h4>
+		</div>
+	</script>
+	
+	<script type="text/x-handlebars-template" id="surcharges-report-template">
+		<table class="table table-striped table-bordered reports-table" cellspacing="0" width="100%">
+			<thead>
+                <tr>
+                    <th>Date of Transaction</th>
+                    <th>Name</th>
+                    <th>Booking Reference</th>
+					<th>Card Reference</th>
+                    <th>Transaction Amount</th>
+                    <th>Surcharge Amount</th>
+                </tr>
+			</thead>
+			<tbody>
+                {{#each transactions}}
+                    <tr {{#compare type '==' 'refund'}}style="color: red;"{{/compare}}>
+						<td>{{received_at}}</td>
+						<td>{{{customer.firstname}}} {{{customer.lastname}}}</td>
+						<td><a class="view-booking">{{booking_ref}}</a></td>
+						<td>{{card_ref}}</td>
+						<td>{{#compare type '==' 'refund'}}- {{/compare}} {{currency.symbol}} {{amount}}</td>
+						<td>{{currency}} {{convertPrice surcharge}}</td>
+                    </tr>
+                {{else}}
+                    <tr><td colspan="6" class="text-center">There are no cancellations between these dates</td></tr>
+                {{/each}}
+			</tbody>
+
+		</table>
+		<div class="text-right" style="font-weight: bold;">
+			<p>&nbsp;</p>
+			<h4>Total surcharged transactions : {{transactions.length}}</h4>
+			<h4>Total surcharged amount : {{currency}} {{convertPrice total}}</h4>
 		</div>
 	</script>
 
