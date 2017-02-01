@@ -125,7 +125,7 @@ Handlebars.registerHelper('arrivalDate', function() {
 });
 
 Handlebars.registerHelper('price', function() {
-	var price = this.decimal_price;
+	var price = (parseFloat(this.decimal_price) + parseFloat(this.sums.surcharge)).toFixed(2);
 	if(this.status === 'cancelled') {
 		return new Handlebars.SafeString(window.company.currency.symbol + ' <del class="text-danger">' + price + '</del> ' + parseFloat(parseInt(this.cancellation_fee) / 100).toFixed(2));
 	}
@@ -135,39 +135,18 @@ Handlebars.registerHelper('price', function() {
 
 Handlebars.registerHelper('prettyPrice', function(price) {
 	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + parseFloat(price).toFixed(2));
+});
+
+Handlebars.registerHelper('convertPrice', function(price) {
+	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + (parseFloat(price) / 100).toFixed(2));
 })
 
 Handlebars.registerHelper('sumPaid', function() {
-	return this.sums.have;
+	return (parseFloat(this.sums.have) + parseFloat(this.sums.surcharge)).toFixed(2);
 });
 
 Handlebars.registerHelper("remainingPay", function() {
-	var price = this.decimal_price;
-
-	if(price === "0.00") return '';
-
-	var sum          = this.sums.have;
-	var remainingPay = this.sums.payable;
-
-	var percentage   = this.sums.have / price;
-
-	if(remainingPay == 0) remainingPay = '';
-	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
-
-	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
-	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
-	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
-
-	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
-	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
-	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
-	html += '	<span class="percentage-left">' + remainingPay + '</span>';
-	html += '</div>';
-	html += '<div class="percentage-width-marker"></div>';
-	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + price  + '</div>';
-
-	return new Handlebars.SafeString(html);
+	return new Handlebars.SafeString(Booking.generateRemainingBar.call(this));
 });
 
 Handlebars.registerHelper('addTransactionButton', function(id) {
@@ -209,6 +188,19 @@ Handlebars.registerHelper('changeRefButton', function(id) {
 	if (this.agent !== null) {
 		return new Handlebars.SafeString('<button onclick="changeRef(' + id + ')" class="btn btn-warning"><i class="fa fa-pencil fa-fw"></i> Change Agent Ref</button> ');
 	}
+});
+
+Handlebars.registerHelper('totalSurcharged', function (id) {
+	var booking = _.findWhere(window.bookings, {id: id});
+	return booking.sums.surcharge;
+});
+
+Handlebars.registerHelper('hasSurcharge', function (id, options) {
+	var booking = _.findWhere(window.bookings, {id: id});
+	if (booking.sums.surcharge !== "0.00") {
+		return options.fn(this);
+	}
+	return options.inverse(this);
 });
 
 //var display;
@@ -611,7 +603,7 @@ function cancelBooking(booking_id, booking_status, self) {
 	};
 
 	$('#modalWindows')
-	.append( cancellationFeeTemplate({'status': booking_status}) ) // Create the modal
+	.append( cancellationFeeTemplate({'status': booking_status, 'booking_id': booking_id}) ) // Create the modal
 	.children('#modal-cancellation-fee')            // Directly find it and use it
 	.data('params', params)                         // Assign the eventObject to the modal DOM element
 	.reveal({                                       // Open modal window | Options:

@@ -250,7 +250,9 @@
 		<div id="modal-cancellation-fee" class="reveal-modal">
 			{{!--{{#compare status '!==' 'temporary'}}--}}
 				<h4>Do you incurr a cancellation fee?</h4>
-
+				{{#hasSurcharge booking_id}}
+					<small><strong>This booking has incurred {{currency}} {{totalSurcharged booking_id}} in credit card surcharges. Theis are non refundable</strong></small>
+				{{/hasSurcharge}}
 				<form class="form cancellation-form">
 					<div class="form-group">
 						<label>
@@ -341,6 +343,14 @@
 								<td>{{paymentgateway.name}}</td>
 								<td>{{card_ref}}</td>
 							</tr>
+							{{#if surcharge}}
+								<tr>
+									<td>{{received_at}}</td>
+									<td>{{convertPrice surcharge}}</td>
+									<td>Credit Card Surcharge</td>
+									<td>{{card_ref}}</td>
+								</tr>
+							{{/if}}
 						{{/each}}
 						{{#each refunds}}
 							<tr>
@@ -349,6 +359,14 @@
 								<td>{{paymentgateway.name}} (refund)</td>
 								<td>{{card_ref}}</td>
 							</tr>
+                            {{#if surcharge}}
+                            <tr>
+                                <td>{{received_at}}</td>
+                                <td>{{convertPrice surcharge}}</td>
+                                <td>Credit Card Surcharge</td>
+                                <td>{{card_ref}}</td>
+                            </tr>
+                            {{/if}}
 						{{/each}}
 						<tr>
 							<td></td>
