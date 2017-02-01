@@ -148,7 +148,8 @@ return array(
 		'Scubawhere\Repositories\TicketRepoServiceProvider',
 		'Scubawhere\Repositories\PackageRepoServiceProvider',
 		'Scubawhere\Repositories\LanguageRepoServiceProvider',
-		'Scubawhere\Repositories\CustomerRepoServiceProvider'
+		'Scubawhere\Repositories\CustomerRepoServiceProvider',
+		\Scubawhere\Providers\BookingRepoServiceProvider::class
 
 	),
 
