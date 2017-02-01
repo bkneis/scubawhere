@@ -7,13 +7,14 @@ use Scubawhere\Helper;
 
 class Payment extends Ardent {
 
-	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at', 'card_ref', 'notes');
+	protected $fillable = array('amount', 'currency_id', 'paymentgateway_id', 'received_at', 'card_ref', 'notes', 'surcharge');
 
 	public static $rules = array(
 		'amount'            => 'required|numeric|min:0.01',
 		'currency_id'       => 'required|integer',
 		'paymentgateway_id' => 'required|integer',
 		'received_at'       => 'required|date',
+		'surcharge'         => 'integer' // @note It would be nice to add model validation, required if card is used but we cannot garuntee payment gateway id
 	);
 
 	public function setAmountAttribute($value)
