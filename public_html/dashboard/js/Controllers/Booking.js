@@ -193,6 +193,43 @@ Booking.changeRef = function(params, successFn, errorFn) {
 	
 };
 
+/**
+ * The reason this needs to be static and called by setting the this context via the
+ * call method is that the handlebars context can only contain the data, not functions,
+ * so in a handlebars helper, i cannot use this.generateRemainingBar
+ *
+ */
+Booking.generateRemainingBar = function() {
+	var price = parseFloat(this.decimal_price) + parseFloat(this.sums.surcharge);
+
+	if(price === "0.00") return '';
+
+	var sum          = (parseFloat(this.sums.have) + parseFloat(this.sums.surcharge)).toFixed(2);
+	var remainingPay = this.sums.payable;
+
+	var percentage   = (parseFloat(this.sums.have) + parseFloat(this.sums.surcharge)) / price;
+
+	console.log(percentage, this.decimal_price);
+
+	if(remainingPay == 0) remainingPay = '';
+	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
+
+	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
+	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
+	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
+
+	var html = '';
+	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
+	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
+	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
+	html += '	<span class="percentage-left">' + remainingPay + '</span>';
+	html += '</div>';
+	html += '<div class="percentage-width-marker"></div>';
+	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + price.toFixed(2)  + '</div>';
+
+	return html;
+};
+
 
 /*
  ********************************
@@ -1066,7 +1103,16 @@ Booking.prototype.calculateSums = function() {
 	}, 0).toFixed(2);
 
 	this.sums.have = (this.sums.payed - this.sums.refunded).toFixed(2);
-
+	
+	this.sums.surcharge = 0;
+	for (var i in this.payments) {
+		this.sums.surcharge += this.payments[i].surcharge;
+	}
+	for (var i in this.refunds) {
+		this.sums.surcharge += this.refunds[i].surcharge;
+	}
+	this.sums.surcharge = (this.sums.surcharge / 100).toFixed(2);
+	
 	this.sums.payable = (this.decimal_price - this.sums.have).toFixed(2);
 
 	this.sums.refundable = (this.sums.have - parseFloat(parseInt(this.cancellation_fee) / 100)).toFixed(2);
@@ -1114,7 +1160,6 @@ Booking.prototype.resendConfirmation = function(successFn, errorFn) {
 		error   : errorFn
 	});	
 };
-
 
 /*
  ********************************
