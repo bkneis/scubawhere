@@ -132,4 +132,23 @@ class ReportController extends Controller {
 			'data'   => array('report' => $report)
 		));
 	}
+	
+	public function getSurcharges()
+	{
+		$after  = Input::get('after', null);
+		$before = Input::get('before', null);
+
+		if(empty($after) || empty($before)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, array(
+				'errors' => ['Both the "after" and the "before" parameters are required.']
+			));
+		}
+
+		$report = $this->report_service->generate('surcharges', $before, $after);
+
+		return Response::json(array(
+			'status' => 'Success. Report created',
+			'data'   => array('report' => $report)
+		));
+	}
 }
