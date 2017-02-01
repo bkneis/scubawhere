@@ -105,14 +105,24 @@
 							</div>
 						</div>
 
-						<div class="form-group paymentgateways-select-container">
+						<div id="payment-gateways-select-container" class="form-group paymentgateways-select-container">
 							<div id="save-loader" class="loader"></div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group payment-card-details" style="display:none;">
 							<label class="col-sm-3 col-sm-offset-1 control-label">Card Ref : </label>
 							<div class="col-sm-6">
 								<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
+							</div>
+						</div>
+						
+						<div class="form-group payment-card-details" style="display:none;">
+							<label class="col-sm-3 col-sm-offset-1 control-label">Card Surcharge : </label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<div class="input-group-addon">%</div>
+									<input name="surcharge" type="number" min="0" step="0.01" class="form-control no-arrows" value="{{card_surcharge}}">
+								</div>
 							</div>
 						</div>
 						
@@ -170,14 +180,24 @@
 						</div>
 					</div>
 
-					<div class="form-group paymentgateways-select-container">
+					<div id="refund-gateways-select-container" class="form-group paymentgateways-select-container">
 						<div id="save-loader" class="loader"></div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group refund-card-details" style="display:none;">
 						<label class="col-sm-3 col-sm-offset-1 control-label">Card Ref : </label>
 						<div class="col-sm-6">
 							<input name="card_ref" type="number" placeholder="0673" class="form-control no-arrows" value="{{card_ref}}">
+						</div>
+					</div>
+					
+					<div class="form-group refund-card-details" style="display:none;">
+						<label class="col-sm-3 col-sm-offset-1 control-label">Card Surcharge : </label>
+						<div class="col-sm-6">
+							<div class="input-group">
+								<div class="input-group-addon">%</div>
+								<input name="surcharge" type="number" min="0" step="0.01" class="form-control no-arrows" value="{{card_surcharge}}">
+							</div>
 						</div>
 					</div>
 					
@@ -240,6 +260,14 @@
 										{{/if}}
 									</td>
 								</tr>
+                                {{#if surcharge}}
+                                <tr>
+                                    <td>{{received_at}}</td>
+                                    <td>{{convertPrice surcharge}}</td>
+                                    <td>Credit Card Surcharge</td>
+                                    <td>{{card_ref}}</td>
+                                </tr>
+                                {{/if}}
 							{{/each}}
 							{{#each refunds}}
 								<tr>
@@ -253,6 +281,14 @@
 										{{/if}}
 									</td>
 								</tr>
+                                {{#if surcharge}}
+                                <tr>
+                                    <td>{{received_at}}</td>
+                                    <td>{{convertPrice surcharge}}</td>
+                                    <td>Credit Card Surcharge</td>
+                                    <td>{{card_ref}}</td>
+                                </tr>
+                                {{/if}}
 							{{/each}}
 						</tbody>
 					</table>
@@ -266,7 +302,7 @@
 	<script type="text/x-handlebars-template" id="paymentgateways-select-template">
 		<label class="col-sm-4 control-label">Payment Gateway : <span class="text-danger">*</span></label>
 		<div class="col-sm-6">
-			<select name="paymentgateway_id" class="form-control">
+			<select id="{{id}}" name="paymentgateway_id" class="form-control">
 				{{#each paymentgateways}}
 					<option value="{{id}}">{{name}}</option>
 				{{/each}}

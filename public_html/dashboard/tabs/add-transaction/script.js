@@ -71,32 +71,7 @@ Handlebars.registerHelper('sumRefunded', function() {
 });*/
 
 Handlebars.registerHelper("remainingPayBar", function() {
-	var price = this.decimal_price;
-
-	if(price === "0.00") return '';
-
-	var sum          = this.sums.have;
-	var remainingPay = this.sums.payable;
-
-	var percentage   = this.sums.have / price;
-
-	if(remainingPay == 0) remainingPay = '';
-	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
-
-	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
-	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
-	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
-
-	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
-	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
-	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
-	html += '	<span class="percentage-left">' + remainingPay + '</span>';
-	html += '</div>';
-	html += '<div class="percentage-width-marker"></div>';
-	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + price  + '</div>';
-
-	return new Handlebars.SafeString(html);
+	return new Handlebars.SafeString(Booking.generateRemainingBar.call(this));
 });
 
 Handlebars.registerHelper("remainingPay", function() {
@@ -188,7 +163,7 @@ $(function() {
 		window.paymentgateways = _.indexBy(data, 'id');
 		window.paymentgateways = _.filter(window.paymentgateways, function(obj) { return obj.name !== 'Agent Deposit'; });
 		$('.loader').remove();
-		$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
+		drawPaymentGatewaySelects();
 	});
 
 	/* $('#received-at-input').val( moment().format('YYYY-MM-DD') );
@@ -220,13 +195,17 @@ $(function() {
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
+		if (params.surcharge !== "") {
+			params.surcharge = ((parseFloat(params.surcharge) / 100) * (parseFloat(params.amount) * 100));
+		}
 
 		booking.addPayment(params, function success(status) {
 			pageMssg(status, true);
 			console.log(booking);
 			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
-			$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
+			drawPaymentGatewaySelects();
+			//$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
 			/* $('#received-at-input').val( moment().format('YYYY-MM-DD') );
 			$('#received-at-input').datetimepicker({
 				pickDate: true,
@@ -258,12 +237,16 @@ $(function() {
 
 		var params = $(this).serializeObject();
 		params._token = window.token;
+		
+		if (params.surcharge !== "") {
+			params.surcharge = ((parseFloat(params.surcharge) / 100) * (parseFloat(params.amount) * 100));
+		}
 
 		booking.addRefund(params, function success(status) {
 			pageMssg(status, true);
 			$('#booking-details-container').html( bookingDetailsTemplate(booking) );
 			$('.loader').remove();
-			$('.paymentgateways-select-container').html( paymentgatewaysSelectTemplate({paymentgateways: window.paymentgateways}) );
+			drawPaymentGatewaySelects();
 			/* $('#received-at-input').val( moment().format('YYYY-MM-DD') );
 			$('#received-at-input').datetimepicker({
 				pickDate: true,
@@ -295,3 +278,32 @@ $(function() {
 	});
 
 });
+
+function drawPaymentGatewaySelects() {
+	$('#payment-gateways-select-container').html( paymentgatewaysSelectTemplate({
+		paymentgateways: window.paymentgateways,
+		id: 'payment-gateways-select'
+	}) );
+	$('#refund-gateways-select-container').html( paymentgatewaysSelectTemplate({
+		paymentgateways: window.paymentgateways,
+		id: 'refund-gateways-select'
+	}) );
+	$('#payment-gateways-select').on('change', function(event) {
+		var option = $( "#payment-gateways-select option:selected" ).text();
+		console.log('dfsdfsdf', option);
+		if (option === 'Credit Card') {
+			$('.payment-card-details').show();
+		} else {
+			$('.payment-card-details').hide();
+		}
+	});
+	$('#refund-gateways-select').on('change', function(event) {
+		var option = $( "#refund-gateways-select option:selected" ).text();
+		console.log('dfsdfsdf', option);
+		if (option === 'Credit Card') {
+			$('.refund-card-details').show();
+		} else {
+			$('.refund-card-details').hide();
+		}
+	});
+}
