@@ -1,6 +1,7 @@
 <?php namespace Scubawhere\Services;
 
-use Scubawhere\Context; 
+use Scubawhere\Context;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Repositories\ObjectStoreRepoInterface;
 use Scubawhere\Exceptions\InvalidInputException;
 
@@ -24,6 +25,22 @@ class ObjectStoreService {
 		$filename = Context::get()->name . '/' . 'terms.pdf';
 		$tmp_name = 'terms.pdf';
 		$this->object_store_repo->uploadFile($file, $filename, $tmp_name, $save_path, $dest_path, 'application/pdf');
+	}
+
+	public function uploadLogo($logo)
+	{
+		if (!$logo) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide an image to upload as you company logo']);
+		}
+		if (!$logo->isValid()) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Sorry, the image seems to be corrupt. Please try again with a valid image']);
+		}
+		$save_path = storage_path() . '/scubawhere/' . Context::get()->name . '/';
+		$dest_path = 'sw-rms-companies-logos';
+		$fileExt = $logo->getClientOriginalExtension();
+		$filename = Context::get()->name . '/' . 'company_logo.' . $fileExt;
+		$tmp_name = 'company_logo.' . $fileExt;
+		return $this->object_store_repo->uploadFile($logo, $filename, $tmp_name, $save_path, $dest_path, 'image/*');
 	}
 
 	public function uploadCustomerCSV($file_path)
@@ -52,6 +69,11 @@ class ObjectStoreService {
 	public function getTermsUrl()
 	{
 		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-terms-conditions', Context::get()->name . '/terms.pdf', '+5 minutes');
+	}
+
+	public function getLogoUrl()
+	{
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-companies-logos', Context::get()->name . '/company_logo.' . Context::get()->fileExt, '+5 minutes');
 	}
 
 	public function uploadEmailImage($image)

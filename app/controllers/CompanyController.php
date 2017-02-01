@@ -472,4 +472,18 @@ class CompanyController extends Controller {
 			'data' => array('users' => $users)
 		, 200));
 	}
+
+	public function postLogo()
+	{
+		$logo = Input::file('company_logo');
+		$this->object_store_service->uploadLogo($logo);
+		
+		$data = array('logoExt' => $logo->getClientOriginalExtension());
+		
+		if (!Context::get()->update($data)) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The file format was not valid']);
+		}
+
+		return Response::json(array('status' => 'Your company logo has been uploaded'), 200);
+	}
 }
