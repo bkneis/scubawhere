@@ -1,6 +1,6 @@
 <?php 
 
-namespace Scubawhere\Repositories;
+namespace Scubawhere\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Scubawhere\Repositories\BookingRepo;
