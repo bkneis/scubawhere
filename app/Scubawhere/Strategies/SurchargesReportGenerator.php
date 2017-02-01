@@ -16,7 +16,7 @@ class SurchargesReportGenerator extends BaseReportGenerator implements ReportGen
     
     public function createReport($before, $after)
     {
-        $bookings = $this->bookings->onlySurcharged();
+        $bookings = $this->bookings->onlySurcharged($before, $after);
         $transactions = array();
         
         foreach ($bookings as $booking) {

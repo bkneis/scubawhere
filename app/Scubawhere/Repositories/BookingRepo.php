@@ -45,16 +45,18 @@ class BookingRepo extends EloquentRepo implements BookingRepoInterface {
             ->get();
 	}
 
-	public function onlySurcharged()
+	public function onlySurcharged($before, $after)
 	{
 		return Booking::with(array('lead_customer',
-			'payments' => function ($q) {
+			'payments' => function ($q) use ($before, $after) {
 				//$q->select('amount', 'card_ref', 'surcharge');
 				// @todo Find out why nothing is returned selecting columns
 				$q->where('surcharge', '>', 0);
+				$q->whereBetween('received_at', [$after, $before]);
 			},
-			'refunds' => function ($q) {
+			'refunds' => function ($q) use ($before, $after) {
 				$q->where('surcharge', '>', 0);
+				$q->whereBetween('received_at', [$after, $before]);
 			}))
 			->whereHas('payments', function ($q) {
 				$q->whereNotNull('surcharge');
