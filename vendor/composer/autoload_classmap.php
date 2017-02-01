@@ -45,6 +45,7 @@ return array(
     'AddIdToCrmTokens' => $baseDir . '/app/database/migrations/2015_11_13_093510_add_id_to_crm_tokens.php',
     'AddInitToCompanyTable' => $baseDir . '/app/database/migrations/2015_02_08_114910_add_init_to_company_table.php',
     'AddInnoDBRelationBetweenCurrenciesAndCountriesTables' => $baseDir . '/app/database/migrations/2014_10_31_163734_add_innoDB_relation_between_currencies_and_countries_tables.php',
+    'AddLogoExtToCompaniesTable' => $baseDir . '/app/database/migrations/2017_02_01_150416_add_logo_ext_to_companies_table.php',
     'AddNameToCrmCampaigns' => $baseDir . '/app/database/migrations/2015_11_15_120519_add_name_to_crm_campaigns.php',
     'AddNewColumnsToCustomerTable' => $baseDir . '/app/database/migrations/2015_08_04_172429_add_new_columns_to_customer_table.php',
     'AddNullableToOverridePriceToBookingdetail' => $baseDir . '/app/database/migrations/2017_01_30_143243_add_nullable_to_override_price_to_bookingdetail.php',
