@@ -125,6 +125,34 @@ $(function() {
 	        processData: false
 	    });
 	});
+	
+	$('#company-form-container').on('click', '#upload-logo', function(event) {
+		event.preventDefault();
+
+		var company_logo = $('#company-logo').prop('files')[0];
+
+		// Use FormData Object instead of JSON to handle the file types such as pdf
+		var formData = new FormData();
+		formData.append('company_logo', company_logo);
+		formData.append('_token', window.token);
+
+		// @todo change uplaod terms to copany controllr and add it to js repo
+		$.ajax({
+			url: "/api/company/logo",
+			type: "POST",
+			data: formData,
+			success: function(data) {
+				pageMssg(data.status, 'success');
+			},
+			error: function(xhr) {
+				console.log(xhr);
+				var data = JSON.parse(xhr.responseText);
+				pageMssg(data.errors[0]);
+			},
+			contentType: false,
+			processData: false
+		});
+	});
 
 	$('#company-form-container').on('change', '#country_id', function(event) {
 		var currency_id = $(event.target).find('option:selected').attr('data-currency-id');

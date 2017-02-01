@@ -65,6 +65,13 @@
 									<label class="field-label">Custom booking reference (Max 3 characters) : </label>
 									<input type="text" style="width: 30%;" name="reference_base" value="{{reference_base}}" maxlength="3">
 								</div>
+								
+								<div class="form-row">
+									<label class="field-label">Upload Company Logo (This will be used when generating invoices) : </label>
+									<input id="company-logo" style="margin-bottom:10px" type="file" accept="image/png,image/jpg,image/jpeg">
+
+									<a id="upload-logo" class="btn btn-default text-uppercase">Upload Logo</a>
+								</div>
 
 								<!--<div id="start-tour-div" class="form-row">
 									<label class="field-label">Restart the Tour : </label>
