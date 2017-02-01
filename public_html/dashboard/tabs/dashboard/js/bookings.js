@@ -135,29 +135,7 @@ Handlebars.registerHelper('sumPaid', function() {
 });*/
 
 Handlebars.registerHelper("remainingPay", function() {
-	if(this.decimal_price === "0.00") return '';
-
-	var sum          = this.sums.have;
-	var remainingPay = this.sums.payable;
-	var percentage   = this.sums.have / this.decimal_price;
-
-	if(remainingPay == 0) remainingPay = '';
-	else remainingPay = window.company.currency.symbol + ' ' + remainingPay;
-
-	var color = '#f0ad4e'; var bgClasses = 'bg-warning border-warning';
-	if(percentage === 0) { color = '#d9534f'; bgClasses = 'bg-danger border-danger'; }
-	if(percentage === 1) { color = '#5cb85c'; bgClasses = 'bg-success border-success'; }
-
-	var html = '';
-	html += '<div data-id="' + this.id + '" class="percentage-bar-container ' + bgClasses + '">';
-	html += '	<div class="percentage-bar" style="background-color: ' + color + '; width: ' + percentage * 100 + '%">&nbsp;</div>';
-	html += '   <span class="percentage-payed">' + window.company.currency.symbol + ' ' + sum + '</span>';
-	html += '	<span class="percentage-left">' + remainingPay + '</span>';
-	html += '</div>';
-	html += '<div class="percentage-width-marker"></div>';
-	html += '<div class="percentage-total">' + window.company.currency.symbol + ' ' + this.decimal_price  + '</div>';
-
-	return new Handlebars.SafeString(html);
+	return new Handlebars.SafeString(Booking.generateRemainingBar.call(this));
 });
 
 Handlebars.registerHelper('addTransactionButton', function() {

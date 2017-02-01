@@ -304,6 +304,14 @@
                 <td>{{paymentgateway.name}}</td>
                 <td>{{card_ref}}</td>
               </tr>
+              {{#if surcharge}}
+              <tr>
+                <td>{{received_at}}</td>
+                <td>{{convertPrice surcharge}}</td>
+                <td>Credit Card Surcharge</td>
+                <td>{{card_ref}}</td>
+              </tr>
+              {{/if}}
               {{/each}}
               {{#each refunds}}
                 <tr>
@@ -312,6 +320,14 @@
                   <td>{{paymentgateway.name}} (refund)</td>
                   <td>{{card_ref}}</td>
                 </tr>
+              {{#if surcharge}}
+              <tr>
+                <td>{{received_at}}</td>
+                <td>{{convertPrice surcharge}}</td>
+                <td>Credit Card Surcharge</td>
+                <td>{{card_ref}}</td>
+              </tr>
+              {{/if}}
                 {{/each}}
               <tr>
                 <td><strong>Total</strong></td>
