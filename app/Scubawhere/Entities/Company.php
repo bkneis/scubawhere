@@ -37,7 +37,8 @@ class Company extends Ardent {
 		'video'               => '',
 		'views'               => 'integer',
 		'source'              => '',
-		'reference_base'      => 'size:3'
+		'reference_base'      => 'size:3',
+		'fileExt'             => ''
 	);
 
 	public function beforeSave()
