@@ -2,6 +2,8 @@
 
 namespace Scubawhere\Services;
 
+use Scubawhere\Entities\Addon;
+use Scubawhere\Entities\Ticket;
 use Scubawhere\Repositories\AgentRepoInterface;
 
 class AgentService {
@@ -59,7 +61,24 @@ class AgentService {
 	 */
 	public function create($data) 
 	{
-		return $this->agent_repo->create($data);
+		$agent = $this->agent_repo->create($data);
+		foreach ($data['rules'] as $rule) {
+			switch($rule['type']) {
+				case ('ticket'):
+					$rule['type'] = Ticket::class;
+					break;
+				case ('course'):
+					$rule['type'] = Course::class;
+					break;
+				case ('package'):
+					$rule['type'] = Package::class;
+					break;
+				case ('addon'):
+					$rule['type'] = Addon::class;
+					break;
+			}
+		}
+		return $agent->syncCommissionRules($data['rules']);
 	}
 
 	/**

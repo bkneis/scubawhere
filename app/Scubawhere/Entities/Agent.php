@@ -49,18 +49,34 @@ class Agent extends Ardent {
 		return $query->where('company_id', '=', Context::get()->id);
 	}
 
+	public function syncCommissionRules($rules)
+	{
+		$newRules = array();
+		foreach ($rules as $rule) {
+			$newRule = AgentCommissionRule::create($rule);
+			array_push($newRules, $rule);
+		}
+		$this->commissionRules()->saveMany($newRules);
+		return $this;
+	}
+
+	public function commissionRules()
+	{
+		return $this->hasMany(AgentCommissionRule::class);
+	}
+
 	public function bookings()
 	{
-		return $this->hasMany('\Scubawhere\Entities\Booking');
+		return $this->hasMany(Booking::class);
 	}
 
 	public function company()
 	{
-		return $this->belongsTo('\Scubawhere\Entities\Company');
+		return $this->belongsTo(Company::class);
 	}
 
 	public function customers()
 	{
-		return $this->hasManyThrough('\Scubawhere\Entities\Customer', 'Booking');
+		return $this->hasManyThrough(Customer::class, 'Booking');
 	}
 }

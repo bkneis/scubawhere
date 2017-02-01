@@ -72,7 +72,8 @@ class AgentController extends Controller {
             'billing_phone',
             'billing_email',
             'commission',
-            'terms'
+            'terms',
+            'commission_rules'
         );
        
         $agent = $this->agent_service->create($data);
