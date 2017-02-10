@@ -66,6 +66,10 @@ Handlebars.registerHelper('getPer', function(capacity){
 	return capacity[0] + '/' + capacity[1] + ' - ' + parseInt((capacity[0] / capacity[1]) * 100) + '%';
 });
 
+Handlebars.registerHelper('convertPrice', function(price) {
+	return new Handlebars.SafeString(window.company.currency.symbol + ' ' + (parseFloat(price) / 100).toFixed(2));
+})
+
 $(function () {
 
 	window.tickets = [];
