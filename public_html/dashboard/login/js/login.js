@@ -62,10 +62,10 @@ $(function(){
 						$( "#login-form" ).effect( "shake" );
 					},
 					202: function() {
-						window.location.href = "/";
+						window.location.href = "/dashboard/";
 					},
 					200: function() {
-						window.location.href = "/";
+						window.location.href = "/dashboard/";
 					}
 				}/*
 				success: function(){
