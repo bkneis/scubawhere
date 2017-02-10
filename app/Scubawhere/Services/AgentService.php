@@ -40,7 +40,7 @@ class AgentService {
      * @return \Illuminate\Database\Eloquent\Collection
      */
 	public function getAll() {
-		return $this->agent_repo->all();
+		return $this->agent_repo->all(['commissionRules']);
 	}
 
 	/**
@@ -61,24 +61,50 @@ class AgentService {
 	 */
 	public function create($data) 
 	{
-		$agent = $this->agent_repo->create($data);
-		foreach ($data['rules'] as $rule) {
-			switch($rule['type']) {
+		$rules = $this->transformCommissionRules($data['commission_rules']);
+		unset($data['commission_rules']);
+		return $this->agent_repo
+			->create($data)
+			->syncCommissionRules($rules);
+	}
+	
+	private function isDefault($str)
+	{
+		return preg_match('/-default/', $str) ? true : false;
+	}
+	
+	private function transformCommissionRules(array $rules)
+	{
+		foreach ($rules as &$rule) {
+			// Nullify the owner_id if its the default so that the integer
+			// validation can pass
+			if (/*$this->isDefault($rule['owner_id'])*/ $rule['owner_id'] === 'default') {
+				$rule['owner_id'] = null;
+			}
+			// If the agent receives commission via a total sum, e.g.
+			// $50 instead of 20% of the trip, save the amount to the
+			// commission_value attribute and multiply by 100, e.g.
+			// save 500 as $5 so that you dont have doubles in the db
+			if ($rule['unit'] !== 'percentage') {
+				$rule['commission_value'] = (int) ((double) $rule['commission'] * 100);
+				unset($rule['commission']);
+			}
+			switch($rule['owner_type']) {
 				case ('ticket'):
-					$rule['type'] = Ticket::class;
+					$rule['owner_type'] = Ticket::class;
 					break;
 				case ('course'):
-					$rule['type'] = Course::class;
+					$rule['owner_type'] = Course::class;
 					break;
 				case ('package'):
-					$rule['type'] = Package::class;
+					$rule['owner_type'] = Package::class;
 					break;
 				case ('addon'):
-					$rule['type'] = Addon::class;
+					$rule['owner_type'] = Addon::class;
 					break;
 			}
 		}
-		return $agent->syncCommissionRules($data['rules']);
+		return $rules;
 	}
 
 	/**
@@ -91,7 +117,11 @@ class AgentService {
 	 */
 	public function update($id, $data) 
 	{
-    	return $this->agent_repo->update($id, $data);
+		$rules = $this->transformCommissionRules($data['commission_rules']);
+		unset($data['commission_rules']);
+    	return $this->agent_repo
+			->update($id, $data)
+			->syncCommissionRules($rules);
 	}
 
 	/**
