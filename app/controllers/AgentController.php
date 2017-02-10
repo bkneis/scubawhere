@@ -3,6 +3,7 @@
 use Scubawhere\Services\AgentService;
 use Scubawhere\Exceptions\NotFoundException;
 use Scubawhere\Exceptions\InvalidInputException;
+use Scubawhere\Transformers\AgentTransformer;
 
 class AgentController extends Controller {
 
@@ -11,12 +12,15 @@ class AgentController extends Controller {
      * \Scubawhere\Services\AgentService
      */
     protected $agent_service;
+    
+    protected $transformer;
 
     /**
      * @param AgentService Injected using laravel's IOC container
      */
     public function __construct(AgentService $agent_service) {
         $this->agent_service = $agent_service;
+        $this->transformer = new AgentTransformer();
     }
 
     /**
@@ -40,7 +44,7 @@ class AgentController extends Controller {
      */
     public function getAll()
     {
-        return $this->agent_service->getAll();
+        return $this->transformer->transformMany($this->agent_service->getAll());
     }
 
     /**
@@ -100,7 +104,8 @@ class AgentController extends Controller {
             'billing_phone',
             'billing_email',
             'commission',
-            'terms'
+            'terms',
+            'commission_rules'
         );
 
         $agent = $this->agent_service->update($id, $data);
