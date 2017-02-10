@@ -17,147 +17,225 @@ Handlebars.registerHelper('isBanned', function() {
 		return new Handlebars.SafeString(' class="banned"');
 });
 
+Handlebars.registerHelper('commissionRulesSelect', function() {
+	return new Handlebars.SafeString(commisssionRulesSelect({
+		tickets: window.tickets,
+		packages: window.packages,
+		addons: window.addons,
+		courses: window.courses
+	}));
+});
+
+Handlebars.registerHelper('calcCommission', function(rule) {
+	return rule.commission !== null ? rule.commission.toFixed(2) : (parseInt(rule.commission_value) / 100).toFixed(2);
+});
+
+Handlebars.registerHelper('isAmount', function (rule, options) {
+	if (rule.commission === null) {
+		return options.fn(this);
+	}
+	return options.inverse(this);
+})
+
 var agentForm,
-	agentList;
+	agentList,
+	commisssionRulesSelect;
 
 $(function(){
 
-	// Render initial agent list
-	agentList = Handlebars.compile( $("#agent-list-template").html() );
-	renderAgentList();
+	var gotData = $.Deferred();
 
-	// Default view: show create agent form
-	agentForm = Handlebars.compile( $("#agent-form-template").html() );
-	renderEditForm();
-	TourManager.getAgentsTour();
-
-	$("#agent-form-container").on('click', '#add-agent', function(event) {
-
-		event.preventDefault();
-
-		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-		Agent.createAgent( $('#add-agent-form').serialize(), function success(data) {
-
-			pageMssg(data.status, true);
-
-			$('form').data('hasChanged', false);
-
-			renderAgentList(function() {
-				renderEditForm(data.id);
-			});
-
-		}, function error(xhr) {
-
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
-
-			if(data.errors.length > 0) {
-
-				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
-				errorsHTML = errorsHTML(data);
-
-				// Render error messages
-				$('.errors').remove();
-				$('#add-agent-form').prepend(errorsHTML);
-				$('#add-agent').before(errorsHTML);
-			}
-			else {
-				alert(xhr.responseText);
-			}
-
-			pageMssg('Oops, something wasn\'t quite right');
-
-			$('#add-agent').prop('disabled', false);
-			$('#add-agent-form').find('#save-loader').remove();
-		});
+	Package.getAllPackages(function (res) {
+		window.packages = res;
+		Course.getAll(function (res) {
+			window.courses = res;
+			Addon.getAllAddons(function (res) {
+				window.addons = res;
+				Ticket.getAllTickets(function (res) {
+					window.tickets = res;
+					gotData.resolve();
+				})
+			})
+		})
 	});
+	
+	$.when(gotData).then(function () {
+		// Render initial agent list
+		agentList = Handlebars.compile( $("#agent-list-template").html() );
+		renderAgentList();
 
-	$("#agent-form-container").on('click', '#update-agent', function(event) {
+		commisssionRulesSelect = Handlebars.compile( $('#commission-select-template').html() );
 
-		event.preventDefault();
-
-		// Show loading indicator
-		$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
-
-		Agent.updateAgent( $('#update-agent-form').serialize(), function success(data) {
-
-			pageMssg(data.status, true);
-
-			renderAgentList(renderEditForm);
-
-			$('form').data('hasChanged', false);
-
-			// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
-			$('.errors').remove();
-
-			$('#update-agent').prop('disabled', false);
-			$('#update-agent-form').find('#save-loader').remove();
-
-		}, function error(xhr) {
-
-			var data = JSON.parse(xhr.responseText);
-			console.log(data);
-
-			if(data.errors.length > 0) {
-
-				var errorsHTML = Handlebars.compile( $("#errors-template").html() );
-				errorsHTML = errorsHTML(data);
-
-				// Render error messages
-				$('.errors').remove();
-				$('#update-agent-form').prepend(errorsHTML);
-				$('#update-agent').before(errorsHTML);
-			}
-			else {
-				alert(xhr.responseText);
-			}
-
-			pageMssg('Oops, something wasn\'t quite right'); 
-			$('#update-agent').prop('disabled', false);
-			$('#save-loader').remove();
-		});
-	});
-
-	$("#agent-list-container").on('click', '#change-to-add-agent', function(event){
-
-		event.preventDefault();
-
+		// Default view: show create agent form
+		agentForm = Handlebars.compile( $("#agent-form-template").html() );
 		renderEditForm();
-	});
+		TourManager.getAgentsTour();
 
-    $("#agent-form-container").on('click', '.remove-agent', function(event) {
-        event.preventDefault();
-		var check = confirm('Do you really want to remove this agent?');
-		if(check){
+		$("#agent-form-container").on('click', '#add-agent', function(event) {
+
+			event.preventDefault();
+
 			// Show loading indicator
-			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+			//$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
 
-			var id = $('#update-agent-form input[name=id]').val();
-
-			Agent.delete({
-				'id'    : id,
-				'_token': $('[name=_token]').val()
-			}, function success(data){
+			Agent.createAgent( $('#add-agent-form').serialize(), function success(data) {
 
 				pageMssg(data.status, true);
 
-				delete window.agents[id];
+				$('form').data('hasChanged', false);
 
-				$('.remove-agent').prop('disabled', false);
-				$('#save-loader').remove();
+				renderAgentList(function() {
+					renderEditForm(data.id);
+				});
 
-				renderAgentList(renderEditForm);
-			}, function error(xhr){
+			}, function error(xhr) {
+
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				if(data.errors.length > 0) {
+
+					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+					errorsHTML = errorsHTML(data);
+
+					// Render error messages
+					$('.errors').remove();
+					$('#add-agent-form').prepend(errorsHTML);
+					$('#add-agent').before(errorsHTML);
+				}
+				else {
+					alert(xhr.responseText);
+				}
 
 				pageMssg('Oops, something wasn\'t quite right');
 
-				$('.remove-agent').prop('disabled', false);
+				$('#add-agent').prop('disabled', false);
+				$('#add-agent-form').find('#save-loader').remove();
+			});
+		});
+
+		$("#agent-form-container").on('click', '#update-agent', function(event) {
+
+			event.preventDefault();
+
+			// Show loading indicator
+			$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+			Agent.updateAgent( $('#update-agent-form').serialize(), function success(data) {
+
+				pageMssg(data.status, true);
+
+				renderAgentList(renderEditForm);
+
+				$('form').data('hasChanged', false);
+
+				// Because the page is not re-rendered like with add-agent, we need to manually remove the error messages
+				$('.errors').remove();
+
+				$('#update-agent').prop('disabled', false);
+				$('#update-agent-form').find('#save-loader').remove();
+
+			}, function error(xhr) {
+
+				var data = JSON.parse(xhr.responseText);
+				console.log(data);
+
+				if(data.errors.length > 0) {
+
+					var errorsHTML = Handlebars.compile( $("#errors-template").html() );
+					errorsHTML = errorsHTML(data);
+
+					// Render error messages
+					$('.errors').remove();
+					$('#update-agent-form').prepend(errorsHTML);
+					$('#update-agent').before(errorsHTML);
+				}
+				else {
+					alert(xhr.responseText);
+				}
+
+				pageMssg('Oops, something wasn\'t quite right');
+				$('#update-agent').prop('disabled', false);
 				$('#save-loader').remove();
 			});
-		}
-    });
+		});
+
+		$("#agent-list-container").on('click', '#change-to-add-agent', function(event){
+
+			event.preventDefault();
+
+			renderEditForm();
+		});
+
+		$("#agent-form-container").on('click', '.remove-agent', function(event) {
+			event.preventDefault();
+			var check = confirm('Do you really want to remove this agent?');
+			if(check){
+				// Show loading indicator
+				$(this).prop('disabled', true).after('<div id="save-loader" class="loader"></div>');
+
+				var id = $('#update-agent-form input[name=id]').val();
+
+				Agent.delete({
+					'id'    : id,
+					'_token': $('[name=_token]').val()
+				}, function success(data){
+
+					pageMssg(data.status, true);
+
+					delete window.agents[id];
+
+					$('.remove-agent').prop('disabled', false);
+					$('#save-loader').remove();
+
+					renderAgentList(renderEditForm);
+				}, function error(xhr){
+
+					pageMssg('Oops, something wasn\'t quite right');
+
+					$('.remove-agent').prop('disabled', false);
+					$('#save-loader').remove();
+				});
+			}
+		});
+
+		$('#agent-form-container').on('click', '#add-commission-rule', function (event) {
+			event.preventDefault();
+			$(this).before(commisssionRulesSelect({
+				tickets: window.tickets,
+				packages: window.packages,
+				addons: window.addons,
+				courses: window.courses,
+				id: randomString(),
+				rule: {
+					unit: '',
+					commission: null,
+					commission_value: null,
+					owner_id: 'default',
+					owner_type: 'ticket'
+				}
+			}));
+			$(this).siblings('p')
+				.last()
+				.children('select.select2')
+				.select2()
+				.on('select2-selecting', function (e) {
+					var data = e.object.element[0].dataset;
+					var id = e.val;
+					id = id.substring(id.indexOf('-') + 1, id.length);
+					console.log('id', id);
+					$('#rule-type-' + data.ruleId).val(data.ruleType);
+					$('#rule-id-' + data.ruleId).val(id);
+					console.log('data', data);
+				});
+		});
+
+		$('#agent-form-container').on('click', '.remove-commission-rule', function(event) {
+			event.preventDefault();
+			$(event.target).parent().remove();
+		});
+	});
+
 
 });
 
@@ -224,6 +302,46 @@ function renderEditForm(id) {
 	agent.has_billing_details = agent.billing_address || agent.billing_email || agent.billing_phone;
 
 	$('#agent-form-container').empty().append( agentForm(agent) );
+
+	for (var i in agent.commission_rules) {
+		var id = agent.commission_rules[i].owner_id;
+		if (id === null) {
+			id = 'default';
+		}
+		var value = agent.commission_rules[i].owner_type + '-' + id; 
+		console.log(value);
+		$('#add-commission-rule')
+			.before(commisssionRulesSelect({
+				tickets: window.tickets,
+				packages: window.packages,
+				addons: window.addons,
+				courses: window.courses,
+				id: randomString(),
+				rule: {
+					unit: agent.commission_rules[i].unit,
+					commission: agent.commission_rules[i].commission,
+					commission_value: agent.commission_rules[i].commission_value,
+					owner_id: id,
+					owner_type: agent.commission_rules[i].owner_type
+				}
+			}))
+			.siblings('p')
+			.last()
+			.children('select.select2')
+			.select2()
+			.on('select2-selecting', function (e) {
+				var data = e.object.element[0].dataset;
+				console.log(data);
+				var id = e.val;
+				id = id.substring(id.indexOf('-') + 1, id.length);
+				$('#rule-type-' + data.ruleId).val(data.ruleType);
+				$('#rule-id-' + data.ruleId).val(id);
+				console.log('id', id, 'e', e);
+			})
+			.val(value)
+			.trigger('change');
+		
+	}
 
 	setToken('[name=_token]');
 

@@ -87,19 +87,38 @@
 								</div>
 							</div>
 
-							<div class="form-row" id="commission-div">
+							<!--<div class="form-row" id="commission-div">
 								<label class="field-label">Commission (%) : <span class="text-danger">*</span></label>
 								<input id="commission-amount" type="text" name="commission" size="4" placeholder="00.00" value="{{commission}}">
-							</div>
+							</div>-->
 
 							<div id="terms-div" class="form-row">
-								<label class="field-label">Business Terms : <span class="text-danger">*</span></label>
+								<label class="field-label">
+									Business Terms : <span class="text-danger">*</span>
+									<small><a class="explain-business-terms">Whats this?</a></small>
+								</label>
 								<select id="terms" name="terms">
 									<option>Please select..</option>
 									<option value="fullamount"{{selected 'fullamount'}}>Full Amount</option>
 									<option value="deposit"{{selected 'deposit'}}>Deposit Only</option>
 									<option value="banned"{{selected 'banned'}}>Banned</option>
 								</select>
+							</div>
+							
+							<h5>Commission Terms <small><a class="explain-commission">Whats this?</a></small></h5> 
+							
+							<div class="form-row">
+								<label class="field-label">Default commission (%) : <span class="text-danger">*</span></label>
+								<input type="number" name="commission" placeholder="00.00" min="0" step="0.01" value="{{commission}}">
+								<!--<select>
+									<option value="percentage">%</option>
+									<option value="amount">$</option>
+								</select>-->
+							</div>
+
+							<div id="commission-rules-container" class="form-row">
+								<label class="field-label">Specific commission terms :</label>
+								<button id="add-commission-rule" class="btn btn-success">+ New commission rule</button>
 							</div>
 
 							{{#if update}}
@@ -114,6 +133,50 @@
 			</div>
 		</div>
 	</div><!-- .row -->
+
+	<!--suppress BadExpressionStatementJS -->
+	<script type="text/x-handlebars-template" id="commission-select-template">
+		<p>
+            <select style="width: 30%" class="select2 commission-rule-select">
+                <optgroup label="Tickets">
+                    <option value="ticket-default" data-rule-id="{{id}}" data-rule-type="ticket">Tickets default</option>
+                    {{#each tickets}}
+                        <option value="ticket-{{id}}" data-rule-id="{{../id}}" data-rule-type="ticket">{{name}}</option>
+                    {{/each}}
+                </optgroup>
+                <optgroup label="Courses">
+                    <option value="course-default" data-rule-id="{{id}}" data-rule-type="course">Courses Default</option>
+                    {{#each courses}}
+                        <option value="course-{{id}}" data-rule-id="{{../id}}" data-rule-type="course">{{name}}</option>
+                    {{/each}}
+                </optgroup>
+                <optgroup label="Packages">
+                    <option value="package-default" data-rule-id="{{id}}" data-rule-type="package">Packages Default</option>
+                    {{#each packages}}
+                        <option value="package-{{id}}" data-rule-id="{{../id}}" data-rule-type="package">{{name}}</option>
+                    {{/each}}
+                </optgroup>
+                <optgroup label="Addons">
+                    <option value="addon-default" data-rule-id="{{id}}" data-rule-type="addon">Addons Default</option>
+                    {{#each addons}}
+                        <option value="addon-{{id}}" data-rule-id="{{../id}}" data-rule-type="addon">{{name}}</option>
+                    {{/each}}
+                </optgroup>
+            </select>
+			<input id="rule-type-{{id}}" type="hidden" name="commission_rules[{{id}}][owner_type]" value="{{rule.owner_type}}">
+			<input id="rule-id-{{id}}" type="hidden" name="commission_rules[{{id}}][owner_id]" value="{{rule.owner_id}}">
+            <input type="number"
+				   name="commission_rules[{{id}}][commission]"
+				   class="no-arrows" 
+				   placeholder="00.00" 
+				   value="{{calcCommission rule}}">
+			<select name="commission_rules[{{id}}][unit]">
+				<option value="percentage" {{#isAmount rule}} {{else}} selected {{/isAmount}}>%</option>
+				<option value="amount" {{#isAmount rule}} selected {{/isAmount}}>$</option>
+			</select>
+			<button class="btn btn-danger remove-commission-rule">X</button>
+		</p>
+	</script>
 
 	<script type="text/x-handlebars-template" id="errors-template">
 		<div class="yellow-helper errors" style="color: #E82C0C;">
