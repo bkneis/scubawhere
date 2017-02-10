@@ -1,0 +1,29 @@
+<div id="nav">
+  <div id="nav-wrapper">
+
+    <h1 id="logo"><a href="/"><img src="/assets/img/Scubawhere_logo.png"></a></h1>
+    <!--<user-actions-menu></user-actions-menu>-->
+
+  </div>
+</div>
+
+<!-- This is needed for pages that are shorter than the window height -->
+<div class="sidebar-background"></div>
+
+<div id="page">
+  <!-- This is needed for pages that are longer than the window height -->
+  <div class="sidebar-background"></div>
+
+  <nav-bar></nav-bar>
+
+  <div id="guts">
+    <!-- @todo add timeline here for wizard-->
+    <breadcrumb></breadcrumb>
+    <!--<breadcrumb :title="breadcrumb"></breadcrumb>-->
+
+    <div id="content">
+      <router-outlet name="tabs"></router-outlet>
+    </div>
+
+  </div>
+</div>

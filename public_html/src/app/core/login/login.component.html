@@ -1,0 +1,20 @@
+<div id="login-wrapper">
+  <div id="login-form">
+    <form accept-charset="utf-8">
+      <img src="/assets/img/scubawhere_logo.svg">
+      <h1>RMS Operator Login</h1>
+
+      <span class="form-error">{{error}}</span>
+
+      <input type="text" [(ngModel)]="username" placeholder="Username" name="username">
+      <input type="password" [(ngModel)]="password" placeholder="Password" name="password"><br>
+
+      <input type="submit" class="btn btn-primary" value="Log in" (click)="login()"/>
+
+      <a routerLink="/register" class="btn btn-success">Register Your Dive Centre</a>
+
+    </form>
+  </div>
+
+  <a href="/api/password/remind" class="forgot-password">Forgot your password?</a>
+</div>

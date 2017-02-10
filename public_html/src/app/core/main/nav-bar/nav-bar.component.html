@@ -1,0 +1,139 @@
+<div id="sidebar">
+  <!-- Navigation including accordion drop down menus -->
+  <ul id="sidenav">
+    <li>
+      <a href="/dashboard/#dashboard">
+        <i class="fa fa-tachometer fa-lg fa-fw"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/dashboard/#add-booking">
+        <i class="fa fa-plus fa-lg fa-fw"></i>
+        <span>Add Booking</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/dashboard/#manage-bookings">
+        <i class="fa fa-pencil fa-lg fa-fw"></i>
+        <span>Manage Bookings</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/dashboard/#availability">
+        <i class="fa fa-calendar-o fa-lg fa-fw"></i>
+        <span>Availability</span>
+      </a>
+    </li>
+
+    <li>
+      <div (click)="calendarShow = !calendarShow">
+        <i class="fa fa-calendar fa-lg fa-fw"></i>
+        <span>Calendar</span>
+        <span class="caret"></span>
+      </div>
+      <ul [@calendarActive]="calendarShow">
+        <li>
+          <a href="/dashboard/#calendar">Calendar</a>
+        </li>
+        <li>
+          <a href="/dashboard/#scheduling">Scheduling</a>
+        </li>
+        <li>
+          <a href="/dashboard/#pickup-schedule">Pick-Up Schedule</a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <div (click)="crmShow = !crmShow">
+        <i class="fa fa-paper-plane fa-lg fa-fw"></i>
+        <span>CRM</span>
+        <span class="caret"></span>
+      </div>
+      <ul [@crmActive]="crmShow">
+        <li>
+          <a href="/dashboard/#customers">My Customers</a>
+        </li>
+        <li>
+          <a href="/dashboard/#mailing-lists">My Mailing Lists</a>
+        </li>
+        <li>
+          <a href="/dashboard/#campaigns">My Campaigns</a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="#reports">
+        <i class="fa fa-line-chart fa-lg fa-fw"></i>
+        <span>Reports</span>
+      </a>
+    </li>
+
+    <li>
+      <div (click)="managementShow = !managementShow">
+        <i class="fa fa-sitemap fa-lg fa-fw"></i>
+        <span>Management</span>
+        <span class="caret"></span>
+      </div>
+      <ul [@managementActive]="managementShow">
+        <li>
+          <a href="/dashboard/#accommodations">Accommodations</a>
+        </li>
+        <li>
+          <a href="/dashboard/#add-ons">Add-ons</a>
+        </li>
+        <li>
+          <a [routerLink]="['/main', {outlets: {'tabs': 'agents'}}]">Agents</a>
+        </li>
+        <li>
+          <a href="/dashboard/#boats">Boats</a>
+        </li>
+        <li>
+          <a href="/dashboard/#classes">Classes</a>
+        </li>
+        <li>
+          <a href="/dashboard/#courses">Courses</a>
+        </li>
+        <li>
+          <a href="/dashboard/#locations">Locations</a>
+        </li>
+        <li>
+          <a href="/dashboard/#packages">Packages</a>
+        </li>
+        <li>
+          <a href="/dashboard/#tickets">Tickets</a>
+        </li>
+        <li>
+          <a href="/dashboard/#trips">Trips</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div (click)="settingsShow = !settingsShow">
+        <i class="fa fa-cog fa-lg fa-fw"></i>
+        <span>Settings</span>
+        <span class="caret"></span>
+      </div>
+      <ul [@settingsActive]="settingsShow">
+        <li>
+          <a href="/dashboard/#settings">Account</a>
+        </li>
+        <li>
+          <a href="/dashboard/#settings-users">Users</a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="/dashboard/#troubleshooting">
+        <i class="fa fa-exclamation fa-lg fa-fw"></i>
+        <span>Troubleshooting</span>
+      </a>
+    </li>
+  </ul>
+</div>

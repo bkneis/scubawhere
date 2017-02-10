@@ -1,0 +1,7 @@
+<div class="form-row">
+  <label *ngIf="label" class="field-label">{{label}}</label>
+  <input type="text"
+         [placeholder]="placeholder"
+         [(value)]="text"
+         (input)="updateValue($event)"/>
+</div>

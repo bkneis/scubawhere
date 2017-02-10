@@ -1,0 +1,32 @@
+<management-layout [model]="'Agent'" [action]="action">
+
+    <entity-list>
+        <ul class="entity-list">
+            <li *ngFor="let agent of agents | async">
+                <strong>{{ agent.name }}</strong> | {{ agent.branch_name }}
+            </li>
+        </ul>
+    </entity-list>
+
+    <entity-form>
+        <form accept-charset="utf8">
+            <button class="btn btn-danger pull-right">
+                Remove
+            </button>
+            <div *ngIf="errors" class="yellow-helper errors">
+                <strong>There are a few problems with the form:</strong>
+                <ul>
+                    <li *ngFor="let error of errors">
+                        {{error}}
+                    </li>
+                </ul>
+            </div>
+            <in-text [(ngModel)]="agent.name"
+                     name="name"
+                     label="Agent Name:">
+            </in-text>
+            <input type="submit" class="btn btn-primary btn-lg pull-right" value="SAVE"/>
+        </form>
+    </entity-form>
+
+</management-layout>
