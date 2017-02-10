@@ -19,10 +19,10 @@ abstract class Transformer
     /**
      * Transform an entity by removing unwanted data before returned as JSON
      * 
-     * @param Model $model
+     * @param Model $agent
      * @return mixed
      */
-    public abstract function transform($model);
+    public abstract function transform($agent);
 
     /**
      * Perform transformation on an array of models
