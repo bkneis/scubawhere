@@ -51,10 +51,11 @@ class Agent extends Ardent {
 
 	public function syncCommissionRules($rules)
 	{
+		$this->commissionRules()->delete();
 		$newRules = array();
 		foreach ($rules as $rule) {
 			$newRule = AgentCommissionRule::create($rule);
-			array_push($newRules, $rule);
+			array_push($newRules, $newRule);
 		}
 		$this->commissionRules()->saveMany($newRules);
 		return $this;
