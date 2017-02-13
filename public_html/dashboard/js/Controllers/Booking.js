@@ -4,6 +4,7 @@ var Booking = function(data) {
 	this.decimal_price  = "0.00";
 	this.discount       = "0.00";
 	this.discount_reason = '';
+	this.commission = 0;
 	this.lead_customer  = null;
 	this.bookingdetails = [];
 	this.accommodations = [];
@@ -725,6 +726,7 @@ Booking.prototype.editInfo = function(params, successFn, errorFn) {
 
 			this.price         = data.price;
 			this.decimal_price = data.decimal_price;
+			this.commission    = data.commission;
 
 			this.calculateSums();
 
