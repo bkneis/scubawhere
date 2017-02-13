@@ -352,7 +352,7 @@
 
 												{{#if agent_id}}
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Gross</span><br />
-													<span class="total-space">{{commission_percentage agent_id}} Commission</span><br />
+													<span class="total-space">{{commission_percentage}} Commission</span><br />
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Net</span>
 												{{else}}
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d">Total</span>
@@ -371,8 +371,8 @@
 
 												{{#if agent_id}}
 													<span class="total-space" style="font-weight: bold; color: #4d4d4d;">{{currency}} {{decimal_price}}</span><br />
-													<span class="total-space">-{{commission_amount agent_id decimal_price}}</span><br />
-													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{commission_result agent_id decimal_price}}</span>
+													<span class="total-space">- {{commission_amount}}</span><br />
+													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{netTotal}}</span>
 												{{else}}
 													<span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{totalSum}}</span>
 												{{/if}}

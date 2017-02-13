@@ -154,28 +154,16 @@ Handlebars.registerHelper('decimal_price_without_discount_applied', function() {
 	return (parseFloat(this.decimal_price) + (parseFloat(this.discount) / 100)).toFixed(2);
 });
 
-Handlebars.registerHelper('commission_percentage', function(agent_id) {
-	return parseFloat(window.agents[agent_id].commission) + "%";
+Handlebars.registerHelper('commission_percentage', function() {
+	return (((parseFloat(this.commission) / 100) / parseFloat(this.decimal_price)).toFixed(2) * 100) + '%';
 });
 
-Handlebars.registerHelper('commission_amount', function(agent_id, decimal_price) {
-
-	// Compulsory addons are EXEMPT from commission!
-	var feeSum = 0;
-	_.each(this.bookingdetails, function(detail) {
-		_.each(detail.addons, function(addon) {
-			if(addon.compulsory === 1 || addon.compulsory === '1')
-				feeSum += parseFloat(addon.decimal_price) * addon.pivot.quantity;
-		});
-	});
-
-	this.real_decimal_price = parseFloat(decimal_price) - feeSum;
-
-	return (decRound((parseFloat(window.agents[agent_id].commission) / 100) * this.real_decimal_price, 2)).toFixed(2);
+Handlebars.registerHelper('commission_amount', function() {
+	return (this.commission / 100).toFixed(2);
 });
 
-Handlebars.registerHelper('commission_result', function(agent_id) {
-	return (parseFloat(this.decimal_price) - decRound((parseFloat(window.agents[agent_id].commission) / 100) * parseFloat(this.real_decimal_price), 2)).toFixed(2);
+Handlebars.registerHelper('netTotal', function() {
+	return (parseFloat(this.decimal_price) - (this.commission / 100)).toFixed(2);
 });
 
 Handlebars.registerHelper('saveable', function() {
