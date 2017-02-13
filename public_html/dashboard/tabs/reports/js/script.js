@@ -66,16 +66,28 @@ Handlebars.registerHelper('currency', function() {
 	return window.company.currency.symbol;
 });
 
-Handlebars.registerHelper('getCommissionAmount', function() {
-	var price = this.real_decimal_price || this.decimal_price;
+Handlebars.registerHelper('getCommission', function() {
+	if (this.commission_amount === null) {
+		return this.agent.commission;
+	}
+	return (((parseFloat(this.commission_amount) / 100) / parseFloat(this.decimal_price)) * 100).toFixed(2);
+});
 
-	return (decRound(parseFloat(price) * parseFloat(this.agent.commission) / 100, 2)).toFixed(2);
+Handlebars.registerHelper('getCommissionAmount', function() {
+	if (this.commission_amount === null) {
+		return (parseFloat(this.decimal_price) * (parseFloat(this.agent.commission) / 100)).toFixed(2);
+	}
+	return (this.commission_amount / 100).toFixed(2);
 });
 
 Handlebars.registerHelper('getNetAmount', function() {
-	var price = this.real_decimal_price || this.decimal_price;
-
-	return (parseFloat(this.decimal_price) - decRound(parseFloat(price) * parseFloat(this.agent.commission) / 100, 2)).toFixed(2);
+	var commission_amount;
+	if (this.commission_amount === null) {
+		commission_amount = parseFloat(this.decimal_price) * (parseFloat(this.agent.commission) / 100);
+	} else {
+		commission_amount = this.commission_amount / 100;
+	}
+	return (parseFloat(this.decimal_price) - commission_amount).toFixed(2);
 });
 
 Handlebars.registerHelper('sourceName', function() {

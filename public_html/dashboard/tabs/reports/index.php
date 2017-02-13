@@ -180,7 +180,7 @@
 						<td><a class="view-booking">{{reference}}</a></td>
 						<td>{{{agent.name}}}</td>
 						<td>{{agent_reference}}</td>
-						<td>{{currency}} {{getCommissionAmount}} ({{agent.commission}}%)</td>
+						<td>{{currency}} {{getCommissionAmount}} ({{getCommission}})%</td>
 						<td>{{currency}} {{getNetAmount}}</td>
 						<td>{{currency}} {{decimal_price}}</td>
 					</tr>
