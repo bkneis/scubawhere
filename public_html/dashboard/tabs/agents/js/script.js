@@ -27,7 +27,7 @@ Handlebars.registerHelper('commissionRulesSelect', function() {
 });
 
 Handlebars.registerHelper('calcCommission', function(rule) {
-	return rule.commission !== null ? rule.commission.toFixed(2) : (parseInt(rule.commission_value) / 100).toFixed(2);
+	return rule.commission !== null ? rule.commission : (parseInt(rule.commission_value) / 100).toFixed(2);
 });
 
 Handlebars.registerHelper('isAmount', function (rule, options) {
@@ -54,7 +54,7 @@ $(function(){
 				Ticket.getAllTickets(function (res) {
 					window.tickets = res;
 					gotData.resolve();
-				})
+				});
 			})
 		})
 	});
