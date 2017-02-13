@@ -7,6 +7,9 @@ use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 class AgentCommissionRule extends Ardent
 {
+    public static $owner_id_column_name = 'owner_id';
+    public static $owner_type_column_name = 'owner_type';
+    
     protected $fillable = array('owner_type', 'owner_id', 'commission', 'commission_value');
     
     public static $rules = array(

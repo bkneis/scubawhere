@@ -19,11 +19,12 @@ trait Bookable
 
     /**
      * Calculate the price of the entity by determing which seasonal / base price applies
-     * 
+     *
      * @param $start
      * @param bool $limitBefore
+     * @param bool $agent_id
      */
-    public function calculatePrice($start, $limitBefore = false) 
+    public function calculatePrice($start, $limitBefore = false, $agent_id = null) 
     {
         $price = Price::where(Price::$owner_id_column_name, $this->id)
             ->where(Price::$owner_type_column_name, get_class($this))
@@ -43,6 +44,58 @@ trait Bookable
             ->first();
 
         $this->decimal_price = $price->decimal_price;
+        $this->calculateCommission($agent_id);
+    }
+
+    private function calculateCommissionAmount($amount, $commission)
+    {
+        return (int) ((double) $amount * 100) - ((int) $amount * (100 - (double) $commission) / 100) * 100; 
+    }
+
+    public function calculateCommission($agent_id)
+    {
+        if (is_null($agent_id)) {
+            $this->commission_amount = 0;
+            return;
+        }
+        
+        $itemId = $this->id;
+        
+        // Retrieve the agent commission rules that apply to the specified agent and this item
+        $rules = AgentCommissionRule::where(AgentCommissionRule::$owner_type_column_name, get_class($this))
+            ->where(function ($q) use ($itemId) {
+                $q->where(AgentCommissionRule::$owner_id_column_name, $itemId);
+                $q->orWhereNull(AgentCommissionRule::$owner_id_column_name);
+            })
+            ->where('agent_id', $agent_id)
+            ->get();
+        
+        // If there are no rules then use the default agent's commission
+        if ($rules->isEmpty()) {
+            $agent = Agent::findOrFail($agent_id);
+            $this->commission_amount = $this->calculateCommissionAmount($this->decimal_price, $agent->commission);
+            return;
+        }
+
+        $use_rule = false;
+        $commissionRule = null;
+
+        // Determine which rule to use, the specific item's rule, or the item type's default
+        $rules->each(function($rule) use (&$use_rule, &$commissionRule) {
+            if ((!is_null($rule->owner_id)) && (!$use_rule)) {
+                $commissionRule = $rule;
+            } else {
+                $use_rule = true;
+            }
+        });
+        
+        // Set the commission amount
+        if (is_null($commissionRule->commission)) {
+            $this->commission_amount = $commissionRule->commission_value;
+        } else {
+            $this->commission_amount = $this->calculateCommissionAmount($this->decimal_price, $commissionRule->commission);
+            //$this->commission_amount = (int) ((double) $this->decimal_price * 100) - ((int) $this->decimal_price * (100 - (double) $commissionRule->commission) / 100) * 100;
+        }
     }
 
     /**

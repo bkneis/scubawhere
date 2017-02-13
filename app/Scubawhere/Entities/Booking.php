@@ -22,7 +22,8 @@ class Booking extends Ardent {
 		'comment',
 		'cancel_reason',
 		'discount_reason',
-		'cancelled_at'
+		'cancelled_at',
+		'commission_amount'
 	);
 
 	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local', 'absolute_price');
@@ -42,7 +43,8 @@ class Booking extends Ardent {
 		'reserved_until'   => 'date',
 		'cancellation_fee' => 'integer|min:0',
 		'comment'          => '',
-		'cancelled_at'     => 'date'
+		'cancelled_at'     => 'date',
+		'commission_amount' => 'integer|min:0'
 	);
 
 	public static function isActive($status)
@@ -381,6 +383,7 @@ class Booking extends Ardent {
 		$tickedOffPackagefacades = [];
 		$tickedOffCourses = [];
 		$sum = 0;
+		$commission = 0;
 
 		$sum -= $this->discount;
 
@@ -400,7 +403,7 @@ class Booking extends Ardent {
 
 		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
 
-		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses)
+		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses, &$commission)
 		{
 			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
@@ -499,8 +502,9 @@ class Booking extends Ardent {
 				else
 					$start = $detail->created_at;
 
-				$detail->ticket->calculatePrice($start, $limitBefore);
+				$detail->ticket->calculatePrice($start, $limitBefore, $this->agent_id);
 				$sum += $detail->ticket->decimal_price;
+				$commission += $detail->ticket->commission_amount;
 			}
 
 			// Sum up all addons that are not part of a package
@@ -561,12 +565,14 @@ class Booking extends Ardent {
 		*/
 
 		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
-
+		$this->commission_amount = (int) $commission;
+		
 		$this->save();
-
+		
 		$this->decimal_price = $sum;
 	}
 
+	// @todo Can i remove this as the cascade flag on delete should be set on bookings table anyways ??
 	public static function boot() {
 		\Eloquent::boot(); // as parent refers to Ardent we refrence Eloquent directly
 
