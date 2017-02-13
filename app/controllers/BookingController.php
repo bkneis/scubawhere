@@ -13,6 +13,7 @@ use Scubawhere\Entities\Packagefacade;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Scubawhere\Repositories\BookingDetailRepo;
+use Scubawhere\Transformers\AgentTransformer;
 
 class BookingController extends Controller
 {
@@ -506,7 +507,7 @@ class BookingController extends Controller
                 if (empty($data['agent_id'])) {
                     throw new ModelNotFoundException();
                 }
-                $agent = Context::get()->agents()->findOrFail($data['agent_id']);
+                $agent = Context::get()->agents()->with('commissionRules')->findOrFail($data['agent_id']);
             } catch (ModelNotFoundException $e) {
                 return Response::json(array('errors' => array('The agent could not be found.')), 404); // 404 Not Found
             }
@@ -532,8 +533,15 @@ class BookingController extends Controller
         } // 406 Not Acceptable
 
         $booking = Context::get()->bookings()->save($booking);
+        
+        //$agentTransformer = new AgentTransformer();
 
-        return Response::json(array('status' => 'OK. Booking created', 'id' => $booking->id, 'reference' => $booking->reference, 'agent' => $agent), 201); // 201 Created
+        return Response::json(array(
+            'status' => 'OK. Booking created',
+            'id' => $booking->id,
+            'reference' => $booking->reference,
+            'agent' => $agent //$agentTransformer->transform($agent)
+        ), 201); // 201 Created
     }
 
     public function postAddDetail()
@@ -1861,7 +1869,7 @@ class BookingController extends Controller
             $booking->updatePrice(true, $oldDiscount);
         }
 
-        return array('status' => 'OK. Booking information updated.', 'price' => $booking->price, 'decimal_price' => $booking->decimal_price);
+        return array('status' => 'OK. Booking information updated.', 'price' => $booking->price, 'decimal_price' => $booking->decimal_price, 'commission' => $booking->commission_amount);
     }
 
     public function postAddPickUp()
