@@ -226,6 +226,16 @@ class CustomerController extends Controller {
 		return Response::json( array('status' => 'OK. Customer updated.'), 200 ); // 200 OK
 	}
 
+	public function postDelete()
+	{
+		$id = Input::only('id');
+		if (!$id) {
+			throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Please provide a customer id']);
+		}
+		$this->customer_repo->delete($id);
+		return Response::json(array('status' => 'OK. Customer deleted'), 200);
+	}
+
 	/**
 	 * API Function to import customer data saved as a CSV then create and validate them as customers within the system.
 	 * @param {Array} columns 				An array where the index represents the column number and the value which attribute it should map to the customer. "" is null

@@ -573,6 +573,18 @@ function emailCustomer(id) {
 
 }
 
+function deleteCustomer(id) {
+    
+    Customer.delete(id, function (res) {
+        pageMssg(res.status, 'success');
+    }, function (xhr) {
+        console.log(xhr);
+        var errors = (JSON.parse(xhr.responseText)).errors;
+        pageMssg(errors[0], 'danger');
+    });
+    
+}
+
 function viewBookings(id) {
 
     var summaryTable = Handlebars.compile($('#booking-summary-template').html());

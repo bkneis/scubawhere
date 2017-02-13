@@ -2,11 +2,13 @@
 
 namespace Scubawhere\Repositories;
 
+use Illuminate\Database\QueryException;
 use Scubawhere\Context;
 use Scubawhere\Exceptions;
 use Scubawhere\Entities\Customer;
 use Scubawhere\Exceptions\Http\HttpNotFound;
 use Scubawhere\Exceptions\Http\HttpNotAcceptable;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Exceptions\InvalidInputException;
 
 /**
@@ -249,6 +251,16 @@ class CustomerRepo extends BaseRepo implements CustomerRepoInterface {
         }
 
         return $customer;
+    }
+
+    public function delete($id)
+    {
+        try {
+            Context::get()->customers()->where('id', $id)->delete();
+        } catch (QueryException $e) {
+            // @todo I feel that this should really be a HTTPPreconditionFailed
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The customer cannot be deleted, they are assigned to a booking']);
+        }
     }
 
 }

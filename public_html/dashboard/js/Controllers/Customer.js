@@ -42,6 +42,16 @@ var Customer = {
 			error: errorFn
 		});
 	},
+	
+	delete : function (id, handleData, errorFn) {
+		$.ajax({
+			type: "POST",
+			url: "/api/customer/delete",
+			data: { id: id, _token: window.token },
+			success: handleData,
+			error: errorFn
+		});
+	},
 
 	importCSV : function(params, handleData, errorFn) {
 		$.ajax({
