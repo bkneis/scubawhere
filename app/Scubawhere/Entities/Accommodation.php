@@ -43,7 +43,7 @@ class Accommodation extends Ardent {
         return !($this->packages()->exists());
     }
 
-	public function calculatePrice($start, $end, $limitBefore = false) {
+	public function calculatePrice($start, $end, $limitBefore = false, $agent_id = null) {
 		$current_date = gettype($start) === "object" ? $start : new \DateTime($start, new \DateTimeZone( Context::get()->timezone ));
 		$end          = gettype($end)   === "object" ? $end :   new \DateTime($end,   new \DateTimeZone( Context::get()->timezone ));
 
@@ -79,6 +79,7 @@ class Accommodation extends Ardent {
 
 		$this->decimal_price         = number_format($totalPrice, 2, '.', '');
 		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
+		$this->calculateCommission($agent_id);
 	}
 
 	public function update(array $attributes = [])
