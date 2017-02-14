@@ -23,8 +23,9 @@ trait Bookable
      * @param $start
      * @param bool $limitBefore
      * @param bool $agent_id
+     * @param bool $commissionable
      */
-    public function calculatePrice($start, $limitBefore = false, $agent_id = null) 
+    public function calculatePrice($start, $limitBefore = false, $agent_id = null, $commissionable = true) 
     {
         $price = Price::where(Price::$owner_id_column_name, $this->id)
             ->where(Price::$owner_type_column_name, get_class($this))
@@ -44,7 +45,7 @@ trait Bookable
             ->first();
 
         $this->decimal_price = $price->decimal_price;
-        $this->calculateCommission($agent_id);
+        $this->calculateCommission($agent_id, $commissionable);
     }
 
     private function calculateCommissionAmount($amount, $commission)
@@ -52,12 +53,14 @@ trait Bookable
         return (int) ((double) $amount * 100) - ((int) $amount * (100 - (double) $commission) / 100) * 100; 
     }
 
-    public function calculateCommission($agent_id)
+    public function calculateCommission($agent_id, $commissionable)
     {
-        if (is_null($agent_id)) {
+        if (is_null($agent_id) || (!$commissionable)) {
             $this->commission_amount = 0;
             return;
         }
+        
+        //dd($commissionable);
         
         $itemId = $this->id;
         
@@ -94,7 +97,6 @@ trait Bookable
             $this->commission_amount = $commissionRule->commission_value;
         } else {
             $this->commission_amount = $this->calculateCommissionAmount($this->decimal_price, $commissionRule->commission);
-            //$this->commission_amount = (int) ((double) $this->decimal_price * 100) - ((int) $this->decimal_price * (100 - (double) $commissionRule->commission) / 100) * 100;
         }
     }
 
