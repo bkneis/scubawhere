@@ -1200,6 +1200,9 @@ class BookingController extends Controller
             'ticket_decimal_price' => !$package && !$course && $ticket ? $ticket->decimal_price : false,
 
             'packagefacade_id' => $package ? $packagefacade->id : false,
+            
+            'item_commissionable' => $bookingdetail->item_commissionable ? $bookingdetail->item_commissionable : 1,
+            'addons_commissionable' => $bookingdetail->addons_commissionable ? $bookingdetail->addons_commissionable : 1
         ); // 200 OK
     }
 
@@ -2343,6 +2346,42 @@ class BookingController extends Controller
 		CrmMailer::sendBookingConf($data['booking_id']);
 		return Response::json(array('status' => 'OK. Booking confirmation resent'), 200);
 	}
+
+    public function postApplyItemCommission()
+    {
+        $data = Input::only('booking_id', 'bookingdetail_id', 'item_type', 'commissionable');
+
+        try {
+            $booking = Context::get()->bookings()->findOrFail($data['booking_id']);
+            $bookingDetail = $booking->bookingdetails()->findOrFail($data['bookingdetail_id']);
+        } catch (ModelNotFoundException $e) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking or booking details could not be found']);
+        }
+        
+        $newData = array();
+        if ($data['item_type'] === 'addon') {
+            $newData['addons_commissionable'] = (bool) $data['commissionable'];
+        } else {
+            $newData['item_commissionable'] = (bool) $data['commissionable'];
+        }
+        
+        if (! $bookingDetail->update($newData)) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
+        }
+        
+        if (!$bookingDetail->save()) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
+        }
+        
+        $booking->updatePrice();
+        
+        return Response::json(array(
+            'status' => 'Ok. Item\'s commission has been updated',
+            'commission' => $booking->commission_amount,
+            'item_commissionable' => $bookingDetail->item_commissionable,
+            'addons_commissionable' => $bookingDetail->addons_commissionable
+        ), 200);
+    }
 
     private function moreThan5DaysAgo($date)
     {
