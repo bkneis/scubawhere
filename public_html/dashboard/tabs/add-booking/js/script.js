@@ -41,6 +41,16 @@ Handlebars.registerHelper('totalSum', function () {
 	return (parseFloat(booking.decimal_price) + parseFloat(booking.sums.surcharge)).toFixed(2);
 });
 
+Handlebars.registerHelper('ifTrue', function (val, options) {
+	return val === true ? options.fn(this) : options.inverse(this);
+});
+
+Handlebars.registerHelper("checkIf", function (condition) {
+	return (condition) ? "checked" : "";
+});
+
+Handlebars.registerPartial('price-breakdown', Handlebars.templates['price-breakdown']);
+
 /**
  * Generate the free spaces percentage bar
  * @param  {array} capacity  Array of the following form: [used-up places, total places]
@@ -3033,12 +3043,14 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	_.each(booking.bookingdetails, function(detail) {
 		if(detail.packagefacade) { // This catches NULL and UNDEFINED
 			if(!packagesSummary[detail.packagefacade.id]) {
+				detail.packagefacade.package.isCommissioned = detail.item_commissionable;
 				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
 				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
 			}
 		}
 		else if(detail.course) {
 			if(!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
+				detail.course.isCommissioned = detail.item_commissionable;
 				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
 				coursesSummary[detail.customer.id + '-' + detail.course.id].bookingdetail_id = detail.id;
 			}
@@ -3046,6 +3058,7 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 		else if(detail.ticket) {
 			var ticket = detail.ticket;
 			ticket.bookingdetail_id = detail.id;
+			ticket.isCommissioned = detail.item_commissionable;
 			ticketsSummary.push(ticket);
 		}
 
@@ -3055,6 +3068,7 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
 				else {
 					addon.qtySummary = parseInt(addon.pivot.quantity);
+					addon.isCommissioned = detail.addons_commissionable;
 					addonsSummary[addon.id] = addon;
 					addonsSummary[addon.id].bookingdetail_id = detail.id;
 				}
@@ -3200,6 +3214,25 @@ $('#summary-tab').on('click', '#btn-override-price', function (event) {
 		console.log(xhr);
 		var errors = (JSON.parse(xhr.responseText)).errors[0];
 		pageMssg(errors, 'danger');
+	});
+});
+
+$('#summary-tab').on('change', '.itemCommissionable', function (e) {
+	e.preventDefault();
+	var data = $(this).data();
+	var params = {
+		booking_id: data.bookingId,
+		bookingdetail_id: data.bookingDetailId,
+		item_type: data.type,
+		commissionable: $(this).is(':checked') ? 1 : 0
+	};
+	var self = this;
+	booking.applyItemCommission(params, function (res) {
+		pageMssg(res.status, 'success');
+		$('#price-breakdown-container').empty().append(Handlebars.templates['price-breakdown'](window.booking));
+	}, function (xhr) {
+		var errors = (JSON.parse(xhr.responseText)).errors;
+		pageMssg(errors[0], 'danger');
 	});
 });
 
