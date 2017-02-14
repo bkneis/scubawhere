@@ -26,6 +26,7 @@ return array(
     'AddColumnToRepresentEmailSentToAllCustomers' => $baseDir . '/app/database/migrations/2015_12_20_131509_add_column_to_represent_email_sent_to_all_customers.php',
     'AddCommisionableBoolToBookables' => $baseDir . '/app/database/migrations/2016_11_28_162748_add_commisionable_bool_to_bookables.php',
     'AddCommissionAmountToBooking' => $baseDir . '/app/database/migrations/2017_02_12_163943_add_commission_amount_to_booking.php',
+    'AddCommissionableFlagsToBookingDetails' => $baseDir . '/app/database/migrations/2017_02_13_144448_add_commissionable_flags_to_booking_details.php',
     'AddCompanyIdToAddonsTable' => $baseDir . '/app/database/migrations/2014_10_09_222929_add_company_id_to_addons_table.php',
     'AddCourseIdAndTrainingSessionIdToBookingDetailsTable' => $baseDir . '/app/database/migrations/2015_03_06_174025_add_course_id_and_training_session_id_to_booking_details_table.php',
     'AddCreditCardSurchargeToPaymentsAndRefundsTable' => $baseDir . '/app/database/migrations/2017_01_31_090912_add_credit_card_surcharge_to_payments_and_refunds_table.php',
