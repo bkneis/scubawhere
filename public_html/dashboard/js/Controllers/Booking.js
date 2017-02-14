@@ -51,7 +51,9 @@ var Booking = function(data) {
  */
 Booking.get = function(id, successFn) {
 	$.get("/api/booking", {id: id}, function(data) {
-		successFn( new Booking(data) );
+		var booking = new Booking(data);
+		booking.commission = data.commission_amount; // @todo Fix the naming collision of commission and commission_amount
+		successFn( booking );
 	});
 };
 
@@ -375,6 +377,8 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				training: params.training_id ? $.extend(true, {}, window.trainings[params.training_id]) : null,
 				training_session: params.training_session_id ? _.omit(window.training_sessions[params.training_session_id], 'training') : null,
 				addons: [], // Prepare the addons array to be able to just push to it later
+				item_commissionable: data.item_commissionable,
+				addons_commissionable: data.addons_commissionable
 			};
 
 			if(params.package_id) {
@@ -1161,6 +1165,94 @@ Booking.prototype.resendConfirmation = function(successFn, errorFn) {
 		success : successFn,
 		error   : errorFn
 	});	
+};
+
+Booking.prototype.applyItemCommission = function (params, handleData, errorFn) {
+	params._token = window.token;
+	
+	var self = this;
+	$.ajax({
+		url     : '/api/booking/apply-item-commission',
+		type    : 'POST',
+		data    : params,
+		success : function (res) {
+			self.commission = res.commission;
+			var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
+			if (detail === undefined) {
+				console.error('WARNING! Unexpected result. The booking detail could not be found to update');
+			} else {
+				detail.item_commissionable = res.item_commissionable;
+				detail.addons_commissionable = res.addons_commissionable;
+			}
+			self.generateSummaries();
+			handleData(res, self);
+		},
+		error   : errorFn
+	})
+};
+
+Booking.prototype.generateSummaries = function () {
+
+	this.bookingdetails = _.sortBy(this.bookingdetails, function(detail) {
+		if(detail.session)
+			return detail.session.start;
+		else if(detail.training_session)
+			return detail.training_session.start;
+		else
+			return '0'; // Temporary/un-dated sessions should be displayed on top
+	});
+
+	// Sort accommodations by start date
+	this.accommodations = _.sortBy(this.accommodations, function(accom) {
+		return accom.pivot.start;
+	});
+
+	// Generate booked items list (for the price table)
+	var packagesSummary = {};
+	var coursesSummary  = {};
+	var ticketsSummary  = [];
+	var addonsSummary   = {};
+
+	_.each(this.bookingdetails, function(detail) {
+		if(detail.packagefacade) { // This catches NULL and UNDEFINED
+			if(!packagesSummary[detail.packagefacade.id]) {
+				detail.packagefacade.package.isCommissioned = detail.item_commissionable;
+				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
+				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
+			}
+		}
+		else if(detail.course) {
+			if(!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
+				detail.course.isCommissioned = detail.item_commissionable;
+				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
+				coursesSummary[detail.customer.id + '-' + detail.course.id].bookingdetail_id = detail.id;
+			}
+		}
+		else if(detail.ticket) {
+			var ticket = detail.ticket;
+			ticket.bookingdetail_id = detail.id;
+			ticket.isCommissioned = detail.item_commissionable;
+			ticketsSummary.push(ticket);
+		}
+
+		_.each(detail.addons, function(addon) {
+			if(!addon.pivot.packagefacade_id) {
+				if(addonsSummary[addon.id])
+					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
+				else {
+					addon.qtySummary = parseInt(addon.pivot.quantity);
+					addon.isCommissioned = detail.addons_commissionable;
+					addonsSummary[addon.id] = addon;
+					addonsSummary[addon.id].bookingdetail_id = detail.id;
+				}
+			}
+		});
+	});
+
+	this.packagesSummary = packagesSummary;
+	this.coursesSummary  = coursesSummary;
+	this.ticketsSummary  = ticketsSummary;
+	this.addonsSummary   = addonsSummary;
 };
 
 /*
