@@ -1,0 +1,171 @@
+<td align="center" valign="top" width="100%" style="background-color: #ffffff;	border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+    <div style="text-align: center;">
+        <table cellpadding="0" cellspacing="0" width="600" class="w320">
+            <tr>
+                <td class="item-table">
+                    <h4>Price Breakdown</h4>
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <tr>
+                            {{#if agent_id}}
+                                <td class="title-dark" width="20">
+                                    Commissioned
+                                </td>
+                            {{/if}}
+                            <td class="title-dark">
+                                Item
+                            </td>
+                            <td class="title-dark" width="100" style="text-align:right">Qty</td>
+                            <td class="title-dark" width="100" style="text-align:right">Price</td>
+                        </tr>
+                        {{#each packagesSummary}}
+                            <tr>
+                                {{#if ../agent_id}}
+                                    <td class="inner-item-col">
+                                        <input type="checkbox" data-id="{{id}}" data-type="package" checked/>
+                                    </td>
+                                {{/if}}
+                                <td class="inner-item-col">
+                                    <i class="fa fa-tags fa-fw"></i> {{{name}}}
+                                </td>
+                                <!--<td>
+													<a href="#" data-id="{{id}}" data-bookingdetail-id="{{bookingdetail_id}}" class="override_price">Click here to override the price</a>
+												</td>-->
+                                <td class="inner-item-col" style="text-align: right;">
+                                    x1
+                                </td>
+                                <td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+                                    {{currency}} {{decimal_price}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#each coursesSummary}}
+                            <tr>
+                                {{#if ../agent_id}}
+                                    <td class="inner-item-col">
+                                        <input type="checkbox" data-id="{{id}}" data-type="course" checked/>
+                                    </td>
+                                {{/if}}
+                                <td class="inner-item-col">
+                                    <i class="fa fa-graduation-cap fa-fw"></i> {{{name}}}
+                                </td>
+                                <td class="inner-item-col" style="text-align: right;">
+                                    x1
+                                </td>
+                                <td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+                                    {{currency}} {{decimal_price}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#each ticketsSummary}}
+                            <tr>
+                                {{#if ../agent_id}}
+                                    <td class="inner-item-col">
+                                        <input type="checkbox"
+                                               data-type="ticket"
+                                               data-booking-id="{{../id}}"
+                                               data-booking-detail-id="{{bookingdetail_id}}"
+                                               class="itemCommissionable"
+                                               checked/>
+                                    </td>
+                                {{/if}}
+                                <td class="inner-item-col">
+                                    <i class="fa fa-ticket fa-fw"></i> {{{name}}}
+                                </td>
+                                <td class="inner-item-col" style="text-align: right;">
+                                    x1
+                                </td>
+                                <td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+                                    {{currency}} {{decimal_price}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#each addonsSummary}}
+                            <tr>
+                                {{#if ../agent_id}}
+                                    <td class="inner-item-col">
+                                        <input type="checkbox" data-id="{{id}}" data-type="addon" checked/>
+                                    </td>
+                                {{/if}}
+                                <td class="inner-item-col">
+                                    <i class="fa fa-cart-plus fa-fw"></i> {{{name}}}
+                                </td>
+                                <td class="inner-item-col" style="text-align: right;">
+                                    x{{qtySummary}}
+                                </td>
+                                <td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+                                    {{currency}} {{decimal_price}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#each accommodations}}
+                            {{#unless pivot.packagefacade_id}}
+                                <tr>
+                                    {{#if ../agent_id}}
+                                        <td class="inner-item-col">
+                                            <input type="checkbox" data-id="{{id}}" data-type="accommodation" checked/>
+                                        </td>
+                                    {{/if}}
+                                    <td class="inner-item-col">
+                                        <i class="fa fa-bed fa-fw"></i> {{{name}}}
+                                    </td>
+                                    <td class="inner-item-col" style="text-align: right;">
+                                        {{numberOfNights pivot.start pivot.end}}
+                                    </td>
+                                    <td class="inner-item-col" style="text-align: right; padding-right: 20px;">
+                                        {{currency}} {{decimal_price}}
+                                    </td>
+                                </tr>
+                            {{/unless}}
+                        {{/each}}
+
+                        <tr>
+                            {{#if agent_id}}
+                                <td class="item-col commissioned" style="border-top: 1px solid #cccccc;"></td>
+                            {{/if}}
+                            <td class="item-col item" style="border-top: 1px solid #cccccc;">
+                            </td>
+                            <td class="item-col quantity" style="width: 30%; text-align: right; padding-right: 10px; border-top: 1px solid #cccccc;">
+                                <span class="total-space">Subtotal</span><br />
+
+                                {{#compare totalSurcharged '!==' '0'}}
+                                    <span class="total-space">Credit Card Surcharge</span><br />
+                                {{/compare}}
+
+                                {{#compare discount '!==' '0.00'}}
+                                    <span class="total-space">Discount</span><br />
+                                {{/compare}}
+
+                                {{#if agent_id}}
+                                    <span class="total-space" style="font-weight: bold; color: #4d4d4d">Gross</span><br />
+                                    <span class="total-space">{{commission_percentage}} Commission</span><br />
+                                    <span class="total-space" style="font-weight: bold; color: #4d4d4d">Net</span>
+                                {{else}}
+                                    <span class="total-space" style="font-weight: bold; color: #4d4d4d">Total</span>
+                                {{/if}}
+                            </td>
+                            <td class="item-col price" style="text-align: right; border-top: 1px solid #cccccc; padding-right: 20px;">
+                                <span class="total-space">{{decimal_price_without_discount_applied}}</span><br />
+
+                                {{#compare totalSurcharged '!==' '0'}}
+                                    <span class="total-space">{{totalSurcharged}}</span><br />
+                                {{/compare}}
+
+                                {{#compare discount '!==' '0.00'}}
+                                    <span class="total-space">- {{decimalise discount}}</span><br />
+                                {{/compare}}
+
+                                {{#if agent_id}}
+                                    <span class="total-space" style="font-weight: bold; color: #4d4d4d;">{{currency}} {{decimal_price}}</span><br />
+                                    <span class="total-space">- {{commission_amount}}</span><br />
+                                    <span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{netTotal}}</span>
+                                {{else}}
+                                    <span style="font-weight: bold; color: #4d4d4d; border-bottom: 1px solid;">{{currency}} {{totalSum}}</span>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</td>
