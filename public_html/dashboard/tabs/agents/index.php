@@ -178,7 +178,7 @@
 				   value="{{calcCommission rule}}">
 			<select name="commission_rules[{{id}}][unit]">
 				<option value="percentage" {{#isAmount rule}} {{else}} selected {{/isAmount}}>%</option>
-				<option value="amount" {{#isAmount rule}} selected {{/isAmount}}>$</option>
+				<option value="amount" {{#isAmount rule}} selected {{/isAmount}}>{{currency}}</option>
 			</select>
 			<button class="btn btn-danger remove-commission-rule">X</button>
 		</p>

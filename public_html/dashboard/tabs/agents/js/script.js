@@ -17,6 +17,10 @@ Handlebars.registerHelper('isBanned', function() {
 		return new Handlebars.SafeString(' class="banned"');
 });
 
+Handlebars.registerHelper('currency', function () {
+	return new Handlebars.SafeString(window.company.currency.symbol);
+});
+
 Handlebars.registerHelper('commissionRulesSelect', function() {
 	return new Handlebars.SafeString(commisssionRulesSelect({
 		tickets: window.tickets,
