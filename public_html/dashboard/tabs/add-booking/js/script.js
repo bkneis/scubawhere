@@ -165,7 +165,7 @@ Handlebars.registerHelper('decimal_price_without_discount_applied', function() {
 });
 
 Handlebars.registerHelper('commission_percentage', function() {
-	return (((parseFloat(this.commission) / 100) / parseFloat(this.decimal_price)).toFixed(2) * 100) + '%';
+	return ((parseFloat(this.commission) / 100) / parseFloat(this.decimal_price) * 100).toFixed(2) + '%';
 });
 
 Handlebars.registerHelper('commission_amount', function() {
@@ -3019,67 +3019,7 @@ $('[data-target="#summary-tab"]').on('show.bs.tab', function () {
 	// $("#summary-lead").html(summaryLeadTemplate(booking.lead_customer));
 	// $("#summary-price").html(summaryPriceTemplate(booking));
 
-	// Sort bookingdetails by start date
-	booking.bookingdetails = _.sortBy(booking.bookingdetails, function(detail) {
-		if(detail.session)
-			return detail.session.start;
-		else if(detail.training_session)
-			return detail.training_session.start;
-		else
-			return '0'; // Temporary/un-dated sessions should be displayed on top
-	});
-
-	// Sort accommodations by start date
-	booking.accommodations = _.sortBy(booking.accommodations, function(accom) {
-		return accom.pivot.start;
-	});
-
-	// Generate booked items list (for the price table)
-	var packagesSummary = {};
-	var coursesSummary  = {};
-	var ticketsSummary  = [];
-	var addonsSummary   = {};
-
-	_.each(booking.bookingdetails, function(detail) {
-		if(detail.packagefacade) { // This catches NULL and UNDEFINED
-			if(!packagesSummary[detail.packagefacade.id]) {
-				detail.packagefacade.package.isCommissioned = detail.item_commissionable;
-				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
-				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
-			}
-		}
-		else if(detail.course) {
-			if(!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
-				detail.course.isCommissioned = detail.item_commissionable;
-				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
-				coursesSummary[detail.customer.id + '-' + detail.course.id].bookingdetail_id = detail.id;
-			}
-		}
-		else if(detail.ticket) {
-			var ticket = detail.ticket;
-			ticket.bookingdetail_id = detail.id;
-			ticket.isCommissioned = detail.item_commissionable;
-			ticketsSummary.push(ticket);
-		}
-
-		_.each(detail.addons, function(addon) {
-			if(!addon.pivot.packagefacade_id) {
-				if(addonsSummary[addon.id])
-					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
-				else {
-					addon.qtySummary = parseInt(addon.pivot.quantity);
-					addon.isCommissioned = detail.addons_commissionable;
-					addonsSummary[addon.id] = addon;
-					addonsSummary[addon.id].bookingdetail_id = detail.id;
-				}
-			}
-		});
-	});
-
-	booking.packagesSummary = packagesSummary;
-	booking.coursesSummary  = coursesSummary;
-	booking.ticketsSummary  = ticketsSummary;
-	booking.addonsSummary   = addonsSummary;
+	booking.generateSummaries();
 
 	window.promises.loadedAgents.done(function() {
 		$('#summary-container').html(summaryTemplate(booking));
@@ -3224,8 +3164,12 @@ $('#summary-tab').on('change', '.itemCommissionable', function (e) {
 		booking_id: data.bookingId,
 		bookingdetail_id: data.bookingDetailId,
 		item_type: data.type,
+		item_id: data.id,
 		commissionable: $(this).is(':checked') ? 1 : 0
 	};
+	if (data.type === 'accommodation') {
+		params.start = data.start;
+	}
 	var self = this;
 	booking.applyItemCommission(params, function (res) {
 		pageMssg(res.status, 'success');

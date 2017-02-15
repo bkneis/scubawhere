@@ -14,12 +14,18 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + " "
     + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
-},"4":function(container,depth0,helpers,partials,data) {
-    var helper;
+},"4":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
-  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\" data-id=\""
-    + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" data-type=\"package\" checked/>\n                                    </td>\n";
+  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\"\n                                               data-type=\"package\"\n                                               data-booking-id=\""
+    + alias1(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
+    + "\"\n                                               data-booking-detail-id=\""
+    + alias1(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               data-id=\""
+    + alias1(((helper = (helper = helpers.facade_id || (depth0 != null ? depth0.facade_id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"facade_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               class=\"itemCommissionable\"\n                                            "
+    + alias1((helpers.checkIf || (depth0 && depth0.checkIf) || alias3).call(alias2,(depth0 != null ? depth0.isCommissioned : depth0),{"name":"checkIf","hash":{},"data":data}))
+    + " />\n                                    </td>\n";
 },"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -32,12 +38,18 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + " "
     + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
-},"7":function(container,depth0,helpers,partials,data) {
-    var helper;
+},"7":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
-  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\" data-id=\""
-    + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" data-type=\"course\" checked/>\n                                    </td>\n";
+  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\"\n                                               data-type=\"course\"\n                                               data-booking-id=\""
+    + alias1(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
+    + "\"\n                                               data-booking-detail-id=\""
+    + alias1(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               data-id=\""
+    + alias1(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               class=\"itemCommissionable\"\n                                            "
+    + alias1((helpers.checkIf || (depth0 && depth0.checkIf) || alias3).call(alias2,(depth0 != null ? depth0.isCommissioned : depth0),{"name":"checkIf","hash":{},"data":data}))
+    + " />\n                                    </td>\n";
 },"9":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -51,12 +63,14 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
 },"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing;
+    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
   return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\"\n                                               data-type=\"ticket\"\n                                               data-booking-id=\""
     + alias1(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
     + "\"\n                                               data-booking-detail-id=\""
-    + alias1(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias3),(typeof helper === "function" ? helper.call(alias2,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + alias1(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               data-id=\""
+    + alias1(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"id","hash":{},"data":data}) : helper)))
     + "\"\n                                               class=\"itemCommissionable\"\n                                               "
     + alias1((helpers.checkIf || (depth0 && depth0.checkIf) || alias3).call(alias2,(depth0 != null ? depth0.isCommissioned : depth0),{"name":"checkIf","hash":{},"data":data}))
     + " />\n                                    </td>\n";
@@ -74,12 +88,18 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + " "
     + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
-},"13":function(container,depth0,helpers,partials,data) {
-    var helper;
+},"13":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
-  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\" data-id=\""
-    + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" data-type=\"addon\" checked/>\n                                    </td>\n";
+  return "                                    <td class=\"inner-item-col\">\n                                        <input type=\"checkbox\"\n                                               data-type=\"addon\"\n                                               data-booking-id=\""
+    + alias1(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
+    + "\"\n                                               data-booking-detail-id=\""
+    + alias1(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               data-id=\""
+    + alias1(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\"\n                                               class=\"itemCommissionable\"\n                                            "
+    + alias1((helpers.checkIf || (depth0 && depth0.checkIf) || alias3).call(alias2,(depth0 != null ? depth0.isCommissioned : depth0),{"name":"checkIf","hash":{},"data":data}))
+    + " />\n                                    </td>\n";
 },"15":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
@@ -98,12 +118,20 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + " "
     + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
     + "\n                                    </td>\n                                </tr>\n";
-},"17":function(container,depth0,helpers,partials,data) {
-    var helper;
+},"17":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "                                        <td class=\"inner-item-col\">\n                                            <input type=\"checkbox\" data-id=\""
-    + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" data-type=\"accommodation\" checked/>\n                                        </td>\n";
+  return "                                        <td class=\"inner-item-col\">\n                                            <input type=\"checkbox\"\n                                                   data-type=\"accommodation\"\n                                                   data-booking-id=\""
+    + alias2(alias1((depths[1] != null ? depths[1].id : depths[1]), depth0))
+    + "\"\n                                                   data-booking-detail-id=\""
+    + alias2(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                                   data-start=\""
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.start : stack1), depth0))
+    + "\"\n                                                   data-id=\""
+    + alias2(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\"\n                                                   class=\"itemCommissionable\"\n                                                "
+    + alias2((helpers.checkIf || (depth0 && depth0.checkIf) || alias4).call(alias3,((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.commissionable : stack1),{"name":"checkIf","hash":{},"data":data}))
+    + " />\n                                        </td>\n";
 },"19":function(container,depth0,helpers,partials,data) {
     return "                                <td class=\"item-col commissioned\" style=\"border-top: 1px solid #cccccc;\"></td>\n";
 },"21":function(container,depth0,helpers,partials,data) {

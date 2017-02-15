@@ -21,7 +21,13 @@
                             <tr>
                                 {{#if ../agent_id}}
                                     <td class="inner-item-col">
-                                        <input type="checkbox" data-id="{{id}}" data-type="package" checked/>
+                                        <input type="checkbox"
+                                               data-type="package"
+                                               data-booking-id="{{../id}}"
+                                               data-booking-detail-id="{{bookingdetail_id}}"
+                                               data-id="{{facade_id}}"
+                                               class="itemCommissionable"
+                                            {{checkIf isCommissioned}} />
                                     </td>
                                 {{/if}}
                                 <td class="inner-item-col">
@@ -39,7 +45,13 @@
                             <tr>
                                 {{#if ../agent_id}}
                                     <td class="inner-item-col">
-                                        <input type="checkbox" data-id="{{id}}" data-type="course" checked/>
+                                        <input type="checkbox"
+                                               data-type="course"
+                                               data-booking-id="{{../id}}"
+                                               data-booking-detail-id="{{bookingdetail_id}}"
+                                               data-id="{{id}}"
+                                               class="itemCommissionable"
+                                            {{checkIf isCommissioned}} />
                                     </td>
                                 {{/if}}
                                 <td class="inner-item-col">
@@ -61,6 +73,7 @@
                                                data-type="ticket"
                                                data-booking-id="{{../id}}"
                                                data-booking-detail-id="{{bookingdetail_id}}"
+                                               data-id="{{id}}"
                                                class="itemCommissionable"
                                                {{checkIf isCommissioned}} />
                                     </td>
@@ -80,7 +93,13 @@
                             <tr>
                                 {{#if ../agent_id}}
                                     <td class="inner-item-col">
-                                        <input type="checkbox" data-id="{{id}}" data-type="addon" checked/>
+                                        <input type="checkbox"
+                                               data-type="addon"
+                                               data-booking-id="{{../id}}"
+                                               data-booking-detail-id="{{bookingdetail_id}}"
+                                               data-id="{{id}}"
+                                               class="itemCommissionable"
+                                            {{checkIf isCommissioned}} />
                                     </td>
                                 {{/if}}
                                 <td class="inner-item-col">
@@ -99,7 +118,14 @@
                                 <tr>
                                     {{#if ../agent_id}}
                                         <td class="inner-item-col">
-                                            <input type="checkbox" data-id="{{id}}" data-type="accommodation" checked/>
+                                            <input type="checkbox"
+                                                   data-type="accommodation"
+                                                   data-booking-id="{{../id}}"
+                                                   data-booking-detail-id="{{bookingdetail_id}}"
+                                                   data-start="{{pivot.start}}"
+                                                   data-id="{{id}}"
+                                                   class="itemCommissionable"
+                                                {{checkIf pivot.commissionable}} />
                                         </td>
                                     {{/if}}
                                     <td class="inner-item-col">
