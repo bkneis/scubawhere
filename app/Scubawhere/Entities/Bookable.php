@@ -79,7 +79,7 @@ trait Bookable
         }
 
         $use_rule = false;
-        $commissionRule = null;
+        $commissionRule = $rules->first();
 
         // Determine which rule to use, the specific item's rule, or the item type's default
         $rules->each(function($rule) use (&$use_rule, &$commissionRule) {
