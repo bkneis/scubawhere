@@ -6,10 +6,11 @@ use LaravelBook\Ardent\Ardent;
 use Scubawhere\Helper;
 
 class Packagefacade extends Ardent {
-	protected $fillable = array('package_id');
+	protected $fillable = array('package_id', 'commissionable');
 
 	public static $rules = array(
-		'package_id'  => 'required|integer'
+		'package_id'  => 'required|integer',
+		'commissionable' => 'boolean'
 	);
 
 	public function beforeSave( $forced )
