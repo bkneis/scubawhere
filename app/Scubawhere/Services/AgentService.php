@@ -2,8 +2,10 @@
 
 namespace Scubawhere\Services;
 
+use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Addon;
 use Scubawhere\Entities\Ticket;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Repositories\AgentRepoInterface;
 
 class AgentService {
@@ -101,6 +103,12 @@ class AgentService {
 					break;
 				case ('addon'):
 					$rule['owner_type'] = Addon::class;
+					break;
+				case ('accommodation'):
+					$rule['owner_type'] = Accommodation::class;
+					break;
+				default:
+					throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['Unknown bookable type']);
 					break;
 			}
 		}
