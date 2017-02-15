@@ -3180,6 +3180,31 @@ $('#summary-tab').on('change', '.itemCommissionable', function (e) {
 	});
 });
 
+$('#summary-tab').on('click', '.show-override', function (e) {
+	e.preventDefault();
+	$('#override-price-container').empty().append(Handlebars.templates['override-price-form']($(this).data()));
+	$('#override-price-modal').show();
+});
+
+$('#summary-tab').on('click', '#btn-override-price', function (e) {
+	e.preventDefault();
+	var data = $(this).data();
+	var params = {
+		booking_id: data.bookingId,
+		bookingdetail_id: data.bookingDetailId,
+		item_type: data.type,
+		item_id: data.id,
+		price: $('#override-price').val()
+	};
+	if (data.type === 'accommodation') {
+		params.start = data.start;
+	}
+	booking.applyItemDiscount(params, function (res) {
+		pageMssg(res.status, 'success');
+		$('#price-breakdown-container').empty().append(Handlebars.templates['price-breakdown'](window.booking));
+	});
+});
+
 /*
 ***************************
 **** Functions & Other ****

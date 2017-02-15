@@ -372,7 +372,7 @@
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title">Override Price</h4>
 			</div>
-            <div class="modal-body">
+            <div id="override-price-container" class="modal-body">
 				<label class="field-label">New Price : </label>
 				<input id="override-price" type="number" placeholder="00.00" min="0" step="0.01"/>
             </div>
