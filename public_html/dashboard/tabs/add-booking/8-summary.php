@@ -365,7 +365,7 @@
 		</table>
 	</script>
 </div>
-<div class="modal fade" id="override-price-modal">
+<div class="modal fade" id="override-price-modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -373,8 +373,6 @@
 				<h4 class="modal-title">Override Price</h4>
 			</div>
             <div id="override-price-container" class="modal-body">
-				<label class="field-label">New Price : </label>
-				<input id="override-price" type="number" placeholder="00.00" min="0" step="0.01"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

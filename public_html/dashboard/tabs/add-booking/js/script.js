@@ -3123,40 +3123,6 @@ $('#summary-tab').on('submit', '#reserve-booking', function(event) {
 
 });
 
-var overridePrice = {
-	bookingdetail_id: null,
-	item_id: null,
-	amount: null
-}
-
-$('#summary-tab').on('click', '.override_price', function (event) {
-	event.preventDefault();
-	overridePrice.bookingdetail_id = $(this).data('bookingdetail-id');
-	overridePrice.item_id = $(this).data('id');
-	overridePrice.item_type = $(this).data('type');
-	$('#override-price').val('');
-	$('#override-price-modal').modal('show');
-});
-
-$('#summary-tab').on('click', '#btn-override-price', function (event) {
-	event.preventDefault();
-	var params = {
-		amount: $('#override-price').val(),
-		bookingdetail_id: overridePrice.bookingdetail_id,
-		item_id: overridePrice.item_id,
-		booking_id: booking.id
-	};
-	
-	booking.overrideItemPrice(params, function (response) {
-		pageMssg(response.status, 'success');
-	},
-	function error (xhr) {
-		console.log(xhr);
-		var errors = (JSON.parse(xhr.responseText)).errors[0];
-		pageMssg(errors, 'danger');
-	});
-});
-
 $('#summary-tab').on('change', '.itemCommissionable', function (e) {
 	e.preventDefault();
 	var data = $(this).data();
@@ -3182,13 +3148,15 @@ $('#summary-tab').on('change', '.itemCommissionable', function (e) {
 
 $('#summary-tab').on('click', '.show-override', function (e) {
 	e.preventDefault();
+	console.log($(this).data());
 	$('#override-price-container').empty().append(Handlebars.templates['override-price-form']($(this).data()));
-	$('#override-price-modal').show();
+	$('#override-price-modal').modal('show');
 });
 
 $('#summary-tab').on('click', '#btn-override-price', function (e) {
 	e.preventDefault();
-	var data = $(this).data();
+	var data = $('#override-price').data();
+	console.log(data);
 	var params = {
 		booking_id: data.bookingId,
 		bookingdetail_id: data.bookingDetailId,
