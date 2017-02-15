@@ -45,7 +45,10 @@ class Bookingdetail extends Ardent {
 
 	public function addons()
 	{
-		return $this->belongsToMany('\Scubawhere\Entities\Addon')->withPivot('quantity', 'packagefacade_id', 'commissionable')->withTimestamps()->withTrashed();
+		return $this->belongsToMany(Addon::class)
+			->withPivot('quantity', 'packagefacade_id', 'commissionable', 'override_price')
+			->withTimestamps()
+			->withTrashed();
 	}
 
 	public function boatroom()

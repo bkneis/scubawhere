@@ -285,9 +285,14 @@ class Booking extends Ardent {
 	public function accommodations()
 	{
 		if($this->loadTrashedAccommodations)
-			return $this->belongsToMany('\Scubawhere\Entities\Accommodation')->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable')->withTimestamps()->withTrashed();
+			return $this->belongsToMany(Accommodation::class)
+				->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price')
+				->withTimestamps()
+				->withTrashed();
 
-		return $this->belongsToMany('\Scubawhere\Entities\Accommodation')->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable')->withTimestamps();
+		return $this->belongsToMany(Accommodation::class)
+			->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price')
+			->withTimestamps();
 	}
 
 	/**
