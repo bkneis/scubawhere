@@ -4,6 +4,7 @@ namespace Scubawhere\Services;
 
 use Scubawhere\Entities\Accommodation;
 use Scubawhere\Entities\Addon;
+use Scubawhere\Entities\Package;
 use Scubawhere\Entities\Ticket;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Repositories\AgentRepoInterface;
@@ -99,7 +100,7 @@ class AgentService {
 					$rule['owner_type'] = Course::class;
 					break;
 				case ('package'):
-					$rule['owner_type'] = Package::class;
+					$rule['owner_type'] = Package::class; 
 					break;
 				case ('addon'):
 					$rule['owner_type'] = Addon::class;
