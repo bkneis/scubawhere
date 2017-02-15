@@ -53,7 +53,10 @@ $(function(){
 				window.addons = res;
 				Ticket.getAllTickets(function (res) {
 					window.tickets = res;
-					gotData.resolve();
+					Accommodation.getAll(function (res) {
+						window.accommodations = res;
+						gotData.resolve();
+					});
 				});
 			})
 		})

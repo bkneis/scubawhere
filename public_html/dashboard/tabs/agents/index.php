@@ -162,6 +162,12 @@
                         <option value="addon-{{id}}" data-rule-id="{{../id}}" data-rule-type="addon">{{name}}</option>
                     {{/each}}
                 </optgroup>
+				<optgroup label="Accommodation">
+					<option value="accommodation-default" data-rule-id="{{id}}" data-rule-type="addon">Acommodation Default</option>
+					{{#each addons}}
+					<option value="accommodation-{{id}}" data-rule-id="{{../id}}" data-rule-type="accommodation">{{name}}</option>
+					{{/each}}
+				</optgroup>
             </select>
 			<input id="rule-type-{{id}}" type="hidden" name="commission_rules[{{id}}][owner_type]" value="{{rule.owner_type}}">
 			<input id="rule-id-{{id}}" type="hidden" name="commission_rules[{{id}}][owner_id]" value="{{rule.owner_id}}">
