@@ -1259,6 +1259,7 @@ class BookingController extends Controller
         ); // 200 OK
     }
 
+    // @todo Remove this
     public function postOverrideItemPrice()
     {
         $data = Input::get('booking_id', 'bookingdetail_id', 'discount', 'item_id');
@@ -2394,6 +2395,56 @@ class BookingController extends Controller
             'status' => 'Ok. Item\'s commission has been updated',
             'commission' => $booking->commission_amount,
             'item_commissionable' => $data['commissionable'] 
+        ), 200);
+    }
+
+    public function postApplyItemDiscount()
+    {
+        $data = Input::only('booking_id', 'item_type', 'item_id', 'price');
+        
+        try {
+            $booking = Context::get()->bookings()->findOrFail($data['booking_id']);
+        } catch (ModelNotFoundException $e) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking could not be found']);
+        }
+
+        if ($data['item_type'] !== 'accommodation') {
+            try {
+                $bookingDetail = $booking->bookingdetails()->findOrFail($data['bookingdetail_id']);
+            } catch (ModelNotFoundException $e) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking details could not be found']);
+            }
+        }
+
+        if ($data['item_type'] === 'addon') {
+            DB::table('addon_bookingdetail')
+                ->where('addon_id', (int) Input::get('item_id'))
+                ->where('bookingdetail_id', $bookingDetail->id)
+                ->update(array('override_price'=> (int) $data['price']));
+        } elseif($data['item_type'] === 'package') {
+            DB::table('packagefacades')
+                ->where('id', (int) Input::get('item_id'))
+                ->update(array('override_price' => (int) $data['price']));
+        } elseif ($data['item_type'] === 'accommodation') {
+            DB::table('accommodation_booking')
+                ->where('booking_id', $booking->id)
+                ->where('accommodation_id', (int) Input::get('item_id'))
+                ->whereRaw('start = DATE(?)', array(Input::get('start')))
+                ->update(array('override_price' => (int) $data['price']));
+        } else {
+            $newData = array();
+            $newData['override_price'] = (int) $data['price'];
+            if (! $bookingDetail->update($newData)) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
+            }
+            $bookingDetail->save();
+        }
+
+        $booking->updatePrice();
+
+        return Response::json(array(
+            'status' => 'Ok. Item\'s price has been updated',
+            'decimal_price' => $booking->decimal_price
         ), 200);
     }
 
