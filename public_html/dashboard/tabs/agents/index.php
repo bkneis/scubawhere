@@ -164,7 +164,7 @@
                 </optgroup>
 				<optgroup label="Accommodation">
 					<option value="accommodation-default" data-rule-id="{{id}}" data-rule-type="addon">Acommodation Default</option>
-					{{#each addons}}
+					{{#each accommodations}}
 					<option value="accommodation-{{id}}" data-rule-id="{{../id}}" data-rule-type="accommodation">{{name}}</option>
 					{{/each}}
 				</optgroup>

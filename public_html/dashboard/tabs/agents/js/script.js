@@ -26,7 +26,8 @@ Handlebars.registerHelper('commissionRulesSelect', function() {
 		tickets: window.tickets,
 		packages: window.packages,
 		addons: window.addons,
-		courses: window.courses
+		courses: window.courses,
+		accommodations: window.accommodations,
 	}));
 });
 
@@ -213,6 +214,7 @@ $(function(){
 				packages: window.packages,
 				addons: window.addons,
 				courses: window.courses,
+				accommodations: window.accommodations,
 				id: randomString(),
 				rule: {
 					unit: '',
@@ -323,6 +325,7 @@ function renderEditForm(id) {
 				packages: window.packages,
 				addons: window.addons,
 				courses: window.courses,
+				accommodations: window.accommodations,
 				id: randomString(),
 				rule: {
 					unit: agent.commission_rules[i].unit,
