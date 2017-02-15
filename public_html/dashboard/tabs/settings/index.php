@@ -67,7 +67,7 @@
 								</div>
 								
 								<div class="form-row">
-									<label class="field-label">Upload Company Logo (This will be used when generating invoices) : </label>
+									<label class="field-label">Upload Company Logo : </label>
 									<input id="company-logo" style="margin-bottom:10px" type="file" accept="image/png,image/jpg,image/jpeg">
 
 									<a id="upload-logo" class="btn btn-default text-uppercase">Upload Logo</a>
