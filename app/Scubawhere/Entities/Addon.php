@@ -51,22 +51,6 @@ class Addon extends Ardent {
         return !($this->packages()->exists());
     }
 
-	public function calculatePrice($start, $limitBefore = false) {
-		$price = Price::where(Price::$owner_id_column_name, $this->id)
-		     ->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Addon')
-		     ->where('from', '<=', $start)
-		     ->where(function($query) use ($limitBefore)
-		     {
-		     	if($limitBefore)
-		     		$query->where('created_at', '<=', $limitBefore);
-		     })
-		     ->orderBy('from', 'DESC')
-			 ->withTrashed()
-		     ->first();
-
-		$this->decimal_price = $price->decimal_price;
-	}
-
 	public function getHasBookingsAttribute()
 	{
 		return $this->bookingdetails()
