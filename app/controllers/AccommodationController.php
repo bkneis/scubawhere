@@ -74,7 +74,7 @@ class AccommodationController extends Controller {
                 throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
             }
 
-            return $this->transformer->transformMany($this->accommodation_service->getFilter($data));
+            return $this->accommodation_service->getFilter($data);
         }
 
         $with_trashed = (bool) $this->request->get('with_deleted');
