@@ -1171,16 +1171,16 @@ Booking.prototype.resendConfirmation = function(successFn, errorFn) {
 	});	
 };
 
-Booking.prototype.applyItemCommission = function (params, handleData, errorFn) {
+Booking.prototype.applyItemDiscount = function (params, handleData, errorFn) {
 	params._token = window.token;
 	
 	var self = this;
 	$.ajax({
-		url     : '/api/booking/apply-item-commission',
+		url     : '/api/booking/apply-item-discount',
 		type    : 'POST',
 		data    : params,
 		success : function (res) {
-			self.commission = res.commission;
+			self.decimal_price = res.decimal_price;
 			if (params.item_type !== 'accommodation') {
 				var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
 				if (detail === undefined) {
@@ -1189,19 +1189,26 @@ Booking.prototype.applyItemCommission = function (params, handleData, errorFn) {
 			}
             if (params.item_type === 'addon') {
                 var addon = _.findWhere(detail.addons, {id: params.item_id});
-                addon.pivot.commissionable = parseInt(res.item_commissionable);
+                addon.pivot.override_price = parseInt(params.price);
             } else if (params.item_type === 'accommodation') {
                 var accommodation = _.findWhere(self.accommodations, {id: params.item_id});
-                accommodation.pivot.commissionable = parseInt(res.item_commissionable);
+                accommodation.pivot.override_price = parseInt(params.price);
             } else if (params.item_type === 'package') {
-                detail.packagefacade.commissionable = parseInt(res.item_commissionable);
+                detail.packagefacade.override_price = parseInt(params.price);
             } else {
-                detail.item_commissionable = parseInt(res.item_commissionable);
+                detail.override_price = parseInt(params.price);
             }
+			self.calculateSums();
 			self.generateSummaries();
 			handleData(res, self);
 		},
-		error   : errorFn
+		error: function (xhr) {
+			var errors = (JSON.parse(xhr.responseText)).errors;
+			pageMssg(errors[0], 'danger');
+			if (typeof errorFn === 'function') {
+				errorFn(xhr);
+			}
+		}
 	})
 };
 
