@@ -60,8 +60,6 @@ trait Bookable
             return;
         }
         
-        //dd($commissionable);
-        
         $itemId = $this->id;
         
         // Retrieve the agent commission rules that apply to the specified agent and this item
