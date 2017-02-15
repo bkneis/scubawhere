@@ -2400,7 +2400,7 @@ class BookingController extends Controller
 
     public function postApplyItemDiscount()
     {
-        $data = Input::only('booking_id', 'item_type', 'item_id', 'price');
+        $data = Input::only('booking_id', 'bookingdetail_id', 'item_type', 'item_id', 'price');
         
         try {
             $booking = Context::get()->bookings()->findOrFail($data['booking_id']);
