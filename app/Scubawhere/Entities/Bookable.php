@@ -92,7 +92,12 @@ trait Bookable
         
         // Set the commission amount
         if (is_null($commissionRule->commission)) {
-            $this->commission_amount = $commissionRule->commission_value;
+            // The commission cannot be greater than the amount due
+            if (($commissionRule->commission_value / 100) > $this->decimal_price) {
+                $this->commission_amount = $this->decimal_price * 100;
+            } else {
+                $this->commission_amount = $commissionRule->commission_value;
+            }
         } else {
             $this->commission_amount = $this->calculateCommissionAmount($this->decimal_price, $commissionRule->commission);
         }
