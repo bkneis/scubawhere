@@ -1202,7 +1202,6 @@ class BookingController extends Controller
             'packagefacade_id' => $package ? $packagefacade->id : false,
             
             'item_commissionable' => $bookingdetail->item_commissionable ? $bookingdetail->item_commissionable : 1,
-            'addons_commissionable' => $bookingdetail->addons_commissionable ? $bookingdetail->addons_commissionable : 1
         ); // 200 OK
     }
 
@@ -2353,24 +2352,40 @@ class BookingController extends Controller
 
         try {
             $booking = Context::get()->bookings()->findOrFail($data['booking_id']);
-            $bookingDetail = $booking->bookingdetails()->findOrFail($data['bookingdetail_id']);
         } catch (ModelNotFoundException $e) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking or booking details could not be found']);
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking could not be found']);
         }
         
-        $newData = array();
+        if ($data['item_type'] !== 'accommodation') {
+            try {
+                $bookingDetail = $booking->bookingdetails()->findOrFail($data['bookingdetail_id']);
+            } catch (ModelNotFoundException $e) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The booking details could not be found']);
+            }
+        }
+        
         if ($data['item_type'] === 'addon') {
-            $newData['addons_commissionable'] = (bool) $data['commissionable'];
+            DB::table('addon_bookingdetail')
+                ->where('addon_id', (int) Input::get('item_id'))
+                ->where('bookingdetail_id', $bookingDetail->id)
+                ->update(array('commissionable'=> (bool) $data['commissionable']));
+        } elseif($data['item_type'] === 'package') {
+            DB::table('packagefacades')
+                ->where('id', (int) Input::get('item_id'))
+                ->update(array('commissionable' => (bool) $data['commissionable']));
+        } elseif ($data['item_type'] === 'accommodation') {
+            DB::table('accommodation_booking')
+                ->where('booking_id', $booking->id)
+                ->where('accommodation_id', (int) Input::get('item_id'))
+                ->whereRaw('start = DATE(?)', array(Input::get('start')))
+                ->update(array('commissionable' => (bool) $data['commissionable']));
         } else {
+            $newData = array();
             $newData['item_commissionable'] = (bool) $data['commissionable'];
-        }
-        
-        if (! $bookingDetail->update($newData)) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
-        }
-        
-        if (!$bookingDetail->save()) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
+            if (! $bookingDetail->update($newData)) {
+                throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $bookingDetail->errors()->all());
+            }
+            $bookingDetail->save();
         }
         
         $booking->updatePrice();
@@ -2378,8 +2393,7 @@ class BookingController extends Controller
         return Response::json(array(
             'status' => 'Ok. Item\'s commission has been updated',
             'commission' => $booking->commission_amount,
-            'item_commissionable' => $bookingDetail->item_commissionable,
-            'addons_commissionable' => $bookingDetail->addons_commissionable
+            'item_commissionable' => $data['commissionable'] 
         ), 200);
     }
 
