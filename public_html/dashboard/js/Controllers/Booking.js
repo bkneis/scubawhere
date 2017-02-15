@@ -1171,6 +1171,40 @@ Booking.prototype.resendConfirmation = function(successFn, errorFn) {
 	});	
 };
 
+Booking.prototype.applyItemCommission = function (params, handleData, errorFn) {
+	params._token = window.token;
+
+	var self = this;
+	$.ajax({
+		url     : '/api/booking/apply-item-commission',
+		type    : 'POST',
+		data    : params,
+		success : function (res) {
+			self.commission = res.commission;
+			if (params.item_type !== 'accommodation') {
+				var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
+				if (detail === undefined) {
+					console.error('WARNING! Unexpected result. The booking detail could not be found to update');
+				}
+			}
+			if (params.item_type === 'addon') {
+				var addon = _.findWhere(detail.addons, {id: params.item_id});
+				addon.pivot.commissionable = parseInt(res.item_commissionable);
+			} else if (params.item_type === 'accommodation') {
+				var accommodation = _.findWhere(self.accommodations, {id: params.item_id});
+				accommodation.pivot.commissionable = parseInt(res.item_commissionable);
+			} else if (params.item_type === 'package') {
+				detail.packagefacade.commissionable = parseInt(res.item_commissionable);
+			} else {
+				detail.item_commissionable = parseInt(res.item_commissionable);
+			}
+			self.generateSummaries();
+			handleData(res, self);
+		},
+		error: errorFn
+	})
+};
+
 Booking.prototype.applyItemDiscount = function (params, handleData, errorFn) {
 	params._token = window.token;
 	
