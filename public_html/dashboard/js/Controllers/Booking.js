@@ -378,13 +378,13 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 				training_session: params.training_session_id ? _.omit(window.training_sessions[params.training_session_id], 'training') : null,
 				addons: [], // Prepare the addons array to be able to just push to it later
 				item_commissionable: data.item_commissionable,
-				addons_commissionable: data.addons_commissionable
 			};
 
 			if(params.package_id) {
 				detail.packagefacade = {
 					id: data.packagefacade_id,
 					package: $.extend(true, {}, window.packages[params.package_id]),
+					commissionable: data.item_commissionable
 				};
 
 				// Clean up package object
@@ -399,9 +399,11 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			}
 			else if(params.course_id) {
 				detail.course.decimal_price = data.course_decimal_price;
+				detail.item_commissionable = data.item_commissionable;
 			}
 			else {
 				detail.ticket.decimal_price = data.ticket_decimal_price;
+				detail.item_commissionable = data.item_commissionable;
 			}
 
 			if(data.boatroom_id)
@@ -545,6 +547,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 				addon.pivot = {
 					quantity: parseInt(params.quantity),
 					packagefacade_id: params.packagefacade_id || null,
+					commissionable: true
 				};
 				relatedBookingdetail.addons.push( addon );
 			}
@@ -640,6 +643,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 				end: params.end,
 				customer_id: params.customer_id,
 				packagefacade_id: data.packagefacade_id ? data.packagefacade_id : null,
+				commissionable: true
 			};
 
 			accommodation.customer = window.customers[params.customer_id];
@@ -1177,13 +1181,23 @@ Booking.prototype.applyItemCommission = function (params, handleData, errorFn) {
 		data    : params,
 		success : function (res) {
 			self.commission = res.commission;
-			var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
-			if (detail === undefined) {
-				console.error('WARNING! Unexpected result. The booking detail could not be found to update');
-			} else {
-				detail.item_commissionable = res.item_commissionable;
-				detail.addons_commissionable = res.addons_commissionable;
+			if (params.item_type !== 'accommodation') {
+				var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
+				if (detail === undefined) {
+					console.error('WARNING! Unexpected result. The booking detail could not be found to update');
+				}
 			}
+            if (params.item_type === 'addon') {
+                var addon = _.findWhere(detail.addons, {id: params.item_id});
+                addon.pivot.commissionable = parseInt(res.item_commissionable);
+            } else if (params.item_type === 'accommodation') {
+                var accommodation = _.findWhere(self.accommodations, {id: params.item_id});
+                accommodation.pivot.commissionable = parseInt(res.item_commissionable);
+            } else if (params.item_type === 'package') {
+                detail.packagefacade.commissionable = parseInt(res.item_commissionable);
+            } else {
+                detail.item_commissionable = parseInt(res.item_commissionable);
+            }
 			self.generateSummaries();
 			handleData(res, self);
 		},
@@ -1216,9 +1230,10 @@ Booking.prototype.generateSummaries = function () {
 	_.each(this.bookingdetails, function(detail) {
 		if(detail.packagefacade) { // This catches NULL and UNDEFINED
 			if(!packagesSummary[detail.packagefacade.id]) {
-				detail.packagefacade.package.isCommissioned = detail.item_commissionable;
+				detail.packagefacade.package.isCommissioned = detail.packagefacade.commissionable;
 				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
 				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
+				packagesSummary[detail.packagefacade.id].facade_id = detail.packagefacade.id;
 			}
 		}
 		else if(detail.course) {
@@ -1241,7 +1256,7 @@ Booking.prototype.generateSummaries = function () {
 					addonsSummary[addon.id].qtySummary += parseInt(addon.pivot.quantity);
 				else {
 					addon.qtySummary = parseInt(addon.pivot.quantity);
-					addon.isCommissioned = detail.addons_commissionable;
+					addon.isCommissioned = addon.pivot.commissionable;
 					addonsSummary[addon.id] = addon;
 					addonsSummary[addon.id].bookingdetail_id = detail.id;
 				}
