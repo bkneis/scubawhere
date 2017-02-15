@@ -391,6 +391,7 @@ class ComposerStaticInitf51a0947d6ace01d487809fc777381b9
         'AddOnlyPackagedFieldToTicketsTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_09_09_182240_add_only_packaged_field_to_tickets_table.php',
         'AddOpenedColumnToCrmTokens' => __DIR__ . '/../..' . '/app/database/migrations/2015_11_13_091236_add_opened_column_to_crm_tokens.php',
         'AddOpenedTimeToLinkTracking' => __DIR__ . '/../..' . '/app/database/migrations/2015_11_13_145244_add_opened_time_to_link_tracking.php',
+        'AddOverridePriceToBookables' => __DIR__ . '/../..' . '/app/database/migrations/2017_02_15_145534_add_override_price_to_bookables.php',
         'AddOverridePriceToBookingdetail' => __DIR__ . '/../..' . '/app/database/migrations/2017_01_30_101045_add_override_price_to_bookingdetail.php',
         'AddPackagefacadeIdToAddonBookingdetailAndAccommodationBookingTable' => __DIR__ . '/../..' . '/app/database/migrations/2015_03_07_205924_add_packagefacade_id_to_addon_bookingdetail_and_accommodation_booking_table.php',
         'AddParentColumnToAddonsTable' => __DIR__ . '/../..' . '/app/database/migrations/2014_11_21_233944_add_parent_column_to_addons_table.php',
