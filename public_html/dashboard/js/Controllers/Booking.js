@@ -1215,6 +1215,7 @@ Booking.prototype.applyItemDiscount = function (params, handleData, errorFn) {
 		data    : params,
 		success : function (res) {
 			self.decimal_price = res.decimal_price;
+			self.commission = parseInt(res.commission);
 			if (params.item_type !== 'accommodation') {
 				var detail = _.findWhere(self.bookingdetails, {id: params.bookingdetail_id});
 				if (detail === undefined) {
