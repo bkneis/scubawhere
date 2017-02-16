@@ -3185,6 +3185,7 @@ $('#summary-tab').on('click', '#btn-override-price', function (e) {
 	}
 	booking.applyItemDiscount(params, function (res) {
 		pageMssg(res.status, 'success');
+		drawBasket();
 		$('#price-breakdown-container').empty().append(Handlebars.templates['price-breakdown'](window.booking));
 		$('#override-price-modal').modal('hide');
 		$('#override-price').val('');
