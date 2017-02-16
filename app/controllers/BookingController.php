@@ -2444,7 +2444,8 @@ class BookingController extends Controller
 
         return Response::json(array(
             'status' => 'Ok. Item\'s price has been updated',
-            'decimal_price' => $booking->decimal_price
+            'decimal_price' => $booking->decimal_price,
+            'commission' => $booking->commission_amount
         ), 200);
     }
 
