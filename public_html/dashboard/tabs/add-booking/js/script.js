@@ -176,6 +176,13 @@ Handlebars.registerHelper('netTotal', function() {
 	return (parseFloat(this.decimal_price) - (this.commission / 100)).toFixed(2);
 });
 
+Handlebars.registerHelper('item_price', function () {
+	if (this.override_price) {
+		return new Handlebars.SafeString('<ins>' + (this.override_price / 100).toFixed(2) + '</ins> <del>' + this.decimal_price + '</del>');
+	}
+	return this.decimal_price; 
+});
+
 Handlebars.registerHelper('saveable', function() {
 	var notSaveable = ['reserved', 'expired', 'confirmed', 'on hold', 'cancelled'];
 	if(notSaveable.indexOf(this.status) !== -1)
@@ -3162,7 +3169,7 @@ $('#summary-tab').on('click', '#btn-override-price', function (e) {
 		bookingdetail_id: data.bookingDetailId,
 		item_type: data.type,
 		item_id: data.id,
-		price: $('#override-price').val()
+		price: ($('#override-price').val() * 100)
 	};
 	if (data.type === 'accommodation') {
 		params.start = data.start;
@@ -3170,6 +3177,8 @@ $('#summary-tab').on('click', '#btn-override-price', function (e) {
 	booking.applyItemDiscount(params, function (res) {
 		pageMssg(res.status, 'success');
 		$('#price-breakdown-container').empty().append(Handlebars.templates['price-breakdown'](window.booking));
+		$('#override-price-modal').modal('hide');
+		$('#override-price').val('');
 	});
 });
 
