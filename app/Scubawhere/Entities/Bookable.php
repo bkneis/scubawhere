@@ -24,27 +24,33 @@ trait Bookable
      * @param bool $limitBefore
      * @param bool $agent_id
      * @param bool $commissionable
+     * @param null $override_price
      */
-    public function calculatePrice($start, $limitBefore = false, $agent_id = null, $commissionable = true) 
+    public function calculatePrice($start, $limitBefore = false, $agent_id = null, $commissionable = true, $override_price = null) 
     {
-        $price = Price::where(Price::$owner_id_column_name, $this->id)
-            ->where(Price::$owner_type_column_name, get_class($this))
-            ->where('from', '<=', $start)
-            ->where(function($query) use ($start)
-            {
-                $query->whereNull('until')
-                    ->orWhere('until', '>=', $start);
-            })
-            ->where(function($query) use ($limitBefore)
-            {
-                if($limitBefore)
-                    $query->where('created_at', '<=', $limitBefore);
-            })
-            ->orderBy('id', 'DESC')
-            ->withTrashed()
-            ->first();
+        if (is_null($override_price)) {
+            $price = Price::where(Price::$owner_id_column_name, $this->id)
+                ->where(Price::$owner_type_column_name, get_class($this))
+                ->where('from', '<=', $start)
+                ->where(function($query) use ($start)
+                {
+                    $query->whereNull('until')
+                        ->orWhere('until', '>=', $start);
+                })
+                ->where(function($query) use ($limitBefore)
+                {
+                    if($limitBefore)
+                        $query->where('created_at', '<=', $limitBefore);
+                })
+                ->orderBy('id', 'DESC')
+                ->withTrashed()
+                ->first();
 
-        $this->decimal_price = $price->decimal_price;
+            $this->decimal_price = $price->decimal_price;
+        } else {
+            $this->decimal_price = ($override_price / 100);
+        }
+        
         $this->calculateCommission($agent_id, $commissionable);
     }
 

@@ -463,8 +463,15 @@ class Booking extends Ardent {
 						$start = $dates[0]->format('Y-m-d H:i:s');
 
 					// Calculate the package price at this first departure datetime and sum it up
-					// $detail->packagefacade->commissionable
-					$detail->packagefacade->package->calculatePrice($start, $limitBefore, $this->agent_id, $detail->packagefacade->commissionable);
+					$detail->packagefacade->package
+						->calculatePrice(
+							$start,
+							$limitBefore,
+							$this->agent_id,
+							$detail->packagefacade->commissionable,
+							$detail->packagefacade->override_price
+						);
+					
 					$sum += $detail->packagefacade->package->decimal_price;
 					$commission += $detail->packagefacade->package->commission_amount;
 				}
@@ -497,7 +504,15 @@ class Booking extends Ardent {
 						$start = $detail->created_at;
 
 					// Calculate the package price at this first departure datetime and sum it up
-					$detail->course->calculatePrice($start, $limitBefore, $this->agent_id, $detail->item_commissionable);
+					$detail->course
+						->calculatePrice(
+							$start,
+							$limitBefore,
+							$this->agent_id,
+							$detail->item_commissionable,
+							$detail->override_price
+						);
+					
 					$sum += $detail->course->decimal_price;
 					$commission += $detail->course->commission_amount;
 				}
@@ -510,7 +525,15 @@ class Booking extends Ardent {
 				else
 					$start = $detail->created_at;
 
-				$detail->ticket->calculatePrice($start, $limitBefore, $this->agent_id, $detail->item_commissionable);
+				$detail->ticket
+					->calculatePrice(
+						$start,
+						$limitBefore,
+						$this->agent_id,
+						$detail->item_commissionable,
+						$detail->override_price
+					);
+				
 				$sum += $detail->ticket->decimal_price;
 				$commission += $detail->ticket->commission_amount;
 			}
@@ -526,7 +549,13 @@ class Booking extends Ardent {
 						$start = $detail->created_at;
 
 					// $addon->pivot->commissionable
-					$addon->calculatePrice($start, $limitBefore, $this->agent_id, $addon->pivot->commissionable);
+					$addon->calculatePrice(
+						$start,
+						$limitBefore,
+						$this->agent_id,
+						$addon->pivot->commissionable,
+						$addon->pivot->override_price
+					);
 					$sum += floatval($addon->decimal_price) * $addon->pivot->quantity;
 					$commission += ($addon->commission_amount * $addon->pivot->quantity);
 				}
@@ -543,7 +572,13 @@ class Booking extends Ardent {
 			if(empty($accommodation->pivot->packagefacade_id))
 			{
 				// $accommodation->pivot->commissionable
-				$accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore, $this->agent_id, $accommodation->pivot->commissionable);
+				$accommodation->calculatePrice(
+					$accommodation->pivot->start,
+					$accommodation->pivot->end,
+					$limitBefore, $this->agent_id,
+					$accommodation->pivot->commissionable,
+					$accommodation->pivot->override_price
+				);
 				$sum += $accommodation->decimal_price;
 				$commission += $accommodation->commission_amount;
 			}
@@ -563,7 +598,14 @@ class Booking extends Ardent {
 				// Calculate the package price at this first departure datetime and sum it up
 				// $packagaefacade->commissionable
 				$packagefacade = Packagefacade::find($accommodation->pivot->packagefacade_id);
-				$packagefacade->package->calculatePrice($firstAccommodation->pivot->start, $limitBefore, $this->agent_id, $packagefacade->commissionable);
+				$packagefacade->package
+					->calculatePrice(
+						$firstAccommodation->pivot->start,
+						$limitBefore,
+						$this->agent_id,
+						$packagefacade->commissionable,
+						$packagefacade->override_price
+					);
 				$sum += $packagefacade->package->decimal_price;
 				$commission += $packagefacade->package->commission_amount;
 			}

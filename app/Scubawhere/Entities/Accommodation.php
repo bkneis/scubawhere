@@ -43,42 +43,51 @@ class Accommodation extends Ardent {
         return !($this->packages()->exists());
     }
 
-	public function calculatePrice($start, $end, $limitBefore = false, $agent_id = null, $commissionable = true) {
+	public function calculatePrice($start, $end, $limitBefore = false, $agent_id = null, $commissionable = true, $override_price = null) {
+
 		$current_date = gettype($start) === "object" ? $start : new \DateTime($start, new \DateTimeZone( Context::get()->timezone ));
 		$end          = gettype($end)   === "object" ? $end :   new \DateTime($end,   new \DateTimeZone( Context::get()->timezone ));
 
-		$totalPrice = 0;
-		$numberOfDays = 0;
+		if (is_null($override_price)) {
 
-		// Find the price for each night
-		do
-		{
-			$date = $current_date->format('Y-m-d');
+			$totalPrice = 0;
+			$numberOfDays = 0;
 
-			$totalPrice += Price::where(Price::$owner_id_column_name, $this->id)
-				->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Accommodation')
-				->where('from', '<=', $date)
-				->where(function($query) use ($date)
-				{
-					$query->whereNull('until')
-					      ->orWhere('until', '>=', $date);
-				})
-			     ->where(function($query) use ($limitBefore)
-			     {
-			     	if($limitBefore)
-			     		$query->where('created_at', '<=', $limitBefore);
-			     })
-				->withTrashed()
-				->orderBy('id', 'DESC')
-				->first()->decimal_price;
+			// Find the price for each night
+			do
+			{
+				$date = $current_date->format('Y-m-d');
 
-			$current_date->add( new \DateInterval('P1D') );
-			$numberOfDays++;
+				$totalPrice += Price::where(Price::$owner_id_column_name, $this->id)
+					->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Accommodation')
+					->where('from', '<=', $date)
+					->where(function($query) use ($date)
+					{
+						$query->whereNull('until')
+							->orWhere('until', '>=', $date);
+					})
+					->where(function($query) use ($limitBefore)
+					{
+						if($limitBefore)
+							$query->where('created_at', '<=', $limitBefore);
+					})
+					->withTrashed()
+					->orderBy('id', 'DESC')
+					->first()->decimal_price;
+
+				$current_date->add( new \DateInterval('P1D') );
+				$numberOfDays++;
+			}
+			while( $current_date < $end );
+
+			$this->decimal_price         = number_format($totalPrice, 2, '.', '');
+			$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
+		} else {
+			$numberOfDays = (int) $end->diff($start)->format('%a');
+			$this->decimal_price         = number_format(($override_price / 100), 2, '.', '');
+			$this->decimal_price_per_day = number_format(($override_price / 100) / $numberOfDays, 2, '.', '');
 		}
-		while( $current_date < $end );
-
-		$this->decimal_price         = number_format($totalPrice, 2, '.', '');
-		$this->decimal_price_per_day = number_format($totalPrice / $numberOfDays, 2, '.', '');
+		
 		$this->calculateCommission($agent_id, $commissionable);
 	}
 
