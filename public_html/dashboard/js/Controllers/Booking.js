@@ -1272,6 +1272,7 @@ Booking.prototype.generateSummaries = function () {
 		if(detail.packagefacade) { // This catches NULL and UNDEFINED
 			if(!packagesSummary[detail.packagefacade.id]) {
 				detail.packagefacade.package.isCommissioned = detail.packagefacade.commissionable;
+				detail.packagefacade.package.override_price = detail.packagefacade.override_price;
 				packagesSummary[detail.packagefacade.id] = detail.packagefacade.package;
 				packagesSummary[detail.packagefacade.id].bookingdetail_id = detail.id;
 				packagesSummary[detail.packagefacade.id].facade_id = detail.packagefacade.id;
@@ -1280,6 +1281,7 @@ Booking.prototype.generateSummaries = function () {
 		else if(detail.course) {
 			if(!coursesSummary[detail.customer.id + '-' + detail.course.id]) {
 				detail.course.isCommissioned = detail.item_commissionable;
+				detail.course.override_price = detail.override_price;
 				coursesSummary[detail.customer.id + '-' + detail.course.id] = detail.course;
 				coursesSummary[detail.customer.id + '-' + detail.course.id].bookingdetail_id = detail.id;
 			}
@@ -1288,6 +1290,7 @@ Booking.prototype.generateSummaries = function () {
 			var ticket = detail.ticket;
 			ticket.bookingdetail_id = detail.id;
 			ticket.isCommissioned = detail.item_commissionable;
+			ticket.override_price = detail.override_price;
 			ticketsSummary.push(ticket);
 		}
 
@@ -1298,6 +1301,7 @@ Booking.prototype.generateSummaries = function () {
 				else {
 					addon.qtySummary = parseInt(addon.pivot.quantity);
 					addon.isCommissioned = addon.pivot.commissionable;
+					addon.override_price = addon.pivot.override_price;
 					addonsSummary[addon.id] = addon;
 					addonsSummary[addon.id].bookingdetail_id = detail.id;
 				}
