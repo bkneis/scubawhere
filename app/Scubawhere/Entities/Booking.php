@@ -396,8 +396,12 @@ class Booking extends Ardent {
 			$sum += $this->price / $currency->getSubunitToUnit();
 
 			$sum += $oldDiscount;
+			
+			$commissionRatio = $this->commission_amount / $this->price;
 
 			$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
+			
+			$this->commission_amount = $commissionRatio * $this->price;
 
 			$this->save();
 
@@ -619,9 +623,19 @@ class Booking extends Ardent {
 			$packagesSum += $packagefacade->package()->first()->price;
 		});
 		*/
-
+		
+		// Ok, so to calculate the commission, incase a discount is applied globally to the booking,
+		// we need to determine the percentage of the original commission, then apply that to the new price
 		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
-		$this->commission_amount = (int) $commission;
+		
+		if ($this->discount === null || $this->discount === 0 || $this->discount === '0.00') {
+			$discountRatio = 0;	
+		} else {
+			//$discountRatio = $this->discount / ($this->price + $this->discount);
+			$discountRatio = ($this->discount / ($this->price + $this->discount)) * 100;
+		}
+		
+		$this->commission_amount = (int) ($commission - (int) ($commission * $discountRatio));
 		
 		$this->save();
 		
