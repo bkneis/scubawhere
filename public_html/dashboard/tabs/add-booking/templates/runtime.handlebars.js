@@ -33,7 +33,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
-    + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
 },"4":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
@@ -63,7 +63,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
-    + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
 },"7":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
@@ -125,7 +125,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
-    + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                            </tr>\n";
 },"13":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
@@ -163,7 +163,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + "\n                                    </td>\n                                    <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                        "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
-    + alias4(((helper = (helper = helpers.decimal_price || (depth0 != null ? depth0.decimal_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"decimal_price","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.accommodation_item_price || (depth0 != null ? depth0.accommodation_item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"accommodation_item_price","hash":{},"data":data}) : helper)))
     + "\n                                    </td>\n                                </tr>\n";
 },"17":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";

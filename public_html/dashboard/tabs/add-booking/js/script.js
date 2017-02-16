@@ -183,6 +183,15 @@ Handlebars.registerHelper('item_price', function () {
 	return this.decimal_price; 
 });
 
+// @todo When redesigning add booking we should really have a accommodationSummary
+// to prevent these duplicate helpers with small diffrences to the data structure
+Handlebars.registerHelper('accommodation_item_price', function () {
+	if (this.pivot.override_price) {
+		return new Handlebars.SafeString('<ins>' + (this.pivot.override_price / 100).toFixed(2) + '</ins> <del>' + this.decimal_price + '</del>');
+	}
+	return this.decimal_price;
+});
+
 Handlebars.registerHelper('saveable', function() {
 	var notSaveable = ['reserved', 'expired', 'confirmed', 'on hold', 'cancelled'];
 	if(notSaveable.indexOf(this.status) !== -1)
