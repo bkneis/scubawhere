@@ -18,6 +18,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // @todo Refactor this
     public function getCompanies()
     {
         $user = Auth::user();
@@ -33,6 +34,11 @@ class UserController extends Controller
             if($company->id === (int) $active_id) {
                 $company->active = true;
             }
+        }
+        if (empty($companies)) {
+            $activeCompany = $user->getActiveCompany();
+            $activeCompany->active = true;
+            $companies = array($activeCompany);
         }
         return $companies;
     }
