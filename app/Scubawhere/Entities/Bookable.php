@@ -84,18 +84,17 @@ trait Bookable
             return;
         }
 
-        $use_rule = false;
-        $commissionRule = $rules->first();
-
         // Determine which rule to use, the specific item's rule, or the item type's default
-        $rules->each(function($rule) use (&$use_rule, &$commissionRule) {
-            if ((!is_null($rule->owner_id)) && (!$use_rule)) {
-                $commissionRule = $rule;
-            } else {
-                $use_rule = true;
-            }
+        $specificRule = $rules->filter(function ($rule) {
+            return !(is_null($rule->owner_id));
         });
         
+        if ($specificRule->isEmpty()) {
+            $commissionRule = $rules->first();
+        } else {
+            $commissionRule = $specificRule->first();
+        }
+
         // Set the commission amount
         if (is_null($commissionRule->commission)) {
             // The commission cannot be greater than the amount due
