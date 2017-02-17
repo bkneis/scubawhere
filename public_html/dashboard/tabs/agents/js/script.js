@@ -36,7 +36,7 @@ Handlebars.registerHelper('calcCommission', function(rule) {
 });
 
 Handlebars.registerHelper('isAmount', function (rule, options) {
-	if (rule.commission === null) {
+	if (rule.commission_value === null) {
 		return options.fn(this);
 	}
 	return options.inverse(this);
