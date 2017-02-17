@@ -95,7 +95,7 @@
 							<div id="terms-div" class="form-row">
 								<label class="field-label">
 									Business Terms : <span class="text-danger">*</span>
-									<small><a class="explain-business-terms">Whats this?</a></small>
+									<small><!--<a class="explain-business-terms">Whats this?</a>--></small>
 								</label>
 								<select id="terms" name="terms">
 									<option>Please select..</option>
@@ -105,7 +105,7 @@
 								</select>
 							</div>
 							
-							<h5>Commission Terms <small><a class="explain-commission">Whats this?</a></small></h5> 
+							<h5>Commission Terms <small><a class="info-commission-rules">Whats this?</a></small></h5> 
 							
 							<div class="form-row">
 								<label class="field-label">Default commission (%) : <span class="text-danger">*</span></label>
@@ -194,6 +194,29 @@
 			</ul>
 		</div>
 	</script>
+
+	<div class="modal fade" id="info-commission-rules-modal" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Info - Agent Commission Rules</h4>
+				</div>
+				<div class="modal-body">
+					<p>If you pay different amounts of commission for different items or products you can set this by clicking “+Add Commission Rule”.</p>
+					<p>You can also set a default commission for a selection or group of products (e.g Courses can be 10%, Packages at 15% and Add-ons at 5%)</p>
+					<p>Alternatively if you pay a set value of commission instead of a Percentage(%) for items or a selection of items or products you can also set this by selecting +Add Commission Rule”.</p>
+					<p>When a rule is created and assigned to an item or product, this will be reflected within your Agent Reconciliation.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 	<!--<script src="/tabs/agents/handlebars.runtime.js"></script>-->
     <link rel="stylesheet" type="text/css" href="/dashboard/css/bootstrap-tour-standalone.min.css">

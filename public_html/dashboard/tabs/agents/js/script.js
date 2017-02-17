@@ -167,6 +167,11 @@ $(function(){
 				$('#save-loader').remove();
 			});
 		});
+		
+		$("#agent-form-container").on("click", ".info-commission-rules", function (e) {
+			e.preventDefault();
+			$('#info-commission-rules-modal').modal('show');
+		});
 
 		$("#agent-list-container").on('click', '#change-to-add-agent', function(event){
 
