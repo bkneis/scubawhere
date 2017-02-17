@@ -577,6 +577,8 @@ function deleteCustomer(id) {
     
     Customer.delete(id, function (res) {
         pageMssg(res.status, 'success');
+        delete window.customers[id];
+        renderCustomerList(window.customers); 
     }, function (xhr) {
         console.log(xhr);
         var errors = (JSON.parse(xhr.responseText)).errors;
