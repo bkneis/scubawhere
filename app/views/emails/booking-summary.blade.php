@@ -74,7 +74,11 @@
 												{{$booking->lead_customer->postcode}}
 											@endif
 											<br />
-											{{{$booking->lead_customer->country->name}}}
+											@if($booking->lead_customer->country)
+												@if($booking->lead_customer->country->name)
+													{{{$booking->lead_customer->country->name}}}
+												@endif
+											@endif
 										</td>
 									</tr>
 								</table>
