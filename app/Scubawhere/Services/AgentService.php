@@ -64,6 +64,9 @@ class AgentService {
 	 */
 	public function create($data) 
 	{
+		if (is_null($data['commission_rules'])) {
+			$data['commission_rules'] = [];
+		}
 		$rules = $this->transformCommissionRules($data['commission_rules']);
 		unset($data['commission_rules']);
 		return $this->agent_repo
@@ -126,6 +129,9 @@ class AgentService {
 	 */
 	public function update($id, $data) 
 	{
+		if (is_null($data['commission_rules'])) {
+            $data['commission_rules'] = [];
+        }
 		$rules = $this->transformCommissionRules($data['commission_rules']);
 		unset($data['commission_rules']);
     	return $this->agent_repo
