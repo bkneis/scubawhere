@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Addon Selection <small>Please assign any addons you wish to include to the trips</small></h2>
+			<h2>Addon Selection <small>Select a customers trip and add requested add-ons.</small></h2>
 		</div>
 	</div>
 </div>

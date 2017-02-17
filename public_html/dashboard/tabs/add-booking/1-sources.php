@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Booking Source <small>Where is your booking coming from?</small></h2>
+			<h2>Booking Source <small>Select where you got the booking from.</small></h2>
 		</div>
 	</div>
 </div>

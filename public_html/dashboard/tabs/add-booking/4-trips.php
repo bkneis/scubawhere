@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Trips & Classes <small>Please assign the customers to their trips</small></h2>
+			<h2>Trips & Classes <small>Select a customer, select a ticket and assign a date. Or add your tickets without date.</small></h2>
 		</div>
 	</div>
 </div>
@@ -251,7 +251,7 @@
 							<tr>
 								<td colspan="6">
 									<h3 class="text-center text-muted"><i class="fa fa-exclamation-triangle"></i></h3>
-									<h5 class="text-center text-muted">Your search did not match any trips.</h5>
+									<h5 class="text-center text-muted">There are no relevant trips or all your tickets have been assigned</h5>
 								</td>
 							</tr>
 						{{/each}}

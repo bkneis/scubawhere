@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Customers <small>Select the customers this booking is for.</small></h2>
+			<h2>Customers <small>Add existing customers or create new customers to add to booking.</small></h2>
 		</div>
 	</div>
 </div>

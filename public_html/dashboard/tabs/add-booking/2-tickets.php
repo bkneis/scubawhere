@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Tickets, Packages & Courses <small>Please select the items you want to book</small></h2>
+			<h2>Tickets, Packages & Courses <small>Add items you would like to book.</small></h2>
 		</div>
 	</div>
 </div>

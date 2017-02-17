@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Extra Details <small>Is there anything else to know?</small></h2>
+			<h2>Extra Details <small>Discount this booking, add pick-up locations or add comments (not visible to customer.)</small></h2>
 		</div>
 	</div>
 </div>

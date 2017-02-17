@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Summary <small>Booking summary</small></h2>
+			<h2>Summary <small>Check booking details are correct. Then reserve, save or confirm your booking.</small></h2>
 		</div>
 	</div>
 </div>

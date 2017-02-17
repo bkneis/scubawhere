@@ -1,7 +1,7 @@
 <div class="row row-header">
 	<div class="col-xs-12">
 		<div class="page-header">
-			<h2>Accommodation Selection <small>If required, Please assign the customers to an accommodation.</small></h2>
+			<h2>Accommodation Selection <small>Assign customer accommodation. (Multiple customers can stay in one room, based on occupancy, however only a lead customer will need to be assigned.)</small></h2>
 		</div>
 	</div>
 </div>
