@@ -172,10 +172,10 @@ trait Bookable
      */
     public function syncPrices(array $prices)
     {
-        foreach ($prices as &$price) {
+        /*foreach ($prices as &$price) {
             $price['new_decimal_price'] = $price['decimal_price'];
             unset($price['decimal_price']);
-        }
+        }*/
         // Go through prices and remove any that do not have an amount
         $prices = array_filter($prices, function ($obj) {
             return ! empty($obj['new_decimal_price']); 
