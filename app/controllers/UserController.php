@@ -35,7 +35,7 @@ class UserController extends Controller
                 $company->active = true;
             }
         }
-        if (empty($companies)) {
+        if ($companies->isEmpty()) {
             $activeCompany = $user->getActiveCompany();
             $activeCompany->active = true;
             $companies = array($activeCompany);
