@@ -139,31 +139,31 @@
 		<p>
             <select style="width: 30%" class="select2 commission-rule-select">
                 <optgroup label="Tickets">
-                    <option value="ticket-default" data-rule-id="{{id}}" data-rule-type="ticket">Tickets default</option>
+                    <option value="ticket-default" data-rule-id="{{id}}" data-rule-type="ticket">All Tickets</option>
                     {{#each tickets}}
                         <option value="ticket-{{id}}" data-rule-id="{{../id}}" data-rule-type="ticket">{{name}}</option>
                     {{/each}}
                 </optgroup>
                 <optgroup label="Courses">
-                    <option value="course-default" data-rule-id="{{id}}" data-rule-type="course">Courses Default</option>
+                    <option value="course-default" data-rule-id="{{id}}" data-rule-type="course">All Courses</option>
                     {{#each courses}}
                         <option value="course-{{id}}" data-rule-id="{{../id}}" data-rule-type="course">{{name}}</option>
                     {{/each}}
                 </optgroup>
                 <optgroup label="Packages">
-                    <option value="package-default" data-rule-id="{{id}}" data-rule-type="package">Packages Default</option>
+                    <option value="package-default" data-rule-id="{{id}}" data-rule-type="package">All Packages</option>
                     {{#each packages}}
                         <option value="package-{{id}}" data-rule-id="{{../id}}" data-rule-type="package">{{name}}</option>
                     {{/each}}
                 </optgroup>
                 <optgroup label="Addons">
-                    <option value="addon-default" data-rule-id="{{id}}" data-rule-type="addon">Addons Default</option>
+                    <option value="addon-default" data-rule-id="{{id}}" data-rule-type="addon">All Addons</option>
                     {{#each addons}}
                         <option value="addon-{{id}}" data-rule-id="{{../id}}" data-rule-type="addon">{{name}}</option>
                     {{/each}}
                 </optgroup>
 				<optgroup label="Accommodation">
-					<option value="accommodation-default" data-rule-id="{{id}}" data-rule-type="addon">Acommodation Default</option>
+					<option value="accommodation-default" data-rule-id="{{id}}" data-rule-type="addon">All Accommodations</option>
 					{{#each accommodations}}
 					<option value="accommodation-{{id}}" data-rule-id="{{../id}}" data-rule-type="accommodation">{{name}}</option>
 					{{/each}}
@@ -177,8 +177,8 @@
 				   placeholder="00.00" 
 				   value="{{calcCommission rule}}">
 			<select name="commission_rules[{{id}}][unit]">
-				<option value="percentage" {{#isAmount rule}} {{else}} selected {{/isAmount}}>%</option>
-				<option value="amount" {{#isAmount rule}} selected {{/isAmount}}>{{currency}}</option>
+				<option value="percentage" {{#isAmount rule}} selected {{/isAmount}}>%</option>
+				<option value="amount" {{#isAmount rule}} {{else}} selected {{/isAmount}}>{{currency}}</option>
 			</select>
 			<button class="btn btn-danger remove-commission-rule">X</button>
 		</p>
