@@ -32,11 +32,8 @@ class AccommodationTransformer extends Transformer
             'name'        => $accommodation['name'],
             'description' => $accommodation['description'],
             'capacity'    => $accommodation['capacity'],
-            'prices'      => array_merge(
-                                $this->priceTransformer->transformMany($accommodation['prices']),
-                                $this->priceTransformer->transformMany($accommodation['base_prices'])
-                            ),
-            'base_prices' => []
+            'prices'      => $this->priceTransformer->transformMany($accommodation['prices']),
+            'base_prices' => $this->priceTransformer->transformMany($accommodation['base_prices'])
         );
     }
 }

@@ -247,7 +247,7 @@ class AccommodationService {
     	return $this->accommodations
 			->get($id, ['basePrices', 'prices'])
 			->update($data)
-			->syncPrices_new($data['prices']);
+			->syncPrices($data['prices']);
 	}
 
 	/**

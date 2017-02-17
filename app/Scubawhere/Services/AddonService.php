@@ -90,7 +90,7 @@ class AddonService {
 		return $this->addonRepo
 			->get($id)
 			->update($data)
-			->syncPrices($data['basePrices']);
+			->syncPrices($data['prices']);
 	}
 
 	/**
