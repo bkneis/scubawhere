@@ -56,7 +56,7 @@ trait Bookable
 
     private function calculateCommissionAmount($amount, $commission)
     {
-        return (int) ((double) $amount * 100) - ((int) $amount * (100 - (double) $commission) / 100) * 100; 
+        return (int) ((double) $amount * 100) - ((int) $amount * (100 - (double) $commission) / 100) * 100;
     }
 
     public function calculateCommission($agent_id, $commissionable)
