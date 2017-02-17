@@ -632,6 +632,7 @@ class Booking extends Ardent {
 		
 		if ($this->discount === null || $this->discount === 0 || $this->discount === '0.00') {
 			$discountRatio = 0;	
+			$discountPercentage = 0;
 		} else {
 			$discountRatio = ($this->discount / ($this->price + $this->discount)) * 100;
 			//$discountRatio = ($discount / $this->price + $discount);
