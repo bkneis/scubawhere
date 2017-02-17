@@ -24,13 +24,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + ((stack1 = helpers["if"].call(alias1,(depths[1] != null ? depths[1].agent_id : depths[1]),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                <td class=\"inner-item-col\">\n                                    <i class=\"fa fa-tags fa-fw\"></i> "
     + ((stack1 = ((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n                                    <a href=\"#\"\n                                       data-type=\"package\"\n                                       data-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       data-booking-id=\""
-    + alias4(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
-    + "\"\n                                       data-booking-detail-id=\""
-    + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
+    + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
     + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
@@ -54,13 +48,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + ((stack1 = helpers["if"].call(alias1,(depths[1] != null ? depths[1].agent_id : depths[1]),{"name":"if","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                <td class=\"inner-item-col\">\n                                    <i class=\"fa fa-graduation-cap fa-fw\"></i> "
     + ((stack1 = ((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n                                    <a href=\"#\"\n                                       data-type=\"course\"\n                                       data-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       data-booking-id=\""
-    + alias4(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
-    + "\"\n                                       data-booking-detail-id=\""
-    + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
+    + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
     + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
@@ -84,13 +72,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + ((stack1 = helpers["if"].call(alias1,(depths[1] != null ? depths[1].agent_id : depths[1]),{"name":"if","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                <td class=\"inner-item-col\">\n                                    <i class=\"fa fa-ticket fa-fw\"></i> "
     + ((stack1 = ((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n                                    <a href=\"#\"\n                                       data-type=\"ticket\"\n                                       data-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       data-booking-id=\""
-    + alias4(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
-    + "\"\n                                       data-booking-detail-id=\""
-    + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
+    + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
     + alias4(((helper = (helper = helpers.item_price || (depth0 != null ? depth0.item_price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"item_price","hash":{},"data":data}) : helper)))
@@ -114,13 +96,7 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + ((stack1 = helpers["if"].call(alias1,(depths[1] != null ? depths[1].agent_id : depths[1]),{"name":"if","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                <td class=\"inner-item-col\">\n                                    <i class=\"fa fa-cart-plus fa-fw\"></i> "
     + ((stack1 = ((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n                                    <a href=\"#\"\n                                       data-type=\"addon\"\n                                       data-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       data-booking-id=\""
-    + alias4(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
-    + "\"\n                                       data-booking-detail-id=\""
-    + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
-    + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x"
+    + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x"
     + alias4(((helper = (helper = helpers.qtySummary || (depth0 != null ? depth0.qtySummary : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"qtySummary","hash":{},"data":data}) : helper)))
     + "\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
@@ -144,21 +120,13 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
 
   return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.packagefacade_id : stack1),{"name":"unless","hash":{},"fn":container.program(16, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"16":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "                                <tr>\n"
     + ((stack1 = helpers["if"].call(alias1,(depths[1] != null ? depths[1].agent_id : depths[1]),{"name":"if","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                    <td class=\"inner-item-col\">\n                                        <i class=\"fa fa-bed fa-fw\"></i> "
     + ((stack1 = ((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n                                        <a href=\"#\"\n                                           data-type=\"accommodation\"\n                                           data-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n                                           data-booking-id=\""
-    + alias4(alias5((depths[1] != null ? depths[1].id : depths[1]), depth0))
-    + "\"\n                                           data-booking-detail-id=\""
-    + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
-    + "\"\n                                           data-start=\""
-    + alias4(alias5(((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.start : stack1), depth0))
-    + "\"\n                                           class=\"show-override\"> (Apply discount)</a>\n                                    </td>\n                                    <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                        "
+    + "\n                                    </td>\n                                    <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                        "
     + alias4((helpers.numberOfNights || (depth0 && depth0.numberOfNights) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.start : stack1),((stack1 = (depth0 != null ? depth0.pivot : depth0)) != null ? stack1.end : stack1),{"name":"numberOfNights","hash":{},"data":data}))
     + "\n                                    </td>\n                                    <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                        "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
