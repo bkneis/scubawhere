@@ -103,7 +103,9 @@ class CompanyController extends Controller {
 		$company = Context::get();
 
 		if(is_null($company->alias)) {
-			$this->postSetSubdomain($data['alias']);
+			if (! empty($data['alias'])) {
+				$this->postSetSubdomain($data['alias']);
+			}
 		}
 
 		if(is_null($data['alias'])) {
