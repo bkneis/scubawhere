@@ -93,9 +93,10 @@ class Helper
 
 	public static function booking_reference_number() {
 		
-		if (! is_null(Context::get()->reference_base)) {
-			$num_bookings = (string) Context::get()->bookings()->count();
-			return Context::get()->reference_base . $num_bookings;
+		$company = Context::get();
+		if ((! is_null($company->reference_base)) || (! empty($company->reference_base))) {
+			$num_bookings = (string) $company->bookings()->count();
+			return $company->reference_base . $num_bookings;
 		}
 
 		$length = 4;
