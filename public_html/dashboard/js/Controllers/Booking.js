@@ -428,6 +428,7 @@ Booking.prototype.addDetail = function(params, successFn, errorFn) {
 			}
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			this.calculateSums();
 
@@ -466,6 +467,7 @@ Booking.prototype.removeDetail = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			this.calculateSums();
 
@@ -553,6 +555,7 @@ Booking.prototype.addAddon = function(params, successFn, errorFn){
 			}
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			if(!params.packagefacade_id)
 				this.calculateSums();
@@ -604,6 +607,7 @@ Booking.prototype.removeAddon = function(params, successFn, errorFn) {
 			}
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			if(removedAddon.pivot.packagefacade_id === null)
 				this.calculateSums();
@@ -656,6 +660,7 @@ Booking.prototype.addAccommodation = function(params, successFn, errorFn) {
 			this.accommodations.push( accommodation );
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			if(!params.packagefacade_id)
 				this.calculateSums();
@@ -696,6 +701,7 @@ Booking.prototype.removeAccommodation = function(params, successFn, errorFn) {
 			});
 
 			this.decimal_price = data.decimal_price;
+			this.discount = data.discount;
 
 			if(removedAccommodation.pivot.packagefacade_id === null)
 				this.calculateSums();
