@@ -1192,6 +1192,7 @@ class BookingController extends Controller
             'id' => $bookingdetail->id,
             'addons' => $addons ? $addons : false,
             'decimal_price' => $booking->decimal_price,
+            'discount' => (int) ((double) $booking->discount * 100),
 
             'boatroom_id' => $departure && $trip->boat_required ? $boatroom_id : false,
 
@@ -1476,7 +1477,12 @@ class BookingController extends Controller
             $booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
         }
 
-        return array('status' => 'OK. Addon(s) added.', 'decimal_price' => $booking->decimal_price, 'addon_decimal_price' => $addon->decimal_price);
+        return array(
+            'status' => 'OK. Addon(s) added.',
+            'decimal_price' => $booking->decimal_price,
+            'discount' => $booking->discount,
+            'addon_decimal_price' => $addon->decimal_price
+        );
     }
 
     public function postRemoveAddon()
@@ -1558,7 +1564,11 @@ class BookingController extends Controller
             $booking->updatePrice();
         } // Only need to update if not a package, because otherwise the price doesn't change
 
-        return array('status' => 'OK. One addon removed.', 'decimal_price' => $booking->decimal_price);
+        return array(
+            'status' => 'OK. One addon removed.',
+            'discount' => $booking->discount,
+            'decimal_price' => $booking->decimal_price
+        );
     }
 
     public function postAddAccommodation()
@@ -1738,6 +1748,7 @@ class BookingController extends Controller
 
             'decimal_price' => $booking->decimal_price,
             'accommodation_decimal_price' => !$package ? $accommodation->decimal_price : false,
+            'discount' => (int) ((double) $booking->discount * 100),
 
             'packagefacade_id' => $packagefacade ? $packagefacade->id : false,
         );
@@ -1794,7 +1805,11 @@ class BookingController extends Controller
         // Update booking price
         $booking->updatePrice();
 
-        return array('status' => 'OK. Accommodation removed.', 'decimal_price' => $booking->decimal_price);
+        return array(
+            'status' => 'OK. Accommodation removed.',
+            'discount' => (int) ((double) $booking->discount * 100),
+            'decimal_price' => $booking->decimal_price
+        );
     }
 
     public function getPickUpLocations()
@@ -1844,6 +1859,12 @@ class BookingController extends Controller
             'comment'           // Text
         );
 
+        if (Input::get('discount_type') === 'percentage') {
+            $data['discount_percentage'] = true;
+        } else {
+            $data['discount_percentage'] = false;
+        }
+
         // @todo Shall we delete the discount reason when 0 or allow the user to do it?
         /*if (empty($data['discount']) && $data['discount'] !== 0 && $data['discount'] !== '0') {
             //$data['discount'] = null;
@@ -1872,7 +1893,13 @@ class BookingController extends Controller
             $booking->updatePrice(true, $oldDiscount);
         }
 
-        return array('status' => 'OK. Booking information updated.', 'price' => $booking->price, 'decimal_price' => $booking->decimal_price, 'commission' => $booking->commission_amount);
+        return array(
+            'status' => 'OK. Booking information updated.',
+            'price' => $booking->price,
+            'decimal_price' => $booking->decimal_price,
+            'commission' => $booking->commission_amount,
+            'discount' => (int) ((double) $booking->discount * 100)
+        );
     }
 
     public function postAddPickUp()
@@ -2394,6 +2421,7 @@ class BookingController extends Controller
         return Response::json(array(
             'status' => 'Ok. Item\'s commission has been updated',
             'commission' => $booking->commission_amount,
+            'discount' => (int) ((double) $booking->discount * 100),
             'item_commissionable' => $data['commissionable'] 
         ), 200);
     }
@@ -2446,7 +2474,7 @@ class BookingController extends Controller
             'status' => 'Ok. Item\'s price has been updated',
             'decimal_price' => $booking->decimal_price,
             'commission' => $booking->commission_amount,
-            'discount' => $booking->discount
+            'discount' => (int) ((double) $booking->discount * 100)
         ), 200);
     }
 
