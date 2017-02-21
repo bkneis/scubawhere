@@ -18,14 +18,18 @@
 					<div class="form-group">
 						<label for="discount" class="col-sm-4 control-label"><strong>Discount</strong></label>
 						<div class="col-md-8">
-							<div class="input-group pull-left" style="width: 39%; margin-right: 5px;">
+							<div id="discount-percentage-container" class="input-group pull-left" style="width: 39%; margin-right: 5px;">
 								<span class="input-group-addon">%</span>
 								<input type="text" class="form-control" id="discount-percentage" value="0.00" />
 							</div>
-							<div class="input-group" style="width: 59%;">
+							<div id="discount-container" class="input-group pull-left" style="width: 39%; margin-right:5px; display: none;">
 								<span class="input-group-addon"><i class="fa fa-money"></i></span>
 								<input type="text" class="form-control" id="discount" name="discount" value="{{decimalise discount}}" />
 							</div>
+							<select id="change-discount-type" name="discount_type">
+								<option value="percentage">%</option>
+								<option value="amount">{{currency}}</option>
+							</select>
 							<p style="margin-top: 5px; margin-bottom: 5px;">Full price: {{currency}} {{fullPrice}}</p>
 							<p style="margin-top: 5px;">Discounted price: <span id="discounted-price" style="font-weight: bold;"></span></p>
 						</div>

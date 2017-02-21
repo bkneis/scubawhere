@@ -2956,6 +2956,17 @@ $('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 	$('#discounted-price').html( window.company.currency.symbol + ' ' + (originalPrice - $discount.val()).toFixed(2) );
 });
 
+$('#extra-tab').on('change', '#change-discount-type', function (e) {
+	e.preventDefault();
+	if ($(this).val() === 'percentage') {
+		$('#discount-container').hide();
+		$('#discount-percentage-container').show();
+	} else {
+		$('#discount-percentage-container').hide();
+		$('#discount-container').show();
+	}
+});
+
 $('#extra-tab').on('change', '#discount', function(e) {
 	$discount            = $(e.target);
 	$discount_percentage = $('#discount-percentage');
