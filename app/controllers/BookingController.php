@@ -1898,7 +1898,8 @@ class BookingController extends Controller
             'price' => $booking->price,
             'decimal_price' => $booking->decimal_price,
             'commission' => $booking->commission_amount,
-            'discount' => (int) ((double) $booking->discount * 100)
+            'discount' => (int) ((double) $booking->discount * 100),
+            'discount_percentage' => (int) $booking->discount_percentage
         );
     }
 

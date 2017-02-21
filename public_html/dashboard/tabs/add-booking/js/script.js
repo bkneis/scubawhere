@@ -2958,12 +2958,13 @@ $('#extra-tab').on('keyup', '#discount-percentage', function(e) {
 
 $('#extra-tab').on('change', '#change-discount-type', function (e) {
 	e.preventDefault();
+	// We need to override the css manually instead of .show / .hide. Ref - http://api.jquery.com/show/
 	if ($(this).val() === 'percentage') {
-		$('#discount-container').hide();
-		$('#discount-percentage-container').show();
+		$('#discount-container').addClass('hidden');
+		$('#discount-percentage-container').removeClass('hidden');
 	} else {
-		$('#discount-percentage-container').hide();
-		$('#discount-container').show();
+		$('#discount-percentage-container').addClass('hidden');
+		$('#discount-container').removeClass('hidden');
 	}
 });
 
