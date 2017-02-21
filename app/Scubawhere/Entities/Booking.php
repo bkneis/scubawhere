@@ -417,8 +417,6 @@ class Booking extends Ardent {
 			$this->save();
 
 			$this->decimal_price = $sum;
-			
-			//dd($discountPercentage, $this->price);
 
 			return true;
 		}
@@ -641,7 +639,7 @@ class Booking extends Ardent {
 		// we need to determine the percentage of the original commission, then apply that to the new price
 		$discountPercentage = $this->calculateDiscount($this->discount);
 		if ($this->discount_percentage) {
-			$this->discount = (int) (round( $sum ) * ($discountPercentage));
+			$this->discount = (int) ((round( $sum ) * $discountPercentage));
 			$this->price = (int) (round( $sum * $currency->getSubunitToUnit() ) * (1 - $discountPercentage));
 		} else {
 			$this->price = (int) (round( ($sum - $this->discount) * $currency->getSubunitToUnit() ));
