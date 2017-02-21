@@ -23,7 +23,8 @@ class Booking extends Ardent {
 		'cancel_reason',
 		'discount_reason',
 		'cancelled_at',
-		'commission_amount'
+		'commission_amount',
+		'discount_percentage'
 	);
 
 	protected $appends = array('decimal_price', 'real_decimal_price', 'arrival_date', 'created_at_local', 'absolute_price');
@@ -44,7 +45,8 @@ class Booking extends Ardent {
 		'cancellation_fee' => 'integer|min:0',
 		'comment'          => '',
 		'cancelled_at'     => 'date',
-		'commission_amount' => 'integer|min:0'
+		'commission_amount' => 'integer|min:0',
+		'discount_percentage' => 'boolean'
 	);
 
 	public static function isActive($status)
@@ -390,22 +392,33 @@ class Booking extends Ardent {
 		$sum = 0;
 		$commission = 0;
 
-		$sum -= $this->discount;
+		//$sum -= $this->discount;
 
 		if($onlyApplyDiscount) {
 			$sum += $this->price / $currency->getSubunitToUnit();
 
-			$sum += $oldDiscount;
+			$sum += (double) $oldDiscount;
 			
-			$commissionRatio = $this->commission_amount / $this->price;
+			if ($this->price === 0) {
+				$commissionRatio = 0;
+			} else {
+				$commissionRatio = $this->commission_amount / $this->price;
+			}
 
-			$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
+			if ($this->discount_percentage) {
+				$discountPercentage = $this->calculateDiscount($oldDiscount);
+				$this->price = (int) (round( $sum * $currency->getSubunitToUnit() ) * (1 - $discountPercentage));
+			} else {
+				$this->price = (int) (round( ($sum - $this->discount) * $currency->getSubunitToUnit() ));
+			}
 			
 			$this->commission_amount = $commissionRatio * $this->price;
 
 			$this->save();
 
 			$this->decimal_price = $sum;
+			
+			//dd($discountPercentage, $this->price);
 
 			return true;
 		}
@@ -623,32 +636,34 @@ class Booking extends Ardent {
 			$packagesSum += $packagefacade->package()->first()->price;
 		});
 		*/
-
-		$discount = (int) ((double)$this->discount * 100);
 		
 		// Ok, so to calculate the commission, incase a discount is applied globally to the booking,
 		// we need to determine the percentage of the original commission, then apply that to the new price
-		$this->price = (int) round( $sum * $currency->getSubunitToUnit() );
-		
-		if ($this->discount === null || $this->discount === 0 || $this->discount === '0.00') {
-			$discountRatio = 0;	
-			$discountPercentage = 0;
+		$discountPercentage = $this->calculateDiscount($this->discount);
+		if ($this->discount_percentage) {
+			$this->discount = (int) (round( $sum ) * ($discountPercentage));
+			$this->price = (int) (round( $sum * $currency->getSubunitToUnit() ) * (1 - $discountPercentage));
 		} else {
-			$discountRatio = ($this->discount / ($this->price + $this->discount)) * 100;
-			//$discountRatio = ($discount / $this->price + $discount);
-			$discountAmount = (double) $this->discount;
-			$discountAmount = $discountAmount * 100;
-			$totalAmount = $this->price + $discountAmount;
-			$discountPercentage = $discountAmount / $totalAmount;
+			$this->price = (int) (round( ($sum - $this->discount) * $currency->getSubunitToUnit() ));
 		}
 		
-		//dd($discountRatio, $this->discount, $this->price, $discountPercentage);
 		$this->commission_amount = (int) ($commission - ($commission * $discountPercentage));
-		//$this->commission_amount = $commission;
 
 		$this->save();
 		
 		$this->decimal_price = $sum;
+	}
+
+	protected function calculateDiscount($oldDiscount = 0)
+	{
+		if ($this->discount === null || $this->discount === 0 || $this->discount === '0.00') {
+			return 0;
+		}
+		
+        $discountAmount = (double) $this->discount;
+		$discountAmount = $discountAmount * 100;
+        $totalAmount = $this->price + ($oldDiscount * 100);
+        return $discountAmount / $totalAmount;
 	}
 
 	// @todo Can i remove this as the cascade flag on delete should be set on bookings table anyways ??
