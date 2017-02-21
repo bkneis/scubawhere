@@ -376,7 +376,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="btn-override-price" class="btn btn-primary">Override Price</button>
+                <button id="btn-override-price" class="btn btn-primary">Apply Discount</button>
             </div>
 		</div>
 	</div>

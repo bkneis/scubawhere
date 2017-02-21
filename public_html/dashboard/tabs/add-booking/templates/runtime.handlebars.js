@@ -3,17 +3,17 @@
 templates['override-price-form'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<label class=\"field-label\">New Price : </label>\n<input id=\"override-price\"\n       type=\"number\"\n       placeholder=\"00.00\"\n       min=\"0\"\n       data-booking-id=\""
+  return "<label class=\"field-label\">New Price : </label>\n<div class=\"input-group\">\n    <span class=\"input-group-addon\"><i class=\"fa fa-money\"></i></span>\n    <input id=\"override-price\"\n           type=\"number\"\n           placeholder=\"00.00\"\n           min=\"0\"\n           data-booking-id=\""
     + alias4(((helper = (helper = helpers.bookingId || (depth0 != null ? depth0.bookingId : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingId","hash":{},"data":data}) : helper)))
-    + "\"\n       data-booking-detail-id=\""
+    + "\"\n           data-booking-detail-id=\""
     + alias4(((helper = (helper = helpers.bookingDetailId || (depth0 != null ? depth0.bookingDetailId : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingDetailId","hash":{},"data":data}) : helper)))
-    + "\"\n       data-type=\""
+    + "\"\n           data-type=\""
     + alias4(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"type","hash":{},"data":data}) : helper)))
-    + "\"\n       data-id=\""
+    + "\"\n           data-id=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"\n       data-start=\""
+    + "\"\n           data-start=\""
     + alias4(((helper = (helper = helpers.start || (depth0 != null ? depth0.start : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start","hash":{},"data":data}) : helper)))
-    + "\"\n       step=\"0.01\"/>\n";
+    + "\"\n           step=\"0.01\"/>\n</div>\n";
 },"useData":true});
 templates['price-breakdown'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "                                <td class=\"title-dark\" width=\"20\">\n                                    Commissioned\n                                </td>\n";

@@ -1,11 +1,14 @@
 <label class="field-label">New Price : </label>
-<input id="override-price"
-       type="number"
-       placeholder="00.00"
-       min="0"
-       data-booking-id="{{bookingId}}"
-       data-booking-detail-id="{{bookingDetailId}}"
-       data-type="{{type}}"
-       data-id="{{id}}"
-       data-start="{{start}}"
-       step="0.01"/>
+<div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-money"></i></span>
+    <input id="override-price"
+           type="number"
+           placeholder="00.00"
+           min="0"
+           data-booking-id="{{bookingId}}"
+           data-booking-detail-id="{{bookingDetailId}}"
+           data-type="{{type}}"
+           data-id="{{id}}"
+           data-start="{{start}}"
+           step="0.01"/>
+</div>
