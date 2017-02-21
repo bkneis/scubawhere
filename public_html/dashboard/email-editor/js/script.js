@@ -210,7 +210,7 @@ function sendCampaign(params)
     Campaign.create(params, function success(data) {
         console.log(data);
         pageMssg(data.status, true);
-        window.location.href = '/#campaigns';
+        window.location.href = '/dashboard/#campaigns';
     },
     function error(xhr) {
         console.log(xhr);
@@ -236,7 +236,10 @@ function processEmailHtml(html_string)
         var html_string = document.getElementById("email-template-editor").contentWindow.document.documentElement.outerHTML;
     }
 
-    var script_pos = html_string.indexOf('<script type="text/javascript" src="/tabs/campaigns/email-templates/js/medium-editor.js"></script>');
+    var script_pos = html_string.indexOf('<script type="text/javascript" src="/dashboard/tabs/campaigns/email-templates/js/medium-editor.js"></script>');
+    if (script_pos === -1) {
+        script_pos = html_string.indexOf('<script type="text/javascript" src="/tabs/campaigns/email-templates/js/medium-editor.js"></script>');
+    }
     var html_compiled = html_string.substring(0, script_pos) + '</body></html>';
 
     var find = 'contenteditable="true"';

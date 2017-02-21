@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../common/js/jquery/jquery.serialize-object.min.js"></script>
     <script type="text/javascript" src="../common/js/jquery/jquery.reveal.js"></script>
     <script type="text/javascript" src="../common/js/moment.min.js"></script>
-    <script type="text/javascript" src="/dashboard/js/script.js"></script>
+    <script type="text/javascript" src="/dashboard/email-editor/js/script.js"></script>
 
     <!-- scubawhere files -->
     <script type="text/javascript">
@@ -96,7 +96,7 @@
                     <button id="send-email" class="btn btn-primary btn-lg pull-right">SEND</button>
                     <button id="save-as-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px;">Save as Template</button>
                     <button id="update-template" class="btn btn-success btn-lg pull-right" style="margin-right: 15px; display:none;">Update Template</button>
-                    <a href="/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
+                    <a href="/dashboard/#campaigns" class="btn btn-default btn-lg abandon-booking pull-right" style="margin-right: 15px;">Discard Email</a>
                     <!--<button id="choose-template" class="btn btn-primary btn-lg pull-left" style="margin-right: 15px;">Choose Different Template</button>-->
                 </div>
             </div>
@@ -125,11 +125,11 @@
                             <ul id="layout-options-list" style="margin-right:10px" class="entity-list"></ul>
                         </div>
                         <div id="layout-options" style="width:35%; float:left; max-height:620px; overflow: auto" class="email-options-list">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_2column_query.html" src="/img/email-templates/email_template_1.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_3column_query.html" src="/img/email-templates/email_template_2.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_body_image_query.html" src="/img/email-templates/email_template_3.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_query.html" src="/img/email-templates/email_template_4.jpg">
-                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_body_image_2column_query.html" src="/img/email-templates/email_template_5.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_2column_query.html" src="/dashboard/img/email-templates/email_template_1.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_3column_query.html" src="/dashboard/img/email-templates/email_template_2.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_body_image_query.html" src="/dashboard/img/email-templates/email_template_3.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_basic_query.html" src="/dashboard/img/email-templates/email_template_4.jpg">
+                            <img width="45%" height="200px" class="email-template-option" data-url="/dashboard/tabs/campaigns/email-templates/base_boxed_body_image_2column_query.html" src="/dashboard/img/email-templates/email_template_5.jpg">
                         </div>
                         <div style="width:65%; float:left">
                             <h4>Preview:</h4>
