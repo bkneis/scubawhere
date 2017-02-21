@@ -123,41 +123,57 @@ $PROTOCOL = 'http';
 		window.facebook = {};
 	</script>
 
-	<?php if(gethostname() === 'rms.scubawhere.com') { ?>
-		<script type="text/javascript" src="js/app.min.js"></script>
-	<?php } else { ?>
-		<script type="text/javascript" src="/dashboard/js/main.js"></script>
-		<script type="text/javascript" src="/dashboard/js/navigation.js"></script>
-		<!--<script type="text/javascript" src="js/tour.js"></script>-->
-		<script type="text/javascript" src="/dashboard/js/ui.js"></script>
-		<script type="text/javascript" src="/dashboard/js/validate.js"></script>
+	<?php
+		if (isset($_SERVER['AWS_ENV'])) {
+			if ($_SERVER['AWS_ENV'] === 'prod') {
+				echo <<<EOT
+<script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+      heap.load("2024590828");
+</script>
+EOT;
+			} elseif ($_SERVER['AWS_ENV'] === 'dev') {
+				echo <<<EOT
+<script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+      heap.load("2640758810");
+</script>
+EOT;
+			}
+		}
+	?>
 
-		<!-- Load all front-end controllers -->
-		<script type="text/javascript" src="/dashboard/js/Controllers/Accommodation.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Addon.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Agency.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Agent.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Boat.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Boatroom.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Booking.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Class.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Company.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Course.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Customer.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Location.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Package.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Payment.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Refund.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Report.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Session.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Ticket.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Timetable.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Trip.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/CustomerGroup.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Campaign.js"></script>
-		<script type="text/javascript" src="/dashboard/js/Controllers/Certificate.js"></script>
-        <script type="text/javascript" src="/dashboard/js/Controllers/Equipment.js"></script>
-	<?php } ?>
+    <script type="text/javascript" src="/dashboard/js/main.js"></script>
+    <script type="text/javascript" src="/dashboard/js/navigation.js"></script>
+    <!--<script type="text/javascript" src="js/tour.js"></script>-->
+    <script type="text/javascript" src="/dashboard/js/ui.js"></script>
+    <script type="text/javascript" src="/dashboard/js/validate.js"></script>
+
+    <!-- Load all front-end controllers -->
+    <script type="text/javascript" src="/dashboard/js/Controllers/Accommodation.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Addon.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Agency.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Agent.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Boat.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Boatroom.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Booking.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Class.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Company.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Course.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Customer.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Location.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Package.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Payment.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Refund.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Report.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Session.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Ticket.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Timetable.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Trip.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/CustomerGroup.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Campaign.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Certificate.js"></script>
+    <script type="text/javascript" src="/dashboard/js/Controllers/Equipment.js"></script>
 
 	<script type="text/javascript">
 		// Load company info
