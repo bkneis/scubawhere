@@ -2475,7 +2475,7 @@ class BookingController extends Controller
             'status' => 'Ok. Item\'s price has been updated',
             'decimal_price' => $booking->decimal_price,
             'commission' => $booking->commission_amount,
-            'discount' => (int) ((double) $booking->discount * 100)
+            'discount' => (double) $booking->discount * 100
         ), 200);
     }
 

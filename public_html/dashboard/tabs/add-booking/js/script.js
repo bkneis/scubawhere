@@ -3190,7 +3190,7 @@ $('#summary-tab').on('click', '#btn-override-price', function (e) {
 		bookingdetail_id: data.bookingDetailId,
 		item_type: data.type,
 		item_id: data.id,
-		price: ($('#override-price').val() * 100)
+		price: parseInt($('#override-price').val() * 100)
 	};
 	if (data.type === 'accommodation') {
 		params.start = data.start;
