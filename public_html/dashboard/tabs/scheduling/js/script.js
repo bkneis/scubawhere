@@ -245,6 +245,13 @@ $(function() {
 		eventAfterRender : function(event, element) {
 			$(element).css('height', '25px');
 			$(element).css('text-align', 'center');
+			/*var weekContainer = $(element).closest('.fc-week').first();
+			var totalHeight = 0;
+			weekContainer.find('.fc-event').each(function (index, el) {
+				totalHeight += $(el).height();
+			});
+			console.log('height', totalHeight);
+			weekContainer.css('height', weekContainer + 'px !important');*/
 		},
 		editable: true,
 		droppable: true, // This allows things to be dropped onto the calendar
