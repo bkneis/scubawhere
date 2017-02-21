@@ -807,7 +807,7 @@ class BookingController extends Controller
 
             $check = array_filter($details, function ($obj) use ($customer, $departure, $training_session) {
                 if ($obj->customer_id === $customer->id) {
-                    if (! is_null($departure)) {
+                    if ($departure) {
                         if ($obj->session_id === $departure->id) {
                             return $obj;
                         }
