@@ -72,7 +72,7 @@ class AddonService {
 	 */
 	public function create(array $data)
 	{
-		return Addon::create($data)->syncPrices($data['basePrices']);
+		return Addon::create($data)->syncPrices($data['prices']);
 	}
 
 	/**
