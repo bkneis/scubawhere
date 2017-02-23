@@ -126,6 +126,11 @@ $(function() {
 			eventAfterRender : function(event, element) {
 				$(element).css('height', '25px');
 				$(element).css('text-align', 'center');
+                if ($('#calendar').fullCalendar('getView').name === 'month') {
+                    var weekContainer = $(element).closest('.fc-week').first();
+                    var totalHeight = weekContainer.children('.fc-content-skeleton').children('table').first().height();
+                    weekContainer.height(totalHeight);
+                }
 			},
             editable: false,
             droppable: false, // This allows things to be dropped onto the calendar
