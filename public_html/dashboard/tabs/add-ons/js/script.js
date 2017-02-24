@@ -278,14 +278,15 @@ function renderEditForm(id) {
 				value.isAlways = true;
 		});
 
-		if(_.size(addon.prices) === 0)
-			addon.prices = [window.sw.default_first_base_price];
+		if(_.size(addon.base_prices) === 0) {
+			addon.base_prices = [window.sw.default_first_base_price];
+		}
 	}
 	else {
 		addon = {
 			task: 'add',
 			update: false,
-			prices: [ window.sw.default_first_base_price ],
+			base_prices: [ window.sw.default_first_base_price ],
 		};
 	}
 
