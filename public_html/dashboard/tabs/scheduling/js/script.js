@@ -248,7 +248,9 @@ $(function() {
 			if ($('#calendar').fullCalendar('getView').name === 'month') {
 				var weekContainer = $(element).closest('.fc-week').first();
 				var totalHeight = weekContainer.children('.fc-content-skeleton').children('table').first().height();
-				weekContainer.height(totalHeight);
+				if (totalHeight > 100) {
+					weekContainer.height(totalHeight);
+				}
 			}
 		},
 		editable: true,
