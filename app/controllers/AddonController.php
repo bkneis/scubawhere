@@ -78,7 +78,7 @@ class AddonController extends ApiController {
         $data['compulsory'] = 0; 
         $addon = $this->addonService->create($data);
         
-        return $this->responseCreated('Ok. Addon created', $addon->load('prices'));
+        return $this->responseCreated('Ok. Addon created', $addon->load('prices', 'basePrices'));
     }
 
     /**
@@ -103,7 +103,7 @@ class AddonController extends ApiController {
         $data['compulsory'] = 0; 
         $addon = $this->addonService->update($id, $data);
 
-        return $this->responseOK('OK. Addon updated', array('model' => $addon->load('prices')));
+        return $this->responseOK('OK. Addon updated', array('model' => $addon->load('prices', 'basePrices')));
     }
 
     /**
