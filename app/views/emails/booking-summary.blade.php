@@ -181,7 +181,7 @@
 																			</td>
 																			<td>
 																				@foreach($detail->addons as $addon)
-																					{{{$addon->name}}} <small><span>x {{$addon->pivot->quantity}}</span></small><br />
+																					{{{$addon->name}}} <small>x <span class="badge badge-default">{{$addon->pivot->quantity}}</span></small><br />
 																				@endforeach
 																			</td>
 																		</tr>
@@ -226,16 +226,14 @@
 											<td class="title-dark">
 												 Accommodations
 											</td>
-											<td class="title-dark" width="100"></td>
-											<td class="title-dark" width="100"></td>
 										</tr>
 
 										@foreach($booking->accommodations as $accommodation)
 											<tr>
-												<td class="item-col item" colspan="3">
+												<td class="item-col item">
 													<table cellspacing="0" cellpadding="0" width="100%">
 														<tr>
-															<td class="item-col-inner title" colspan="2">
+															<td class="item-col-inner title">
 																<span style="color: #4d4d4d; font-weight:bold; font-size: 17px;">
 																	<i class="fa fa-bed fa-fw"></i> {{{$accommodation->name}}}
 																</span>
