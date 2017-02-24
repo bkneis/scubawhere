@@ -44,6 +44,8 @@
 				<input style="width:280px;" type="password" name="repassword" placeholder="Re Enter Password" required>
 				<label for="source">Where did you hear about us?</label>
 				<select name="source">
+					<option value="empty">Please select ...</option>
+					<option value="scubaverse">Scubaverse</option>
 					<option value="website">scubawhere website</option>
 					<option value="google">Google</option>
 					<option value="social-media">Social Media</option>
