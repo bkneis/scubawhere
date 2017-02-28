@@ -52,46 +52,33 @@
 					<h1 align="center">{{$company->name}} Booking Summary</h1>
 					<table cellpadding="0" cellspacing="0" width="100%">
 						<tr>
-							<td class="mini-container-left mini-block-padding">
+							<td class="mini-container-left mini-block-padding" style="padding: 10px 0 10px 15px;">
 								<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
 									<tr>
 										<td class="mini-block">
-											<span class="header-sm">Lead Customer</span><br />
-											{{{$booking->lead_customer->firstname}}} {{{$booking->lead_customer->lastname}}}<br />
-											@if($booking->lead_customer->address_1)
-												{{{$booking->lead_customer->address_1}}}<br />
-											@endif
-											@if($booking->lead_customer->address_2)
-												{{{$booking->lead_customer->address_2}}}<br />
-											@endif
-											@if($booking->lead_customer->city)
-												{{$booking->lead_customer->city}},
-											@endif
-											@if($booking->lead_customer->county)
-												{{$booking->lead_customer->county}},
-											@endif
-											@if($booking->lead_customer->postcode)
-												{{$booking->lead_customer->postcode}}
+											Lead Customer<br />
+											<strong>
+												{{{$booking->lead_customer->firstname}}} {{{$booking->lead_customer->lastname}}}<br />
+											</strong>
+											<br />
+											@if($booking->lead_customer->phone)
+												Telephone<br/>
+												<strong>{{{$booking->lead_customer->phone}}}</strong>
 											@endif
 											<br />
-											@if($booking->lead_customer->country)
-												@if($booking->lead_customer->country->name)
-													{{{$booking->lead_customer->country->name}}}
-												@endif
-											@endif
 										</td>
 									</tr>
 								</table>
 							</td>
-							<td class="mini-container-right mini-block-padding">
+							<td class="mini-container-right mini-block-padding" style="padding: 10px 0 10px 15px;">
 								<table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
 									<tr>
 										<td class="mini-block">
 											Booking Reference<br />
-											<span class="header-sm">{{$booking->reference}}</span><br />
+											<strong>{{$booking->reference}}</strong><br />
 											<br />
 											Booking Date<br />
-											<span class="header-sm">{{friendlyDateNoTime($booking->created_at_local)}}</span>
+											<strong>{{friendlyDateNoTime($booking->created_at_local)}}</strong>
 										</td>
 									</tr>
 								</table>
@@ -116,6 +103,9 @@
 											</td>
 											<td class="title-dark" width="100"></td>
 											<td class="title-dark" width="100"></td>
+										</tr>
+										<tr>
+											<td colspan="3" height="10"></td>
 										</tr>
 
 										@foreach($booking->bookingdetails as $detail)
@@ -142,7 +132,7 @@
 																	@endif
 																</span>
 
-																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-bottom: -15px;">
 																	@if($detail->temporary)
 																		No date set
 																	@else
@@ -158,7 +148,10 @@
 															</td>
 														</tr>
 														<tr>
-															<td class="item-col-inner item" style="padding-left: 28px;">
+															<td height="10" colspan="2"></td>
+														</tr>
+														<tr>
+															<td class="item-col-inner item" style="padding-left: 28px;" colspan="2">
 																<table cellspacing="0" cellpadding="0" width="100%">
 																	<tr>
 																		<td style="width: 90px;">
@@ -167,6 +160,9 @@
 																		<td>
 																			{{{$detail->customer->firstname}}} {{{$detail->customer->lastname}}}
 																		</td>
+																	</tr>
+																	<tr>
+																		<td height="10" colspan="2"></td>
 																	</tr>
 
 																	@if(!empty($detail->ticket))
@@ -177,6 +173,9 @@
 																			<td>
 																				{{{$detail->ticket->name}}}
 																			</td>
+																		</tr>
+																		<tr>
+																			<td height="10" colspan="2"></td>
 																		</tr>
 																	@endif
 
@@ -189,12 +188,11 @@
 																				{{{$detail->training->name}}}
 																			</td>
 																		</tr>
+																		<tr>
+																			<td height="10" colspan="2"></td>
+																		</tr>
 																	@endif
-																</table>
-															</td>
-															<td class="item-col-inner item">
-																<table cellspacing="0" cellpadding="0" width="100%">
-																	@if(!empty($detail->addons))
+																	@if(! $detail->addons->isEmpty())
 																		<tr>
 																			<td style="width: 90px;">
 																				<span style="color: #4d4d4d; font-weight:bold;">Addons:</span>
@@ -204,6 +202,9 @@
 																					{{{$addon->name}}} <small><span class="badge badge-default">{{$addon->pivot->quantity}}</span></small><br />
 																				@endforeach
 																			</td>
+																		</tr>
+																		<tr>
+																			<td height="10" colspan="2"></td>
 																		</tr>
 																	@endif
 
@@ -216,6 +217,9 @@
 																				<i class="fa fa-graduation-cap fa-fw"></i> {{{$detail->course->name}}}
 																			</td>
 																		</tr>
+																		<tr>
+																			<td height="10" colspan="2"></td>
+																		</tr>
 																	@endif
 
 																	@if(!empty($detail->packagefacade))
@@ -226,6 +230,9 @@
 																			<td style="padding-top: 0;">
 																				<i class="fa fa-tags fa-fw"></i> {{{$detail->packagefacade->package->name}}}
 																			</td>
+																		</tr>
+																		<tr>
+																			<td height="10" colspan="2"></td>
 																		</tr>
 																	@endif
 																</table>
@@ -249,6 +256,9 @@
 											<td class="title-dark" width="100"></td>
 											<td class="title-dark" width="100"></td>
 										</tr>
+                                        <tr>
+                                            <td colspan="3" height="10"></td>
+                                        </tr>
 
 										@foreach($booking->accommodations as $accommodation)
 											<tr>
@@ -260,21 +270,27 @@
 																	<i class="fa fa-bed fa-fw"></i> {{{$accommodation->name}}}
 																</span>
 
-																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-left: 28px; margin-bottom: -15px;">
+																<span style="color: #4d4d4d; font-size: 14px; display: block; margin-top: 5px; margin-bottom: -15px;">
 																	{{friendlyDateNoTime($accommodation->pivot->start)}} - {{friendlyDateNoTime($accommodation->pivot->end)}}
 																</span>
 															</td>
 														</tr>
 														<tr>
+															<td height="10" colspan="2"></td>
+														</tr>
+														<tr>
 															<td class="item-col-inner item" style="padding-left: 28px;">
 																<table cellspacing="0" cellpadding="0" width="100%">
 																	<tr>
-																		<td style="width: 90px;">
-																			<span style="color: #4d4d4d; font-weight:bold;">Customer:</span>
+																		<td style="width: 90px; padding-right: 20px !important;">
+																			<span style="color: #4d4d4d; font-weight:bold;">Customer: </span>
 																		</td>
-																		<td>
-																			{{{$accommodation->customer->firstname}}} {{{$accommodation->customer->lastname}}}
+																		<td style="width: 100%">
+																			 {{{$accommodation->customer->firstname}}} {{{$accommodation->customer->lastname}}}
 																		</td>
+																	</tr>
+                                                                	<tr>
+                                                                    	<td colspan="2" height="10"></td>
 																	</tr>
 																</table>
 															</td>
