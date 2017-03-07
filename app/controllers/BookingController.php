@@ -521,7 +521,7 @@ class BookingController extends Controller
         $data['price'] = 0;
 
         // Reserve booking for 15 min by default
-        $data['reserved_until'] = Helper::localTime()->add(new DateInterval('PT15M'))->format('Y-m-d H:i:s');
+        $data['reserved_until'] = Helper::localTime()->add(new DateInterval('PT60M'))->format('Y-m-d H:i:s');
         $data['status'] = 'initialised';
 
         $booking = new Booking($data);
