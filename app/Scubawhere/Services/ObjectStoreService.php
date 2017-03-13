@@ -60,6 +60,17 @@ class ObjectStoreService {
 	{
 		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-log', 'heartbeats.log', '+5 minutes');
 	}
+	
+	public function uploadUserLog()
+	{
+		$file_path = storage_path() . '/logs/logins.txt';
+		return $this->object_store_repo->uploadObject($file_path, 'sw-rms-log', 'logins.txt', 'text/plain');
+	}
+
+	public function getUserLogUrl()
+	{
+		return $this->object_store_repo->getPreSignedObjectUrl('sw-rms-log', 'logins.txt', '+5 minutes');
+	}
 
 	public function getCustomerCSVUrl()
 	{

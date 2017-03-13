@@ -359,6 +359,25 @@ class CompanyController extends Controller {
 		$this->object_store_service->uploadHeartbeatsLog();
 	}
 
+	public function getLog()
+	{
+		$file = storage_path() . '/logs/logins.txt';
+		// Get the log file url from s3
+		$log_url = $this->object_store_service->getUserLogUrl();
+		// Download the log file and save to $file
+		file_put_contents($file, fopen($log_url, 'r'));
+
+		$line = array();
+		array_push($line, Context::get()->name);
+		array_push($line, date('Y-m-d H:i:s'));
+
+		## Write log
+		file_put_contents($file, implode(' ', $line)."\n", FILE_APPEND | LOCK_EX);
+
+		// Upload the file to s3
+		$this->object_store_service->uploadUserLog();
+	}
+
 	public function getNotifications()
 	{
 
