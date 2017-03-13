@@ -189,6 +189,10 @@ $(function() {
 
 			window.hasCompletedSettings = true;
 
+			if (params.reference_base !== '') {
+				$('#reference_base').attr('disabled', true);
+			}
+
 			// If the user is on the tour, redirect them to the next step
 			if(window.tourStart) 
 			{

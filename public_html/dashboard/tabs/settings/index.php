@@ -63,7 +63,13 @@
 								
 								<div class="form-row">
 									<label class="field-label">Custom booking reference (Max 3 characters) : </label>
-									<input type="text" style="width: 30%;" name="reference_base" value="{{reference_base}}" maxlength="3">
+									<input type="text" 
+										   style="width: 30%;"
+										   name="reference_base"
+										   id="reference_base"
+										   value="{{reference_base}}"
+										   maxlength="3"
+										   {{#if reference_base}} disabled {{/if}}>
 								</div>
 								
 								<div class="form-row">
