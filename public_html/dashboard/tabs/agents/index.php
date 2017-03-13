@@ -105,7 +105,7 @@
 								</select>
 							</div>
 							
-							<h5>Commission Terms <small><a class="info-commission-rules">Whats this?</a></small></h5> 
+							<h5>Commission Terms <small><a class="info-commission-rules">What's this?</a></small></h5> 
 							
 							<div class="form-row">
 								<label class="field-label">Default commission (%) : <span class="text-danger">*</span></label>
