@@ -361,6 +361,12 @@ class CompanyController extends Controller {
 
 	public function getLog()
 	{
+		if (!isset($_SERVER['AWS_ENV'])) {
+			return;
+		}
+		if ($_SERVER['AWS_ENV'] !== 'prod') {
+			return;
+		}
 		$file = storage_path() . '/logs/logins.txt';
 		// Get the log file url from s3
 		$log_url = $this->object_store_service->getUserLogUrl();
