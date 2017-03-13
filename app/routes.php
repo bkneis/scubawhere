@@ -18,7 +18,7 @@ Route::get('/', function()
 Route::get('terms', function()
 {
 	// Get scubawhere's terms and condition pdf and open in a browser
-	return Redirect::to("../common/scubawhereRMS_Terms_and_Conditions_for_operators.pdf");
+	return Redirect::to("../dashboard/common/scubawhereRMS_Terms_and_Conditions_for_operators.pdf");
 });
 
 /*
