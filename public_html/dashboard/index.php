@@ -42,6 +42,11 @@ $PROTOCOL = 'http';
 		header("Location: " . $BASE_URL . "/dashboard/login/");
 		exit();
 	}
+    $ch = curl_init($BASE_URL . '/api/company/log');
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
+    $result = curl_exec( $ch );
+    curl_close( $ch );
 ?>
 <!DOCTYPE html>
 <html>
