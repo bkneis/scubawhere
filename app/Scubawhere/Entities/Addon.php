@@ -8,6 +8,13 @@ use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
+/**
+ * Class Addon
+ * @package Scubawhere\Entities
+ *
+ * Addons are additional bookable items that must be assigned to a booked session. They have a one to many
+ * relationship so that a customer can book multiple addons to the same day trip.
+ */
 class Addon extends Ardent {
 
 	use Owneable;

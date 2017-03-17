@@ -6,7 +6,10 @@ use Scubawhere\Services\AccommodationService;
 use Scubawhere\Transformers\AccommodationTransformer;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
-class AccommodationController extends Controller {
+/**
+ * Class AccommodationController
+ */
+class AccommodationController extends ApiController {
 
     /** @var AccommodationService */
     protected $accommodation_service;
@@ -14,13 +17,18 @@ class AccommodationController extends Controller {
     /** @var Request  */
     protected $request;
     
-    protected $accommodationTransformer;
+    protected $transformer;
 
-    public function __construct(AccommodationService $accommodation_service, AccommodationTransformer $accommodationTransformer, Request $request)
+    public function __construct(AccommodationService $accommodation_service,
+                                AccommodationTransformer $accommodationTransformer,
+                                Request $request
+    )
     {
         $this->transformer = $accommodationTransformer;
         $this->accommodation_service = $accommodation_service;
         $this->request = $request;
+        
+        parent::__construct($request);
     }
 
     /**
@@ -45,7 +53,14 @@ class AccommodationController extends Controller {
         if($validator->fails()) {
             throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
         }
-
+        
+        /* 
+        return $this->responseOk(
+                   $this->transformer->transformMany(
+                        $this->accommodation_service->get($data['id'])
+                    )
+           )
+        */
         return $this->transformer->transformMany($this->accommodation_service->get($data['id']));
     }
 
@@ -85,30 +100,6 @@ class AccommodationController extends Controller {
     }
 
     /**
-     * Get all accommodations belonging to a company
-     * @api /api/accommodation/filter
-     * @throws HttpNotFound
-     * @return array Collection Accommodation models
-     */
-    /*public function getFilter()
-    {
-        $data = Input::only('after', 'before', 'accommodation_id');
-
-        $rules = array(
-            'after' => 'date|required_with:before',
-            'before' => 'date',
-            'accommodation_id' => 'integer|min:1'
-        );
-        $validator = Validator::make($data, $rules);
-
-        if($validator->fails()) {
-            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
-        return $this->accommodation_service->getFilter($data);
-    }*/
-
-    /**
      * @todo move this to manifest controller and replace the getmanifest function in service object
      *
      * @return mixed
@@ -139,9 +130,7 @@ class AccommodationController extends Controller {
      * Create a new accommodation
      *
      * @api /api/accommodation/add
-     *
      * @throws HttpUnprocessableEntity
-     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store()
@@ -204,7 +193,7 @@ class AccommodationController extends Controller {
     /**
      * Delete an accommodation and remove it from any quotes or packages
      *
-     * @api /api/accommodation/delete
+     * @api /api/accommodation
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse

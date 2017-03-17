@@ -8,6 +8,14 @@ use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
+/**
+ * Class Accommodation
+ * @package Scubawhere\Entities
+ * 
+ * Accommodations have a similar relationship to bookings as trips. But instead of their being a ticket and a session,
+ * accommodations have only 1 available booking type. Therefore the accommodation's availability can be managed
+ * easily by assigning a quantity to represent it's capacity.
+ */
 class Accommodation extends Ardent {
 
 	use Owneable;
