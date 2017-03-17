@@ -232,7 +232,7 @@ class Package extends Ardent {
      */
 	public function packagefacades()
 	{
-		return $this->hasMany(Package::class);
+		return $this->hasMany(Packagefacade::class);
 	}
 
 	/**
