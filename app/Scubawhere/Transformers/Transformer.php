@@ -2,8 +2,8 @@
 
 namespace Scubawhere\Transformers;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Abstract transformer to be extended by specific entity transformers.
@@ -32,7 +32,7 @@ abstract class Transformer
      */
     public function transformMany($models) 
     {
-        if ($models instanceof Collection) {
+        if ($models instanceof Collection || is_subclass_of($models, Model::class)) {
             $models = $models->toArray();
         }
         return array_map(function ($obj) { 
