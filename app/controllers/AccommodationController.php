@@ -17,6 +17,7 @@ class AccommodationController extends ApiController {
     /** @var Request  */
     protected $request;
     
+    /** @var AccommodationTransformer */
     protected $transformer;
 
     public function __construct(AccommodationService $accommodation_service,
@@ -35,33 +36,22 @@ class AccommodationController extends ApiController {
      * Get a single accommodation by ID
      *
      * @api /api/accommodation
-     *
      * @param $id
      * @return \Scubawhere\Entities\Accommodation
-     * @throws HttpNotFound
+     * @throws HttpUnprocessableEntity
      */
     public function show($id)
     {
-        $data = array(
-            'id' => $id
-        );
-
-        $rules = array('id' => 'required');
-        $messages = array('id.required' => 'The accommodation could not be found.');
-        $validator = Validator::make($data, $rules, $messages);
-
-        if($validator->fails()) {
-            throw new HttpNotFound(__CLASS__.__METHOD__, $validator->errors()->all());
+        if (! $id) {
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The ID field is required']);
         }
         
-        /* 
         return $this->responseOk(
-                   $this->transformer->transformMany(
-                        $this->accommodation_service->get($data['id'])
-                    )
-           )
-        */
-        return $this->transformer->transformMany($this->accommodation_service->get($data['id']));
+            'Ok. Accommodations retrieved', 
+            $this->transformer->transform(
+                $this->accommodation_service->get($id)
+            )
+        );
     }
 
     /**
@@ -107,23 +97,16 @@ class AccommodationController extends ApiController {
      */
     public function getAvailability()
     {
-        $dates = Input::only('after', 'before');
-
-        $rules = array(
-            'after'  => 'required|date',
+        $input = array(
+            'after' => 'required|date',
             'before' => 'required|date'
         );
-
-        $validator = Validator::make($dates, $rules);
-
-        if($validator->fails()) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
-        return Response::json(array(
-            'status' => 'Sucess. Avaialability retrieved',
-            'data'   => $this->accommodation_service->getAvailability($dates)
-        ));
+        $dates = $this->validate($input);
+        
+        return $this->responseOK(
+            'Success. Availability retrieved',
+            array('data' => $this->accommodation_service->getAvailability($dates))
+        );
     }
 
     /**
@@ -135,80 +118,65 @@ class AccommodationController extends ApiController {
      */
     public function store()
     {
-        $data = Input::only('name', 'description', 'capacity', 'parent_id', 'prices'); // Please NEVER use parent_id in the front-end!
-
-        $rules = array(
-            'name'        => 'required',
-            'capacity'    => 'required',
-            'prices'      => 'required'
+        $input = array(
+            'name' => 'required',
+            'description' => '',
+            'capacity' => 'required',
+            'parent_id' => '',
+            'prices' => 'required'
         );
-        $validator = Validator::make($data, $rules);
-
-        if($validator->fails()) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
+        $data = $this->validate($input);
         $accommodation = $this->accommodation_service->create($data);
-
-
-        return Response::json(
-            array(
-                'status' => 'OK. Accommodation created',
-                'model' => $this->transformer->transform($accommodation->load('basePrices', 'prices'))
-            ), 201); // 201 Created
+        
+        return $this->responseCreated(
+            'OK. Accommodation created',
+            $this->transformer->transform($accommodation->load('basePrices', 'prices'))
+        );
     }
 
     /**
      * Edit an existing accommodation
      *
      * @api /api/accommodation/edit
-     *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      * @throws HttpUnprocessableEntity
      */
     public function update($id)
     {
-        $data = Input::only('name', 'description', 'capacity', 'parent_id', 'prices'); // Please NEVER use parent_id in the front-end!
-
-        $rules = array(
+        $input = array(
             'name' => 'required',
-            'capacity' => 'required'
+            'description' => '',
+            'capacity' => 'required',
+            'parent_id' => '',
+            'prices' => ''
         );
-        $validator = Validator::make(Input::all(), $rules);
-
-        if($validator->fails()) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-
+        $data = $this->validate($input);
         $accommodation = $this->accommodation_service->update($id, $data);
 
-        return Response::json(
-            array(
-                'status' => 'OK. Accommodation updated',
-                'model' => $this->transformer->transform($accommodation->load('basePrices', 'prices'))
-            ), 200);
+        return $this->responseOK(
+            'OK. Accommodation updated',
+            array('model' => $this->transformer->transform($accommodation->load('basePrices', 'prices')))
+        );
     }
 
     /**
      * Delete an accommodation and remove it from any quotes or packages
      *
      * @api /api/accommodation
-     *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws HttpNotFound
+     * @throws HttpUnprocessableEntity
      * @throws \Scubawhere\Exceptions\ConflictException
      */
     public function destroy($id)
     {
         if(!$id) {
-            throw new HttpNotFound(__CLASS__.__METHOD__, ['The Accommodation was not found']);
+            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The ID is a required field']);
         }
-
         $this->accommodation_service->delete($id);
-
-        return Response::json(array('status' => 'OK. Accommodation deleted'), 200); // 200 Success
+        
+        return $this->responseOK('OK. Accommodation deleted');
     }
 
 }
