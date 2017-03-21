@@ -966,9 +966,16 @@ class BookingController extends Controller
         // Validate that the ticket still fits into the package
         if ($ticket && $packagefacade && !$course) {
             // Check if the package still has space for the wanted ticket
-            $bookedTicketsQuantity = $packagefacade->bookingdetails()->where('ticket_id', $ticket->id)->whereNull('course_id')->count();
+            // We need to count the booked tickets through the booking and not the packagefacade, as when dealing
+            // with an edited bookings, the packagefacade will refer back to the original booking, which will have the old capacity
+            $bookedTicketsQuantity = $booking->bookingdetails()
+                ->where('ticket_id', $ticket->id)
+                ->where('packagefacade_id', $packagefacade->id)
+                ->whereNull('course_id')
+                ->count();
+            $availableTicketsQuantity = $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity;
 
-            if ($bookedTicketsQuantity >= $package->tickets()->where('id', $ticket->id)->first()->pivot->quantity) {
+            if ($bookedTicketsQuantity >= $availableTicketsQuantity) {
                 return Response::json(['errors' => ['The ticket cannot be assigned because the package\'s limit for the ticket is reached.']], 403);
             } // 403 Forbidden
         }
