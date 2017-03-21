@@ -66,15 +66,20 @@ class AddonController extends ApiController {
      */
     public function store()
     {
-        $rules = array(
+        $input = array(
             'name'        => 'required',
             'description' => '',
             'parent_id'   => '',
             'prices'      => 'required'
         );
         
-        $data = $this->validateInput($rules);
+        $data = $this->validate($input);
         
+        /*
+         * Compulsory was removed from the user features after
+         * release/hammerhead-v1.1. We need to force it to 0,
+         * even if the user supplies the compulsory flags.
+         */
         $data['compulsory'] = 0; 
         $addon = $this->addonService->create($data);
         
@@ -91,15 +96,15 @@ class AddonController extends ApiController {
      */
     public function update($id)
     {
-        $rules = array(
+        $input = array(
             'name'        => 'required',
             'description' => '',
-            'capacity'    => '',
             'parent_id'   => '',
             'prices'      => 'required'
         );
+
+        $data = $this->validate($input);
         
-        $data = $this->validateInput($rules);
         $data['compulsory'] = 0; 
         $addon = $this->addonService->update($id, $data);
 

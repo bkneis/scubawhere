@@ -80,5 +80,15 @@ abstract class ApiController extends Controller
     {
         return new JsonResponse(array('status' => $status, 'model' => $model), 201);
     }
+    
+    /**
+     * @param $status
+     * @param $model
+     * @return JsonResponse
+     */
+    public function responseAccepted($status, $model)
+    {
+        return new JsonResponse(array('status' => $status, 'model' => $model), 202);
+    }
 
 }
