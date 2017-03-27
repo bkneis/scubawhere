@@ -94,7 +94,7 @@ class Helper
 	public static function booking_reference_number() {
 		
 		$company = Context::get();
-		if ((! is_null($company->reference_base)) || (! empty($company->reference_base))) {
+		if (! empty($company->reference_base)) {
 			$num_bookings = (string) $company->bookings()->count();
 			return $company->reference_base . $num_bookings;
 		}
