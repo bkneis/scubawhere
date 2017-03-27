@@ -552,7 +552,7 @@ class Booking extends Ardent {
 			}
 
 			/*
-			 * OK. So originally the addon discount was storied within it's pivot (the addon_bookingdetail)
+			 * OK. So originally the addon discount was stored within it's pivot (the addon_bookingdetail)
 			 * table. The problem is that the addons discount is applied per addon, not by booking_detail, therefore
 			 * applying a discount where there is more than 1 addon and in separate booking details, only
 			 * 1 of the booking details addons will have the discount applied, and the total will look incorrect.
