@@ -2260,12 +2260,7 @@ class BookingController extends Controller
         if(!is_null($edited_booking)) {
             Request::replace(['id' => $edited_booking->id]);
             return $this->getIndex();
-            //return Response::json($edited_booking);
         }
-
-        /*if (DB::table('bookings')->where('reference', $booking->reference.'_')->exists()) {
-            return Response::json(['errors' => ['This booking is already being edited. Cancel the edit and then try again.']], 412);
-        } // 412 Precondition Failed*/
 
         // Dublicate bookings table entry to get new bookingID
         $old_booking = DB::table('bookings')->find($booking->id);
