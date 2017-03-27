@@ -634,18 +634,28 @@ class DepartureController extends Controller {
 
 					// Update all following session with new time and timetable_id
 					// First, calculate offset between old_time and new_time
-					$offset    = new \DateTime($departure->start);
-					$offset    = $offset->diff($start);
-					$offsetSQL = $offset->format('%h:%i'); // hours:minutes
+					$originalStart = new \DateTime($departure->start);
+					$offsetAmount  = $originalStart->diff($start);
+					$offsetSQL     = $offsetAmount->format('%h:%i'); // hours:minutes
 
-					// Single-Query MagicTM
-					DB::update(
-						"UPDATE `sessions` SET `timetable_id`=?,
-						`start`=DATE_ADD(`start`, INTERVAL ? HOUR_MINUTE),
-						`boat_id`=?
-						WHERE `start`>=? AND `timetable_id`=?",
-						array( $timetable->id, $offsetSQL, $boat_id, $departure->start, $departure->timetable_id )
-					);
+					if ($start < $originalStart) {
+						DB::update(
+							"UPDATE `sessions` SET `timetable_id`=?,
+							`start`= DATE_SUB(`start`, INTERVAL ? HOUR_MINUTE),
+							`boat_id`=?
+							WHERE `start`>=? AND `timetable_id`=?",
+							array( $timetable->id, $offsetSQL, $boat_id, $departure->start, $departure->timetable_id )
+						);
+					} else {
+						DB::update(
+							"UPDATE `sessions` SET `timetable_id`=?,
+							`start`= DATE_ADD(`start`, INTERVAL ? HOUR_MINUTE),
+							`boat_id`=?
+							WHERE `start`>=? AND `timetable_id`=?",
+							array( $timetable->id, $offsetSQL, $boat_id, $departure->start, $departure->timetable_id )
+						);
+					}
+
 
 					return array('status' => 'OK. All trips updated.');
 				break;
