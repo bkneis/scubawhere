@@ -418,7 +418,7 @@ function generateInvoice(customer_id, booking) {
 	invoice.tickets  = ticketsSummary;
 	invoice.addons   = addonsSummary;
 
-	// This is a hack as handlebars cannot interate over an array that uses malformed
+	// This is a hack as handlebars cannot iterate over an array that uses malformed
 	// index's, i.e. courses can use index's such as 67-12 therefore we need to add them back.
 	var courses = [];
 	for (var i in invoice.courses) {
@@ -431,6 +431,10 @@ function generateInvoice(customer_id, booking) {
 		invoice.subTotal += parseFloat(invoice.addons[j].decimal_price) * invoice.addons[j].qtySummary;
 		invoice.addons[j].name += ' x ' + invoice.addons[j].qtySummary.toString();
 	}
+	
+	_.each(invoice.accommodations, function (accommodation) {
+		invoice.subTotal += parseFloat(accommodation.decimal_price);
+	});
 
 	// Calculate total and discounted amount
 	invoice.total    = (invoice.subTotal * (1 - (discountPercentage / 100))).toFixed(2);
