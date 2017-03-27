@@ -3176,7 +3176,6 @@ $('#summary-tab').on('change', '.itemCommissionable', function (e) {
 
 $('#summary-tab').on('click', '.show-override', function (e) {
 	e.preventDefault();
-	console.log($(this).data());
 	$('#override-price-container').empty().append(Handlebars.templates['override-price-form']($(this).data()));
 	$('#override-price-modal').modal('show');
 });
@@ -3184,12 +3183,12 @@ $('#summary-tab').on('click', '.show-override', function (e) {
 $('#summary-tab').on('click', '#btn-override-price', function (e) {
 	e.preventDefault();
 	var data = $('#override-price').data();
-	console.log(data);
+	var itemId = data.type === 'package' ? data.facadeId : data.id;
 	var params = {
 		booking_id: data.bookingId,
 		bookingdetail_id: data.bookingDetailId,
 		item_type: data.type,
-		item_id: data.id,
+		item_id: itemId,
 		price: parseInt($('#override-price').val() * 100)
 	};
 	if (data.type === 'accommodation') {

@@ -11,6 +11,8 @@ templates['override-price-form'] = template({"compiler":[7,">= 4.0.0"],"main":fu
     + alias4(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"type","hash":{},"data":data}) : helper)))
     + "\"\n           data-id=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\"\n           data-facade-id=\""
+    + alias4(((helper = (helper = helpers.facadeId || (depth0 != null ? depth0.facadeId : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"facadeId","hash":{},"data":data}) : helper)))
     + "\"\n           data-start=\""
     + alias4(((helper = (helper = helpers.start || (depth0 != null ? depth0.start : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start","hash":{},"data":data}) : helper)))
     + "\"\n           step=\"0.01\"/>\n</div>\n";
@@ -30,6 +32,8 @@ templates['price-breakdown'] = template({"1":function(container,depth0,helpers,p
     + alias4(container.lambda((depths[1] != null ? depths[1].id : depths[1]), depth0))
     + "\"\n                                       data-booking-detail-id=\""
     + alias4(((helper = (helper = helpers.bookingdetail_id || (depth0 != null ? depth0.bookingdetail_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bookingdetail_id","hash":{},"data":data}) : helper)))
+    + "\"\n                                       data-facade-id=\""
+    + alias4(((helper = (helper = helpers.facade_id || (depth0 != null ? depth0.facade_id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"facade_id","hash":{},"data":data}) : helper)))
     + "\"\n                                       class=\"show-override\"> (Apply discount)</a>\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right;\">\n                                    x1\n                                </td>\n                                <td class=\"inner-item-col\" style=\"text-align: right; padding-right: 20px;\">\n                                    "
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " "
