@@ -46,10 +46,6 @@ Handlebars.registerHelper('getDate', function(date){
 	return date.split(' ')[0];
 });
 
-Handlebars.registerHelper('getTransAmount', function(date){
-	//
-});
-
 Handlebars.registerHelper('getRemaining', function(capacity, assigned){
 	return capacity - assigned;
 });
@@ -58,7 +54,7 @@ Handlebars.registerHelper('getStatID', function(country){
 	return country.replace(/\s/g, '');
 });
 
-Handlebars.registerHelper('getCountry', function(id){
+Handlebars.registerHelper('getCountry', function(id) {
 	return window.countries[id].name;
 });
 
