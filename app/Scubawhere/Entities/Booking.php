@@ -78,8 +78,7 @@ class Booking extends Ardent {
 	public function getAbsolutePriceAttribute()
 	{
 		$this->load('agent');
-		if($this->agent)
-		{
+		if($this->agent) {
 			if($this->agent->terms == 'deposit') return $this->decimal_price * (1 - ($this->agent->commission / 100));
 		}
 		return null;
@@ -107,7 +106,7 @@ class Booking extends Ardent {
 					else
 						$start = $detail->created_at;
 
-					$addon->calculatePrice($start, $limitBefore);
+					$addon->calculatePrice($start, $detail->created_at, $limitBefore);
 
 					$feeSum += floatval($addon->decimal_price) * $addon->pivot->quantity;
 				}
@@ -288,12 +287,12 @@ class Booking extends Ardent {
 	{
 		if($this->loadTrashedAccommodations)
 			return $this->belongsToMany(Accommodation::class)
-				->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price')
+				->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price', 'created_at')
 				->withTimestamps()
 				->withTrashed();
 
 		return $this->belongsToMany(Accommodation::class)
-			->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price')
+			->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'commissionable', 'override_price', 'created_at')
 			->withTimestamps();
 	}
 
@@ -391,7 +390,7 @@ class Booking extends Ardent {
 		$tickedOffCourses = [];
 		$sum = 0;
 		$commission = 0;
-
+		
 		if($onlyApplyDiscount) {
 			$sum += $this->price / $currency->getSubunitToUnit();
 
@@ -479,6 +478,7 @@ class Booking extends Ardent {
 					$detail->packagefacade->package
 						->calculatePrice(
 							$start,
+							$detail->created_at,
 							$limitBefore,
 							$this->agent_id,
 							$detail->packagefacade->commissionable,
@@ -520,6 +520,7 @@ class Booking extends Ardent {
 					$detail->course
 						->calculatePrice(
 							$start,
+							$detail->created_at,
 							$limitBefore,
 							$this->agent_id,
 							$detail->item_commissionable,
@@ -541,6 +542,7 @@ class Booking extends Ardent {
 				$detail->ticket
 					->calculatePrice(
 						$start,
+						$detail->created_at,
 						$limitBefore,
 						$this->agent_id,
 						$detail->item_commissionable,
@@ -582,6 +584,7 @@ class Booking extends Ardent {
 
 					$addon->calculatePrice(
 						$start,
+						$detail->created_at,
 						$limitBefore,
 						$this->agent_id,
 						$addon->pivot->commissionable,
@@ -600,13 +603,13 @@ class Booking extends Ardent {
 		{
 			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
-			if(empty($accommodation->pivot->packagefacade_id))
-			{
-				// $accommodation->pivot->commissionable
+			if(empty($accommodation->pivot->packagefacade_id)) {
 				$accommodation->calculatePrice(
 					$accommodation->pivot->start,
 					$accommodation->pivot->end,
-					$limitBefore, $this->agent_id,
+					$accommodation->pivot->created_at,
+					$limitBefore, 
+					$this->agent_id,
 					$accommodation->pivot->commissionable,
 					$accommodation->pivot->override_price
 				);
@@ -632,6 +635,7 @@ class Booking extends Ardent {
 				$packagefacade->package
 					->calculatePrice(
 						$firstAccommodation->pivot->start,
+						$packagefacade->created_at,
 						$limitBefore,
 						$this->agent_id,
 						$packagefacade->commissionable,

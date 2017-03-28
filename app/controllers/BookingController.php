@@ -109,7 +109,7 @@ class BookingController extends Controller
                     if ($start === null) {
                         $start = $firstDetail->created_at;
                     }
-                    $detail->packagefacade->package->calculatePrice($start, $limitBefore);
+                    $detail->packagefacade->package->calculatePrice($start, $detail->created_at, $limitBefore);
 
                     $pricedPackagefacades[$detail->packagefacade_id] = $detail->packagefacade->package->decimal_price;
                 } else {
@@ -143,7 +143,7 @@ class BookingController extends Controller
                     }
 
                     // Calculate the package price at this first departure datetime and sum it up
-                    $detail->course->calculatePrice($start, $limitBefore);
+                    $detail->course->calculatePrice($start, $detail->created_at, $limitBefore);
 
                     $pricedCourses[$identifier] = $detail->course->decimal_price;
                 } else {
@@ -157,7 +157,7 @@ class BookingController extends Controller
                     $start = $detail->created_at;
                 }
 
-                $detail->ticket->calculatePrice($start, $limitBefore);
+                $detail->ticket->calculatePrice($start, $detail->created_at, $limitBefore);
             }
 
             // Calculate add-ons
@@ -172,7 +172,7 @@ class BookingController extends Controller
                     $start = $detail->created_at;
                 }
 
-                $addon->calculatePrice($start);
+                $addon->calculatePrice($start, $detail->created_at);
             });
         });
 
@@ -180,7 +180,12 @@ class BookingController extends Controller
             if (empty($accommodation->pivot->packagefacade_id)) {
                 $limitBefore = in_array($booking->status, ['reserved', 'expired', 'confirmed']) ? $accommodation->pivot->created_at : false;
 
-                $accommodation->calculatePrice($accommodation->pivot->start, $accommodation->pivot->end, $limitBefore);
+                $accommodation->calculatePrice(
+                    $accommodation->pivot->start,
+                    $accommodation->pivot->end,
+                    $accommodation->pivot->created_at,
+                    $limitBefore
+                );
             } else {
                 $accommodation->package = Packagefacade::find($accommodation->pivot->packagefacade_id)->package;
             }
@@ -1102,7 +1107,7 @@ class BookingController extends Controller
                         $start = $bookingdetail->created_at;
                     }
 
-                    $addon->calculatePrice($start);
+                    $addon->calculatePrice($start, $bookingdetail->created_at);
                 });
             }
         } else {
@@ -1153,7 +1158,7 @@ class BookingController extends Controller
             if ($start === null) {
                 $start = $firstDetail->created_at;
             }
-            $package->calculatePrice($start);
+            $package->calculatePrice($start, $bookingdetail->created_at);
         } elseif ($course) {
             // Find the first departure or class datetime that is booked in this course
             $bookingdetails = $course->bookingdetails()
@@ -1181,7 +1186,7 @@ class BookingController extends Controller
             }
 
             // Calculate the package price at this first departure datetime and sum it up
-            $course->calculatePrice($start);
+            $course->calculatePrice($start, $bookingdetail->created_at);
         } else {
             if ($departure) {
                 $start = $departure->start;
@@ -1189,7 +1194,7 @@ class BookingController extends Controller
                 $start = $bookingdetail->created_at;
             }
 
-            $ticket->calculatePrice($start);
+            $ticket->calculatePrice($start, $bookingdetail->created_at);
         }
 
         $booking->updatePrice();
@@ -1480,7 +1485,7 @@ class BookingController extends Controller
                 $start = $bookingdetail->created_at;
             }
 
-            $addon->calculatePrice($start);
+            $addon->calculatePrice($start, $bookingdetail->created_at);
             $booking->updatePrice(); // Only need to update if not a package, because otherwise the price doesn't change
         }
 
@@ -1745,7 +1750,7 @@ class BookingController extends Controller
 
         // Update booking price
         if (!$package) {
-            $accommodation->calculatePrice($start, $end);
+            $accommodation->calculatePrice($start, $end, date('Y-m-d'));
         }
 
         $booking->updatePrice();

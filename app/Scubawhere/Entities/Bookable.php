@@ -18,15 +18,22 @@ trait Bookable
     }
 
     /**
-     * Calculate the price of the entity by determing which seasonal / base price applies
+     * Calculate the price of the entity by determining which seasonal / base price applies
      *
      * @param $start
+     * @param string $bookingDate
      * @param bool $limitBefore
      * @param bool $agent_id
      * @param bool $commissionable
      * @param null $override_price
      */
-    public function calculatePrice($start, $limitBefore = false, $agent_id = null, $commissionable = true, $override_price = null) 
+    public function calculatePrice(
+        $start,
+        $bookingDate = '0000-00-00',
+        $limitBefore = false,
+        $agent_id = null,
+        $commissionable = true,
+        $override_price = null) 
     {
         if (is_null($override_price)) {
             $price = Price::where(Price::$owner_id_column_name, $this->id)
@@ -41,6 +48,10 @@ trait Bookable
                 {
                     if($limitBefore)
                         $query->where('created_at', '<=', $limitBefore);
+                })
+                ->where(function ($query) use ($bookingDate) {
+                    $query->whereDate('deleted_at', '>', date($bookingDate))
+                        ->orWhereNull('deleted_at');
                 })
                 ->orderBy('id', 'DESC')
                 ->withTrashed()

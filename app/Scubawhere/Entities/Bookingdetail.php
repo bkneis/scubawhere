@@ -112,7 +112,7 @@ class Bookingdetail extends Ardent {
 
 		if (count($this->packagefacade) == 0)
 		{
-			$this->ticket->calculatePrice($this->session->start, $limitBefore);
+			$this->ticket->calculatePrice($this->session->start, $this->created_at, $limitBefore);
 
 			$price = $this->ticket->decimal_price;
 

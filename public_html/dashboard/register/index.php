@@ -46,6 +46,7 @@
 				<select name="source">
 					<option value="empty">Please select ...</option>
 					<option value="scubaverse">Scubaverse</option>
+					<option value="raid">Raid UK & Malta</option>
 					<option value="website">scubawhere website</option>
 					<option value="google">Google</option>
 					<option value="social-media">Social Media</option>

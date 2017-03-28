@@ -51,8 +51,15 @@ class Accommodation extends Ardent {
         return !($this->packages()->exists());
     }
 
-	public function calculatePrice($start, $end, $limitBefore = false, $agent_id = null, $commissionable = true, $override_price = null) {
-
+	public function calculatePrice(
+		$start,
+		$end,
+		$bookingDate = '0000-00-00',
+		$limitBefore = false,
+		$agent_id = null,
+		$commissionable = true,
+		$override_price = null) 
+	{
 		$current_date = gettype($start) === "object" ? $start : new \DateTime($start, new \DateTimeZone( Context::get()->timezone ));
 		$end          = gettype($end)   === "object" ? $end :   new \DateTime($end,   new \DateTimeZone( Context::get()->timezone ));
 
@@ -67,21 +74,26 @@ class Accommodation extends Ardent {
 				$date = $current_date->format('Y-m-d');
 
 				$totalPrice += Price::where(Price::$owner_id_column_name, $this->id)
-					->where(Price::$owner_type_column_name, 'Scubawhere\Entities\Accommodation')
+					->where(Price::$owner_type_column_name, Accommodation::class)
 					->where('from', '<=', $date)
-					->where(function($query) use ($date)
-					{
+					->where(function($query) use ($date) {
 						$query->whereNull('until')
 							->orWhere('until', '>=', $date);
 					})
-					->where(function($query) use ($limitBefore)
-					{
+					->where(function($query) use ($limitBefore) {
 						if($limitBefore)
 							$query->where('created_at', '<=', $limitBefore);
 					})
+					->where(function ($query) use ($bookingDate) {
+						/*$query->whereDate('deleted_at', '>', date($bookingDate))
+							->orWhereNull('deleted_at');*/
+						$query->whereNull('deleted_at')
+							->orWhere('deleted_at', '>', $bookingDate);
+					})
 					->withTrashed()
 					->orderBy('id', 'DESC')
-					->first()->decimal_price;
+					->first()
+					->decimal_price;
 
 				$current_date->add( new \DateInterval('P1D') );
 				$numberOfDays++;
@@ -145,8 +157,23 @@ class Accommodation extends Ardent {
 	public function bookings()
 	{
 		return $this->belongsToMany(Booking::class)
-			->withPivot('customer_id', 'start', 'end', 'packagefacade_id')
+			->withPivot('customer_id', 'start', 'end', 'packagefacade_id', 'created_at')
 			->withTimestamps();
+	}
+
+	/**
+	 * Retrieve accommodation booking information by booking ID
+	 * 
+	 * @param $id
+	 * @return \Illuminate\Database\Eloquent\Collection
+     */
+	public function getBookedSession($id)
+	{
+		return $this->belongsToMany(Booking::class)
+			->withPivot('customer_id', 'booking_id', 'start', 'end', 'packagefacade_id', 'created_at')
+			->withTimestamps()
+			->wherePivot('booking_id', '=', (int) $id)
+			->first();
 	}
 
 	public function company()

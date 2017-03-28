@@ -70,9 +70,9 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 				### -------------------------------- ###
 
 				if($detail->departure)
-					$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at);
+					$detail->ticket->calculatePrice($detail->departure->start, $detail->created_at, $detail->created_at);
 				else
-					$detail->ticket->calculatePrice($detail->created_at, $detail->created_at);
+					$detail->ticket->calculatePrice($detail->created_at, $detail->created_at, $detail->created_at);
 
 				$revenue = $detail->ticket->decimal_price;
 				$model   = 'tickets';
@@ -117,7 +117,7 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 						$start = $firstDetail->training_session->start;
 
 					// Calculate the course price at this first departure/training_session datetime
-					$detail->course->calculatePrice($start, $detail->created_at);
+					$detail->course->calculatePrice($start, $detail->created_at, $detail->created_at);
 
 					$revenue = $detail->course->decimal_price;
 					$model   = 'courses';
@@ -174,7 +174,7 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 					}
 
 					// Calculate the package price at this first departure datetime and sum it up
-					$detail->packagefacade->package->calculatePrice($start, $detail->created_at);
+					$detail->packagefacade->package->calculatePrice($start, $detail->created_at, $detail->created_at);
 
 					$revenue = $detail->packagefacade->package->decimal_price;
 					$model   = 'packages';
@@ -291,9 +291,11 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 				// Only continue if the accommodation is not part of a package
 				if(empty($booking->pivot->packagefacade_id))
 				{
+					$detailCreatedAt = $accommodation->getBookedSession($booking->id)->pivot->created_at->toDateString();
 					$accommodation->calculatePrice(
 						$booking->pivot->start,
 						$booking->pivot->end,
+						$detailCreatedAt,
 						$booking->pivot->created_at
 					);
 
@@ -305,8 +307,7 @@ class RevenueReportGenerator implements ReportGeneratorInterface {
 					$revenue = $accommodation->decimal_price * $realPricePercentage;
 
 					// If booked through agent, subtract agent's commission
-					if(!empty($booking->agent))
-					{
+					if(!empty($booking->agent)) {
 						$revenue = $revenue * (1 - $booking->agent->commission / 100);
 					}
 
