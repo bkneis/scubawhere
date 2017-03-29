@@ -45,6 +45,7 @@ class AuthenticationController extends Controller {
 
 	public function checkRehash()
 	{
+		$user = Auth::user();
 		// Check to see if the password needs to be re-hashed (when the hash technique is different from when originally saved)
 		if ( Hash::needsRehash($user->password) ) {
 			$user->password = Hash::make( Input::get('password') );

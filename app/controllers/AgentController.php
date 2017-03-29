@@ -1,17 +1,26 @@
 <?php
 
 use Illuminate\Http\Request;
-use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 use Scubawhere\Services\AgentService;
 use Scubawhere\Exceptions\InvalidInputException;
 use Scubawhere\Transformers\AgentTransformer;
+use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
+/**
+ * Class AgentController
+ * 
+ * Responsible for managing travel agents of a user. Only CRUD ops are really needed
+ * for this end point as any logic to do with agents are within the booking itself
+ * or reporting.
+ * 
+ * @todo Implement RESTful design to the api end points (i.e. Use PUT/DELETE etc with url params, GET /api/agent/1)
+ * @api /api/agent
+ * @version 1.1.0
+ * @author Bryan Kneis
+ */
 class AgentController extends ApiController {
 
-    /**
-     * Service to manage agents
-     * @var \Scubawhere\Services\AgentService
-     */
+    /** @var \Scubawhere\Services\AgentService */
     protected $agent_service;
     
     /* @var AgentTransformer*/
@@ -32,7 +41,7 @@ class AgentController extends ApiController {
      * Get a single agent by ID
      *
      * @api /api/agent
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      * @throws HttpUnprocessableEntity
      */
     public function getIndex() 
@@ -43,9 +52,10 @@ class AgentController extends ApiController {
         }
         
         return $this->responseOK(
-            $this->transformer->transform(
+            'Ok. Agent retrieved',
+            array('data' => $this->transformer->transform(
                 $this->agent_service->get($id)
-            )
+            ))
         );
     }
 
@@ -53,22 +63,32 @@ class AgentController extends ApiController {
      * Get all agents belonging to a company
      * 
      * @api /api/agent/all
-     * @return array Collection Agent models
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function getAll()
     {
-        return $this->transformer->transformMany($this->agent_service->getAll());
+        return $this->responseOK(
+            'Ok. All agents retrieved.',
+            array('data' => $this->transformer->transformMany(
+                $this->agent_service->getAll()
+            ))
+        );
     }
 
     /**
      * Get all agents belonging to a company including soft deleted models
      * 
      * @api /api/agent/all-with-trashed
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function getAllWithTrashed()
     {
-        return $this->agent_service->getAllWithTrashed();
+        return $this->responseOK(
+            'Ok. All agents retrieved.',
+            array('data' => $this->transformer->transformMany(
+                $this->agent_service->getAllWithTrashed()
+            ))
+        );
     }
 
     /**
@@ -76,7 +96,7 @@ class AgentController extends ApiController {
      * 
      * @api /api/agent/add
      * @throws \Scubawhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function postAdd()
     {
@@ -97,7 +117,6 @@ class AgentController extends ApiController {
        
         $agent = $this->agent_service->create($data);
         return $this->responseCreated('OK. Agent created', $agent);
-        //return Response::json(array('status' => 'OK. Agent created', 'model' => $agent), 201); // 201 Created
     }
 
     /**
@@ -105,7 +124,7 @@ class AgentController extends ApiController {
      * 
      * @api /api/agent/edit
      * @throws \Scubawhere\Exceptions\InvalidInputException
-     * @return \Illuminate\Http\Response 200 Success with updated agent
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function postEdit()
     {
@@ -127,7 +146,6 @@ class AgentController extends ApiController {
 
         $agent = $this->agent_service->update($id, $data);
         return $this->responseOK('OK. Agent updated.', array('model' => $agent));
-        //return Response::json(array('status' => 'OK. Agent updated', 'model' => $agent), 200); // 200 Success
     }
 
     /**
@@ -136,7 +154,7 @@ class AgentController extends ApiController {
      * @api /api/agent/delete
      * @throws \Scubawhere\Exceptions\NotFoundException
      * @throws Exception
-     * @return \Illuminate\Http\Response 200 Success
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function postDelete()
     {
@@ -147,7 +165,6 @@ class AgentController extends ApiController {
         $this->agent_service->delete($id);
         
         return $this->responseOK('OK. Agent deleted');
-        //return Response::json(array('status' => 'OK. Agent deleted'), 200); // 200 Success
     }
 
 }

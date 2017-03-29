@@ -34,7 +34,7 @@ class AgentService {
      * @return \Scubawhere\Entities\Agent
      */
 	public function get($id) {
-		return $this->agent_repo->get($id);
+		return $this->agent_repo->get($id, ['commissionRules']);
 	}
 
 	/**

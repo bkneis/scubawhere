@@ -41,7 +41,7 @@ class AddonService {
      * @return \Scubawhere\Entities\Addon
      */
 	public function get($id) {
-		return $this->addonRepo->get($id, ['prices']);
+		return $this->addonRepo->get($id, ['basePrices']);
 	}
 
 	/**

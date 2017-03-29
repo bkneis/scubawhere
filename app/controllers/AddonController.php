@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Scubawhere\Services\AddonService;
 use Scubawhere\Exceptions\Http\HttpNotFound;
+use Scubawhere\Transformers\AddonTransformer;
 use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 
 /**
@@ -19,10 +20,16 @@ class AddonController extends ApiController {
 
     /** @var AddonService */
     protected $addonService;
+    
+    /** @var AddonTransformer */
+    protected $transformer;
 
-    public function __construct(AddonService $addon_service, Request $request) 
+    public function __construct(AddonService $addon_service,
+                                Request $request,
+                                AddonTransformer $transformer) 
     {
         $this->addonService = $addon_service;
+        $this->transformer = $transformer;
         parent::__construct($request);
     }
 
@@ -39,22 +46,37 @@ class AddonController extends ApiController {
         if (is_null($id)) {
             throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, ['The id field is required']);
         }
-        return $this->addonService->get($id);
+        return $this->responseOK(
+            'OK. Addon retrieved',
+            array('data' => $this->transformer->transform(
+                $this->addonService->get($id)
+            ))
+        );
     }
 
     /**
      * Get all addons belonging to a company
      *
      * @api GET /api/addon
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $with_deleted = (bool) $this->request->get('with_deleted');
         if ($with_deleted) {
-            return $this->addonService->getAllWithTrashed();
+            return $this->responseOK(
+                'Ok. Addons retrieved',
+                array('data' => $this->transformer->transformMany(
+                    $this->addonService->getAllWithTrashed()      
+                ))
+            );
         } else {
-            return $this->addonService->getAll();
+            return $this->responseOK(
+                'Ok. Addons retrieved',
+                array('data' => $this->transformer->transformMany(
+                    $this->addonService->getAll()
+                ))
+            );
         }
     }
 
