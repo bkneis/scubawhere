@@ -2,10 +2,11 @@
 
 namespace Scubawhere\Entities;
 
-use LaravelBook\Ardent\Ardent;
 use Scubawhere\Helper;
+use LaravelBook\Ardent\Ardent;
 
 class Agency extends Ardent {
+	
 	protected $guarded = array('*');
 	protected $fillable = array();
 	protected $hidden = array('created_at', 'updated_at');

@@ -1,7 +1,9 @@
 var Accommodation = {
 
 	get : function(params, handleData) {
-		$.get("/api/accommodation/" + params.id, handleData);
+		$.get("/api/accommodation/" + params.id, function (res) {
+			handleData(res.data);
+		});
 	},
 
 	getAll : function(handleData) {

@@ -47,10 +47,10 @@ class AccommodationController extends ApiController {
         }
         
         return $this->responseOk(
-            'Ok. Accommodations retrieved', 
-            $this->transformer->transform(
+            'Ok. Accommodations retrieved',
+            array('data' => $this->transformer->transform(
                 $this->accommodation_service->get($id)
-            )
+            ))
         );
     }
 

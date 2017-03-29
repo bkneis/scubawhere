@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Class AdminController
+ * 
+ * Controller used to return the admin page of the RMS. This api route
+ * uses the 'admin' middleware that only allows the admin user controlled
+ * by scubawhere access. No customer should be able to access this!
+ *
+ * @api /api/admin
+ * @author Bryan Kneis
+ * @version 1.0
+ */
 class AdminController extends Controller {
 
 	public function getIndex()

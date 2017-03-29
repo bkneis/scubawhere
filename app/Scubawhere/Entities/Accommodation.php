@@ -141,11 +141,6 @@ class Accommodation extends Ardent {
 		return $this;
 	}
 
-	public function isDeleteable()
-	{
-		return !($this->packages()->exists());
-	}
-
 	/**
 	 * Overload the bookable bookings relationship as accommodations have
 	 * a direct pivot table accommodation_bookings.
@@ -183,16 +178,6 @@ class Accommodation extends Ardent {
 	{
 		return $this->belongsToMany('\Scubawhere\Entities\Customer', 'accommodation_booking')->withPivot('booking_id', 'start', 'end')->withTimestamps();
 	}
-
-	/*public function basePrices()
-	{
-		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNull('until');
-	}
-
-	public function prices()
-	{
-		return $this->morphMany('\Scubawhere\Entities\Price', 'owner')->whereNotNull('until');
-	}*/
 
 	public function packages()
 	{

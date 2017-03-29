@@ -1,14 +1,14 @@
 var Agent = {
 
 	getAgent : function(params, handleData) {
-		$.get("/api/agent", params, function(data) {
-			handleData(data);
+		$.get("/api/agent", params, function(res) {
+			handleData(res.data);
 		});
 	},
 
 	getAllAgents : function(handleData) {
-		$.get("/api/agent/all", function(data){
-			handleData(data);
+		$.get("/api/agent/all", function(res){
+			handleData(res.data);
 		});
 	},
 
