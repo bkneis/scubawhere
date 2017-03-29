@@ -55,6 +55,7 @@ Handlebars.registerHelper('getStatID', function(country){
 });
 
 Handlebars.registerHelper('getCountry', function(id) {
+	if (id === null) return '';
 	return window.countries[id].name;
 });
 
