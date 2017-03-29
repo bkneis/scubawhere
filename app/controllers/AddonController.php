@@ -8,7 +8,8 @@ use Scubawhere\Exceptions\Http\HttpUnprocessableEntity;
 /**
  * Class AddonController
  *
- * @todo Compulsory is always 0 until we can safely remove it
+ * Compulsory addons were removed from the user features after release/hammerhead-v1.1.
+ * We need to force it to 0, even if the user supplies the compulsory flag until v2 of the API is released
  *
  * @api /api/addon
  * @author Bryan Kneis
@@ -75,11 +76,6 @@ class AddonController extends ApiController {
         
         $data = $this->validate($input);
         
-        /*
-         * Compulsory was removed from the user features after
-         * release/hammerhead-v1.1. We need to force it to 0,
-         * even if the user supplies the compulsory flags.
-         */
         $data['compulsory'] = 0; 
         $addon = $this->addonService->create($data);
         
