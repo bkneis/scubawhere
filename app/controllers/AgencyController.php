@@ -3,8 +3,18 @@
 use Scubawhere\Entities\Agency;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-// use Scubawhere\Helper;
-
+/**
+ * Class AgencyController
+ * 
+ * Responsible for returning training agencies such as PADI, SSI etc.
+ * that courses cna be associated to. An argument can be made to create 
+ * and agencyRepo but due to time constraints and the fact that the rest
+ * of the application has to rarely reference these it is not worth it.
+ * 
+ * @api /api/agency
+ * @author Bryan Kneis
+ * @version 1.0
+ */
 class AgencyController extends Controller
 {
     public function __construct()
