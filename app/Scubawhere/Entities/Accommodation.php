@@ -84,10 +84,10 @@ class Accommodation extends Ardent {
 						if($limitBefore)
 							$query->where('created_at', '<=', $limitBefore);
 					})
-					/*->where(function ($query) use ($bookingDate) {
+					->where(function ($query) use ($bookingDate) {
 						$query->whereNull('deleted_at')
 							->orWhere('deleted_at', '>', $bookingDate);
-					})*/
+					})
 					->withTrashed()
 					->orderBy('id', 'DESC')
 					->first()

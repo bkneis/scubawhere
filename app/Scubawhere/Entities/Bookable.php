@@ -49,10 +49,10 @@ trait Bookable
                     if($limitBefore)
                         $query->where('created_at', '<=', $limitBefore);
                 })
-                /*->where(function ($query) use ($bookingDate) {
+                ->where(function ($query) use ($bookingDate) {
                     $query->whereDate('deleted_at', '>', date($bookingDate))
                         ->orWhereNull('deleted_at');
-                })*/
+                })
                 ->orderBy('id', 'DESC')
                 ->withTrashed()
                 ->first();
