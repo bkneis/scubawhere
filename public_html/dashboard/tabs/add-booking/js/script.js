@@ -177,7 +177,7 @@ Handlebars.registerHelper('netTotal', function() {
 });
 
 Handlebars.registerHelper('item_price', function () {
-	if (this.override_price) {
+	if (this.override_price !== undefined) {
 		return new Handlebars.SafeString('<ins>' + (this.override_price / 100).toFixed(2) + '</ins> <del>' + this.decimal_price + '</del>');
 	}
 	return this.decimal_price; 
@@ -186,7 +186,7 @@ Handlebars.registerHelper('item_price', function () {
 // @todo When redesigning add booking we should really have a accommodationSummary
 // to prevent these duplicate helpers with small diffrences to the data structure
 Handlebars.registerHelper('accommodation_item_price', function () {
-	if (this.pivot.override_price) {
+	if (_.has(this.pivot, 'override_price')) {
 		return new Handlebars.SafeString('<ins>' + (this.pivot.override_price / 100).toFixed(2) + '</ins> <del>' + this.decimal_price + '</del>');
 	}
 	return this.decimal_price;
