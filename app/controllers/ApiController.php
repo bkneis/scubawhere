@@ -17,15 +17,6 @@ abstract class ApiController extends Controller
     {
         $this->request = $request;
     }
-    
-    /*public function validateInput(array $data, array $rules, array $messages = [])
-    {
-        $validator = Validator::make($data, $rules, $messages);
-
-        if($validator->fails()) {
-            throw new HttpUnprocessableEntity(__CLASS__.__METHOD__, $validator->errors()->all());
-        }
-    }*/
 
     /**
      * @deprecated 
