@@ -419,8 +419,27 @@ class Booking extends Ardent {
 		}
 
 		$bookingdetails = $this->bookingdetails()->with('ticket', 'departure', 'addons', 'packagefacade', 'packagefacade.package')->get();
+		/*
+         * OK. So originally the addon discount was stored within it's pivot (the addon_bookingdetail)
+         * table. The problem is that the addons discount is applied per addon, not by booking_detail, therefore
+         * applying a discount where there is more than 1 addon and in separate booking details, only
+         * 1 of the booking details addons will have the discount applied, and the total will look incorrect.
+         * So long story short, below is a fix to this problem. It will need to be address in the future, but for now
+         * it is the fix. We will make a separate lookup in the booking details by addon id, then have an array by addon id
+         * to discount, then check the addon id and submitting the discount when calculating the price.
+         */
+		$addonDiscounts = array();
 
-		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses, &$commission, $bookingdetails)
+		$bookingdetails->each(function ($detail) use (&$addonDiscounts) {
+			$detail->load('addons');
+			$detail->addons->each( function ($addon) use (&$addonDiscounts) {
+				if (! is_null($addon->pivot->override_price)) {
+					$addonDiscounts[$addon->id] = $addon->pivot->override_price;
+				}
+			});
+		});
+
+		$bookingdetails->each(function($detail) use (&$sum, $currency, &$tickedOffPackagefacades, &$tickedOffCourses, &$commission, $addonDiscounts)
 		{
 			$limitBefore = in_array($this->status, ['reserved', 'expired', 'confirmed']) ? $detail->created_at : false;
 
@@ -552,26 +571,6 @@ class Booking extends Ardent {
 				$sum += $detail->ticket->decimal_price;
 				$commission += $detail->ticket->commission_amount;
 			}
-
-			/*
-			 * OK. So originally the addon discount was stored within it's pivot (the addon_bookingdetail)
-			 * table. The problem is that the addons discount is applied per addon, not by booking_detail, therefore
-			 * applying a discount where there is more than 1 addon and in separate booking details, only
-			 * 1 of the booking details addons will have the discount applied, and the total will look incorrect.
-			 * So long story short, below is a fix to this problem. It will need to be address in the future, but for now
-			 * it is the fix. We will make a separate lookup in the booking details by addon id, then have an array by addon id
-			 * to discount, then check the addon id and submitting the discount when calculating the price.
-			 */
-			$addonDiscounts = array();
-
-			$bookingdetails->each(function ($detail) use (&$addonDiscounts) {
-				$detail->load('addons');
-				$detail->addons->each( function ($addon) use (&$addonDiscounts) {
-					if (! is_null($addon->pivot->override_price)) {
-						$addonDiscounts[$addon->id] = $addon->pivot->override_price;
-					}
-				});
-			});
 
 			// Sum up all addons that are not part of a package
 			$detail->addons->each(function($addon) use ($detail, &$sum, $limitBefore, &$commission, $addonDiscounts) {
