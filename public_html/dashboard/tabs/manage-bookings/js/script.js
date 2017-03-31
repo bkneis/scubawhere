@@ -689,7 +689,7 @@ function generateBookingDetails(id) {
 	var booking = _.find(window.bookings, function(booking) {
 		return parseInt(booking.id) === parseInt(id);
 	});
-
+	
 	return bookingDetailsTemplate({bookingDetails : [booking]});
 }
 
@@ -726,7 +726,14 @@ function createDataTable() {
         }
         else {
             // Open this row
-            row.child( generateBookingDetails($(this).attr('data-id')) ).show();
+			var self = this;
+			Booking.get(parseInt($(self).attr('data-id')), function (data) {
+				window.bookings = _.indexBy(window.booking, 'id');
+				window.bookings[data.id] = data;
+				row.child( generateBookingDetails($(self).attr('data-id')) ).show();
+			}, function (xhr) {
+				console.log('fail', xhr);		
+			});
             tr.addClass('shown');
         }
     });
